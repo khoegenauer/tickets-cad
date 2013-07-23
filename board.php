@@ -848,7 +848,7 @@ setTimeout('do_post()', 1000);
 				global $istest;
 				
 				$text = "";
-				$the_msg = mail_it ($to_str, $text, $ticket_id, 3, TRUE);		// get default msg text
+				$the_msg = mail_it ($to_str, "", $text, $ticket_id, 3, TRUE);		// get default msg text
 				$temp = (explode("\n", $text));
 				$msg_lines = count($temp);
 											
@@ -937,7 +937,7 @@ setTimeout('do_post()', 1000);
 				<TD ALIGN='left'>
 					<FORM NAME='add_mail_form' METHOD = 'post' ACTION = "<?php print basename(__FILE__); ?>">	<!-- 11/27/09 -->
 <?php
-			$msg_str = "Dispatching" . mail_it ($to_str, "New", $ticket_id, 3, TRUE); 
+			$msg_str = "Dispatching" . mail_it ($to_str, "", "New", $ticket_id, 3, TRUE); 
 ?>			
 					<TEXTAREA NAME="frm_text" COLS=60 ROWS=<?php print $msg_lines+8; ?>><?php print $msg_str;?></TEXTAREA>
 					

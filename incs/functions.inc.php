@@ -1970,8 +1970,6 @@ Host		Q
 911 contact	R				// 6/26/10
 Ticket link S				// 6/20/12
 Facility 	T				// 6/20/12
-Handle		U				// 3/25/13
-Scheduled	V				// 3/25/13
 */
 
 function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_only = FALSE) {	// 10/6/08, 10/15/08,  2/18/09, 3/7/09, 10/23/12, 11/14/2012, 12/14/2012
@@ -1997,6 +1995,7 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 	$ticket_result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$t_row = stripslashes_deep(mysql_fetch_array($ticket_result));
 	$the_scope = strlen(trim($t_row['scope']))>0? trim($t_row['scope']) : "[#{$ticket_id}]" ;	// possibly empty
+
 	$eol = PHP_EOL;
 	$locale = get_variable('locale');	
 
@@ -2130,7 +2129,6 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 						$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	// 3/22/09
 						if (mysql_num_rows ($result)>0) {
 							$f_row = stripslashes_deep(mysql_fetch_array($result));
-							$message .= "{$gt}: {$f_row['handle']}\n";
 							$message .= "{$gt}: {$f_row['beds_info']}\n";
 							}
 						}
@@ -2154,9 +2152,13 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 					
 				case "V":
 					$gt = get_text("Scheduled For");
-					$message .= get_text("{$gt}") . ": " . format_date_2($t_row['booked_date']). $_end .$eol;
+					if($t_row['booked_date'] == NULL) {
+						$message .= "" . $_end .$eol;
+						} else {
+						$message .= get_text("{$gt}") . ": " . format_date_2($t_row['booked_date']). $_end .$eol;
+						}
 				    break;
-
+				
 				default:
 //				    $message = "Match string error:" . $match_str[$i]. " " . $match_str . $eol ;
 					@session_start();

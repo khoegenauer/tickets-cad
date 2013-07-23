@@ -50,7 +50,7 @@ function get_category($unit) {
 		if($deployed == 0) {
 			$query = "SELECT `$GLOBALS[mysql_prefix]responder`.`un_status_id`, `$GLOBALS[mysql_prefix]un_status`.`status_val`, `$GLOBALS[mysql_prefix]un_status`.`hide`
 				FROM `$GLOBALS[mysql_prefix]responder`
-				RIGHT JOIN `$GLOBALS[mysql_prefix]un_status` ON `$GLOBALS[mysql_prefix]responder`.`un_status_id`=`$GLOBALS[mysql_prefix]un_status`.`id`
+				LEFT JOIN `$GLOBALS[mysql_prefix]un_status` ON `$GLOBALS[mysql_prefix]responder`.`un_status_id`=`$GLOBALS[mysql_prefix]un_status`.`id`
 				WHERE `$GLOBALS[mysql_prefix]responder`.`id` = $unit";
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 			while ($row = stripslashes_deep(mysql_fetch_array($result))) {
@@ -58,10 +58,14 @@ function get_category($unit) {
 				$status_hide = $row['hide'];
 			}
 			unset($result);
-				if($status_hide == "y") {
-					$status_category = "Not Available";
+				if($status_id != 0) {
+					if($status_hide == "y") {
+						$status_category = "Not Available";
+					} else {
+						$status_category = "Available";
+					}
 				} else {
-					$status_category = "Available";
+					$status_category = "Status Error";	
 				}
 		} else {
 			$status_category = "Dispatched";
@@ -78,12 +82,16 @@ function get_category($unit) {
 					WHERE `$GLOBALS[mysql_prefix]responder`.`id` = $unit";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 				while ($row = stripslashes_deep(mysql_fetch_array($result))) {
-					if(($row['group']=="") || ($row['group']==NULL) || ($row['group']=="NULL")) {
-						$category_name = "?";
+					if($row['un_status_id'] != 0) {
+						if(($row['group']=="") || ($row['group']==NULL) || ($row['group']=="NULL")) {
+							$category_name = "?";
+						} else {
+							$category_name = $row['group'];
+						}				
+						$status_category = $category_name;	
 					} else {
-						$category_name = $row['group'];
-					}				
-					$status_category = $category_name;			
+						$status_category = "Status Error";	
+					}
 				}
 			} else {
 			$status_category = "Dispatched";
@@ -103,14 +111,14 @@ function get_all_categories() {
 			`$GLOBALS[mysql_prefix]un_status`.`group`,
 			`$GLOBALS[mysql_prefix]un_status`.`hide`
 			FROM `$GLOBALS[mysql_prefix]responder`
-			RIGHT JOIN `$GLOBALS[mysql_prefix]un_status` ON `$GLOBALS[mysql_prefix]responder`.`un_status_id`=`$GLOBALS[mysql_prefix]un_status`.`id`";	
+			LEFT JOIN `$GLOBALS[mysql_prefix]un_status` ON `$GLOBALS[mysql_prefix]responder`.`un_status_id`=`$GLOBALS[mysql_prefix]un_status`.`id`";	
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 			$unit = $row['id'];
 			$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `$GLOBALS[mysql_prefix]assigns`.`responder_id` = '{$unit}' AND (`clear` IS NULL OR DATE_FORMAT(`clear`,'%Y') = '0000' )";	//2/12/11
 			$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 			$deployed = mysql_num_rows($result2);
-			if($deployed == 0) {			
+			if(($deployed == 0) && ($row['un_status_id'] != 0)) {			
 				$status_id = $row['un_status_id'];
 				$status_hide = $row['hide'];
 				if($status_hide == "y") {
@@ -118,8 +126,10 @@ function get_all_categories() {
 					} else {
 					$status_category[$unit] = "Available";
 					}
-				} else {
+				} elseif(($deployed != 0) && ($row['un_status_id'] != 0)) {
 				$status_category[$unit] = "Dispatched";	
+				} else {
+				$status_category[$unit] = "Status Error";	
 				}
 			}
 		} else {
@@ -130,21 +140,23 @@ function get_all_categories() {
 			`$GLOBALS[mysql_prefix]un_status`.`group`,			
 			`$GLOBALS[mysql_prefix]un_status`.`hide`
 			FROM `$GLOBALS[mysql_prefix]responder`
-			RIGHT JOIN `$GLOBALS[mysql_prefix]un_status` ON `$GLOBALS[mysql_prefix]responder`.`un_status_id`=`$GLOBALS[mysql_prefix]un_status`.`id`";	
+			LEFT JOIN `$GLOBALS[mysql_prefix]un_status` ON `$GLOBALS[mysql_prefix]responder`.`un_status_id`=`$GLOBALS[mysql_prefix]un_status`.`id`";	
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 			$unit = $row['id'];
 			$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `$GLOBALS[mysql_prefix]assigns`.`responder_id` = '{$unit}' AND (`clear` IS NULL OR DATE_FORMAT(`clear`,'%Y') = '0000' )";	//2/12/11
 			$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 			$deployed = mysql_num_rows($result2);
-			if($deployed == 0) {			
+			if(($deployed == 0) && ($row['un_status_id'] != 0)) {			
 				if(($row['group']=="") || ($row['group']==NULL) || ($row['group']=="NULL")) {
 					$status_category[$unit] = "?";
 					} else {
 					$status_category[$unit] = $row['group'];
 					}				
+				} elseif(($deployed != 0) && ($row['un_status_id'] != 0)) {
+				$status_category[$unit] = "Dispatched";	
 				} else {
-				$status_category[$unit] = "Dispatched";
+				$status_category[$unit] = "Status Error";	
 				}	
 			}
 		}

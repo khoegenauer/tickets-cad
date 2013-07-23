@@ -13,23 +13,56 @@
 1/14/10 status legend, email count added, get_text units, incident
 2/8/11 dumps removed, for production
 3/15/11 changed stylesheet.php to stylesheet.php
+10/23/12 Added code for messaging (SMS Gateway)
 */
 
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
 error_reporting (E_ALL  ^ E_DEPRECATED);
-
+set_time_limit(0);
 @session_start();
 require_once('./incs/functions.inc.php');
-// dump($_GET);
-// dump($_POST);
+require_once('./incs/messaging.inc.php');
+//dump($_REQUEST);
+function distance($lat1, $lon1, $lat2, $lon2, $unit) { 
+	$theta = $lon1 - $lon2; 
+	$dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta)); 
+	$dist = acos($dist); 
+	$dist = rad2deg($dist); 
+	$miles = $dist * 60 * 1.1515;
+	$unit = strtoupper($unit);
 
+	if ($unit == "K") {
+		return ($miles * 1.609344); 
+		} else if ($unit == "N") {
+		return ($miles * 0.8684);
+		} else {
+		return $miles;
+		}
+	}
 
-if (!(empty($_GET))) {
-	$step = (((integer) $_GET['name'])==0)? 2 : 0 ;
+function subval_sort($a,$subkey) {
+	foreach($a as $k=>$v) {
+		$b[$k] = strtolower($v[$subkey]);
+	}
+	asort($b);
+	foreach($b as $key=>$val) {
+		$c[] = $a[$key];
+	}
+	return $c;
+}
+
+$tik_id = 0;
+
+if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
+	$step = (((integer) $_GET['name'])==0)? 1 : 0 ;
 //	print $_GET['addrs'];
 //	$step = 0;		// unit id - or 0 - passed as get ['name']
-	}
-else {
+	} elseif((!(empty($_GET))) && (isset($_GET['the_ticket'])))  {	//	10/23/12
+	$tik_id = $_GET['the_ticket'];
+	$step = (((integer) $_GET['the_ticket'])==0)? 0 : 2 ;
+//	print $_GET['addrs'];
+//	$step = 0;		// unit id - or 0 - passed as get ['name']	
+	} else {
 //	dump(__LINE__);
 	if (empty($_POST)) {
 		$query = "SELECT DISTINCT `ticket_id` , scope, `ticket_id` AS `incident` FROM `$GLOBALS[mysql_prefix]assigns` 
@@ -51,6 +84,7 @@ else {
 		$step = $_POST['frm_step'];
 		}
 	}
+
 //dump(__LINE__);
 //dump($step);
 ?>
@@ -66,6 +100,7 @@ else {
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <META HTTP-EQUIV="Script-date" CONTENT="6/13/09">
 <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<SCRIPT SRC="./js/misc_function.js"></SCRIPT>
 <SCRIPT>
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
@@ -94,13 +129,32 @@ else {
 			return false;
 			}
 		var sep = "";
-		for (i=0;i<document.mail_form.elements.length; i++) {
+		var sep2 = "";	//	10/23/12
+		var z;	//	10/23/12
+		for (i=0;i<document.mail_form.elements.length; i++) {	//	10/23/12
 			if((document.mail_form.elements[i].type =='checkbox') && (document.mail_form.elements[i].checked)){		// frm_add_str
-				document.mail_form.frm_add_str.value += sep + document.mail_form.elements[i].value;
+				var the_val_arr = document.mail_form.elements[i].value.split(":"); 
+				var the_e_add = the_val_arr[0];
+				var the_r_id = the_val_arr[1];
+				var the_smsg_id = the_val_arr[2];
+				var x=1;
+				if((document.mail_form.use_smsg[1]) && (document.mail_form.use_smsg[1].checked)) {
+					if((the_smsg_id != "NONE") && (the_smsg_id != "")) {
+						document.mail_form.frm_smsg_ids.value += sep2 + the_smsg_id;	
+						document.mail_form.frm_resp_ids.value += sep + the_r_id;							
+						} else {
+						document.mail_form.frm_resp_ids.value += sep + the_r_id;					
+						document.mail_form.frm_add_str.value += sep + the_e_add;
+						}
+					} else {
+					document.mail_form.frm_resp_ids.value += sep + the_r_id;					
+					document.mail_form.frm_add_str.value += sep + the_e_add;
+					}
 				sep = "|";
+				sep2 = ",";				
 				}
 			}
-		if (document.mail_form.frm_add_str.value.trim()=="") {
+		if ((document.mail_form.frm_add_str.value.trim()=="") && (document.mail_form.frm_smsg_ids.value.trim()=="")) {	//	10/23/12
 			alert ("Addressees required");
 			return false;
 			}
@@ -128,6 +182,80 @@ else {
 			document.mail_form.frm_subj.focus();
 			}
 		}		// end function set_signal()
+		
+	function set_message(message) {	//	10/23/12
+		var randomnumber=Math.floor(Math.random()*99999999);	
+		var tick_id = <?php print $tik_id;?>;
+		var url = './ajax/get_replacetext.php?tick=' + tick_id + '&version=' + randomnumber + '&text=' + encodeURIComponent(message);
+		sendRequest (url,replacetext_cb, "");			
+			function replacetext_cb(req) {
+				var the_text=JSON.decode(req.responseText);
+				if (the_text[0] == "") {
+					var replacement_text = message;
+					} else {
+					var replacement_text = the_text[0];					
+					}
+				document.mail_form.frm_text.value += replacement_text;					
+				}			// end function replacetext_cb()	
+		}		// end function set_message(message)
+
+	function sendRequest(url,callback,postData) {
+		var req = createXMLHTTPObject();
+		if (!req) return;
+		var method = (postData) ? "POST" : "GET";
+		req.open(method,url,true);
+		req.setRequestHeader('User-Agent','XMLHTTP/1.0');
+		if (postData)
+			req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		req.onreadystatechange = function () {
+			if (req.readyState != 4) return;
+			if (req.status != 200 && req.status != 304) {
+				return;
+				}
+			callback(req);
+			}
+		if (req.readyState == 4) return;
+		req.send(postData);
+		}
+	
+	var XMLHttpFactories = [
+		function () {return new XMLHttpRequest()	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		];
+	
+	function createXMLHTTPObject() {
+		var xmlhttp = false;
+		for (var i=0;i<XMLHttpFactories.length;i++) {
+			try {
+				xmlhttp = XMLHttpFactories[i]();
+				}
+			catch (e) {
+				continue;
+				}
+			break;
+			}
+		return xmlhttp;
+		}
+
+	function syncAjax(strURL) {							// synchronous ajax function - 4/5/10
+		if (window.XMLHttpRequest) {						 
+			AJAX=new XMLHttpRequest();						 
+			} 
+		else {																 
+			AJAX=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+		if (AJAX) {
+			AJAX.open("GET", strURL, false);														 
+			AJAX.send(null);							// form name
+			return AJAX.responseText;																				 
+			} 
+		else {
+			alert("<?php echo 'error: ' . basename(__FILE__) . '@' .  __LINE__;?>");
+			return false;
+			}																						 
+		}		// end function sync Ajax()
 
 </SCRIPT>
 </HEAD>
@@ -140,7 +268,7 @@ else {
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` {$where};";		// 
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 				$row = stripslashes_deep(mysql_fetch_assoc($result));
-			
+				$smsg_ids = (isset($row['smsg_id'])) ? $row['smsg_id'] : "";			
 //				$arr = explode(",", $_GET['name']);
 ?>
 			<BODY scroll='auto' onLoad = "reSizeScr(1); document.mail_form.frm_subj.focus();"><CENTER>		<!-- 1/12/09 -->
@@ -155,31 +283,69 @@ else {
 				<TR VALIGN = 'TOP' CLASS='odd'>
 					<TD ALIGN='right' CLASS="td_label">Subject: </TD><TD><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>	
 				<TR VALIGN = 'TOP' CLASS='even'>
-					<TD ALIGN='right' CLASS="td_label">Message: </TD><TD> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
-			<TR VALIGN = 'TOP' CLASS='odd'>		<!-- 11/15/10 -->
-				<TD ALIGN='right' CLASS="td_label">Signal: </TD><TD>
+					<TD ALIGN='right' CLASS="td_label">Message: </TD><TD><TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA><?php print get_text("mail_help"); ?></TD></TR>
+				<TR VALIGN = 'TOP' CLASS='odd'>		<!-- 11/15/10 -->
+					<TD ALIGN='right' CLASS="td_label">Signal: </TD><TD>
 
-					<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-					<OPTION VALUE=0 SELECTED>Select</OPTION>
+						<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
+						<OPTION VALUE=0 SELECTED>Select</OPTION>
 <?php
-					$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
-					$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-					while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
-						print "\t<OPTION VALUE='{$row['code']}'>{$row['code']}|{$row['text']}</OPTION>\n";		// pipe separator
-						}
+						$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
+						$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+						while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+							print "\t<OPTION VALUE='{$row['code']}'>{$row['code']}|{$row['text']}</OPTION>\n";		// pipe separator
+							}
 ?>
-				</SELECT>
-					<SPAN STYLE='margin-left:20px;'>Apply to: Subject &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='0' CHECKED onClick = 'set_text = false;'></SPAN>
-					<SPAN STYLE='margin-left:20px;'>Text &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='1' CHECKED onClick = 'set_text = true;'>&nbsp;&nbsp;</SPAN>
-					</TD></TR>	
+					</SELECT>
+						<SPAN STYLE='margin-left:20px;'>Apply to: Subject &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='0' CHECKED onClick = 'set_text = false;'></SPAN>
+						<SPAN STYLE='margin-left:20px;'>Text &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='1' CHECKED onClick = 'set_text = true;'>&nbsp;&nbsp;</SPAN>
+					</TD>
+				</TR>
+				<TR VALIGN = 'TOP' CLASS='even'>
+					<TD ALIGN='right' CLASS="td_label">Standard Message: </TD><TD>
 
+						<SELECT NAME='signals' onChange = 'set_message(this.options[this.selectedIndex].text);'>	<!--  11/17/10 -->
+						<OPTION VALUE=0 SELECTED>Select</OPTION>
+<?php
+//					dump(__LINE__);
+						$query = "SELECT * FROM `$GLOBALS[mysql_prefix]std_msgs` ORDER BY `id` ASC";	//	10/23/12
+						$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+						while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+							print "\t<OPTION VALUE='{$row['id']}'>{$row['message']}</OPTION>\n";
+							}
+?>
+						</SELECT>
+						<BR />
+					</TD>
+				</TR>
 				<TR VALIGN = 'TOP' CLASS='even'>
 					<TD ALIGN='center' COLSPAN=2><BR /><BR />
 						<INPUT TYPE='button' 	VALUE='Next' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
 						<INPUT TYPE='reset' 	VALUE='Reset'>&nbsp;&nbsp;&nbsp;&nbsp;
 						<INPUT TYPE='button' 	VALUE='Cancel' onClick = 'window.close();'><BR /><BR />
-					</TD></TR>
-				</TABLE></FORM>
+					</TD>
+				</TR>
+				<TR><TD>&nbsp;</TD></TR>	
+<?php
+				if((get_variable('use_messaging') == 2) || (get_variable('use_messaging') == 3)) { // 10/23/12
+?>				
+					<TR>
+						<TD ALIGN='left' COLSPAN=2>
+							<input type="radio" name="use_smsg" VALUE="0" checked> Use Email<br>	<!-- 10/23/12 -->
+							<input type="radio" name="use_smsg" VALUE="1"> Use <?php get_provider_name(get_msg_variable('smsg_provider'));?>?<br>	<!-- 10/23/12 -->
+						</TD>
+					</TR>
+<?php
+					} else {
+?>
+				<INPUT TYPE='hidden' NAME="use_smsg" VALUE='0'>
+<?php
+					}
+?>
+				</TABLE>
+				<INPUT type='hidden' NAME='frm_resp_ids' VALUE=''>
+				<INPUT type='hidden' NAME='frm_smsg_ids' VALUE='<?php print $smsg_ids;?>'>				
+				</FORM>
 	
 <?php
 								
@@ -238,22 +404,36 @@ else {
 
 		case 2:													// 9/19/10
 //			dump(__LINE__);
-		
+			$tik_id = ((isset($_GET['the_ticket'])) && ($_GET['the_ticket'] != 0)) ? $_GET['the_ticket'] : 0;	//	10/23/12
+			$t_query = "SELECT `t`.`lat` AS `t_lat`, `t`.`lng` AS `t_lng`	FROM `$GLOBALS[mysql_prefix]ticket` `t`	WHERE `id` = {$tik_id} LIMIT 1";
+			$t_result = mysql_query($t_query) or do_error($t_query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
+			$t_row = stripslashes_deep(mysql_fetch_assoc($t_result), MYSQL_ASSOC);			
+			
+			$default_msg = "Ticket ID *" . $tik_id . "*";	//	10/23/12
 			if ((!array_key_exists ( 'frm_sel_inc', $_POST)) || ($_POST['frm_sel_inc']==0)) {
-				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` `r`
+				$query = "SELECT *,	`r`.`id` AS `responder_id`,
+					`r`.`lat` AS `r_lat`,
+					`r`.`lng` AS `r_lng`				
+					FROM `$GLOBALS[mysql_prefix]responder` `r`
 					LEFT JOIN `$GLOBALS[mysql_prefix]un_status`	`s` ON (`r`.`un_status_id` = `s`.`id`)
-					WHERE LOCATE('@', `contact_via`) > 1
-					ORDER BY  `name` ASC ";
+					WHERE LOCATE('@', `contact_via`) > 1 || (`smsg_id` IS NOT NULL || `smsg_id` <> '')
+					ORDER BY  `name` ASC ";	//	10/23/12
 //			dump(__LINE__);
 //			dump($step);
 				}
 			else {												// 7/1/10 - 9/19/10
-				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` `a`
+				$query = "SELECT *, `r`.`id` AS `responder_id`,
+					`t`.`lat` AS `t_lat`,
+					`t`.`lng` AS `t_lng`,
+					`r`.`lat` AS `r_lat`,
+					`r`.`lng` AS `r_lng`
+					FROM `$GLOBALS[mysql_prefix]assigns` `a`
 					LEFT JOIN `$GLOBALS[mysql_prefix]responder`	 `r` ON (`a`.`responder_id` = `r`.`id`)
 					LEFT JOIN `$GLOBALS[mysql_prefix]un_status`	 `s` ON (`r`.`un_status_id` = `s`.`id`)
+					LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` ON (`a`.`ticket_id` = `t`.`id`)
 					WHERE `ticket_id` = {$_POST['frm_sel_inc']} AND LOCATE('@', `contact_via`) > 1
 					AND ((`clear` IS NULL) OR (DATE_FORMAT(`clear`,'%y') = '00'))
-					ORDER BY `name` ASC ";
+					ORDER BY `name` ASC ";	//	10/23/12
 //			dump(__LINE__);
 //			dump($query);
 				}
@@ -294,8 +474,8 @@ else {
 ?>
 			<TR><TD COLSPAN=99 ALIGN='center'>
 
-			<SPAN ID='clr_spn' STYLE = 'display:block' onClick = 'do_clear()'>&raquo; <U>Un-check all</U></SPAN>
-			<SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check()'>&raquo; <U>Check all</U></SPAN>
+			<SPAN ID='clr_spn' STYLE = 'display:none' onClick = 'do_clear()'>&raquo; <U>Un-check all</U></SPAN>
+			<SPAN ID='chk_spn' STYLE = 'display:block'  onClick = 'do_check()'>&raquo; <U>Check all</U></SPAN>
 			</TD></TR>
 <?php
 		}
@@ -308,24 +488,45 @@ else {
 
 <?php			
 				if($no_rows>0) {
+					$the_arr = array();
+					$n=1;
+					while($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)){	//	create an array from the result row
+						$the_arr[$n]['smsg_id'] = $row['smsg_id'];
+						$the_arr[$n]['name'] = $row['name'];
+						$the_arr[$n]['responder_id'] = $row['responder_id'];
+						$the_arr[$n]['contact_via'] = $row['contact_via'];
+						$the_arr[$n]['bg_color'] = $row['bg_color'];		
+						$the_arr[$n]['text_color'] = $row['text_color'];
+						$the_arr[$n]['distance'] = (isset($t_row['t_lat'])) ? distance($row['r_lat'], $row['r_lng'], $t_row['t_lat'], $t_row['t_lng'], "N") : 0;	//	populate array entry with distance from responder to ticket
+						$n++;
+						}
+					if((isset($_GET['the_ticket'])) && ($_GET['the_ticket'] != 0)) {
+						$the_arr = subval_sort($the_arr,'distance'); 	//	sort array by distance ascending but only if the mail form is called from a Ticket
+						}
+
 					$i=1;
 //					print "<TABLE ALIGN = 'center'>";
 					print "<TR><TD COLSPAN = 3 ALIGN='center'>" . get_units_legend() . "<BR /></TD></TR";
 					print "<TR><TD>\n";
 					print "<TABLE ALIGN = 'center' BORDER=0><TR><TD>\n";
-					print "<DIV  style='width:auto;height:500PX; overflow-y: scroll; overflow-x: none;' >";
-					while($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)){
-						print "\t<SPAN STYLE='background-color:{$row['bg_color']}; color:{$row['text_color']};'>
-							<INPUT TYPE='checkbox' NAME='cb{$i}' VALUE='{$row['contact_via']}' CHECKED>
-							&nbsp;&nbsp;{$row['name']}&nbsp;&nbsp;&nbsp;&nbsp;(<I>{$row['contact_via']}</I>)</SPAN><BR />\n";				
+					print "<DIV  style='width: auto; height: 500PX; overflow-y: scroll; overflow-x: none; border: 1px outset #FFFFFF; padding: 10px;' >";	//	10/23/12
+					foreach($the_arr as $val) {
+//					while($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)){
+						$smsg = (($val['smsg_id'] == NULL) || ($val['smsg_id'] == "")) ? "NONE" : $val['smsg_id'] ;
+						$e_add = (($val['contact_via'] == NULL) || ($val['contact_via'] == "")) ? "NONE" : $val['contact_via'] ;
+						$dist = (round($val['distance'],1) != 0) ? "Dist: " . round($val['distance'],1) : "";         
+						print "\t<SPAN STYLE='background-color:{$val['bg_color']}; color:{$val['text_color']}; display: inline-block; white-space: nowrap;'>
+							<INPUT TYPE='checkbox' NAME='cb{$i}' VALUE='{$val['contact_via']}:{$val['responder_id']}:{$val['smsg_id']}'>
+							&nbsp;&nbsp;{$dist} &nbsp;&nbsp;{$val['name']}&nbsp;&nbsp;(<I>(E) {$e_add} - (SMSG) {$smsg}</I> )</SPAN><BR />\n";	//	10/23/12
 						$i++;
 						}		// end while()
 ?>
-			</DIV></TD></TR></TABLE>
+			<BR /></DIV></TD></TR>
+			</TABLE>
 			</TD><TD>
 			<TABLE BORDER=0>
-			<TR VALIGN='top' CLASS='even'><TD CLASS="td_label" ALIGN='right'>Subject: </TD><TD><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
-			<TR VALIGN='top' CLASS='odd'><TD CLASS="td_label" ALIGN='right'>Message: </TD><TD><TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
+			<TR VALIGN='top' CLASS='even'><TD CLASS="td_label" ALIGN='right'>Subject: </TD><TD><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60 VALUE='<?php print $default_msg;?>'></TD></TR>	<!-- 10/23/12 -->
+			<TR VALIGN='top' CLASS='odd'><TD CLASS="td_label" ALIGN='right'>Message: </TD><TD><TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA><BR /><SPAN CLASS='warn'><?php print get_text("messaging help"); ?></SPAN></TD></TR>
 
 			<TR VALIGN = 'TOP' CLASS='even'>
 				<TD ALIGN='right' CLASS="td_label">Signal: </TD><TD>
@@ -342,18 +543,53 @@ else {
 						}
 ?>
 					</SELECT>
-
+					<BR />
 					<SPAN STYLE='margin-left:20px;'>Apply to: Subject &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='0' CHECKED onClick = 'set_text = false;'></SPAN>
 					<SPAN STYLE='margin-left:20px;'>Text &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='1' CHECKED onClick = 'set_text = true;'></SPAN>
-				
-					</TD></TR>	
+				</TD>
+			</TR>
+			<TR VALIGN = 'TOP' CLASS='even'>
+				<TD ALIGN='right' CLASS="td_label">Standard Message: </TD><TD>	<!-- 10/23/12 -->
 
+					<SELECT NAME='signals' onChange = 'set_message(this.options[this.selectedIndex].text);'>	<!--  11/17/10 -->
+					<OPTION VALUE=0 SELECTED>Select</OPTION>
+<?php
+//					dump(__LINE__);
+					$query = "SELECT * FROM `$GLOBALS[mysql_prefix]std_msgs` ORDER BY `id` ASC";
+					$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+					while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+						print "\t<OPTION VALUE='{$row['id']}'>{$row['message']}</OPTION>\n";
+						}
+?>
+					</SELECT>
+					<BR />
+				</TD>
+			</TR>
 			<TR VALIGN='top' CLASS='odd'><TD ALIGN='center' COLSPAN=2><BR /><BR />
 				<INPUT TYPE='button' 	VALUE='Next' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
 				<INPUT TYPE='reset' 	VALUE='Reset'>&nbsp;&nbsp;&nbsp;&nbsp;
 				<INPUT TYPE='button' 	VALUE='Cancel' onClick = 'window.close();'><BR /><BR />
 				</TD></TR>
-
+<?php	//	10/23/12
+				if((get_variable('use_messaging') == 2) || (get_variable('use_messaging') == 3)) {
+?>					
+					<TR><TD>&nbsp;</TD></TR>				
+					<TR>
+						<TD ALIGN='left' COLSPAN=2>
+							<input type="radio" name="use_smsg" VALUE="0" checked> Use Email<br>
+							<input type="radio" name="use_smsg" VALUE="1"> Use <?php get_provider_name(get_msg_variable('smsg_provider'));?>?<br>						
+						</TD>
+					</TR>
+<?php
+					} else {
+?>
+				<INPUT TYPE='hidden' NAME="use_smsg" VALUE='0'>
+<?php
+					}
+?>
+				<INPUT type='hidden' NAME='frm_resp_ids' VALUE=''>
+				<INPUT type='hidden' NAME='frm_smsg_ids' VALUE=''>		
+				<INPUT type='hidden' NAME='frm_ticket_id' VALUE='<?php print $tik_id;?>'>					
 <?php
 				print "</TABLE></TD></TR></TABLE></FORM>";
 //				print get_unit_status_legend();
@@ -366,12 +602,17 @@ else {
 		
 			break;
 
-		case 3:
-			$count = do_send ($_POST['frm_add_str'], $_POST['frm_subj'], $_POST['frm_text'] );	// ($to_str, $subject_str, $text_str )
+		case 3:	//	10/23/12
+			$smsg_ids = ((isset($_POST['use_smsg'])) && ($_POST['use_smsg'] == 1)) ? $_POST['frm_smsg_ids'] : "";
+			$address_str = $_POST['frm_add_str'];
+			$resp_ids = ((isset($_POST['frm_resp_ods'])) && ($_POST['frm_resp_ids'] != "") && ($_POST['frm_resp_ids'] != 0)) ? $_POST['frm_resp_ids'] : 0;
+			$count = 0;
+			$tik_id = ((isset($_POST['frm_ticket_id'])) && ($_POST['frm_ticket_id'] != 0)) ? $_POST['frm_ticket_id'] : 0;
+			$count = do_send ($address_str, $smsg_ids, $_POST['frm_subj'], $_POST['frm_text'], $tik_id, $_POST['frm_resp_ids']);	// ($to_str, $to_smsr, $subject_str, $text_str, $ticket_id, $responder_id )
 //			snap(__LINE__, $count);
 ?>
 <BODY scroll='auto' onLoad = "reSizeScr(2)"><CENTER>		<!-- 1/14/10 -->
-<CENTER><BR /><BR /><BR /><H3><?php print "E-mails sent: {$count}";?></H3>
+<CENTER><BR /><BR /><BR /><H3><?php print "Messages sent: {$count}";?></H3>
 <BR /><BR /><BR /><INPUT TYPE='button' VALUE='Finished' onClick = 'window.close();'><BR /><BR />
 
 <?php

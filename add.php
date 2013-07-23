@@ -105,6 +105,8 @@ if($istest) {print "_POST"; dump($_POST);}
 6/9/11 action and patient buttons, cancel function added, caller id
 6/10/11 added changes required to support regional capability (Ticket region assignment).
 6/23/11 revised target for action and patient buttons
+11/22/2012 'nearby' capability added
+12/1/2012 show 'nearby' only if internet/maps
 */
 
 if (empty($_GET)) {
@@ -349,8 +351,9 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 			<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 			<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 			<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" /> <!-- 7/7/09 -->
-			<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
-
+			<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+			<SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>	<!-- 9/14/12 -->
+			<SCRIPT SRC="./js/jscolor/jscolor.js"></SCRIPT>	<!-- 9/14/12 -->
 		<SCRIPT>
 <?php
 		$addrs = notify_user($_POST['ticket_id'],$GLOBALS['NOTIFY_TICKET_CHG']);		// returns array of adddr's for notification, or FALSE
@@ -515,7 +518,6 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 <SCRIPT SRC="./js/suggest.js" TYPE="text/javascript"></SCRIPT>			<!-- 2/20/11 -->
 
 <SCRIPT>
-
 	function get_new_colors() {				// 5/4/11
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
@@ -1609,8 +1611,8 @@ $maptype = get_variable('maptype');	// 08/02/09
 
 </HEAD>
 <?php
-$from_left = 550;
-$from_top = 50;
+$from_left = 500;
+$from_top = 150;				// 11/22/2012
 $cid_lat = isset($cid_lat) ? $cid_lat : ""; // 8/8/11
 $cid_lng = isset($cid_llng) ? $cid_lng : ""; // 8/8/11
 $onload_str = "load(" .  get_variable('def_lat') . ", " . get_variable('def_lng') . "," . get_variable('def_zoom') . ");";
@@ -1745,6 +1747,20 @@ var obj_sugg;
 	}
  var aNames =[<?php print $city_name_array_str;?>];
 
+function do_nearby(the_form){		// 11/22/2012
+	if (the_form.frm_lat.value.length == 0) {
+		alert("Map <?php echo get_text("Location");?> is required for nearby <?php echo get_text("Incident");?> lookup.");
+		return;
+		}
+	var the_url = "nearby.php?tick_lat="+the_form.frm_lat.value+"&tick_lng="+the_form.frm_lng.value;
+	newwindow=window.open(the_url, "new_window",  "titlebar, location=0, resizable=1, scrollbars, height=480,width=960,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
+	if (newwindow == null) {
+		alert ("Nearby operation requires popups to be enabled. Please adjust your browser options.");
+		return;
+		}
+	newwindow.focus();
+	}		// end do_nearby()
+
 </SCRIPT>
 <DIV>
 <TABLE BORDER="0" ID = "outer" >
@@ -1767,7 +1783,14 @@ var obj_sugg;
 	<TD><INPUT ID="my_txt"  onFocus = "createAutoComplete();$('city_reset').visibility='visible';" NAME="frm_city" autocomplete="off" tabindex=2 SIZE="32" TYPE="text" VALUE="<?php print $city; ?>" MAXLENGTH="32" onChange = " $('city_reset').visibility='visible'; this.value=capWords(this.value)">
 		<span id="suggest" onmousedown="$('suggest').style.display='none'; $('city_reset').style.visibility='visible';" style="visibility:hidden;border:#000000 1px solid;width:150px;right:400px;" /></span>
 		<IMG ID = 'city_reset' SRC="./markers/reset.png" STYLE = "margin-left:20px; visibility:hidden;" onClick = "this.style.visibility='hidden'; document.add.frm_city.value=''; document.add.frm_city.focus(); obj_sugg = null; ">
-		<SPAN CLASS="td_label" STYLE='margin-left:24px;' onmouseout="UnTip()" onmouseover="Tip('<?php print $titles['_state'];?>');"><?php print get_text("St"); ?></SPAN>:&nbsp;&nbsp;
+<?php
+	if ($gmaps) {		// 12/1/2012
+?>	
+		<BUTTON type="button" onClick="Javascript:do_nearby(this.form);return false;">Nearby?</BUTTON> <!-- 11/22/2012 -->
+<?php
+	}	
+?>			
+		<SPAN CLASS="td_label" STYLE='margin-left:20px;' onmouseout="UnTip()" onmouseover="Tip('<?php print $titles['_state'];?>');"><?php print get_text("St"); ?></SPAN>:&nbsp;&nbsp;
 		<INPUT NAME="frm_state" tabindex=3 SIZE="<?php print $st_size;?>" TYPE="text" VALUE="<?php print $st; ?>" MAXLENGTH="<?php print $st_size;?>"></TD>
 	</TR>
 <TR CLASS='even'>

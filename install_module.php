@@ -7,7 +7,6 @@
 @session_start();
 
 require_once('./incs/functions.inc.php');
-require_once('./incs/mysql.inc.php');
 error_reporting(E_ALL);				// 2/3/09
 do_login(basename(__FILE__));	// session_start()
 $tickets_dir = getcwd();	
@@ -21,34 +20,9 @@ $tickets_dir = getcwd();
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
-<SCRIPT>
-function $() {									// 1/21/09, 7/18/10
-	var elements = new Array();
-	for (var i = 0; i < arguments.length; i++) {
-		var element = arguments[i];
-		if (typeof element == 'string')		element = document.getElementById(element);
-		if (arguments.length == 1)			return element;
-		elements.push(element);
-		}
-	return elements;
-	}
-	
-function do_hover (the_id) {
-	CngClass(the_id, 'hover');
-	return true;
-	}
-
-function do_plain (the_id) {				// 8/21/10
-	CngClass(the_id, 'plain');
-	return true;
-	}
-
-function CngClass(obj, the_class){
-	$(obj).className=the_class;
-	return true;
-	}	
-</SCRIPT>
-</HEAD><BODY>
+<SCRIPT  SRC='./js/misc_function.js' type='text/javascript'></SCRIPT>  <!-- 4/14/10 -->
+</HEAD>
+<BODY>
 
 <?php
 
@@ -72,7 +46,6 @@ $result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_
 if($result) {
 print "Module Table Created";
 }
-
 
 function get_mod_to_install() {
 	$to_install = array();
@@ -105,7 +78,7 @@ function get_mod_to_install() {
 	$ret_str = "<SELECT NAME='frm_module'>";
 	$i=1;
 	foreach($to_install as $val) {
-		$ret_str .= "<OPTION VALUE=" . $i . ">" . $val . "</OPTION>";
+		$ret_str .= "<OPTION VALUE=" . $val . ">" . $val . "</OPTION>";
 		}
 	$ret_str .= "</SELECT>";
 	return $ret_str;
@@ -181,10 +154,12 @@ function write_path($filepath, $tickets_dir) {
 	}	
 
 if (isset($_POST['submit'])) { // Handle the form.
+	print $_POST['frm_module'];
+	
 
 	print "<DIV style='background-color:#CECECE; position: absolute; width: 60%; height: 60%; left: 20%; top: 10%; border:2px inset #FFF2BF; display: block; text-align: center'>";
 	
-	$structurefile = "structure.xml";
+	$structurefile = "./modules/" . $_POST['frm_module'] . "/structure.xml";
 	$xml = simplexml_load_file($structurefile);
 					
 	//	Read XML file for details of structure and other information.

@@ -16,6 +16,8 @@
 7/3/11 key check corrected
 3/1/12 Changed level['MEMBER'] to level['UNIT']
 6/1/12 Hide Guest loging notice if guest account doesn't exist.
+10/23/12 Added Level 'Service User' with redirection
+12/1/2012 include browser identification in log entry
 */
 
 function do_logout($return=FALSE){						/* logout - destroy session data */
@@ -119,6 +121,11 @@ function is_expired($id) {		// returns boolean
 	$row = @stripslashes_deep(mysql_fetch_assoc($result));
 	return ((is_resource($result)) && (mysql_affected_rows()==1) && ($row['expires'] > $now));
 	}
+
+function redir($url, $time = 0) {
+	echo '<meta http-equiv="refresh" content="', $time, ';URL=', $url, '">';
+	die; 
+	} 
 
 function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do login/ses sion code - returns array - 2/12/09, 3/8/09
 	global $hide_dispatched, $hide_status_groups;
@@ -250,8 +257,8 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 
 				set_filenames($internet);			// 8/31/10
 	
-				do_log($GLOBALS['LOG_SIGN_IN'],0,0,$row['id']);			// log it													
-																		// 7/21/10 
+				do_log($GLOBALS['LOG_SIGN_IN'],0,0,"{$browser}");		// log it - 12/1/2012
+																		
 				$query = "DELETE FROM `$GLOBALS[mysql_prefix]ticket` WHERE `status` = {$GLOBALS['STATUS_RESERVED']} AND `_by` = {$_SESSION['user_id']};";
 				$result = mysql_query($query);
 	
@@ -268,7 +275,6 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 				header('Cache-Control: no-store, no-cache, must-revalidate');
 				header('Cache-Control: post-check=0, pre-check=0', FALSE);
 				header('Pragma: no-cache');
-				
 	
 				$host  = $_SERVER['HTTP_HOST'];
 				$uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
@@ -278,15 +284,19 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 				
 				if($level == $GLOBALS['LEVEL_UNIT']) {	//	3/1/12
 					$extra = 'mobile.php';
-					} else if ($level == $GLOBALS['LEVEL_STATS'] ) {
+					} else if($level == $GLOBALS['LEVEL_STATS']) {
 					$extra = 'stats_scr.php?stats=stats';
+					} else if($level == $GLOBALS['LEVEL_SERVICE_USER']) {	//	10/11/12
+					$extra = 'portal.php';	
 					} else {
 					$extra = 'main.php?log_in=1';
 					}
 //				$extra = (($row['level']== $GLOBALS['LEVEL_UNIT']) ||($unit_id))? 'mobile.php' : 'main.php?log_in=1';				// 8/29/10
 
-				header("Location: http://$host$uri/$extra");								// to top of calling script
-				exit;				
+				$url = "http://" . $host . $uri . "/" . $extra;
+				redir($url);
+//				header("Location: http://$host$uri/$extra");								// to top of calling script
+				exit();				
 				
 				}			// end if (mysql_affected_rows()==1)
 			}			// end if((!empty($_POST))&&(check_for_rows(...)

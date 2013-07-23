@@ -30,8 +30,8 @@ function sane($in_lat, $in_lng, $in_time) {			// applies sanity check to input v
 	$one_day = 24*60*60;						// set 24-hour window each side of now - 2/22/12
 	$ts_threshold_p = now() - $one_day;			// past 
 	$ts_threshold_f = now() + $one_day;			// future	- function mysql_format_date()
-	snap( __LINE__, $in_time );	
-	snap( __LINE__, mysql_format_date($in_time) );	
+//	snap( __LINE__, $in_time );	
+//	snap( __LINE__, mysql_format_date($in_time) );	
 //	snap( __LINE__, mysql_format_date($ts_threshold_p) );	
 	return (($in_time>$ts_threshold_p) && ($in_time<$ts_threshold_f));		// 2/22/12
 	}				// end function same()
@@ -359,7 +359,8 @@ function do_glat() {			//7/29/09
 			$result_temp = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 			}			// end if (sane())
 		else {
-			snap(__LINE__,  " data error: " . $row['callsign'] );
+			snap( __LINE__, $timestamp);
+			log_error("Google Latitude data error - {$row['callsign']} @ " . __LINE__ );
 			}
 		}			// end while()
 
@@ -546,7 +547,7 @@ function do_ogts() {			// 3/24/12
 					switch (count($addr_arr)) {							// sanity checks added 4/2/12 
 						case 1:
 						case 2:
-							snap(__FUNCTION__ . __LINE__ , trim($addr_arr[0]));		// ex: M8 motorway
+//							snap(__FUNCTION__ . __LINE__ , trim($addr_arr[0]));		// ex: M8 motorway
 							break;
 						case 3:
 							$street_work_val = substr (trim($addr_arr[0]), 0 , 28);

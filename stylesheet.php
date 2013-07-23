@@ -2,6 +2,7 @@
 header('Content-type: text/css');
 /* 
 3/15/11 new file - dynamic css file
+10/23/12 Added styles for messaging
 */
 require_once('incs/functions.inc.php');
 session_start();
@@ -757,4 +758,55 @@ select.sit {
 .content { 
 	padding: 1em; 
 	float: left; 
+	}
+	
+.cols_h {
+	font-size: 10px; 
+	font-weight: bold; 
+	display: inline-block; 	
+	background-color: #CECECE; 
+	color: #000000;
+	padding-top: 3px; 
+	padding-bottom: 3px; 
+	border: 1px outset #DEDEDE;
+	}
+	
+.msg_col_h {
+	font-size: 10px; 
+	font-weight: bold; 
+	display: inline-block; 
+	background-color: #CECECE; 
+	color: #000000;	
+	padding-top: 3px; 
+	padding-bottom: 3px; 	
+	border: 1px outset #FFFFFF;
+	}
+	
+.cols {
+	display: inline-block; 
+	white-space: normal; 
+	word-wrap: break-word; 
+	padding-top: 5px; 
+	padding-bottom: 5px; 
+	height: auto; 
+	-ms-word-wrap : sWrap;
+	}
+	
+.msg_col {
+	background-color: #FFFFFF; 
+	display: inline-block; 
+	white-space: normal; 
+	word-wrap: break-word; 
+	padding-top: 5px; 
+	padding-bottom: 5px; 
+	-ms-word-wrap : sWrap; 
+	}	
+	
+.msg_div {
+	background-color: #FFFFFF; 
+	max-height: 150px; 
+	overflow-y: auto; 
+	overflow-x: hidden; 
+	word-wrap: break-word; 
+	display: block;
 	}

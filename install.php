@@ -46,6 +46,7 @@
 12/18/10   write permissions test corrected
 1/10/11 Added default setting for Group or dispatch
 5/11/12 Added code for quick start.
+1/9/2013 API key is no longer mandatory
 */
 
 error_reporting(E_ALL);				// 2/3/09
@@ -58,15 +59,7 @@ function dump($variable) {
 	echo "</PRE>\n";
 	}
 
-switch(strtoupper($_SERVER["HTTP_HOST"])) {
-	case '127.0.0.1': {$api_key = "ABQIAAAAiLlX5dJnXCkZR5Yil2cQ5BRi_j0U6kJrkFvY4-OX2XYmEAa76BSxM3tBbKeopztUxxRu-Em4ds4HHg";
-	break;}
-
-	case 'LOCALHOST': {$api_key = "ABQIAAAAiLlX5dJnXCkZR5Yil2cQ5BT2yXp_ZAY8_ufC3CFXhHIE1NvwkxRGkBZARk7Vp6dHzzw2qCN6kP4pTQ";
-	break;}
-
-	default: $api_key = "";
-	}				// end switch
+$api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
@@ -85,7 +78,7 @@ switch(strtoupper($_SERVER["HTTP_HOST"])) {
 		var errmsg="";
 		if (theForm.frm_db_host.value == "")			{errmsg+= "\tMySQL HOST name is required\n";}
 		if (theForm.frm_db_dbname.value == "")			{errmsg+= "\tMySQL DATABASE name is required\n";}
-		if (theForm.frm_api_key.value.length != 86)		{errmsg+= "\tGMaps API key is required - 86 chars\n";}
+//		if (theForm.frm_api_key.value.length != 86)		{errmsg+= "\tGMaps API key is required - 86 chars\n";} -- 1/9/2013
 		if (errmsg!="") {
 			alert ("Please correct the following and re-submit:\n\n" + errmsg);
 			return false;
@@ -1253,8 +1246,8 @@ switch(strtoupper($_SERVER["HTTP_HOST"])) {
 			<TABLE BORDER="0">
 			<TR CLASS="even"><TD width="200px">MySQL Database: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_dbname" VALUE=""> your just-created MySQL database</TD></TR>
 			<TR CLASS="odd"><TD>MySQL Table Prefix (optional): </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_prefix" VALUE=""> your choice</TD></TR>
-			<TR CLASS="even"><TD>GMaps API Key:<BR />(domain: <?php print $_SERVER['HTTP_HOST'];?>)</TD><TD><INPUT TYPE="text" SIZE="110" MAXLENGTH="255" NAME="frm_api_key"  VALUE="<?php print $api_key; ?>"><BR>
-				&nbsp;&nbsp;&nbsp;&nbsp;Obtain from Google at <A HREF="http://www.google.com/apis/maps/signup.html">http://www.google.com/apis/maps/signup.html </A>
+			<TR CLASS="even"><TD>Google API Key:<BR /></TD><TD><INPUT TYPE="text" SIZE="70" MAXLENGTH="255" NAME="frm_api_key"  VALUE="<?php print $api_key; ?>"><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;Note: this is a temporary key; Obtain your site's API key at https://code.google.com/apis/console/
 				</TD></TR>
 			<TR CLASS="odd"><TD>Install Option: </TD><TD>
 			<INPUT TYPE="radio" VALUE="install" NAME="frm_option" checked> Install Database - new<BR />

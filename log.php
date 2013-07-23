@@ -118,7 +118,7 @@ else {										// not empty
 				case $GLOBALS['LOG_COMMENT']:
 				$i++;
 					$print .= "<TR CLASS='{$evenodd[$i%2]}' VALIGN='bottom'>";
-					$temp = split(" ", $row['when']);				// date and time
+					$temp = preg_split('/ /',  $row['when']);				// date and time
 					if ($temp[0]==$day_part) {
 						$the_date = $temp[1];
 						}
@@ -144,7 +144,8 @@ else {										// not empty
 
 	switch ($_POST['func']) {
 		case "add":
-			do_log($GLOBALS['LOG_COMMENT'], $ticket_id=0, $responder_id=0, trim($_POST['frm_comment']));
+			do_log($GLOBALS['LOG_COMMENT'], $ticket_id=0, $responder_id=0, strip_tags(trim($_POST['frm_comment'])));
+			
 			break;
 		case "view":
 			print my_show_log ();

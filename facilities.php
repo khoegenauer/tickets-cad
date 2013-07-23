@@ -1,6 +1,11 @@
 <?php
 
 error_reporting(E_ALL);
+
+function do_updated ($instr) {		// 11/1/2012
+	return substr($instr, 8, 8);
+	}
+
 $facs_side_bar_height = .5;		// max height of facilities sidebar as decimal fraction of screen height - default is 0.6 (60%)
 $zoom_tight = FALSE;				// replace with a decimal number to over-ride the standard default zoom setting
 $iw_width= "300px";					// map infowindow with
@@ -34,6 +39,8 @@ $iw_width= "300px";					// map infowindow with
 8/1/11 state length increased to 4 chars
 6/10/11 Added Groups and Boundaries
 6/18/12 'points' boolean to 'got_points'
+10/29/2012 Beds handling added
+12/1/2012 - re-do re unix SQL time replacement
 */
 
 @session_start();	
@@ -499,7 +506,7 @@ function get_icon_legend (){			// returns legend string
 							document.res_edit_Form.frm_street.focus();
 							break;
 						default:
-							alert ("441: error");
+							alert ("522: error");
 						}
 						}
 					});
@@ -737,7 +744,10 @@ function list_facilities($addon = '', $start) {
 	$calls_nr = array();
 	$calls_time = array();
 
-	$query = "SELECT * , UNIX_TIMESTAMP(packet_date) AS `packet_date` FROM `$GLOBALS[mysql_prefix]tracks` ORDER BY `packet_date` ASC";	
+	$query = "SELECT * , 
+		`packet_date` AS `packet_date` 
+		FROM `$GLOBALS[mysql_prefix]tracks` 
+		ORDER BY `packet_date` ASC";	
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 	while ($row = mysql_fetch_assoc($result)) {
 		if (isset($calls[$row['source']])) {		// array_key_exists ( mixed key, array search )
@@ -941,10 +951,7 @@ var color=0;
 		marker.id = color;				// for hide/unhide - unused
 
 		GEvent.addListener(marker, "click", function() {		// here for both side bar and icon click
-			alert(943);
 			if (marker) {
-				alert(945);
-			
 				map.closeInfoWindow();
 				which = id;
 				gmarkers[which].hide();
@@ -964,7 +971,7 @@ var color=0;
 
 				}		// end if (marker)
 			else {
-				alert(966);
+//				alert(984);
 				}
 			});			// end GEvent.add Listener()
 
@@ -1104,8 +1111,8 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 ?>
 	var map;
-	var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_facilities'>";
-	side_bar_html += "<TR class='even'>	<TD><B>Icon</B></TD><TD><B>Handle</B></TD><TD ALIGN='left'><B>Name</B></TD><TD ALIGN='left'><B><?php print get_text("Type"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("Status"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("As of"); ?></B></TD></TR>";
+	var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_facilities' WiDTH='100%'>";	//	10/23/12
+	side_bar_html += "<TR class='even'>	<TD><B>Icon</B></TD><TD ALIGN='left'><B><?php print get_text("Type"); ?></B></TD><TD><B>Handle</B></TD><TD ALIGN='left'><B>Name</B></TD><TD ALIGN='center' COLSPAN=2><B><?php print get_text("Beds"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("Status"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("As of"); ?></B></TD></TR>";
 	var gmarkers = [];
 	var infoTabs = [];
 	var which;
@@ -1115,7 +1122,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 	map = new GMap2($("map"));						// create the map
 <?php
 $maptype = get_variable('maptype');
-
+$the_id = 0;
 	switch($maptype) { 
 		case "1":
 		break;
@@ -1331,7 +1338,7 @@ $maptype = get_variable('maptype');
 	unset($result);
 	//	3/15/11, 6/10/11
 
-	$query = "SELECT *,UNIX_TIMESTAMP(updated) AS updated, 
+	$query = "SELECT *, 
 		`f`.id AS id, 
 		`f`.status_id AS status_id,
 		`f`.boundary AS boundary,		
@@ -1371,13 +1378,13 @@ $maptype = get_variable('maptype');
 				extract ($row_bn);
 				$bn_name = $row_bn['line_name'];
 				$points = explode (";", $line_data);
-				for ($i = 0; $i < count($points); $i++) {
-					$coords = explode (",", $points[$i]);
+				for ($z = 0; $z < count($points); $z++) {
+					$coords = explode (",", $points[$z]);
 ?>
 					thepoint = new GLatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
 					points.push(thepoint);
 <?php
-					}			// end for ($i = 0 ... )
+					}			// end for ($z = 0 ... )
 				if (intval($filled) == 1) {		//	6/10/11
 ?>
 					var polyline = new GPolygon(points, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, "<?php print $fill_color;?>", <?php print $fill_opacity;?>, {clickable:false});
@@ -1436,12 +1443,6 @@ $maptype = get_variable('maptype');
 			$toroute = "&nbsp;<A HREF='{$_SESSION['facroutesfile']}?fac_id=" . $row['id'] . "'><U>Route To Facility</U></A>";	
 			}		
 
-		$temp = $row['status_id'] ;	
-		$the_status = (array_key_exists($temp, $status_vals))? $status_vals[$temp] : "??";	
-
-		$temp_type = $row['type'] ;	
-		$the_type = (array_key_exists($temp_type, $type_vals))? $type_vals[$temp_type] : "??";
-
 		if (!($got_point) && ((my_is_float($row['lat'])))) {
 			if(($row['lat']==0.999999) && ($row['lng']==0.999999)) {
 				echo "\t\tvar point = new GLatLng(" . get_variable('def_lat') . ", " . get_variable('def_lng') .");\n";
@@ -1453,25 +1454,30 @@ $maptype = get_variable('maptype');
 
 		$update_error = strtotime('now - 6 hours');							// set the time for silent setting
 		$index = $row['icon_str'];
-// name
 
+// type
+		$temp_type = $row['type'] ;	
+		$the_type = (array_key_exists($temp_type, $type_vals))? $type_vals[$temp_type] : "??";
+		$sidebar_line = "&nbsp;&nbsp;<TD >{$the_type}</TD>";
+// name
 		$display_name = $name = htmlentities($row['name'], ENT_QUOTES);	
 		$handle = htmlentities($row['handle'], ENT_QUOTES);					// 7/7/11
-
-		$sidebar_line = "&nbsp;&nbsp;<TD WIDTH='15%' TITLE = '{$row['handle']}' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($handle, 15)) ."</SPAN></U></TD>";	//	6/10/11
-		$sidebar_line .= "<TD WIDTH='40%' TITLE = '" . addslashes($name) . "' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'><NOBR>" . addslashes(shorten($name, 24)) ."</NOBR></SPAN></U></TD><TD WIDTH='15%'>{$the_type}</TD>";
-		$sidebar_line .= "<TD WIDTH='20%' CLASS='td_data' TITLE = '" . addslashes ($the_status) . "'> " . get_status_sel($row['id'], $row['status_id'], 'f') . "</TD>";	//	3/15/11
-
+		$sidebar_line .= "<TD TITLE = '{$row['handle']}' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($handle, 15)) ."</SPAN></U></TD>";	//	6/10/11
+		$sidebar_line .= "<TD TITLE = '" . addslashes($name) . "' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'><NOBR>" . addslashes(shorten($name, 24)) ."</NOBR></SPAN></U></TD>";
+// beds 10/30/2012
+		$sidebar_line .= "<TD TITLE = 'Beds' {$the_on_click} ALIGN='right'><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'><NOBR>{$row['beds_a']}/{$row['beds_o']}</NOBR></SPAN></U></TD>";
+		$sidebar_line .= "<TD TITLE = '{$row['beds_info']}' {$the_on_click} ALIGN='left'><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'><NOBR>" . shorten($row['beds_info'], 20) . "</NOBR></SPAN></U></TD>";
+// status
+		$temp = $row['status_id'] ;	
+		$the_status = (array_key_exists($temp, $status_vals))? $status_vals[$temp] : "??";	
+		$sidebar_line .= "<TD TITLE = '" . addslashes ($the_status) . "'> " . get_status_sel($row['id'], $row['status_id'], 'f') . "</TD>";	
+//		$sidebar_line .= "<TD TITLE = 'status' {$the_on_click} ALIGN='left'><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>{$the_status}</SPAN></U></TD>";
 // as of
-		$strike = $strike_end = "";
+		$strike = $strike_end = $the_class = "";
 		$the_time = $row['updated'];
-		$the_class = "";
+		$sidebar_line .= "<TD CLASS='$the_class'> $strike <NOBR>" . format_sb_date_2($the_time) . "</NOBR> $strike_end</TD>";
 
-		$strike = $strike_end = "";
-
-		$sidebar_line .= "<TD WIDTH='20%' CLASS='$the_class'> $strike <NOBR>" . format_sb_date($the_time) . "</NOBR> $strike_end</TD>";
 // tab 1
-
 		if (my_is_float($row['lat'])) {										// position data?
 			$temptype = $u_types[$row['type']];
 			$the_type = $temptype[0];
@@ -1480,8 +1486,12 @@ $maptype = get_variable('maptype');
 			$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . addslashes(shorten($display_name, 48)) . "</B> - " . $the_type . "</TD></TR>";
 			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Description:&nbsp;</TD><TD ALIGN='left'>" . addslashes(shorten(str_replace($eols, " ", $row['description']), 32)) . "</TD></TR>";
 			$tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>Status:&nbsp;</TD><TD ALIGN='left'>" . $the_status . " </TD></TR>";
+// 10/29/2012
+			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>" . get_text("Beds") . ":&nbsp;</TD><TD ALIGN='left'>" . get_text("Available"). ":&nbsp;&nbsp;" . $row['beds_a'] . "&nbsp;&nbsp;&nbsp;" . get_text("Occupied") . ":&nbsp;&nbsp;" . $row['beds_o'] . "</TD></TR>";
+			$tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>" . get_text("Beds information") . ":&nbsp;</TD><TD ALIGN='left'>" . $row['beds_info'] . "</TD></TR>";
+
 			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Contact:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['contact_name']). " Via: " . addslashes($row['contact_email']) . "</TD></TR>";
-			$tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>As of:&nbsp;</TD><TD ALIGN='left'>" . format_date($row['updated']) . "</TD></TR>";
+			$tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>As of:&nbsp;</TD><TD ALIGN='left'>" . format_sb_date_2($row['updated']) . "</TD></TR>";
 			$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . $toedit . $tomail . "&nbsp;&nbsp;<A HREF='{$_SESSION['facilitiesfile']}?func=responder&view=true&id=" . $row['id'] . "'><U>View</U></A></TD></TR>";	// 08/8/02
 			$tab_1 .= "</TABLE>";
 
@@ -1503,7 +1513,7 @@ $maptype = get_variable('maptype');
 		if (!($tabs_done)) {	//
 ?>
 			var myinfoTabs = [
-				new GInfoWindowTab("<?php print nl2brr(addslashes(shorten($row['name'], 10)));?>", "<?php print $tab_1;?>"),
+				new GInfoWindowTab("<?php print nl2brr(addslashes(shorten($row['handle'], 10)));?>", "<?php print $tab_1;?>"),
 				new GInfoWindowTab("More ...", "<?php print str_replace($eols, " ", $tab_2);?>"),
 				new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>")
 				];
@@ -1516,19 +1526,22 @@ $maptype = get_variable('maptype');
 			
 ?>
 		var fac_id = "<?php print $index;?>";	//	10/8/09
+		var n = <?php print $the_id;?>;			
+		var the_id = "<?php print $row['id'];?>";
 		var the_class = ((map_is_fixed) && (!(mapBounds.containsLatLng(point))))? "emph" : "td_label";
 
-		do_sidebar ("<?php print $sidebar_line; ?>", i, the_class, fac_id);
-		var dummymarker = createdummyMarker(point, myinfoTabs,<?php print $row['type'];?>, i, fac_id);	// 771 (point,tabs, color, id)
+		do_sidebar ("<?php print $sidebar_line; ?>", n, the_class, fac_id);
+		var dummymarker = createdummyMarker(point, myinfoTabs,<?php print $row['type'];?>, n, fac_id);	// 771 (point,tabs, color, id)
 		map.addOverlay(dummymarker);
 <?php
 		} else {
 ?>
 		var fac_id = "<?php print $index;?>";	//	10/8/09
+		var n = <?php print $the_id;?>;	
 		var the_class = ((map_is_fixed) && (!(mapBounds.containsLatLng(point))))? "emph" : "td_label";
 
-		do_sidebar ("<?php print $sidebar_line; ?>", i, the_class, fac_id);
-		var marker = createMarker(point, myinfoTabs,<?php print $row['type'];?>, i, fac_id);	// 771 (point,tabs, color, id)
+		do_sidebar ("<?php print $sidebar_line; ?>", n, the_class, fac_id);
+		var marker = createMarker(point, myinfoTabs,<?php print $row['type'];?>, n, fac_id);	// 771 (point,tabs, color, id)
 		map.addOverlay(marker);
 <?php
 			}	// End of check for facilities added in no maps mode 7/28/10
@@ -1544,6 +1557,7 @@ $maptype = get_variable('maptype');
 			print "\tdo_sidebar_nm (\" {$sidebar_line} \" , i, {$row['id']}, fac_id);\n";	// sidebar only - no map
 			}
 	$i++;				// zero-based
+	$the_id++;
 	}				// end  ==========  while() for Facility ==========
 
 ?>
@@ -1807,7 +1821,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 					getAddress(overlay, latlng, currform);				// 7/5/10
 					break;
 				default:
-					alert("Invalid Function");
+					alert("Invalid Function - 1829");
 				}			
 
 			});		// end GEvent.add Listener()
@@ -1883,6 +1897,9 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				`icon_str`= " . 	quote_smart(trim($_POST['frm_icon_str'])) . ",
 				`boundary`= " . 	quote_smart(trim($_POST['frm_boundary'])) . ",				
 				`description`= " . 	quote_smart(trim($_POST['frm_descr'])) . ",
+				`beds_a`= " . 		quote_smart(trim($_POST['frm_beds_a'])) . ",
+				`beds_o`= " . 		quote_smart(trim($_POST['frm_beds_o'])) . ",
+				`beds_info`= " . 	quote_smart(trim($_POST['frm_beds_info'])) . ",
 				`capab`= " . 		quote_smart(trim($_POST['frm_capab'])) . ",
 				`status_id`= " .	quote_smart(trim($_POST['frm_status_id'])) . ",
 				`lat`= " . 			$the_lat . ",
@@ -1934,8 +1951,9 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		$frm_lat = (empty($_POST['frm_lat']))? 'NULL': quote_smart(trim($_POST['frm_lat']));		// 7/22/10
 		$frm_lng = (empty($_POST['frm_lng']))? 'NULL': quote_smart(trim($_POST['frm_lng']));		// 7/15/10
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));
+// 10/29/2012
 		$query = "INSERT INTO `$GLOBALS[mysql_prefix]facilities` (
-			`name`, `street`, `city`, `state`, `handle`, `icon_str`, `boundary`, `description`, `capab`, `status_id`, `contact_name`, `contact_email`, `contact_phone`, `security_contact`, `security_email`, `security_phone`, `opening_hours`, `access_rules`, `security_reqs`, `pager_p`, `pager_s`, `lat`, `lng`, `type`, `user_id`, `updated` )
+			`name`, `street`, `city`, `state`, `handle`, `icon_str`, `boundary`, `description`, `capab`, `beds_a`, `beds_o`, `beds_info`, `status_id`, `contact_name`, `contact_email`, `contact_phone`, `security_contact`, `security_email`, `security_phone`, `opening_hours`, `access_rules`, `security_reqs`, `pager_p`, `pager_s`, `lat`, `lng`, `type`, `user_id`, `updated` )
 			VALUES (" .
 				quote_smart(trim($_POST['frm_name'])) . "," .
 				quote_smart(trim($_POST['frm_street'])) . "," .
@@ -1946,6 +1964,9 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				quote_smart(trim($_POST['frm_boundary'])) . "," .				
 				quote_smart(trim($_POST['frm_descr'])) . "," .
 				quote_smart(trim($_POST['frm_capab'])) . "," .
+				quote_smart(trim($_POST['frm_beds_a'])) . "," .
+				quote_smart(trim($_POST['frm_beds_o'])) . "," .
+				quote_smart(trim($_POST['frm_beds_info'])) . "," .
 				quote_smart(trim($_POST['frm_status_id'])) . "," .
 				quote_smart(trim($_POST['frm_contact_name'])) . "," .
 				quote_smart(trim($_POST['frm_contact_email'])) . "," .
@@ -1991,7 +2012,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		print do_calls();		// call signs to JS array for validation
 ?>
 		</HEAD>
-		<BODY onLoad = "ck_frames();" onUnload="GUnload()"> <!-- 1987 -->
+		<BODY onLoad = "ck_frames();" onUnload="GUnload()"> <!-- 2020 -->
 		<A NAME='top'>		<!-- 11/11/09 -->
 <?php
 		require_once('./incs/links.inc.php');
@@ -2010,7 +2031,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 					<INPUT TYPE="text" SIZE = 3 MAXLENGTH=3 NAME="frm_icon_str" VALUE="" />			
 			</TD></TR>
 <?php
-	if(get_num_groups() > 1) {
+	if(get_num_groups()) {
 		if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>		
 			<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
@@ -2117,6 +2138,12 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print get_variable('def_city'); ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=40 ROWS=2></TEXTAREA></TD></TR>
+<!--10/29/2012 -->		
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information"><?php print get_text("Beds"); ?></A>:&nbsp;</TD>
+			<TD  CLASS="td_label">&nbsp;&nbsp;&nbsp;&nbsp;<?php print get_text("Available"); ?>: <INPUT TYPE='text' NAME="frm_beds_a" SIZE=4 VALUE=''/>&nbsp;&nbsp;&nbsp;&nbsp;
+			<?php print get_text("Occupied"); ?>: <INPUT TYPE='text' NAME="frm_beds_o" SIZE=4 VALUE=''/></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information "><?php print get_text("Beds information"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_beds_info" COLS=40 ROWS=1></TEXTAREA></TD></TR>
+		
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_capab" COLS=40 ROWS=2></TEXTAREA></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility main contact name"><?php print get_text("Contact name"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact email - main contact email address"><?php print get_text("Contact email"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_email" VALUE="" /></TD></TR>
@@ -2237,7 +2264,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				<INPUT TYPE="text" SIZE = 3 MAXLENGTH=3 NAME="frm_icon_str" VALUE="<?php print $row['icon_str'];?>" />			
 			</TD></TR>
 <?php
-		if(get_num_groups() > 1) {
+		if(get_num_groups()) {
 			if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>			
 			<TR CLASS='even' VALIGN='top'>;
@@ -2345,6 +2372,11 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=40 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
+<!--10/29/2012 -->		
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information"><?php print get_text("Beds"); ?></A>:&nbsp;</TD>
+			<TD  CLASS="td_label">&nbsp;&nbsp;&nbsp;&nbsp;<?php print get_text("Available"); ?>: <INPUT TYPE='text' NAME="frm_beds_a" SIZE=4 VALUE="<?php print $row['beds_a'] ;?>" />&nbsp;&nbsp;&nbsp;&nbsp;
+			<?php print get_text("Occupied"); ?>: <INPUT TYPE='text' NAME="frm_beds_o" SIZE=4 VALUE="<?php print $row['beds_o'];?>"/></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information "><?php print get_text("Beds information"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_beds_info" COLS=40 ROWS=1><?php print $row['beds_info'];?></TEXTAREA></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_capab" COLS=40 ROWS=2><?php print $row['capab'];?></TEXTAREA></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility main contact name">Contact name</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="<?php print $row['contact_name'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact email - main contact email address"><?php print get_text("Contact email"); ?></A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_email" VALUE="<?php print $row['contact_email'] ;?>" /></TD></TR>
@@ -2454,8 +2486,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				}
 				
 			$id = $_GET['id'];
-			$query	= "SELECT *, UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id`=$id LIMIT 1";
-
+			$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id`=$id LIMIT 1";
 			$result	= mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 			$row	= stripslashes_deep(mysql_fetch_assoc($result));
 			$lat = $row['lat'];
@@ -2524,6 +2555,12 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Status"); ?>:</TD>		<TD><?php print $un_st_val;?>
 			</TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Description"); ?>: </TD>	<TD><?php print $row['description'];?></TD></TR>
+<!--10/29/2012 -->		
+			<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information"><?php print get_text("Beds"); ?></A>:&nbsp;</TD>
+				<TD><SPAN STYLE = "margin-left:40px;" CLASS="td_label"><?php print get_text("Available"); ?></SPAN>: <?php print $row['beds_a'] ;?>&nbsp;&nbsp;&nbsp;&nbsp;
+					<SPAN STYLE = "margin-left:40px;" CLASS="td_label"><?php print get_text("Occupied"); ?></SPAN>: <?php print $row['beds_o'] ;?></TD></TR>
+			<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information"><?php print get_text("Beds information"); ?></A>:&nbsp;</TD>
+				<TD COLSPAN=3 ><?php print $row['beds_info'] ;?></TD></TR>
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Capability"); ?>: </TD>	<TD><?php print $row['capab'];?></TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Contact name"); ?>:</TD>	<TD><?php print $row['contact_name'] ;?></TD></TR>
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Contact email"); ?>:</TD>	<TD><?php print $row['contact_email'] ;?></TD></TR>
@@ -2536,7 +2573,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Security reqs"); ?>:</TD>	<TD><?php print $row['security_reqs'] ;?></TD></TR>
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Primary pager"); ?>:</TD>	<TD><?php print $row['pager_p'] ;?></TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Secondary pager"); ?>:</TD>	<TD><?php print $row['pager_s'] ;?></TD></TR>
-			<TR CLASS = 'odd'><TD CLASS="td_label">As of:</TD>	<TD><?php print format_date($row['updated']); ?></TD></TR>
+			<TR CLASS = 'odd'><TD CLASS="td_label">As of:</TD>	<TD><?php print format_sb_date_2($row['updated']); ?></TD></TR>
 <?php
 		if (my_is_float($lat)) {
 ?>		
@@ -2780,10 +2817,11 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 ?>
 			<DIV id = 'regions_outer' style = "position: fixed; right: 20%; top: 10%; z-index: 1000;">
 				<DIV id="boxB" class="box" style="z-index:1000;">
-					<div class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;">Viewed Regions
-					<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+					<DIV class="bar_header" class="heading_2" style='white-space: nowrap;'>	
 					<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
-						onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
+						onmousedown="dragStart(event, 'boxB')"><i>Drag me</i>
+						<DIV id="collapse_regs" class='plain' style ="display: inline; z-index:1001; cursor: pointer; float: right; margin-left: 0px; font-size: 10px;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+					</DIV>
 					<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV>
 					</DIV>
 				</DIV>

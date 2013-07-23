@@ -10,11 +10,12 @@
 9/30/10 major re-do based on using $id_stack as list of qualifying ticket id's
 3/15/11 changed stylesheet.php to stylesheet.php
 4/5/11 get_new_colors() added
+1/6/2013 XSS check corrected
 */
 error_reporting(E_ALL);
 
 session_start();
-//require_once($_SESSION['fip']);				//7/28/10
+//require_once($_SESSION['fip']);				// 7/28/10
 require_once('./incs/functions.inc.php');		// 9/29/10
 do_login(basename(__FILE__));
 require_once($_SESSION['fmp']);					// 9/29/10
@@ -84,7 +85,7 @@ function validate(theForm) {
 
 <BODY onLoad = "ck_frames()">
 <?php 
-	$post_frm_query = (array_key_exists('frm_query', ($_POST))) ? $_POST['frm_query']  : "" ;
+	$post_frm_query = (array_key_exists('frm_query', $_POST)) ? strip_tags($_POST['frm_query']) : FALSE ;		// 1/6/2013
 
 	if ($post_frm_query) {
 

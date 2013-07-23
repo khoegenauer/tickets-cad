@@ -6,6 +6,7 @@
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 8/10/10 address data disambiguated
 3/15/11 changed stylesheet.php to stylesheet.php
+11/30/2012 unix time conversion dropped
 */
 error_reporting(E_ALL);	
 		// 7/28/10
@@ -13,11 +14,11 @@ error_reporting(E_ALL);
 require_once($_SESSION['fip']);		// 7/28/10
 require_once($_SESSION['fmp']);		// 7/28/10, 8/10/10
 	$query = "SELECT *,
-		UNIX_TIMESTAMP(problemstart) AS problemstart,
-		UNIX_TIMESTAMP(problemend) AS problemend,
-		UNIX_TIMESTAMP(booked_date) AS booked_date,		
-		UNIX_TIMESTAMP(date) AS date,
-		UNIX_TIMESTAMP(`$GLOBALS[mysql_prefix]ticket`.`updated`) AS updated,
+		`problemstart` AS `problemstart`,
+		`problemend` AS `problemend`,
+		`booked_date` AS `booked_date`,		
+		`date` AS `date`,
+		`$GLOBALS[mysql_prefix]ticket`.`updated` AS updated,
 		 `$GLOBALS[mysql_prefix]ticket`.`description` AS `tick_descr`,
 		 `$GLOBALS[mysql_prefix]ticket`.`lat` AS `lat`,
 		 `$GLOBALS[mysql_prefix]ticket`.`lng` AS `lng`,

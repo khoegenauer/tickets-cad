@@ -62,6 +62,14 @@ $types = array();
 
 	$types[$GLOBALS['LOG_ICS213_MESSAGE_SEND']]				="ICS213 message sent";				// 3/22/12
 	$types[$GLOBALS['LOG_ERROR']]							="Error";					
-	$types[$GLOBALS['LOG_INTRUSION']]						="Security alert: intrusion detected";					
+	$types[$GLOBALS['LOG_INTRUSION']]						="Security alert: intrusion detected";				
+
+	$types[$GLOBALS['LOG_SMSGATEWAY_CONNECT']]				="SMS Gateway Connection Error";
+	$types[$GLOBALS['LOG_SMSGATEWAY_SEND']]					="SMS Gateway Send Error";
+	$types[$GLOBALS['LOG_SMSGATEWAY_RECEIVE']]				="SMS Gateway Receieve Error";
+
+	$types[$GLOBALS['LOG_EMAIL_CONNECT']]					="Email Connection Error";
+	$types[$GLOBALS['LOG_EMAIL_SEND']]						="Email Send Error";
+	$types[$GLOBALS['LOG_EMAIL_RECEIVE']]					="Email Receive Error";
 
 ?>

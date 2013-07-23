@@ -607,4 +607,29 @@ function decreaseFontSize() {
  
    }
 } 
+
+function $() {									// 1/21/09, 7/18/10
+	var elements = new Array();
+	for (var i = 0; i < arguments.length; i++) {
+		var element = arguments[i];
+		if (typeof element == 'string')		element = document.getElementById(element);
+		if (arguments.length == 1)			return element;
+		elements.push(element);
+		}
+	return elements;
+	}
 	
+function do_hover (the_id) {
+	CngClass(the_id, 'hover');
+	return true;
+	}
+
+function do_plain (the_id) {				// 8/21/10
+	CngClass(the_id, 'plain');
+	return true;
+	}
+
+function CngClass(obj, the_class){
+	$(obj).className=the_class;
+	return true;
+	}	

@@ -114,10 +114,17 @@ Sequence numbering: SELECT a.id, @num := @num + 1 seqno from ticket a, (SELECT @
 6/10/11 changes for regional capability
 4/24/12 Revised SQL station to correct incorrect GROUP BY clause.
 6/20/12 applied get_text() to "Units", don't reset 'dispatch' time on reset
+10/19/12 mysql setting set, form end moved outside table row
+10/20/12 button label correction, generate log entry for each changed assigns event
+1/8/2013 function get_disp_cell() added, reload() set true
+1/10/2013 function my_gregoriantojd added, gregoriantojd being absent from some config's
 */
 
 @session_start();
 require_once('./incs/functions.inc.php');		//7/28/10
+$query = "SET @@global.sql_mode= '';";			//10/19/12
+$result = mysql_query($query) ;
+
 //dump($_SESSION);
 //dump($_REQUEST);
 
@@ -161,9 +168,9 @@ function show_top() {				// generates the document introduction
 		#bar 		{ width: auto; height: auto; background:transparent; z-index: 100; } 
 		* html #bar { /*\*/position: absolute; top: expression((4 + (ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop)) + 'px'); right: expression((30 + (ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft)) + 'px');/**/ }
 		#foo > #bar { position: fixed; top: 4px; right: 30px; }
-		
-		
-				
+
+		td.my_plain	{background-color: white; white-space:nowrap;}
+		tr td		{white-space:nowrap;}
 		</STYLE>
 <SCRIPT>
 		function syncAjax(strURL) {							// synchronous ajax function
@@ -262,18 +269,36 @@ function get_lines(){							// returns pixel count
 	}		// end function show_top()
 
 	function my_to_date($in_date) {			// date_time format to user's spec
-//		$temp = mktime(substr($in_date,11,2),substr($in_date,14,2),substr($in_date,17,2),substr($in_date,5,2),substr($in_date,8,2),substr($in_date,0,4));
-//		$temp = mktime((int)substr($in_date,11,2), (int)substr($in_date,14,2), (int)substr($in_date,17,2), (int)substr($in_date,5,2), (int)substr($in_date,8,2), (int)substr($in_date,0,4));		// 9/29/10
 		$temp = mysql2timestamp($in_date);		// 9/29/10		
 		return (good_date_time($in_date)) ?  date(get_variable("date_format"), $temp): "";		// 
 		}
 	
 	function my_to_date_sh($in_date) {			// short date_time string
-//		$temp = mktime(substr($in_date,11,2),substr($in_date,14,2),substr($in_date,17,2),substr($in_date,5,2),substr($in_date,8,2),substr($in_date,0,4));
-//		$temp = mktime((int)substr($in_date,11,2), (int)substr($in_date,14,2), (int)substr($in_date,17,2), (int)substr($in_date,5,2), (int)substr($in_date,8,2), (int)substr($in_date,0,4));		// 9/29/10
 		$temp = mysql2timestamp($in_date);		// 9/29/10
 		return (good_date_time($in_date)) ?  date("H:i", $temp): "";		// 
 		}
+
+	function my_gregoriantojd ( $da, $mo, $yr) {		// 1/10/2013
+		return strtotime ("{$da} {$mo} {$yr}");
+		}
+		
+	$jd_today = my_gregoriantojd (date ("M"), date ("j"), date ("Y"));			// julian today - see get_disp_cell() - 1/7/2013
+
+	function get_disp_cell($row_element, $form_element, $theClass ) {		// returns td cell with disp times or checkbox - 1/8/2013
+		$can_update = (array_key_exists ('level', $_SESSION) )? ( is_administrator() || is_user()): FALSE;			// 1/8/2013
+		global $jd_today; 
+		if (is_date($row_element)) {
+			$ttip_str = " onmouseover=\"Tip(' " . my_to_date($row_element) . "')\" onmouseout=\"UnTip()\" ";		
+			$then = strtotime($row_element);
+			$jd_then = my_gregoriantojd (date ("M", $then), date ("j", $then), date ("Y", $then));
+			$this_class = ($jd_then == $jd_today )? $theClass: "my_plain";
+			return "\n\t<TD CLASS='{$this_class}' {$ttip_str}>" . my_to_date_sh($row_element) . "</TD>\n";	// identify as not-today
+			}
+		else {
+			$is_dis = ($can_update)? "" : "DISABLED";		// limit to admins, operators 
+			return "\n\t<TD CLASS='{$theClass}'><INPUT TYPE='checkbox' NAME='{$form_element}' {$is_dis} onClick = 'checkbox_clicked()' ></TD>\n";			
+			}
+		}		// end function get_disp_cell()
 
 	sleep(1);		// wait for possible logout to complete	
 	@session_start();
@@ -659,7 +684,7 @@ setTimeout('do_post()', 1000);
 			print "\n<SCRIPT>\n";
 			print "\t\tassigns = new Array();\n";
 			
-			$query = "SELECT *,UNIX_TIMESTAMP(as_of) AS as_of FROM `$GLOBALS[mysql_prefix]assigns` WHERE `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00' ORDER BY `as_of` DESC";	// 12/13/09
+			$query = "SELECT *,`as_of` AS `as_of` FROM `$GLOBALS[mysql_prefix]assigns` WHERE `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00' ORDER BY `as_of` DESC";	// 12/13/09
 	
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 			while($row = stripslashes_deep(mysql_fetch_array($result))) {
@@ -682,7 +707,11 @@ setTimeout('do_post()', 1000);
 			if (!(theForm.frm_miles_end.value.trim()) =="") {
 				if (!(parseInt(theForm.frm_miles_end.value.trim()) == theForm.frm_miles_end.value.trim())) 
 														{errmsg+= "\tEnd mileage error\n";}
-				}									
+				}
+			if (!(theForm.frm_miles_tot.value.trim()) =="") {	//	10/23/12
+				if (!(parseInt(theForm.frm_miles_tot.value.trim()) == theForm.frm_miles_tot.value.trim())) 
+														{errmsg+= "\tTotal mileage error\n";}
+				}					
 			if (errmsg!="") {
 				alert ("Please correct the following and re-submit:\n\n" + errmsg);
 				return false;
@@ -790,8 +819,11 @@ setTimeout('do_post()', 1000);
 					<SPAN STYLE = "WIDTH: 60PX; DISPLAY: inline-block"></SPAN>
 					<SPAN CLASS="td_label"> On scene:</SPAN> <INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_onsc" VALUE="" TYPE="text" />
 					<SPAN STYLE = "WIDTH: 60PX; DISPLAY: inline-block"></SPAN>
-					<SPAN CLASS="td_label">End:</SPAN>
-				<INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_end" VALUE="" TYPE="text" /></TD></TR>
+					<SPAN CLASS="td_label">End:</SPAN> <INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_end" VALUE="" TYPE="text" />
+					<SPAN STYLE = "WIDTH: 60PX; DISPLAY: inline-block"></SPAN>
+					<SPAN CLASS="td_label">Total:</SPAN> <INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_tot" VALUE="" TYPE="text" />
+				</TD>
+			</TR>	<!-- 10/23/12 -->
 			 </TABLE>
 					 
 			<INPUT TYPE='hidden' NAME='func' 			VALUE= 'add_db' />
@@ -940,8 +972,10 @@ setTimeout('do_post()', 1000);
 				$onsc_mi = (empty($temp))? 0: $temp ;
 				$temp = trim($frm_miles_end);
 				$end_mi = (empty($temp))? 0: $temp ;
+				$temp = trim($frm_miles_tot);
+				$tot_mi = (empty($temp))? 0: $temp ;		//	10/23/12			
 																// 12/9/10
-				$query  = sprintf("INSERT INTO `$GLOBALS[mysql_prefix]assigns` (`as_of`, `dispatched`, `ticket_id`, `responder_id`, `comments`, `start_miles`, `on_scene_miles`, `end_miles`, `user_id`)
+				$query  = sprintf("INSERT INTO `$GLOBALS[mysql_prefix]assigns` (`as_of`, `dispatched`, `ticket_id`, `responder_id`, `comments`, `start_miles`, `on_scene_miles`, `end_miles`, `miles`, `user_id`)
 								VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)",
 									quote_smart($now),
 									quote_smart($now),
@@ -951,6 +985,7 @@ setTimeout('do_post()', 1000);
 									quote_smart($start_mi),
 									quote_smart($onsc_mi),
 									quote_smart($end_mi),
+									quote_smart($tot_mi),									
 									quote_smart($frm_by_id));
 		
 				$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
@@ -1239,6 +1274,7 @@ setTimeout('do_post()', 1000);
 
 			$('done_id').style.display='inline';  					// show 'Done!' for 2 seconds
 			setTimeout('$(\'done_id\').style.display=\'none\';', 2000);
+			window.location.reload(true);							// 1/8/2013
 			}
 			
 		function checkbox_clicked(){								//  hide/show on any cb click 10/21/09
@@ -1404,7 +1440,7 @@ setTimeout('do_post()', 1000);
 			
 // ================================ end of regions stuff																				
 																	
-		$query = "SELECT *,UNIX_TIMESTAMP(as_of) AS as_of,
+		$query = "SELECT *, `as_of` AS `as_of`,
 			`$GLOBALS[mysql_prefix]assigns`.`id` AS `assign_id` ,
 			`$GLOBALS[mysql_prefix]assigns`.`comments` AS `assign_comments`,
 			`u`.`user` AS `theuser`, `t`.`scope` AS `tick_scope`,
@@ -1584,90 +1620,12 @@ setTimeout('do_post()', 1000);
 							 onclick = \"do_mail_win(F{$i}.frm_contact_via.value, {$row['ticket_id']}); \"> 
 							</SPAN></TD>\n";		// 4/26/09
 	
-//		dispatched 
-						$ttip_str = "";
-						$show_date = (is_date($row['dispatched']))?   my_to_date($row['dispatched']) : "";					
-						if ($guest) {				// 4/11/09
-							$is_cd = (is_date($row['dispatched']))? " CHECKED DISABLED": " DISABLED ";
-							}
-						else {
-							$ttip_str = (is_date($row['dispatched']))? " onmouseover=\"Tip('Disp: {$show_date}')\"  onmouseout=\"UnTip()\" ": "";		
-						
-							$is_cd = (is_date($row['dispatched']))? " CHECKED DISABLED": "  onClick = \"checkbox_clicked()\"";		// 5/20/09
-							}
-						print "\t<TD CLASS='$theClass' {$ttip_str} ><INPUT TYPE='checkbox' NAME='frm_dispatched' $is_cd > </TD>\n"; 
-//		responding
-						$ttip_str = "";
-						$show_date = (is_date($row['responding']))?   my_to_date($row['responding']) : "";
-						if ($guest) {				// 4/11/09
-							$is_cd = (is_date($row['responding']))? " CHECKED DISABLED": " DISABLED ";
-							}
-						else {
-							$ttip_str = (is_date($row['responding']))? " onmouseover=\"Tip('Resp: {$show_date}')\"  onmouseout=\"UnTip()\" ": "";		
-						
-							$is_cd = (is_date($row['responding']))? " CHECKED DISABLED": "  onClick = \"checkbox_clicked()\"";		// 5/20/09
-							}
-						print "\t<TD CLASS='$theClass' {$ttip_str} ><INPUT TYPE='checkbox' NAME='frm_responding' $is_cd > </TD>\n"; 
-						
-//		on_scene
-						$ttip_str = "";
-						$show_date = (is_date($row['on_scene']))?   my_to_date($row['on_scene']) : "";
-						if ($guest) {				// 4/11/09
-							$is_cd = (is_date($row['on_scene']))? " CHECKED DISABLED": " DISABLED ";
-							}
-						else {
-							$ttip_str = (is_date($row['on_scene']))? " onmouseover=\"Tip('On_scene: {$show_date}')\"  onmouseout=\"UnTip()\" ": "";		
-						
-							$is_cd = (is_date($row['on_scene']))? " CHECKED DISABLED": "  onClick = \"checkbox_clicked()\"";		// 5/20/09
-							}
-						print "\t<TD CLASS='$theClass' {$ttip_str} ><INPUT TYPE='checkbox' NAME='frm_on_scene' $is_cd > </TD>\n"; 					
-						
-//		u2fenr
-						$ttip_str = "";
-						$show_date = (is_date($row['u2fenr']))?   my_to_date($row['u2fenr']) : "";
-						if ($guest) {	//10/6/09
-							$is_cd = (is_date($row['u2fenr']))? " CHECKED DISABLED": " DISABLED ";
-							}
-						else {
-							$is_cd = (is_date($row['u2fenr']))? " CHECKED DISABLED":  " onClick = \"checkbox_clicked()\"";	
-							}
-						$ttip_str = (is_date($row['u2fenr']))? " onmouseover=\"Tip('Fac\'y enroute: {$show_date}')\"  onmouseout=\"UnTip()\" ": "";		
-
-						print "\t<TD CLASS='$theClass' {$ttip_str}><INPUT TYPE='checkbox' NAME='frm_u2fenr' $is_cd > </TD>\n"; // note names!
-
-						if ($guest) {	//10/6/09
-							$is_cd = (is_date($row['u2farr']))? " CHECKED DISABLED": " DISABLED ";
-							}
-						else {
-							$is_cd = (is_date($row['u2farr']))? " CHECKED DISABLED":  " onClick = \"checkbox_clicked()\"";	
-							}
-//		u2farr
-						$ttip_str = "";
-						$show_date = (is_date($row['u2farr']))?   my_to_date($row['u2farr']) : "";
-						if ($guest) {				// 4/11/09
-							$is_cd = (is_date($row['u2farr']))? " CHECKED DISABLED": " DISABLED ";
-							}
-						else {
-							$ttip_str = (is_date($row['u2farr']))? " onmouseover=\"Tip('Fac\'y arrive: {$show_date}')\"  onmouseout=\"UnTip()\" ": "";		
-						
-							$is_cd = (is_date($row['u2farr']))? " CHECKED DISABLED": "  onClick = \"checkbox_clicked()\"";		// 5/20/09
-							}
-						print "\t<TD CLASS='$theClass' {$ttip_str} ><INPUT TYPE='checkbox' NAME='frm_u2farr' $is_cd > </TD>\n"; 
-
-//		clear
-						$ttip_str = "";
-//						$the_date_str = (is_date($row['clear']))? ezDate($row['clear']): "";
-						$show_date = (is_date($row['clear']))?   my_to_date($row['clear']) : "";
-
-						if ($guest) {				// 4/11/09
-							$is_cd = (is_date($row['clear']))? " CHECKED DISABLED": " DISABLED ";
-							}
-						else {
-							$ttip_str = (is_date($row['clear']))? " onmouseover=\"Tip('Clear: {$show_date}')\"  onmouseout=\"UnTip()\" ": "";		
-						
-							$is_cd = (is_date($row['clear']))? " CHECKED DISABLED": "  onClick = \"checkbox_clicked()\"";		// 5/20/09
-							}
-						print "\t<TD CLASS='$theClass' {$ttip_str} ><INPUT TYPE='checkbox' NAME='frm_clear' $is_cd > </TD>\n"; 
+						echo get_disp_cell($row['dispatched'], 	"frm_dispatched", $theClass );		// 1/8/2013
+						echo get_disp_cell($row['responding'], 	"frm_responding", $theClass );
+						echo get_disp_cell($row['on_scene'], 	"frm_on_scene", $theClass );
+						echo get_disp_cell($row['u2fenr'], 		"frm_u2fenr", $theClass );
+						echo get_disp_cell($row['u2farr'], 		"frm_u2farr", $theClass );
+						echo get_disp_cell($row['clear'], 		"frm_clear", $theClass );
 						
 						if (!in_array ($row['unit_id'], $unit_ids)) {				// status array not yet shown?
 							$unit_st_val = (array_key_exists($row['un_status_id'], $status_vals_ar))? $status_vals_ar[$row["un_status_id"]]: "";
@@ -1690,6 +1648,7 @@ setTimeout('do_post()', 1000);
 						print "\t<TD COLSPAN=10 CLASS='$theClass' onClick = editA(" . $row['assign_id'] . ") ID='myDate$i' ALIGN='left'><B>&nbsp;&nbsp;&nbsp;&nbsp;NA</b></TD>\n";	
 						}		// end 'no responder'
 
+
 					$d1 = $row['assign_as_of'];
 					$d2 = mysql2timestamp($d1);		// 9/29/10
 
@@ -1697,8 +1656,8 @@ setTimeout('do_post()', 1000);
 					
 					print  "\t<TD onmouseover=\"Tip('{$temp} ')\" onmouseout=\"UnTip()\" CLASS='$theClass' 
 						onClick = editA(" . $row['assign_id'] . "); ID='myDate$i' ALIGN='left' TITLE='" . 
-						date("n/j y H:i", $row['as_of']) ." '>" .  $strike . 
-						cb_shorten (date("H:i", $d2), $COLS_ASOF) .  $strikend . "</TD>\n";			// as of - 11/16/10
+						format_date_2($row['as_of']) ." '>" .  $strike . 
+						format_sb_date_2($row['assign_as_of']) .  $strikend . "</TD>\n";			// as of - 11/16/10
 
 					print "\t<TD onmouseover=\"Tip('{$row['theuser']}')\" onmouseout=\"UnTip()\" CLASS='$theClass' onClick = 'editA(" . $row['assign_id'] . ");'>" .  $strike . cb_shorten ($row['theuser'], $COLS_USER) .  $strikend . "</TD>\n";															// user  
 
@@ -1716,8 +1675,10 @@ setTimeout('do_post()', 1000);
 					print "\t<INPUT TYPE='hidden' NAME='frm_ticket_id' VALUE='" . $row['ticket_id'] . "'>\n";
 					print "\t<INPUT TYPE='hidden' NAME='frm_assign_id' VALUE='" . $row['assign_id'] . "'>\n";		// 1/12/09 
 //					print "\t<INPUT TYPE='hidden' NAME='frm_mailed' VALUE='" . $row['mailed'] . "'>\n";				// 3/25/09
-					print "</FORM>\n</TR>\n";
+					print "\n</TR>\n";
 				} // end if $inviewed	6/10/11
+					print "\n\t</FORM>\n";				// 10/19/12
+				
 					$i++;			 
 				}		// end while($row ...)
 				$lines = $i;
@@ -1782,13 +1743,14 @@ setTimeout('do_post()', 1000);
 
 	function do_all() {										// 2/19/09
 		var do_refresh = false;								// 6/16/09
-		for (i=0; i< document.forms.length; i++) {			// look at each form
-			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_dispatched.disabled ) && (document.forms[i].frm_dispatched.checked)) {do_this_form(i);}
-			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_responding.disabled ) && (document.forms[i].frm_responding.checked)) {do_this_form(i);}
-			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_on_scene.disabled ) && (document.forms[i].frm_on_scene.checked))   {do_this_form(i);}
-			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_u2fenr.disabled ) && (document.forms[i].frm_u2fenr.checked))   {do_this_form(i);}	//10/6/09
-			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_u2farr.disabled ) && (document.forms[i].frm_u2farr.checked))   {do_this_form(i);}	//10/6/09
-			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_clear.disabled ) && (document.forms[i].frm_clear.checked))      {do_this_form(i); do_refresh = true;}		// 6/16/09
+		for (i=0; i< document.forms.length; i++) {			// look at each form - 1/8/2013
+		
+			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_dispatched)	&& (!document.forms[i].frm_dispatched.disabled )	&& (document.forms[i].frm_dispatched.checked))	{do_this_form(i);}
+			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_responding)	&& (!document.forms[i].frm_responding.disabled )	&& (document.forms[i].frm_responding.checked))	{do_this_form(i);}
+			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_on_scene)	&& (!document.forms[i].frm_on_scene.disabled )		&& (document.forms[i].frm_on_scene.checked))	{do_this_form(i);}
+			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_u2fenr)		&& (!document.forms[i].frm_u2fenr.disabled )		&& (document.forms[i].frm_u2fenr.checked))		{do_this_form(i);}	//10/6/09
+			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_u2farr)		&& (!document.forms[i].frm_u2farr.disabled )		&& (document.forms[i].frm_u2farr.checked))		{do_this_form(i);}	//10/6/09
+			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_clear)		&& (!document.forms[i].frm_clear.disabled )			&& (document.forms[i].frm_clear.checked))		{do_this_form(i); do_refresh = true;}		// 6/16/09
 
 //			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_clear) && (!document.forms[i].frm_clear.disabled ) && (document.forms[i].frm_clear.checked)) {do_this_form(i); do_refresh = true;}		// 6/16/09
 			}
@@ -1798,13 +1760,13 @@ setTimeout('do_post()', 1000);
 	function clr_all_btn(){
 		var a_check = false;
 
-		for (i=0; i< document.forms.length; i++) {			// look at each form
-			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_dispatched.disabled ) && (document.forms[i].frm_dispatched.checked)) 		{a_check = true; }
-			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_responding.disabled ) && (document.forms[i].frm_responding.checked)) 		{a_check = true; }
-			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_on_scene.disabled ) && (document.forms[i].frm_on_scene.checked)) 			{a_check = true; }
-			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_u2fenr.disabled ) && (document.forms[i].frm_u2fenr.checked)) 			{a_check = true; }	//10/6/09
-			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_u2farr.disabled ) && (document.forms[i].frm_u2farr.checked)) 			{a_check = true; }	//10/6/09
-			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_clear) && (!document.forms[i].frm_clear.disabled ) && (document.forms[i].frm_clear.checked)) {a_check = true;  }
+		for (i=0; i< document.forms.length; i++) {			// look at each form - 1/8/2013
+			if ((document.forms[i].name.substring(0,1)=="F")	&& (document.forms[i].frm_dispatched)	&& (!document.forms[i].frm_dispatched.disabled )	&& (document.forms[i].frm_dispatched.checked)) 		{a_check = true; }
+			if ((document.forms[i].name.substring(0,1)=="F")	&& (document.forms[i].frm_responding)	&& (!document.forms[i].frm_responding.disabled )	&& (document.forms[i].frm_responding.checked)) 		{a_check = true; }
+			if ((document.forms[i].name.substring(0,1)=="F")	&& (document.forms[i].frm_on_scene)		&& (!document.forms[i].frm_on_scene.disabled )		&& (document.forms[i].frm_on_scene.checked)) 		{a_check = true; }
+			if ((document.forms[i].name.substring(0,1)=="F")	&& (document.forms[i].frm_u2fenr)		&& (!document.forms[i].frm_u2fenr.disabled )		&& (document.forms[i].frm_u2fenr.checked)) 			{a_check = true; }	//10/6/09
+			if ((document.forms[i].name.substring(0,1)=="F")	&& (document.forms[i].frm_u2farr)		&& (!document.forms[i].frm_u2farr.disabled )		&& (document.forms[i].frm_u2farr.checked)) 			{a_check = true; }	//10/6/09
+			if ((document.forms[i].name.substring(0,1)=="F")	&& (document.forms[i].frm_clear)		&& (!document.forms[i].frm_clear.disabled ) 		&& (document.forms[i].frm_clear.checked)) 			{a_check = true; }
 			}				// end for ( ... )
 		if (!a_check){
 			$('apply_btn').style.visibility='hidden'; 
@@ -1830,14 +1792,15 @@ setTimeout('do_post()', 1000);
 														// if (!empty($row['clear'])) ??????
 			extract($_POST);
 
-			$query = "SELECT *,UNIX_TIMESTAMP(as_of) AS as_of, 
-			UNIX_TIMESTAMP(`dispatched`) AS `dispatched`, 
-			UNIX_TIMESTAMP(`responding`) AS `responding`, 
-			UNIX_TIMESTAMP(`on_scene`) AS `on_scene`, 
-			UNIX_TIMESTAMP(`u2fenr`) AS `u2fenr`, 
-			UNIX_TIMESTAMP(`u2farr`) AS `u2farr`, 
-			UNIX_TIMESTAMP(`clear`) AS `clear`,  
-			UNIX_TIMESTAMP(`problemstart`) AS `problemstart`,  
+			$query = "SELECT *,
+			`as_of` AS `as_of`, 
+			`dispatched` AS `dispatched`, 
+			`responding` AS `responding`, 
+			`on_scene` AS `on_scene`, 
+			`u2fenr` AS `u2fenr`, 
+			`u2farr` AS `u2farr`, 
+			`clear` AS `clear`,  
+			`problemstart`) AS `problemstart`,  
 			`$GLOBALS[mysql_prefix]assigns`.`id` AS `assign_id` , 
 			`$GLOBALS[mysql_prefix]assigns`.`comments` AS `assign_comments`,
 			`u`.`user` AS `theuser`,
@@ -1876,7 +1839,7 @@ setTimeout('do_post()', 1000);
 				$unit_name = "<FONT COLOR='red'><B>UNASSIGNED</B></FONT>";
 				$unit_link = "";
 				}
-			print "<TR CLASS='even' VALIGN='baseline'><TD CLASS='td_label' ALIGN='right'>As of:</TD><TD>" . format_date($asgn_row['as_of']) .
+			print "<TR CLASS='even' VALIGN='baseline'><TD CLASS='td_label' ALIGN='right'>As of:</TD><TD>" . format_date_2($asgn_row['as_of']) .
 				"&nbsp;&nbsp;&nbsp;&nbsp;By " . $asgn_row['user'] . "</TD></TR>\n";		
 			print "<TR CLASS='odd' VALIGN='baseline' " . $unit_link . ">";
 			print "<TD CLASS='td_label' ALIGN='right'> " . $highlight . "<U>" . get_text("Units") . "</U>:</TD><TD>" . $unit_name ."</TD></TR>\n";
@@ -1892,32 +1855,40 @@ setTimeout('do_post()', 1000);
 ?>
 			</TD></TR>
 			<!-- 1764 -->
-			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right">Incident start:</TD>	<TD><?php print (format_date($asgn_row['problemstart'])) ;?></TD></TR>
+			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right">Incident start:</TD>	<TD><?php print (format_date_2($asgn_row['problemstart'])) ;?></TD></TR>
 <?php
-		$the_str = (!(intval ($asgn_row['dispatched'])>0))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['dispatched']);
+		$the_str = (!(good_date_time ($asgn_row['dispatched'])))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['dispatched']);
 ?>
-			<TR CLASS = 'odd'><TD CLASS="td_label" ALIGN="right">Dispatched:</TD>	<TD><?php print format_date($asgn_row['dispatched'])  . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
+			<TR CLASS = 'odd'><TD CLASS="td_label" ALIGN="right">Dispatched:</TD>	<TD><?php print format_date_2($asgn_row['dispatched'])  . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
 <?php
-		$the_str = (!(intval ($asgn_row['responding'])>0))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['responding']);
+		$the_str = (!(good_date_time ($asgn_row['responding'])))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['responding']);
 ?>
-			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right">Responding:</TD>	<TD><?php print (format_date($asgn_row['responding']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
+			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right">Responding:</TD>	<TD><?php print (format_date_2($asgn_row['responding']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
 <?php
-		$the_str = (!(intval ($asgn_row['on_scene'])>0))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['on_scene']);
+		$the_str = (!(good_date_time ($asgn_row['on_scene'])))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['on_scene']);
 ?>
-			<TR CLASS = 'odd'><TD CLASS="td_label" ALIGN="right">On scene:</TD>		<TD><?php print (format_date($asgn_row['on_scene']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
+			<TR CLASS = 'odd'><TD CLASS="td_label" ALIGN="right">On scene:</TD>		<TD><?php print (format_date_2($asgn_row['on_scene']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
 <?php
-		$the_str = (!(intval ($asgn_row['u2fenr'])>0))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['u2fenr']);
+		$the_str = (!(good_date_time ($asgn_row['u2fenr'])))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['u2fenr']);
 ?>
-			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right">Fac en-route:</TD>	<TD><?php print (format_date($asgn_row['u2fenr']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR> <!--10/6/09-->
+			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right">Fac en-route:</TD>	<TD><?php print (format_date_2($asgn_row['u2fenr']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR> <!--10/6/09-->
 <?php
-		$the_str = (!(intval ($asgn_row['u2farr'])>0))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['u2farr']);
+		$the_str = (!(good_date_time ($asgn_row['u2farr'])))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['u2farr']);
 ?>
-			<TR CLASS = 'odd'><TD CLASS="td_label" ALIGN="right">Fac arr:</TD>		<TD><?php print (format_date($asgn_row['u2farr']))  . "&nbsp;&nbsp;" . $the_str;?></TD></TR> <!--10/6/09-->
+			<TR CLASS = 'odd'><TD CLASS="td_label" ALIGN="right">Fac arr:</TD>		<TD><?php print (format_date_2($asgn_row['u2farr']))  . "&nbsp;&nbsp;" . $the_str;?></TD></TR> <!--10/6/09-->
 <?php
-		$the_str = (!(intval ($asgn_row['clear'])>0))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['clear']);
+		$the_str = (!(good_date_time ($asgn_row['clear'])))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['clear']);
 ?>
-			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right">Clear:</TD>		<TD><?php print (format_date($asgn_row['clear']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
-			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right">Mileage:</TD>		<TD><?php print "start &raquo;{$asgn_row['start_miles']}&nbsp;&nbsp; on-scene &raquo; {$asgn_row['on_scene_miles']}&nbsp;&nbsp; end &raquo; {$asgn_row['end_miles']}";?></TD></TR>
+			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right">Clear:</TD>		<TD><?php print (format_date_2($asgn_row['clear']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
+			<TR CLASS = 'even'>
+				<TD CLASS="td_label" ALIGN="right">Mileage:</TD>		
+				<TD><?php print "
+						start &raquo;{$asgn_row['start_miles']}&nbsp;&nbsp; 
+						on-scene &raquo; {$asgn_row['on_scene_miles']}&nbsp;&nbsp; 
+						end &raquo; {$asgn_row['end_miles']}&nbsp;&nbsp;
+						tot &raquo; {$asgn_row['miles']}";?>
+				</TD>
+			</TR>
 			
 			<TR CLASS="odd">
 				<TD CLASS="td_label" ALIGN="right">Comments:</TD>
@@ -2011,7 +1982,7 @@ setTimeout('do_post()', 1000);
 			</DIV>
 		
 <?php
-			$query = "SELECT *,UNIX_TIMESTAMP(as_of) AS as_of, `$GLOBALS[mysql_prefix]assigns`.`id` AS `assign_id` , `$GLOBALS[mysql_prefix]assigns`.`comments` AS `assign_comments`,`u`.`user` AS `theuser`, `t`.`scope` AS `theticket`,
+			$query = "SELECT *, `as_of` AS `as_of`, `$GLOBALS[mysql_prefix]assigns`.`id` AS `assign_id` , `$GLOBALS[mysql_prefix]assigns`.`comments` AS `assign_comments`,`u`.`user` AS `theuser`, `t`.`scope` AS `theticket`,
 				`s`.`status_val` AS `thestatus`, `r`.`name` AS `theunit`, `r`.`id` AS `resp_id` FROM `$GLOBALS[mysql_prefix]assigns`
 				LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` 	ON (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`)
 				LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON (`$GLOBALS[mysql_prefix]assigns`.`status_id` = `s`.`id`)
@@ -2107,11 +2078,13 @@ setTimeout('do_post()', 1000);
 			<TR CLASS=''><TD CLASS="td_label" ALIGN="right">Mileage:</TD> <!--10/6/09-->
 				<TD colspan=3 ALIGN='center'>
 					<SPAN CLASS="td_label"> Start:</SPAN> 
-						<INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_strt" VALUE="<?php print $asgn_row['start_miles']; ?>" TYPE="text" <?php print $disabled;?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_strt" VALUE="<?php print $asgn_row['start_miles']; ?>" TYPE="text" <?php print $disabled;?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<SPAN CLASS="td_label"> On scene:</SPAN> 
-						<INPUT MAXLENGTH="8" SIZE="8" NAME="frm_on_scene_miles" VALUE="<?php print $asgn_row['on_scene_miles']; ?>" TYPE="text" <?php print $disabled;?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<INPUT MAXLENGTH="8" SIZE="8" NAME="frm_on_scene_miles" VALUE="<?php print $asgn_row['on_scene_miles']; ?>" TYPE="text" <?php print $disabled;?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<SPAN CLASS="td_label">End:</SPAN>
-						<INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_end" VALUE="<?php print $asgn_row['end_miles']; ?>" TYPE="text" <?php print $disabled;?>></TD></TR>
+						<INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_end" VALUE="<?php print $asgn_row['end_miles']; ?>" TYPE="text" <?php print $disabled;?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<SPAN CLASS="td_label">Total Miles:</SPAN>	<!-- 10/23/12 -->
+						<INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_tot" VALUE="<?php print $asgn_row['miles']; ?>" TYPE="text" <?php print $disabled;?>></TD></TR>	<!-- 10/23/12 -->						
 <?php
 		 	$now = mysql_format_date(time() - (get_variable('delta_mins')*60)); 		// mysql format
 	
@@ -2224,7 +2197,7 @@ setTimeout('do_post()', 1000);
 				
 ?>
 			<TR CLASS='even' VALIGN='baseline'><TD CLASS='td_label' ALIGN='right'>As of:</TD>
-				<TD colspan=2><?php print format_date($asgn_row['as_of']);?>&nbsp;&nbsp;&nbsp;&nbsp;By: <?php print $asgn_row['user'];?></TD>
+				<TD colspan=2><?php print format_date_2($asgn_row['as_of']);?>&nbsp;&nbsp;&nbsp;&nbsp;By: <?php print $asgn_row['user'];?></TD>
 				</TR>		
 	
 <!--		<TR CLASS="even" VALIGN="baseline"><TD colspan="99" ALIGN="center">
@@ -2300,34 +2273,48 @@ setTimeout('do_post()', 1000);
 			
 			$frm_dispatched =	(array_key_exists('frm_db', $_POST))? 	quote_smart($_POST['frm_year_dispatched'] . "-" . $_POST['frm_month_dispatched'] . "-" . $_POST['frm_day_dispatched']." " . $_POST['frm_hour_dispatched'] . ":". $_POST['frm_minute_dispatched'] .":00") : "";
 			$frm_responding = 	(array_key_exists('frm_rb', $_POST))? 	quote_smart($_POST['frm_year_responding'] . "-" . $_POST['frm_month_responding'] . "-" . $_POST['frm_day_responding']." " . $_POST['frm_hour_responding'] . ":". $_POST['frm_minute_responding'] .":00") : "";
-			$frm_on_scene = 	(array_key_exists('frm_os', $_POST))?  	quote_smart($_POST['frm_year_on_scene'] . "-" .   $_POST['frm_month_on_scene'] . "-" .   $_POST['frm_day_on_scene']." " .   $_POST['frm_hour_on_scene'] . ":".   $_POST['frm_minute_on_scene'] .":00") : "";
-			$frm_u2fenr = 	(array_key_exists('frm_fe', $_POST))?  	quote_smart($_POST['frm_year_u2fenr'] . "-" .   $_POST['frm_month_u2fenr'] . "-" .   $_POST['frm_day_u2fenr']." " .   $_POST['frm_hour_u2fenr'] . ":".   $_POST['frm_minute_u2fenr'] .":00") : "";	//10/6/09
-			$frm_u2farr = 	(array_key_exists('frm_fa', $_POST))?  	quote_smart($_POST['frm_year_u2farr'] . "-" .   $_POST['frm_month_u2farr'] . "-" .   $_POST['frm_day_u2farr']." " .   $_POST['frm_hour_u2farr'] . ":".   $_POST['frm_minute_u2farr'] .":00") : "";	//10/6/09
+			$frm_on_scene = 	(array_key_exists('frm_ob', $_POST))?  	quote_smart($_POST['frm_year_on_scene'] . "-" .   $_POST['frm_month_on_scene'] . "-" .   $_POST['frm_day_on_scene']." " .   $_POST['frm_hour_on_scene'] . ":".   $_POST['frm_minute_on_scene'] .":00") : "";	// 10/20/12
+			$frm_u2fenr = 		(array_key_exists('frm_fe', $_POST))?  	quote_smart($_POST['frm_year_u2fenr'] . "-" .   $_POST['frm_month_u2fenr'] . "-" .   $_POST['frm_day_u2fenr']." " .   $_POST['frm_hour_u2fenr'] . ":".   $_POST['frm_minute_u2fenr'] .":00") : "";	//10/6/09
+			$frm_u2farr = 		(array_key_exists('frm_fa', $_POST))?  	quote_smart($_POST['frm_year_u2farr'] . "-" .   $_POST['frm_month_u2farr'] . "-" .   $_POST['frm_day_u2farr']." " .   $_POST['frm_hour_u2farr'] . ":".   $_POST['frm_minute_u2farr'] .":00") : "";	//10/6/09
 			$frm_clear = 		(array_key_exists('frm_cb', $_POST))?  	quote_smart($_POST['frm_year_clear'] . "-" . 	  $_POST['frm_month_clear'] . "-" 	.    $_POST['frm_day_clear']." " .      $_POST['frm_hour_clear'] . ":".      $_POST['frm_minute_clear'] .":00") : "";
 			
 			$date_part = (empty($frm_dispatched))? 	"": ", `dispatched`= " . 	$frm_dispatched ;
 			$date_part .= (empty($frm_responding))? "": ", `responding`= " . 	$frm_responding;
 			$date_part .= (empty($frm_on_scene))? 	"": ", `on_scene`= " 	. 	$frm_on_scene;
-			$date_part .= (empty($frm_u2fenr))? 	"": ", `u2fenr`= " 	. 	$frm_u2fenr;
-			$date_part .= (empty($frm_u2farr))? 	"": ", `u2farr`= " 	. 	$frm_u2farr;
+			$date_part .= (empty($frm_u2fenr))? 	"": ", `u2fenr`= " 	. 		$frm_u2fenr;
+			$date_part .= (empty($frm_u2farr))? 	"": ", `u2farr`= " 	. 		$frm_u2farr;
 			$date_part .= (empty($frm_clear))? 		"": ", `clear`= " . 		$frm_clear;
 
 			$unit_sql = (isset($frm_unit_id))?	" `responder_id`=" .quote_smart($frm_unit_id) . ", " :"";			// 1/15/09
 
 //			$query = "UPDATE `$GLOBALS[mysql_prefix]assigns` SET {$unit_sql} `as_of`= " . quote_smart($now) . ", `comments`= " . quote_smart($_POST['frm_comments']) . ", `start_miles`= " . quote_smart($_POST['frm_miles_strt']) . ", `end_miles`= " . quote_smart($_POST['frm_miles_end']) ;	//10/6/09
 			$query = "UPDATE `$GLOBALS[mysql_prefix]assigns` SET 
-						 {$unit_sql} `as_of`= " . quote_smart($now) . ", 
-						 `comments`= " . quote_smart($_POST['frm_comments']) . ", 
-						 `start_miles`= " . quote_smart($_POST['frm_miles_strt']) . ", 
-						 `on_scene_miles`= " . quote_smart($_POST['frm_on_scene_miles']) . ", 
-						 `end_miles`= " . quote_smart($_POST['frm_miles_end']) ;	//10/6/09
+						 {$unit_sql} `as_of`= " . 	quote_smart($now) . ", 
+						 `comments`= " . 			quote_smart($_POST['frm_comments']) . ", 
+						 `start_miles`= " . 		quote_smart($_POST['frm_miles_strt']) . ", 
+						 `on_scene_miles`= " . 		quote_smart($_POST['frm_on_scene_miles']) . ", 
+						 `end_miles`= " . 			quote_smart($_POST['frm_miles_end']) . ",
+						 `miles`= " . 				quote_smart($_POST['frm_miles_tot']) ;	//10/6/09, 10/23/12						 
 
 			$query .= $date_part;
 			$query .=  " WHERE `id` = " . quote_smart($_POST['frm_id']) . " LIMIT 1";		// 5/26/11
 
 			$result	= mysql_query($query) or do_error($query,'',mysql_error(), basename( __FILE__), __LINE__);
-//			dump($query);
-	
+//						generate log entry for each changed event - 10/20/12
+			$as_query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` = " . quote_smart($_POST['frm_id']) . " LIMIT 1";
+			$as_result	= mysql_query($as_query) or do_error($as_query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
+			$as_row = stripslashes_deep(mysql_fetch_assoc($as_result));
+
+			if ((array_key_exists('frm_db', $_POST)) && (quote_smart($as_row['dispatched']) <> $frm_dispatched)) 	{do_log($GLOBALS['LOG_CALL_DISP'], 	$frm_ticket_id, $frm_unit_id, $frm_id);}
+			if ((array_key_exists('frm_rb', $_POST)) && (quote_smart($as_row['responding']) <> $frm_responding)) 	{do_log($GLOBALS['LOG_CALL_RESP'], 	$frm_ticket_id, $frm_unit_id, $frm_id);}
+			if ((array_key_exists('frm_ob', $_POST)) && (quote_smart($as_row['on_scene']) <> $frm_on_scene)) 		{do_log($GLOBALS['LOG_CALL_ONSCN'],	$frm_ticket_id, $frm_unit_id, $frm_id);}
+			if ((array_key_exists('frm_cb', $_POST)) && (quote_smart($as_row['clear']) <> $frm_clear)) 				{do_log($GLOBALS['LOG_CALL_CLR'], 	$frm_ticket_id, $frm_unit_id, $frm_id);}
+			if ((array_key_exists('frm_fe', $_POST)) && (quote_smart($as_row['u2fenr']) <> $frm_u2fenr)) 			{do_log($GLOBALS['LOG_CALL_U2FENR'],$frm_ticket_id, $frm_unit_id, $frm_id);}
+			if ((array_key_exists('frm_fa', $_POST)) && (quote_smart($as_row['u2farr']) <> $frm_u2farr)) 			{do_log($GLOBALS['LOG_CALL_U2FARR'],$frm_ticket_id, $frm_unit_id, $frm_id);}
+
+//			snap (__LINE__, array_key_exists('frm_db', $_POST));
+//			snap (__LINE__, quote_smart($as_row['clear']));
+//			snap (__LINE__, $frm_clear);
 			$message = "Update Applied";
 ?>
 			</HEAD>
@@ -2475,7 +2462,7 @@ setTimeout('do_post()', 1000);
 	$where = "WHERE `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00' ";
 
 	$query = "SELECT *,
-		UNIX_TIMESTAMP(as_of) AS as_of, 
+		`as_of` AS `as_of`, 
 		`$GLOBALS[mysql_prefix]assigns`.`id` AS `assign_id` ,
 		`$GLOBALS[mysql_prefix]assigns`.`comments` AS `assign_comments`,
 		`u`.`user` AS `theuser`,
@@ -2680,7 +2667,13 @@ setTimeout('do_post()', 1000);
 						print "\t<TD ALIGN='left' CLASS='$theClass' >" . $row['start_miles'] . "&nbsp;</TD>\n";	
 						print "\t<TD ALIGN='left' CLASS='$theClass' >" . $row['on_scene_miles'] . "&nbsp;</TD>\n";	
 						print "\t<TD ALIGN='left' CLASS='$theClass' >" . $row['end_miles'] . "&nbsp;</TD>\n";
-						$dist = ((my_is_int($row['start_miles'])) && (my_is_int($row['end_miles'])))? ($row['end_miles'] -  $row['start_miles']) : "";
+						if($row['miles'] != NULL) {	//	10/12/23
+							$dist = $row_miles;
+							} elseif(($row['miles'] == NULL) && ((my_is_int($row['start_miles'])) && (my_is_int($row['end_miles'])))) {
+							$dist = $row['end_miles'] -  $row['start_miles'];
+							} else {
+							$dist = "";
+							}
 						print "\t<TD ALIGN='left' CLASS='$theClass' >{$dist}</TD>\n";
 						}
 

@@ -83,6 +83,9 @@ $zoom_tight = FALSE;		// default is FALSE (no tight zoom); replace with a decima
 5/4/11 get_new_colors() 				// 
 6/10/11 Added changes required to support regional capability (Ticket region assignment) plus tidied screen for no maps.
 3/28/12 Corrected to errors with Region display.
+12/10/2012 - fix to ajax calls re message format
+11/22/2012 Added Nearby Functionality
+2/14/2013 add grid initialize, try/catch reverse geo error handling
 */
 	$addrs = FALSE;										// notifies address array doesn't exist
 
@@ -678,8 +681,6 @@ $do_unload = ($gmaps)? " onUnload=\"GUnload();\"" : "";
  				LEFT JOIN `$GLOBALS[mysql_prefix]in_types` `ty` ON (`t`.`in_types_id` = `ty`.`id`)
  				LEFT JOIN `$GLOBALS[mysql_prefix]user` `u` ON (`t`.`_by` = `u`.`id`)
  				WHERE `t`.`id`='$id' LIMIT 1";
-// 			snap(__LINE__, $query);
-
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 			
 			$row = stripslashes_deep(mysql_fetch_array($result));
@@ -755,8 +756,8 @@ $do_unload = ($gmaps)? " onUnload=\"GUnload();\"" : "";
 			print 		"</TD>
 						<TD><INPUT SIZE='32' TYPE='text' 	NAME='frm_city' VALUE=\"{$row['city']}\" MAXLENGTH='32' onChange = 'this.value=capWords(this.value)' {$dis}>\n";
 			$st_size = (get_variable("locale") ==0)?  2: 4;												// 11/23/10
-			print 	"<SPAN STYLE='margin-left:24px'  onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_state']}');\">" . get_text("St") . "</SPAN>:&nbsp;&nbsp;<INPUT SIZE='{$st_size}' TYPE='text' NAME='frm_state' VALUE='" . $row['state'] . "' MAXLENGTH='{$st_size}' {$dis}></TD></TR>\n";
-
+			print 	"<SPAN STYLE='margin-left:24px'  onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_state']}');\">" . get_text("St") . "</SPAN>:&nbsp;&nbsp;<INPUT SIZE='{$st_size}' TYPE='text' NAME='frm_state' VALUE='" . $row['state'] . "' MAXLENGTH='{$st_size}' {$dis}>";
+			print 		"<BUTTON type='button' onClick='Javascript:do_nearby(this.form);return false;'>Nearby?</BUTTON></TD></TR>\n"; 	//11/22/2012
 			print "<TR CLASS='even'>
 				<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_phone']}');\">" . get_text("Phone") . ":</TD>";
 			print 		"<TD><button type='button'  onClick='Javascript:phone_lkup(document.edit.frm_phone.value);'><img src='./markers/glasses.png' alt='Lookup phone no' /></button>";	// 1/19/09
@@ -1160,7 +1161,7 @@ $do_unload = ($gmaps)? " onUnload=\"GUnload();\"" : "";
 			print "</TD></TR></TABLE>";		// bottom of outer
 			
 			$from_left = $gmaps ? 450: 650;	//	6/10/11
-$from_top = 100;
+			$from_top = 220;				// 11/22/2012
 ?>			
 			<FORM NAME='can_Form' ACTION="main.php">
 			<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['id'];?>">
@@ -1184,6 +1185,7 @@ if (!$disallow) {
 
 ?>
 	<SCRIPT>
+		var grid = false;										// 2/14/2013	
 		function toglGrid() {									// toggle
 			grid = !grid;
 			if (!grid) {										// check prior value
@@ -1547,7 +1549,13 @@ $maptype = get_variable('maptype');	// 08/02/09
 						alert("948: Status Code:" + response.Status.code);
 					} else { 
 						place = response.Placemark[0];
-						locality = response.Placemark[0].AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality;   
+//						locality = response.Placemark[0].AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality;   
+						try 		{locality = response.Placemark[0].AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality;}
+						catch(err) 	{ 				// 2/14/2013
+							point = new GLatLng(document.edit.frm_lat.value, document.edit.frm_lng.value);
+							marker = new GMarker(point);
+							map.addOverlay(marker);
+							return false; }	
 						point = new GLatLng(place.Point.coordinates[1],place.Point.coordinates[0]);
 						marker = new GMarker(point);
 						map.addOverlay(marker);
@@ -1561,6 +1569,20 @@ $maptype = get_variable('maptype');	// 08/02/09
 
 
 // *****************************************************************************
+
+	function do_nearby(the_form){		// 11/22/2012
+		if (the_form.frm_lat.value.length == 0) {
+			alert("Map <?php echo get_text("Location");?> is required for nearby <?php echo get_text("Incident");?> lookup.");
+			return;
+			}
+		var the_url = "nearby.php?tick_lat="+the_form.frm_lat.value+"&tick_lng="+the_form.frm_lng.value;
+		newwindow=window.open(the_url, "new_window",  "titlebar, location=0, resizable=1, scrollbars, height=480,width=960,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
+		if (newwindow == null) {
+			alert ("Nearby operation requires popups to be enabled. Please adjust your browser options.");
+			return;
+			}
+		newwindow.focus();
+		}		// end do_nearby()
 
 	</SCRIPT>
 
@@ -1584,7 +1606,9 @@ $maptype = get_variable('maptype');	// 08/02/09
 		var theId = '<?php print $_GET['id'];?>';
 
 //			 		 ($to_str, $text, $ticket_id, $text_sel=1;, $txt_only = FALSE)
-		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId ;		// ($to_str, $text, $ticket_id)   10/15/08
+// 12/10/2012
+//		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId ;		// ($to_str, $text, $ticket_id)   10/15/08
+		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId + "&text_sel=1" ;		// ($to_str, $text, $ticket_id)   10/15/08
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 		}			// end function do notify()
 	

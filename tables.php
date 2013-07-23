@@ -38,11 +38,15 @@ improvements to datatype 'time' handling
 3/18/11 revised to correct error if $_POST['srch_str'] does not exist
 6/10/11 Added Regions
 12/12/11 - special case table user added
-
+1/6/2013 - security measures added
 */
 $gmap=TRUE;
 
 session_start();
+if (empty($_SESSION)) {				// 1/6/2013
+	header("Location: index.php");
+	}
+
 require_once('./incs/functions.inc.php');
 $query = "SET @@global.sql_mode= '';";		// 6/25/10
 $result = mysql_query($query) ;
@@ -54,6 +58,7 @@ if ($istest) {
 	dump($_POST);
 	}
 do_login(basename(__FILE__));	// 9/18/08
+if(is_administrator()) {
 
 $key_str			= "_id";			// FOREIGN KEY (parent_id) REFERENCES parent(id) relationship terminal string identifier 
 
@@ -307,6 +312,10 @@ if (($func == "c")||($func == "u")) {			// not required for all functions
 ?>
 
 <SCRIPT>
+	if(self.location.href==parent.location.href) {				// 1/6/2013
+		self.location.href = 'index.php';
+		}
+
 	Array.prototype.inArray = function (value) {	// Returns true if argument value exists in array, else false - 12/31/08
 		for (i=0; i < this.length; i++) {
 			if (this[i] == value) {	return true;}
@@ -1806,7 +1815,7 @@ function do_check(the_bool) {
 	case "l":	// Select table ====================
 
 	print "<BR /><BR /><BR /><BR /><BR /><BR /><BR />";
-	fnTables();
+//	fnTables();											// 1/6/2013
 	break;
 	default:
 
@@ -1901,3 +1910,7 @@ if ($calstuff!="") {
 </FORM>
 </BODY>
 </HTML>
+<?php
+} else {
+exit();		//	Exit gracefully with no view of DB if not admin.
+}

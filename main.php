@@ -9,6 +9,7 @@ session_start();						//
 require_once('./incs/functions.inc.php');
 
 $the_inc = ((array_key_exists('internet', ($_SESSION))) && ($_SESSION['internet']))? './incs/functions_major.inc.php' : './incs/functions_major_nm.inc.php';
+$the_level = (isset($_SESSION['level'])) ? $_SESSION['level'] : 0 ;
 require_once($the_inc);
 /*
 10/14/08 moved js includes here fm function_major
@@ -47,7 +48,10 @@ require_once($the_inc);
 3/5/12 handle empty GMaps API key
 3/23/12 auto-refresh changes
 4/12/12 Revised regions control buttons
+6/1/12 Revised loading of main page modules so tha they only load on the main screen, not the Ticket Detail screen.
 6/14/12 Moved position of ck_frames() in onLoad string.
+10/23/12 Added code for Messaging
+2/14/2013 - disabled check for GMaps key
 */
 
 if (isset($_GET['logout'])) {
@@ -55,7 +59,7 @@ if (isset($_GET['logout'])) {
 	exit();
 	}
 else {		// 
-	do_login(basename(__FILE__));	
+	do_login(basename(__FILE__));
 	$do_mu_init = (array_key_exists('log_in', $_GET))? "parent.frames['upper'].mu_init();" : "";	// start multi-user function
 	}
 
@@ -93,6 +97,7 @@ $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_ni
 	<STYLE>
 		.disp_stat	{ FONT-WEIGHT: bold; FONT-SIZE: 9px; COLOR: #FFFFFF; BACKGROUND-COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;}
 	</STYLE>
+	<SCRIPT SRC="./js/messaging.js" TYPE="text/javascript"></SCRIPT><!-- 10/23/12-->
 <?php 
 @session_start();	
 if(file_exists("./incs/modules.inc.php")) {	//	10/28/10
@@ -106,7 +111,14 @@ if ($_SESSION['internet']) {				// 8/22/10
 <SCRIPT TYPE="text/javascript" src="./js/ELabel.js"></SCRIPT><!-- 8/1/11 -->
 <?php } ?>
 <SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>	<!-- 5/3/11 -->	
+<SCRIPT SRC="./js/messaging.js" TYPE="text/javascript"></SCRIPT>	<!-- 10/23/12 -->
 <SCRIPT>
+var sortby = '`date`';	//	10/23/12
+var sort = "DESC";	//	10/23/12
+var columns = "<?php print get_msg_variable('columns');?>";	//	10/23/12
+var the_columns = new Array(<?php print get_msg_variable('columns');?>);	//	10/23/12
+var thescreen = 'ticket';	//	10/23/12
+var thelevel = '<?php print $the_level;?>';
 <?php
 if ( get_variable('call_board') == 2) {		// 7/20/10
 	$cb_per_line = 22;						// adjust as needed
@@ -149,6 +161,26 @@ if (is_guest()) {													// 8/25/10
 	var NOT_STR = '<?php echo NOT_STR;?>';			// value if not logged-in, defined in functions.inc.php
 	var check_initialized = false;
 	var check_interval = null;
+
+	function change_status_sel(the_control, the_val) {
+		var oldval = false;
+		var newval = the_val;
+		var existing = false;
+		var thelength = false;
+		if(document.getElementById(the_control)) {
+			thelength = document.getElementById(the_control).options.length;
+			existing = document.getElementById(the_control).selectedIndex;
+			if(document.getElementById(the_control).options[existing].value) {	
+				oldval = document.getElementById(the_control).options[existing].value;
+				}
+			for(var f = 0; f < thelength; f++) {
+				if((document.getElementById(the_control).options[f].value == newval) && (f != existing)) {
+					document.getElementById(the_control).options[f].selected = true;
+					parent.frames["upper"].show_msg ('Responder Status Changed');
+					}
+				}
+			}
+		}
 	
 	function logged_in() {								// returns boolean
 		var temp = parent.frames["upper"].$("whom").innerHTML==NOT_STR;
@@ -168,32 +200,6 @@ if (is_guest()) {													// 8/25/10
 				}
 			}
 		}
-		
-	function $() {									// 1/21/09, 7/18/10
-		var elements = new Array();
-		for (var i = 0; i < arguments.length; i++) {
-			var element = arguments[i];
-			if (typeof element == 'string')		element = document.getElementById(element);
-			if (arguments.length == 1)			return element;
-			elements.push(element);
-			}
-		return elements;
-		}
-		
-	function do_hover (the_id) {
-		CngClass(the_id, 'hover');
-		return true;
-		}
-
-	function do_plain (the_id) {				// 8/21/10
-		CngClass(the_id, 'plain');
-		return true;
-		}
-
-	function CngClass(obj, the_class){
-		$(obj).className=the_class;
-		return true;
-		}	
 		
 	function fence_get() {								// set cycle
 		if (check_interval!=null) {return;}			// ????
@@ -405,7 +411,7 @@ if (is_guest()) {													// 8/25/10
 			extract ($row66);
 			if((my_is_float($lat)) && (my_is_float($lng))) {
 				print "\t\t	var resp_name = \"$name\";\n";
-				print "\t\t var points = new Array();\n";
+				print "\t\t var thepoints = new Array();\n";
 				print "\t\t var newpoint = new GLatLng({$lat}, {$lng});\n";
 				$query67 = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id` = {$ring_fence}";
 				$result67 = mysql_query($query67)or do_error($query67, mysql_error(), basename(__FILE__), __LINE__);
@@ -417,9 +423,9 @@ if (is_guest()) {													// 8/25/10
 					for ($yy = 0; $yy < count($points); $yy++) {
 						$coords = explode (",", $points[$yy]);		
 						print "\t\t thepoint = new GLatLng(parseFloat($coords[0]), parseFloat($coords[1]));\n";
-						print "\t\t points.push(thepoint);\n";
+						print "\t\t thepoints.push(thepoint);\n";
 					}			// end for ($yy = 0 ... )
-					print "\t\t var pline = new GPolygon(points, \"$line_color\", $line_width, $line_opacity, \"$fill_color\", $fill_opacity, {clickable:false});\n";
+					print "\t\t var pline = new GPolygon(thepoints, \"$line_color\", $line_width, $line_opacity, \"$fill_color\", $fill_opacity, {clickable:false});\n";
 					print "\t\t boundary1.push(pline);\n";
 					print "\t\t if (!(boundary1[0].Contains(newpoint))) {\n";
 					print "\t\t blink_text(resp_name, '#FF0000', '#FFFF00', '#FFFF00', '#FF0000');\n";
@@ -494,7 +500,7 @@ if (is_guest()) {													// 8/25/10
 			extract ($row66);
 			if((my_is_float($lat)) && (my_is_float($lng))) {
 				print "\t\t	var resp_name = \"$name\";\n";
-				print "\t\t var points = new Array();\n";
+				print "\t\t var thepoints = new Array();\n";
 				print "\t\t var newpoint = new GLatLng({$lat}, {$lng});\n";
 				$query67 = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id` = {$excl_zone}";
 				$result67 = mysql_query($query67)or do_error($query67, mysql_error(), basename(__FILE__), __LINE__);
@@ -506,9 +512,9 @@ if (is_guest()) {													// 8/25/10
 					for ($yy = 0; $yy < count($points); $yy++) {
 						$coords = explode (",", $points[$yy]);		
 						print "\t\t thepoint = new GLatLng(parseFloat($coords[0]), parseFloat($coords[1]));\n";
-						print "\t\t points.push(thepoint);\n";
+						print "\t\t thepoints.push(thepoint);\n";
 					}			// end for ($yy = 0 ... )
-					print "\t\t var pline = new GPolygon(points, \"$line_color\", $line_width, $line_opacity, \"$fill_color\", $fill_opacity, {clickable:false});\n";
+					print "\t\t var pline = new GPolygon(thepoints, \"$line_color\", $line_width, $line_opacity, \"$fill_color\", $fill_opacity, {clickable:false});\n";
 					print "\t\t boundary1.push(pline);\n";
 					print "\t\t if ((boundary1[0].Contains(newpoint))) {\n";
 					print "\t\t blink_text2(resp_name, '#00FF00', '#FFFF00', '#FFFF00', '#FF0000');\n";
@@ -592,7 +598,77 @@ if (is_guest()) {													// 8/25/10
 		$('btn_can').style.display = 'none';
 		document.frm_interval_sel.frm_sched.selectedIndex=0;
 		}
-	</SCRIPT>
+		
+	function sendRequest(url,callback,postData) {
+		var req = createXMLHTTPObject();
+		if (!req) return;
+		var method = (postData) ? "POST" : "GET";
+		req.open(method,url,true);
+		req.setRequestHeader('User-Agent','XMLHTTP/1.0');
+		if (postData)
+			req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		req.onreadystatechange = function () {
+			if (req.readyState != 4) return;
+			if (req.status != 200 && req.status != 304) {
+				return;
+				}
+			callback(req);
+			}
+		if (req.readyState == 4) return;
+		req.send(postData);
+		}
+	
+	var XMLHttpFactories = [
+		function () {return new XMLHttpRequest()	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		];
+	
+	function createXMLHTTPObject() {
+		var xmlhttp = false;
+		for (var i=0;i<XMLHttpFactories.length;i++) {
+			try {
+				xmlhttp = XMLHttpFactories[i]();
+				}
+			catch (e) {
+				continue;
+				}
+			break;
+			}
+		return xmlhttp;
+		}
+
+	function syncAjax(strURL) {							// synchronous ajax function - 4/5/10
+		if (window.XMLHttpRequest) {						 
+			AJAX=new XMLHttpRequest();						 
+			} 
+		else {																 
+			AJAX=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+		if (AJAX) {
+			AJAX.open("GET", strURL, false);														 
+			AJAX.send(null);							// form name
+			return AJAX.responseText;																				 
+			} 
+		else {
+			alert("<?php echo 'error: ' . basename(__FILE__) . '@' .  __LINE__;?>");
+			return false;
+			}																						 
+		}		// end function sync Ajax()
+		
+	function do_mail_all_win(the_ticket) {			// 6/16/09
+		if(starting) {return;}					
+		starting=true;	
+		newwindow_um=window.open("do_unit_mail.php?the_ticket=" + the_ticket, "Email",  "titlebar, resizable=1, scrollbars, height=640,width=600,status=0,toolbar=0,menubar=0,location=0, left=50,top=150,screenX=100,screenY=300");
+		if (isNull(newwindow_um)) {
+			alert ("This requires popups to be enabled. Please adjust your browser options.");
+			return;
+			}
+		newwindow_um.focus();
+		starting = false;
+		}		
+</SCRIPT>
 
 <?php 
 	if ($_SESSION['internet']) {	
@@ -600,8 +676,8 @@ if (is_guest()) {													// 8/25/10
 		<SCRIPT SRC='./js/usng.js' TYPE='text/javascript'></SCRIPT>		<!-- 10/14/08 -->
 		<SCRIPT SRC='./js/graticule.js' type='text/javascript'></SCRIPT>
 <?php 
- 
-		if(module_active("Ticker")==1) {
+		$sit_scr = (array_key_exists('id', ($_GET)))? $_GET['id'] :	NULL;	 	//	10/23/12
+		if((module_active("Ticker")==1) && (!($sit_scr))) {	//	6/1/12, 10/23/12
 ?>
 			<SCRIPT SRC='./modules/Ticker/js/mootools-1.2-core.js' type='text/javascript'></SCRIPT>
 			<SCRIPT SRC='./modules/Ticker/js/ticker_core.js' type='text/javascript'></SCRIPT>
@@ -610,7 +686,6 @@ if (is_guest()) {													// 8/25/10
 			$ld_ticker = "ticker_init();";	//	3/23/11 To support ticket module
 			}
 		}
-
 //								// 3/23/12 - auto-refresh; develop the notification string
 	$info_str ="";
 	$our_time = mysql_format_date(now() - 30);			// seconds ago ********
@@ -706,10 +781,11 @@ if (is_guest()) {													// 8/25/10
 <STYLE TYPE="text/css">
 .box { background-color: #DEE3E7; border: 2px outset #606060; color: #000000; padding: 0px; position: absolute; z-index:1000; width: 180px; }
 .bar { background-color: #FFFFFF; border-bottom: 2px solid #000000; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
-.bar_header { height: 20px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
+.bar_header { height: 30px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
 .content { padding: 1em; }
 </STYLE>
 <SCRIPT>
+	var watch_val;
 	function start_watch() {							// get initial values from top - 3/23/12
 //		alert(681 + parent.frames["upper"].$("div_assign_id").innerHTML);
 		parent.frames['upper'].mu_init();				// start the polling
@@ -764,6 +840,25 @@ if (is_guest()) {													// 8/25/10
 			clearInterval(blink_var);
 			}
 		}		// end function
+		
+	function get_wastebin() {	//	10/23/12
+		$(waste_but).style.display = "none";
+		$(inbox_but).style.display = "inline";	
+		get_wastelist('','',sortby, 'DESC','');
+		$('the_box').innerHTML = "Showing Wastebasket";		
+		}
+		
+	function get_inbox() {	//	10/23/12
+		$(waste_but).style.display = "inline";
+		$(inbox_but).style.display = "none";	
+		$('the_box').innerHTML = "Showing Inbox";	
+		get_all_messagelist(ticket_id,'',sortby, 'DESC','', 'ticket');
+		}			
+		
+	function get_mainmessages(ticket_id, responder_id, sortby, sort, filter, thescreen) {	//	10/23/12
+		ticket_id = ticket_id;
+		get_all_messagelist(ticket_id,'',sortby, sort, filter, 'ticket');
+		}
 <?php
 	$do_blink_str = ($do_blink)? "start_blink()" : "";
 	$end_blink_str = ($do_blink)? "end_blink()" : "";
@@ -771,16 +866,16 @@ if (is_guest()) {													// 8/25/10
 </SCRIPT>
 </HEAD>
 <?php
-	if((!(is_guest())) && ($_SESSION['internet'])) {	//	4/6/11 Added for add on modules
-		if(file_exists("./incs/modules.inc.php")) {
-			get_modules('main');
-			}
-		}
-		
 	$get_print = 			(array_key_exists('print', ($_GET)))?			$_GET['print']: 		NULL;
 	$get_id = 				(array_key_exists('id', ($_GET)))?				$_GET['id']  :			NULL;
 	$get_sort_by_field = 	(array_key_exists('sort_by_field', ($_GET)))?	$_GET['sort_by_field']:	NULL;
 	$get_sort_value = 		(array_key_exists('sort_value', ($_GET)))?		$_GET['sort_value']:	NULL;	
+	
+	if((!(is_guest())) && ($_SESSION['internet']) && (!($get_id))) {	//	4/6/11 Added for add on modules, 6/1/12 only on situation screen, not on ticket detail.
+		if(file_exists("./incs/modules.inc.php")) {
+			get_modules('main');
+			}
+		}	
 	
 	$gunload = ($_SESSION['internet'])? "GUnload();" : "" ;				// 3/23/12
 	$fences = (($_SESSION['internet']) && (!($get_id)))? "fence_init();" : "" ;				// 4/22/11	
@@ -791,10 +886,11 @@ if (is_guest()) {													// 8/25/10
 	$refresh =  ($temp < 15)? 15000: $temp * 1000;
 	$set_to = (intval(trim(get_variable('situ_refr')))>0)? "setTimeout('location.reload(true);', {$refresh});": "";
 	$set_bnds = (($_SESSION['internet']) && (!($get_id)))? "set_bnds();" : "";
-	$the_api_key = trim(get_variable('gmaps_api_key'));							// 3/5/12	
-	$set_map = (empty($the_api_key))? "document.to_map.submit();" : "";
+//			removed gmaps api key check - 2/14/2013
+	$set_regions_control = ((!($get_id)) && ((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))) ? "set_regions_control();" : "";	//	6/1/12
+	$get_messages = ($get_id) ? "get_mainmessages(" . $get_id . " ,'',sortby, sort, '', 'ticket');" : "";
 ?>
-<BODY onLoad = "ck_frames(); <?php print $ld_ticker;?> set_regions_control(); <?php print $set_showhide;?> <?php print $set_bnds;?> parent.frames['upper'].document.getElementById('gout').style.display  = 'inline'; start_watch(); <?php echo $set_map; ?> location.href = '#top'; <?php print $do_mu_init;?> <?php print $fences;?> <?php print $do_blink_str;?> " onUnload = "end_watch(); end_blink(); <?php print $gunload;?>";>	<!-- 3/15/11, 6/14/12 -->
+<BODY onLoad = "ck_frames(); <?php print $ld_ticker;?> <?php print $set_regions_control;?> <?php print $get_messages;?> <?php print $set_showhide;?> <?php print $set_bnds;?> parent.frames['upper'].document.getElementById('gout').style.display  = 'inline'; ck_frames(); start_watch(); location.href = '#top'; <?php print $do_mu_init;?> <?php print $fences;?> <?php print $do_blink_str;?> " onUnload = "end_watch(); end_blink(); <?php print $gunload;?>";>	<!-- 3/15/11, 10/23/12 -->
 <?php
 	include("./incs/links.inc.php");		// 8/13/10
 ?>
@@ -813,16 +909,16 @@ if (is_guest()) {													// 8/25/10
 <DIV ID = "div_assign_id" STYLE="display:none;"></DIV>
 <DIV ID = "div_action_id" STYLE="display:none;"></DIV>
 <DIV ID = "div_patient_id" STYLE="display:none;"></DIV>
-
 <?php
 if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
 ?>
 		<DIV id = 'regions_outer' style = "position: fixed; right: 20%; top: 10%; z-index: 1000;">
 			<DIV id="boxB" class="box" style="z-index:1000;">
-				<DIV class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;">Viewed Regions
-				<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+				<DIV class="bar_header" class="heading_2" style='white-space: nowrap;'>	
 				<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
-					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
+					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i>
+					<DIV id="collapse_regs" class='plain' style ="display: inline; z-index:1001; cursor: pointer; float: right; margin-left: 0px; font-size: 10px;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+				</DIV>
 				<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV>
 				</DIV>
 			</DIV>
@@ -844,6 +940,30 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
 	else {
 		list_tickets();
 		}
+		
+	$sit_scr = (array_key_exists('id', ($_GET)))? $_GET['id'] :	NULL;		//	10/23/12	
+	if((module_active("Ticker")==1) && (!($sit_scr))) {			//	10/23/12
+		require_once('./modules/Ticker/incs/ticker.inc.php');
+		$the_markers = buildmarkers();
+		foreach($the_markers AS $value) {
+?>
+<SCRIPT>
+			var the_point = new GLatLng(<?php print $value[3];?>, <?php print $value[4];?>);		//	10/23/12
+			var the_header = "Traffic Alert";		//	10/23/12
+			var the_text = "<?php print $value[1];?>";		//	10/23/12
+			var the_id = "<?php print $value[0];?>";		//	10/23/12
+			var the_category = "<?php print $value[5];?>";		//	10/23/12
+			var the_descrip = "<DIV style='font-size: 14px; color: #000000; font-weight: bold;'>" + the_header + "</DIV><BR />";		//	10/23/12
+			the_descrip += "<DIV style='font-size: 14px; color: #FFFFFF; background-color: #707070; font-weight: bold;'>" + the_category + "</DIV><BR />";		//	10/23/12
+			the_descrip += "<DIV style='font-size: 12px; color: blue; font-weight: normal;'>";		//	10/23/12
+			the_descrip += "<?php print $value[2];?>";		//	10/23/12
+			the_descrip += "</DIV>";		//	10/23/12
+			var rss_marker = create_feedMarker(the_point, the_text, the_descrip, the_id, the_id);		//	10/23/12
+			map.addOverlay(rss_marker);		//	10/23/12
+</SCRIPT>
+<?php
+		}
+	}
 ?>
 <FORM NAME='to_closed' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'> <!-- 11/28/10 not now used - replaced with form to_listtype -->
 <INPUT TYPE='hidden' NAME='status' VALUE='<?php print $GLOBALS['STATUS_CLOSED'];?>' /> <!-- 11/28/10 not now used - replaced with form to_listtype -->

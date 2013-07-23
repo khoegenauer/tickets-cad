@@ -1855,7 +1855,7 @@ var sidebar_line = "";
 <?php	
 			} else {
 ?>
-			var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, , 0, {clickable:false, id:"ringfence"});
+			var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, 0, 0, {clickable:false, id:"ringfence"});
 			boundary.push(polyline);
 			bound_names.push("<?php print $bn_name;?>"); 
 <?php		
@@ -1897,7 +1897,7 @@ var sidebar_line = "";
 <?php	
 			} else {
 ?>
-			var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, , 0, {clickable:false, id:"ringfence"});
+			var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, 0, 0, {clickable:false, id:"ringfence"});
 			boundary.push(polyline);
 			bound_names.push("<?php print $bn_name;?>"); 
 <?php		

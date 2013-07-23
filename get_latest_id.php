@@ -100,13 +100,16 @@ if(!isset($curr_viewed)) {			//	6/10/11
 	$where2 .= "AND `a`.`type` = 2";	
 							
 $where4 = "AND `a`.`type` = 2";							
-$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` `r`
+$query = "SELECT *, `r`.`id` AS `the_responder_id` FROM `$GLOBALS[mysql_prefix]responder` `r`
 		LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON `r`.`id` = `a`.`resource_id`
 		WHERE  `callsign` > '' AND (`aprs` = 1 OR  `instam` = 1 OR  `locatea` = 1 OR  `gtrack` = 1 OR  `glat` = 1 ) $where2 ORDER BY `r`.`updated` DESC LIMIT 1";
 $result = mysql_query($query) or error_out(basename(__FILE__) . "@"  . __LINE__) ;			// 2/10/12
 $row = (mysql_affected_rows()>0)? stripslashes_deep(mysql_fetch_assoc($result)): FALSE;
-
-if (!($row )) {				// latest unit status updates written by others
+//	Changed 8/3/12
+if ($row ) {	//	Latest unit Status update written by current user.
+	$_SESSION['unit_flag_1'] = $row['the_responder_id'];			// 2/21/12
+//	$_SESSION['unit_flag_2'] = $me;		// 6/11/10
+	} else {				// latest unit status updates written by others
 	if(!isset($curr_viewed)) {			//	6/10/11
 		$x=0;	
 		$where2 = "AND (";
@@ -134,6 +137,7 @@ if (!($row )) {				// latest unit status updates written by others
 	WHERE `r`.`user_id` != {$me} $where2 $where4 ORDER BY `r`.`updated` DESC LIMIT 1";		// get most recent
 	$result = mysql_query($query) or error_out(basename(__FILE__) . "@"  . __LINE__) ;		// 2/10/12
 	$row =  (mysql_affected_rows()>0)? stripslashes_deep(mysql_fetch_assoc($result)): FALSE;
+
 	}
 
 if ($row) {
@@ -181,13 +185,19 @@ $query = "SELECT `updated` FROM `$GLOBALS[mysql_prefix]patient` WHERE `updated` 
 $result = mysql_query($query) or error_out(basename(__FILE__) . "@"  . __LINE__) ;		// 2/10/12
 $pat_row =  (mysql_affected_rows()>0)? stripslashes_deep(mysql_fetch_assoc($result)): FALSE;
 
+$query = "SELECT * FROM `$GLOBALS[mysql_prefix]requests` WHERE `status` = 'Open'";	//	10/23/12
+$result = mysql_query($query) or error_out(basename(__FILE__) . "@"  . __LINE__) ;		// 2/10/12
+$req_row =  (mysql_affected_rows()>0)? stripslashes_deep(mysql_fetch_assoc($result)): FALSE;
+$the_reqs = mysql_num_rows($result);
+
+
 $the_act_id = ($act_row)? $act_row['updated'] : "0";		// action item
 $the_pat_id = ($pat_row)? $pat_row['updated'] : "0";		// patient item
 
-$the_unit_id = ($row)? $row['id'] : "0";
+$the_unit_id = ($row)? $row['the_responder_id'] : "0";	//	10/23/12
 $the_updated = ($row)? $row['updated'] : "0";
 $the_dispatch_change = ($assign_row)? $assign_row['as_of']: "";
-$the_hash = md5($the_chat_id . $the_tick_id . $the_unit_id . $the_updated . $the_dispatch_change . $the_act_id . $the_pat_id);
-$ret_arr = array ($the_chat_id, $the_tick_id, $the_unit_id, $the_updated, $the_dispatch_change, $the_act_id, $the_pat_id, $the_hash);
+$the_hash = md5($the_chat_id . $the_tick_id . $the_unit_id . $the_updated . $the_dispatch_change . $the_act_id . $the_pat_id . $the_reqs);	//	10/23/12
+$ret_arr = array ($the_chat_id, $the_tick_id, $the_unit_id, $the_updated, $the_dispatch_change, $the_act_id, $the_pat_id, $the_reqs, $the_hash);	//	10/23/12
 print json_encode($ret_arr);				// 1/6/11
 ?>

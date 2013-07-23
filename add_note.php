@@ -7,6 +7,7 @@
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 12/1/10 added get_text(disposition)
 3/15/11 changed stylesheet.php to stylesheet.php
+1/7/2013 added user ident to inserted string, strip_tags as XSS prevention
 */
 error_reporting(E_ALL);
 
@@ -20,7 +21,6 @@ if($istest) {
 	dump($_POST);
 	}
 $disposition = get_text("Disposition");				// 12/1/10
-	
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
@@ -101,7 +101,8 @@ Description &raquo; <INPUT TYPE = 'radio' NAME='frm_add_to' value='0' CHECKED />
 		$format = get_variable('date_format');
 		$the_date = date($format, $now);
 		$the_in_str = ($_POST['frm_add_to']=="0")? $row['description'] : $row['comments'] ;
-		$the_text = $the_in_str . " [" . $the_date . "]" . trim($_POST['frm_text']) . "\n";
+		@session_start();		
+		$the_text = "{$the_in_str} [{$_SESSION['user']}:{$the_date}]" . strip_tags(trim($_POST['frm_text'])) . "\n";		// 1/7/2013
 	
 		$query = "UPDATE `$GLOBALS[mysql_prefix]ticket` SET `{$field_name[$_POST['frm_add_to']]}`= " . quote_smart($the_text) . " WHERE `id` = " . quote_smart($_POST['frm_ticket_id'])  ." LIMIT 1";
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);

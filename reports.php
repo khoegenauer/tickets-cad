@@ -1,5 +1,5 @@
 <?php
-/*
+/* 
 6/6/08 revised to accommodate deleted incident and unit records, these identified by a # at its index value
 8/7/08 added ACTION & PATIENT delete types
 8/9/08 calculate graphics width
@@ -45,6 +45,10 @@
 7/24/11 corrections to qualifier per MC email.
 11/4/11 - AS corrections to Unit log per AJ email; handle final unprinted log entry
 5/29/12 - AS corrections to avoid using mysql unixtimestamp and SQL to reduce data load returned
+10/24/12 - rewrite dispatch report to use assigns, vs. log data
+12/1/2012 - re-do re unix SQL time replacement
+1/7/2013 - date correction, use setting disp_stat for column headings
+2/4/2013 - Change to after action report to add associated messages to ticket detail.
 */
 error_reporting(E_ALL);									// 10/1/08
 $asof = "3/24/10";
@@ -174,6 +178,7 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 .typical	{font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight: normal; font-size: 11px;}
 .high		{font-family: Verdana, Arial, Helvetica, sans-serif;color:#347C17;font-weight: bold; font-size: 11px;}
 .highest	{font-family: Verdana, Arial, Helvetica, sans-serif;color:#FF0000;font-weight: bold; font-size: 11px;}
+p.page { page-break-after: always; }
 </style>
 
 <SCRIPT>
@@ -378,6 +383,7 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 		return substr($temp[1], 0, 5);
 		}		// end function time_part()
 
+
 // =================================================== DISPATCH LOG =========================================	1/31/09
 
 	function do_dispreport($date_in, $func_in) {				// $frm_date, $mode as params - 6/8/11
@@ -388,148 +394,109 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 		function the_time($in_val) {
 			return date("j H:i", (int)$in_val);
 			}
-		function print_row($ary_in, $_i) {			//
-			$_evenodd = array ("even", "odd");
-			$_priorities = array("typical","high","highest" );
 
-			$disp_str = (empty($ary_in[6]))? "" : 	the_time($ary_in[6]) . " <I>(" . round((($ary_in[6]) - $ary_in[2])/60) . ")</I>";
-			$enr_str = (empty($ary_in[7]))? "" :  	the_time($ary_in[7]) . " <I>(" . round((($ary_in[7]) - $ary_in[2])/60) . ")</I>";
-			$onsc_str = (empty($ary_in[8]))? "" :  	the_time($ary_in[8]) . " <I>(" . round((($ary_in[8]) - $ary_in[2])/60) . ")</I>";
-			$facen_str = (empty($ary_in[9]))? "" : 	the_time($ary_in[9]) .  " <I>(" . round((($ary_in[9]) - $ary_in[2])/60) . ")</I>";
-			$facar_str = (empty($ary_in[10]))? "" : the_time($ary_in[10]) . " <I>(" . round((($ary_in[10]) - $ary_in[2])/60) . ")</I>";
-			$clr_str = (empty($ary_in[11]))? "" : 	the_time($ary_in[11]) . " <I>(" . round((($ary_in[11]) - $ary_in[2])/60) . ")</I>";
-			$res_str = (empty($ary_in[12]))? "" :  	the_time($ary_in[12]) ;
-			$_class = (isset($_priorities[$ary_in[3]]))? $_priorities[$ary_in[3]] : $_priorities[0];
-			$_shortname = empty($ary_in[1])? "[#{$ary_in[0]}]" : shorten($ary_in[1], 32);
-			$_full_time = format_date((string)$ary_in[2]);
-			echo "<TR CLASS='{$_evenodd[$_i%2]}'>";
-			echo "<TD class='{$_class}' onmouseout='UnTip()' onmouseover=\"Tip('{$ary_in[1]}');\" >{$_shortname}</TD>";		//	ticket name
-			echo "<TD  onmouseout='UnTip()' onmouseover=\"Tip('{$_full_time}');\">" . the_time($ary_in[2]). "</TD>";			//	ticket start
-			$_unit_name = (empty($ary_in[5]))? "[#{$ary_in[4]}]" : $ary_in[5] ;
-			echo "<TD>{$_unit_name}</TD>";							//	unit name
-			echo "<TD>{$disp_str}</TD>";							//	dispatched
-			echo "<TD>{$enr_str}</TD>";								//	en route
-			echo "<TD>{$onsc_str}</TD>";							//	on scene
-			echo "<TD>{$facen_str}</TD>";							//	far enroute
-			echo "<TD>{$facar_str}</TD>";							//	fac arr
-			echo "<TD>{$clr_str}</TD>";								//	clear
-			echo "<TD>{$res_str}</TD>";								//	reset
-			echo "</TR>\n";
-			}				// end function echo row()
-/*
-0	- ticket id
-1	- ticket name
-2	- ticket start
-3	- ticket severity
-4	- unit id
-5	- unit name
-6	- dispatched
-7	- en route
-8	- on scene
-9	- far enroute
-10	- fac arr
-11	- clear
-12	- reset
-*/
-
-		function initial ($row_in) {
-			$ary_out = array("","","","","","","","","","","","","");
-			$ary_out[0] = $row_in['ticket_id'];
-			$ary_out[1] = $row_in['scope'];
-			$ary_out[2] = $row_in['problemstart'];
-			$ary_out[3] = $row_in['severity'];
-			$ary_out[4] = $row_in['responder_id'];
-			$ary_out[5] = $row_in['handle'];
-			return $ary_out;
-			};
+		function do_cells ($in_1, $in_2) {
+			global $row, $out_row_1, $out_row_2;
+			if (is_date($row['in_1'])) {
+				$out_val1 = format_date_2($row['in_2']);
+				$out_val2 = my_date_diff($row['problemstart_i'], $row['in_2']);
+				}
+			else {$out_val1 = $out_val2 = "";}
+			$out_row_1 .= "<TD>{$out_val1}</TD>";
+			$out_row_2 .= "<TD>{$out_val2}</TD>";
+			}
+		
+		function do_cell ($in_1, $in_2) {
+			return (is_date($in_2))? format_date_2($in_1) : "";
+			}
+		
 
 		$from_to = date_range($date_in,$func_in);	// get date range as array
 
 		$titles = array ();
-		$titles['dr'] = "Dispatch - Daily Report - ";
-		$titles['cm'] = "Dispatch - Current Month-to-date - ";
-		$titles['lm'] = "Dispatch - Last Month - ";
-		$titles['cw'] = "Dispatch - Current Week-to-date - ";
-		$titles['lw'] = "Dispatch - Last Week - ";
-		$titles['cy'] = "Dispatch - Current Year-to-date - ";
-		$titles['ly'] = "Dispatch - Last Year - ";
+		$titles['dr'] = "Dispatch Log Daily Report - ";
+		$titles['cm'] = "Dispatch Log Current Month-to-date - ";
+		$titles['lm'] = "Dispatch Log Last Month - ";
+		$titles['cw'] = "Dispatch Log Current Week-to-date - ";
+		$titles['lw'] = "Dispatch Log Last Week - ";
+		$titles['cy'] = "Dispatch Log Current Year-to-date - ";
+		$titles['ly'] = "Dispatch Log Last Year - ";
+		$to_str = ($func_in=="dr")? "": " to " . $from_to[3];
+
 		$to_str = ($func_in=="dr")? "": " to " . $from_to[3];
 		print "\n<TABLE ALIGN='left' BORDER = 0 >\n<TR CLASS='even' style='height: 24px'>\n";
 		print "<TH COLSPAN=99 ALIGN = 'center' border=1>" . $titles[$func_in] . $from_to[2] . $to_str . "</TH></TR>\n";
 
-		$where = " WHERE `when` BETWEEN '" . $from_to[0] . "' AND '" . $from_to[1] . "'";
-		$which_inc = ($_POST['frm_tick_sel'] ==0)? "" : " AND `ticket_id` = " . $_POST['frm_tick_sel'];				// 2/7/09
-		$which_unit = ($_POST['frm_resp_sel']==0)? "" : " AND `responder_id` = " .$_POST['frm_resp_sel'];
-												// 6/4/11
-		$codes = "{$GLOBALS['LOG_CALL_DISP']}, {$GLOBALS['LOG_CALL_RESP']}, {$GLOBALS['LOG_CALL_ONSCN']}, {$GLOBALS['LOG_CALL_CLR']}, {$GLOBALS['LOG_CALL_RESET']}, {$GLOBALS['LOG_CALL_U2FENR']}, {$GLOBALS['LOG_CALL_U2FARR']}";
-//		$codes = "{$GLOBALS['LOG_CALL_U2FENR']}, {$GLOBALS['LOG_CALL_U2FARR']}";
-		$query = "SELECT *, 
-			UNIX_TIMESTAMP(`l`.`when`) AS `when_num`, 
-			UNIX_TIMESTAMP(`t`.`problemstart`) AS `problemstart`, 
-			`r`.`name` AS `unit_name`, 
-			`l`.`info` AS `status`
-			FROM `$GLOBALS[mysql_prefix]log` `l`
-			LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` ON (`t`.`id` = `l`.`ticket_id`)
-			LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON (`r`.`id` = `l`.`responder_id`)
-			{$where} {$which_inc} {$which_unit}
-			AND `l`.`code` IN ({$codes})
-			ORDER BY `l`.`ticket_id` ASC, `l`.`responder_id` ASC, `l`.`code` ASC" ;
+		$where = " WHERE  `a`.`dispatched` BETWEEN '{$from_to[0]}' AND '{$from_to[1] }'
+					OR  `a`.`responding` BETWEEN '{$from_to[0]}' AND '{$from_to[1] }'
+					OR  `a`.`on_scene` BETWEEN '{$from_to[0]}' AND '{$from_to[1] }'
+					OR  `a`.`u2fenr` BETWEEN '{$from_to[0]}' AND '{$from_to[1] }'
+					OR  `a`.`u2farr` BETWEEN '{$from_to[0]}' AND '{$from_to[1] }'
+					OR  `a`.`clear` BETWEEN '{$from_to[0]}' AND '{$from_to[1] }'";
 
-		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
+		$which_inc = ($_POST['frm_tick_sel']==0)? 	"" : " AND `ticket_id` = " . 	quote_smart($_POST['frm_tick_sel']);				// 2/7/09
+		$which_unit = ($_POST['frm_resp_sel']==0)? 	"" : " AND `responder_id` = " . quote_smart($_POST['frm_resp_sel']);
+
+		$query = "SELECT *, 
+			`dispatched` AS dispatched_i, 
+			`responding` AS responding_i, 
+			`on_scene` AS on_scene_i, 
+			`u2fenr` AS u2fenr_i, 
+			`u2farr` AS u2farr_i, 
+			`clear` AS clear_i, `r`.`handle`, 
+			`t`.`problemstart` AS `problemstart_i`,
+			`r`.`handle`
+			FROM `$GLOBALS[mysql_prefix]assigns` `a`
+			LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` 	ON (`t`.`id` = `a`.`ticket_id`)
+			LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON (`r`.`id` = `a`.`responder_id`)			 
+			{$where} {$which_inc} {$which_unit}
+			ORDER BY `t`.`severity` DESC, `a`.`id` ASC" ;
+
 //		dump($query);
 
-		$normalize = array(	$GLOBALS['LOG_CALL_DISP']	 => 6 ,
-							$GLOBALS['LOG_CALL_RESP']	 => 7 ,
-							$GLOBALS['LOG_CALL_ONSCN']	 => 8 ,
-							$GLOBALS['LOG_CALL_U2FENR']	 => 9 ,
-							$GLOBALS['LOG_CALL_U2FARR']	 => 10 ,
-							$GLOBALS['LOG_CALL_CLR']	 => 11,
-							$GLOBALS['LOG_CALL_RESET']	 => 12							
-							);
-		$i = 0;
-		$disp_start = "";
-		$_data = $empty = array("", "", "", "", "", "", "", "", "", "", "", "", "");	// incident, unit, start, dispatch time, responding time, on-scene time, fac-enr time, fac-arr time, clear, reset
-		$counts = $minutes = $stats = array(0, 0, 0, 0, 0, 0, 0);							// elapsed minutes and counts to dispatched, responding, on-scene, fac-enr, fac-arr, cleared - 2/6/09
-
-		if (mysql_affected_rows()>0) {				// main loop - top
-			$header= "<TR><TH ALIGN='left'>&nbsp;{$incident}&nbsp;</TH><TH ALIGN='left'>&nbsp;Start&nbsp;</TH><TH ALIGN='left'>&nbsp;" . get_text("Unit") . "&nbsp;</TH><TH ALIGN='left'>&nbsp;Dispatched&nbsp;</TH><TH ALIGN='left'>&nbsp;Responding&nbsp;</TH><TH ALIGN='left'>&nbsp;On-scene&nbsp;</TH><TH ALIGN='left'>&nbsp;Fac-enr&nbsp;</TH><TH ALIGN='left'>&nbsp;Fac-arr&nbsp;</TH><TH ALIGN='left'>&nbsp;Cleared&nbsp;</TH><TH ALIGN='left'>&nbsp;Reset&nbsp;</TH></TR>\n";
+		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
+		if (mysql_affected_rows()>0) {										// main loop - top
+			$temp = explode("/", get_variable('disp_stat'));				// 1/7/2013
+			if (count($temp)< 6) {$temp = 	explode("/", "D/R/O/FE/FA/Clear");}	
+			$header= "<TR CLASS = '{$evenodd[1]} {highest}'>
+				<TH ALIGN='center'>" . get_text("Unit") . "&nbsp;</TH>
+				<TH ALIGN='center'>" . get_text("Incident") . "&nbsp;</TH>
+				<TH ALIGN='center'>Start</TH>
+				<TH ALIGN='center'>{$temp[0]}&nbsp;</TH>
+				<TH ALIGN='center'>{$temp[1]}&nbsp;</TH>
+				<TH ALIGN='center'>{$temp[2]}&nbsp;</TH>
+				<TH ALIGN='center'>{$temp[3]}&nbsp;</TH>
+				<TH ALIGN='center'>{$temp[4]}&nbsp;</TH>
+				<TH ALIGN='center'>{$temp[5]}&nbsp;</TH>
+				</TR>\n";
 			echo $header;
 			$i = 0;
-			$initialized = FALSE;
-			while($row = stripslashes_deep(mysql_fetch_assoc($result))) {
-
-				if (!($initialized)) { 
-					$_data = initial ($row); 
-					$initialized = TRUE; 
+			while($row = stripslashes_deep(mysql_fetch_assoc($result))) {			// main loop - top
+				switch($row['severity'])		{		//style row by severity
+				 	case $GLOBALS['SEVERITY_MEDIUM']: 	$severityclass='high'; break;
+					case $GLOBALS['SEVERITY_HIGH']: 	$severityclass='highest'; break;
+					default: 							$severityclass='typical'; break;
 					}
-				$disp_event = $normalize[$row['code']]; 		// normalize to column position
-																// change in incident, unit, or code collision?
-				if ((($row['ticket_id'])!=$_data[0]) || 
-						(!$row['responder_id']==$_data[4]) || 
-						(!(empty($_data[$disp_event])))) {
-					print_row($_data, $i);
-					$i++;
-					if (($i%100)==0) {echo $header;}
-					$_data =  initial($row);
-					$_data[$normalize[$row['code']]] = $row['when_num'];
-					}
-				else {
-					$_data[$normalize[$row['code']]] = $row['when_num'];
-					}
-				}				// end while ...
-
-								// do the last line if any
-			if ((!(empty($_data[6]))) ||(!(empty($_data[7]))) ||(!(empty($_data[8]))) ||(!(empty($_data[9]))) ||(!(empty($_data[10]))) ||(!(empty($_data[11]))) ||(!(empty($_data[12]))) ) {
-				print_row($_data, $i);
+					
+				$row_tr = "<TR CLASS = '{$evenodd[$i%2]} {$severityclass}'>";
+				$row_tr .= "<TD>&nbsp;{$row['handle']}</TD>\n";
+				$row_tr .= "<TD>&nbsp;{$row['scope']}</TD>\n";		// 
+				$row_tr .= "<TD>&nbsp;" . do_cell ($row['problemstart_i'],	$row['problemstart']) .	"</TD>\n";		
+				$row_tr .= "<TD>&nbsp;" . do_cell ($row['dispatched_i'],		$row['dispatched']) .	"</TD>\n";		
+				$row_tr .= "<TD>&nbsp;" . do_cell ($row['responding_i'],		$row['responding']) .	"</TD>\n";		
+				$row_tr .= "<TD>&nbsp;" . do_cell ($row['on_scene_i'],		$row['on_scene']) .		"</TD>\n";		
+				$row_tr .= "<TD>&nbsp;" . do_cell ($row['u2fenr_i'],			$row['u2fenr']) .		"</TD>\n";		
+				$row_tr .= "<TD>&nbsp;" . do_cell ($row['u2farr_i'],			$row['u2farr']) .		"</TD>\n";		
+				$row_tr .= "<TD>&nbsp;" . do_cell ($row['clear_i'],			$row['clear']) .		"</TD>\n";		
+				$row_tr .= "</TR>\n";		
+				echo $row_tr;
+				$i++;
 				}
-
 			}		// end if (mysql_affected_rows()>0)
-		else {																// 10/31/09
-			print "\n<TR CLASS='odd'><TD COLSPAN='99' ALIGN='center'><br /><I>No data for this period</I><BR /></TD></TR>\n";
+		else {
+			echo "<TR><TH><BR/>No data this period<BR/></TH></TR>";
 			}
-		print "<TR><TD COLSPAN=99 ALIGN='center'><HR STYLE = 'color: blue; size: 1; width: 50%'></TD></TR>";
-
-		print "</TABLE>\n";
+		echo "</TABLE><BR/><BR/>";
 		}		// end function do_dispreport()
 
 
@@ -616,7 +583,11 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 //		$which_unit = ($_POST['frm_resp_sel']==0)? "" : " AND `responder_id` = " .$_POST['frm_resp_sel'];
 		$which_unit = ((!isset($_POST['frm_resp_sel']) || ($_POST['frm_resp_sel']==0)))? "" : " AND `responder_id` = " .$_POST['frm_resp_sel'];
 																																			// 3/23/09
-		$query = "SELECT *, UNIX_TIMESTAMP(`when`) AS `when_num`, `responder_id` AS `unit`, `info` AS `status`, `ticket_id` AS `incident`
+		$query = "SELECT *, 
+			`when` AS `when_num`,
+			`responder_id` AS `unit`, 
+			`info` AS `status`, 
+			`ticket_id` AS `incident`
 			FROM `$GLOBALS[mysql_prefix]log`
 			LEFT JOIN `$GLOBALS[mysql_prefix]responder` r ON (`$GLOBALS[mysql_prefix]log`.responder_id = r.id) ".
 			$where . $which_unit. " AND `code` = " . $GLOBALS['LOG_UNIT_STATUS'] . " ORDER BY `name` ASC, `incident` ASC, `status` ASC, `when` ASC" ;
@@ -629,10 +600,10 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 				if (empty($curr_unit)) {
 					$curr_unit = $row['unit'];
 					$curr_inc = $row['incident'];
-					$curr_date_test = date ('z', $row['when_num']);			// day of year as test value
+					$curr_date_test = date ('z', strtotime($row['when_num']));			// day of year as test value
 					$do_date=$row['when_num'];
 					}								// populate break item
-				if (($row['unit'] == $curr_unit) && ($row['incident'] == $curr_inc ) && (date ('z', $row['when_num']) == $curr_date_test )) {	// same unit and incident, date?
+				if (($row['unit'] == $curr_unit) && ($row['incident'] == $curr_inc ) && (date ('z', strtotime($row['when_num'])) == $curr_date_test )) {	// same unit and incident, date?
 					$statuses[$row['status']] = time_part($row['when']);		// yes, populate the row
 					$theIncident_id = $row['incident'];
 					}
@@ -641,15 +612,15 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 					$theUnitName = (array_key_exists($curr_unit, $unit_names))? shorten($unit_names[$curr_unit], 16): "#" . $curr_unit ;
 					print (array_key_exists($curr_unit, $unit_names))? "<TD onClick = 'viewU(" .$curr_unit . ")'><B>" . $theUnitName . "</B></TD>":	"<TD>[#" . $curr_unit . "]</TD>";
 					if (!empty($do_date)) {
-						print "<TD>" . date ('D, M j', $do_date) . "</TD>";
+						print "<TD>" . date ('D, M j', strtotime($do_date)) . "</TD>";
 						$do_date = "";
 						}
 					else {
 						print "<TD></TD>";
 						}
-					if(((date ('z', $row['when_num'])) != $curr_date_test)) {		// date change?
+					if(((date ('z', strtotime($row['when_num']))) != $curr_date_test)) {		// date change?
 						$do_date=$row['when_num'];
-						$curr_date_test = date ('z', $row['when_num']);
+						$curr_date_test = date ('z', strtotime($row['when_num']));
 						}
 					$theUnitName = (array_key_exists($curr_unit, $unit_names))? shorten($unit_names[$curr_unit], 16): "#" . $curr_unit ;
 
@@ -666,7 +637,7 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 						}
 					print "</TR>\n";
 					$statuses = $blank;															// initalize
-					$statuses[$row['status']] = date('H:i', $row['when_num']);					// MySQL format
+					$statuses[$row['status']] = date('H:i', strtotime($row['when_num']));					// MySQL format
 					$curr_unit = $row['unit'];
 					$curr_inc = $row['incident'];
 					$i++;
@@ -679,13 +650,8 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 			$theUnitName = (array_key_exists($curr_unit, $unit_names))? shorten($unit_names[$curr_unit], 16):  "#" . $curr_unit ;
 			print "<TD onClick = 'viewU(" .$curr_unit . ")'><B>" . $theUnitName . "</B></TD>";		// flush tail-end Charlie
 
-/*
-			if (!empty($do_date)) {
-				print "<TD>" . date ('D, M j', $do_date) . "</TD>";
-//				$do_date = "";
-				}
-*/
-			$work_date = (!empty($do_date))? date ('D, M j', $do_date) : "" ; // 11/4/11 - AS
+//			dump($do_date);
+			$work_date = (!empty($do_date))? date ('D, M j', strtotime($do_date)) : "" ; // 1/7/2013
 			print "<TD>{$work_date}</TD>";
 
 			foreach($statuses as $key => $val) {
@@ -835,7 +801,12 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 		$which_inc = ($_POST['frm_tick_sel'] ==0)? "" : " AND `ticket_id` = " . $_POST['frm_tick_sel'];				// 2/7/09
 
 		$query = "
-			SELECT *, UNIX_TIMESTAMP(`when`) AS `when`, t.id AS `tick_id`,t.scope AS `tick_name`, t.severity AS `tick_severity`, `u`.`user` AS `user_name` FROM `$GLOBALS[mysql_prefix]log`
+			SELECT *, 
+			`when` AS `when`, 
+			t.id AS `tick_id`,t.scope AS `tick_name`, 
+			t.severity AS `tick_severity`,
+			`u`.`user` AS `user_name` 
+			FROM `$GLOBALS[mysql_prefix]log`
 			LEFT JOIN `$GLOBALS[mysql_prefix]ticket` t ON (`$GLOBALS[mysql_prefix]log`.ticket_id = t.id)
 			LEFT JOIN `$GLOBALS[mysql_prefix]user` u ON (`$GLOBALS[mysql_prefix]log`.who = u.id)
 			". $where . $which_inc . " AND `code` >= '" . $GLOBALS['LOG_INCIDENT_OPEN'] ."'  AND `code` <= '" . $GLOBALS['LOG_INCIDENT_CLOSE'] . "'
@@ -880,12 +851,12 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 						$inc_types[$row['in_types_id']] = 1;
 						}
 					print "<TR CLASS='" . $evenodd[$i%2] . "'>";
-					if(!(date("z", $row['when']) == $curr_date))  {								// date change?
-						print "<TD>" . date ('D, M j', $row['when']) ."</TD>";
-						$curr_date = date("z", $row['when']);
+					if(!(date("z", strtotime($row['when'])) == $curr_date))  {								// date change?
+						print "<TD>" . date ('D, M j', strtotime($row['when'])) ."</TD>";
+						$curr_date = date("z", strtotime($row['when']));
 						}
 					else {print "<TD></TD>";}
-					print "<TD>" . date('H:i',$row['when']) . "</TD>";
+					print "<TD>" . date('H:i',strtotime($row['when'])) . "</TD>";
 					print "<TD>" . $types[$row['code']] . "</TD>";
 					if ($row['ticket_id']>0) {
 						$the_ticket = (empty($row['tick_name']))? "[#" . $row['ticket_id'] . "]" : shorten($row['tick_name'],20);	// 8/15/08 -1
@@ -1008,11 +979,11 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 // ______________________________________________________________________________
 	
 		$query = "SELECT *,
-			UNIX_TIMESTAMP(problemstart) AS problemstart,
-			UNIX_TIMESTAMP(problemend) AS problemend,
-			UNIX_TIMESTAMP(booked_date) AS booked_date,		
-			UNIX_TIMESTAMP(date) AS date,
-			UNIX_TIMESTAMP(`$GLOBALS[mysql_prefix]ticket`.`updated`) AS updated,
+			`problemstart` AS `problemstart`,
+			`problemend` AS `problemend`,
+			`booked_date` AS `booked_date`,		
+			`date` AS `date`,
+			`$GLOBALS[mysql_prefix]ticket`.`updated` AS updated,
 			 `$GLOBALS[mysql_prefix]ticket`.`description` AS `tick_descr`,
 			 `$GLOBALS[mysql_prefix]ticket`.`lat` AS `lat`,
 			 `$GLOBALS[mysql_prefix]ticket`.`lng` AS `lng`,
@@ -1054,16 +1025,16 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 		$print .= "<TR CLASS='even'><TD ALIGN='left'>Reported by:</TD>	<TD ALIGN='left'>{$theRow['contact']}";
 		$print .= "&nbsp;&nbsp;&nbsp;&nbsp;Phone:&nbsp;&nbsp;" . format_phone ($theRow['phone']) . "</TD></TR>\n";
 		$by_str = ($theRow['call_taker'] ==0)?	"" : "&nbsp;&nbsp;by " . get_owner($theRow['call_taker']) . "&nbsp;&nbsp;";		// 1/7/10
-		$print .= "<TR CLASS='odd'><TD ALIGN='left'>Written:</TD>		<TD ALIGN='left'>" . format_date($theRow['date']) . $by_str;
-		$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Updated:&nbsp;&nbsp;" . format_date($theRow['updated']) . "</TD></TR>\n";
-		$print .= (empty($theRow['booked_date']))? "" : "<TR CLASS='odd'><TD ALIGN='left'>Scheduled date:</TD>		<TD ALIGN='left'>" . format_date($theRow['booked_date']) . "</TD></TR>\n";	// 10/6/09
+		$print .= "<TR CLASS='odd'><TD ALIGN='left'>Written:</TD>		<TD ALIGN='left'>" . format_date_2($theRow['date']) . $by_str;
+		$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Updated:&nbsp;&nbsp;" . format_date_2($theRow['updated']) . "</TD></TR>\n";
+		$print .= (empty($theRow['booked_date']))? "" : "<TR CLASS='odd'><TD ALIGN='left'>Scheduled date:</TD>		<TD ALIGN='left'>" . format_date_2($theRow['booked_date']) . "</TD></TR>\n";	// 10/6/09
 		$print .= (!(is_int($theRow['facility'])))? 		"" : "<TR CLASS='odd' ><TD ALIGN='left'>{$incident} at Facility:</TD>		<TD ALIGN='left'>{$theRow['fac_name']}</TD></TR>\n";	// 8/1/09
 		$print .= (!(is_int($theRow['rec_facility'])))? 	"" : "<TR CLASS='even' ><TD ALIGN='left'>Receiving Facility:</TD>		<TD ALIGN='left'>{$theRow['rec_fac_name']}</TD></TR>\n";	// 10/6/09
 	
 		$print .= (empty($theRow['comments']))? "" : "<TR CLASS='odd'  VALIGN='top'><TD ALIGN='left'>{$disposition}:</TD>	<TD ALIGN='left'>" . nl2br($theRow['comments']) . "</TD></TR>\n";
 	
-		$print .= "<TR CLASS='even' ><TD ALIGN='left'>Run Start:</TD><TD ALIGN='left'>" . format_date($theRow['problemstart']);
-		$print .= 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End:&nbsp;&nbsp;" . format_date($theRow['problemend']) . "&nbsp;&nbsp;&nbsp;&nbsp;Elapsed:&nbsp;&nbsp;{$elapsed}
+		$print .= "<TR CLASS='even' ><TD ALIGN='left'>Run Start:</TD><TD ALIGN='left'>" . format_date_2($theRow['problemstart']);
+		$print .= 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End:&nbsp;&nbsp;" . format_date_2($theRow['problemend']) . "&nbsp;&nbsp;&nbsp;&nbsp;Elapsed:&nbsp;&nbsp;{$elapsed}
 			</TD></TR>\n";
 	
 		$locale = get_variable('locale');	// 08/03/09
@@ -1097,7 +1068,7 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 				`l`.`info` AS `log_info` , 
 				`l`.`id` AS `log_id` , 
 				`l`.`responder_id` AS `the_unit_id`,
-				UNIX_TIMESTAMP( `l`.`when` ) AS `when`
+				`l`.`when`  AS `when`
 			FROM `$GLOBALS[mysql_prefix]log` `l`
 			LEFT JOIN `$GLOBALS[mysql_prefix]ticket` t ON ( `t`.`id` = `l`.`ticket_id` )
 			LEFT JOIN `$GLOBALS[mysql_prefix]user` u ON ( `l`.`who` = `u`.`id` )
@@ -1132,7 +1103,7 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 						</TR>";
 					$do_hdr = FALSE;
 					}
-			$temp = explode (" ", format_date($row['when']));
+			$temp = explode (" ", format_date_2($row['when']));
 			$show_day = ($temp[0] == $day_part)? "" : $temp[0] ;
 			$day_part = $temp[0];
 			echo "<TR CLASS = '{$evenodd[($i%2)]}'>
@@ -1224,24 +1195,24 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 		$where = " WHERE `problemstart` >= '{$from_to[0]}' AND `problemstart` < '{$from_to[1]}'";
 
 		$query = "SELECT *,
-			UNIX_TIMESTAMP(problemstart) AS problemstart,
-			UNIX_TIMESTAMP(problemend) AS problemend,
-			UNIX_TIMESTAMP(booked_date) AS booked_date,		
-			UNIX_TIMESTAMP(date) AS date,
-			UNIX_TIMESTAMP(`$GLOBALS[mysql_prefix]ticket`.`updated`) AS updated,
-			 `$GLOBALS[mysql_prefix]ticket`.`description` AS `tick_descr`,
-			 `$GLOBALS[mysql_prefix]ticket`.`lat` AS `lat`,
-			 `$GLOBALS[mysql_prefix]ticket`.`lng` AS `lng`,
-			 `$GLOBALS[mysql_prefix]ticket`.`_by` AS `call_taker`,
-			 `$GLOBALS[mysql_prefix]ticket`.`street` AS `tick_street`,
-			 `$GLOBALS[mysql_prefix]ticket`.`city` AS `tick_city`,
-			 `$GLOBALS[mysql_prefix]ticket`.`state` AS `tick_state`,				 
-			 `$GLOBALS[mysql_prefix]facilities`.`name` AS `fac_name`,
-			 `rf`.`name` AS `rec_fac_name`,
-			 `rf`.`lat` AS `rf_lat`,
-			 `rf`.`lng` AS `rf_lng`,
-			 `$GLOBALS[mysql_prefix]facilities`.`lat` AS `fac_lat`,
-			 `$GLOBALS[mysql_prefix]facilities`.`lng` AS `fac_lng` FROM `$GLOBALS[mysql_prefix]ticket`  
+			`problemstart` AS `problemstart`,
+			`problemend` AS `problemend`,
+			`booked_date` AS `booked_date`,		
+			`date` AS `date`,
+			`$GLOBALS[mysql_prefix]ticket`.`updated` AS updated,
+			`$GLOBALS[mysql_prefix]ticket`.`description` AS `tick_descr`,
+			`$GLOBALS[mysql_prefix]ticket`.`lat` AS `lat`,
+			`$GLOBALS[mysql_prefix]ticket`.`lng` AS `lng`,
+			`$GLOBALS[mysql_prefix]ticket`.`_by` AS `call_taker`,
+			`$GLOBALS[mysql_prefix]ticket`.`street` AS `tick_street`,
+			`$GLOBALS[mysql_prefix]ticket`.`city` AS `tick_city`,
+			`$GLOBALS[mysql_prefix]ticket`.`state` AS `tick_state`,				 
+			`$GLOBALS[mysql_prefix]facilities`.`name` AS `fac_name`,
+			`rf`.`name` AS `rec_fac_name`,
+			`rf`.`lat` AS `rf_lat`,
+			`rf`.`lng` AS `rf_lng`,
+			`$GLOBALS[mysql_prefix]facilities`.`lat` AS `fac_lat`,
+			`$GLOBALS[mysql_prefix]facilities`.`lng` AS `fac_lng` FROM `$GLOBALS[mysql_prefix]ticket`  
 			LEFT JOIN `$GLOBALS[mysql_prefix]in_types` `ty` ON (`$GLOBALS[mysql_prefix]ticket`.`in_types_id` = `ty`.`id`)		
 			LEFT JOIN `$GLOBALS[mysql_prefix]facilities` ON (`$GLOBALS[mysql_prefix]facilities`.`id` = `$GLOBALS[mysql_prefix]ticket`.`facility`)
 			LEFT JOIN `$GLOBALS[mysql_prefix]facilities` `rf` ON (`rf`.`id` = `$GLOBALS[mysql_prefix]ticket`.`rec_facility`) 
@@ -1252,16 +1223,19 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 			print "<BR /><BR /><SPAN STYLE='margin-left:300px;'><B>No incident data for this period</B></SPAN>";
 			}
 		else {
+			$numrows = mysql_num_rows($result);
 			$to_str = ($func_in=="dr")? "": " to {$from_to[3]} " . substr($from_to[1] ,0 , 4) ;
 			print "<BR /><SPAN STYLE='margin-left:160px;'><B>" . mysql_affected_rows() . " Incidents: " . $from_to[2] . $to_str .  "</B></SPAN><BR /><BR />";
-
-			print "<TABLE ALIGN='left' CELLSPACING = 2 CELLPADDING = 2  BORDER=0 width='800px'><TR><TD>";	
+			$page_num = 1;
+//			print "<TABLE ALIGN='left' CELLSPACING = 2 CELLPADDING = 2  BORDER=0 width='800px'><TR><TD>";	
 			while ($row_ticket = stripslashes_deep(mysql_fetch_array($result))){
-				print do_ticket($row_ticket, $the_width, FALSE, FALSE);
+				print do_ticket_wm($row_ticket, $the_width, FALSE, FALSE);	//	2/4/13
 		//		print "<TR><TD ALIGN='center'><HR COLOR='blue'><BR /></TD></TR>";
 				print "<BR />";
+				print "<p class='page'>Page " . $page_num . " of " . $numrows . "</p>";
+				$page_num++;
 				}			// end while ()
-			print "</TD></TR></TABLE>";		
+//			print "</TD></TR></TABLE>";		
 			}		// end if/else
 	
 		}			// end function
@@ -1293,12 +1267,12 @@ function my_stripslashes_deep($value) {
 				
 					if (empty($today)) {
 						$today_ref = date("z", $row_in['problemstart']);
-						$today = substr( format_date($row_in['problemstart']), 0, 5);
+						$today = substr( format_date_2($row_in['problemstart']), 0, 5);
 						}
 					else {
 						if (!($today_ref == (date("z", $row_in['problemstart'])))) {				// date change?
 							$today_ref = date("z", $row_in['problemstart']);
-							$today = substr( format_date($row_in['problemstart']), 0, 5);
+							$today = substr( format_date_2($row_in['problemstart']), 0, 5);
 							}
 						}			
 		
@@ -1308,11 +1282,11 @@ function my_stripslashes_deep($value) {
 				print "<TR CLASS = '{$evenodd[$line_ctr%2]}'  onClick = 'open_tick_window(" . $row_in['tick_id'] . ");' >\n";
 				print "<TD>{$today}</TD>\n";							//		Date - 
 		
-				$problemstart = format_date($row_in['problemstart']);
+				$problemstart = format_date_2($row_in['problemstart']);
 				$problemstart_sh = short_ts($problemstart);
 				print "<TD onMouseover=\"Tip('{$problemstart}');\" onmouseout='UnTip();'>{$problemstart_sh}</TD>\n";						//		start
 				
-				$problemend = format_date($row_in['problemend']);
+				$problemend = format_date_2($row_in['problemend']);
 				$problemend_sh = short_ts($problemend);
 				print "<TD onMouseover=\"Tip('{$problemend}');\" onmouseout='UnTip();'>{$problemend_sh}</TD>\n";						//		end
 		
@@ -1361,7 +1335,7 @@ function my_stripslashes_deep($value) {
 				print "<TR CLASS = '{$evenodd[$line_ctr%2]}'>\n";
 				print "<TD>{$today}</TD>\n";							//		Date - 
 		
-				$when = format_date($ary_in['when']);
+				$when = format_date_2($ary_in['when']);
 				$when_sh = short_ts($when);
 				print "<TD onMouseover=\"Tip('{$when}');\" onmouseout='UnTip();'>{$when_sh}</TD>\n";						//		start
 				print "<TD  COLSPAN=3></TD>\n";							//		end	Ending time	
@@ -1378,7 +1352,10 @@ function my_stripslashes_deep($value) {
 				
 																			// populate global logs array
 			$where_l = str_replace ("problemstart",  "when", $where);		// log version - 7/22/11
-			$query = "SELECT `l`.`code`, `l`.`info` AS `info`, UNIX_TIMESTAMP(`l`.`when`) AS `when`, `u`.`user`, `u`.`info` AS `user_info`
+			$query = "SELECT `l`.`code`, 
+				`l`.`info` AS `info`, 
+				`l`.`when` AS `when`, 
+				`u`.`user`, `u`.`info` AS `user_info`
 				FROM `$GLOBALS[mysql_prefix]log` `l`
 				LEFT JOIN `$GLOBALS[mysql_prefix]user` u ON (`l`.who = u.id)
 				{$where_l}
@@ -1398,8 +1375,9 @@ function my_stripslashes_deep($value) {
 					}
 				}		// end function check_logs()						
 		
-			$query = "SELECT *, UNIX_TIMESTAMP(problemstart) AS `problemstart`,
-				UNIX_TIMESTAMP(problemend) AS `problemend`,
+			$query = "SELECT *, 
+				`problemstart` AS `problemstart`,
+				`problemend` AS `problemend`,
 				`a`.`id` AS `assign_id` ,
 				`a`.`comments` AS `assign_comments`,
 				`u`.`user` AS `theuser`, `t`.`scope` AS `tick_scope`,
@@ -1491,8 +1469,8 @@ function my_stripslashes_deep($value) {
 				}
 
 			$query = "SELECT *, 
-				UNIX_TIMESTAMP(problemstart) AS `problemstart`,
-				UNIX_TIMESTAMP(problemend) AS `problemend`,
+				`problemstart` AS `problemstart`,
+				`problemend` AS `problemend`,
 				`u`.`user` AS `theuser`,
 				NULL AS `unit_name`,
 				`t`.`scope` AS `tick_scope`,

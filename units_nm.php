@@ -18,6 +18,7 @@ $zoom_tight = FALSE;		// replace with a decimal number to over-ride the standard
 8/1/11 state length increased to 4 chars
 2/8/12 Fixed error on single region operation - editing a unit removes region 1 region allocation.
 3/24/12 fixed to accommodate OGTS in validate()
+12/1/2012 - unix time revisions
 */
 
 session_start();
@@ -553,7 +554,8 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 	}
 	$where2 .= "AND `a`.`type` = 2";	//	6/10/11		
 		
-	$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated`,
+	$query = "SELECT *, 
+		`updated` AS `updated`,
 		`t`.`id` AS `type_id`,
 		`r`.`id` AS `unit_id`,
 		`r`.`name` AS `name`,
@@ -667,7 +669,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			$strike_end = "</STRIKE>";
 		} 
 
-		$sidebar_line .= "<TD CLASS='$the_class'> $strike" . format_sb_date($the_time) . "$strike_end</TD>";	// 6/17/08
+		$sidebar_line .= "<TD CLASS='$the_class'> $strike" . format_sb_date_2($the_time) . "$strike_end</TD>";	// 6/17/08
 
 ?>
 		var unit_id = "<?php print $index;?>";	//	10/8/09
@@ -777,6 +779,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				`lng`= " . 			$the_lng . ",
 				`contact_name`= " . quote_smart(trim($_POST['frm_contact_name'])) . ",
 				`contact_via`= " . 	quote_smart(trim($_POST['frm_contact_via'])) . ",
+				`smsg_id`= " . 		quote_smart(trim($_POST['frm_smsg_id'])) . ",				
 				`type`= " . 		quote_smart(trim($_POST['frm_type'])) . ",
 				`user_id`= " . 		quote_smart(trim($_SESSION['user_id'])) . ",
 				`updated`= " . 		quote_smart(trim($now)) . "
@@ -813,7 +816,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$frm_lng = (empty($_POST['frm_lng']))? '0.999999': quote_smart(trim($_POST['frm_lng']));						// 9/3/08
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));							// 1/27/09
 		$query = "INSERT INTO `$GLOBALS[mysql_prefix]responder` (
-			`name`, `street`, `city`, `state`, `phone`, `handle`,  `icon_str`, `description`, `capab`, `un_status_id`, `callsign`, `mobile`, `multi`, `aprs`, `instam`, `locatea`, `gtrack`, `glat`, `t_tracker`, `ogts`, `direcs`, `contact_name`, `contact_via`, `lat`, `lng`, `type`, `user_id`, `updated` )
+			`name`, `street`, `city`, `state`, `phone`, `handle`,  `icon_str`, `description`, `capab`, `un_status_id`, `callsign`, `mobile`, `multi`, `aprs`, `instam`, `locatea`, `gtrack`, `glat`, `t_tracker`, `ogts`, `direcs`, `contact_name`, `contact_via`, `smsg_id`, `lat`, `lng`, `type`, `user_id`, `updated` )
 			VALUES (" .
 				quote_smart(trim($_POST['frm_name'])) . "," .
 				quote_smart(trim($_POST['frm_street'])) . "," .
@@ -833,11 +836,12 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				quote_smart(trim($_POST['frm_locatea'])) . "," .
 				quote_smart(trim($_POST['frm_gtrack'])) . "," .
 				quote_smart(trim($_POST['frm_glat'])) . "," .
-				quote_smart(trim($_POST['frm_t_tracker'])) . "," .				
+				quote_smart(trim($_POST['frm_t_tracker'])) . "," .
 				quote_smart(trim($_POST['frm_ogts'])) . "," .
 				quote_smart(trim($_POST['frm_direcs'])) . "," .
 				quote_smart(trim($_POST['frm_contact_name'])) . "," .
 				quote_smart(trim($_POST['frm_contact_via'])) . "," .
+				quote_smart(trim($_POST['frm_smsg_id'])) . "," .
 				$frm_lat . "," .
 				$frm_lng . "," .
 				quote_smart(trim($_POST['frm_type'])) . "," .
@@ -1034,7 +1038,8 @@ if(get_num_groups() > 1) {
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Capability - training, equipment on board etc">Capability</A>:&nbsp;</TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_capab" COLS=56 ROWS=2></TEXTAREA></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Contact name">Contact Name</A>:&nbsp;</TD>	<TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Contact via - for email to unit this must be a valid email address or email to SMS address">Contact Via</A>:&nbsp;</TD>	<TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_via" VALUE="" /></TD></TR>
-		<TR CLASS = "odd"><TD COLSPAN=4 ALIGN='center'>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="<?php get_provider_name(get_msg_variable('smsg_provider'));?> ID - This is for <?php get_provider_name(get_msg_variable('smsg_provider'));?> Integration and is the ID used by <?php get_provider_name(get_msg_variable('smsg_provider'));?> to send SMS messages"><?php get_provider_name(get_msg_variable('smsg_provider'));?> ID</A>:&nbsp;</TD>	<TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_smsg_id" VALUE="" /></TD></TR>	<!-- 10/23/12 -->
+		<TR CLASS = "even"><TD COLSPAN=4 ALIGN='center'>
 			<INPUT TYPE="button" VALUE="Cancel" onClick="document.can_Form.submit();" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<INPUT TYPE="reset" VALUE="Reset" onClick = "do_add_reset(this.form);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- 1/22/09 -->
 			<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>"  onClick="validate(document.res_add_Form);" ></TD></TR>	<!-- 7/21/09 -->
@@ -1280,6 +1285,7 @@ if(get_num_groups() > 1) {
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Capability - training, equipment on board etc">Capability</A>:&nbsp; </TD>										<TD COLSPAN=3><TEXTAREA NAME="frm_capab" COLS=56 ROWS=2><?php print $row['capab'];?></TEXTAREA></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Contact name">Contact Name</A>:&nbsp;</TD>	<TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="<?php print $row['contact_name'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Contact via - for email to unit this must be a valid email address or email to SMS address">Contact Via</A>:&nbsp;</TD>	<TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_via" VALUE="<?php print $row['contact_via'] ;?>" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="<?php get_provider_name(get_msg_variable('smsg_provider'));?> ID - This is for <?php get_provider_name(get_msg_variable('smsg_provider'));?> Integration and is the ID used by <?php get_provider_name(get_msg_variable('smsg_provider'));?> to send SMS messages"><?php get_provider_name(get_msg_variable('smsg_provider'));?> ID</A>:&nbsp;</TD>	<TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_smsg_id" VALUE="<?php print $row['smsg_id'] ;?>" /></TD></TR>	<!-- 10/23/12-->
 		<TR CLASS="odd" VALIGN='baseline'><TD CLASS="td_label"><A HREF="#" TITLE="Delete unit from system - disallowed if unit is assigned to any calls.">Remove <?php print get_text("Units");?></A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>>
 <?php 	print $cbtext; 
 ?>
@@ -1342,7 +1348,9 @@ if(get_num_groups() > 1) {
 				}		
 		
 			$id = $_GET['id'];
-			$query	= "SELECT *, UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]responder` `r` 
+			$query	= "SELECT *, 
+				`updated` AS `updated` 
+				FROM `$GLOBALS[mysql_prefix]responder` `r` 
 				WHERE `r`.`id`={$id} LIMIT 1";
 			$result	= mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 			$row	= stripslashes_deep(mysql_fetch_assoc($result));
@@ -1431,10 +1439,11 @@ if(get_num_groups() > 1) {
 		<TR CLASS = "even"><TD CLASS="td_label">Capability: </TD>	<TD><?php print $row['capab'];?></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label">Contact name:</TD>	<TD><?php print $row['contact_name'] ;?></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label">Contact via:</TD>	<TD><?php print $row['contact_via'] ;?></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><?php get_provider_name(get_msg_variable('smsg_provider'));?> ID:</TD>	<TD><?php print $row['smsg_id'] ;?></TD></TR>	<!-- 10/23/12 -->		
 		
-		<TR CLASS = 'odd'><TD CLASS="td_label">As of:</TD>	<TD><?php print format_date($row['updated']); ?></TD></TR>
+		<TR CLASS = 'even'><TD CLASS="td_label">As of:</TD>	<TD><?php print format_date_2($row['updated']); ?></TD></TR>
 		<TR><TD>&nbsp;</TD></TR>
-		<TR CLASS = "even"><TD COLSPAN=2 ALIGN='center'>
+		<TR CLASS = "odd"><TD COLSPAN=2 ALIGN='center'>
 			<INPUT TYPE="button" VALUE="Cancel" onClick="document.can_Form.submit();" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <?php		// 1/2/10
@@ -1685,17 +1694,18 @@ if(get_num_groups() > 1) {
 	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
 		$regs_col_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "s")) ? "" : "none";	//	6/10/11
 		$regs_exp_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "h")) ? "" : "none";	//	6/10/11	
-?>			
+?>		
 		<DIV id = 'regions_outer' style = "position: fixed; right: 20%; top: 10%; z-index: 1000;">
 			<DIV id="boxB" class="box" style="z-index:1000;">
-				<div class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;">Viewed Regions
-				<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+				<DIV class="bar_header" class="heading_2" style='white-space: nowrap;'>	
 				<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
-					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
+					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i>
+					<DIV id="collapse_regs" class='plain' style ="display: inline; z-index:1001; cursor: pointer; float: right; margin-left: 0px; font-size: 10px;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+				</DIV>
 				<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV>
 				</DIV>
 			</DIV>
-		</DIV>
+		</DIV>	
 <?php	
 	}		
 		print get_buttons_inner();	//	3/28/12

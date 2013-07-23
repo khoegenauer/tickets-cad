@@ -9,7 +9,7 @@ error_reporting(E_ALL);
 require_once('../incs/functions.inc.php');
 @session_start();
 
-$user_id = (isset($_GET['user'])) ? $_GET['user'] : "";
+$user_id = (isset($_GET['user'])) ? clean_string($_GET['user']) : "";
 
 $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = $user_id ORDER BY `id` ASC;";	//	6/10/11
 $result = mysql_query($query);	//	6/10/11
@@ -127,7 +127,7 @@ $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_er
 $num_tick = mysql_num_rows($result);
 
 //	Number of Tickets not assigned
-$query = "SELECT *,UNIX_TIMESTAMP(`$GLOBALS[mysql_prefix]ticket`.`problemstart`) AS problemstart,
+$query = "SELECT *,`$GLOBALS[mysql_prefix]ticket`.`problemstart`) AS problemstart,
 		UNIX_TIMESTAMP(`$GLOBALS[mysql_prefix]ticket`.`problemend`) AS problemend,
 		UNIX_TIMESTAMP(`$GLOBALS[mysql_prefix]ticket`.`booked_date`) AS booked_date,	
 		UNIX_TIMESTAMP(`$GLOBALS[mysql_prefix]ticket`.`date`) AS date, 

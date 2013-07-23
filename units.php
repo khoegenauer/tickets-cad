@@ -5,9 +5,7 @@ $units_side_bar_height = .5;		// max height of units sidebar as decimal fraction
 $zoom_tight = FALSE;				// replace with a decimal number to over-ride the standard default zoom setting
 $iw_width= "300px";					// map infowindow with
 $groupname = isset($_SESSION['group_name']) ? $_SESSION['group_name'] : "";	//	4/11/11
-
-
-
+$the_resp_id = (isset($_GET['id']))? $_GET['id']: 0;
 /*
 5/23/08	added check for associated assign records before allowing deletions line 843 area
 5/29/08	addded do_kml calls
@@ -132,6 +130,8 @@ $groupname = isset($_SESSION['group_name']) ? $_SESSION['group_name'] : "";	//	4
 3/24/12 accommodate OGTS in validate()
 6/18/12 'points' boolean to 'got_points'
 6/20/12 applied get_text() to Units
+10/23/12 Added code for Messaging (SMS Gateway)
+12/1/2012 - re-do re unix SQL time replacement
 */
 
 @session_start();	
@@ -143,10 +143,12 @@ if (!($_SESSION['internet'])) {				// 8/22/10
 $tester = (((isset($_REQUEST['edit'])) && $_REQUEST['edit'] == TRUE) || ((isset($_REQUEST['add'])) && ($_REQUEST['add'] == TRUE)) || ((isset($_REQUEST['view'])) && ($_REQUEST['view'] == TRUE))) ? 0 : 1;
 
 require_once($_SESSION['fip']);		//7/28/10
+$column_arr = explode(',', get_msg_variable('columns'));	//	10/23/12
 if(file_exists("./incs/modules.inc.php")) {	//	10/28/10
 	require_once('./incs/modules.inc.php');
 	}
 do_login(basename(__FILE__));
+require_once('./incs/messaging.inc.php');	//	10/23/12
 $key_field_size = 30;						// 7/23/09
 $st_size = (get_variable("locale") ==0)?  2: 4;		
 
@@ -158,7 +160,7 @@ if((($istest)) && (!empty($_GET))) {dump ($_GET);}
 if((($istest)) && (!empty($_POST))) {dump ($_POST);}
 */
 $remotes = get_current();		// returns array - 3/16/09
-
+$the_level = $_SESSION['level'];
 $u_types = array();												// 1/1/09
 $query = "SELECT * FROM `$GLOBALS[mysql_prefix]unit_types` ORDER BY `id`";		// types in use
 $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -206,7 +208,13 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 	<SCRIPT  SRC='./js/misc_function.js' type='text/javascript'></SCRIPT>  <!-- 4/14/10 -->
 	<script src="./js/epoly.js" type="text/javascript"> </script>	<!-- 6/10/11 -->	
 	<SCRIPT TYPE="text/javascript" src="./js/ELabel.js"></SCRIPT> <!-- 8/1/11 -->
+	<SCRIPT SRC="./js/messaging.js" TYPE="text/javascript"></SCRIPT> <!-- 10/23/12 -->	
 	<SCRIPT >
+	var sortby = '`date`';	//	10/23/12
+	var sort = "DESC";	//	10/23/12
+	var columns = "<?php print get_msg_variable('columns');?>";	//	10/23/12
+	var the_columns = new Array(<?php print get_msg_variable('columns');?>);	//	10/23/12
+	var thescreen = 'units';	//	10/23/12
 
 	try {
 		parent.frames["upper"].$("whom").innerHTML  = "<?php print $_SESSION['user'];?>";
@@ -222,8 +230,9 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 	var lat_lng_frmt = <?php print get_variable('lat_lng'); ?>;				// 9/9/08
 	var check_initialized = false;
 	var check_interval = null;	
-
+	var thelevel = '<?php print $the_level;?>';
 	function get_new_colors() {
+
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
 		
@@ -276,6 +285,11 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 		return true;
 		}
 
+	function get_allmessages() {
+		var the_id = <?php print $the_resp_id;?>;
+		get_all_messagelist('',the_id,sortby, 'DESC','', 'msg_win');
+		}
+	
 	String.prototype.trim = function () {									// added 6/10/08
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
@@ -484,6 +498,64 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 			}
 		}				// end function
 		
+	function sendRequest(url,callback,postData) {	//	10/23/12
+		var req = createXMLHTTPObject();
+		if (!req) return;
+		var method = (postData) ? "POST" : "GET";
+		req.open(method,url,true);
+		req.setRequestHeader('User-Agent','XMLHTTP/1.0');
+		if (postData)
+			req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		req.onreadystatechange = function () {
+			if (req.readyState != 4) return;
+			if (req.status != 200 && req.status != 304) {
+				return;
+				}
+			callback(req);
+			}
+		if (req.readyState == 4) return;
+		req.send(postData);
+		}
+	
+	var XMLHttpFactories = [
+		function () {return new XMLHttpRequest()	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		];	//	10/23/12
+	
+	function createXMLHTTPObject() {	//	10/23/12
+		var xmlhttp = false;
+		for (var i=0;i<XMLHttpFactories.length;i++) {
+			try {
+				xmlhttp = XMLHttpFactories[i]();
+				}
+			catch (e) {
+				continue;
+				}
+			break;
+			}
+		return xmlhttp;
+		}
+
+	function syncAjax(strURL) {	//	10/23/12
+		if (window.XMLHttpRequest) {						 
+			AJAX=new XMLHttpRequest();						 
+			} 
+		else {																 
+			AJAX=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+		if (AJAX) {
+			AJAX.open("GET", strURL, false);														 
+			AJAX.send(null);							// form name
+			return AJAX.responseText;																				 
+			} 
+		else {
+			alert("<?php echo 'error: ' . basename(__FILE__) . '@' .  __LINE__;?>");
+			return false;
+			}																						 
+		}		// end function sync Ajax()
+	
 	function fence_get() {								// set cycle
 		if (check_interval!=null) {return;}			// ????
 		check_interval = window.setInterval('check_fence_loop()', 60000);		// 4/7/10 
@@ -639,7 +711,7 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 			extract ($row66);
 			if((my_is_float($lat)) && (my_is_float($lng))) {
 				print "\t\t	var resp_name = \"$name\";\n";
-				print "\t\t var points = new Array();\n";
+				print "\t\t var thepoints = new Array();\n";
 				print "\t\t var newpoint = new GLatLng({$lat}, {$lng});\n";
 				$query67 = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id` = {$ring_fence}";
 				$result67 = mysql_query($query67)or do_error($query67, mysql_error(), basename(__FILE__), __LINE__);
@@ -651,9 +723,9 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 					for ($yy = 0; $yy < count($points); $yy++) {
 						$coords = explode (",", $points[$yy]);		
 						print "\t\t thepoint = new GLatLng(parseFloat($coords[0]), parseFloat($coords[1]));\n";
-						print "\t\t points.push(thepoint);\n";
+						print "\t\t thepoints.push(thepoint);\n";
 					}			// end for ($yy = 0 ... )
-					print "\t\t var pline = new GPolygon(points, \"$line_color\", $line_width, $line_opacity, \"$fill_color\", $fill_opacity, {clickable:false});\n";
+					print "\t\t var pline = new GPolygon(thepoints, \"$line_color\", $line_width, $line_opacity, \"$fill_color\", $fill_opacity, {clickable:false});\n";
 					print "\t\t boundary1.push(pline);\n";
 					print "\t\t if (!(boundary1[0].Contains(newpoint))) {\n";
 					print "\t\t blink_text_rf(resp_name, '#FF0000', '#FFFF00', '#FFFF00', '#FF0000');\n";
@@ -727,7 +799,7 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 			extract ($row66);
 			if((my_is_float($lat)) && (my_is_float($lng))) {
 				print "\t\t	var resp_name = \"$name\";\n";
-				print "\t\t var points = new Array();\n";
+				print "\t\t var thepoints = new Array();\n";
 				print "\t\t var newpoint = new GLatLng({$lat}, {$lng});\n";
 				$query67 = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id` = {$excl_zone}";
 				$result67 = mysql_query($query67)or do_error($query67, mysql_error(), basename(__FILE__), __LINE__);
@@ -739,9 +811,9 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 					for ($yy = 0; $yy < count($points); $yy++) {
 						$coords = explode (",", $points[$yy]);		
 						print "\t\t thepoint = new GLatLng(parseFloat($coords[0]), parseFloat($coords[1]));\n";
-						print "\t\t points.push(thepoint);\n";
+						print "\t\t thepoints.push(thepoint);\n";
 					}			// end for ($yy = 0 ... )
-					print "\t\t var pline = new GPolygon(points, \"$line_color\", $line_width, $line_opacity, \"$fill_color\", $fill_opacity, {clickable:false});\n";
+					print "\t\t var pline = new GPolygon(thepoints, \"$line_color\", $line_width, $line_opacity, \"$fill_color\", $fill_opacity, {clickable:false});\n";
 					print "\t\t boundary1.push(pline);\n";
 					print "\t\t if ((boundary1[0].Contains(newpoint))) {\n";
 					print "\t\t blink_text2_rf(resp_name, '#00FF00', '#FFFF00', '#FFFF00', '#FF0000');\n";
@@ -842,7 +914,7 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 
 		if (theForm.frm_un_status_id.options[theForm.frm_un_status_id.selectedIndex].value==0)	{errmsg+="Unit STATUS selection is required.\n";}
 		
-		if (theForm.frm_descr.value.trim()=="")													{errmsg+="Unit DESCRIPTION is required with Tracking.\n";}
+		if (theForm.frm_descr.value.trim()=="")													{errmsg+="Unit DESCRIPTION is required.\n";}
 		if ((!(theForm.frm_mob_disp.checked)) && (theForm.frm_lat.value.trim().length == 0)) 	{errmsg+="Map location is required for non-mobile units.\n";}
 		
 		if (errmsg!="") {
@@ -1182,7 +1254,7 @@ function list_responders($addon = '', $start) {
 	$calls_nr = array();
 	$calls_time = array();
 
-	$query = "SELECT * , UNIX_TIMESTAMP(packet_date) AS `packet_date` FROM `$GLOBALS[mysql_prefix]tracks` ORDER BY `packet_date` ASC";		// 6/17/08
+	$query = "SELECT * ,`packet_date` AS `packet_date` FROM `$GLOBALS[mysql_prefix]tracks` ORDER BY `packet_date` ASC";		// 6/17/08
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 	while ($row = mysql_fetch_array($result)) {
 		if (isset($calls[$row['source']])) {		// array_key_exists ( mixed key, array search )
@@ -1367,7 +1439,7 @@ var color=0;
 		return xmlhttp;
 		}		
 
-	function createMarker(point,tabs, color, id, unit_id) {			// (point, myinfoTabs,<?php print $row['type'];?>, i)
+	function createMarker(point,tabs, color, id, unit_id) {						// (point, myinfoTabs,<?php print $row['type'];?>, i)
 		got_points = true;											// at least one - 6/18/12
 		var unit_id = unit_id;										// 2/13/09
 
@@ -1531,7 +1603,6 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 	var which;
 	var i = <?php print $start; ?>;					// sidebar/icon index
 	var got_points = false;							// none -  6/18/12
-
 	map = new GMap2($("map"));						// create the map
 <?php
 $maptype = get_variable('maptype');	// 08/02/09
@@ -1631,7 +1702,7 @@ $maptype = get_variable('maptype');	// 08/02/09
 
 	foreach($gp_bounds as $value) {		//	6/10/11
 ?>
-		var points = new Array();
+		var boundpoints = new Array();
 <?php	
 		if($value !=0) {
 			$query_bn = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id`='{$value}'";
@@ -1644,7 +1715,7 @@ $maptype = get_variable('maptype');	// 08/02/09
 					$coords = explode (",", $points[$i]);
 		?>
 					thepoint = new GLatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
-					points.push(thepoint);
+					boundpoints.push(thepoint);
 <?php
 					}			// end for ($i = 0 ... )
 			?>
@@ -1652,13 +1723,13 @@ $maptype = get_variable('maptype');	// 08/02/09
 <?php
 			if (intval($filled) == 1) {		//	6/10/11
 ?>
-				var polyline = new GPolygon(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>, {clickable:false});
+				var polyline = new GPolygon(boundpoints, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>, {clickable:false});
 				boundary.push(polyline);
 				bound_names.push("<?php print $bn_name;?>"); 			
 				<?php	
 				} else {
 ?>
-				var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,0 , 0, {clickable:false});
+				var polyline = new GPolyline(boundpoints, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, 0, 0, {clickable:false});
 				boundary.push(polyline);
 				bound_names.push("<?php print $bn_name;?>"); 			
 <?php		
@@ -1735,7 +1806,7 @@ $maptype = get_variable('maptype');	// 08/02/09
 //-----------------------UNIT RING FENCE STUFF--------------------6/10/11
 ?>
 	var thepoint;
-	var points = new Array();
+	var ringpoints = new Array();
 		
 <?php	
 	$query_bn = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` `l`
@@ -1752,18 +1823,18 @@ $maptype = get_variable('maptype');	// 08/02/09
 			$coords = explode (",", $points[$i]);
 ?>
 			thepoint = new GLatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
-			points.push(thepoint);
+			ringpoints.push(thepoint);
 <?php
 			}			// end for ($i = 0 ... )
 		if (intval($filled) == 1) {		//	6/10/11
 ?>
-			var polyline = new GPolygon(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>, {clickable:false, id:"ringfence"});
+			var polyline = new GPolygon(ringpoints, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>, {clickable:false, id:"ringfence"});
 			boundary.push(polyline);
 			bound_names.push("<?php print $bn_name;?>"); 
 <?php	
 			} else {
 ?>
-			var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,0 , 0, {clickable:false, id:"ringfence"});
+			var polyline = new GPolyline(ringpoints, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,0 , 0, {clickable:false, id:"ringfence"});
 			boundary.push(polyline);
 			bound_names.push("<?php print $bn_name;?>"); 
 <?php		
@@ -1777,7 +1848,7 @@ $maptype = get_variable('maptype');	// 08/02/09
 //-----------------------UNIT EXCLUSION ZONE STUFF--------------------6/10/11
 ?>
 	var thepoint;
-	var points = new Array();
+	var exclpoints = new Array();
 		
 <?php	
 	$query_bn = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` `l`
@@ -1794,18 +1865,18 @@ $maptype = get_variable('maptype');	// 08/02/09
 			$coords = explode (",", $points[$i]);
 ?>
 			thepoint = new GLatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
-			points.push(thepoint);
+			exclpoints.push(thepoint);
 <?php
 			}			// end for ($i = 0 ... )
 		if (intval($filled) == 1) {		//	6/10/11
 ?>
-			var polyline = new GPolygon(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>, {clickable:false, id:"ringfence"});
+			var polyline = new GPolygon(exclpoints, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>, {clickable:false, id:"ringfence"});
 			boundary.push(polyline);
 			bound_names.push("<?php print $bn_name;?>"); 
 <?php	
 			} else {
 ?>
-			var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,0 , 0, {clickable:false, id:"ringfence"});
+			var polyline = new GPolyline(exclpoints, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,0 , 0, {clickable:false, id:"ringfence"});
 			boundary.push(polyline);
 			bound_names.push("<?php print $bn_name;?>"); 
 <?php		
@@ -1822,7 +1893,8 @@ $maptype = get_variable('maptype');	// 08/02/09
 		var unit_ids = new Array();				// parallel to gmarkers array
 <?php
 
-	$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated`,
+	$query = "SELECT *, 
+		`updated` AS `updated`,
 		`t`.`id` AS `type_id`,
 		`r`.`id` AS `unit_id`,
 		`r`.`name` AS `name`,
@@ -1892,9 +1964,12 @@ $maptype = get_variable('maptype');	// 08/02/09
 
 		if ($track_type> 0) {				// get most recent position data
 			$do_legend = TRUE;		
-			$query = "SELECT *,UNIX_TIMESTAMP(packet_date) AS `packet_date`, UNIX_TIMESTAMP(updated) AS `updated` FROM 
-				`$GLOBALS[mysql_prefix]tracks`
-				WHERE `source`= '$row[callsign]' ORDER BY `packet_date` DESC LIMIT 1";		// newest
+			$query = "SELECT *,
+				`packet_date` AS `packet_date`, 
+				`updated` AS `updated` 
+				FROM `$GLOBALS[mysql_prefix]tracks`
+				WHERE `source`= '$row[callsign]' 
+				ORDER BY `packet_date` DESC LIMIT 1";		// newest
 			$result_tr = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 			$row_track = (mysql_affected_rows()>0)? stripslashes_deep(mysql_fetch_assoc($result_tr)) : FALSE;
 			$aprs_updated = $row_track['updated'];
@@ -1973,13 +2048,14 @@ $maptype = get_variable('maptype');	// 08/02/09
 
 // as of
 		$the_time = $row['updated'];
+		$the_time_test = strtotime($row['updated']);
 		$the_class = "";
 		$strike = $strike_end = "";
 		$the_flag = $name . "_flag";		
-		if (($track_type > 0) && ((abs($utc - $the_time)) > $GLOBALS['TOLERANCE'])) {								// attempt to identify  non-current values
+		if (($track_type > 0) && ((abs($utc - $the_time_test)) > $GLOBALS['TOLERANCE'])) {			// attempt to identify  non-current values
 			$strike = "<STRIKE>"; $strike_end = "</STRIKE>";
 			}
-		$sidebar_line .= "<TD WIDTH='18%' CLASS='$the_class'> {$strike}<SPAN id = '" . $name . "'><NOBR>" . format_sb_date($the_time) . "</NOBR></SPAN>{$strike_end}&nbsp;&nbsp;<SPAN ID = '" . $the_flag . "'></SPAN></TD>";	// 6/17/08
+		$sidebar_line .= "<TD WIDTH='18%' CLASS='$the_class'> {$strike}<SPAN id = '" . $name . "'><NOBR>" . format_sb_date_2($the_time) . "</NOBR></SPAN>{$strike_end}&nbsp;&nbsp;<SPAN ID = '" . $the_flag . "'></SPAN></TD>";	// 6/17/08
 // tab 1
 		if (my_is_float($row['lat'])) {										// position data? 4/29/09
 			$temptype = $u_types[$row['type_id']];
@@ -1990,7 +2066,7 @@ $maptype = get_variable('maptype');	// 08/02/09
 			$tab_1 .= "<TR CLASS='odd'><TD>Description:</TD><TD>" . addslashes(shorten(str_replace($eols, " ", $row['description']), 32)) . "</TD></TR>";
 			$tab_1 .= "<TR CLASS='even'><TD>Status:</TD><TD>" . $the_status . " </TD></TR>";
 			$tab_1 .= "<TR CLASS='odd'><TD>Contact:</TD><TD>" . addslashes($row['contact_name']). " Via: " . addslashes($row['contact_via']) . "</TD></TR>";
-			$tab_1 .= "<TR CLASS='even'><TD>As of:</TD><TD>" . format_date($the_time) . "</TD></TR>";		// 4/11/10
+			$tab_1 .= "<TR CLASS='even'><TD>As of:</TD><TD>" . format_date_2(strtotime($the_time)) . "</TD></TR>";		// 4/11/10
 			if (array_key_exists($row['unit_id'], $assigns)) {
 				$tab_1 .= "<TR CLASS='even'><TD CLASS='emph'>Dispatched to:</TD><TD CLASS='emph'><A HREF='main.php?id=" . $tickets[$row['unit_id']] . "'>" . addslashes(shorten($assigns[$row['unit_id']], 20)) . "</A></TD></TR>";
 				}
@@ -2008,7 +2084,7 @@ $maptype = get_variable('maptype');	// 08/02/09
 			$tab_2 .= "<TR CLASS='even'><TD>Closest city: </TD><TD>" . $row_track['closest_city'] . "</TD></TR>";
 			$tab_2 .= "<TR CLASS='odd'><TD>Status: </TD><TD>" . $row_track['status'] . "</TD></TR>";
 			if (array_key_exists ('packet_date',$row_track )) {
-				$tab_2 .= "<TR CLASS='even'><TD>As of: </TD><TD> $strike" . format_date($row_track['packet_date']) . "$strike_end (UTC)</TD></TR></TABLE>";
+				$tab_2 .= "<TR CLASS='even'><TD>As of: </TD><TD> $strike" . format_date_2(strtotime($row_track['packet_date'])) . "$strike_end (UTC)</TD></TR></TABLE>";
 				}
 ?>
 			var myinfoTabs = [
@@ -2374,7 +2450,7 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 
 			if ($_postmap_clear=='on') {$the_lat = $the_lng = "NULL";}					// 11/19/09
 			else {
-				if (intval($_POST['frm_facility_sel'])> 0 ) {							// obtain facility location - 6/20/12
+				if ((isset($_POST['frm_facility_sel'])) && (intval($_POST['frm_facility_sel'])> 0 )) {							// obtain facility location - 6/20/12
 					$query_fac = "SELECT `lat`, `lng`, `id` FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = {$_POST['frm_facility_sel']} LIMIT 1";
 //					dump($query_fac);
 					$result_fac = mysql_query($query_fac) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -2385,7 +2461,7 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 						}	
 					}
 				}				// end else {}
-			
+
 			$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET
 				`name`= " . 		quote_smart(trim($_POST['frm_name'])) . ",
 				`street`= " . 		quote_smart(trim($_POST['frm_street'])) . ",
@@ -2414,6 +2490,7 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 				`lng`= " . 			$the_lng . ",
 				`contact_name`= " . quote_smart(trim($_POST['frm_contact_name'])) . ",
 				`contact_via`= " . 	quote_smart(trim($_POST['frm_contact_via'])) . ",
+				`smsg_id`= " . 		quote_smart(trim($_POST['frm_smsg_id'])) . ",				
 				`type`= " . 		quote_smart(trim($_POST['frm_type'])) . ",
 				`user_id`= " . 		quote_smart(trim($_SESSION['user_id'])) . ",
 				`updated`= " . 		quote_smart(trim($now)) . "
@@ -2424,7 +2501,7 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 			
 			$list = $_POST['frm_exist_groups']; 	//	4/14/11
 			$ex_grps = explode(',', $list); 	//	4/14/11 
-			
+
 			if($curr_groups != $groups) { 	//	4/14/11
 				foreach($_POST['frm_group'] as $posted_grp) { 	//	4/14/11
 					if(!in_array($posted_grp, $ex_grps)) {
@@ -2462,7 +2539,7 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));							// 1/27/09
 
 		$query = "INSERT INTO `$GLOBALS[mysql_prefix]responder` (
-			`name`, `street`, `city`, `state`, `phone`, `handle`, `icon_str`, `description`, `capab`, `un_status_id`, `callsign`, `mobile`, `multi`, `aprs`, `instam`, `locatea`, `gtrack`, `glat`, `t_tracker`, `ogts`, `ring_fence`, `excl_zone`, `direcs`, `contact_name`, `contact_via`, `lat`, `lng`, `type`, `user_id`, `updated` )
+			`name`, `street`, `city`, `state`, `phone`, `handle`, `icon_str`, `description`, `capab`, `un_status_id`, `callsign`, `mobile`, `multi`, `aprs`, `instam`, `locatea`, `gtrack`, `glat`, `t_tracker`, `ogts`, `ring_fence`, `excl_zone`, `direcs`, `contact_name`, `contact_via`, `smsg_id`, `lat`, `lng`, `type`, `user_id`, `updated` )
 			VALUES (" .
 				quote_smart(trim($_POST['frm_name'])) . "," .
 				quote_smart(trim($_POST['frm_street'])) . "," .
@@ -2489,6 +2566,7 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 				quote_smart(trim($_POST['frm_direcs'])) . "," .
 				quote_smart(trim($_POST['frm_contact_name'])) . "," .
 				quote_smart(trim($_POST['frm_contact_via'])) . "," .
+				quote_smart(trim($_POST['frm_smsg_id'])) . "," .				
 				$frm_lat . "," .
 				$frm_lng . "," .
 				quote_smart(trim($_POST['frm_type'])) . "," .
@@ -2538,7 +2616,7 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 			<SPAN STYLE = 'margin-left:30px'  CLASS="td_label"> Icon: </SPAN>&nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp;<INPUT TYPE = "text" NAME = "frm_icon_str" SIZE = 3 MAXLENGTH=3 VALUE="" />
 
 <?php
-	if(get_num_groups() > 1) {
+	if(get_num_groups()) {
 		if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>		
 			<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
@@ -2565,7 +2643,7 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 ?>	
 			</TD></TR>
 <?php
-			} else {
+			} elseif((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
 ?>
 			<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
 			<TD CLASS="td_label"><A HREF="#" TITLE="Sets Regions that Responder is allocated to - click + to expand, - to collapse"><?php print get_text("Regions");?></A>: 
@@ -2578,7 +2656,12 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 			print get_user_group_butts_readonly(get_allocates(4, $_SESSION['user_id']));	//	4/18/11		
 ?>	
 			</TD></TR>
-<?php			
+<?php
+			} else {
+?>
+			<INPUT TYPE="hidden" NAME="frm_group[]" VALUE="1">	 <!-- 6/10/11 -->
+<?php
+			
 			}
 		} else {
 ?>
@@ -2679,7 +2762,8 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Capability - training, equipment on board etc">Capability</A>:&nbsp;</TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_capab" COLS=56 ROWS=2></TEXTAREA></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Contact name">Contact Name</A>:&nbsp;</TD>	<TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Contact via - for email to unit this must be a valid email address or email to SMS address">Contact Via</A>:&nbsp;</TD>	<TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_via" VALUE="" /></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Latitude and Longitude - set from map click">
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="<?php get_provider_name(get_msg_variable('smsg_provider'));?> ID - This is for <?php get_provider_name(get_msg_variable('smsg_provider'));?> Integration and is the ID used by <?php get_provider_name(get_msg_variable('smsg_provider'));?> to send SMS messages"><?php get_provider_name(get_msg_variable('smsg_provider'));?> ID</A>:&nbsp;</TD>	<TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_smsg_id" VALUE="" /></TD></TR>	<!-- 10/23/12 -->
+		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Latitude and Longitude - set from map click">
 			<SPAN onClick = 'javascript: do_coords(document.res_add_Form.frm_lat.value ,document.res_add_Form.frm_lng.value)'>
 				Lat/Lng</A></SPAN>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<IMG ID='lock_p' BORDER=0 SRC='./markers/unlock2.png' STYLE='vertical-align: middle'
@@ -2714,7 +2798,7 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 ?>
 
 		<TR><TD COLSPAN=4 ALIGN='center'><font color='red' size='-1'>*</FONT> Required</TD></TR>
-		<TR CLASS = "odd"><TD COLSPAN=4 ALIGN='center'>
+		<TR CLASS = "even"><TD COLSPAN=4 ALIGN='center'>
 			<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>"  do_add_reset(this.form);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- 1/22/09 -->
 			<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>"  onClick="validate(document.res_add_Form);" ></TD></TR>	<!-- 7/21/09 -->
@@ -2822,8 +2906,8 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 			<SPAN STYLE = 'margin-left:30px'  CLASS="td_label"> Icon: </SPAN>&nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp;<INPUT TYPE = 'text' NAME = 'frm_icon_str' SIZE = 3 MAXLENGTH=3 VALUE='<?php print $row['icon_str'] ;?>'>
 			</TD></TR>
 <?php
-		if(get_num_groups() > 1) {
-			if((is_super())&& (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
+		if(get_num_groups()) {
+			if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>			
 			<TR CLASS='even' VALIGN='top'>;
 			<TD CLASS='td_label'><A HREF="#" TITLE="Click + to expand control"><?php print get_text('Regions');?></A>:
@@ -3002,6 +3086,7 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Capability - training, equipment on board etc">Capability</A>:&nbsp; </TD>										<TD COLSPAN=3><TEXTAREA NAME="frm_capab" COLS=56 ROWS=2><?php print $row['capab'];?></TEXTAREA></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Contact name">Contact Name</A>:&nbsp;</TD>	<TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="<?php print $row['contact_name'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Contact via - for email to unit this must be a valid email address or email to SMS address">Contact Via</A>:&nbsp;</TD>	<TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_via" VALUE="<?php print $row['contact_via'] ;?>" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="<?php get_provider_name(get_msg_variable('smsg_provider'));?> ID - This is for <?php get_provider_name(get_msg_variable('smsg_provider'));?> Integration and is the ID used by <?php get_provider_name(get_msg_variable('smsg_provider'));?> to send SMS messages"><?php get_provider_name(get_msg_variable('smsg_provider'));?> ID</A>:&nbsp;</TD>	<TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_smsg_id" VALUE="<?php print $row['smsg_id'] ;?>" /></TD></TR>	<!-- 10/23/12-->
 <?php
 		$map_capt = (!$is_mobile)? 	"<BR /><BR /><CENTER><B>Click to revise unit location</B>" : "";
 		$lock_butt = (!$is_mobile)? "<IMG ID='lock_p' BORDER=0 SRC='./markers/unlock2.png' STYLE='vertical-align: middle' onClick = 'do_unlock_pos(document.res_edit_Form);'>" : "" ;
@@ -3009,7 +3094,7 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 		$osgb_link = (!$is_mobile)? "<SPAN ID = 'osgb_link'>OSGB:</SPAN>": "OSGB:";		
 		$utm_link = (!$is_mobile)? "<SPAN ID = 'utm_link'>UTM:</SPAN>": "UTM:";				
 ?>
-		<TR CLASS = "even">
+		<TR CLASS = "odd">
 			<TD CLASS="td_label">
 				<SPAN onClick = 'javascript: do_coords(document.res_edit_Form.frm_lat.value ,document.res_edit_Form.frm_lng.value  )' ><A HREF="#" TITLE="Latitude and Longitude - set from map click">
 				Lat/Lng</A></SPAN>:&nbsp;&nbsp;&nbsp;&nbsp;<?php print $lock_butt;?>
@@ -3031,13 +3116,13 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 		break;
 		
 		case "2":
-		print $utm_link;?> <INPUT TYPE="text" NAME="frm_ngs" VALUE="<?php print LLtoUTM($row['lat'], $row['lng']) ;?>" SIZE=19 disabled /></TD></TR>	<!-- 9/13/08 -->
+		$ngs_arr = LLtoUTM($row['lat'], $row['lng'], NULL);
+		print $utm_link;?> <INPUT TYPE="text" NAME="frm_ngs" VALUE="<?php @print $ngs_arr[2];?>" SIZE=19 disabled /></TD></TR>	<!-- 9/13/08 -->
 <?php 
 		break;		
 
 		default:
-			print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";				
-		
+			print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";						
 		}
 	if (!(empty($row['lat']))) {				// 11/15/09
 		print "<TR CLASS='even' VALIGN='baseline'><TD CLASS='td_label'><A HREF='#' TITLE='Clear from map'>Clear position</A>:&nbsp;</TD>
@@ -3048,9 +3133,9 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 		}
 ?>
 		<TR><TD>&nbsp;</TD></TR>
-		<TR CLASS="odd" VALIGN='baseline'><TD CLASS="td_label"><A HREF="#" TITLE="Delete unit from system - disallowed if unit is assigned to any calls.">Remove Unit</A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>>
+		<TR CLASS="even" VALIGN='baseline'><TD CLASS="td_label"><A HREF="#" TITLE="Delete unit from system - disallowed if unit is assigned to any calls.">Remove Unit</A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>>
 		<?php print $cbtext; ?></TD></TR>
-		<TR CLASS = "even">
+		<TR CLASS = "odd">
 			<TD COLSPAN=4 ALIGN='center'><BR><INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick="track_reset(this.form); map_reset()";>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>" onClick="validate(document.res_edit_Form);"></TD></TR>
@@ -3091,7 +3176,7 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 ?>
 <SCRIPT>
 	var thepoint;
-	var points = new Array();
+	var ringpoints = new Array();
 	var boundary = new Array();	
 	var bound_names = new Array();		
 <?php	
@@ -3109,18 +3194,18 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 			$coords = explode (",", $points[$i]);
 ?>
 			thepoint = new GLatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
-			points.push(thepoint);
+			ringpoints.push(thepoint);
 <?php
 			}			// end for ($i = 0 ... )
 		if (intval($filled) == 1) {		//	6/10/11
 ?>
-			var polyline = new GPolygon(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>, {clickable:false, id:"ringfence"});
+			var polyline = new GPolygon(ringpoints, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>, {clickable:false, id:"ringfence"});
 			boundary.push(polyline);
 			bound_names.push("<?php print $bn_name;?>"); 
 <?php	
 			} else {
 ?>
-			var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,0 , 0, {clickable:false, id:"ringfence"});
+			var polyline = new GPolyline(ringpoints, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,0 , 0, {clickable:false, id:"ringfence"});
 			boundary.push(polyline);
 			bound_names.push("<?php print $bn_name;?>"); 
 <?php		
@@ -3134,7 +3219,7 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 //-----------------------UNIT EXCLUSION ZONE STUFF--------------------6/10/11
 ?>
 	var thepoint;
-	var points = new Array();
+	var exclpoints = new Array();
 		
 <?php	
 	$query_bn = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` `l`
@@ -3151,18 +3236,18 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 			$coords = explode (",", $points[$i]);
 ?>
 			thepoint = new GLatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
-			points.push(thepoint);
+			exclpoints.push(thepoint);
 <?php
 			}			// end for ($i = 0 ... )
 		if (intval($filled) == 1) {		//	6/10/11
 ?>
-			var polyline = new GPolygon(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>, {clickable:false, id:"ringfence"});
+			var polyline = new GPolygon(exclpoints, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>, {clickable:false, id:"ringfence"});
 			boundary.push(polyline);
 			bound_names.push("<?php print $bn_name;?>"); 
 <?php	
 			} else {
 ?>
-			var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,0 , 0, {clickable:false, id:"ringfence"});
+			var polyline = new GPolyline(exclpoints, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,0 , 0, {clickable:false, id:"ringfence"});
 			boundary.push(polyline);
 			bound_names.push("<?php print $bn_name;?>"); 
 <?php		
@@ -3192,7 +3277,8 @@ fence_init();
 // view =================================================================================================================
 
 		if ($_getview == 'true') {
-		
+			$columns_arr = explode(',', get_msg_variable('columns'));	//	10/23/12
+
 			$query_un = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 2 AND `resource_id` = '$_GET[id]' ORDER BY `id` ASC;";	// 6/10/11
 			$result_un = mysql_query($query_un);	// 6/10/11
 			$un_groups = array();
@@ -3207,7 +3293,9 @@ fence_init();
 				}
 				
 			$id = $_GET['id'];
-			$query	= "SELECT *, UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]responder` `r` 
+			$query	= "SELECT *, 
+				`updated` AS `updated` 
+				FROM `$GLOBALS[mysql_prefix]responder` `r` 
 				WHERE `r`.`id`={$id} LIMIT 1";
 			$result	= mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 			$row	= stripslashes_deep(mysql_fetch_assoc($result));
@@ -3239,8 +3327,12 @@ fence_init();
 
 			$coords =  $row['lat'] . "," . $row['lng'];		// for UTM
 
-			$query = "SELECT *,UNIX_TIMESTAMP(packet_date) AS `packet_date`, UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]tracks`
-				WHERE `source`= '$row[callsign]' ORDER BY `packet_date` DESC LIMIT 1";		// newest
+			$query = "SELECT *,
+				`packet_date` AS `packet_date`, 
+				`updated` AS `updated` 
+				FROM `$GLOBALS[mysql_prefix]tracks`
+				WHERE `source`= '$row[callsign]' 
+				ORDER BY `packet_date` DESC LIMIT 1";		// newest
 			$result_tr = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 			if (mysql_affected_rows()>0) {						// got track stuff?
 				$rowtr = stripslashes_deep(mysql_fetch_array($result_tr));
@@ -3251,9 +3343,12 @@ fence_init();
 			$mob_checked = (!empty($row['mobile']))? " checked" : "" ;				// 1/24/09
 			$multi_checked = (!empty($row['multi']))? " checked" : "" ;				// 1/24/09
 			$direcs_checked = (!empty($row['direcs']))? " checked" : "" ;			// 3/19/09
+			
+			$get_messages = ((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) || (get_variable('use_messaging') == 3)) ? "get_all_messagelist('', {$id}, sortby, sort, '', 'units');" : "";
 ?>
-		</HEAD><!-- 1387 -->
-		<BODY onLoad = "ck_frames(); fence_init(); " onUnload="GUnload()"> <!-- <?php print __LINE__;?> -->	
+		</HEAD><!-- 3353 -->
+		<BODY onLoad = "ck_frames(); fence_init(); <?php print $get_messages;?> " onUnload="GUnload()"> <!-- <?php print __LINE__;?> -->	<!-- 10/23/12-->
+		<SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT><!-- 1/3/10, 10/23/12 -->		
 		<A NAME='top'>		<!-- 11/11/09 -->
 		<DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0></div>
 <?php
@@ -3274,9 +3369,9 @@ fence_init();
 		$the_type = $temp[0];			// name of type
 
 ?>
-			<FONT CLASS="header">Unit&nbsp;'<?php print $row['name'] ;?>'</FONT> (#<?php print $row['id'];?>) <BR /><BR />
-			<DIV id = 'fence_flag'></DIV>
-			<TABLE BORDER=0 ID='outer'><TR><TD>
+			<CENTER><FONT CLASS="header">Unit&nbsp;'<?php print $row['name'] ;?>'</FONT> (#<?php print $row['id'];?>) <BR /><BR />
+			<DIV id = 'fence_flag'></DIV><CENTER>
+			<TABLE BORDER=0 ID='outer'><TR><TD style='width: 45%; text-align: left;'>
 			<TABLE BORDER=0 ID='view_unit' STYLE='display: block'>
 			<FORM METHOD="POST" NAME= "res_view_Form" ACTION="<?php print basename(__FILE__);?>?func=responder">
 			<TR CLASS = "even"><TD CLASS="td_label">Name: </TD>		<TD><?php print $row['name'];?></TD></TR>
@@ -3310,12 +3405,12 @@ fence_init();
 			<TR CLASS = "even"><TD CLASS="td_label">Capability: </TD>	<TD><?php print $row['capab'];?></TD></TR>
 			<TR CLASS = "odd"><TD CLASS="td_label">Contact name:</TD>	<TD><?php print $row['contact_name'] ;?></TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label">Contact via:</TD>	<TD><?php print $row['contact_via'] ;?></TD></TR>
-
-			<TR CLASS = 'odd'><TD CLASS="td_label">As of:</TD>	<TD><?php print format_date($row['updated']); ?></TD></TR>
+			<TR CLASS = "odd"><TD CLASS="td_label"><?php get_provider_name(get_msg_variable('smsg_provider'));?> ID:</TD>	<TD><?php print $row['smsg_id'] ;?></TD></TR>	<!-- 10/23/12 -->
+			<TR CLASS = 'even'><TD CLASS="td_label">As of:</TD>	<TD><?php print format_date_2(strtotime($row['updated'])); ?></TD></TR>
 <?php
 		if (my_is_float($lat)) {				// 7/10/09
 ?>		
-			<TR CLASS = "even"><TD CLASS="td_label"  onClick = 'javascript: do_coords(<?php print "$lat,$lng";?>)'><U>Lat/Lng</U>:</TD><TD>
+			<TR CLASS = "odd"><TD CLASS="td_label"  onClick = 'javascript: do_coords(<?php print "$lat,$lng";?>)'><U>Lat/Lng</U>:</TD><TD>
 				<INPUT TYPE="text" NAME="show_lat" VALUE="<?php print get_lat($lat);?>" SIZE=11 disabled />&nbsp;
 				<INPUT TYPE="text" NAME="show_lng" VALUE="<?php print get_lng($lng);?>" SIZE=11 disabled />&nbsp;
 
@@ -3343,11 +3438,11 @@ fence_init();
 			}		// end if (my_is_float($lat))
 
 		if (isset($rowtr)) {																	// got tracks?
-			print "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'><B>TRACKING</B></TD></TR>";
-			print "<TR CLASS='even'><TD>Course: </TD><TD>" . $rowtr['course'] . ", Speed:  " . $rowtr['speed'] . ", Alt: " . $rowtr['altitude'] . "</TD></TR>";
-			print "<TR CLASS='odd'><TD>Closest city: </TD><TD>" . $rowtr['closest_city'] . "</TD></TR>";
-			print "<TR CLASS='even'><TD>Status: </TD><TD>" . $rowtr['status'] . "</TD></TR>";
-			print "<TR CLASS='odd'><TD>As of: </TD><TD>" . format_date($rowtr['packet_date']) . " (UTC)</TD></TR>";
+			print "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>TRACKING</B></TD></TR>";
+			print "<TR CLASS='odd'><TD>Course: </TD><TD>" . $rowtr['course'] . ", Speed:  " . $rowtr['speed'] . ", Alt: " . $rowtr['altitude'] . "</TD></TR>";
+			print "<TR CLASS='even'><TD>Closest city: </TD><TD>" . $rowtr['closest_city'] . "</TD></TR>";
+			print "<TR CLASS='odd'><TD>Status: </TD><TD>" . $rowtr['status'] . "</TD></TR>";
+			print "<TR CLASS='even'><TD>As of: </TD><TD>" . format_date_2($rowtr['packet_date']) . " (UTC)</TD></TR>";
 			$lat = $rowtr['latitude'];
 			$lng = $rowtr['longitude'];
 			}
@@ -3474,19 +3569,64 @@ fence_init();
 			$ff++;
 			}
 ?>
-
 			<TR><TD ALIGN="center" COLSPAN=99><BR /><BR />
 				<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick = "$('facilities').style.display='none'; $('view_unit').style.display='block';">
 			</TD></TR>
 			</TABLE><BR><BR>
-			</TD><TD ALIGN='center'><DIV ID='map' style="width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: inset"></DIV>
+			</TD><TD ALIGN='center' style='width: 50%;'><DIV ID='map' style="width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: inset"></DIV>
 			<BR />
 			<DIV ID="directions" STYLE="width: <?php print get_variable('map_width');?>"><BR />Click map point for directions</DIV>
 			<BR /><SPAN onClick='doGrid()'><u>Grid</U></SPAN>&
 				<SPAN onClick='doTraffic()' STYLE = 'margin-left:80px;'><U>Traffic</U></SPAN>
 				<SPAN ID='do_sv' onClick = 'sv_win(document.res_view_Form)' STYLE = 'margin-left:80px;'><u>Street view</U></SPAN>
 				<BR /><BR />
-			</TD></TR></TABLE>
+<?php
+if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) || (get_variable('use_messaging') == 3)) {
+?>
+			<DIV style='width: <?php print get_variable('map_width');?>px; background-color: #CECECE;'><!-- 10/23/12 -->
+				<DIV style='background-color: #707070; color: #FFFFFF; position: relative; text-align: center;'><BR /><!-- 10/23/12 -->
+					<SPAN id='all_read_but' class='plain' style='float: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick="read_status('read', 0, 'ticket', 0, <?php print $row['id'];?>);">Mark All Read</SPAN><!-- 10/23/12 -->
+					<SPAN id='all_unread_but' class='plain' style='float: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick="read_status('unread', 0, 'ticket', 0, <?php print $row['id'];?>);">Mark All Unread</SPAN><!-- 10/23/12 -->
+					<SPAN id='waste_but' class='plain' style='float: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='get_wastebin();'>Wastebasket</SPAN>	<!-- 10/23/12 -->
+					<SPAN id='inbox_but' class='plain' style='float: none; display: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='get_inbox();'>Inbox</SPAN><BR /><BR /><!-- 10/23/12 -->
+				</DIV><!-- 10/23/12 -->
+				<DIV style='background-color: #707070; color: #FFFFFF; position: relative; text-align: center;'><!-- 10/23/12 -->
+					<SPAN style='vertical-align: middle; text-align: center; font-size: 22px; color: #FFFFFF;'>Messages for Unit <?php print $row['id'];?> </SPAN>&nbsp;&nbsp;&nbsp;&nbsp;<!-- 10/23/12 -->
+					<SPAN ID='the_box' style='font-size: 14px; color: blue; background-color: #FFFFFF;'>Showing Inbox</SPAN><BR />
+					<SPAN style='font-size: 10px;'>Click Column Heading to sort</SPAN><BR /><!-- 10/23/12 -->
+				</DIV><!-- 10/23/12 -->
+				<DIV style='background-color: #707070; color: #FFFFFF; position: relative; text-align: center;'><!-- 10/23/12 -->
+					<FORM NAME='the_filter'><!-- 10/23/12 -->
+						<SPAN style='vertical-align: middle; text-align: center;'><B>FILTER: &nbsp;&nbsp;</B><INPUT TYPE='text' NAME='frm_filter' size='60' MAXLENGTH='128' VALUE=''><!-- 10/23/12 -->
+							<SPAN id = 'filter_box' class='plain' style='float: none; vertical-align: middle;' onMouseover = 'do_hover(this);' onMouseout='do_plain(this);' onClick="do_filter('','<?php print $row['id'];?>');">&nbsp;&nbsp;&#9654;&nbsp;&nbsp;GO</SPAN><!-- 10/23/12 -->
+							<SPAN id = 'the_clear' class='plain' style='float: none; display: none; vertical-align: middle;' onMouseover = 'do_hover(this);' onMouseout='do_plain(this);' onClick="clear_filter('', '<?php print $row['id'];?>');">&nbsp;&nbsp; X &nbsp;&nbsp;Clear</SPAN><!-- 10/23/12 -->
+						</SPAN><BR /><BR /><!-- 10/23/12 -->
+					</FORM><!-- 10/23/12 -->
+				</DIV><!-- 10/23/12 -->
+				<TABLE cellspacing='0' cellpadding='0' style='width: 98%; background-color: #CECECE;'><!-- 10/23/12 -->
+					<TR style='background-color: #CECECE; color: #FFFFFF; width: 100%;'><!-- 10/23/12 -->
+<?php				
+						$print = "";
+						$print .= (in_array('1', $columns_arr)) ? "<TD id='ticket' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('units',''," . $row['id'] . ",'`ticket_id`',filter)\">Tkt</TD>" : "";					
+						$print .= (in_array('2', $columns_arr)) ? "<TD id='type' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('units',''," . $row['id'] . ",'`msg_type`',filter)\">Typ</TD>" : "";				
+						$print .= (in_array('3', $columns_arr)) ? "<TD id='fromname' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('units',''," . $row['id'] . ",'`fromname`',filter)\">From</TD>" : "";				
+						$print .= (in_array('4', $columns_arr)) ? "<TD id='recipients' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('units',''," . $row['id'] . ",'`recipients`',filter)\">To</TD>" : "";
+						$print .= (in_array('5', $columns_arr)) ? "<TD id='subject' class='cols_h' NOWRAP style='width: 20%;' onClick=\"sort_switcher('units',''," . $row['id'] . ",'`subject`',filter)\">Subject</TD>" : "";					
+						$print .= (in_array('6', $columns_arr)) ? "<TD id='message' class='msg_col_h' NOWRAP style='width: 45%;' onClick=\"sort_switcher('units',''," . $row['id'] . ",'`message`',filter)\">Message</TD>" : "";
+						$print .= (in_array('7', $columns_arr)) ? "<TD id='date' class='cols_h' style='width: 5%;' onClick=\"sort_switcher('units',''," . $row['id'] . ",'`date`',filter)\">Date</TD>" : "";
+						$print .= (in_array('8', $columns_arr)) ? "<TD id='owner' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('units',''," . $row['id'] . ",'`_by`',filter)\">Owner</TD>" : "";
+						$print .= "<TD class='cols_h' NOWRAP style='width: 5%;'>Del</TD>";
+						print $print;
+?>
+					</TR><!-- 10/23/12 -->
+				</TABLE><!-- 10/23/12 -->
+				<DIV ID = 'message_list' style='position: relative; background-color: #CECECE; overflow-y: scroll; overflow-x: hidden; height: 500px; border: 2px outset #FEFEFE; width: 98%;'></DIV><!-- 10/23/12 -->
+			</DIV><!-- 10/23/12 -->
+<?php
+	}
+?>
+			</TD></TR><!-- 10/23/12 -->
+			</TABLE><!-- 10/23/12 -->
 			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
 			<FORM NAME="to_edit_Form" METHOD="post" ACTION = "<?php print basename(__FILE__);?>?func=responder&edit=true&id=<?php print $id; ?>"></FORM>
 			<FORM NAME="routes_Form" METHOD="get" ACTION = "<?php print $_SESSION['routesfile'];?>"> <!-- 8/31/10 -->
@@ -3708,10 +3848,11 @@ fence_init();
 ?>
 			<DIV id = 'regions_outer' style = "position: fixed; right: 20%; top: 10%; z-index: 1000;">
 				<DIV id="boxB" class="box" style="z-index:1000;">
-					<DIV class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;">Viewed Regions
-					<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+					<DIV class="bar_header" class="heading_2" style='white-space: nowrap;'>	
 					<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
-						onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
+						onmousedown="dragStart(event, 'boxB')"><i>Drag me</i>
+						<DIV id="collapse_regs" class='plain' style ="display: inline; z-index:1001; cursor: pointer; float: right; margin-left: 0px; font-size: 10px;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+					</DIV>
 					<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV>
 					</DIV>
 				</DIV>

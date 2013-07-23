@@ -77,6 +77,7 @@
 3/22/12 ics 213 link
 4/25/12 audio window correction
 6/20/12 applied get_text() to 'Unit'
+10/23/12 Added Level 'Service User' for Portal, added messaging
 */
 	$asterisk = FALSE;		// user: change to TRUE  in order to make the Pin Control table accessible.	
 	if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/7/09 
@@ -86,6 +87,7 @@
 	do_login(basename(__FILE__));	// session_start()
 	require_once('./incs/config.inc.php');
 	require_once('./incs/usng.inc.php');				// 9/16/08
+//	dump($_REQUEST);
 	$st_size = (get_variable("locale") ==0)?  2: 4;		
 //	$istest = TRUE;
 	if ($istest) {
@@ -105,7 +107,53 @@
 	$users = "";
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 		$users .= trim($row['user']) . "\t";			
-		}			
+		}		
+		
+	// function get_org_control($the_userid) {
+		// $sel1 = ($the_userid == 0) ? "SELECTED" : "";
+		// $query	= "SELECT * FROM `$GLOBALS[mysql_prefix]organisations`";		// 12/2/08
+		// $result	= mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
+		// $org_cntl = "<SELECT NAME='frm_org_cntl'><OPTION value=0 " . $sel1 . ">SELECT ONE</OPTION>";
+		// while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+			// $sel2 = ($the_userid == $row['id']) ? "SELECTED" : "";
+			// $org_cntl .= "<OPTION value=" . $row['id'] . " " . $sel2 . ">" . $row['name'] . "</OPTION>";			
+			// }	
+		// $org_cntl .= "</SELECT>";
+		// return $org_cntl;
+		// }
+		
+	function dump_db() {
+		require_once('./incs/MySQLDump.class.php');
+		include('./incs/mysql.inc.php');
+		$the_now = strtotime(mysql_format_date(time() - (get_variable('delta_mins')*60)));		
+		$backup = new MySQLDump(); //create new instance of MySQLDump
+		$the_db = $mysql_prefix . $mysql_db;
+		$backup->connect($mysql_host,$mysql_user,$mysql_passwd,$the_db);		// connect
+		if (!$backup->connected) { die('Error: '.$backup->mysql_error); } 		// MySQL parameters from mysql.inc.php
+		$backup->list_tables(); 												// list all tables
+		$broj = count($backup->tables); 										// count all tables, $backup->tables 
+																				//   will be array of table names
+		$the_db_dump ="\n\n-- start  start  start  start  start  start  start  start  start  start  start  start  start  start  start  start  start  start  start \n";
+		$the_db_dump .="\n-- Dumping tables for database: $mysql_db\n"; //write "intro" ;)
+		
+		for ($i=0;$i<$broj;$i++) {						//dump all tables:
+			$table_name = $backup->tables[$i]; 			//get table name
+			if(strrpos($table_name, $mysql_prefix) === 0) {
+				$backup->dump_table($table_name); 			//dump it to output (buffer)
+				$the_db_dump .=htmlspecialchars($backup->output); 	//write output
+				}
+			}
+		$the_db_dump .="\n\n-- end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end \n";
+		$file = './backups/' . $the_now . '_tickets_backup.sql';
+		$fh = fopen($file, 'w');
+		if(!fwrite($fh, $the_db_dump)) {	
+			print "<LI>DB Backup failed";
+			fclose($fh);
+			} else {
+			print '<LI>Tickets Database backup complete...';
+			}
+		}
+			
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -126,11 +174,46 @@
 #foo > #bar { position: fixed; top: 60px; right: 320px; }
 
 	</STYLE>
+	<SCRIPT SRC="./js/misc_function.js"></SCRIPT>	<!-- 1/25/13 JSON call-->
 	<SCRIPT SRC='./js/md5.js'></SCRIPT>				<!-- 11/30/08 -->
 	<SCRIPT SRC='./js/jscoord.js'></SCRIPT>		<!-- coordinate conversion 12/4/10 -->	
 	<SCRIPT SRC="./js/jscolor/jscolor.js"></SCRIPT>				<!-- 01/24/11 -->
 
 	<SCRIPT>
+// for messages
+	function get_msgs() {	//	10/23/12
+		var randomnumber=Math.floor(Math.random()*99999999);		
+//		alert("getting messages");
+	  	// call the server to execute the server side operation
+		if (window.XMLHttpRequest) {
+			xmlHttp = new XMLHttpRequest();
+			xmlHttp.open("GET", "./ajax/get_messages.php?mode=all&version=" + randomnumber, true);
+			xmlHttp.onreadystatechange = handleRequestStateChange;
+			xmlHttp.send(null);
+			}
+		}
+		
+	function handleRequestStateChange() {	//	10/23/12
+		var the_resp;
+		var the_val;
+		if (xmlHttp.readyState == 4) {
+			if (xmlHttp.status == 200) {
+				var response = JSON.decode(xmlHttp.responseText);
+				alert(xmlHttp.responseText);
+				for(var key in response[0]) {
+					the_resp = key;
+					the_val = response[0][key];
+					un_stat_chg(the_resp, the_val)
+					}	
+				var the_mess = response[1][0];
+				var the_stored = response[1][1];
+				if(the_stored > 0) {
+					show_msg("There are " + the_stored + " new messages");
+					}	
+				}
+			}
+		}	
+	
 	function $() {									// 7/11/10
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -941,23 +1024,40 @@ if (mysql_num_rows($result)>0) {
 	    break;
 	
 	case 'reset' :
+		if((isset($_GET['auth'])) && ($_GET['auth'] == 'true') && ($_POST['frm_confirm'] == 'yes')) {
+			print "</HEAD>\n<BODY onLoad = 'ck_frames()'>\n";
+			dump_db();	//	for security, dump db to file;
+			print "Database Backed Up<BR />";
+			$ticket = ((isset($_POST['frm_ticket'])) && ($_POST['frm_ticket'] == 1)) ? 1 : 0;
+			$responders = ((isset($_POST['frm_responders'])) && ($_POST['frm_responders'] == 1)) ? 1 : 0;
+			$facilities = ((isset($_POST['frm_facilities'])) && ($_POST['frm_facilities'] == 1)) ? 1 : 0;
+			$messages = ((isset($_POST['frm_messages'])) && ($_POST['frm_messages'] == 1)) ? 1 : 0;
+			$settings = ((isset($_POST['frm_settings'])) && ($_POST['frm_settings'] == 1)) ? 1 : 0;			
+			$user = ((isset($_POST['frm_user'])) && ($_POST['frm_user'] == 1)) ? 1 : 0;	
+			reset_db($user,$ticket,$responders,$facilities,$settings,$messages,1);			
+			exit();
+			} else {
 ?>
-				</HEAD>\n<BODY onLoad = 'ck_frames()'>
-				<FONT CLASS="header">Reset Database</FONT><BR />This operation requires confirmation by entering "yes" into this box.<BR />
-				<FONT CLASS="warn"><BR />Warning! This deletes all previous tickets, actions, patients, users, resets<BR /> settings and creates a default admin user.</FONT><BR /><BR />
-				<TABLE BORDER="0"><FORM METHOD="POST" ACTION="config.php?func=reset&auth=true">
-				<!-- <TR><TD CLASS="td_label">Purge closed tickets:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_purge"></TD></TR> -->
-				<TR><TD CLASS="td_label">Reset tickets/actions:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_ticket"></TD></TR>
-				<TR><TD CLASS="td_label">Reset users:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_user"></TD></TR>
-				<TR><TD CLASS="td_label">Reset settings:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_settings"></TD></TR>
-				<TR><TD CLASS="td_label">Really reset database? &nbsp;&nbsp;</TD><TD><INPUT MAXLENGTH="20" SIZE="40" TYPE="text" NAME="frm_confirm"></TD></TR>
-				<TR><TD></TD><TD ALIGN="center"><INPUT TYPE="button" VALUE="Cancel"  onClick="history.back();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="reset" VALUE="Reset">&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="submit" VALUE="Apply"></TD></TR>
-				</FORM></TABLE>
-				<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename(__FILE__); ?>"></FORM>		
-				</BODY>
-				</HTML>
+			</HEAD><BODY onLoad = 'ck_frames()'>
+			<FONT CLASS="header">Reset Database</FONT><BR />This operation requires confirmation by entering "yes" into this box.<BR />
+			<FONT CLASS="warn"><BR />Warning! This deletes all previous tickets, actions, patients, users, resets<BR /> settings and creates a default admin user.</FONT><BR /><BR />
+			<TABLE BORDER="0"><FORM METHOD="POST" ACTION="config.php?func=reset&auth=true">
+			<!-- <TR><TD CLASS="td_label">Purge closed tickets:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_purge"></TD></TR> -->
+			<TR><TD CLASS="td_label">Reset tickets/actions:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_ticket"></TD></TR>
+			<TR><TD CLASS="td_label">Reset users:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_user"></TD></TR>
+			<TR><TD CLASS="td_label">Reset settings:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_settings"></TD></TR>
+			<TR><TD CLASS="td_label">Reset responders:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_responders"></TD></TR>
+			<TR><TD CLASS="td_label">Reset facilities:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_facilities"></TD></TR>	
+			<TR><TD CLASS="td_label">Reset messages:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_messages"></TD></TR>				
+			<TR><TD CLASS="td_label">Really reset database? &nbsp;&nbsp;</TD><TD><INPUT MAXLENGTH="20" SIZE="40" TYPE="text" NAME="frm_confirm"></TD></TR>
+			<TR><TD></TD><TD ALIGN="center"><INPUT TYPE="button" VALUE="Cancel"  onClick="history.back();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="reset" VALUE="Reset">&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="submit" VALUE="Apply"></TD></TR>
+			</FORM></TABLE>
+			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename(__FILE__); ?>"></FORM>		
+			</BODY>
+			</HTML>
 <?php
-				exit();
+			exit();
+			}
 	    break;
 	
 	case 'settings' :
@@ -1026,6 +1126,118 @@ if (mysql_num_rows($result)>0) {
 			exit();
 			}				// end else
 	    break;
+		
+	case 'msg_settings' :	//	10/23/12
+		if((isset($_GET))&& (isset($_GET['go']))&& ($_GET['go'] == 'true')) {
+			print "</HEAD>\n<BODY onLoad = 'ck_frames(); '>\n";		// 1/23/10
+			foreach ($_POST as $VarName=>$VarValue) {
+				if($VarName != "columns") {
+					$query = "UPDATE `$GLOBALS[mysql_prefix]msg_settings` SET `value`=". quote_smart($VarValue)." WHERE `name`='".$VarName."'";
+					$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
+					}
+				if($VarName == "columns") {
+					$the_val = implode(",", $_POST['columns']);
+					$query = "UPDATE `$GLOBALS[mysql_prefix]msg_settings` SET `value`=". quote_smart($the_val) ." WHERE `name`='columns'";
+					$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
+					}					
+				}
+			print '<FONT CLASS="update_conf">Settings saved - will take effect at <font color="red"> next Tickets re-start</FONT>.</FONT><BR /><BR />';
+			}
+		else {
+			print "</HEAD>\n<BODY onLoad = 'ck_frames();'>\n";		// 9/21/08
+			$evenodd = array ("even", "odd");
+?>
+<DIV ID='to_bottom' style="position:fixed; top:4px; left:20px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png" BORDER=0 /></div>
+<A NAME="top" /> <!-- 11/11/09 -->
+
+<?php
+			print "<SPAN STYLE='margin-left:40px'><FONT CLASS='header'>Edit Messaging Settings</FONT>  (mouseover caption for help information)</SPAN><BR /><BR />
+				<TABLE BORDER='0' STYLE='margin-left:40px'><FORM METHOD='POST' NAME= 'set_Form'  
+				onSubmit='return validate_set(document.set_Form);' ACTION='config.php?func=msg_settings&go=true'>";
+			$counter = 0;
+			$result = mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]msg_settings` ORDER BY name") or do_error('config.php::list_settings', 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
+			while($row = stripslashes_deep(mysql_fetch_array($result))) {
+				if (($row['name']{0} <> "_" ) && (($row['name'] <> "columns") && ($row['name'] <> "smsg_provider"))) {								// hide these
+					$capt = str_replace ( "_", " ", $row['name']);
+					print "<TR CLASS='" . $evenodd[$counter%2] . "'><TD CLASS='td_label'><A HREF='#' TITLE='".get_msg_settings_help($row['name'])."'>$capt</A>: &nbsp;</TD>";
+					print "<TD><INPUT MAXLENGTH='512' SIZE='128' TYPE='text' VALUE='" . $row['value'] . "' NAME='" . $row['name'] . "'></TD></TR>\n";
+	
+					$counter++;
+					}
+				if (($row['name']{0} <> "_" ) && ($row['name'] == "columns")) {								// hide these
+					$columns_checked = explode(",", $row['value']);
+					$chkd1 = (in_array("1", $columns_checked)) ? "CHECKED" : "";
+					$chkd2 = (in_array("2", $columns_checked)) ? "CHECKED" : "";
+					$chkd3 = (in_array("3", $columns_checked)) ? "CHECKED" : "";
+					$chkd4 = (in_array("4", $columns_checked)) ? "CHECKED" : "";
+					$chkd5 = (in_array("5", $columns_checked)) ? "CHECKED" : "";
+					$chkd6 = (in_array("6", $columns_checked)) ? "CHECKED" : "";
+					$chkd7 = (in_array("7", $columns_checked)) ? "CHECKED" : "";
+					$chkd8 = (in_array("8", $columns_checked)) ? "CHECKED" : "";
+					$capt = str_replace ( "_", " ", $row['name']);
+					print "<TR CLASS='" . $evenodd[$counter%2] . "'><TD CLASS='td_label'><A HREF='#' TITLE='".get_msg_settings_help($row['name'])."'>$capt</A>: &nbsp;</TD>";
+					print "<TD><INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=1 " . $chkd1 . ">Ticket";
+					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=2 " . $chkd2 . ">Type";
+					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=3 " . $chkd3 . ">From";
+					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=4 " . $chkd4 . ">To";
+					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=5 " . $chkd5 . ">Subject";
+					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=6 " . $chkd6 . ">Message";
+					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=7 " . $chkd7 . ">Date";
+					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=8 " . $chkd8 . ">Owner";					
+					print "</TD></TR>\n";
+	
+					$counter++;
+					}
+				if (($row['name']{0} <> "_" ) && ($row['name'] == "smsg_provider")) {								// hide these
+					$capt = str_replace ( "_", " ", $row['name']);
+					print "<TR CLASS='" . $evenodd[$counter%2] . "'><TD CLASS='td_label'><A HREF='#' TITLE='".get_msg_settings_help($row['name'])."'>$capt</A>: &nbsp;</TD>";
+					print "<TD>";
+					print "<SELECT NAME='smsg_provider'>";
+					print "<OPTION VALUE=0 SELECTED>Not Selected</OPTION>";					
+					print "<OPTION VALUE=1 SELECTED>SMS Responder</OPTION>";
+					print "<OPTION VALUE=2>Txt Local</OPTION>";
+					print "</SELECT>";					
+					print "</TD></TR>\n";
+	
+					$counter++;
+					}					
+
+				}		// str_replace ( search, replace, subject)
+			
+			print "</FORM></TABLE>\n";		// 7/16/09	
+?>
+		<A NAME="bottom" /> <!-- 11/11/09 -->
+		<IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#top';" STYLE = 'margin-left: 20px'></TD>
+
+			<DIV ID="foo"><DIV ID="bar">		<!-- 9/26/09 -->
+				<INPUT TYPE='button' VALUE='Cancel' onClick='document.can_Form.submit();'><BR /><BR />
+<?php		// 3/19/11
+				if((is_administrator()) || (is_super())) {
+?>				
+				<INPUT TYPE='button' VALUE='Reset form'  onClick='document.set_Form.reset();'><BR /><BR />
+				<INPUT TYPE='button' VALUE='Apply changes'  onClick='document.set_Form.submit();'>
+<?php	
+				}
+?>				
+				
+			</DIV></DIV>
+	
+			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename(__FILE__); ?>"></FORM>		
+			</BODY>
+			<SCRIPT>
+				try {
+					parent.frames["upper"].document.getElementById("whom").innerHTML  = "<?php print $_SESSION['user'];?>";
+					parent.frames["upper"].document.getElementById("level").innerHTML = "<?php print get_level_text($_SESSION['level']);?>";
+					parent.frames["upper"].document.getElementById("script").innerHTML  = "<?php print LessExtension(basename( __FILE__));?>";
+					}
+				catch(e) {
+					}
+			</SCRIPT>
+			</HTML>
+<?php
+			exit();
+			}				// end else
+	    break;		
 	
 	case 'user' :
 		print "</HEAD>\n<BODY onLoad = 'ck_frames()'>\n";
@@ -1105,6 +1317,9 @@ if (mysql_num_rows($result)>0) {
 	//	7/6/11
 				$checked = (intval($row['level'])==intval($GLOBALS['LEVEL_STATS']))? 	"checked":"" ;						// 12/15/08
 	 			print " Statistics &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_STATS'] ."' {$checked} {$disabled}>\n";				
+	//	10/23/12
+				$checked = (intval($row['level'])==intval($GLOBALS['LEVEL_SERVICE_USER']))? 	"checked":"" ;						// 12/15/08
+	 			print " Service User &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_SERVICE_USER'] ."' {$checked} {$disabled}>\n";					
 ?>			
 				</TD></TR>
 <?php
@@ -1124,8 +1339,8 @@ if (mysql_num_rows($result)>0) {
 					print get_all_group_butts(get_allocates(4, $id));	//	6/10/11
 					print "</DIV";
 				}
-?>				
-				<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print get_text("Units");?>: </TD><TD><?php print $sel_str;?></TD></TR>
+?>	
+				<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print get_text("Units");?>: </TD><TD><?php print $sel_str;?></TD></TR>
 				<TR VALIGN="baseline" CLASS="spacer"><TD class="spacer" COLSPAN=99 ALIGN='center'>&nbsp;</TD></TR>
 				<TR VALIGN="baseline" CLASS="even"><TD COLSPAN=4 ALIGN='center'>&nbsp;</TD></TR>
 				<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Last name: </TD>
@@ -1239,7 +1454,6 @@ if (mysql_num_rows($result)>0) {
 	
 				$groups = "," . implode(',', $_POST['frm_group']) . ","; 	//	6/10/11	
 				$curr_groups = implode(',', get_allocates(4, $_POST['frm_id']));	//	6/10/11	
-	
 				$ex_grps = explode(',', $curr_groups); 	//	6/10/11
 				if($curr_groups != $groups) { 	//	6/10/11
 					foreach($_POST['frm_group'] as $posted_grp) { 	//	6/10/11
@@ -1327,6 +1541,10 @@ if (mysql_num_rows($result)>0) {
 							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_ADMINISTRATOR'];?>" NAME="frm_level" <?php print is_administrator()?"checked":"";?>> Administrator<BR />
 							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_USER'];?>" NAME="frm_level" <?php print is_user()?"checked":"";?>> Operator<BR />
 							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_GUEST'];?>" NAME="frm_level" <?php print is_guest()?"checked":"";?>> Guest<BR />
+							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_MEMBER'];?>" NAME="frm_level" <?php print is_member()?"checked":"";?>> Member<BR />
+							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_UNIT'];?>" NAME="frm_level" <?php print is_unit()?"checked":"";?>> Unit<BR />
+							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_STATISTICS'];?>" NAME="frm_level" <?php print is_statistics()?"checked":"";?>> Statistics<BR />	
+							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_SERVICE_USER'];?>" NAME="frm_level" <?php print is_service_user()?"checked":"";?>> Service User<BR />
 							</TD></TR>
 						<TR CLASS="odd"><TD CLASS="td_label">Info:</TD><TD><INPUT SIZE="40" MAXLENGTH="80" TYPE="text" VALUE="<?php print $_POST['frm_info'];?>" NAME="frm_info"></TD></TR>
 						<TR CLASS="even"><TD></TD><TD><INPUT TYPE="button" VALUE="Cancel" onClick="document.can_Form.submit();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="reset" VALUE="Reset">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="submit" VALUE="Submit"></TD></TR>
@@ -1363,7 +1581,8 @@ if (mysql_num_rows($result)>0) {
 						Guest &raquo; <INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_GUEST'];?>" NAME="frm_level" /> &nbsp;&nbsp;
 						Member &raquo; <INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_MEMBER'];?>" NAME="frm_level" /> 	<!-- 3/3/09 -->
 						<?php print get_text("Units");?> &raquo; <INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_UNIT'];?>" NAME="frm_level"/> <!-- 6/30/09 -->
-						Statistics &raquo; <INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_STATS'];?>" NAME="frm_level"/> <!-- 7/6/11 -->						
+						Statistics &raquo; <INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_STATS'];?>" NAME="frm_level"/> <!-- 7/6/11 -->
+						Service User &raquo; <INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_SERVICE_USER'];?>" NAME="frm_level"/> <!-- 10/11/12 -->							
 						</TD></TR>
 <?php
 					if(is_super()) {		//	6/10/11
@@ -1602,14 +1821,15 @@ if (mysql_num_rows($result)>0) {
 <?php
 		$_echo ="\n\n-- start  start  start  start  start  start  start  start  start  start  start  start  start  start  start  start  start  start  start \n";
 		$_echo .="\n-- Dumping tables for database: $mysql_db\n"; //write "intro" ;)
-		
+	
 		for ($i=0;$i<$broj;$i++) {						//dump all tables:
 			$table_name = $backup->tables[$i]; 			//get table name
-			$backup->dump_table($table_name); 			//dump it to output (buffer)
-			$_echo .=htmlspecialchars($backup->output); 	//write output
+			if(strrpos($table_name, $mysql_prefix) === 0) {
+				$backup->dump_table($table_name); 			//dump it to output (buffer)
+				$_echo .=htmlspecialchars($backup->output); 	//write output
+				}	
 			}
 		$_echo .="\n\n-- end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end \n";
-		
 		echo "\n<FORM NAME='the_form'><TEXTAREA NAME ='the_dump' COLS=120 ROWS=20>{$_echo}</TEXTAREA>";
 		echo "<BR /><BR /><INPUT onclick='copyit()' type='button' value='Click to copy the dump' name='cpy'\>\n</FORM>\n";
 	
@@ -2099,134 +2319,201 @@ ul {
 ?>
 		<LI CLASS='links'><A HREF="#" onClick = "do_mail_win()">Email users</A>	<!-- 6/30/09, 3/15/11 -->
 		<LI><A HREF="#" onClick = "do_Post('contacts');">Contacts</A>
+		<LI><A HREF="config.php?func=profile">Edit My Profile</A>			<!-- 12/1/08 -->
+<?php
+		}
+	if ( is_super()) { 	// SHOW MENU BASED ON USER LEVEL
+?>
+		<LI><A HREF="config.php?func=user&add=true">Add user</A>
+		<LI><A HREF="config.php?func=settings">Edit Settings</A>
+		<LI><A HREF="config.php?func=notify">Add/Edit Notifies</A>	
+		<LI><A HREF="config.php?func=delete">Delete Closed Tickets</A>
+		<LI><A HREF="#" onClick = "do_audio_test();">Alarm audio test</A>		<!-- 6/22/10 -->
+		<LI><A HREF="#" onClick = "window.open('ics213.php', 'ics213');">ICS 213</A>		<!-- 3/22/12 -->		
+<?php
+		if (mysql_table_exists("$GLOBALS[mysql_prefix]evacuees")) {		// 6/4/09
+?>	
+			<BR />
+			<LI><A HREF="#" onClick = "do_Post('evacuees');">Evacuees</A>
+<?php
+			}		// end if evacuees
+		if (mysql_table_exists("$GLOBALS[mysql_prefix]constituents")) {		// 6/4/09
+?>	
+			<BR />
+			<LI><A HREF="#" onClick = "do_Post('constituents');">Constituents</A>
 <?php
 			}
-	if ( is_super()) { 	// SHOW MENU BASED ON USER LEVEL
-?>			
-		<LI><A HREF="config.php?func=settings">Edit Settings</A>
-		<LI><A HREF="config.php?func=user&add=true">Add user</A>
-		<BR />
-		<BR />
-		<TABLE BORDER=0><TR CLASS = 'even'>		
-		<TD><LI><A HREF="#" onClick = "do_Post('region');"><?php print get_text("Regions");?></A></TD>		
-		<TD><LI><A HREF="#" onClick = "do_Post('region_type');"><?php print get_text("Region");?> Type</A></TD>	
-		<TD><LI><A HREF="reset_regions.php">Reset <?php print get_text("Regions");?></A></TD>
-		<TD><LI><A HREF="cleanse_regions.php?func=list">List and Cleanse <?php print get_text("Region");?> Allocations</A></TD>	<!-- 3/11/11 -->	
-		</TR></TABLE><BR />
-		<LI><A HREF="config.php?func=delete">Delete Closed Tickets</A>
-		<BR /><BR />
-		<TABLE BORDER=0><TR CLASS = 'even'><!-- 3/15/11 -->
-			<TD><LI><A HREF="config.php?func=css_day">Edit Day Colors</A></TD>	<!-- 3/15/11 -->
-			<TD><LI><A HREF="config.php?func=css_night">Edit Night Colors</A></TD><!-- 3/15/11 -->
-			<TD COLSPAN=2>	</TD>
-			</TR><!-- 3/15/11 -->
-
-			<TR CLASS = 'odd'><!-- 3/15/11 -->
-			<TD><LI><A HREF="config.php?func=center">Set Default Map</A></TD>
-			<TD><LI><A HREF="config.php?func=api_key">Set GMaps API key</A></TD>
-			<TD></TD>
-			</TR>
-
-			<TR CLASS = 'even'><!-- 3/15/11 -->
-				<TD><LI><A HREF="config.php?func=dump">Dump DB to screen</A></TD>
-				<TD><LI><A HREF="config.php?func=reset">Reset Database</A></TD>
-				<TD><LI><A HREF="config.php?func=optimize">Optimize Database</A> </TD>
+		if (($asterisk) && mysql_table_exists("$GLOBALS[mysql_prefix]pin_ctrl")) {		// 7/16
+?>	
+			<LI><A HREF="#" onClick = "do_Post('pin_ctrl');">PIN Control</A> <!-- 4/9/10 -->
+<?php
+			}			// end 'pin_ctrl'	
+//		if (mysql_table_exists("$GLOBALS[mysql_prefix]organisations")) {
+?>	<!--
+			<BR />
+			<LI><A HREF="#" onClick = "do_Post('organisations');">Organisations</A> -->
+<?php
+//			}
+		}
+		if(get_variable('use_messaging') != 0) {		//10/23/12		
+?>		
+			<BR /><BR />
+			<LI><B>Messaging</B><BR />
+			<TABLE BORDER=0><TR CLASS = 'odd'>				
+			<TD><LI><A HREF="config.php?func=msg_settings">Messaging Settings</A></TD>	<!-- 10/23/12 -->
+			<TD><LI><A HREF="msg_archive.php">Message Archiving</A></TD>				<!-- 10/23/12 -->	
+			<TD><LI><A HREF="#" onClick = "get_msgs();">Get all Messages</A></TD>			<!-- 10/23/12 -->		
+			<TD><LI><A HREF="#" onClick = "do_Post('std_msgs');">Edit Standard Messages</A></TD>			<!-- 10/23/12 -->
+			<TD><LI><A HREF="#" onClick = "do_Post('replacetext');">Message Text replacement</A></TD>			<!-- 10/23/12 -->			
+<?php
+			if(get_msg_variable('use_autostat') == 1) {		//10/23/12
+?>
+				<TD><LI><A HREF="auto_status.php" >Edit Auto Status Text</A></TD>		<!-- 10/23/12 -->
+<?php
+				}
+?>
+			</TABLE><BR />
+<?php
+			}
+		if((is_administrator()) || (is_super())) {
+?>
+			<LI><B>Regions</B><BR />
+			<TABLE BORDER=0><TR CLASS = 'odd'>		
+			<TD><LI><A HREF="#" onClick = "do_Post('region');"><?php print get_text("Regions");?></A></TD>		
+			<TD><LI><A HREF="#" onClick = "do_Post('region_type');"><?php print get_text("Region");?> Type</A></TD>	
+			<TD><LI><A HREF="reset_regions.php">Reset <?php print get_text("Regions");?></A></TD>
+			<TD><LI><A HREF="cleanse_regions.php?func=list">List and Cleanse <?php print get_text("Region");?> Allocations</A></TD>	<!-- 3/11/11 -->	
+			</TR></TABLE><BR />
+			<LI><B>Display Colors</B><BR />
+			<TABLE BORDER=0>
+				<TR CLASS = 'odd'>		
+					<TD><LI><A HREF="config.php?func=css_day">Edit Day Colors</A></TD>	<!-- 3/15/11 -->
+					<TD><LI><A HREF="config.php?func=css_night">Edit Night Colors</A></TD><!-- 3/15/11 -->
+					<TD COLSPAN=2></TD>
+				</TR><!-- 3/15/11 -->
+			</TABLE>
+			<BR />
+			<LI><B>Maps Configuration</B><BR />
+			<TABLE BORDER=0>		
+				<TR CLASS = 'odd'><!-- 3/15/11 -->
+					<TD><LI><A HREF="config.php?func=center">Set Default Map</A></TD>
+					<TD><LI><A HREF="config.php?func=api_key">Set GMaps API key</A></TD>
+					<TD></TD>
 				</TR>
 			</TABLE>
-		<BR />
+			<BR />
+			<LI><B>Database Functions</B><BR />
+			<TABLE BORDER=0>
+				<TR CLASS = 'odd'><!-- 3/15/11 -->
+					<TD><LI><A HREF="config.php?func=dump">Dump DB to screen</A></TD>
+					<TD><LI><A HREF="config.php?func=reset">Reset Database</A></TD>
+					<TD><LI><A HREF="config.php?func=optimize">Optimize Database</A> </TD>
+				</TR>
+			</TABLE>
+			<BR />
 <?php
-											// end if(is_super()
 		}								// end if (is_administrator()|| is_super() ) -- latitude.php
-
 ?>
-		<LI CLASS='links'><A HREF="#">Test:</A>&nbsp;&nbsp;&nbsp;<A HREF="#" onClick = "do_test()"><U>APRS</U></A>&nbsp;&nbsp;&nbsp;&nbsp;<!-- 3/15/11 -->
-			<A HREF="#" onClick = "do_instam()"><U>Instamapper</U></A>		&nbsp;&nbsp;&nbsp;&nbsp;
+		<LI><B>Outgoing email and Unit Tracking Tests</B><BR />
+		<TABLE BORDER=0>
+			<TR CLASS = 'odd'><!-- 3/15/11 -->		
+				<TD><LI><A HREF="#" onClick = "do_test()"><U>APRS</U></A></TD>
+				<TD><LI><A HREF="#" onClick = "do_instam()"><U>Instamapper</U></A></TD>
 <?php 				// 7/5/10
 		if (is_super()) {
-			print "\t\t<A HREF=\"#\" onClick = \"do_smtp()\"><U>SMTP Mail</U></A>&nbsp;&nbsp;&nbsp;&nbsp;\n";
+			print "\t\t<TD><LI><A HREF=\"#\" onClick = \"do_smtp()\"><U>SMTP Mail</U></A></TD>\n";
 			}
 ?>		
-		<A HREF="#" onClick = "do_glat()"><U>Google Latitude</U></A>		&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 7/28/09 -->
-		<A HREF="#" onClick = "do_locatea()"><U>LocateA</U></A>		&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 7/28/09 -->
-		<A HREF="#" onClick = "do_gtrack()"><U>Gtrack</U></A>	&nbsp;&nbsp;&nbsp;&nbsp;		<!-- 7/28/09 -->
-		<A HREF="#" onClick = "do_ogts()"><U>Open GTS</U></A>	&nbsp;&nbsp;&nbsp;&nbsp;		<!-- 7/5/11 -->
-		<A HREF="#" onClick = "do_t_tracker()"><U>Internal Tracker</U></A>			<!-- 9/27/11 -->		
+				<TD><LI><A HREF="#" onClick = "do_glat()"><U>Google Latitude</U></A></TD>	<!-- 7/28/09 -->
+				<TD><LI><A HREF="#" onClick = "do_locatea()"><U>LocateA</U></A></TD>	<!-- 7/28/09 -->
+				<TD><LI><A HREF="#" onClick = "do_gtrack()"><U>Gtrack</U></A></TD>		<!-- 7/28/09 -->
+				<TD><LI><A HREF="#" onClick = "do_ogts()"><U>Open GTS</U></A></TD>		<!-- 7/5/11 -->
+				<TD><LI><A HREF="#" onClick = "do_t_tracker()"><U>Internal Tracker</U></A></TD>			<!-- 9/27/11 -->	
+			</TR>
+		</TABLE></BR>
 <?php
-
-		if (!is_guest()) {
-?>		
-		<LI><A HREF="config.php?func=profile">Edit My Profile</A>			<!-- 12/1/08 -->
-		<BR />
-<?php
-		}																	// end if (!is_guest())
 	if (is_super()) {									// super or admin - 9/24/08			
 ?>		
-		<LI><A HREF="config.php?func=notify">Add/Edit Notifies</A>
-<!--	<LI><A HREF="config.php?func=notify&id=0">All-Tickets Notify</A> -->
-		<BR />
+		<LI><B>Incident Numbering</B><BR />
 		<TABLE BORDER=0 STYLE = 'margin-left:0px'>
-			<TR CLASS = 'even'><!-- 3/15/11 -->
+			<TR CLASS = 'odd'><!-- 3/15/11 -->
 				<TD><LI><A HREF="config.php?func=in_nums">Incident Numbers</A></TD>
 				<TD><LI><A HREF="#" onClick = "do_Post('in_types');">Incident types</A> </TD>
+			</TR>
+		</TABLE><BR />
+		<LI><B><?php print get_text("Units");?> Configuration</B><BR />
+		<TABLE BORDER=0 STYLE = 'margin-left:0px'>
+			<TR CLASS = 'odd'><!-- 3/15/11 -->
 				<TD><LI><A HREF="#" onClick = "do_Post('unit_types');"><?php print get_text("Units");?> types</A></TD><!-- 10/8/08,  6/4/09 -->
-				<TD><LI><A HREF="#" onClick = "do_Post('un_status');"><?php print get_text("Units");?> status</A>&nbsp;&nbsp;</TD></TR>
+				<TD><LI><A HREF="#" onClick = "do_Post('un_status');"><?php print get_text("Units");?> status</A>&nbsp;&nbsp;</TD>
+				<TD><LI><A HREF="reset_responder_status.php" >Set <?php print get_text("Units");?> Status to a common setting </A></TD>		<!-- 10/23/12 -->
+			</TR>
+		</TABLE><BR />
 <?php
 	}	// end if is super
 	
 		if (mysql_table_exists("$GLOBALS[mysql_prefix]fac_status")) 	{		// 10/5/09
-?>	
-
-			<BR />
-
-
+?>				
+			<LI><B>Facilities Configuration</B><BR />
+			<TABLE BORDER=0 STYLE = 'margin-left:0px'>
+				<TR CLASS = 'odd'><!-- 3/15/11 -->
+					<TD><LI><A HREF="#" onClick = "do_Post('fac_status');">Facility Status</A></TD>
+					<TD><LI><A HREF="#" onClick = "do_Post('fac_types');">Facility Types</A></TD>
+					<TD>&nbsp;</TD>
+					<TD>&nbsp;</TD>
 				</TR>
-
-			<TR CLASS = 'odd'><!-- 3/15/11 -->
-				<TD><LI><A HREF="#" onClick = "do_Post('fac_status');">Facility Status</A></TD>
-				<TD><LI><A HREF="#" onClick = "do_Post('fac_types');">Facility Types</A></TD>
-				<TD>&nbsp;</TD>
-				<TD>&nbsp;</TD>
-				</TR>
+			</TABLE><BR />
 <?php
 		}
 ?>
-		<TR CLASS = 'even'><!-- 3/15/11 -->
-			<TD><LI><A HREF="capts.php">Captions</A></TD>
-<!--		<TD><LI><A HREF="#" onClick = "do_Post('hints');">Hints</A></TD> -->
-			<TD><LI><A HREF="#" onClick = "do_Post('codes');">Signals</A></TD>
-			<TD><LI><A HREF="config.php?func=hints">Hints</A></TD>
-			<TD><LI><A HREF="#" onClick = "do_Post('places');">Places</A></TD>	<!-- 2/28/11 -->
+
+		<LI><B>Captions, Signals, Hints and Places</B><BR />
+		<TABLE BORDER=0 STYLE = 'margin-left:0px'>
+			<TR CLASS = 'odd'><!-- 3/15/11 -->
+				<TD><LI><A HREF="capts.php">Captions</A></TD>
+				<TD><LI><A HREF="#" onClick = "do_Post('codes');">Signals</A></TD>
+				<TD><LI><A HREF="config.php?func=hints">Hints</A></TD>
+				<TD><LI><A HREF="#" onClick = "do_Post('places');">Places</A></TD>	<!-- 2/28/11 -->
 			</TR>
-		<TR CLASS = 'odd'><!-- 7/30/11 -->
-			<TD><LI><A HREF= "./landb.php">Map Markup</A></TD>
-			<TD><LI><A HREF="#" onClick = "do_Post('mmarkup_cats');">MM Categories</A></TD>
+		</TABLE><BR />
+		<LI><B>Map Markup</B><BR />
+		<TABLE BORDER=0 STYLE = 'margin-left:0px'>		
+			<TR CLASS = 'odd'><!-- 7/30/11 -->
+				<TD><LI><A HREF= "./landb.php">Map Markup</A></TD>
+				<TD><LI><A HREF="#" onClick = "do_Post('mmarkup_cats');">MM Categories</A></TD>
 			</TR>
+		</TABLE><BR />
 			
 <?php						// 4/23/11
 	$query_update = "SELECT * FROM  `$GLOBALS[mysql_prefix]user` WHERE `user`= '_cloud' LIMIT 1;";
 	$result = mysql_query($query_update) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	5/4/11	
 	if ((mysql_num_rows($result) > 0) && (is_super())) {
 ?>	
-			<TR  CLASS = 'even'>
-			<TD><LI><A HREF="http://www.ticketscad.org/support" target="_blank">Support</A></TD>
-			<TD><LI><A HREF="http://www.ticketscad.org/dbadmin" target="_blank">DB Admin</A></TD>
-			<TD COLSPAN=2></TD>
+		<LI><B>Cloud</B><BR />
+		<TABLE BORDER=0 STYLE = 'margin-left:0px'>
+			<TR  CLASS = 'odd'>
+				<TD><LI><A HREF="http://www.ticketscad.org/support" target="_blank">Support</A></TD>
+				<TD><LI><A HREF="http://www.ticketscad.org/dbadmin" target="_blank">DB Admin</A></TD>
+				<TD COLSPAN=2></TD>
 			</TR>
+		</TABLE
 <?php	
 		}	
 	$course_table = "$GLOBALS[mysql_prefix]courses_taken";		// 12/19/11 
 	if (mysql_table_exists($course_table)) {
 ?>	
-	<FORM NAME = 'course_form' METHOD = 'post' ACTION = 'course_report.php' TARGET = '_blank'>	
-	<INPUT TYPE = 'hidden' NAME = 'user_id' VALUE = ''>
-	</FORM>
-			<TR CLASS = 'even'>		<!-- 12/10/11 -->
-			<TD><LI><A HREF="#" onClick = "do_Post('courses');">Update Courses</A></TD>
-			<TD><LI><A HREF="#" onClick = "do_Post('courses_taken');">Update Courses taken</A></TD>
-			<TD CLASS="td_label" ALIGN="left"><LI> Report &raquo;</TD>
-			<TD><SELECT NAME='frm_user_id' onChange = "document.course_form.user_id.value=this.options[this.selectedIndex].value; document.course_form.submit();">
-				<OPTION VALUE='' selected>Select</OPTION>
-				<OPTION VALUE='0' >All users</OPTION>
+		<LI><B>Courses</B><BR />
+		<TABLE BORDER=0 STYLE = 'margin-left:0px'>
+			<FORM NAME = 'course_form' METHOD = 'post' ACTION = 'course_report.php' TARGET = '_blank'>	
+			<INPUT TYPE = 'hidden' NAME = 'user_id' VALUE = ''>
+			</FORM>
+					<TR CLASS = 'odd'>		<!-- 12/10/11 -->
+					<TD><LI><A HREF="#" onClick = "do_Post('courses');">Update Courses</A></TD>
+					<TD><LI><A HREF="#" onClick = "do_Post('courses_taken');">Update Courses taken</A></TD>
+					<TD CLASS="td_label" ALIGN="left"><LI><A HREF='#'>Report</A> &raquo;</TD>
+					<TD><SELECT NAME='frm_user_id' onChange = "document.course_form.user_id.value=this.options[this.selectedIndex].value; document.course_form.submit();">
+						<OPTION VALUE='' selected>Select</OPTION>
+						<OPTION VALUE='0' >All users</OPTION>
 <?php
 	$query 	= "SELECT * FROM  `$GLOBALS[mysql_prefix]user` WHERE ((`name_l` IS NOT NULL) AND (LENGTH(`name_l`) > 0)) ORDER BY `name_l` ASC, `name_f` ASC";    			
 	$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
@@ -2243,7 +2530,7 @@ ul {
 ?>	
 		<LI><B>Modules</B><BR />
 		<TABLE BORDER=0 STYLE = 'margin-left:0px'>
-		<TR CLASS = 'even'><!-- 3/15/11 -->		
+		<TR CLASS = 'odd'><!-- 3/15/11 -->		
 <?php
 		if (mysql_table_exists("$GLOBALS[mysql_prefix]modules")) 	{		// 10/28/10
 ?>
@@ -2255,32 +2542,6 @@ ul {
 ?>		
 			<TD><LI><A HREF="install_module.php">Add Tickets Module</A></TD></TR></TABLE>
 <?php
-//		if (mysql_table_exists("$GLOBALS[mysql_prefix]ics_213")) 	{		// 6/4/09
-?>	
-<!--
-		<BR />
-		<LI><A HREF="#" onClick = "do_Post('ics_213');">ICS 213</A>
--->		
-<?php
-//			}		// end if ics213
-		if (mysql_table_exists("$GLOBALS[mysql_prefix]evacuees")) 	{		// 6/4/09
-?>	
-		<BR />
-		<LI><A HREF="#" onClick = "do_Post('evacuees');">Evacuees</A>
-<?php
-			}		// end if evacuees
-
-		if (mysql_table_exists("$GLOBALS[mysql_prefix]constituents")) 	{		// 6/4/09
-?>	
-		<BR />
-		<LI><A HREF="#" onClick = "do_Post('constituents');">Constituents</A>
-
-<?php
-		if (($asterisk) && mysql_table_exists("$GLOBALS[mysql_prefix]pin_ctrl")) 	{		// 7/16
-?>	
-			<LI><A HREF="#" onClick = "do_Post('pin_ctrl');">PIN Control</A> <!-- 4/9/10 -->
-<?php
-			}			// end 'pin_ctrl'
 		if ($istest) {
 ?>
 			<LI><A HREF="#" onClick = "do_Post('log');">Log</A>
@@ -2295,12 +2556,9 @@ ul {
 			}		// end if ($istest)
 		}
 ?>
-			<LI><A HREF="#" onClick = "do_audio_test();">Alarm audio test</A>		<!-- 6/22/10 -->
 
-<br />
-			<LI><A HREF="#" onClick = "window.open('ics213.php', 'ics213');">ICS 213</A>		<!-- 3/22/12 -->
 <?php
-		}		// if (is_administrator() || is_super())
+//		}		// if (is_administrator() || is_super())
 
 //-		
 	print "<BR /><BR />\n";

@@ -8,8 +8,7 @@
 error_reporting(0);
 require_once('../incs/functions.inc.php');
 @session_start();
-
-$type = $_GET['type'];
+$type = (isset($type)) ? clean_string($type) : "";
 
 function get_stat_type_type($value) {
 	$stat_type = "Not Used";

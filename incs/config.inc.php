@@ -40,7 +40,7 @@ error_reporting(E_ALL);		// 3/5/12
 3/18/11 Added aprs.fi key help.
 6/10/11 Added revisable Title string
 11/7/11	Added Statistics users to count in System Summary
-6/20/12 applied get_text() to 'Units'
+10/23/12 Added code for messaging and added extra missing settings to reset function
  */
 $colors = array ('odd', 'even');
 
@@ -49,7 +49,7 @@ function optimize_db(){
 	$result = mysql_query("OPTIMIZE TABLE $GLOBALS[mysql_prefix]ticket, $GLOBALS[mysql_prefix]action, $GLOBALS[mysql_prefix]user, $GLOBALS[mysql_prefix]settings, $GLOBALS[mysql_prefix]notify") or do_error('functions.inc.php::optimize_db()', 'mysql_query(optimize) failed', mysql_error(), __FILE__, __LINE__);
 	}
 /* reset database to defaults */
-function reset_db($user=0,$ticket=0,$settings=0,$purge=0){
+function reset_db($user=0,$ticket=0,$responders=0,$facilities=0,$settings=0,$messages=0,$purge=0){
 	if($ticket)	{
 	 	print '<LI> Deleting actions...';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]action") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
@@ -63,19 +63,44 @@ function reset_db($user=0,$ticket=0,$settings=0,$purge=0){
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]notify") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 	 	print '<LI> Deleting patient...';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]patient") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-	 	print '<LI> Deleting responder...';
-		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]responder") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 		print '<LI> Deleting tickets...';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]ticket") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
+		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]allocates WHERE `type` = 1") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);		
+		}
+		
+	if($responders) {
+	 	print '<LI> Deleting responder...';
+		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]responder") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
+		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]allocates WHERE `type` = 2") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);	
 	 	print '<LI> Deleting tracks...';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]tracks") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
+		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]tracks_hh") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);		
 		}
-
+		
+	if($facilities) {
+	 	print '<LI> Deleting facilities...';
+		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]facilities") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
+		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]allocates WHERE `type` = 3") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);		
+		}
+		
+	if($messages) {
+	 	print '<LI> Deleting messages...';
+		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]messages") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);		
+		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]messages_bin") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);				
+		}
+		
 	if($user)	{
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]notify") or do_error('reset_db()::mysql_query(delete notifies)', 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 		print '<LI> Deleting users and notifies...';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]user") or do_error('reset_db()::mysql_query(delete users)', 'mysql query failed', mysql_error(), __FILE__, __LINE__);
+		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]allocates WHERE `type` = 4") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
+		//	add admin user
 		$query = "INSERT INTO $GLOBALS[mysql_prefix]user (user,info,level,passwd) VALUES('admin','Administrator',$GLOBALS[LEVEL_ADMINISTRATOR],PASSWORD('admin'))";
+		$result = mysql_query($query) or do_error(query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);		
+		$new_id=mysql_insert_id();	//	get user id for new admin user
+		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));	//	get current time for insert
+		//	add allocation for new admin user to region / group 1
+		$query = "INSERT INTO `$GLOBALS[mysql_prefix]allocates` (`group`,`type`,`al_as_of`,`al_status`,`resource_id`,`sys_comments`,`user_id`) VALUES (1,4,'$now',0,$new_id,'Allocated to Group after reset operation',$new_id)";				
 		$result = mysql_query($query) or do_error(query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 		print '<LI> Admin account created with password \'admin\'';
 		}
@@ -84,21 +109,27 @@ function reset_db($user=0,$ticket=0,$settings=0,$purge=0){
 
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]settings") or do_error('reset_db()::mysql_query(delete settings)', 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 		do_insert_settings('_aprs_time','0');
+		do_insert_settings('_sleep','5');		//	10/23/12
 		do_insert_settings('_version',$version);
 		do_insert_settings('abbreviate_affected','30');
 		do_insert_settings('abbreviate_description','65');
 		do_insert_settings('allow_custom_tags','0');
 		do_insert_settings('allow_notify','1');
 		do_insert_settings('auto_poll','0');			// new 10/15/07, 3/17/09
+		do_insert_settings('auto_route','1');					// 1/17/09
+		do_insert_settings('_aprs_time','0');		
 		do_insert_settings('def_area_code','');			// new 1/27/09
 		do_insert_settings('call_board','1');			// new 1/10/08
 		do_insert_settings('chat_time','4');			// new 1/16/08
+		do_insert_settings('closed_interval','');		//	10/23/12		
 		do_insert_settings('date_format','n/j/y H:i');
+		do_insert_settings('def_area_code','');		//	10/23/12			
 		do_insert_settings('def_city','');
 		do_insert_settings('def_lat','39.1');			// approx center US
 		do_insert_settings('def_lng','-90.7');
 		do_insert_settings('def_st','');
 		do_insert_settings('def_zoom','3');
+		do_insert_settings('def_zoom_fixed','3');		//	10/23/12			
 		do_insert_settings('delta_mins','0');
 		do_insert_settings('email_reply_to','');		// new 1/10/08
 		do_insert_settings('frameborder','1');
@@ -106,6 +137,7 @@ function reset_db($user=0,$ticket=0,$settings=0,$purge=0){
 		do_insert_settings('gmaps_api_key',$_POST['frm_api_key']);		//
 		do_insert_settings('guest_add_ticket','0');
 		do_insert_settings('host','www.yourdomain.com');	
+		do_insert_settings('instam_key','');		//	10/23/12	
 		do_insert_settings('kml_files','1');		//	 'new 6/7/08
 		do_insert_settings('lat_lng','0');			// 9/13/08
 		do_insert_settings('link_capt','');
@@ -115,16 +147,23 @@ function reset_db($user=0,$ticket=0,$settings=0,$purge=0){
 		do_insert_settings('map_height','512');
 		do_insert_settings('map_width','512');
 		do_insert_settings('military_time','1');				// 7/16/08
+		do_insert_settings('msg_text_1','');		//	10/23/12	
+		do_insert_settings('msg_text_2','');		//	10/23/12	
+		do_insert_settings('msg_text_3','');		//	10/23/12	
+		do_insert_settings('quick','0');		//	10/23/12		
 		do_insert_settings('restrict_user_add','0');
 		do_insert_settings('restrict_user_tickets','0');
+		do_insert_settings('serial_no_ap','1');					// 1/17/09
+		do_insert_settings('situ_refr','');		//	10/23/12		
 		do_insert_settings('terrain','1');						// 2/24/09
 		do_insert_settings('ticket_per_page','0');
 		do_insert_settings('ticket_table_width','640');
 		do_insert_settings('UTM','0');
 		do_insert_settings('validate_email','1');
 		do_insert_settings('wp_key','729c1a751fd3d2428cfe2a7b43442c64');		// 9/13/08 
-		do_insert_settings('auto_route','1');					// 1/17/09
-		do_insert_settings('serial_no_ap','1');					// 1/17/09
+		do_insert_settings('internet','1');		//	10/23/12	
+		do_insert_settings('smtp_acct','');		//	10/23/12	
+		do_insert_settings('email_from','');		//	10/23/12	
 		do_insert_settings('gtrack_url','');					// 7/24/09
 		do_insert_settings('maptype','1');					// 7/24/09
 		do_insert_settings('locale','0');						// 8/3/09
@@ -132,7 +171,21 @@ function reset_db($user=0,$ticket=0,$settings=0,$purge=0){
 		do_insert_settings('func_key2','');					// 8/5/09
 		do_insert_settings('func_key3','');					// 8/5/09
 		do_insert_settings('reverse_geo','0');				// 11/01/09		
+		do_insert_settings('logo','t.png');		//	10/23/12			
+		do_insert_settings('pie_charts','300/450/300');		//	10/23/12	
+		do_insert_settings('sound_wav','aooga.wav');		//	10/23/12			
+		do_insert_settings('sound_mp3','phonesring.mp3');		//	10/23/12			
+		do_insert_settings('disp_stat','D/R/O/FE/FA/Clear');		//	10/23/12			
+		do_insert_settings('oper_can_edit','0');		//	10/23/12		
 		do_insert_settings('group_or_dispatch','0');				// 12/16/10	
+		do_insert_settings('_inc_num','');				//	10/23/12	
+		do_insert_settings('_cloud','0');				//	10/23/12	
+		do_insert_settings('aprs_fi_key','');				//	10/23/12	
+		do_insert_settings('title_string','');				//	10/23/12	
+		do_insert_settings('ogts_info','');				//	10/23/12	
+		do_insert_settings('regions_control','0');				//	10/23/12	
+		do_insert_settings('map_in_portal','1');				//	10/23/12	
+		do_insert_settings('use_messaging','0');				//	10/23/12	
 		}	//
 
 
@@ -236,7 +289,7 @@ function show_stats(){			/* 6/9/08 show database/user stats */
 	$show_str = $out_str . $total . " total";
 	unset($result);	
 
-	print "<TR CLASS='odd'><TD CLASS='td_label'>" . get_text("Units") . " in database:</TD><TD ALIGN='left'>" . $show_str . "</TD></TR>";
+	print "<TR CLASS='odd'><TD CLASS='td_label'>Units in database:</TD><TD ALIGN='left'>" . $show_str . "</TD></TR>";
 	
 	print "<TR CLASS='even'><TD CLASS='td_label'>Users in database:</TD><TD ALIGN='left'>$super_in_db Super$pluralS, $admin_in_db Administrator$pluralA, $oper_in_db Operator$pluralOp, $guest_in_db Guest$pluralG, $memb_in_db Member$pluralM, $stats_in_db Statistics ".($super_in_db+$oper_in_db+$admin_in_db+$guest_in_db+$memb_in_db+$stats_in_db)." total</TD></TR>";	//	11/07/11
 
@@ -285,8 +338,7 @@ function list_users(){		/* list users */
 		<TD><B>&nbsp;User</B></TD>
 		<TD><B>&nbsp;Online</B></TD>
 		<TD><B>&nbsp;Level</B></TD>
-		<TD><B>&nbsp;" . get_text("Units") . "</B></TD>
-		<TD><B>&nbsp;Call</B></TD>
+		<TD><B>&nbsp;Unit</B></TD>
 		<TD><B>&nbsp;Description</B></TD>
 		<TD><B>&nbsp;Log in</B></TD>
 		<TD><B>&nbsp;From</B></TD>
@@ -305,7 +357,6 @@ function list_users(){		/* list users */
 				<TD ALIGN = 'center'>{$online}</TD>
 				<TD>{$level}</TD>
 				<TD>{$row['unitname']}</TD> 
-				<TD>{$row['callsign']}</TD>
 				<TD>{$row['info']}</TD>
 				<TD>{$login}</TD>
 				<TD>{$row['_from']}</TD>
@@ -410,6 +461,7 @@ function get_setting_help($setting){/* get help for settings */
 		case "msg_text_1": 				return "Default message string for incident new/edit notifies; see instructions"; break;		// 4/5/09										// 9/13/08
 		case "msg_text_2": 				return "Default message string for incident mini-menu email; see instructions"; break;												// 9/13/08
 		case "msg_text_3": 				return "Default message string for for dispatch notifies; see instructions"; break;												// 9/13/08
+		case "ogts_info": 				return "Open GTS server info"; break;												// 9/13/08		
 		case "gtrack_url": 				return "URL for Gtrack server in format http://www.yourserver.com"; break;	//06/24/09
 		case "maptype": 				return "Default Map display type - 1 for Standard, 2 for Satellite, 3 for Terrain Map, 4 for Hybrid"; break;	//08/02/09
 		case "locale": 					return "Locale for USNG/UTM/OSG setting plus date format - 0=US, 1=UK, 2=ROW "; break;	//08/03/09
@@ -417,8 +469,8 @@ function get_setting_help($setting){/* get help for settings */
 		case "func_key2": 				return "User Defined Function key 2 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."; break;	//08/05/09
 		case "func_key3": 				return "User Defined Function key 3 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."; break;	//08/05/09
 		case "reverse_geo": 			return "Use Reverse Geocoding when setting location for an incident. 1 for yes, 0 for no. Default is 0"; break;	//11/01/09
-		case "regions_control": 		return "Use 0 for floating regions select control, 1 for docked to top bar"; break;	//11/01/09
 		case "logo": 					return "Enter filename of your site logo file here"; break;	//8/13/10
+		case "regions_control": 		return "Regions select / view control floating over map (0) or docked to top bar (1)"; break;												// 9/13/08
 		case "pie_charts": 				return "Severity/Incident types/Location pie chart diameters, in pixels"; break;	// 3/21/10
 		case "internet": 				return "Internet/network connection available: 1 (default) for Yes, 2 for No, 3 for maybe - will check network dynamically"; break;	// 8/13/10		
 		case "sound_mp3": 				return "Enter filename of your site mp3 alert tone - Default is phonesring.mp3"; break;	// 8/13/10
@@ -427,7 +479,9 @@ function get_setting_help($setting){/* get help for settings */
 		case "disp_stat": 				return "Dispatch status tags, slash-separated; for &#39;dispatched&#39;, responding&#39;, &#39;on-scene&#39;, &#39;facility-enroute&#39;, &#39;facility arrived&#39;, &#39;clear&#39; IN THAT ORDER! (D/R/O/FE/FA/Clear)"; break;	// 8/29/10		
 		case "group_or_dispatch": 		return "Show hide categories for units on the situation screen are based on show/hide setting in un_status table (0 - default) or on status groups in un_status table (1)"; break;	// 8/29/10		
 		case "aprs_fi_key": 			return "To use aprs location data you will need to sign up for an aprs.fi user account/key (free).  Obtain from http://aprs.fi"; break;	// 3/19/11		
-		case "title_string": 			return "If text is entered here it replaces the default title in the top bar."; break;	// 6/10/11		
+		case "title_string": 			return "If text is entered here it replaces the default title in the top bar."; break;	// 6/10/11	
+		case "use_messaging": 			return "Setting determines whether to use Tickets 2-way Messaging interface. Setting 0 (Default) does not use messaging, 1 to use Email, 2 to use SMS Gateway and 3 to use Email and SMS Gateway"; break;	// 6/10/11			
+		case "map_in_portal": 			return "Setting determines whether to show map on portal page or not - 1 (default) shows the map"; break;	// 6/10/11			
 		default: 						return "No help for '$setting'"; break;	//
 		}
 	}
@@ -469,6 +523,36 @@ function get_css_night_help($setting){/* get help for color settings	3/15/11 */
 		default: 							return "No help for '$setting'"; break;	//		default: 						return "No help for '$setting'"; break;	//
 		}
 	}		
+
+function get_msg_settings_help($setting){/* get help for color settings	3/15/11 */
+	switch($setting) {
+		case "email_server":				return "POP3 server address such as pop.gmail.com. Do not include the http://"; break;
+		case "email_port": 					return "Email server port - normally 110. For gmail use port 995"; break;
+		case "email_protocol": 				return "Leave as default POP3"; break;
+		case "email_addon": 				return "Leave as default 'notls'"; break;
+		case "email_folder": 				return "Leave as default INBOX"; break;
+		case "email_userid": 				return "Your login ID for the email server. Either just 'userid' or sometimes 'userid@domain.com'. This is email provider dependant"; break;
+		case "email_password": 				return "Your email server password"; break;
+		case "email_svr_simple":			return "Email server simple or normal authentication - i.e. does this use SSL and a different port. Most public servers do not use simple authentication. 1 for simple 0 for normal."; break;
+		case "smsg_provider": 				return "Shows the current SMS Gateway Provider (only provides name translation in the various screens). Only SMS Responder is currently implemented, please leave with this setting. "; break;
+		case "smsg_server":					return "Incoming API page for SMS Gateway provider (the receiving page). Include the http://."; break;
+		case "smsg_server2":				return "If SMS Gateway provider has a backup server this is the address for the receiving page. Include the http://"; break;
+		case "smsg_og_serv1": 				return "Outgoing Primary server API sending page for the SMS Gateway provider. Include the http://"; break;	
+		case "smsg_og_serv2": 				return "Outgoing Secondary server API sendig page for SMS Gateway provider. Include the http://"; break;	
+		case "smsg_force_sec": 				return "Force Tickets to use the backup SMS Gateway server - for use when the primary is still working but maybe slow or otherwise unreliable. If Primary is completely down then Tickets will automate switching to secondary."; break;		
+		case "smsg_orgcode": 				return "SMS Gateway provider primary authorisation - your account name"; break;		
+		case "smsg_apipin": 				return "SMS Gateway provider password / pin for the account name / org code"; break;		
+		case "smsg_mode": 					return "Leave as default - 'SENDXML'"; break;		
+		case "smsg_replyto": 				return "The reply to number for the SMS Gateway provider (primary server) that ensures that replies to SMS Messages end up on the server and thus into Tickets"; break;		
+		case "smsg_replyto": 				return "The reply to number for the SMS Gateway provider (secondary server) that ensures that replies to SMS Messages end up on the server and thus into Tickets"; break;		
+		case "smsg_server_inuse": 			return "Shows what SMS Gateway server is currently in use, primary (1) or secondary (2). Can be changed however this is also automatically changed by Tickets based on a check of server connection"; break;		
+		case "columns": 					return "For message lists the specific columns to show - enables reduction in detail where screen real estate is limited."; break;		
+		case "use_autostat": 				return "Whether to use automatic status updates for responders who send reply messages with specific text in the message. Delimiters for the special text are set in start and end tag."; break;				
+		case "start_tag": 					return "Start delimiter. Text in incoming SMS messages between the start tag and end tag will be used to drive specific responder status changes."; break;		
+		case "end_tag": 					return "The end tag for the special text in SMS incoming messages that delimits the end of the special text. Text between the start tag and this will be used for auto status updates."; break;		
+		default: 							return "No help for '$setting'"; break;	//		default: 						return "No help for '$setting'"; break;	//
+		}
+	}	
 	
 //		case 'kml files':  				return 'Dont/Do display KML files - 0/1'; break;
 //def_zoom_fixed

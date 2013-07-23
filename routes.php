@@ -517,7 +517,8 @@ if((array_key_exists('func', $_REQUEST)) && ($_REQUEST['func'] == "do_db")) {	//
 
 	extract($_REQUEST);
 	$the_ticket_id = (integer) $_REQUEST["frm_ticket_id"];
-	$addrs = array();													// 10/7/08
+	$addrs = array();		// 10/7/08
+	$smsgaddrs = array();	// 10/23/12
 	$now = mysql_format_date(time() - (get_variable('delta_mins')*60)); 
 	$assigns = explode ("|", $_REQUEST['frm_id_str']);		// pipe sep'd id's in frm_id_str
 	for ($i=0;$i<count($assigns); $i++) {		//10/6/09 added facility and receiving facility
@@ -539,11 +540,11 @@ if((array_key_exists('func', $_REQUEST)) && ($_REQUEST['func'] == "do_db")) {	//
 
 							// apply status update to unit status
 
-		$query = "SELECT `id`, `contact_via` FROM `$GLOBALS[mysql_prefix]responder` WHERE `id` = " . quote_smart($assigns[$i])  ." LIMIT 1";		// 10/7/08
+		$query = "SELECT `id`, `contact_via`, `smsg_id` FROM `$GLOBALS[mysql_prefix]responder` WHERE `id` = " . quote_smart($assigns[$i])  ." LIMIT 1";		// 10/7/08
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 		$row_addr = stripslashes_deep(mysql_fetch_assoc($result));
 		if (is_email($row_addr['contact_via'])) {array_push($addrs, $row_addr['contact_via']); }		// to array for emailing to unit
-
+		if ($row_addr['smsg_id'] != "") {array_push($smsgaddrs, $row_addr['smsg_id']); }		// to array for sending message via SMS Gateway to unit	//	10/23/12
 		do_log($GLOBALS['LOG_CALL_DISP'], $frm_ticket_id, $assigns[$i], $frm_status_id);		// 3/13/12
 		if ($frm_facility_id != 0) {
 			do_log($GLOBALS['LOG_FACILITY_DISP'], $frm_ticket_id, $assigns[$i], $frm_status_id);
@@ -602,11 +603,11 @@ if((array_key_exists('func', $_REQUEST)) && ($_REQUEST['func'] == "do_db")) {	//
 
 	var starting = false;						// 2/15/09
 
-	function do_mail_win(addrs, ticket_id) {	
+	function do_mail_win(addrs, smsgaddrs, ticket_id) {	
 		if(starting) {return;}					// dbl-click catcher
 //		alert(" <?php print __LINE__; ?> " +addrs);
 		starting=true;	
-		var url = "mail_edit.php?ticket_id=" + ticket_id + "&addrs=" + addrs + "&text=";	// no text
+		var url = "mail_edit.php?ticket_id=" + ticket_id + "&addrs=" + addrs + "&smsgaddrs=" + smsgaddrs + "&text=";	// no text
 		newwindow_mail=window.open(url, "mail_edit",  "titlebar, location=0, resizable=1, scrollbars, height=360,width=600,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 		if (isNull(newwindow_mail)) {
 			alert ("Email edit operation requires popups to be enabled -- please adjust your browser options.");
@@ -640,7 +641,8 @@ if((array_key_exists('func', $_REQUEST)) && ($_REQUEST['func'] == "do_db")) {	//
 <?php
 								// 7/29/10
 	$addr_str = urlencode( implode("|", array_unique($addrs)));
-	$mail_str = (empty($addr_str))? "" :  "do_mail_win('{$addr_str}', '{$_REQUEST['frm_ticket_id']}');";
+	$smsg_add_str = urlencode( implode(",", array_unique($smsgaddrs)));
+	$mail_str = (empty($addr_str))? "" :  "do_mail_win('{$addr_str}', '{$smsg_add_str}', '{$_REQUEST['frm_ticket_id']}');";
 	$quick_str = ((get_variable('quick'))==1)? "document.more_form.submit();" : "";
 	$extra =  (((empty($mail_str)) && (empty($quick_str))))? "" : " onLoad = \"{$mail_str}{$quick_str}\"";
 

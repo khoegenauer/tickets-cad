@@ -16,8 +16,14 @@ $zoom_tight = FALSE;		// replace with a decimal number to over-ride the standard
 7/1/11 permissions corrected
 8/1/11 state length increased to 4 chars
 2/8/12 Fixed error on single region operation - editing a unit removes region 1 region allocation.
+10/31/2012 Beds information added
+11/1/2012 remove unix conversion from field 'updated'
 */
 
+function do_updated ($instr) {		// 11/1/2012
+	return substr($instr, 8, 8);
+	}
+	
 @session_start();
 require_once('./incs/functions.inc.php');
 do_login(basename(__FILE__));
@@ -380,26 +386,12 @@ var color=0;
 		} 	
 	
 	function do_sidebar (sidebar, id, the_class, fac_id, fac_index) {
-		var fac_id = fac_id;
-		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"' onClick = myclick(" + fac_index + ");>";
-//		side_bar_html += "<TD CLASS='" + the_class + "'>" + fac_id + sidebar +"</TD></TR>\n";	//10/29/09 removed period
+		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"' onClick = 'myclick(" + fac_index + ");'>";
 		side_bar_html += sidebar + "</TR>\n";	//10/29/09 removed period
 		}
 
 	function myclick(fac_index) {				// Responds to sidebar click - view facility data
 		document.view_form.id.value=fac_index;
-		document.view_form.submit();
-		}
-
-	function do_sidebar_nm (sidebar, line_no, id, fac_id) {	
-		var fac_id = fac_id;	
-		var letter = to_str(line_no);	
-		side_bar_html += "<TR CLASS='" + colors[(line_no)%2] +"'>";
-		side_bar_html += "<TD onClick = myclick_nm(" + id + "); >" + fac_id + sidebar +"</TD></TR>\n";		// 1/23/09, 10/29/09 removed period, 11/11/09, 3/15/11
-		}
-
-	function myclick_nm(v_id) {				// Responds to sidebar click - view responder data
-		document.view_form.id.value=v_id;
 		document.view_form.submit();
 		}
 		
@@ -423,7 +415,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 ?>
 	var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_facilities' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.6));?> >";
-	side_bar_html += "<TR class='even'><TD ALIGN='left'><B>Icon</B></TD><TD ALIGN='left'><B><?php print get_text("Handle"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("Facility"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("Type"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("Status"); ?></B></TD><TD ALIGN='center'><B><?php print get_text("As of"); ?></B></TD></TR>";
+	side_bar_html += "<TR class='even'>	<TD><B>Icon</B></TD><TD ALIGN='left'><B><?php print get_text("Type"); ?></B></TD><TD><B>Handle</B></TD><TD ALIGN='left'><B>Name</B></TD><TD ALIGN='center' COLSPAN=2><B><?php print get_text("Beds"); ?></B></TD><TD ALIGN='left'>&nbsp;<B><?php print get_text("Status"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("As of"); ?></B></TD></TR>";
 
 	var which;
 	var i = <?php print $start; ?>;					// sidebar/icon index
@@ -491,7 +483,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 	$where2 .= "AND `a`.`type` = 3";	//	6/10/11				
 
 	//	3/15/11, 6/10/11
-	$query = "SELECT *,UNIX_TIMESTAMP(updated) AS updated,
+	$query = "SELECT *,
 		`t`.`id` AS `type_id`, 	
 		`f`.id AS `id`, 
 		`f`.status_id AS status_id,
@@ -509,7 +501,6 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 	$num_facilities = mysql_affected_rows();
 	$i=0;				// counter
 // =============================================================================
-	$utc = gmdate ("U");
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {		// ==========  major while() for Facility ==========
 
 		$fac_gps = get_allocates(3, $row['id']);	//	6/10/11
@@ -524,7 +515,6 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$grp_names .= " / ";
 		$the_bg_color = 	$GLOBALS['FACY_TYPES_BG'][$row['icon']];		// 2/8/10
 		$the_text_color = 	$GLOBALS['FACY_TYPES_TEXT'][$row['icon']];		// 2/8/10	
-		$the_on_click = (my_is_float($row['lat']))? " onClick = myclick({$i}); " : " onClick = myclick_nm({$row['id']}); ";	//	3/15/11
 		$got_point = FALSE;
 		print "\n\t\tvar i=$i;\n";
 
@@ -543,30 +533,31 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$the_type = (array_key_exists($temp_type, $type_vals))? $type_vals[$temp_type] : "??";
 
 		$update_error = strtotime('now - 6 hours');							// set the time for silent setting
+// Icon
+		$sidebar_line = "<TD>{$row['icon_str']}</TD>";			// 10/8/09		
+// Type
+		$sidebar_line .= "<TD>{$the_type}</TD>";	//	6/10/11
+// Handle		
+		$handle = addslashes($row['handle']);		//	5/30/10
+		$sidebar_line .= "<TD TITLE = '{$handle}'><B>". shorten($handle, 16) . "</B></TD>";			// 10/8/09		
 // name
-
 		$name = $row['name'];		//	10/8/09
 		$fac_index = $row['id'];		//	10/8/09
 		$temp = explode("/", $name );
 		$display_name = $temp[0];
+		$sidebar_line .= "<TD TITLE = '" . $grp_names . "Facility Name: " . addslashes($display_name) . "' ><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($display_name, 40)) ."</SPAN></U></TD>";
+// Beds
+		$sidebar_line .= "<TD WIDTH='15%' TITLE = 'Beds' ALIGN='right'><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'><NOBR>{$row['beds_a']}/{$row['beds_o']}</NOBR></SPAN></U></TD>";
+		$sidebar_line .= "<TD WIDTH='15%' TITLE = '{$row['beds_info']}'  ALIGN='left'><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'><NOBR>" . shorten($row['beds_info'], 20) . "</NOBR></SPAN></U></TD>";
 
-		$icon_str = $row['icon_str'];
-		$sidebar_line = "<TD TITLE = '{$icon_str}'>". $icon_str . "</TD>";			// 10/8/09		
-		
-		$handle = addslashes($row['handle']);		//	5/30/10
-		$sidebar_line .= "<TD TITLE = '{$handle}'>". shorten($handle, 16) . "</TD>";			// 10/8/09		
-
-		$sidebar_line .= "<TD TITLE = '" . $grp_names . "Facility Name: " . addslashes($display_name) . "' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($display_name, 40)) ."</SPAN></U>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD>{$the_type}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>";	//	6/10/11
+// status
 		$sidebar_line .= "<TD CLASS='td_data' TITLE = '" . addslashes ($the_status) . "'> " . get_status_sel($row['id'], $row['status_id'], 'f') . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>";	//	3/15/11
-
 // as of
-		$strike = $strike_end = "";
 		$the_time = $row['updated'];
 		$the_class = "td_data";
-
 		$strike = $strike_end = "";
 
-		$sidebar_line .= "<TD CLASS='$the_class'> $strike" . format_sb_date($the_time) . "$strike_end</TD>";
+		$sidebar_line .= "<TD CLASS='$the_class'> $strike" . do_updated($the_time) . "$strike_end</TD>";
 		$name = $row['name'];	// 10/8/09	
 		$fac_index = $row['id'];		//	10/8/09
 		$temp = explode("/", $name );
@@ -1092,7 +1083,7 @@ var buttons_html = "";
 				}
 				
 			$id = $_GET['id'];
-			$query	= "SELECT *, UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id`=$id LIMIT 1";
+			$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id`=$id LIMIT 1";
 
 			$result	= mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 			$row	= stripslashes_deep(mysql_fetch_assoc($result));
@@ -1156,7 +1147,7 @@ var buttons_html = "";
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Security reqs"); ?>:</TD>	<TD><?php print $row['security_reqs'] ;?></TD></TR>
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Primary pager"); ?>:</TD>	<TD><?php print $row['pager_p'] ;?></TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Secondary pager"); ?>:</TD>	<TD><?php print $row['pager_s'] ;?></TD></TR>
-			<TR CLASS = 'odd'><TD CLASS="td_label">As of:</TD>	<TD><?php print format_date($row['updated']); ?></TD></TR>
+			<TR CLASS = 'odd'><TD CLASS="td_label">As of:</TD>	<TD><?php print do_updated($row['updated']); ?></TD></TR>
 <?php
 		$toedit = (is_administrator() || is_super())? "<INPUT TYPE='button' VALUE='to Edit' onClick= 'to_edit_Form.submit();'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;": "" ;
 ?>
@@ -1276,17 +1267,18 @@ var buttons_html = "";
 	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
 		$regs_col_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "s")) ? "" : "none";	//	6/10/11
 		$regs_exp_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "h")) ? "" : "none";	//	6/10/11	
-?>		
+?>	
 		<DIV id = 'regions_outer' style = "position: fixed; right: 20%; top: 10%; z-index: 1000;">
 			<DIV id="boxB" class="box" style="z-index:1000;">
-				<div class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;">Viewed Regions
-				<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+				<DIV class="bar_header" class="heading_2" style='white-space: nowrap;'>	
 				<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
-					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
+					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i>
+					<DIV id="collapse_regs" class='plain' style ="display: inline; z-index:1001; cursor: pointer; float: right; margin-left: 0px; font-size: 10px;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+				</DIV>
 				<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV>
 				</DIV>
 			</DIV>
-		</DIV>
+		</DIV>	
 <?php		
 	}
 		print get_buttons_inner();	//	3/28/12

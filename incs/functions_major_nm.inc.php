@@ -14,6 +14,8 @@
 4/5/12 revised top tr to accommodate auto-refresh blink
 4/12/12 Revised Regions control buttons
 6/20/12 applied get_text() to Units, Responders
+9/30/12 lifted restriction per GD email- ????
+11/3/2012 facilities beds handling added
 */
 
 @session_start();
@@ -23,6 +25,10 @@ $disposition = get_text("Disposition");
 $patient = get_text("Patient");
 $incident = get_text("Incident");
 $incidents = get_text("Incidents");
+
+function do_updated ($instr) {		// 11/3/2012
+	return substr($instr, 8, 8);
+	}
 
 function get_can_edit() {				// 5/1/11
 	if (empty($_SESSION)) {return FALSE;}
@@ -646,7 +652,7 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
 		}
 
 	function do_sidebar_fac_ed (fac_instr, fac_id, fac_sym, myclass, line_no) {					// constructs facilities sidebar row 9/22/09
-		side_bar_html += "<TR CLASS='" + colors[line_no%2] +"'>";
+		side_bar_html += "<TR CLASS='" + colors[(line_no+1)%2] +"'>";
 		side_bar_html += "<TD  onClick = fac_click_ed(" + fac_id + ");>" + (fac_sym) + "</TD>";
 		side_bar_html += fac_instr +"</TR>\n";		// 10/30/09 removed period
 		location.href = "#top";
@@ -1312,9 +1318,7 @@ $temp  = (string) ( round((microtime(true) - $time), 3));
 
 	
 // ====================================  Add Facilities to Map 8/1/09 ================================================
-//	side_bar_html ="<TABLE border=0 CLASS='sidebar' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> >\n";
-	side_bar_html ="<TABLE border=0 CLASS='sidebar' >\n";
-
+	side_bar_html ="<TABLE border=0 CLASS='sidebar' WIDTH=100% >\n";	// 11/1/2012
 	var icons=[];	
 	var g=0;
 
@@ -1358,8 +1362,8 @@ $temp  = (string) ( round((microtime(true) - $time), 3));
 			}
 	}
 	$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	5/4/11
-
-	$query_fac = "SELECT *,UNIX_TIMESTAMP(updated) AS updated, 
+																// 11/3/2012
+	$query_fac = "SELECT *,`$GLOBALS[mysql_prefix]facilities`.`updated` AS `updated`, 
 		`$GLOBALS[mysql_prefix]facilities`.id AS `fac_id`, 
 		`$GLOBALS[mysql_prefix]facilities`.description AS `facility_description`,
 		`$GLOBALS[mysql_prefix]fac_types`.name AS `fac_type_name`, 
@@ -1390,7 +1394,8 @@ $temp  = (string) ( round((microtime(true) - $time), 3));
 		side_bar_html += "</I></TD></TR>";	//	3/15/11
 <?php
 	
-		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD>&nbsp</TD><TD ALIGN='left'><B>Facility</B> ({$facs_ct}) </TD><TD ALIGN='left'><IMG SRC='mail_red.png' BORDER=0 onClick = '{$mail_str}'/></TD><TD>&nbsp;<B>Status</B></TD><TD ALIGN='left'><B>Type</B></TD><TD ALIGN='left'><B>&nbsp;As of</B></TD></TR>\"\n";	// 7/2/10, 3/15/11
+//		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD>&nbsp</TD><TD ALIGN='left'><B>Facility</B> ({$facs_ct}) </TD><TD ALIGN='left'><IMG SRC='mail_red.png' BORDER=0 onClick = '{$mail_str}'/></TD><TD>&nbsp;<B>Status</B></TD><TD ALIGN='left'><B>Type</B></TD><TD ALIGN='left'><B>&nbsp;As of</B></TD></TR>\"\n";	// 7/2/10, 3/15/11
+		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD><B>Icon</B></TD><TD ALIGN='left'>&nbsp;&nbsp;&nbsp;&nbsp;<B>" . get_text ("Type") . "</B></TD><TD ALIGN='left'><B>" . get_text ("Facility") . "</B> ({$facs_ct}) </TD><TD ALIGN='left'><IMG SRC='mail_red.png' BORDER=0 onClick = '{$mail_str}'/></TD><TD COLSPAN=2 ALIGN='center'><B>" . get_text ("Beds") . "</B></TD><TD>&nbsp;<B>" . get_text ("Status") . "</B></TD><TD ALIGN='left'><B>&nbsp;" . get_text ("As of") . "</B></TD></TR>\"\n";	// 11/1/2012
 		}
 //  ===========================  begin major while() for FACILITIES ==========
 	
@@ -1426,23 +1431,28 @@ $temp  = (string) ( round((microtime(true) - $time), 3));
 		$the_bg_color = 	$GLOBALS['FACY_TYPES_BG'][$row_fac['icon']];		// 2/8/10
 		$the_text_color = 	$GLOBALS['FACY_TYPES_TEXT'][$row_fac['icon']];		// 2/8/10			
 
-		$sidebar_fac_line = "<TD onClick = '{$on_click}' TITLE = '{$fac_name}' ALIGN='left'><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};' >{$fac_handle}</SPAN></TD>";
-
+// Type
+		$sidebar_fac_line = "<TD ALIGN='left'  onClick = '{$on_click};' >" . addslashes(shorten($row_fac['fac_type_name'],$col_width)) . "</TD>";
+// Handle
+		$sidebar_fac_line .= "<TD onClick = '{$on_click}' TITLE = '{$fac_name}' ALIGN='left'><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};' >{$fac_handle}</SPAN></TD>";
 // MAIL					
 		if ((may_email()) && ((is_email($row_fac['contact_email'])) || (is_email($row_fac['security_email']))) ) {		// 7/2/10
-
-			$mail_link = "\t<TD CLASS='mylink' ALIGN='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+			$mail_link = "\t<TD CLASS='mylink' ALIGN='center'>"
 				. "<IMG SRC='mail.png' BORDER=0 TITLE = 'click to email facility {$fac_handle}'"
 				. " onclick = 'do_mail_win(\\\"{$fac_handle},{$row_fac['contact_email']}\\\");'> "
 				. "</TD>";		// 4/26/09
 				}
 		else {
-			$mail_link = "\t<TD ALIGN='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>na</b></TD>";
+			$mail_link = "\t<TD ALIGN='center'><b>na</b></TD>";
 			}
 		$sidebar_fac_line .= $mail_link;
-		$sidebar_fac_line .= "<TD ALIGN='left'  onClick = '{$on_click};' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . addslashes(shorten($row_fac['fac_type_name'],$col_width)) .          "</TD>";
-		$sidebar_fac_line .= "<TD ALIGN='left'  onClick = '{$on_click};' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . addslashes($row_fac['status_val']) .          "</TD>";
-		$sidebar_fac_line .= "<TD onClick = '{$on_click};' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . format_sb_date($row_fac['updated']) . "</TD>";
+// BEDS - 11/3/2012
+			$sidebar_fac_line .= "<TD ALIGN='right'>{$row_fac['beds_a']}/{$row_fac['beds_o']}</TD>";
+			$sidebar_fac_line .= "<TD ALIGN='left'><NOBR>" . shorten($row_fac['beds_info'], 10) . "</NOBR></TD>";
+// Status
+		$sidebar_fac_line .= "<TD ALIGN='left'  onClick = '{$on_click};' >" . addslashes($row_fac['status_val']) . "</TD>";
+// As-of - 11/3/2012
+		$sidebar_fac_line .= "<TD onClick = '{$on_click};' TITLE = '{$row_fac['updated']}' >" . do_updated($row_fac['updated']) . "</TD>";	// 11/3/2012
 ?>
 		var fac_icon = "td_label";
 		do_sidebar_fac_ed ("<?php print $sidebar_fac_line;?>", <?php print $row_fac['fac_id'];?>, fac_sym, fac_icon, g);		
@@ -1512,8 +1522,9 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 		print "Invalid Ticket ID: '$id'<BR />";
 		return;
 		}
-
-	$restrict_ticket = ((get_variable('restrict_user_tickets')==1) && !(is_administrator()))? " AND owner=$_SESSION[user_id]" : "";
+				// 9/30/12
+//	$restrict_ticket = ((get_variable('restrict_user_tickets')==1) && !(is_administrator()))? " AND owner=$_SESSION[user_id]" : "";
+	$restrict_ticket = "";
 										// 1/7/10
 	$query = "SELECT *,
 		`problemstart` AS `my_start`,

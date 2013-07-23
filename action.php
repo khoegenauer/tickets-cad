@@ -509,14 +509,20 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 
 //		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `name` ASC";		// 2/12/09
 
-		$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated`, `y`.`id` AS `type_id`, `r`.`id` AS `unit_id`, `r`.`name` AS `unit_name`,
-			`s`.`description` AS `stat_descr`,  `r`.`description` AS `unit_descr`, 
-			(SELECT  COUNT(*) as numfound FROM `$GLOBALS[mysql_prefix]assigns` WHERE `$GLOBALS[mysql_prefix]assigns`.`responder_id` = unit_id  AND `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00' ) AS `nr_assigned` 
+		$query = "SELECT *, 
+			`updated` AS `updated`,
+			`y`.`id` AS `type_id`,
+			`r`.`id` AS `unit_id`,
+			`r`.`name` AS `unit_name`,
+			`s`.`description` AS `stat_descr`,
+			`r`.`description` AS `unit_descr`, 
+			(SELECT  COUNT(*) as numfound FROM `$GLOBALS[mysql_prefix]assigns` 
+				WHERE `$GLOBALS[mysql_prefix]assigns`.`responder_id` = unit_id  AND `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00' ) 
+				AS `nr_assigned` 
 			FROM `$GLOBALS[mysql_prefix]responder` `r` 
 			LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` `y` ON ( `r`.`type` = y.id )	
 			LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON ( `r`.`un_status_id` = s.id ) 		
 			ORDER BY `nr_assigned` DESC,  `handle` ASC, `r`.`name` ASC";											// 2/1/10, 3/15/10
-
 //		dump($query);	//
 		$result = mysql_query($query) or do_error($query,'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
 		$max = 24;
@@ -656,8 +662,13 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 	$where .= "AND `a`.`type` = 2";	//	6/10/11		
 
 
-		$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated`, `t`.`id` AS `type_id`, `r`.`id` AS `unit_id`, `r`.`name` AS `unit_name`,
-			`s`.`description` AS `stat_descr`,  `r`.`description` AS `unit_descr`, 
+		$query = "SELECT *, 
+			`updated` AS `updated`,
+			`t`.`id` AS `type_id`, 
+			`r`.`id` AS `unit_id`, 
+			`r`.`name` AS `unit_name`,
+			`s`.`description` AS `stat_descr`,  
+			`r`.`description` AS `unit_descr`, 
 			(SELECT  COUNT(*) as numfound FROM `$GLOBALS[mysql_prefix]assigns` 
 				WHERE `$GLOBALS[mysql_prefix]assigns`.`responder_id` = unit_id  AND `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00' ) 
 				AS `nr_assigned` 

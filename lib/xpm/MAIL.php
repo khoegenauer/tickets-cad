@@ -24,9 +24,37 @@ if (!class_exists('SMTP')) require_once 'SMTP.php';
 
 if (version_compare(phpversion(), '5', '>=')) {
 	if (!class_exists('MAIL5')) require_once 'PHP5/MAIL5.php';
+/**
+ * MAIL
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 	class MAIL extends MAIL5 { }
 } else {
 	if (!class_exists('MAIL4')) require_once 'PHP4/MAIL4.php';
+/**
+ * MAIL
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 	class MAIL extends MAIL4 { }
 }
 

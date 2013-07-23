@@ -10,6 +10,19 @@ This is the main modules include file. It includes the helper file of all module
 require_once('mysql.inc.php');
 
 
+/**
+ * get_modules
+ * Insert description here
+ *
+ * @param $calling_file
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_modules($calling_file) {
 	global $handle;	
 	$query 		= "SELECT COUNT(*) FROM `$GLOBALS[mysql_prefix]modules`";
@@ -29,6 +42,19 @@ function get_modules($calling_file) {
 		}
 	}
 	
+/**
+ * module_active
+ * Insert description here
+ *
+ * @param $module
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function module_active($module) {
 	global $handle;	
 	$query 		= "SELECT * FROM `$GLOBALS[mysql_prefix]modules` WHERE `mod_name`='{$module}' ";

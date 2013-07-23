@@ -5,6 +5,19 @@
 */
 error_reporting (E_ALL);
 
+/**
+ * checkBrowser
+ * Insert description here
+ *
+ * @param $input
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function checkBrowser($input) {
 
 $browsers = "mozilla msie gecko firefox ";

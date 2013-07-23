@@ -23,6 +23,23 @@ set_time_limit(0);
 require_once('./incs/functions.inc.php');
 require_once('./incs/messaging.inc.php');
 //dump($_REQUEST);
+/**
+ * distance
+ * Insert description here
+ *
+ * @param $lat1
+ * @param $lon1
+ * @param $lat2
+ * @param $lon2
+ * @param $unit
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function distance($lat1, $lon1, $lat2, $lon2, $unit) { 
 	$theta = $lon1 - $lon2; 
 	$dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta)); 
@@ -40,6 +57,20 @@ function distance($lat1, $lon1, $lat2, $lon2, $unit) {
 		}
 	}
 
+/**
+ * subval_sort
+ * Insert description here
+ *
+ * @param $a
+ * @param $subkey
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function subval_sort($a,$subkey) {
 	foreach($a as $k=>$v) {
 		$b[$k] = strtolower($v[$subkey]);

@@ -108,6 +108,22 @@ else {
 	$errors = FALSE;
 	@set_time_limit(5);		// certain errors take longer
 	
+/**
+ * myErrorHandler
+ * Insert description here
+ *
+ * @param $errno
+ * @param $errstr
+ * @param $errfile
+ * @param $errline
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function myErrorHandler($errno, $errstr, $errfile, $errline) {
 		global $errors, $istest;
 		if($errno == 2048) { return;}

@@ -10,6 +10,19 @@ require_once('../incs/functions.inc.php');
 @session_start();
 $type = (isset($type)) ? clean_string($type) : "";
 
+/**
+ * get_stat_type_type
+ * Insert description here
+ *
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_stat_type_type($value) {
 	$stat_type = "Not Used";
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]stats_type` WHERE `st_id` = {$value}";

@@ -58,14 +58,53 @@ if((($istest)) && (!empty($_GET))) {dump ($_GET);}
 if((($istest)) && (!empty($_POST))) {dump ($_POST);}
 
 
+/**
+ * do_updated
+ * Insert description here
+ *
+ * @param $instr
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_updated ($instr) {		// 11/1/2012
 	return substr($instr, 8, 8);
 	}
 
+/**
+ * fac_format_date
+ * Insert description here
+ *
+ * @param $date
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function fac_format_date($date){							/* 1/20/2013 */ 
 	if (get_variable('locale')==1)	{return date("j/n/y H:i",$date);}					// 08/27/10 - Revised to show UK format for locale = 1	
 	else 							{return date(get_variable("date_format"),$date);}	// return date(get_variable("date_format"),strtotime($date));
 	}				// end function fac format date
+/**
+ * isempty
+ * Insert description here
+ *
+ * @param $arg
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function isempty($arg) {
 	return (bool) (strlen($arg) == 0) ;
 	}
@@ -84,6 +123,18 @@ unset($result);
 $icons = $GLOBALS['fac_icons'];
 $sm_icons = $GLOBALS['sm_fac_icons'];	//	3/15/11
 
+/**
+ * get_icon_legend
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_icon_legend (){			// returns legend string
 	global $f_types, $sm_icons;
 	$query = "SELECT DISTINCT `type` FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `type`";
@@ -839,6 +890,20 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		}		
 </SCRIPT>
 <?php
+/**
+ * list_facilities
+ * Insert description here
+ *
+ * @param $addon
+ * @param $start
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function list_facilities($addon = '', $start) {
 //	global {$_SESSION['fip']}, $fmp, {$_SESSION['editfile']}, {$_SESSION['addfile']}, {$_SESSION['unitsfile']}, {$_SESSION['facilitiesfile']}, {$_SESSION['routesfile']}, {$_SESSION['facroutesfile']};
 	global $iw_width, $f_types, $tolerance;
@@ -1672,6 +1737,19 @@ var buttons_html = "";
 	}				// end function list_facilities() ===========================================================
 
 
+/**
+ * finished
+ * Insert description here
+ *
+ * @param $caption
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function finished ($caption) {
 		print "</HEAD><BODY><!--" . __LINE__ . " -->";
 		require_once('./incs/links.inc.php');	// 10/6/09
@@ -1682,6 +1760,19 @@ var buttons_html = "";
 		print "</FORM>\n<A NAME='bottom' />\n</BODY></HTML>";
 		}
 
+/**
+ * do_calls
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_calls($id = 0) {				// generates js callsigns array
 		$print = "\n<SCRIPT >\n";
 		$print .="\t\tvar calls = new Array();\n";

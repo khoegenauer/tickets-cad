@@ -8,6 +8,23 @@ error_reporting (E_ALL  ^ E_DEPRECATED);
 require_once('incs/functions.inc.php');		//7/28/10
 $evenodd = array ("even", "odd");	// CLASS names for alternating tbl row colors
 
+/**
+ * html_mail
+ * Insert description here
+ *
+ * @param $to
+ * @param $subject
+ * @param $html_message
+ * @param $from_address
+ * @param $from_display_name
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html_mail ($to, $subject, $html_message, $from_address, $from_display_name=''){
 
 //	$headers = 'From: ' . $from_display_name . ' <shoreas@gmail.com>' . "\n"; 
@@ -29,6 +46,19 @@ function html_mail ($to, $subject, $html_message, $from_address, $from_display_n
 	}			// end function html_mail ()
 
 
+/**
+ * template_213
+ * Insert description here
+ *
+ * @param $do_form
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function template_213 ($do_form = TRUE) {
 	global $item;
 	$out_str = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
@@ -314,6 +344,22 @@ switch ($step) {
 
 	if(mysql_affected_rows()>0) {
 			
+/**
+ * do_row
+ * Insert description here
+ *
+ * @param $i
+ * @param $addr
+ * @param $name
+ * @param $org
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_row($i, $addr, $name, $org) {
 		global $evenodd;
 		$return_str = "<TR CLASS= '{$evenodd[($i)%2]}'>";
@@ -380,10 +426,43 @@ switch ($step) {
 //		$the_from = (empty($row['name_l'].$row['name_f'].$row['name_mi']))? "" :								
 //								"{$row['name_l']}, {$row['name_f']} {$row['name_mi']}";
 		
+/**
+ * in_str
+ * Insert description here
+ *
+ * @param $name
+ * @param $size
+ * @param $tabindex
+ * @param $data
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function in_str( $name, $size, $tabindex, $data = "") {		
 			return "<input type=text id='f{$name}'  name='f{$name}' size={$size} maxlength={$size} value='{$data}' tabindex={$tabindex} />";	
 			}
 			
+/**
+ * in_text
+ * Insert description here
+ *
+ * @param $name
+ * @param $cols
+ * @param $rows
+ * @param $tabindex
+ * @param $data
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function in_text ($name, $cols, $rows, $tabindex, $data = "") {
 			return "<textarea id='f{$name}'  name='f{$name}' cols={$cols} rows={$rows} tabindex={$tabindex}>{$data}</textarea>";
 			}

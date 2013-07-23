@@ -54,6 +54,19 @@ error_reporting(E_ALL);				// 2/3/09
 
 $version = "2.20 A base beta";				// see usage below 8/5/10
 
+/**
+ * dump
+ * Insert description here
+ *
+ * @param $variable
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function dump($variable) {
 	echo "\n<PRE>";					// pretty it a bit
 	var_dump($variable) ;
@@ -96,6 +109,20 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 //	foreach ($_GET as $VarName=>$VarValue) 	{echo "GET:$VarName => $VarValue, <BR />";};
 //	echo "<BR/>";
 
+/**
+ * table_exists
+ * Insert description here
+ *
+ * @param $name
+ * @param $drop_tables
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function table_exists($name,$drop_tables) {			//check if mysql table exists, if it's a re-install
 		$query 		= "SELECT COUNT(*) FROM $name";
        	$result 	= mysql_query($query);
@@ -113,6 +140,19 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 			}
 		}
 
+/**
+ * prefix
+ * Insert description here
+ *
+ * @param $tbl
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function prefix ($tbl) {		/* returns concatenated string */
 		global $db_prefix;
 		return  $db_prefix . $tbl;
@@ -125,6 +165,20 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		$result = mysql_query($query) or die("DO_INSERT_SETTINGS($name,$value) failed, execution halted");
 		}
 	//create tables
+/**
+ * create_tables
+ * Insert description here
+ *
+ * @param $db_prefix
+ * @param $drop_tables
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function create_tables($db_prefix,$drop_tables=1) {
 		//check if tables exists and if drop_tables is 1
 
@@ -992,6 +1046,18 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		}
 
 
+/**
+ * create_user
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function create_user() {	// create default super user (note: priv's level 'super') and guest // 6/9/08, 10/29/10
 		global $db_prefix;
 		$tablename = prefix("user");
@@ -1004,6 +1070,18 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		}
 
 	//insert settings
+/**
+ * insert_settings
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function insert_settings() {
 		global $version, $api_key;
 
@@ -1065,6 +1143,23 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		}
 
 	//output mysql settings to mysql.inc.php
+/**
+ * write_conf
+ * Insert description here
+ *
+ * @param $host
+ * @param $db
+ * @param $user
+ * @param $password
+ * @param $prefix
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function write_conf($host,$db,$user,$password,$prefix) {
 		if (!$fp = fopen('./incs/mysql.inc.php', 'a'))
         	print '<LI> <FONT CLASS="warn">Cannot open mysql.inc.php for writing</FONT>';
@@ -1085,6 +1180,19 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		}
 
 	//upgrade db from 0.65 to 0.7
+/**
+ * upgrade_065_07
+ * Insert description here
+ *
+ * @param $prefix
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function upgrade_065_07($prefix) {
 		print '<LI> Upgrading structure <B>0.65->0.7...</B><BR />';
 		mysql_query("ALTER TABLE $prefix"."ticket ADD severity int(2) NOT NULL default '0'") or die("<FONT CLASS=\"warn\">Could not upgrade 0.65->0.7, query #1 failed</FONT>");

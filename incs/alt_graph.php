@@ -13,6 +13,23 @@ include ("./jpgraph.php");
 include ("./jpgraph_line.php");
 include ("./jpgraph_error.php");
 
+/**
+ * getRiemannDistance
+ * Insert description here
+ *
+ * @param $lat_from
+ * @param $long_from
+ * @param $lat_to
+ * @param $long_to
+ * @param $unit
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function getRiemannDistance($lat_from, $long_from, $lat_to, $long_to, $unit='k'){
 	switch ($unit): /*** distance unit ***/
 	case 'm': 		/*** miles ***/
@@ -38,16 +55,55 @@ function getRiemannDistance($lat_from, $long_from, $lat_to, $long_to, $unit='k')
 	}
 
 $theDay="";
+/**
+ * TimeCallback
+ * Insert description here
+ *
+ * @param $aVal
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function TimeCallback($aVal) {				// Callback formatting function for the X-scale to convert timestamps
 	global $theDay;
 //	dump($aVal);
 	return (intval($aVal));
 	}
 
+/**
+ * is_my_null
+ * Insert description here
+ *
+ * @param $inchar
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_my_null($inchar) {
 	return $inchar=="-";
 	}
 
+/**
+ * get_low
+ * Insert description here
+ *
+ * @param $in_date
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_low($in_date) {		// ex:2008-08-26 21:31:09
 	$ar1 = split(" ", $in_date);
 	$ar2 = split(":", $ar1[1]);		// time

@@ -3,6 +3,20 @@
 MySQL Dump PHP class by CubeScripts, www.cubescripts.com
 */
 
+/**
+ * MySQLDump
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class MySQLDump {
 
 	var $tables = array();
@@ -11,6 +25,22 @@ class MySQLDump {
 	var $droptableifexists = false;
 	var $mysql_error;
 	
+/**
+ * connect
+ * Insert description here
+ *
+ * @param $host
+ * @param $user
+ * @param $pass
+ * @param $db
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function connect($host,$user,$pass,$db) {	
 	$return = true;
 	$conn = @mysql_connect($host,$user,$pass);
@@ -21,6 +51,18 @@ function connect($host,$user,$pass,$db) {
 	return $return;
 	}
 
+/**
+ * list_tables
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function list_tables() {
 	$return = true;
 	if (!$this->connected) { $return = false; 	}
@@ -32,6 +74,19 @@ function list_tables() {
 	return $return;
 	}
 
+/**
+ * list_values
+ * Insert description here
+ *
+ * @param $tablename
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function list_values($tablename) {
 	$sql = mysql_query("SELECT * FROM $tablename");
 	$this->output .= "\n\n-- Dumping data for table: $tablename\n\n";
@@ -49,12 +104,38 @@ function list_values($tablename) {
 		}	
 	}
 
+/**
+ * dump_table
+ * Insert description here
+ *
+ * @param $tablename
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function dump_table($tablename) {
 	$this->output = "";
 	$this->get_table_structure($tablename);	
 	$this->list_values($tablename);
 	}
 
+/**
+ * get_table_structure
+ * Insert description here
+ *
+ * @param $tablename
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_table_structure($tablename) {
 //	snap(__LINE__, $tablename);
 	$arr = array("NO" => "NOT NULL", "YES" => "NULL");

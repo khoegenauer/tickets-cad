@@ -103,6 +103,18 @@ if (!(isset ($_SESSION['allow_dirs']))) {
 	$_SESSION['allow_dirs'] = 'true';			// note js-style LC
 	}
 
+/**
+ * get_ticket_id
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_ticket_id () {				// 5/4/11
 	if (array_key_exists('ticket_id', ($_REQUEST))) {
 		$_SESSION['active_ticket'] = $_REQUEST['ticket_id'];
@@ -129,6 +141,18 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 $icons = $GLOBALS['icons'];				// 1/1/09
 $sm_icons = $GLOBALS['sm_icons'];
 
+/**
+ * get_icon_legend
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_icon_legend (){			// returns legend string - 1/1/09
 	global $u_types, $sm_icons;
 	$query = "SELECT DISTINCT `type` FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `handle` ASC, `name` ASC";
@@ -1146,6 +1170,18 @@ function toggle_div(theDiv, theButton, theText) {
 	<DIV STYLE="position:fixed; width:60px; height:auto; top:<?php print $from_top;?>px; left:<?php print $from_left;?>px; background-color: transparent; text-align:left">	<!-- 5/17/09, 7/7/09 -->
 		
 <?php
+/**
+ * get_addr
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 			function get_addr(){				// returns incident address 11/27/09
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id`= " . get_ticket_id () . " LIMIT 1";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);

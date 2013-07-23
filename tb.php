@@ -3,6 +3,19 @@
 any comments go here
 */
 error_reporting(E_ALL);	
+/**
+ * dump
+ * Insert description here
+ *
+ * @param $variable
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function dump($variable) {
 	echo "\n<PRE>";				// pretty it a bit
 	var_dump($variable) ;

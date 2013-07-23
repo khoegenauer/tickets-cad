@@ -342,6 +342,20 @@ unset($result);
 
 <?php
 
+/**
+ * list_responders
+ * Insert description here
+ *
+ * @param $addon
+ * @param $start
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function list_responders($addon = '', $start) {
 //	global {$_SESSION['fip']}, $fmp, {$_SESSION['editfile']}, {$_SESSION['addfile']}, {$_SESSION['unitsfile']}, {$_SESSION['facilitiesfile']}, {$_SESSION['routesfile']},	{$_SESSION['facroutesfile']}; 
 	global $iw_width, $u_types, $tolerance;
@@ -496,6 +510,19 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 <?php
 
+/**
+ * can_do_dispatch
+ * Insert description here
+ *
+ * @param $the_row
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function can_do_dispatch($the_row) {
 		if (intval($the_row['multi'])==1) return TRUE;
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `responder_id` = {$the_row['id']}";	// all dispatches this unit
@@ -713,6 +740,19 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 <?php
 	}				// end function list_responders() ===========================================================
 
+/**
+ * finished
+ * Insert description here
+ *
+ * @param $caption
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function finished ($caption) {
 		print "</HEAD><BODY>";
 		require_once('./incs/links.inc.php');
@@ -722,6 +762,19 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		print "</FORM></BODY></HTML>";
 		}
 
+/**
+ * do_calls
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_calls($id = 0) {				// generates js callsigns array
 		$print = "\n<SCRIPT >\n";
 		$print .="\t\tvar calls = new Array();\n";

@@ -836,6 +836,18 @@ $day_night = (array_key_exists('day_night', $_SESSION)) ? $_SESSION['day_night']
 print "\n\t var the_whom = '{$the_whom}'\n";
 print "\t var the_level ='{$the_level}'\n"; 
 
+/**
+ * get_daynight
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_daynight() {
 	$day_night = ((array_key_exists('day_night', $_SESSION)) && ($_SESSION['day_night'])) ? $_SESSION['day_night'] : 'Day';
 	return $day_night;

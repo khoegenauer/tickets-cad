@@ -22,9 +22,37 @@
 
 if (version_compare(phpversion(), '5', '>=')) {
 	if (!class_exists('FUNC5')) require_once 'PHP5/FUNC5.php';
+/**
+ * FUNC
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 	class FUNC extends FUNC5 { }
 } else {
 	if (!class_exists('FUNC4')) require_once 'PHP4/FUNC4.php';
+/**
+ * FUNC
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 	class FUNC extends FUNC4 { }
 }
 

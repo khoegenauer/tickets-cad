@@ -72,6 +72,19 @@ class Swift_Encoding
   
   // -- Private Static Methods
   
+  /**
+   * _lookup
+   * Insert description here
+   *
+   * @param $key
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private static function _lookup($key)
   {
     return Swift_DependencyContainer::getInstance()->lookup($key);

@@ -28,6 +28,21 @@
 
 $thirty_days = 30*24*60*60;							// seconds - 7/4/2013
 
+/**
+ * sane
+ * Insert description here
+ *
+ * @param $in_lat
+ * @param $in_lng
+ * @param $in_time
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function sane($in_lat, $in_lng, $in_time ) {		// applies sanity check to input values - returns boolean - 6/24/2013
 	global $thirty_days;	
 	if ( ( ! ( is_float ( $in_lat ) ) ) || 
@@ -40,6 +55,18 @@ function sane($in_lat, $in_lng, $in_time ) {		// applies sanity check to input v
 	return 																TRUE;
 	}				// end function sane()
 
+/**
+ * get_current
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_current() {		// 3/16/09, 6/10/11, 7/25/09 
 	$delay = 1;			// minimum time in minutes between  queries - 7/25/09
 	$when = get_variable('_aprs_time');				// misnomer acknowledged
@@ -84,6 +111,19 @@ function get_current() {		// 3/16/09, 6/10/11, 7/25/09
 	return array("aprs" => $aprs, "instam" => $instam, "locatea" => $locatea, "gtrack" => $gtrack, "glat" => $glat, "ogts" => $ogts, "t_tracker" => $t_tracker);		//7/29/09, 7/6/11, 6/10/11
 	}		// end get_current() 
 
+/**
+ * do_instam
+ * Insert description here
+ *
+ * @param $key_val
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_instam($key_val) {				// 3/17/09
 	global $ts_threshold;					// 4/25/11
 // 	http://www.instamapper.com/api?action=getPositions&key=4899336036773934943
@@ -142,6 +182,18 @@ function do_instam($key_val) {				// 3/17/09
 	
 	}		// end function do_instam()
 
+/**
+ * do_gtrack
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_gtrack() {			//7/29/09
 	global $ts_threshold;		// 4/25/11
 
@@ -225,6 +277,18 @@ function do_gtrack() {			//7/29/09
 		}	// end while
 	}	// end function do_gtrack()
 
+/**
+ * do_locatea
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_locatea() {				//7/29/09
 	global $ts_threshold;					// 4/25/11
 	
@@ -299,6 +363,18 @@ function do_locatea() {				//7/29/09
 		}	// end while
 	}	// end function do_locatea()
 
+/**
+ * do_glat
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_glat() {			//	7/7/2013
 	$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `glat`= 1 AND `callsign` <> ''";  // work each call/license, 8/10/09
 	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -340,10 +416,35 @@ function do_glat() {			//	7/7/2013
 		}			// end while()
 	}		// end function do_glat();
 
+/**
+ * aprs_date_ok
+ * Insert description here
+ *
+ * @param $indate
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function aprs_date_ok ($indate) {	// checks for date/time within 48 hours
 	return (abs(time() - mysql2timestamp($indate)) < 2*24*60*60); 
 	}
 
+/**
+ * do_aprs
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_aprs() {				// 7/2/2013 - populates the APRS tracks table and updates responder position data
 	function log_aprs_err($message) {								// error logger - 4/29/12
 		@session_start();
@@ -455,8 +556,33 @@ function do_aprs() {				// 7/2/2013 - populates the APRS tracks table and update
 		}			// end (mysql_affected_rows() > 0) - any APRS units?
 	}			// end function do_aprs() 
 
+/**
+ * do_ogts
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_ogts() {			// 3/24/12
 
+/**
+ * log_ogts_err
+ * Insert description here
+ *
+ * @param $message
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function log_ogts_err($message) {					// error logger
 		@session_start();
 		if (!(array_key_exists ( "ogts_err", $_SESSION ))) {		// limit to once per session
@@ -588,6 +714,18 @@ function do_ogts() {			// 3/24/12
 
 }		// end function do_ogts();
 
+/**
+ * do_t_tracker
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_t_tracker() {		//	6/10/11
 	$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `t_tracker`= 1 AND `callsign` <> ''";  // work each call/license, 8/10/09	
 	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);

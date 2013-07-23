@@ -56,6 +56,20 @@ Gtrack URL: <INPUT TYPE='text' NAME = 'frm_gtrack_url' SIZE = '40'/>
 	else {
 		require_once('./incs/functions.inc.php');
 
+/**
+ * do_gt
+ * Insert description here
+ *
+ * @param $user
+ * @param $url
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_gt($user, $url) {
 	
 		$request_url = "http://" . $url . "/data.php?userid=$user";		//change to reflect the server address

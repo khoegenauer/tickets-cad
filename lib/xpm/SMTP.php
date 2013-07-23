@@ -24,9 +24,37 @@ if (!class_exists('MIME')) require_once 'MIME.php';
 
 if (version_compare(phpversion(), '5', '>=')) {
 	if (!class_exists('SMTP5')) require_once 'PHP5/SMTP5.php';
+/**
+ * SMTP
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 	class SMTP extends SMTP5 { }
 } else {
 	if (!class_exists('SMTP4')) require_once 'PHP4/SMTP4.php';
+/**
+ * SMTP
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 	class SMTP extends SMTP4 { }
 }
 

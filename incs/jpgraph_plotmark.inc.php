@@ -14,6 +14,20 @@
 // Description: Handles the plot marks in graphs
 //===================================================
 
+/**
+ * PlotMark
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class PlotMark {
     public $title, $show=true;
     public $type,$weight=1;
@@ -32,6 +46,18 @@ class PlotMark {
 
 //--------------
 // CONSTRUCTOR
+    /**
+     * PlotMark
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function PlotMark() {
 	$this->title = new Text();
 	$this->title->Hide();
@@ -40,6 +66,21 @@ class PlotMark {
     }
 //---------------
 // PUBLIC METHODS	
+    /**
+     * SetType
+     * Insert description here
+     *
+     * @param $aType
+     * @param $aFileName
+     * @param $aScale
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetType($aType,$aFileName='',$aScale=1.0) {
 	$this->type = $aType;
 	if( $aType == MARK_IMG && $aFileName=='' ) {
@@ -49,39 +90,154 @@ class PlotMark {
 	$this->iScale = $aScale;
     }
 	
+    /**
+     * SetCallback
+     * Insert description here
+     *
+     * @param $aFunc
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetCallback($aFunc) {
 	$this->iFormatCallback = $aFunc;
     }
 
+    /**
+     * SetCallbackYX
+     * Insert description here
+     *
+     * @param $aFunc
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetCallbackYX($aFunc) {
 	$this->iFormatCallback2 = $aFunc;
     }
     
+    /**
+     * GetType
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetType() {
 	return $this->type;
     }
 	
+    /**
+     * SetColor
+     * Insert description here
+     *
+     * @param $aColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColor($aColor) {
 	$this->color=$aColor;
     }
 	
+    /**
+     * SetFillColor
+     * Insert description here
+     *
+     * @param $aFillColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFillColor($aFillColor) {
 	$this->fill_color = $aFillColor;
     }
 
+    /**
+     * SetWeight
+     * Insert description here
+     *
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetWeight($aWeight) {
 	$this->weight = $aWeight;
     }
 
     // Synonym for SetWidth()
+    /**
+     * SetSize
+     * Insert description here
+     *
+     * @param $aWidth
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetSize($aWidth) {
 	$this->width=$aWidth;
     }
 	
+    /**
+     * SetWidth
+     * Insert description here
+     *
+     * @param $aWidth
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetWidth($aWidth) {
 	$this->width=$aWidth;
     }
 
+    /**
+     * SetDefaultWidth
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetDefaultWidth() {
 	switch( $this->type ) {
 	    case MARK_CIRCLE: 
@@ -93,36 +249,140 @@ class PlotMark {
 	}
     }
 	
+    /**
+     * GetWidth
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetWidth() {
 	return $this->width;
     }
 	
+    /**
+     * Hide
+     * Insert description here
+     *
+     * @param $aHide
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Hide($aHide=true) {
 	$this->show = !$aHide;
     }
 	
+    /**
+     * Show
+     * Insert description here
+     *
+     * @param $aShow
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Show($aShow=true) {
 	$this->show = $aShow;
     }
 
+    /**
+     * SetCSIMAltVal
+     * Insert description here
+     *
+     * @param $aY
+     * @param $aX
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetCSIMAltVal($aY,$aX='') {
         $this->yvalue=$aY; 
         $this->xvalue=$aX; 
     }
     
+    /**
+     * SetCSIMTarget
+     * Insert description here
+     *
+     * @param $aTarget
+     * @param $aWinTarget
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetCSIMTarget($aTarget,$aWinTarget='') {
         $this->csimtarget=$aTarget;
         $this->csimwintarget=$aWinTarget;
     }
     
+    /**
+     * SetCSIMAlt
+     * Insert description here
+     *
+     * @param $aAlt
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetCSIMAlt($aAlt) {
         $this->csimalt=$aAlt;
     }
     
+    /**
+     * GetCSIMAreas
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetCSIMAreas(){
         return $this->csimareas;
     }
         
+    /**
+     * AddCSIMPoly
+     * Insert description here
+     *
+     * @param $aPts
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AddCSIMPoly($aPts) {
         $coords = round($aPts[0]).", ".round($aPts[1]);
         $n = count($aPts)/2;
@@ -145,6 +405,21 @@ class PlotMark {
 	}
     }
     
+    /**
+     * AddCSIMCircle
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     * @param $r
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AddCSIMCircle($x,$y,$r) {
     	$x = round($x); $y=round($y); $r=round($r);
         $this->csimareas="";    
@@ -163,6 +438,21 @@ class PlotMark {
         }
     }
     	
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $img
+     * @param $x
+     * @param $y
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($img,$x,$y) {
 	if( !$this->show ) return;
 
@@ -443,6 +733,20 @@ class PlotMark {
 // Description: Base class for all image data classes that contains the 
 // real image data.
 //========================================================================
+/**
+ * ImgData
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class ImgData {
     protected $name = '';		// Each subclass gives a name
     protected $an = array();		// Data array names
@@ -451,6 +755,20 @@ class ImgData {
     protected $maxidx = 0 ;		// Max color index
     protected $anchor_x=0.5, $anchor_y=0.5 ;    // Where is the center of the image
     // Create a GD image from the data and return a GD handle
+    /**
+     * GetImg
+     * Insert description here
+     *
+     * @param $aMark
+     * @param $aIdx
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetImg($aMark,$aIdx) {
 	$n = $this->an[$aMark];
 	if( is_string($aIdx) ) {
@@ -467,6 +785,18 @@ class ImgData {
 	    $idx = $aIdx ;
 	return Image::CreateFromString(base64_decode($this->{$n}[$idx][1]));   
     }
+    /**
+     * GetAnchor
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetAnchor() {
 	return array($this->anchor_x,$this->anchor_y);
     }
@@ -481,6 +811,20 @@ $_gFlagCache=array(
     4 => null,
 );
 // Only supposed to b called as statics
+/**
+ * FlagCache
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class FlagCache {
     static function GetFlagImgByName($aSize,$aName) {
 	global $_gFlagCache;

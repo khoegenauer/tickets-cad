@@ -45,6 +45,19 @@ if (empty($_POST)) {
 		@session_start();
 		require_once($_SESSION['fip']); 
 
+/**
+ * get_remote
+ * Insert description here
+ *
+ * @param $url
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function get_remote($url) {				// 8/9/09
 			
 				$data="";
@@ -79,6 +92,20 @@ $frm_badge = $_POST['frm_badge'];
 
 $the_url = "http://www.google.com/latitude/apps/badge/api?user={$frm_badge}&type=json";
 
+/**
+ * test_glat
+ * Insert description here
+ *
+ * @param $user
+ * @param $test_url
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function test_glat($user, $test_url) {				// given user id and url,  returns Google Latitude id, timestamp and coords as a 4-element array, if found - else FALSE
 		$ret_val = array("", "", "", "");
 		$json = get_remote($test_url) ;

@@ -20,9 +20,39 @@ DEFINE("BAND_DIAGCROSS",8); // Diagonal crosses
 
 
 // Utility class to hold coordinates for a rectangle
+/**
+ * Rectangle
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class Rectangle {
     public $x,$y,$w,$h;
     public $xe, $ye;
+    /**
+     * Rectangle
+     * Insert description here
+     *
+     * @param $aX
+     * @param $aY
+     * @param $aWidth
+     * @param $aHeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Rectangle($aX,$aY,$aWidth,$aHeight) {
 	$this->x=$aX;
 	$this->y=$aY;
@@ -40,6 +70,20 @@ class Rectangle {
 // must at least implement method DoPattern($aImg) which is responsible
 // for drawing the pattern onto the graph.
 //=====================================================================
+/**
+ * RectPattern
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class RectPattern {
     protected $color;
     protected $weight;
@@ -48,23 +92,89 @@ class RectPattern {
     protected $linespacing;	// Line spacing in pixels
     protected $iBackgroundColor=-1;  // Default is no background fill
 	
+    /**
+     * RectPattern
+     * Insert description here
+     *
+     * @param $aColor
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function RectPattern($aColor,$aWeight=1) {
 	$this->color = $aColor;
 	$this->weight = $aWeight;		
     }
 
+    /**
+     * SetBackground
+     * Insert description here
+     *
+     * @param $aBackgroundColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetBackground($aBackgroundColor) {
 	$this->iBackgroundColor=$aBackgroundColor;
     }
 
+    /**
+     * SetPos
+     * Insert description here
+     *
+     * @param $aRect
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetPos($aRect) {
 	$this->rect = $aRect;
     }
 	
+    /**
+     * ShowFrame
+     * Insert description here
+     *
+     * @param $aShow
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function ShowFrame($aShow=true) {
 	$this->doframe=$aShow;
     }
 
+    /**
+     * SetDensity
+     * Insert description here
+     *
+     * @param $aDens
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetDensity($aDens) {
 	if( $aDens < 1 || $aDens > 100 )
 	    JpGraphError::RaiseL(16001,$aDens);
@@ -75,6 +185,19 @@ class RectPattern {
 
     }
 
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($aImg) {
 	if( $this->rect == null )
 	    JpGraphError::RaiseL(16002);
@@ -103,12 +226,53 @@ class RectPattern {
 // Class RectPatternSolid
 // Implements a solid band
 //=====================================================================
+/**
+ * RectPatternSolid
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class RectPatternSolid extends RectPattern {
 
+    /**
+     * RectPatternSolid
+     * Insert description here
+     *
+     * @param $aColor
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function RectPatternSolid($aColor="black",$aWeight=1) {
 	parent::RectPattern($aColor,$aWeight);
     }
 
+    /**
+     * DoPattern
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DoPattern($aImg) {
 	$aImg->SetColor($this->color);
 	$aImg->FilledRectangle($this->rect->x,$this->rect->y,
@@ -120,13 +284,55 @@ class RectPatternSolid extends RectPattern {
 // Class RectPatternHor
 // Implements horizontal line pattern
 //=====================================================================
+/**
+ * RectPatternHor
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class RectPatternHor extends RectPattern {
 		
+    /**
+     * RectPatternHor
+     * Insert description here
+     *
+     * @param $aColor
+     * @param $aWeight
+     * @param $aLineSpacing
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function RectPatternHor($aColor="black",$aWeight=1,$aLineSpacing=7) {
 	parent::RectPattern($aColor,$aWeight);
 	$this->linespacing = $aLineSpacing;
     }
 		
+    /**
+     * DoPattern
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DoPattern($aImg) {
 	$x0 = $this->rect->x;		
 	$x1 = $this->rect->xe;
@@ -142,8 +348,37 @@ class RectPatternHor extends RectPattern {
 // Class RectPatternVert
 // Implements vertical line pattern
 //=====================================================================
+/**
+ * RectPatternVert
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class RectPatternVert extends RectPattern {
 		
+    /**
+     * RectPatternVert
+     * Insert description here
+     *
+     * @param $aColor
+     * @param $aWeight
+     * @param $aLineSpacing
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function RectPatternVert($aColor="black",$aWeight=1,$aLineSpacing=7) {
 	parent::RectPattern($aColor,$aWeight);
 	$this->linespacing = $aLineSpacing;
@@ -152,6 +387,19 @@ class RectPatternVert extends RectPattern {
     //--------------------
     // Private methods
     //
+    /**
+     * DoPattern
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DoPattern($aImg) {
 	$x = $this->rect->x;		
 	$y0 = $this->rect->y;
@@ -168,13 +416,55 @@ class RectPatternVert extends RectPattern {
 // Class RectPatternRDiag
 // Implements right diagonal pattern
 //=====================================================================
+/**
+ * RectPatternRDiag
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class RectPatternRDiag extends RectPattern {
 		
+    /**
+     * RectPatternRDiag
+     * Insert description here
+     *
+     * @param $aColor
+     * @param $aWeight
+     * @param $aLineSpacing
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function RectPatternRDiag($aColor="black",$aWeight=1,$aLineSpacing=12) {
 	parent::RectPattern($aColor,$aWeight);
 	$this->linespacing = $aLineSpacing;
     }
 
+    /**
+     * DoPattern
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DoPattern($aImg) {
 	//  --------------------
 	//  | /   /   /   /   /|
@@ -237,13 +527,55 @@ class RectPatternRDiag extends RectPattern {
 // Class RectPatternLDiag
 // Implements left diagonal pattern
 //=====================================================================
+/**
+ * RectPatternLDiag
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class RectPatternLDiag extends RectPattern {
 		
+    /**
+     * RectPatternLDiag
+     * Insert description here
+     *
+     * @param $aColor
+     * @param $aWeight
+     * @param $aLineSpacing
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function RectPatternLDiag($aColor="black",$aWeight=1,$aLineSpacing=12) {
 	$this->linespacing = $aLineSpacing;
 	parent::RectPattern($aColor,$aWeight);
     }
 
+    /**
+     * DoPattern
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DoPattern($aImg) {
 	//  --------------------
 	//  |\   \   \   \   \ |
@@ -301,21 +633,75 @@ class RectPatternLDiag extends RectPattern {
 // Class RectPattern3DPlane
 // Implements "3D" plane pattern
 //=====================================================================
+/**
+ * RectPattern3DPlane
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class RectPattern3DPlane extends RectPattern {
     private $alpha=50;  // Parameter that specifies the distance
     // to "simulated" horizon in pixel from the
     // top of the band. Specifies how fast the lines
     // converge.
 
+    /**
+     * RectPattern3DPlane
+     * Insert description here
+     *
+     * @param $aColor
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function RectPattern3DPlane($aColor="black",$aWeight=1) {
 	parent::RectPattern($aColor,$aWeight);
 	$this->SetDensity(10);  // Slightly larger default
     }
 
+    /**
+     * SetHorizon
+     * Insert description here
+     *
+     * @param $aHorizon
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetHorizon($aHorizon) {
 	$this->alpha=$aHorizon;
     }
 	
+    /**
+     * DoPattern
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DoPattern($aImg) {
 	// "Fake" a nice 3D grid-effect. 
 	$x0 = $this->rect->x + $this->rect->w/2;
@@ -418,31 +804,111 @@ class RectPattern3DPlane extends RectPattern {
 // Class RectPatternCross
 // Vert/Hor crosses
 //=====================================================================
+/**
+ * RectPatternCross
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class RectPatternCross extends RectPattern {
     private $vert=null;
     private $hor=null;
+    /**
+     * RectPatternCross
+     * Insert description here
+     *
+     * @param $aColor
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function RectPatternCross($aColor="black",$aWeight=1) {
 	parent::RectPattern($aColor,$aWeight);
 	$this->vert = new RectPatternVert($aColor,$aWeight);
 	$this->hor  = new RectPatternHor($aColor,$aWeight);
     }
 
+    /**
+     * SetOrder
+     * Insert description here
+     *
+     * @param $aDepth
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetOrder($aDepth) {
 	$this->vert->SetOrder($aDepth);
 	$this->hor->SetOrder($aDepth);
     }
 
+    /**
+     * SetPos
+     * Insert description here
+     *
+     * @param $aRect
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetPos($aRect) {
 	parent::SetPos($aRect);
 	$this->vert->SetPos($aRect);
 	$this->hor->SetPos($aRect);
     }
 
+    /**
+     * SetDensity
+     * Insert description here
+     *
+     * @param $aDens
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetDensity($aDens) {
 	$this->vert->SetDensity($aDens);
 	$this->hor->SetDensity($aDens);
     }
 
+    /**
+     * DoPattern
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DoPattern($aImg) {
 	$this->vert->DoPattern($aImg);
 	$this->hor->DoPattern($aImg);
@@ -454,31 +920,111 @@ class RectPatternCross extends RectPattern {
 // Vert/Hor crosses
 //=====================================================================
 
+/**
+ * RectPatternDiagCross
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class RectPatternDiagCross extends RectPattern {
     private $left=null;
     private $right=null;
+    /**
+     * RectPatternDiagCross
+     * Insert description here
+     *
+     * @param $aColor
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function RectPatternDiagCross($aColor="black",$aWeight=1) {
 	parent::RectPattern($aColor,$aWeight);
 	$this->right = new RectPatternRDiag($aColor,$aWeight);
 	$this->left  = new RectPatternLDiag($aColor,$aWeight);
     }
 
+    /**
+     * SetOrder
+     * Insert description here
+     *
+     * @param $aDepth
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetOrder($aDepth) {
 	$this->left->SetOrder($aDepth);
 	$this->right->SetOrder($aDepth);
     }
 
+    /**
+     * SetPos
+     * Insert description here
+     *
+     * @param $aRect
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetPos($aRect) {
 	parent::SetPos($aRect);
 	$this->left->SetPos($aRect);
 	$this->right->SetPos($aRect);
     }
 
+    /**
+     * SetDensity
+     * Insert description here
+     *
+     * @param $aDens
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetDensity($aDens) {
 	$this->left->SetDensity($aDens);
 	$this->right->SetDensity($aDens);
     }
 
+    /**
+     * DoPattern
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DoPattern($aImg) {
 	$this->left->DoPattern($aImg);
 	$this->right->DoPattern($aImg);
@@ -490,10 +1036,39 @@ class RectPatternDiagCross extends RectPattern {
 // Class RectPatternFactory
 // Factory class for rectangular pattern 
 //=====================================================================
+/**
+ * RectPatternFactory
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class RectPatternFactory {
     function RectPatternFactory() {
 	// Empty
     }
+    /**
+     * Create
+     * Insert description here
+     *
+     * @param $aPattern
+     * @param $aColor
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Create($aPattern,$aColor,$aWeight=1) {
 	switch($aPattern) {
 	    case BAND_RDIAG:
@@ -535,11 +1110,44 @@ class RectPatternFactory {
 // It is responsible for factoring the corresponding pattern
 // concrete class.
 //=====================================================================
+/**
+ * PlotBand
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class PlotBand {
     public $depth; // Determine if band should be over or under the plots
     private $prect=null;
     private $dir, $min, $max;
 
+    /**
+     * PlotBand
+     * Insert description here
+     *
+     * @param $aDir
+     * @param $aPattern
+     * @param $aMin
+     * @param $aMax
+     * @param $aColor
+     * @param $aWeight
+     * @param $aDepth
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function PlotBand($aDir,$aPattern,$aMin,$aMax,$aColor="black",$aWeight=1,$aDepth=DEPTH_BACK) {
 	$f =  new RectPatternFactory();
 	$this->prect = $f->Create($aPattern,$aColor,$aWeight);
@@ -553,41 +1161,157 @@ class PlotBand {
     }
 	
     // Set position. aRect contains absolute image coordinates
+    /**
+     * SetPos
+     * Insert description here
+     *
+     * @param $aRect
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetPos($aRect) {
 	assert( $this->prect != null ) ;
 	$this->prect->SetPos($aRect);
     }
 	
+    /**
+     * ShowFrame
+     * Insert description here
+     *
+     * @param $aFlag
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function ShowFrame($aFlag=true) {
 	$this->prect->ShowFrame($aFlag);
     }
 
     // Set z-order. In front of pplot or in the back
+    /**
+     * SetOrder
+     * Insert description here
+     *
+     * @param $aDepth
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetOrder($aDepth) {
 	$this->depth=$aDepth;
     }
 	
+    /**
+     * SetDensity
+     * Insert description here
+     *
+     * @param $aDens
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetDensity($aDens) {
 	$this->prect->SetDensity($aDens);
     }
 	
+    /**
+     * GetDir
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetDir() {
 	return $this->dir;
     }
 	
+    /**
+     * GetMin
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetMin() {
 	return $this->min;
     }
 	
+    /**
+     * GetMax
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetMax() {
 	return $this->max;
     }
 
+    /**
+     * PreStrokeAdjust
+     * Insert description here
+     *
+     * @param $aGraph
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function PreStrokeAdjust($aGraph) {
 	// Nothing to do
     }
 	
     // Display band
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $aImg
+     * @param $aXScale
+     * @param $aYScale
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($aImg,$aXScale,$aYScale) {
 	assert( $this->prect != null ) ;
 	if( $this->dir == HORIZONTAL ) {

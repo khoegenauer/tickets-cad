@@ -103,6 +103,20 @@ $html2text_elements['img'] = Array(false,false,false,0,0,false,'html2text_before
 
 //functions for special case elements, where an attribute or some other feature of the element determines how it should behave
 
+/**
+ * html2text_before_li
+ * Insert description here
+ *
+ * @param $element
+ * @param $index
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html2text_before_li($element,$index) {
 	//get parent tag name do work out if it is a bullet or numbered list
 	$parent_node = $element->parentNode;
@@ -121,6 +135,20 @@ function html2text_before_li($element,$index) {
 	return $prefix.(($parent_tag=='ol')?($index.'.'):'·').' ';
 }
 
+/**
+ * html2text_before_img
+ * Insert description here
+ *
+ * @param $element
+ * @param $index
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html2text_before_img($element,$index) {
 	if( $element->hasAttribute('alt') && ( $alt = html2text_cleanspace($element->getAttribute('alt')) ) ) {
 		return "[IMG: $alt]";
@@ -128,6 +156,20 @@ function html2text_before_img($element,$index) {
 	return '';
 }
 
+/**
+ * html2text_before_input
+ * Insert description here
+ *
+ * @param $element
+ * @param $index
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html2text_before_input($element,$index) {
 	if( $element->hasAttribute('type') && strtolower(html2text_cleanspace($element->getAttribute('type'))) != 'hidden' ) {
 		return '[INPUT]';
@@ -135,6 +177,20 @@ function html2text_before_input($element,$index) {
 	return '';
 }
 
+/**
+ * html2text_before_isindex
+ * Insert description here
+ *
+ * @param $element
+ * @param $index
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html2text_before_isindex($element,$index) {
 	if( $element->hasAttribute('prompt') && ( $prompt = html2text_cleanspace($element->getAttribute('prompt')) ) ) {
 		return "$prompt [INPUT]";
@@ -142,6 +198,20 @@ function html2text_before_isindex($element,$index) {
 	return '[INPUT]';
 }
 
+/**
+ * html2text_before_link
+ * Insert description here
+ *
+ * @param $element
+ * @param $index
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html2text_before_link($element,$index) {
 	if( $element->hasAttribute('href') && ( $href = html2text_resolve($element->getAttribute('href'),$element) ) ) {
 		if( $element->childNodes->length == 1 && $element->firstChild->nodeType == XML_TEXT_NODE && $element->firstChild->nodeValue == preg_replace( "/^mailto:/iu", '', $href ) ) {
@@ -154,6 +224,20 @@ function html2text_before_link($element,$index) {
 	return '';
 }
 
+/**
+ * html2text_before_area
+ * Insert description here
+ *
+ * @param $element
+ * @param $index
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html2text_before_area($element,$index) {
 	if( $element->hasAttribute('href') && ( $href = html2text_resolve($element->getAttribute('href'),$element) ) ) {
 		return "[LINK: $href] ".($element->hasAttribute('alt')?html2text_cleanspace($element->getAttribute('alt')):'');
@@ -161,6 +245,20 @@ function html2text_before_area($element,$index) {
 	return '';
 }
 
+/**
+ * html2text_before_form
+ * Insert description here
+ *
+ * @param $element
+ * @param $index
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html2text_before_form($element,$index) {
 	if( $element->hasAttribute('action') && ( $action = html2text_resolve($element->getAttribute('action'),$element) ) ) {
 		return "[FORM: $action]";
@@ -168,6 +266,20 @@ function html2text_before_form($element,$index) {
 	return '';
 }
 
+/**
+ * html2text_before_quote
+ * Insert description here
+ *
+ * @param $element
+ * @param $index
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html2text_before_quote($element,$index) {
 	if( $element->hasAttribute('cite') && ( $cite = html2text_resolve($element->getAttribute('cite'),$element) ) ) {
 		return "{{ [CITE: $cite]";
@@ -175,6 +287,20 @@ function html2text_before_quote($element,$index) {
 	return '{{';
 }
 
+/**
+ * html2text_before_base
+ * Insert description here
+ *
+ * @param $element
+ * @param $index
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html2text_before_base($element,$index) {
 	if( $element->hasAttribute('href') ) {
 		$element->ownerDocument->h2t_base = @parse_url($element->getAttribute('href'));
@@ -190,10 +316,37 @@ function html2text_before_base($element,$index) {
 	}
 }
 
+/**
+ * html2text_cleanspace
+ * Insert description here
+ *
+ * @param $str
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html2text_cleanspace($str) {
 	return preg_replace("/\s+/u",' ',preg_replace("/^\s+|\s+$/u",'',$str));
 }
 
+/**
+ * html2text_resolve
+ * Insert description here
+ *
+ * @param $href
+ * @param $element
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html2text_resolve($href,$element) {
 	$base = $element->ownerDocument->h2t_base;
 	//resolve $href according to the $base href
@@ -228,6 +381,20 @@ function html2text_resolve($href,$element) {
 	return $prefix.$pathprefix.$href.($base['fragment']?('#'.$base['fragment']):'');
 }
 
+/**
+ * html2text_formattext
+ * Insert description here
+ *
+ * @param $flags
+ * @param $node_value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html2text_formattext($flags,$node_value) {
 	//return the text node, with pending margins, and pending spaces
 	//reset all pending states
@@ -247,6 +414,20 @@ function html2text_formattext($flags,$node_value) {
 	return $output;
 }
 
+/**
+ * html2text_render
+ * Insert description here
+ *
+ * @param $element
+ * @param $elementindex
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html2text_render($element,$elementindex) {
 	//try to create a textual rendering of the element and its children
 	global $html2text_elements;
@@ -343,6 +524,21 @@ function html2text_render($element,$elementindex) {
 	return $element_render;
 }
 
+/**
+ * html2text
+ * Insert description here
+ *
+ * @param $sourceStr
+ * @param $isXML
+ * @param $isfile
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function html2text( $sourceStr, $isXML = false, $isfile = false ) {
 	global $html2text_elements;
 	if( is_object($sourceStr) ) {

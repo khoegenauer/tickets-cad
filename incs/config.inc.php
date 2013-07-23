@@ -196,8 +196,32 @@ function reset_db($user=0,$ticket=0,$responders=0,$facilities=0,$settings=0,$mes
 	print '<LI> Database reset done<BR /><BR />';
 	}
 
+/**
+ * show_stats
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function show_stats(){			/* 6/9/08 show database/user stats */
 	
+/**
+ * ntp_time
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function ntp_time() {
 	// ntp time servers to contact
 	// we try them one at a time if the previous failed (failover)
@@ -318,6 +342,18 @@ function show_stats(){			/* 6/9/08 show database/user stats */
 	print "</TABLE>";		//
 	}
 
+/**
+ * list_users
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function list_users(){		/* list users */
 	global $colors;						// 9/3/10
 //	$result = mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]user`") or do_error('list_users()::mysql_query()', 'mysql query failed', mysql_error(), __FILE__, __LINE__);
@@ -372,6 +408,20 @@ function list_users(){		/* list users */
 	print '</TABLE><BR />';
 	}		// end function list_users()
 
+/**
+ * do_insert_settings
+ * Insert description here
+ *
+ * @param $name
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_insert_settings($name,$value){/* insert new values into settings table */
 	$query =  sprintf("INSERT INTO `$GLOBALS[mysql_prefix]settings` (`name`,`value`) VALUES(%s,%s)",
 								quote_smart(trim($name)),
@@ -379,6 +429,19 @@ function do_insert_settings($name,$value){/* insert new values into settings tab
 	$result = mysql_query($query) or do_error($query, '', mysql_error(), __FILE__, __LINE__);
 	}
 
+/**
+ * validate_email
+ * Insert description here
+ *
+ * @param $email
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function validate_email($email){ 	//really validate? - code courtesy of Jerrett Taylor 
 	if (!get_variable('validate_email')){
 		$return['status'] = true;  $return['msg'] = $email;
@@ -412,6 +475,19 @@ function validate_email($email){ 	//really validate? - code courtesy of Jerrett 
 	return $return;
 	}
 
+/**
+ * get_setting_help
+ * Insert description here
+ *
+ * @param $setting
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_setting_help($setting){/* get help for settings */
 	switch($setting) {
 		case "_aprs_time":				return "Not user-settable; used for APRS time between polls"; break;
@@ -495,6 +571,19 @@ function get_setting_help($setting){/* get help for settings */
 		}
 	}
 	
+/**
+ * get_css_day_help
+ * Insert description here
+ *
+ * @param $setting
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_css_day_help($setting){/* get help for color settings	3/15/11 */
 	switch($setting) {
 		case "page_background":				return "Main Page Background color."; break;
@@ -514,6 +603,19 @@ function get_css_day_help($setting){/* get help for color settings	3/15/11 */
 		}
 	}	
 	
+/**
+ * get_css_night_help
+ * Insert description here
+ *
+ * @param $setting
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_css_night_help($setting){/* get help for color settings	3/15/11 */
 	switch($setting) {
 		case "page_background":				return "Main Page Background color."; break;
@@ -533,6 +635,19 @@ function get_css_night_help($setting){/* get help for color settings	3/15/11 */
 		}
 	}		
 
+/**
+ * get_msg_settings_help
+ * Insert description here
+ *
+ * @param $setting
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_msg_settings_help($setting){/* get help for color settings	3/15/11 */
 	switch($setting) {
 		case "email_server":				return "POP3 server address such as pop.gmail.com. Do not include the http://"; break;

@@ -22,20 +22,85 @@
 
 if (!defined('DISPLAY_XPM4_ERRORS')) define('DISPLAY_XPM4_ERRORS', true);
 
+/**
+ * FUNC5
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class FUNC5 {
 
+/**
+ * is_debug
+ * Insert description here
+ *
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function is_debug($debug) {
 		return (is_array($debug) && isset($debug[0]['class'], $debug[0]['type'], $debug[0]['function'], $debug[0]['file'], $debug[0]['line']));
 	}
 
+/**
+ * microtime_float
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function microtime_float() {
 		return microtime(true);
 	}
 
+/**
+ * is_win
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function is_win() {
 		return (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN');
 	}
 
+/**
+ * log_errors
+ * Insert description here
+ *
+ * @param $msg
+ * @param $strip
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function log_errors($msg = null, $strip = false) {
 		if (defined('LOG_XPM4_ERRORS')) {
 			if (is_string(LOG_XPM4_ERRORS) && is_string($msg) && is_bool($strip)) {
@@ -54,6 +119,22 @@ class FUNC5 {
 		}
 	}
 
+/**
+ * trace
+ * Insert description here
+ *
+ * @param $debug
+ * @param $message
+ * @param $level
+ * @param $ret
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function trace($debug, $message = null, $level = 0, $ret = false) {
 		if (self::is_debug($debug) && is_string($message) && ($level == 0 || $level == 1 || $level == 2)) {
 			if ($level == 0) $mess = 'Error';
@@ -78,6 +159,21 @@ class FUNC5 {
 		return $ret;
 	}
 
+/**
+ * str_clear
+ * Insert description here
+ *
+ * @param $str
+ * @param $addrep
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function str_clear($str = null, $addrep = null, $debug = null) {
 		if (!self::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -99,6 +195,22 @@ class FUNC5 {
 		else self::trace($debug, implode(', ', $err));
 	}
 
+/**
+ * is_alpha
+ * Insert description here
+ *
+ * @param $str
+ * @param $num
+ * @param $add
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function is_alpha($str = null, $num = true, $add = '', $debug = null) {
 		if (!self::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -131,6 +243,21 @@ class FUNC5 {
 		}
 	}
 
+/**
+ * is_hostname
+ * Insert description here
+ *
+ * @param $str
+ * @param $addr
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function is_hostname($str = null, $addr = false, $debug = null) {
 		if (!self::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -165,12 +292,41 @@ class FUNC5 {
 		}
 	}
 
+/**
+ * is_ipv4
+ * Insert description here
+ *
+ * @param $str
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function is_ipv4($str = null, $debug = null) {
 		if (!self::is_debug($debug)) $debug = debug_backtrace();
 		if (is_string($str)) return (trim($str) != '' && ip2long($str) && count(explode('.', $str)) === 4);
 		else self::trace($debug, 'invalid argument type');
 	}
 
+/**
+ * getmxrr_win
+ * Insert description here
+ *
+ * @param $hostname
+ * @param $mxhosts
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function getmxrr_win($hostname = null, &$mxhosts, $debug = null) {
 		if (!self::is_debug($debug)) $debug = debug_backtrace();
 		$mxhosts = array();
@@ -189,6 +345,21 @@ class FUNC5 {
 		}
 	}
 
+/**
+ * is_mail
+ * Insert description here
+ *
+ * @param $addr
+ * @param $vermx
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function is_mail($addr = null, $vermx = false, $debug = null) {
 		if (!self::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -205,6 +376,20 @@ class FUNC5 {
 		}
 	}
 
+/**
+ * mime_type
+ * Insert description here
+ *
+ * @param $name
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function mime_type($name = null, $debug = null) {
 		if (!self::is_debug($debug)) $debug = debug_backtrace();
 		if (!is_string($name)) self::trace($debug, 'invalid filename type');

@@ -24,9 +24,37 @@ if (!class_exists('FUNC')) require_once 'FUNC.php';
 
 if (version_compare(phpversion(), '5', '>=')) {
 	if (!class_exists('POP35')) require_once 'PHP5/POP35.php';
+/**
+ * POP3
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 	class POP3 extends POP35 { }
 } else {
 	if (!class_exists('POP34')) require_once 'PHP4/POP34.php';
+/**
+ * POP3
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 	class POP3 extends POP34 { }
 }
 

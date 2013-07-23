@@ -1,4 +1,16 @@
 <?php
+/**
+ * ntp_time
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function ntp_time() {
 // ntp time servers to contact
 // we try them one at a time if the previous failed (failover)

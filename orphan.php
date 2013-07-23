@@ -6,6 +6,19 @@ $findex['path'] = array();
 $findex['file'] = array();
 $extensions = array('.cfm','.html','.htm','.css','.php','.gif','.jpg','.png','.jpeg','.dwt','.js');
 $excludes = array('.svn');
+/**
+ * rec_scandir
+ * Insert description here
+ *
+ * @param $dir
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function rec_scandir($dir)
 	{
 	$files = array();

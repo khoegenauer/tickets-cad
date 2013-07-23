@@ -219,6 +219,21 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 	}				// end function mail_it ()
 // ________________________________________________________
 
+/**
+ * do_send
+ * Insert description here
+ *
+ * @param $to_str
+ * @param $subject_str
+ * @param $text_str
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_send ($to_str, $subject_str, $text_str ) {					// 7/7/09
 	global $istest;
     require_once('smtp.inc.php');     									// defer load until required - 8/2/10
@@ -241,6 +256,19 @@ function do_send ($to_str, $subject_str, $text_str ) {					// 7/7/09
 		}
 
 
+/**
+ * stripLabels
+ * Insert description here
+ *
+ * @param $sText
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function stripLabels($sText){
 		$labels = array("Incident:", "Priority:", "Nature:", "Addr:", "Descr:", "Reported by:", "Phone:", "Written:", "Updated:", "Status:", "Disp:", "Run Start:", "Map:", "Patient:", "Actions:", "Tickets host:"); // 5/9/10
 		for ($x = 0; $x < count($labels); $x++) {
@@ -300,6 +328,19 @@ function do_send ($to_str, $subject_str, $text_str ) {					// 7/7/09
 	return (string) ($count_ll + $count_cells);
 	}					// end function do send ()
 
+/**
+ * is_email
+ * Insert description here
+ *
+ * @param $email
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_email($email){		   //  validate email, code courtesy of Jerrett Taylor - 10/8/08, 7/2/10
 	if(!preg_match( "/^" .
 	"[a-zA-Z0-9]+([_\\.-][a-zA-Z0-9]+)*" .		//user

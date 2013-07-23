@@ -17,6 +17,19 @@ require_once('incs/functions.inc.php');		//7/28/10
 
 $phone = (empty($_POST))? "1234560000": $_POST['phone'];
 $vals = array("", "", "{$phone}", "", "", "", "", "", "", "", "");		// output values
+/**
+ * do_the_row
+ * Insert description here
+ *
+ * @param $inRow
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_the_row($inRow) {		// for ticket or constituents data
 		global $vals;
 		$vals[1] = $inRow['contact'];

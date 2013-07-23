@@ -40,6 +40,18 @@ if (!(isset ($_SESSION['allow_dirs']))) {
 	$_SESSION['allow_dirs'] = 'true';			// note js-style LC
 	}
 
+/**
+ * get_ticket_id
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_ticket_id () {				// 5/4/11
 	if (array_key_exists('ticket_id', ($_REQUEST))) {
 		$_SESSION['active_ticket'] = $_REQUEST['ticket_id'];
@@ -53,6 +65,19 @@ function get_ticket_id () {				// 5/4/11
 		}								// end if/else
 	}				// end function	
 
+/**
+ * get_left_margin
+ * Insert description here
+ *
+ * @param $sb_width
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_left_margin ($sb_width) {
 //	return min(($_SESSION['scr_width'] - 150), ($sb_width + get_variable('map_width') + 72));
 	return min(($_SESSION['scr_width'] - 150), ($sb_width + 72));
@@ -796,6 +821,18 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 	<DIV STYLE="position:fixed; width:120px; height:auto; top:<?php print $from_top;?>px; left:<?php print $from_left;?>px; background-color: transparent;">	<!-- 5/17/09, 7/7/09 -->
 		
 <?php
+/**
+ * get_addr
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 			function get_addr(){				// returns incident address 11/27/09
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id`= " . $_GET['ticket_id'] . " LIMIT 1";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
@@ -950,6 +987,21 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 
 	}			// end if/else !empty($_POST)
 
+/**
+ * do_list
+ * Insert description here
+ *
+ * @param $unit_id
+ * @param $capabilities
+ * @param $searchtype
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_list($unit_id ="", $capabilities ="", $searchtype) {
 	global $row_ticket, $dispatches_disp, $dispatches_act, $from_top, $from_left, $eol, $sidebar_width;
 	
@@ -1134,6 +1186,19 @@ function do_list($unit_id ="", $capabilities ="", $searchtype) {
 		
 <?php
 
+/**
+ * get_cd_str
+ * Insert description here
+ *
+ * @param $in_row
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 			function get_cd_str($in_row) {			// unit row in, 
 				global $unit_id;	// 11/18/10
 	//																			// first, already on this run?		

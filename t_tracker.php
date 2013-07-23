@@ -54,6 +54,19 @@ if (!(empty($_POST))) {
 
 $user = $_POST['dev_key'];
 
+/**
+ * do_gt
+ * Insert description here
+ *
+ * @param $user
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_gt($user) {
 		$ret_array = array();
 		$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]remote_devices` WHERE `user` = '$user'";	//	read location data from incoming table

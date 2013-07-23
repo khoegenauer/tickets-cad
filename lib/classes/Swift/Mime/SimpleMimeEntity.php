@@ -642,6 +642,20 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
   
   // -- Private methods
   
+  /**
+   * _readStream
+   * Insert description here
+   *
+   * @param Swift_OutputByteStream
+   * @param $os
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _readStream(Swift_OutputByteStream $os)
   {
     $string = '';
@@ -652,6 +666,19 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     return $string;
   }
   
+  /**
+   * _setEncoding
+   * Insert description here
+   *
+   * @param $encoding
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _setEncoding($encoding)
   {
     if (!$this->_setHeaderFieldModel('Content-Transfer-Encoding', $encoding))
@@ -660,6 +687,19 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     }
   }
   
+  /**
+   * _assertValidBoundary
+   * Insert description here
+   *
+   * @param $boundary
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _assertValidBoundary($boundary)
   {
     if (!preg_match(
@@ -670,6 +710,19 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     }
   }
   
+  /**
+   * _setContentTypeInHeaders
+   * Insert description here
+   *
+   * @param $type
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _setContentTypeInHeaders($type)
   {
     if (!$this->_setHeaderFieldModel('Content-Type', $type))
@@ -678,11 +731,37 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     }
   }
   
+  /**
+   * _setNestingLevel
+   * Insert description here
+   *
+   * @param $level
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _setNestingLevel($level)
   {
     $this->_nestingLevel = $level;
   }
   
+  /**
+   * _getCompoundLevel
+   * Insert description here
+   *
+   * @param $children
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _getCompoundLevel($children)
   {
     $level = 0;
@@ -693,6 +772,20 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     return $level;
   }
   
+  /**
+   * _getNeededChildLevel
+   * Insert description here
+   *
+   * @param $child
+   * @param $compoundLevel
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _getNeededChildLevel($child, $compoundLevel)
   {
     $filter = array();
@@ -718,12 +811,38 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     }
   }
   
+  /**
+   * _createChild
+   * Insert description here
+   *
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _createChild()
   {
     return new self($this->_headers->newInstance(),
       $this->_encoder, $this->_cache);
   }
   
+  /**
+   * _notifyEncoderChanged
+   * Insert description here
+   *
+   * @param Swift_Mime_ContentEncoder
+   * @param $encoder
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _notifyEncoderChanged(Swift_Mime_ContentEncoder $encoder)
   {
     foreach ($this->_immediateChildren as $child)
@@ -732,6 +851,19 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     }
   }
   
+  /**
+   * _notifyCharsetChanged
+   * Insert description here
+   *
+   * @param $charset
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _notifyCharsetChanged($charset)
   {
     $this->_encoder->charsetChanged($charset);
@@ -742,6 +874,18 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     }
   }
   
+  /**
+   * _sortChildren
+   * Insert description here
+   *
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _sortChildren()
   {
     $shouldSort = false;
@@ -762,6 +906,20 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     }
   }
   
+  /**
+   * _childSortAlgorithm
+   * Insert description here
+   *
+   * @param $a
+   * @param $b
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _childSortAlgorithm($a, $b)
   {
     $typePrefs = array();

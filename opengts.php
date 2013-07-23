@@ -25,6 +25,20 @@ extract ($_POST);
 <BODY>
 
 <?php
+/**
+ * customError
+ * Insert description here
+ *
+ * @param $errno
+ * @param $errstr
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function customError($errno, $errstr)
   {
   echo "Error:</b> [$errno] $errstr<br /><br />";
@@ -32,6 +46,21 @@ function customError($errno, $errstr)
   die();
   } 
 set_error_handler("customError"); 
+/**
+ * test_opengts
+ * Insert description here
+ *
+ * @param $_url
+ * @param $_account
+ * @param $_pw
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function test_opengts( $_url, $_account, $_pw ) {		// returns array, or FALSE
 //			target	http://track.kmbnet.net:8080/events/data.json?a=sysadmin&p=12test34&g=all&limit=1
 

@@ -22,6 +22,19 @@ $zoom_tight = FALSE;		// replace with a decimal number to over-ride the standard
 6/4/2013 beds information added for all operations
 */
 
+/**
+ * do_updated
+ * Insert description here
+ *
+ * @param $instr
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_updated ($instr) {		// 11/1/2012
 	return substr($instr, 8, 8);
 	}
@@ -52,6 +65,18 @@ unset($result);
 $icons = $GLOBALS['fac_icons'];
 $sm_icons = $GLOBALS['sm_fac_icons'];
 
+/**
+ * get_icon_legend
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_icon_legend (){			// returns legend string
 	global $u_types, $sm_icons;
 	$query = "SELECT DISTINCT `type` FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `type`";
@@ -305,6 +330,20 @@ function get_icon_legend (){			// returns legend string
 
 <?php
 
+/**
+ * list_facilities
+ * Insert description here
+ *
+ * @param $addon
+ * @param $start
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function list_facilities($addon = '', $start) {
 	global $iw_width, $u_types, $tolerance;
 //	$assigns = array();
@@ -600,6 +639,19 @@ var buttons_html = "";
 <?php
 	}				// end function list_Facilities() ===========================================================
 
+/**
+ * finished
+ * Insert description here
+ *
+ * @param $caption
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function finished ($caption) {
 		print "</HEAD><BODY>";
 		require_once('./incs/links.inc.php');	// 10/6/09
@@ -610,6 +662,19 @@ var buttons_html = "";
 		print "</FORM>\n<A NAME='bottom' />\n</BODY></HTML>";
 		}
 
+/**
+ * do_calls
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_calls($id = 0) {				// generates js callsigns array
 		$print = "\n<SCRIPT >\n";
 		$print .="\t\tvar calls = new Array();\n";

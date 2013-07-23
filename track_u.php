@@ -31,6 +31,20 @@ else {
 
 $api_key = get_variable('gmaps_api_key');
 
+/**
+ * list_tracks
+ * Insert description here
+ *
+ * @param $addon
+ * @param $start
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function list_tracks($addon = '', $start) {
 	global $source, $evenodd;
 

@@ -239,6 +239,19 @@ function doReset() {
 
 	}			// end if/else !empty($_POST)
 
+/**
+ * do_list
+ * Insert description here
+ *
+ * @param $unit_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_list($unit_id ="") {
 	global $row_unit;
 	

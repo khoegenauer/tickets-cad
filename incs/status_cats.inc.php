@@ -7,6 +7,18 @@ $hide_status_groups = get_variable('group_or_dispatch');
 2/12/11 Revised SQL in function get_category($unit) to correct error with show / hide when using setting group_or_dispatch = 0
 */
 
+/**
+ * get_category_butts
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_category_butts() {
 	global $hide_status_groups, $hide_dispatched;
 	$category_butts = array();
@@ -38,6 +50,19 @@ function get_category_butts() {
 
 	} 	// end function get_category_butts()
 
+/**
+ * get_category
+ * Insert description here
+ *
+ * @param $unit
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_category($unit) {
 	global $hide_status_groups, $hide_dispatched;
 	$status_category="";
@@ -100,6 +125,18 @@ function get_category($unit) {
 	return $status_category;	
 	}	// end function get_category($unit);
 	
+/**
+ * get_all_categories
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_all_categories() {
 	global $hide_status_groups, $hide_dispatched;
 	$status_category=array();
@@ -163,6 +200,18 @@ function get_all_categories() {
 		return $status_category;	
 	}	// end function get_category($unit);
 	
+/**
+ * get_no_units
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_no_units() {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder`";	
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
@@ -170,6 +219,19 @@ function get_no_units() {
 	return $num_units;
 	}
 	
+/**
+ * get_session_status
+ * Insert description here
+ *
+ * @param $curr_cats
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_session_status($curr_cats) {
 	$category_stat = array();
 	$cats_in_use = $curr_cats;
@@ -186,6 +248,19 @@ function get_session_status($curr_cats) {
 	return $category_stat;
 	}	//	end function get_session_status()
 
+/**
+ * find_hidden
+ * Insert description here
+ *
+ * @param $curr_cats
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function find_hidden($curr_cats) {
 	$stat_array = get_session_status($curr_cats);
 	$counter=0;
@@ -194,6 +269,19 @@ function find_hidden($curr_cats) {
 	return $counter;
 	}
 
+/**
+ * find_showing
+ * Insert description here
+ *
+ * @param $curr_cats
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function find_showing($curr_cats) {
 	$stat_array = get_session_status($curr_cats);
 	$counter=0;
@@ -202,6 +290,18 @@ function find_showing($curr_cats) {
 	return $counter;
 	}
 	
+/**
+ * count_units
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function count_units() {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder`";	
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -209,6 +309,18 @@ function count_units() {
 	return $units_no;
 	}
 
+/**
+ * get_fac_category_butts
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_fac_category_butts() {
 	$fac_category_butts = array();
 	$i=0;
@@ -225,6 +337,18 @@ function get_fac_category_butts() {
 	return $fac_category_butts;
 	} 	// end function get_fac_category_butts()
 	
+/**
+ * get_bnd_butts
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_bnd_butts() {
 	$bnd_butts = array();
 	$i=0;
@@ -239,6 +363,19 @@ function get_bnd_butts() {
 	return $bnd_butts;
 	} 	// end function get_bnd_butts()	
 	
+/**
+ * get_bound_name
+ * Insert description here
+ *
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_bound_name($value) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id` = '{$value}'";	
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -247,6 +384,18 @@ function get_bound_name($value) {
 	return $bnd_name;
 	}
 	
+/**
+ * get_sess_boundaries
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_sess_boundaries() {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]' ORDER BY `id` ASC;";	//	6/10/11
 	$result = mysql_query($query);	//	6/10/11
@@ -332,6 +481,18 @@ function get_sess_boundaries() {
 	return array_unique($all_boundaries);
 	}
 
+/**
+ * get_bnd_session
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_bnd_session() {	
 	$boundaries = array();
 	$boundaries = get_sess_boundaries();
@@ -361,6 +522,18 @@ function get_bnd_session() {
 		}
 	}	//	end function get_bnd_session()
 	
+/**
+ * get_bnd_session_names
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_bnd_session_names() {
 	$bn=0;
 	$tmp = array();
@@ -379,6 +552,18 @@ function get_bnd_session_names() {
 		}
 	}
 	
+/**
+ * find_bnd_hidden
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function find_bnd_hidden() {
 	$stat_array = get_bnd_session();
 	if(!empty($stat_array)) {
@@ -391,6 +576,18 @@ function find_bnd_hidden() {
 		}
 	}
 
+/**
+ * find_bnd_showing
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function find_bnd_showing() {
 	$stat_array = get_bnd_session();
 	if(!empty($stat_array)) {	
@@ -403,6 +600,19 @@ function find_bnd_showing() {
 		}
 	}	
 
+/**
+ * get_fac_category
+ * Insert description here
+ *
+ * @param $facility
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_fac_category($facility) {
 	$fac_category="";
 	require_once('mysql.inc.php');
@@ -417,6 +627,18 @@ function get_fac_category($facility) {
 	return $facility_type;	
 	}	// end function get_fac_category($facility);
 
+/**
+ * get_fac_session_status
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_fac_session_status() {
 	$fac_category_stat = array();
 	$fac_cats_in_use = get_fac_category_butts();
@@ -433,6 +655,18 @@ function get_fac_session_status() {
 	return $fac_category_stat;
 	}	//	end function get_fac_session_status()
 
+/**
+ * find_fac_hidden
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function find_fac_hidden() {
 	$fac_stat_array = get_fac_session_status();
 	$fac_counter=0;
@@ -441,6 +675,18 @@ function find_fac_hidden() {
 	return $fac_counter;
 	}
 
+/**
+ * find_fac_showing
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function find_fac_showing() {
 	$fac_stat_array = get_fac_session_status();
 	$fac_counter=0;
@@ -449,6 +695,18 @@ function find_fac_showing() {
 	return $fac_counter;
 	}
 
+/**
+ * count_facilities
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function count_facilities() {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities`";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);

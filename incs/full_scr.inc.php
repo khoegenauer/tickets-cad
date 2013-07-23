@@ -43,6 +43,19 @@ $un_stat_cats = get_all_categories();
 		$monday =  $temp_monday;
 		
 		
+/**
+ * fs_get_disp_status
+ * Insert description here
+ *
+ * @param $row_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function fs_get_disp_status ($row_in) {			// 3/25/11
 	$tags_arr = explode("/", get_variable('disp_stat'));
 	if (is_date($row_in['u2farr'])) 	{ return $tags_arr[4];}
@@ -52,6 +65,20 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 	if (is_date($row_in['dispatched'])) { return $tags_arr[0];}
 	}		
 
+/**
+ * full_scr
+ * Insert description here
+ *
+ * @param $sort_by_field
+ * @param $sort_value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function full_scr($sort_by_field='',$sort_value='') {	// list tickets ===================================================
 		global $now_num, $now_day, $now_mon, $now_year, $monday, $disposition, $curr_cats, $hidden, $shown, $un_stat_cats, $cat_sess_stat;
 		
@@ -2784,6 +2811,19 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 		side_bar_html= "<form action='#'>";		//	12/03/10
 
 <?php
+/**
+ * get_fac_icon
+ * Insert description here
+ *
+ * @param $fac_cat
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function get_fac_icon($fac_cat){			// returns legend string
 			$icons = $GLOBALS['fac_icons'];
 			$sm_fac_icons = $GLOBALS['sm_fac_icons'];

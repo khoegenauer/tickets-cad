@@ -16,6 +16,19 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
 	$the_tickets[] = $row['id'];
 	}
 
+/**
+ * read_directory
+ * Insert description here
+ *
+ * @param $directory
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function read_directory($directory) {
 	$the_ret = array();
 	$dirhandler = opendir($directory);

@@ -21,6 +21,20 @@ DEFINE("LP_AREA_NO_BORDER",true);
 // CLASS LinePlot
 // Description: 
 //===================================================
+/**
+ * LinePlot
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class LinePlot extends Plot{
     public $mark=null;
     protected $filled=false;
@@ -35,6 +49,20 @@ class LinePlot extends Plot{
 
 //---------------
 // CONSTRUCTOR
+    /**
+     * LinePlot
+     * Insert description here
+     *
+     * @param $datay
+     * @param $datax
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function LinePlot($datay,$datax=false) {
 	$this->Plot($datay,$datax);
 	$this->mark = new PlotMark() ;
@@ -43,35 +71,143 @@ class LinePlot extends Plot{
 // PUBLIC METHODS	
 
     // Set style, filled or open
+    /**
+     * SetFilled
+     * Insert description here
+     *
+     * @param $aFlag
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFilled($aFlag=true) {
     	JpGraphError::RaiseL(10001);//('LinePlot::SetFilled() is deprecated. Use SetFillColor()');
     }
 	
+    /**
+     * SetBarCenter
+     * Insert description here
+     *
+     * @param $aFlag
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetBarCenter($aFlag=true) {
 	$this->barcenter=$aFlag;
     }
 
+    /**
+     * SetStyle
+     * Insert description here
+     *
+     * @param $aStyle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetStyle($aStyle) {
 	$this->line_style=$aStyle;
     }
 	
+    /**
+     * SetStepStyle
+     * Insert description here
+     *
+     * @param $aFlag
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetStepStyle($aFlag=true) {
 	$this->step_style = $aFlag;
     }
 	
+    /**
+     * SetColor
+     * Insert description here
+     *
+     * @param $aColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColor($aColor) {
 	parent::SetColor($aColor);
     }
 	
+    /**
+     * SetFillFromYMin
+     * Insert description here
+     *
+     * @param $f
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFillFromYMin($f=true) {
 	$this->fillFromMin = $f ;
     }
     
+    /**
+     * SetFillColor
+     * Insert description here
+     *
+     * @param $aColor
+     * @param $aFilled
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFillColor($aColor,$aFilled=true) {
 	$this->fill_color=$aColor;
 	$this->filled=$aFilled;
     }
 
+    /**
+     * SetFillGradient
+     * Insert description here
+     *
+     * @param $aFromColor
+     * @param $aToColor
+     * @param $aNumColors
+     * @param $aFilled
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFillGradient($aFromColor,$aToColor,$aNumColors=100,$aFilled=true) {
 	$this->fillgrad_fromcolor = $aFromColor;
 	$this->fillgrad_tocolor   = $aToColor;
@@ -80,6 +216,19 @@ class LinePlot extends Plot{
 	$this->fillgrad = true;
     }
 	
+    /**
+     * Legend
+     * Insert description here
+     *
+     * @param $graph
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Legend($graph) {
 	if( $this->legend!="" ) {
 	    if( $this->filled && !$this->fillgrad ) {
@@ -100,6 +249,23 @@ class LinePlot extends Plot{
 	}	
     }
 
+    /**
+     * AddArea
+     * Insert description here
+     *
+     * @param $aMin
+     * @param $aMax
+     * @param $aFilled
+     * @param $aColor
+     * @param $aBorder
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AddArea($aMin=0,$aMax=0,$aFilled=LP_AREA_NOT_FILLED,$aColor="gray9",$aBorder=LP_AREA_BORDER) {
 	if($aMin > $aMax) {
 	    // swap
@@ -111,6 +277,19 @@ class LinePlot extends Plot{
     }
 	
     // Gets called before any axis are stroked
+    /**
+     * PreStrokeAdjust
+     * Insert description here
+     *
+     * @param $graph
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function PreStrokeAdjust($graph) {
 
 	// If another plot type have already adjusted the
@@ -131,10 +310,40 @@ class LinePlot extends Plot{
 	}
     }
     
+    /**
+     * SetFastStroke
+     * Insert description here
+     *
+     * @param $aFlg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFastStroke($aFlg=true) {
 	$this->iFastStroke = $aFlg;
     }
 
+    /**
+     * FastStroke
+     * Insert description here
+     *
+     * @param $img
+     * @param $xscale
+     * @param $yscale
+     * @param $aStartPoint
+     * @param $exist_x
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FastStroke($img,$xscale,$yscale,$aStartPoint=0,$exist_x=true) {
 	// An optimized stroke for many data points with no extra 
 	// features but 60% faster. You can't have values or line styles, or null
@@ -170,6 +379,21 @@ class LinePlot extends Plot{
 	$img->Polygon($cord,false,true);
     }
 	
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $img
+     * @param $xscale
+     * @param $yscale
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($img,$xscale,$yscale) {
 	$idx=0;
 	$numpoints=count($this->coords[0]);
@@ -420,11 +644,38 @@ class LinePlot extends Plot{
 // CLASS AccLinePlot
 // Description: 
 //===================================================
+/**
+ * AccLinePlot
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class AccLinePlot extends Plot {
     protected $plots=null,$nbrplots=0;
     private $iStartEndZero=true;
 //---------------
 // CONSTRUCTOR
+    /**
+     * AccLinePlot
+     * Insert description here
+     *
+     * @param $plots
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AccLinePlot($plots) {
         $this->plots = $plots;
 	$this->nbrplots = count($plots);
@@ -444,11 +695,36 @@ class AccLinePlot extends Plot {
 
 //---------------
 // PUBLIC METHODS	
+    /**
+     * Legend
+     * Insert description here
+     *
+     * @param $graph
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Legend($graph) {
 	foreach( $this->plots as $p )
 	    $p->DoLegend($graph);
     }
 	
+    /**
+     * Max
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Max() {
 	list($xmax) = $this->plots[0]->Max();
 	$nmax=0;
@@ -475,6 +751,18 @@ class AccLinePlot extends Plot {
 	return array($xmax,$ymax);
     }	
 
+    /**
+     * Min
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Min() {
 	$nmax=0;
 	list($xmin,$ysetmin) = $this->plots[0]->Min();
@@ -503,6 +791,19 @@ class AccLinePlot extends Plot {
     }
 
     // Gets called before any axis are stroked
+    /**
+     * PreStrokeAdjust
+     * Insert description here
+     *
+     * @param $graph
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function PreStrokeAdjust($graph) {
 
 	// If another plot type have already adjusted the
@@ -525,6 +826,19 @@ class AccLinePlot extends Plot {
 	
     }
 
+    /**
+     * SetInterpolateMode
+     * Insert description here
+     *
+     * @param $aIntMode
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetInterpolateMode($aIntMode) {
 	$this->iStartEndZero=$aIntMode;
     }
@@ -532,6 +846,19 @@ class AccLinePlot extends Plot {
     // Replace all '-' with an interpolated value. We use straightforward
     // linear interpolation. If the data starts with one or several '-' they
     // will be replaced by the the first valid data point
+    /**
+     * LineInterpolate
+     * Insert description here
+     *
+     * @param $aData
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function LineInterpolate(&$aData) {
 
 	$n=count($aData);
@@ -600,6 +927,21 @@ class AccLinePlot extends Plot {
     // it wouldn't be possible to create an acc line plot
     // with the same graphs, i.e AccLinePlot(array($pl,$pl,$pl));
     // since this method would have a side effect.
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $img
+     * @param $xscale
+     * @param $yscale
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($img,$xscale,$yscale) {
 	$img->SetLineWeight($this->weight);
 	$this->numpoints = count($this->plots[0]->coords[0]);

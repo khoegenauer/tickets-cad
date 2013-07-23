@@ -34,6 +34,20 @@ $user = $_POST['dev_key'];
 $url = $_POST['frm_locatea_url'];
 
 
+/**
+ * do_gt
+ * Insert description here
+ *
+ * @param $user
+ * @param $url
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_gt($user, $url) {
 	
 		$request_url = "http://" . $url . "/data.php?userid=$user";		//change to reflect the server address

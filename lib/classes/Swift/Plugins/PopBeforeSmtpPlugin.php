@@ -248,6 +248,19 @@ class Swift_Plugins_PopBeforeSmtpPlugin
   
   // -- Private Methods
   
+  /**
+   * _command
+   * Insert description here
+   *
+   * @param $command
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _command($command)
   {
     if (!fwrite($this->_socket, $command))
@@ -269,6 +282,19 @@ class Swift_Plugins_PopBeforeSmtpPlugin
     return $response;
   }
   
+  /**
+   * _assertOk
+   * Insert description here
+   *
+   * @param $response
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _assertOk($response)
   {
     if (substr($response, 0, 3) != '+OK')
@@ -279,6 +305,18 @@ class Swift_Plugins_PopBeforeSmtpPlugin
     }
   }
   
+  /**
+   * _getHostString
+   * Insert description here
+   *
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _getHostString()
   {
     $host = $this->_host;

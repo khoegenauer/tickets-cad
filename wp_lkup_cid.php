@@ -17,8 +17,34 @@ require_once('incs/functions.inc.php');		//7/28/10
 
 $phone = (empty($_POST))? "4108498721": $_POST['phone'];
 
+/**
+ * cid_lookup
+ * Insert description here
+ *
+ * @param $phone
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function cid_lookup($phone )  {
 		$aptStr = " Apt:";															
+/**
+ * do_the_row
+ * Insert description here
+ *
+ * @param $inRow
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function do_the_row($inRow) {		// for ticket or constituents data
 			global $apartment, $misc;
 			$outStr = $inRow['contact']	. ";";		// phone

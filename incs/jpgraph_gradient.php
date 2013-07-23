@@ -28,15 +28,55 @@ DEFINE("GRAD_DIAGONAL",11);
 // Description: Handles gradient fills. This is to be
 // considered a "friend" class of Class Image.
 //===================================================
+/**
+ * Gradient
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class Gradient {
     private $img=null, $numcolors=100;
 //---------------
 // CONSTRUCTOR
+    /**
+     * Gradient
+     * Insert description here
+     *
+     * @param $img
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Gradient(&$img) {
 	$this->img = $img;
     }
 
 
+    /**
+     * SetNumColors
+     * Insert description here
+     *
+     * @param $aNum
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetNumColors($aNum) {
 	$this->numcolors=$aNum;
     }
@@ -49,6 +89,25 @@ class Gradient {
     // $from_color	Starting color in gradient
     // $to_color	End color in the gradient
     // $style		Which way is the gradient oriented?
+    /**
+     * FilledRectangle
+     * Insert description here
+     *
+     * @param $xl
+     * @param $yt
+     * @param $xr
+     * @param $yb
+     * @param $from_color
+     * @param $to_color
+     * @param $style
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FilledRectangle($xl,$yt,$xr,$yb,$from_color,$to_color,$style=1) {
 	switch( $style ) {	
 	    case GRAD_VER:  
@@ -327,6 +386,21 @@ class Gradient {
     // Please note that this is NOT a generic gradient polygon fill
     // routine. It assumes that the bottom is flat (like a drawing
     // of a mountain)
+    /**
+     * FilledFlatPolygon
+     * Insert description here
+     *
+     * @param $pts
+     * @param $from_color
+     * @param $to_color
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FilledFlatPolygon($pts,$from_color,$to_color) {
 	if( count($pts) == 0 ) return;
 	
@@ -389,6 +463,23 @@ class Gradient {
 // PRIVATE METHODS	
     // Add to the image color map the necessary colors to do the transition
     // between the two colors using $numcolors intermediate colors
+    /**
+     * GetColArray
+     * Insert description here
+     *
+     * @param $from_color
+     * @param $to_color
+     * @param $arr_size
+     * @param $colors
+     * @param $numcols
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetColArray($from_color,$to_color,$arr_size,&$colors,$numcols=100) {
 	if( $arr_size==0 ) return;
 	// If color is given as text get it's corresponding r,g,b values

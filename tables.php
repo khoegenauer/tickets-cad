@@ -107,6 +107,19 @@ $sortby = (!(isset($sortby)) || empty($sortby))?		 "id" : $sortby;
 $sortdir = (!(isset($sortdir)) || empty($sortdir))?		 0 : $sortdir; 
 $sortby = (!(isset($index)) || empty($index))?			 "id" : $index; 
 
+/**
+ * get_comments
+ * Insert description here
+ *
+ * @param $the_table
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_comments($the_table) {  				// returns array key=> name, value=> comment - 10/31/10
 //	global $mysql_prefix;
 	$_array = array();								// 12/15/10
@@ -120,6 +133,19 @@ function get_comments($the_table) {  				// returns array key=> name, value=> co
 	return $_array;
 	}				// end function
 
+/**
+ * is_in_use
+ * Insert description here
+ *
+ * @param $index_val
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_in_use($index_val) {	// 11/9/10 - return boolean based on whether the identified entry is in use
 	global $tablename, $mysql_prefix;
 	switch ($tablename) {		
@@ -186,6 +212,19 @@ if ((isset($tablename)) && (!isset($indexname))) {
 	}
 
 
+/**
+ * fnQuote_Smart
+ * Insert description here
+ *
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function fnQuote_Smart($value) {    // Stripslashes
     if (get_magic_quotes_gpc()) {
         $value = stripslashes($value);
@@ -196,11 +235,40 @@ function fnQuote_Smart($value) {    // Stripslashes
     return $value;
 	}
 
+/**
+ * get_digs
+ * Insert description here
+ *
+ * @param $str_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_digs($str_in) {		// returns extracted digits
 	$allowed = "/[^\d]/";
 	return preg_replace($allowed,"",$str_in);
 	}
 
+/**
+ * myerror
+ * Insert description here
+ *
+ * @param $script
+ * @param $line
+ * @param $custom_err
+ * @param $query
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function myerror($script,$line,$custom_err='', $query = '')	{	/* raise an error event */
 	print "<BR><FONT CLASS=\"warn\">Error in '<B>$script</B>', line '<B>$line</B>'</FONT><BR>";
 	if ($custom_err != '') 	print "Additional info: '<B>$custom_err</B>'<BR>";
@@ -208,11 +276,37 @@ function myerror($script,$line,$custom_err='', $query = '')	{	/* raise an error 
 	print '<BR>Please contact the <A HREF="help.php?q=credits">author</A> with these details.<BR>';
 	die('<B>Execution stopped.</B></FONT>');
 	}
+/**
+ * get_file
+ * Insert description here
+ *
+ * @param $mystr
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_file($mystr) {								// returns extracted script name
 	if (!$temp=(strrchr ($mystr, "/"))) {$temp=(strrchr ( $mystr, "\\"));} 		// win32 or *nix?
 	return $temp;
 	}													
 
+/**
+ * fnDatabaseExists
+ * Insert description here
+ *
+ * @param $dbName
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function fnDatabaseExists($dbName) {					//Verifies existence of a MySQL database
 	global $mysql_host, $mysql_user, $mysql_passwd;
 	$bRetVal = FALSE;
@@ -228,6 +322,19 @@ function fnDatabaseExists($dbName) {					//Verifies existence of a MySQL databas
 	return ($bRetVal);
 	}
 
+/**
+ * fnSubTableExists
+ * Insert description here
+ *
+ * @param $TableName
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function fnSubTableExists($TableName) {					// returns name of substitution table, or FALSE
 	global $id_lg, $primaries, $secondaries ;
 	$thename = substr( $TableName, 0, strlen($TableName)-$id_lg);				// high-order portion possible base name?
@@ -238,6 +345,19 @@ function fnSubTableExists($TableName) {					// returns name of substitution tabl
 		return FALSE;}
 	}
 	
+/**
+ * fnDoCal
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function fnDoCal($id) {
 	global $calstuff;
 	$calstuff .= "Calendar.setup({";
@@ -249,6 +369,19 @@ function fnDoCal($id) {
 	$calstuff .= "});";
 	} 					// end  fnDoCal()
 
+/**
+ * fnCalButt
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function fnCalButt ($id) {									// displays the calendar gif button
 	print "<img src='./markers/img.gif' id='ft$id' style='cursor: pointer; border: 1px solid red;' title='Date selector'";
     print " onmouseover=\"this.style.background='red';\" onmouseout=\"this.style.background=''\" />";
@@ -961,6 +1094,22 @@ switch ($func) {		// ================================== case "c" ===============
 	break;														// end 'Create record'
 	
 	case "r":																			// Retrieve/List =================
+/**
+ * fnLinkTDm
+ * Insert description here
+ *
+ * @param $theclass
+ * @param $theid
+ * @param $thestring
+ * @param $the_in_use
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function fnLinkTDm ( $theclass, $theid, $thestring, $the_in_use) {		// returns <td ... /td>
 		global $tablename, $mysql_prefix, $disallow, $can_edit;				// 2/25/10, 3/19/11
 //		$disallow = (($tablename == $mysql_prefix . "un_status") && ($theid==1));
@@ -1826,6 +1975,18 @@ function do_check(the_bool) {
 //	fnTables();
 //	}
 	
+/**
+ * fnTables
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function fnTables () {							/// displays tables comprising db $mysql_db
 	global $mysql_db, $mysql_prefix, $FK_id, $id_lg, $primaries, $secondaries;
 	$ctrp=$ctrs=0;

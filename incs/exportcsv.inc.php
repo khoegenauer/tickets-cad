@@ -1,5 +1,22 @@
 <?php
  
+/**
+ * exportMysqlToCsv
+ * Insert description here
+ *
+ * @param $table
+ * @param $filename
+ * @param $start
+ * @param $end
+ * @param $del
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function exportMysqlToCsv($table,$filename, $start, $end, $del){
     $csv_terminated = "\n";
     $csv_separator = ",";

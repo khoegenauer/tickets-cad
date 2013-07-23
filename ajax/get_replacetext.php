@@ -23,12 +23,38 @@ $date = date("d-m-Y", $timestamp);
 $start_tag = "|";
 $end_tag = "|";
 
+/**
+ * get_owner_unit
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_owner_unit($id){								/* get owner unit name from id */
 	$result	= mysql_query("SELECT responder_id FROM `$GLOBALS[mysql_prefix]user` WHERE `id`='$id' LIMIT 1") or do_error("get_owner(i:$id)::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$row	= stripslashes_deep(mysql_fetch_assoc($result));
 	return (mysql_affected_rows()==0 )? 0 : $row['responder_id'];
 	}
 
+/**
+ * get_owner_unit_handle
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_owner_unit_handle($id){								/* get owner unit name from id */
 	$result	= mysql_query("SELECT handle FROM `$GLOBALS[mysql_prefix]responder` WHERE `id`='$id' LIMIT 1") or do_error("get_owner(i:$id)::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$row	= stripslashes_deep(mysql_fetch_assoc($result));
@@ -36,6 +62,22 @@ function get_owner_unit_handle($id){								/* get owner unit name from id */
 	}	
 	
 
+/**
+ * replace_content_inside_delimiters
+ * Insert description here
+ *
+ * @param $start
+ * @param $end
+ * @param $new
+ * @param $source
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function replace_content_inside_delimiters($start, $end, $new, $source) {
 	$thetxt = preg_replace('#('.preg_quote($start).')(.*)('.preg_quote($end).')#si', '$1'.$new.'$3', $source);
 	$tags = array($start,$end);	
@@ -43,6 +85,20 @@ function replace_content_inside_delimiters($start, $end, $new, $source) {
 	return $thetxt;
 	}
 	
+/**
+ * get_coords
+ * Insert description here
+ *
+ * @param $lat
+ * @param $lng
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_coords($lat, $lng) {
 	$locale = get_variable('locale');
 	switch($locale) { 
@@ -59,6 +115,19 @@ function get_coords($lat, $lng) {
 	return $ret;
 	}
 	
+/**
+ * tkt_summary
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function tkt_summary($id) {
 	$thetxt = "";
 	if($id != 0) {
@@ -120,6 +189,19 @@ function tkt_summary($id) {
 	}
 
 
+/**
+ * get_replacement_text
+ * Insert description here
+ *
+ * @param $val
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_replacement_text($val) {
 	$return = array();
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]replacetext` WHERE `in_text` = '" . $val . "'";

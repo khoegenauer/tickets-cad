@@ -126,6 +126,18 @@
 		// return $org_cntl;
 		// }
 		
+/**
+ * dump_db
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function dump_db() {
 		require_once('./incs/MySQLDump.class.php');
 		include('./incs/mysql.inc.php');
@@ -2619,6 +2631,18 @@ ul {
 <?php						// cloud?
 print "</BODY>\n";
 	
+/**
+ * map_cen
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function map_cen () {				// specific to map center
 	$lat = get_variable('def_lat'); $lng = get_variable('def_lng');
 ?>

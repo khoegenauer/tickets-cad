@@ -22,6 +22,20 @@
 
 if (!class_exists('SMTP5')) require_once 'SMTP5.php';
 
+/**
+ * MAIL5
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class MAIL5 {
 
 	public $From = null;
@@ -56,16 +70,55 @@ class MAIL5 {
 	public $History = array();
 	public $Result = null;
 
+/**
+ * __construct
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function __construct() {
 		$this->_result(array(0 => 'initialize class'));
 	}
 
+/**
+ * _result
+ * Insert description here
+ *
+ * @param $data
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	private function _result($data = array(), $ret = null) {
 		$this->History[][strval(microtime(true))] = $data;
 		$this->Result = $data;
 		return $ret;
 	}
 
+/**
+ * context
+ * Insert description here
+ *
+ * @param $arr
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function context($arr = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if (!is_array($arr)) FUNC5::trace($debug, 'invalid context type');
@@ -76,6 +129,20 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * name
+ * Insert description here
+ *
+ * @param $host
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function name($host = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if (!is_string($host)) FUNC5::trace($debug, 'invalid hostname type');
@@ -87,6 +154,20 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * path
+ * Insert description here
+ *
+ * @param $addr
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function path($addr = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if (!is_string($addr)) FUNC5::trace($debug, 'invalid address type');
@@ -97,6 +178,20 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * priority
+ * Insert description here
+ *
+ * @param $level
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function priority($level = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if ($level == null) {
@@ -111,6 +206,23 @@ class MAIL5 {
 		} else FUNC5::trace($debug, 'invalid level type');
 	}
 
+/**
+ * from
+ * Insert description here
+ *
+ * @param $addr
+ * @param $name
+ * @param $charset
+ * @param $encoding
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function from($addr = null, $name = null, $charset = null, $encoding = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -141,6 +253,23 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * addto
+ * Insert description here
+ *
+ * @param $addr
+ * @param $name
+ * @param $charset
+ * @param $encoding
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function addto($addr = null, $name = null, $charset = null, $encoding = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -184,6 +313,20 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * delto
+ * Insert description here
+ *
+ * @param $addr
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function delto($addr = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if ($addr == null) {
@@ -208,6 +351,23 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * addcc
+ * Insert description here
+ *
+ * @param $addr
+ * @param $name
+ * @param $charset
+ * @param $encoding
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function addcc($addr = null, $name = null, $charset = null, $encoding = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -251,6 +411,20 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * delcc
+ * Insert description here
+ *
+ * @param $addr
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function delcc($addr = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if ($addr == null) {
@@ -275,6 +449,20 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * addbcc
+ * Insert description here
+ *
+ * @param $addr
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function addbcc($addr = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if (!is_string($addr)) FUNC5::trace($debug, 'invalid address type');
@@ -296,6 +484,20 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * delbcc
+ * Insert description here
+ *
+ * @param $addr
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function delbcc($addr = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if ($addr == null) {
@@ -320,6 +522,23 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * addheader
+ * Insert description here
+ *
+ * @param $name
+ * @param $value
+ * @param $charset
+ * @param $encoding
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function addheader($name = null, $value = null, $charset = null, $encoding = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -371,6 +590,20 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * delheader
+ * Insert description here
+ *
+ * @param $name
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function delheader($name = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if ($name == null) {
@@ -395,6 +628,22 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * subject
+ * Insert description here
+ *
+ * @param $content
+ * @param $charset
+ * @param $encoding
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function subject($content = null, $charset = null, $encoding = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -421,6 +670,22 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * text
+ * Insert description here
+ *
+ * @param $content
+ * @param $charset
+ * @param $encoding
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function text($content = null, $charset = null, $encoding = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -443,6 +708,22 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * html
+ * Insert description here
+ *
+ * @param $content
+ * @param $charset
+ * @param $encoding
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function html($content = null, $charset = null, $encoding = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -465,6 +746,26 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * attach
+ * Insert description here
+ *
+ * @param $content
+ * @param $type
+ * @param $name
+ * @param $charset
+ * @param $encoding
+ * @param $disposition
+ * @param $id
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function attach($content = null, $type = null, $name = null, $charset = null, $encoding = null, $disposition = null, $id = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -511,6 +812,20 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * delattach
+ * Insert description here
+ *
+ * @param $name
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function delattach($name = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if ($name == null) {
@@ -535,6 +850,28 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * connect
+ * Insert description here
+ *
+ * @param $host
+ * @param $port
+ * @param $user
+ * @param $pass
+ * @param $vssl
+ * @param $tout
+ * @param $name
+ * @param $context
+ * @param $auth
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function connect($host = null, $port = null, $user = null, $pass = null, $vssl = null, $tout = null, $name = null, $context = null, $auth = null, $debug = null) {
 		global $_RESULT;
 		$_RESULT = array();
@@ -552,6 +889,20 @@ class MAIL5 {
 		return $this->_result($_RESULT, $ret);
 	}
 
+/**
+ * disconnect
+ * Insert description here
+ *
+ * @param $resc
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function disconnect($resc = null, $debug = null) {
 		global $_RESULT;
 		$_RESULT = array();
@@ -579,6 +930,20 @@ class MAIL5 {
 		}
 	}
 
+/**
+ * send
+ * Insert description here
+ *
+ * @param $resc
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	public function send($resc = null, $debug = null) {
 		global $_RESULT;
 		$_RESULT = $err = array();

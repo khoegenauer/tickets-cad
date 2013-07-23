@@ -185,6 +185,18 @@ unset($result);
 $icons = $GLOBALS['icons'];				// 1/1/09
 $sm_icons = $GLOBALS['sm_icons'];
 
+/**
+ * get_icon_legend
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_icon_legend (){			// returns legend string - 1/1/09
 	global $u_types, $sm_icons;
 	$query = "SELECT DISTINCT `type` FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `name`";
@@ -1351,6 +1363,20 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 
 <?php
 
+/**
+ * list_responders
+ * Insert description here
+ *
+ * @param $addon
+ * @param $start
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function list_responders($addon = '', $start) {
 	global $iw_width, $u_types, $tolerance, $gt_handle, $gt_unit, $gt_as_of, $gt_dispatched, $gt_status;
 
@@ -1816,6 +1842,19 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 	}	//	end foreach $gp_bounds
 
 //-------------------------END OF BOUNDARIES STUFF-------------------------		
+/**
+ * can_do_dispatch
+ * Insert description here
+ *
+ * @param $the_row
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function can_do_dispatch($the_row) {
 		if (intval($the_row['multi'])==1) return TRUE;
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `responder_id` = {$the_row['unit_id']}";	// all dispatches this unit
@@ -2033,6 +2072,19 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 	$i=0;				// counter
 // =============================================================================
 			
+/**
+ * is_ok_coord
+ * Insert description here
+ *
+ * @param $inval
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function is_ok_coord($inval) {				// // 3/14/12
 		return ((abs(floatval($inval) != 0.0)) && (floatval($inval) != $GLOBALS['NM_LAT_VAL']));
 		}
@@ -2287,6 +2339,22 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 <?php
 	}				// end function list_responders() ===========================================================
 
+/**
+ * map
+ * Insert description here
+ *
+ * @param $mode
+ * @param $lat
+ * @param $lng
+ * @param $icon
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 9/2/12
 	if ($lat == $GLOBALS['NM_LAT_VAL']) {
 		$lat = get_variable('def_lat');  $lng = get_variable('def_lng');  
@@ -2510,6 +2578,22 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 9/2/1
 	}		// end function map()
 
 
+/**
+ * orig_map
+ * Insert description here
+ *
+ * @param $mode
+ * @param $lat
+ * @param $lng
+ * @param $icon
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/09
 	$have_coords = is_numeric($lat);
 	$the_lat = my_is_float($lat)? $lat : get_variable('def_lat')  ;		// 8/1/09
@@ -2792,6 +2876,19 @@ function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 
 <?php
 	}		// end function map()
 
+/**
+ * do_calls
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_calls($id = 0) {				// generates js callsigns array
 		$print = "\n<SCRIPT >\n";
 		$print .="\t\tvar calls = new Array();\n";

@@ -22,6 +22,20 @@
 
 if (!class_exists('FUNC5')) require_once 'FUNC5.php';
 
+/**
+ * MIME5
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class MIME5 {
 
 	const LE = "\r\n";
@@ -83,10 +97,37 @@ class MIME5 {
 			"=F7","=F8","=F9","=FA","=FB","=FC","=FD","=FE",
 			"=FF");
 
+/**
+ * unique
+ * Insert description here
+ *
+ * @param $add
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function unique($add = null) {
 		return md5(microtime(true).$add);
 	}
 
+/**
+ * is_printable
+ * Insert description here
+ *
+ * @param $str
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function is_printable($str = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if (!is_string($str)) FUNC5::trace($debug, 'invalid argument type');
@@ -96,6 +137,22 @@ class MIME5 {
 		}
 	}
 
+/**
+ * qp_encode
+ * Insert description here
+ *
+ * @param $str
+ * @param $len
+ * @param $end
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function qp_encode($str = null, $len = null, $end = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -128,6 +185,24 @@ class MIME5 {
 		}
 	}
 
+/**
+ * encode_header
+ * Insert description here
+ *
+ * @param $str
+ * @param $charset
+ * @param $encoding
+ * @param $len
+ * @param $end
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function encode_header($str = null, $charset = null, $encoding = null, $len = null, $end = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -187,6 +262,20 @@ class MIME5 {
 		}
 	}
 
+/**
+ * decode_header
+ * Insert description here
+ *
+ * @param $str
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function decode_header($str = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if (!is_string($str)) FUNC5::trace($debug, 'invalid argument type');
@@ -219,6 +308,21 @@ class MIME5 {
 		}
 	}
 
+/**
+ * decode_content
+ * Insert description here
+ *
+ * @param $str
+ * @param $encoding
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function decode_content($str = null, $encoding = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -240,6 +344,28 @@ class MIME5 {
 		}
 	}
 
+/**
+ * message
+ * Insert description here
+ *
+ * @param $content
+ * @param $type
+ * @param $name
+ * @param $charset
+ * @param $encoding
+ * @param $disposition
+ * @param $id
+ * @param $len
+ * @param $end
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function message($content = null, $type = null, $name = null, $charset = null, $encoding = null, $disposition = null, $id = null, $len = null, $end = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -291,6 +417,24 @@ class MIME5 {
 		}
 	}
 
+/**
+ * compose
+ * Insert description here
+ *
+ * @param $text
+ * @param $html
+ * @param $attach
+ * @param $uniq
+ * @param $end
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function compose($text = null, $html = null, $attach = null, $uniq = null, $end = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -417,6 +561,22 @@ class MIME5 {
 		}
 	}
 
+/**
+ * isset_header
+ * Insert description here
+ *
+ * @param $str
+ * @param $name
+ * @param $value
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function isset_header($str = null, $name = null, $value = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -439,6 +599,20 @@ class MIME5 {
 		}
 	}
 
+/**
+ * split_header
+ * Insert description here
+ *
+ * @param $str
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function split_header($str = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if (!(is_string($str) && $str != '')) FUNC5::trace($debug, 'invalid header value');
@@ -481,6 +655,20 @@ class MIME5 {
 		}
 	}
 
+/**
+ * split_message
+ * Insert description here
+ *
+ * @param $str
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function split_message($str = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if (!(is_string($str) && $str != '')) FUNC5::trace($debug, 'invalid message value');
@@ -493,6 +681,22 @@ class MIME5 {
 		}
 	}
 
+/**
+ * split_mail
+ * Insert description here
+ *
+ * @param $str
+ * @param $headers
+ * @param $body
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function split_mail($str = null, &$headers, &$body, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$headers = $body = false;
@@ -517,6 +721,22 @@ class MIME5 {
 		if (count($body) == 0) $body[] = self::_content($str, $debug);
 	}
 
+/**
+ * _parts
+ * Insert description here
+ *
+ * @param $str
+ * @param $boundary
+ * @param $multipart
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static private function _parts($str = null, $boundary = null, $multipart = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -561,6 +781,20 @@ class MIME5 {
 		}
 	}
 
+/**
+ * _content
+ * Insert description here
+ *
+ * @param $str
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static private function _content($str = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if (!(is_string($str) && $str != '')) FUNC5::trace($debug, 'invalid content value');
@@ -589,6 +823,20 @@ class MIME5 {
 		}
 	}
 
+/**
+ * fix_eol
+ * Insert description here
+ *
+ * @param $str
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function fix_eol($str = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		if (!(is_string($str) && $str != '')) FUNC5::trace($debug, 'invalid content value');

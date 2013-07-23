@@ -10,6 +10,21 @@ generates numbered icon given the icon id and value string
 header("Content-type: image/png");
 //$img_url = "./icons/gen_icon5.php?blank=7&text=BB";
 
+/**
+ * do_icon
+ * Insert description here
+ *
+ * @param $icon
+ * @param $text
+ * @param $color
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_icon ($icon, $text, $color) {
 	$im = imagecreatefrompng($icon);
 	imageAlphaBlending($im, true);

@@ -18,6 +18,19 @@ error_reporting(E_ALL);
 @session_start();
 require_once('./incs/functions.inc.php');		//7/28/10
 
+/**
+ * error_out
+ * Insert description here
+ *
+ * @param $err_arg
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function error_out($err_arg) {							// 2/10/12
 	do_log($GLOBALS['LOG_ERROR'], 0, 0, $err_arg);		// logs supplied error message
 	return;

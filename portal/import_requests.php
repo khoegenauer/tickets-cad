@@ -9,6 +9,19 @@ if (empty($_SESSION)) {
 	header("Location: index.php");
 	}
 require_once('../incs/functions.inc.php');
+/**
+ * get_user_name
+ * Insert description here
+ *
+ * @param $the_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_user_name($the_id) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` `u` WHERE `id` = " . $the_id . " LIMIT 1";
 	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	

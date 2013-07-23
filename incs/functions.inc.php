@@ -365,11 +365,37 @@ $expiry = expires();		// note global
 require_once ('login.inc.php');				// 8/21/10
 require_once('status_cats.inc.php');				// 12/03/10
 
+/**
+ * remove_nls
+ * Insert description here
+ *
+ * @param $instr
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function remove_nls($instr) {                // 10/20/09
 	$nls = array("\r\n", "\n", "\r");        // note order
 	return str_replace($nls, " ", $instr);
 	}        // end function
 
+/**
+ * mysql_table_exists
+ * Insert description here
+ *
+ * @param $table
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function mysql_table_exists($table) {/* check if mysql table exists */
 	$query = "SELECT COUNT(*) FROM `$table`";
 	$result = mysql_query($query);
@@ -380,12 +406,38 @@ function mysql_table_exists($table) {/* check if mysql table exists */
 		return FALSE;
 	}
 
+/**
+ * get_issue_date
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_issue_date($id){
 	$result = mysql_query("SELECT date FROM `$GLOBALS[mysql_prefix]ticket` WHERE id='$id'");
 	$row = mysql_fetch_assoc($result);
 	print $row[date];
 	}
 
+/**
+ * check_for_rows
+ * Insert description here
+ *
+ * @param $query
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function check_for_rows($query) {		/* check sql query for returning rows, courtesy of Micah Snyder */
 	if($sql = mysql_query($query)) {
 		if(mysql_num_rows($sql) !== 0)
@@ -399,6 +451,20 @@ function check_for_rows($query) {		/* check sql query for returning rows, courte
 
 //	} {		-- dummy
 
+/**
+ * get_disps
+ * Insert description here
+ *
+ * @param $tick_id
+ * @param $resp_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_disps($tick_id, $resp_id) {				// 7/4/10, 10/20/12
 	$result = mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]assigns` 
 		WHERE `ticket_id`='$tick_id' AND `responder_id` = '$resp_id'
@@ -438,6 +504,20 @@ function get_disps($tick_id, $resp_id) {				// 7/4/10, 10/20/12
 		return "???? ";
 	}
 
+/**
+ * show_assigns
+ * Insert description here
+ *
+ * @param $which
+ * @param $id_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function show_assigns($which, $id_in){				// 10/20/12
 	global $evenodd;
 	$which_ar = array ("ticket_id", "responder_id");		// 
@@ -510,6 +590,22 @@ function show_assigns($which, $id_in){				// 10/20/12
 	}		// end function show_assigns()
 
 
+/**
+ * show_actions
+ * Insert description here
+ *
+ * @param $the_id
+ * @param $theSort
+ * @param $links
+ * @param $display
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function show_actions ($the_id, $theSort="date", $links, $display) {			/* list actions and patient data belonging to ticket */
 	if ($display) {
 		$evenodd = array ("even", "odd");		// class names for display table row colors
@@ -595,6 +691,22 @@ function show_actions ($the_id, $theSort="date", $links, $display) {			/* list a
 	return $print;
 	}			// end function show_actions
 	
+/**
+ * list_messages
+ * Insert description here
+ *
+ * @param $the_id
+ * @param $theSort
+ * @param $links
+ * @param $display
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function list_messages($the_id, $theSort="date", $links, $display) {
 	$print = "";
 	if(get_variable('use_messaging') != 0) {
@@ -645,6 +757,22 @@ function list_messages($the_id, $theSort="date", $links, $display) {
 	return $print;
 	}	//	End of function Show Messages
 
+/**
+ * show_actions_orig
+ * Insert description here
+ *
+ * @param $the_id
+ * @param $theSort
+ * @param $links
+ * @param $display
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function show_actions_orig ($the_id, $theSort="date", $links, $display) {			/* list actions and patient data belonging to ticket */
 	if ($display) {
 		$evenodd = array ("even", "odd");		// class names for display table row colors
@@ -740,6 +868,22 @@ function show_actions_orig ($the_id, $theSort="date", $links, $display) {			/* l
 
 // } { -- dummy
 
+/**
+ * show_messages
+ * Insert description here
+ *
+ * @param $the_id
+ * @param $theSort
+ * @param $links
+ * @param $display
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function show_messages ($the_id, $theSort="date", $links, $display) {			/* list messages belonging to ticket 10/23/12 */
 	global $evenodd;
 	$actr=0;
@@ -824,6 +968,20 @@ function show_messages ($the_id, $theSort="date", $links, $display) {			/* list 
 	
 // } { -- dummy
 
+/**
+ * show_log
+ * Insert description here
+ *
+ * @param $theid
+ * @param $show_cfs
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function show_log ($theid, $show_cfs=FALSE) {								// 11/20/09, 10/20/12
 	global $evenodd ;	// class names for alternating table row colors
 	require('./incs/log_codes.inc.php'); 									// 9/29/10
@@ -872,11 +1030,39 @@ function show_log ($theid, $show_cfs=FALSE) {								// 11/20/09, 10/20/12
 	}		// end function get_log ()
 //	} -- dummy
 
+/**
+ * set_ticket_status
+ * Insert description here
+ *
+ * @param $status
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function set_ticket_status($status,$id){				/* alter ticket status */
 	$query = "UPDATE `$GLOBALS[mysql_prefix]ticket` SET status='$status' WHERE ID='$id'LIMIT 1";
 	$result = mysql_query($query) or do_error("set_ticket_status(s:$status, id:$id)::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	}
 	
+/**
+ * get_allocates
+ * Insert description here
+ *
+ * @param $type
+ * @param $resource
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_allocates($type, $resource) {	//	6/10/11
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= '$type' AND `resource_id` = '$resource' ORDER BY `group`;";		//	6/10/11
 	$result = mysql_query($query);	// 4/13/11
@@ -895,6 +1081,19 @@ function get_allocates($type, $resource) {	//	6/10/11
 	return $al_groups;
 	}
 	
+/**
+ * get_tickets_allocated
+ * Insert description here
+ *
+ * @param $group
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_tickets_allocated($group) {	//	6/10/11
 	$x=0;	
 	$cwi = get_variable('closed_interval');			// closed window interval in hours
@@ -922,6 +1121,19 @@ function get_tickets_allocated($group) {	//	6/10/11
 	return $tickets;
 	}	
 
+/**
+ * get_all_group_butts
+ * Insert description here
+ *
+ * @param $curr_grps
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_all_group_butts($curr_grps) {		//	6/10/11
 	$query1 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` ORDER BY `id` ASC";		//	6/10/11
 	$result1 = mysql_query($query1) or do_error($query1, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -937,6 +1149,19 @@ function get_all_group_butts($curr_grps) {		//	6/10/11
 		return $al_buttons;
 	}
 	
+/**
+ * get_all_group_butts_chkd
+ * Insert description here
+ *
+ * @param $curr_grps
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_all_group_butts_chkd($curr_grps) {		//	6/10/11
 	$query1 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` ORDER BY `id` ASC";		//	6/10/11
 	$result1 = mysql_query($query1) or do_error($query1, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -952,6 +1177,21 @@ function get_all_group_butts_chkd($curr_grps) {		//	6/10/11
 		return $al_buttons;
 	}
 	
+/**
+ * get_sub_group_butts
+ * Insert description here
+ *
+ * @param $user_id
+ * @param $resource
+ * @param $resource_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_sub_group_butts($user_id, $resource, $resource_id) {		//	6/10/11
 
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= '$resource' AND `resource_id` = '$resource_id';";		//	6/10/11
@@ -973,6 +1213,21 @@ function get_sub_group_butts($user_id, $resource, $resource_id) {		//	6/10/11
 	return $al_buttons;
 	}
 	
+/**
+ * get_sub_group_butts_readonly
+ * Insert description here
+ *
+ * @param $user_id
+ * @param $resource
+ * @param $resource_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_sub_group_butts_readonly($user_id, $resource, $resource_id) {		//	6/10/11
 
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= '$resource' AND `resource_id` = '$resource_id';";		//	6/10/11
@@ -994,6 +1249,19 @@ function get_sub_group_butts_readonly($user_id, $resource, $resource_id) {		//	6
 	return $al_buttons;
 	}	
 
+/**
+ * get_user_group_butts
+ * Insert description here
+ *
+ * @param $user_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_user_group_butts($user_id) {		//	6/10/11
 	$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id'";			//	6/10/11
 	$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -1005,6 +1273,19 @@ function get_user_group_butts($user_id) {		//	6/10/11
 	return $al_buttons;
 	}	
 
+/**
+ * get_user_group_butts_readonly
+ * Insert description here
+ *
+ * @param $user_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_user_group_butts_readonly($user_id) {		//	6/10/11
 	$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id'";			//	6/10/11
 	$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -1016,6 +1297,19 @@ function get_user_group_butts_readonly($user_id) {		//	6/10/11
 	return $al_buttons;
 	}
 
+/**
+ * get_user_group_butts_no_regions
+ * Insert description here
+ *
+ * @param $user_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_user_group_butts_no_regions($user_id) {		//	6/10/11
 	$al_buttons="<DIV ID='groups_sh' style='width: 100%; align: left; display: none;'>";	
 	$al_buttons.="<DIV style='float: left; display: none;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' OnClick='javascript:return ReadOnlyCheckBox()' onkeydown='javascript:return ReadOnlyCheckBox()' VALUE='1'></INPUT></DIV>";
@@ -1023,6 +1317,19 @@ function get_user_group_butts_no_regions($user_id) {		//	6/10/11
 	return $al_buttons;
 	}
 	
+/**
+ * get_groupname
+ * Insert description here
+ *
+ * @param $groupid
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_groupname($groupid) {		//	6/10/11
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]region` WHERE `id`= '$groupid'";		//	6/10/11
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -1032,6 +1339,18 @@ function get_groupname($groupid) {		//	6/10/11
 	return $groupname;
 	}
 
+/**
+ * get_num_groups
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_num_groups() {		//	6/10/11
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]region`";		//	6/10/11
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -1043,6 +1362,20 @@ function get_num_groups() {		//	6/10/11
 		}
 	}
 	
+/**
+ * get_first_group
+ * Insert description here
+ *
+ * @param $resource
+ * @param $resource_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_first_group($resource, $resource_id) {		//	6/10/11
 	$query = "SELECT `$GLOBALS[mysql_prefix]allocates`.`group`, `$GLOBALS[mysql_prefix]allocates`.`type`, `$GLOBALS[mysql_prefix]region`.`group_name`
 			FROM `$GLOBALS[mysql_prefix]allocates`	
@@ -1056,6 +1389,19 @@ function get_first_group($resource, $resource_id) {		//	6/10/11
 	return $group;
 	}	
 	
+/**
+ * get_regions_inuse
+ * Insert description here
+ *
+ * @param $user
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_regions_inuse($user) {		//	6/10/11
 	if($user = 9999) {
 		$where = "";
@@ -1074,6 +1420,19 @@ function get_regions_inuse($user) {		//	6/10/11
 	return $group;
 	}
 
+/**
+ * get_regions_inuse_numbers
+ * Insert description here
+ *
+ * @param $user
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_regions_inuse_numbers($user) {		//	6/10/11
 	if($user == 9999) {
 		$where = "";
@@ -1092,6 +1451,21 @@ function get_regions_inuse_numbers($user) {		//	6/10/11
 	return $group;
 	}
 
+/**
+ * test_allocates
+ * Insert description here
+ *
+ * @param $resource
+ * @param $al_group
+ * @param $type
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function test_allocates($resource, $al_group, $type) {	//	6/10/11
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates`WHERE `resource_id` = '$resource' AND `group` = '$al_group' AND `type` = '$type'";	
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -1103,6 +1477,19 @@ function test_allocates($resource, $al_group, $type) {	//	6/10/11
 		}
 	}
 	
+/**
+ * format_date
+ * Insert description here
+ *
+ * @param $date
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function format_date($date){							/* format date to defined type 8/27/10 */ 
 	if (good_date($date)) {	
 		if (get_variable('locale')==1) {
@@ -1113,12 +1500,38 @@ function format_date($date){							/* format date to defined type 8/27/10 */
 	} else {return "TBD";}
 	}				// end function format date($date)
 
+/**
+ * good_date
+ * Insert description here
+ *
+ * @param $date
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function good_date($date) {		// 
 	return (is_string ($date) && ((strlen($date)==10)));
 	}
 
 //		return  (substr(inval, 5, 2) . substr(inval, 10, 6));
 
+/**
+ * format_sb_date
+ * Insert description here
+ *
+ * @param $date
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function format_sb_date($date){							/* format sidebar date Oct-30 07:46 */ 
 	if (is_string ($date) && strlen($date)==10) {	
 		return date("M-d H:i",$date);}	//return date(get_variable("date_format"),strtotime($date));
@@ -1132,20 +1545,72 @@ function new_format_sb_date($date){
 	}				// end new_format_sb_date();
 */
 
+/**
+ * new_format_sb_date
+ * Insert description here
+ *
+ * @param $date
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function new_format_sb_date($date){						// 1/19/2013
 	if (is_string ($date) && strlen($date)==19) {return  substr($date, 8, 8);}	/* 2013-01-19 21:18:19 	 */ 
 	else 										{return "TBD";}
 	}				// end new_format_sb_date();
 
+/**
+ * good_date_time
+ * Insert description here
+ *
+ * @param $date
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function good_date_time($date) {						//  2/15/09
 	return (is_string ($date) && (strlen($date)==19) && (!($date=="0000-00-00 00:00:00")));
 	}
 
+/**
+ * format_date_time
+ * Insert description here
+ *
+ * @param $date
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function format_date_time($date){		// mySql format to settings spec - 2/15/09 - 11/30/2012
 	return format_date ($date);			 
 //	return (good_date_time($date))? date(get_variable("date_format"),mysql2timestamp($date))  : "TBD";
 	}				// end function format_date_time()
 	
+/**
+ * get_status
+ * Insert description here
+ *
+ * @param $status
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_status($status){							/* return status text from code */
 	switch($status)	{
 		case 1: 	return 'Closed';	break;
@@ -1155,6 +1620,19 @@ function get_status($status){							/* return status text from code */
 		}
 	}
 
+/**
+ * get_owner
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_owner($id){								/* get owner name from id */
 	$result	= mysql_query("SELECT user FROM `$GLOBALS[mysql_prefix]user` WHERE `id`='$id' LIMIT 1") or do_error("get_owner(i:$id)::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$row	= stripslashes_deep(mysql_fetch_assoc($result));
@@ -1162,12 +1640,38 @@ function get_owner($id){								/* get owner name from id */
 //	return $row['user'];
 	}
 	
+/**
+ * get_reader
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_reader($id){								/* Add in for Messaging 10/23/12 */
 	$result	= mysql_query("SELECT user FROM `$GLOBALS[mysql_prefix]user` WHERE `id`='$id' LIMIT 1") or do_error("get_owner(i:$id)::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$row	= stripslashes_deep(mysql_fetch_assoc($result));
 	return (mysql_affected_rows()==0 )? "None" : $row['user'];
 	}
 
+/**
+ * get_severity
+ * Insert description here
+ *
+ * @param $severity
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_severity($severity){			/* return severity string from value */
 	switch($severity) {
 		case $GLOBALS['SEVERITY_NORMAL']: 	return "normal"; break;
@@ -1177,12 +1681,38 @@ function get_severity($severity){			/* return severity string from value */
 		}
 	}
 
+/**
+ * get_responder
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_responder($id){			/* return responder-type string from value */
 	$result	= mysql_query("SELECT `name` FROM `$GLOBALS[mysql_prefix]responder` WHERE id='$id' LIMIT 1") or do_error("get_responder(i:$id)::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$temprow	= stripslashes_deep(mysql_fetch_assoc($result));
 	return $temprow['name'];
 	}
 
+/**
+ * strip_html
+ * Insert description here
+ *
+ * @param $html_string
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function strip_html($html_string) {						/* strip HTML tags/special characters and fix custom ones to prevent bad HTML, CrossSiteScripting etc */
 	$html_string =strip_tags(htmlspecialchars($html_string));	//strip all "real" html and convert special characters first
 	
@@ -1205,6 +1735,19 @@ function strip_html($html_string) {						/* strip HTML tags/special characters a
 	}
 
 $variables = array();
+/**
+ * get_variable
+ * Insert description here
+ *
+ * @param $which
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_variable($which){								/* get variable from db settings table, returns FALSE if absent  */
 	global $variables;
 	if (empty($variables)) {
@@ -1219,6 +1762,19 @@ function get_variable($which){								/* get variable from db settings table, re
 	}
 	
 $msg_variables = array();	
+/**
+ * get_msg_variable
+ * Insert description here
+ *
+ * @param $which
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_msg_variable($which){								/* get variable from db msg_settings table, returns FALSE if absent  */
 	global $msg_variables;
 	if (empty($msg_variables)) {
@@ -1232,6 +1788,20 @@ function get_msg_variable($which){								/* get variable from db msg_settings t
 	}
 
 $css = array();			//	3/15/11
+/**
+ * get_css
+ * Insert description here
+ *
+ * @param $element
+ * @param $day_night
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_css($element, $day_night){								/* get hex color string from db css colors table, returns FALSE if absent 3/15/11 */
 	global $css;
 	if($day_night=="Day") {
@@ -1264,6 +1834,23 @@ function do_error($err_function,$err,$custom_err='',$file='',$line=''){
 	}
 */
 
+/**
+ * do_error
+ * Insert description here
+ *
+ * @param $err_function
+ * @param $err
+ * @param $custom_err
+ * @param $file
+ * @param $line
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_error($err_function, $err, $custom_err='', $file='', $line=''){ /* report an error event - revised 5/11/2013 */
 	@session_start();											//
 	$log_message = substr ( "application error: {[$file]@[$line] [$err_function]", 0, 2048) ;
@@ -1280,6 +1867,20 @@ function do_error($err_function, $err, $custom_err='', $file='', $line=''){ /* r
 	die('<B>Execution stopped.</B></FONT>');
 	}
 
+/**
+ * add_header
+ * Insert description here
+ *
+ * @param $ticket_id
+ * @param $no_edit
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function add_header($ticket_id, $no_edit = FALSE) {		// 11/27/09, 3/30/10, 8/27/10
 //	global {$_SESSION['fip']}, $fmp, {$_SESSION['editfile']}, {$_SESSION['addfile']}, {$_SESSION['unitsfile']}, {$_SESSION['facilitiesfile']}, {$_SESSION['routesfile']}, {$_SESSION['facroutesfile']};
 //	print "<A HREF='{$_SESSION['editfile']}?id=$ticket_id&delete=1'>" . get_text("Delete") . " </A> | ";
@@ -1313,40 +1914,185 @@ function add_header($ticket_id, $no_edit = FALSE) {		// 11/27/09, 3/30/10, 8/27/
 	print "</FONT></NOBR></SPAN><BR />";
 	}				// function add_header()
 
+/**
+ * is_closed
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_closed($id){/* is ticket closed? */
 	return check_for_rows("SELECT id,status FROM `$GLOBALS[mysql_prefix]ticket` WHERE id='$id' AND status='$GLOBALS[STATUS_CLOSED]'");
 	}
 
+/**
+ * is_super
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_super(){				// added 6/9/08
 	return ($_SESSION['level'] == $GLOBALS['LEVEL_SUPER']);		// 5/11/10
 	}
+/**
+ * is_administrator
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_administrator(){		/* is user admin or super? */
 	return (($_SESSION['level'] == $GLOBALS['LEVEL_ADMINISTRATOR']) || ($_SESSION['level'] == $GLOBALS['LEVEL_SUPER']));		// 5/11/10
 	}
+/**
+ * is_admin
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_admin(){		/* is user admin but not super? */
 	return (($_SESSION['level'] == $GLOBALS['LEVEL_ADMINISTRATOR']));		// 10/26/11
 	}	
+/**
+ * is_guest
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_guest(){				/* is user guest? */
 	return (($_SESSION['level'] == $GLOBALS['LEVEL_GUEST']) || ($_SESSION['level'] == $GLOBALS['LEVEL_MEMBER']));				// 6/25/10
 	}
+/**
+ * is_member
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_member(){				/* is user member? */
 	return (($_SESSION['level'] == $GLOBALS['LEVEL_MEMBER']));				// 7/2/10
 	}
+/**
+ * is_user
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_user(){					/* is user operator/dispatcher? */
 	return ($_SESSION['level'] == $GLOBALS['LEVEL_USER']);		// 5/11/10
 	}
+/**
+ * is_unit
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_unit(){					/* is user unit? */			
 	return ($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']);						// 7/12/10
 	}
+/**
+ * is_statistics
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_statistics(){					/* is user statistics? */			
 	return ($_SESSION['level'] == $GLOBALS['LEVEL_STATISTICS']);						// 10/23/12
 	}
+/**
+ * is_service_user
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_service_user(){					/* is user service user? */			
 	return ($_SESSION['level'] == $GLOBALS['LEVEL_SERVICE_USER']);						// 10/23/12
 	}
+/**
+ * see_buttons
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function see_buttons() {
 	return (($_SESSION['level'] == $GLOBALS['LEVEL_ADMINISTRATOR']) || ($_SESSION['level'] == $GLOBALS['LEVEL_SUPER']) || ($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']) || ($_SESSION['level'] == $GLOBALS['LEVEL_USER']) || ($_SESSION['level'] == $GLOBALS['LEVEL_MEMBER']));		// 10/11/12
 	}
+/**
+ * may_email
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function may_email() {
 	return (!(is_guest()) || (is_member() || is_unit())) ;						// members, units  allowed
 	}
@@ -1354,6 +2100,21 @@ function may_email() {
 function has_admin() {
 	return ((is_super()) || (is_administrator())) ;								// 9/22/10
 	}
+/**
+ * generate_date_dropdown
+ * Insert description here
+ *
+ * @param $date_suffix
+ * @param $default_date
+ * @param $disabled
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function generate_date_dropdown($date_suffix,$default_date=0, $disabled=FALSE) {			// 'extra allows 'disabled'
 
 	$dis_str = ($disabled)? " disabled" : "" ;
@@ -1472,6 +2233,21 @@ function generate_date_dropdown($date_suffix,$default_date=0, $disabled=FALSE) {
 		}
 	}		// end function generate_date_dropdown(
 	
+/**
+ * generate_dateonly_dropdown
+ * Insert description here
+ *
+ * @param $date_suffix
+ * @param $default_date
+ * @param $disabled
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function generate_dateonly_dropdown($date_suffix,$default_date=0, $disabled=FALSE) {			// 10/23/12
 
 	$dis_str = ($disabled)? " disabled" : "" ;
@@ -1570,6 +2346,22 @@ function generate_dateonly_dropdown($date_suffix,$default_date=0, $disabled=FALS
 		}
 	}		// end function generate_dateonly_dropdown(	
 
+/**
+ * report_action
+ * Insert description here
+ *
+ * @param $action_type
+ * @param $ticket_id
+ * @param $value1
+ * @param $value2
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function report_action($action_type,$ticket_id,$value1='',$value2=''){/* insert reporting actions */
 	if (!get_variable('reporting')) return;
 	
@@ -1585,22 +2377,75 @@ function report_action($action_type,$ticket_id,$value1='',$value2=''){/* insert 
 	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
 	}
 
+/**
+ * dumpp
+ * Insert description here
+ *
+ * @param $variable
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function dumpp($variable) {
 	echo "\n<PRE>";				// pretty it a bit
 	var_dump(debug_backtrace());
 	var_dump($variable) ;
 	echo "</PRE>\n";
 	}
+/**
+ * dump
+ * Insert description here
+ *
+ * @param $variable
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function dump($variable) {
 	echo "\n<PRE>\n";				// pretty it a bit - 2/23/2013
 	var_dump($variable) ;
 	echo "</PRE>\n";
 	}
 
+/**
+ * shorten
+ * Insert description here
+ *
+ * @param $instring
+ * @param $limit
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function shorten($instring, $limit) {
 	return (strlen($instring) > $limit)? substr($instring, 0, $limit-4) . ".." : $instring ;	// &#133
 	}
 
+/**
+ * format_phone
+ * Insert description here
+ *
+ * @param $instr
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function format_phone ($instr) { // 11/16/10 added check for locale for UK phone number format.
 	$locale = get_variable('locale');
 	$temp = trim($instr);
@@ -1619,6 +2464,20 @@ function format_phone ($instr) { // 11/16/10 added check for locale for UK phone
 		}			// end switch()
 	}
 	
+/**
+ * highlight
+ * Insert description here
+ *
+ * @param $term
+ * @param $string
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function highlight($term, $string) {		// highlights search term
 	$replace = "<SPAN CLASS='found'>" .$term . "</SPAN>";
 	if (function_exists('str_ireplace')) {
@@ -1629,17 +2488,56 @@ function highlight($term, $string) {		// highlights search term
 		}
 	}
 
+/**
+ * replace_quotes
+ * Insert description here
+ *
+ * @param $instring
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function replace_quotes($instring) {		//	3/15/11
     	$search = array(chr(34)); 
     	$value = str_replace($search, " ", $instring); 
     	return $value;
        }    
 
+/**
+ * stripslashes_deep
+ * Insert description here
+ *
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function stripslashes_deep($value) {
     	$value = is_array($value) ? array_map('stripslashes_deep', $value) :	stripslashes($value);
     	return $value;
 	}
 
+/**
+ * trim_deep
+ * Insert description here
+ *
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function trim_deep($value) {	
     	$value = is_array($value) ?
                 array_map('trim_deep', $value) :
@@ -1647,6 +2545,19 @@ function trim_deep($value) {
     	return $value;
 	}
 
+/**
+ * mysql_real_escape_string_deep
+ * Insert description here
+ *
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function mysql_real_escape_string_deep($value) {
     $value = is_array($value) ?
                 array_map('mysql_real_escape_string_deep', $value) :
@@ -1654,10 +2565,36 @@ function mysql_real_escape_string_deep($value) {
     return $value;
 	}
 
+/**
+ * nl2brr
+ * Insert description here
+ *
+ * @param $text
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function nl2brr($text) {
     return preg_replace("/\r\n|\n|\r/", "<BR />", $text);
 	}
 
+/**
+ * get_level_text
+ * Insert description here
+ *
+ * @param $level
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_level_text ($level) {
 	switch ($level) {
 		case $GLOBALS['LEVEL_SUPER'] 			: return "Super"; break;
@@ -1672,15 +2609,53 @@ function get_level_text ($level) {
 		}
 	}		//end function
 	
+/**
+ * got_gmaps
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function got_gmaps() {								// valid GMaps API key ?
 	return (strlen(get_variable('gmaps_api_key'))==86);
 	}
 
+/**
+ * mysql_format_date
+ * Insert description here
+ *
+ * @param $indate
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function mysql_format_date($indate="") {			// returns MySQL-format date given argument timestamp or default now
 	if (empty($indate)) {$indate = time();}
 	return @date("Y-m-d H:i:s", $indate);
 	}
 
+/**
+ * is_date
+ * Insert description here
+ *
+ * @param $DateEntry
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_date($DateEntry) {						// returns true for valid non-zero date	
 	$Date_Array = explode('-',$DateEntry);			// "2007-00-00 00:00:00"
 	if (count($Date_Array)!=3) 									return FALSE;
@@ -1688,6 +2663,20 @@ function is_date($DateEntry) {						// returns true for valid non-zero date
 	else {return TRUE;}	
 	}		// end function Is_Date()
 
+/**
+ * toUTM
+ * Insert description here
+ *
+ * @param $coordsIn
+ * @param $from
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function toUTM($coordsIn, $from = "") {							// UTM converter - assume comma separator
 	$temp = explode(",", $coordsIn);
 	$coords = new LatLng(trim($temp[0]), trim($temp[1]));	
@@ -1699,6 +2688,19 @@ function toUTM($coordsIn, $from = "") {							// UTM converter - assume comma se
 	return $temp1[0] . " " . $temp2[0] . " " . $temp3[0];
 	}				// end function toUTM ()
 	
+/**
+ * get_type
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_type($id) {				// returns incident type given its id
 	if ($id == 0) {return "TBD";}		// 1/11/09
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]in_types` WHERE `id`= $id LIMIT 1";
@@ -1708,6 +2710,20 @@ function get_type($id) {				// returns incident type given its id
 	return (isset($row_type['type']))? $row_type['type']: "?";		// 8/12/09
 	}
 
+/**
+ * output_csv
+ * Insert description here
+ *
+ * @param $data
+ * @param $filename
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function output_csv($data, $filename = false){
 	$csv = array();
 	foreach($data as $row){
@@ -1728,6 +2744,19 @@ function output_csv($data, $filename = false){
 	}
 
 
+/**
+ * mysql2timestamp
+ * Insert description here
+ *
+ * @param $m
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function mysql2timestamp($m) {				// 9/29/10
 //	return mktime(substr($m,11,2),substr($m,14,2),substr($m,17,2),substr($m,5,2),substr($m,8,2),substr($m,0,4));
 	return mktime(	(int) ltrim(substr((string)$m,11,2), "0"),
@@ -1741,6 +2770,25 @@ function mysql2timestamp($m) {				// 9/29/10
 
 require_once('remotes.inc.php');	// 8/21/10
 
+/**
+ * do_log
+ * Insert description here
+ *
+ * @param $code
+ * @param $ticket_id
+ * @param $responder_id
+ * @param $info
+ * @param $facility_id
+ * @param $rec_facility_id
+ * @param $mileage
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_log($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, $rec_facility_id=0, $mileage=0) {		// generic log table writer - 5/31/08, 10/6/09
 	@session_start();							// 4/4/10
 //	$who = (array_key_exists($_SESSION, 'user_id'))? $_SESSION['user_id']: 0;		// 11/14/10
@@ -1777,6 +2825,18 @@ function do_log($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, 
 
 // =====================================================================================
 
+/**
+ * set_sess_exp
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function set_sess_exp() {						// updates session-expires time in user record
 		@session_start();							// 4/4/10
 		global $expiry;
@@ -1786,6 +2846,18 @@ function do_log($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, 
 		$result = mysql_query($query) or do_error($query, "", mysql_error(), basename( __FILE__), __LINE__);
 		}
 
+/**
+ * expired
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function expired() {			// returns TRUE/FALSE state of login time_out
 		if(empty($_SESSION)) {return TRUE;}		// $_SESSION = array(); ??
 
@@ -1807,21 +2879,73 @@ function do_log($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, 
 			}
 		}			// end expired()
 
+/**
+ * get_sess_key
+ * Insert description here
+ *
+ * @param $line
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_sess_key($line="") {
 	if(!(isset($_SESSION['id']))) return FALSE;
 	return $_SESSION['id'];
 	}
 
+/**
+ * totime
+ * Insert description here
+ *
+ * @param $string
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function totime($string){			// given a MySQL-format date/time, returns the unix equivalent
 	return mktime(substr($string, 11 , 2),  substr($string, 14 , 2), substr($string, 17 , 2),  substr($string, 5 , 2),  substr($string, 8 , 2),  substr($string, 0 , 4));
 	}
 
+/**
+ * LessExtension
+ * Insert description here
+ *
+ * @param $strName
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function LessExtension($strName) {
 	$ext = strrchr($strName, '.');	
 	return ($ext)? substr($strName, 0, -strlen($ext)):$strName  ;
 	}		// end function LessExtension()
 
 
+/**
+ * xml2php
+ * Insert description here
+ *
+ * @param $xml
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function xml2php($xml) {
 	$fils = 0;
 	$tab = false;
@@ -1852,15 +2976,54 @@ function xml2php($xml) {
 	return $array;
 	}
 
+/**
+ * get_stuff
+ * Insert description here
+ *
+ * @param $in_file
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_stuff($in_file) {				// return file contents as string
 	return file_get_contents($in_file);;
 	}				// end function get_stuff()
 	
+/**
+ * get_ext
+ * Insert description here
+ *
+ * @param $filename
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_ext($filename) {				// return extension in lower-case
 	$exts = explode(".", $filename) ;	// 8/2/09
 	return strtolower($exts[count($exts)-1]);
 	}
 
+/**
+ * ezDate
+ * Insert description here
+ *
+ * @param $d
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function ezDate($d) {
 	$temp = strtotime(str_replace("-","/",$d));
 	$ts = time() - $temp;
@@ -1878,10 +3041,35 @@ function ezDate($d) {
 	return $val;
 	} 
 	
+/**
+ * isValidURL
+ * Insert description here
+ *
+ * @param $url
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function isValidURL($url) {
 	return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url);
 	}
 	
+/**
+ * do_kml
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_kml() {									// emits JS for kml-type files in noted directory - added 5/23/08
 	$dir = "./kml_files";							// required as directory
 	if (is_dir($dir)){										
@@ -1917,6 +3105,19 @@ function do_kml() {									// emits JS for kml-type files in noted directory - 
 		}		// end is_dir()
 	}		// end function do_kml()
 
+/**
+ * lat2dms
+ * Insert description here
+ *
+ * @param $inlat
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function lat2dms($inlat) {				// 9/9/08 both to degr, min, sec
 	$nors = ($inlat<0.0)? "S.":"N.";
 	$d = floor(abs($inlat));	// degrees
@@ -1927,6 +3128,19 @@ function lat2dms($inlat) {				// 9/9/08 both to degr, min, sec
 	return $d . '&deg; ' . abs($m) . "&#39; " . abs($s) . "&#34;" . $nors;
 	}
 
+/**
+ * lng2dms
+ * Insert description here
+ *
+ * @param $inlng
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function lng2dms($inlng) {				// 9/9/08 both to degr, min, sec
 	$wore = ($inlng<0.0)? "W.":"E.";
 	$d = floor(abs($inlng));	// degrees
@@ -1938,17 +3152,56 @@ function lng2dms($inlng) {				// 9/9/08 both to degr, min, sec
 	}
 
 
+/**
+ * lat2ddm
+ * Insert description here
+ *
+ * @param $inlat
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function lat2ddm($inlat) {				// to degr, dec mins 9/7/08
 	$nors = ($inlat<0.0)? "S.":"N.";
 	$deg = floor(abs($inlat));
 	return $deg . '&deg; ' . round(abs($inlat-$deg)*60, 1) . "' " . $nors;
 	}
+/**
+ * lng2ddm
+ * Insert description here
+ *
+ * @param $inlng
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function lng2ddm($inlng) {				// to degr, dec mins 9/7/08
 	$wore = ($inlng<0.0)? "W.":"E.";
 	$deg = floor(abs($inlng));
 	return $deg . '&deg; ' . round((abs($inlng)-$deg)*60, 1) . "' " . $wore;
 	}
 
+/**
+ * get_lat
+ * Insert description here
+ *
+ * @param $in_lat
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_lat($in_lat) {					// 9/7/08
 	if (empty($in_lat)) {return"";}			// 9/14/08
 	$format = get_variable('lat_lng');
@@ -1967,6 +3220,19 @@ function get_lat($in_lat) {					// 9/7/08
 		}
 	}				// end function get_lat()
 	
+/**
+ * get_lng
+ * Insert description here
+ *
+ * @param $in_lng
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_lng($in_lng) {					// 9/7/08
 	if (empty($in_lng)) {return"";}			// 9/14/08
 	$format = get_variable('lat_lng');
@@ -2010,6 +3276,24 @@ Handle		U				// 3/25/13
 Scheduled	V				// 3/25/13
 */
 
+/**
+ * mail_it
+ * Insert description here
+ *
+ * @param $to_str
+ * @param $smsg_to_str
+ * @param $text
+ * @param $ticket_id
+ * @param $text_sel
+ * @param $txt_only
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_only = FALSE) {	// 10/6/08, 10/15/08,  2/18/09, 3/7/09, 10/23/12, 11/14/2012, 12/14/2012
 	global $istest;
 //	if (is_null($text_sel)) {$text_sel = 1;}			//
@@ -2223,11 +3507,46 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 	}				// end function mail_it ()
 // ________________________________________________________
 
+/**
+ * smtp
+ * Insert description here
+ *
+ * @param $my_to
+ * @param $my_subject
+ * @param $my_message
+ * @param $my_params
+ * @param $my_from
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function smtp ($my_to, $my_subject, $my_message, $my_params, $my_from) { 
     require_once('smtp.inc.php');                                        // defer load until required - 8/2/10
     real_smtp ($my_to, $my_subject, $my_message, $my_params, $my_from);
     }                         // end function smtp
 
+/**
+ * do_send
+ * Insert description here
+ *
+ * @param $to_str
+ * @param $smsg_to_str
+ * @param $subject_str
+ * @param $text_str
+ * @param $ticket_id
+ * @param $responder_ids
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_send ($to_str, $smsg_to_str, $subject_str, $text_str, $ticket_id, $responder_ids=0) {					// 7/7/09 - 5/25/2013
 //	print $to_str . "," . $smsg_to_str . "," . $subject_str . "," . $text_str . "," . $ticket_id . "," . $responder_ids . "<BR />";
 	$the_resp_ids = "";
@@ -2268,6 +3587,19 @@ function do_send ($to_str, $smsg_to_str, $subject_str, $text_str, $ticket_id, $r
 		return ;		
 		}
 	if(!function_exists('stripLabels')) {
+/**
+ * stripLabels
+ * Insert description here
+ *
+ * @param $sText
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function stripLabels($sText){
 			$labels = array("Incident:", "Priority:", "Nature:", "Addr:", "Descr:", "Reported by:", "Phone:", "Written:", "Updated:", "Status:", "Disp:", "Run Start:", "Map:", "Patient:", "Actions:", "Tickets host:"); // 5/9/10
 			for ($x = 0; $x < count($labels); $x++) {
@@ -2346,6 +3678,19 @@ function do_send ($to_str, $smsg_to_str, $subject_str, $text_str, $ticket_id, $r
 	return (string) ($count_ll + $count_cells + $count_smsg);
 	}					// end function do send ()
 
+/**
+ * is_email
+ * Insert description here
+ *
+ * @param $email
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_email($email){		   //  validate email, code courtesy of Jerrett Taylor - 10/8/08, 7/2/10
 	if(!preg_match( "/^" .
 	"[a-zA-Z0-9]+([_\\.-][a-zA-Z0-9]+)*" .		//user
@@ -2361,6 +3706,20 @@ function is_email($email){		   //  validate email, code courtesy of Jerrett Tayl
 		}							  // end function is_email()
 		
 
+/**
+ * notify_user
+ * Insert description here
+ *
+ * @param $ticket_id
+ * @param $action_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function notify_user($ticket_id, $action_id) {								// 10/20/08, 5/22/11
 	if (get_variable('allow_notify') != '1') return FALSE;						//should we notify?
 	
@@ -2394,6 +3753,19 @@ function notify_user($ticket_id, $action_id) {								// 10/20/08, 5/22/11
 	return (empty($temp))? FALSE: $temp;
 	}
 	
+/**
+ * notify_newreq
+ * Insert description here
+ *
+ * @param $svceuser_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function notify_newreq($svceuser_id) {								// 10/23/12
 	if (get_variable('allow_notify') != '1') return FALSE;
 	$addrs = array();															// 
@@ -2412,6 +3784,20 @@ function notify_newreq($svceuser_id) {								// 10/23/12
 	return (empty($temp))? FALSE: $temp;
 	}
 	
+/**
+ * snap
+ * Insert description here
+ *
+ * @param $source
+ * @param $stuff
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function snap($source, $stuff = "") {									// 10/18/08 , 3/5/09 - debug tool
 	global $snap_table;				// defined in istest.inc.php
 	if (mysql_table_exists($snap_table)) {
@@ -2434,10 +3820,36 @@ function snap($source, $stuff = "") {									// 10/18/08 , 3/5/09 - debug tool
 	}		// end function snap()
 	
 	
+/**
+ * isFloat
+ * Insert description here
+ *
+ * @param $n
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function isFloat($n){														// 1/23/09
     return ( $n == strval(floatval($n)) )? true : false;
 	}
 	
+/**
+ * quote_smart
+ * Insert description here
+ *
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function quote_smart($value) {												// 1/28/09
 	if (get_magic_quotes_gpc()) {		// Stripslashes
 		$value = stripslashes($value);
@@ -2448,31 +3860,127 @@ function quote_smart($value) {												// 1/28/09
 	return $value;
 	}
 
+/**
+ * quote_smart_deep
+ * Insert description here
+ *
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function quote_smart_deep($value) {		// recursive array-capable version of the above 
     $value = is_array($value) ? array_map('quote_smart_deep', $value) : quote_smart($value);
     return $value;
 	}
 
+/**
+ * db_insert
+ * Insert description here
+ *
+ * @param $table
+ * @param $fieldset
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function db_insert($table, $fieldset){				// 2/4/09
 	return 'INSERT INTO ' . $table . '(' . implode(',', array_keys($fieldset)) . ') VALUES (' . implode(',', array_values($fieldset)) . ')';
 	}
+/**
+ * db_delete
+ * Insert description here
+ *
+ * @param $table
+ * @param $where
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function db_delete($table, $where = ''){
 	return 'DELETE FROM ' . $table . ($where ? ' WHERE ' . $where : '');
 	}
+/**
+ * db_update
+ * Insert description here
+ *
+ * @param $table
+ * @param $fieldset
+ * @param $where
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function db_update($table, $fieldset, $where = ''){
 	$set = array();
 	foreach($fieldset as $field=>$value) $set[] = $field . '=' . $value;
 	return 'UPDATE ' . $table . ' SET ' . implode(',', $set) . ($where ? ' WHERE ' . $where : '');
 	}
 
+/**
+ * my_is_float
+ * Insert description here
+ *
+ * @param $n
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function my_is_float($n){									// 5/4/09
     return ((($n == strval(floatval($n))) || ($n == floatval($n))) && (!($n==0)) )? true : false;		//	6/10/13
 	}
 
+/**
+ * my_is_int
+ * Insert description here
+ *
+ * @param $n
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function my_is_int($n){										// 3/25/09
     return ( $n == strval(intval($n)) )? true : false;
 	}
 
+/**
+ * LLtoOSGB
+ * Insert description here
+ *
+ * @param $lat
+ * @param $lng
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function LLtoOSGB($lat, $lng) {
 
 	$ll2w = new LatLng($lat, $lng);
@@ -2483,6 +3991,20 @@ function LLtoOSGB($lat, $lng) {
 	return $osgrid;
 	}	//end function LLtoOSGB
 
+/**
+ * my_date_diff
+ * Insert description here
+ *
+ * @param $d1_in
+ * @param $d2_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function my_date_diff($d1_in, $d2_in) {		// end, start datetime strings in, returns string - 5/13/10 - 11/29/2012
 	$d1 = strtotime($d1_in);				// string to integer
 	$d2 = strtotime($d2_in);
@@ -2565,18 +4087,58 @@ function get_elapsed_time ($in_start, $in_end) {		// datetime strings - 11/30/20
 	}
 */
 
+/**
+ * get_elapsed_time
+ * Insert description here
+ *
+ * @param $in_row
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_elapsed_time ($in_row) {						// ex: 2012-03-29 14:37:10	- 5/20/2013
 	$end_date = (good_date_time($in_row['problemend']))?  $in_row['problemend'] :  now_ts();	// string
 	$start_date = ($in_row['status'] == $GLOBALS['STATUS_SCHEDULED'] )? $in_row['booked_date'] : $in_row['problemstart'];
 	return my_date_diff ( $start_date , $end_date);
 	}
 
+/**
+ * expires
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function expires() {
 	$now = time() - (intval(intval(get_variable('delta_mins')))*60); 				// 6/17/10
 //	return mysql_format_date($now + $GLOBALS['SESSION_TIME_LIMIT']);
 	return $now + $GLOBALS['SESSION_TIME_LIMIT'];				// 8/25/10
 	}
 
+/**
+ * get_status_sel
+ * Insert description here
+ *
+ * @param $unit_in
+ * @param $status_val_in
+ * @param $tbl_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_status_sel($unit_in, $status_val_in, $tbl_in) {					// returns select list as click-able string - 2/6/10
 	switch ($tbl_in) {
 		case ("u") :
@@ -2631,6 +4193,18 @@ function get_status_sel($unit_in, $status_val_in, $tbl_in) {					// returns sele
 	return $outstr;
 	}
 
+/**
+ * curr_regs
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function curr_regs() {	//	10/18/11	Gets currently allocated or viewed regions
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]';";	//	10/18/11
 	$result = mysql_query($query);
@@ -2675,6 +4249,21 @@ function curr_regs() {	//	10/18/11	Gets currently allocated or viewed regions
 	return $where;
 	}	
 	
+/**
+ * get_recfac_sel
+ * Insert description here
+ *
+ * @param $unit_in
+ * @param $tickid
+ * @param $assign_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_recfac_sel($unit_in, $tickid, $assign_id) {					// 10/18/11 - Gets select menu for receiving facility control on mobile page
 	$where = curr_regs();
 	$query01 = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `$GLOBALS[mysql_prefix]assigns`.`id` = " . $assign_id . " LIMIT 1";	
@@ -2707,6 +4296,18 @@ function get_recfac_sel($unit_in, $tickid, $assign_id) {					// 10/18/11 - Gets 
 	return $outstr;
 	}
 
+/**
+ * get_units_legend
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_units_legend() {		// returns string as centered span - 2/8/10
 	$query = "SELECT DISTINCT `type`, `icon`,  `$GLOBALS[mysql_prefix]unit_types`.`name` AS `mytype` FROM `$GLOBALS[mysql_prefix]responder` 
 		LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` ON `$GLOBALS[mysql_prefix]unit_types`.`id` = `$GLOBALS[mysql_prefix]responder`.`type` ORDER BY `mytype`";
@@ -2721,6 +4322,18 @@ function get_units_legend() {		// returns string as centered span - 2/8/10
 	return $out_str .= "</SPAN>";	
 	}										// end function get_units_legend()
 
+/**
+ * get_facilities_legend
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_facilities_legend() {		// returns string as centered row - 2/8/10
 	$query = "SELECT DISTINCT `type`, `icon`,  `$GLOBALS[mysql_prefix]fac_types`.`name` AS `mytype` FROM `$GLOBALS[mysql_prefix]facilities` 
 		LEFT JOIN `$GLOBALS[mysql_prefix]fac_types` ON `$GLOBALS[mysql_prefix]fac_types`.`id` = `$GLOBALS[mysql_prefix]facilities`.`type` ORDER BY `mytype`";
@@ -2735,6 +4348,19 @@ function get_facilities_legend() {		// returns string as centered row - 2/8/10
 	return $out_str .= "</SPAN>";	
 	}										// end function get_facilities_legend()
 
+/**
+ * is_phone
+ * Insert description here
+ *
+ * @param $instr
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_phone ($instr) {		// 3/13/10
 	if(get_variable("locale")==0){
 		return ((strlen(trim($instr))==9) && (is_numeric($instr))) ;
@@ -2743,6 +4369,18 @@ function is_phone ($instr) {		// 3/13/10
 		return (is_numeric($instr));
 		}
 	}
+/**
+ * get_unit_status_legend
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_unit_status_legend() {		// returns string as div - 3/21/10
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]un_status` ORDER BY `status_val`";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -2753,6 +4391,19 @@ function get_unit_status_legend() {		// returns string as div - 3/21/10
 	return $out_str .= "</DIV>";	
 	}										// end function get_unit_status_legend()
 
+/**
+ * get_un_div_height
+ * Insert description here
+ *
+ * @param $in_max
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_un_div_height ($in_max) {				//	compute pixels min 260, max .5 x screen height - 2/8/10
 	$min = 80 ;
 	$max = round($in_max * $_SESSION['scr_height']);
@@ -2766,32 +4417,130 @@ function get_un_div_height ($in_max) {				//	compute pixels min 260, max .5 x sc
 	else					{return ($required > $max)?   $max:  $required;}
 	}		// end function un_div_height ()	
 
+/**
+ * get_sess_vbl
+ * Insert description here
+ *
+ * @param $in_str
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_sess_vbl ($in_str) {				//	
 	$default = 'error';
 	@session_start();
 	return (array_key_exists ( $in_str, $_SESSION ))?  $_SESSION [$in_str]: $default;
 	}		// end get_sess_vbl()
 
+/**
+ * now_ts
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function now_ts() {		// returns date time as a timestamp - 5/19/2013
 	return mysql_format_date(time() - intval(get_variable('delta_mins'))*60);
 	}
 
+/**
+ * now
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function now() {		// returns date as integer
 	return (time() - intval(get_variable('delta_mins'))*60);
 	}
+/**
+ * monday
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function monday() {		// returns date
 	return strtotime("last Monday");
 	}
+/**
+ * day
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function day() {		// returns number
 	return date("d", now());
 	}
+/**
+ * month
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function month() {		// returns number
 	return date("n", now());
 	}
+/**
+ * year
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function year() {		// returns number
 	return date("Y", now());
 	}
 
+/**
+ * get_start
+ * Insert description here
+ *
+ * @param $local_func
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_start($local_func){						// 5/2/10
 	switch ($local_func) {
 		case 1 :		// Today
@@ -2835,6 +4584,19 @@ function get_start($local_func){						// 5/2/10
 			}
 		}		// end function get_start
 
+/**
+ * get_end
+ * Insert description here
+ *
+ * @param $local_func
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_end($local_func){
 	switch ($local_func) {
 		case 1 :		// Today
@@ -2865,6 +4627,18 @@ function get_end($local_func){
 			}
 		}		// end function get_end
 
+/**
+ * get_cb_height
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_cb_height () {		// returns pixel count for cb frame	height based on no. of lines - 7/10/10
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00'";		// 2/12/09   
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
@@ -2885,6 +4659,19 @@ function get_cb_height () {		// returns pixel count for cb frame	height based on
 
 
 $text_array = array();
+/**
+ * get_text
+ * Insert description here
+ *
+ * @param $which
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_text($which){		/* get replacement text from db captions table, returns FALSE if absent  */
 	global $text_array;
 	if (empty($text_array)) {	// populate it to avoid hammering db
@@ -2898,12 +4685,38 @@ function get_text($which){		/* get replacement text from db captions table, retu
 	return (array_key_exists($which, $text_array))? $text_array[$which] : $which ;
 	}
 
+/**
+ * can_edit
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function can_edit() {										// 8/27/10
 	$oper_can_edit = ((is_user()) && (get_variable('oper_can_edit') == 1));	
 	return (is_administrator() || is_super() || ($oper_can_edit));
 	} 	// end function can_edit()
 
 
+/**
+ * do_diff
+ * Insert description here
+ *
+ * @param $indx
+ * @param $row
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_diff($indx, $row){		// returns diff in seconds from problemstart- 9/29/10
 	switch ($indx) {
 		case 0:
@@ -2933,11 +4746,37 @@ function do_diff($indx, $row){		// returns diff in seconds from problemstart- 9/
 	return $temp - mysql2timestamp($row['problemstart']); 
 	}
 
+/**
+ * elapsed
+ * Insert description here
+ *
+ * @param $in_time
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function elapsed ($in_time) {			// 4/26/11
 	$mins = (integer) (round ((now() - mysql2timestamp($in_time)) / 60.0));
 	return ($mins> 99)? 99: $mins;
 	}				// end function elapsed
 
+/**
+ * get_disp_status
+ * Insert description here
+ *
+ * @param $row_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_disp_status ($row_in) {			// 4/26/11
 	extract ($row_in);
 	$tags_arr = explode("/", get_variable('disp_stat'));
@@ -2950,6 +4789,19 @@ function get_disp_status ($row_in) {			// 4/26/11
 	}
 														
 // 5/11/2013 fix to remove '_on'  change ' _by' to 'user_id' from set_u_updated () sql  - 6/10/2013
+/**
+ * set_u_updated
+ * Insert description here
+ *
+ * @param $in_assign
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function set_u_updated ($in_assign) {			// given a disaptch record id, updates unit data - 9/1/10
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` =  {$in_assign} LIMIT 1";
 	$result = mysql_query($query) or do_error($query, "", mysql_error(), basename( __FILE__), __LINE__);
@@ -2965,15 +4817,54 @@ function set_u_updated ($in_assign) {			// given a disaptch record id, updates u
 	return TRUE;
 	}		// end function set_u_updated (
 
+/**
+ * short_ts
+ * Insert description here
+ *
+ * @param $in_str
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function short_ts($in_str){		// ex:10/29/10 12:22 - 10/2/10
 	return substr($in_str, -5);
 	}
 
+/**
+ * get_dist_factor
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_dist_factor() {							// returns distance conversion factor - 11/24/10
 	$factors = array("0.6214", "0.6214", "1.0");		// factors as strings
 	return $factors[get_variable("locale")];			// US, UK, ROW
 	}
 
+/**
+ * get_speed
+ * Insert description here
+ *
+ * @param $instr
+ * @param $inspeed
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_speed ($instr, $inspeed) {					// 11/26/10
 	if (!(is_int($inspeed)))	{$the_class='unk';}
 	elseif ($inspeed >= 50) 		{$the_class='fast'; }
@@ -2982,6 +4873,20 @@ function get_speed ($instr, $inspeed) {					// 11/26/10
 	return "<SPAN CLASS='TD {$the_class}'>&nbsp;{$instr}&nbsp;</SPAN>";
 	}
 
+/**
+ * get_remote
+ * Insert description here
+ *
+ * @param $url
+ * @param $json
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_remote($url, $json=TRUE) {				// 11/26/10	, 4/23/11
 	$data="";
 	if (function_exists("curl_init")) {
@@ -3012,6 +4917,19 @@ function get_remote($url, $json=TRUE) {				// 11/26/10	, 4/23/11
 	}	// end function get remote()
 
 
+/**
+ * get_hints
+ * Insert description here
+ *
+ * @param $instr
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_hints($instr) {		// returns associative array - 11/30/10 
 	$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]hints` WHERE `form` = '{$instr}' "; 
 	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -3022,6 +4940,19 @@ function get_hints($instr) {		// returns associative array - 11/30/10
 	return($hints);
 	}						// end function
 	
+/**
+ * get_regions_buttons
+ * Insert description here
+ *
+ * @param $user_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_regions_buttons($user_id) {		//	4/12/12
 	$regs_viewed = "";
 	if(isset($_SESSION['viewed_groups'])) {
@@ -3045,6 +4976,19 @@ function get_regions_buttons($user_id) {		//	4/12/12
 	return $al_buttons;
 	}
 	
+/**
+ * get_regions_buttons2
+ * Insert description here
+ *
+ * @param $user_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_regions_buttons2($user_id) {		//	4/12/12
 	if(isset($_SESSION['viewed_groups'])) {
 		$regs_viewed= explode(",",$_SESSION['viewed_groups']);
@@ -3068,6 +5012,19 @@ function get_regions_buttons2($user_id) {		//	4/12/12
 	return $al_buttons;
 	}
 	
+/**
+ * clean_string
+ * Insert description here
+ *
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function clean_string($value) {	//	10/23/12
 	// if(get_magic_quotes_gpc()) {
 		// $value = stripslashes($value);
@@ -3075,6 +5032,18 @@ function clean_string($value) {	//	10/23/12
 	return mysql_real_escape_string($value);
 	}
 
+/**
+ * get_buttons_inner
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_buttons_inner(){		//	4/12/12
 	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
 ?>
@@ -3090,6 +5059,18 @@ function get_buttons_inner(){		//	4/12/12
 		}
 	}
 
+/**
+ * get_buttons_inner2
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_buttons_inner2(){		//	4/12/12
 	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
 ?>
@@ -3104,6 +5085,19 @@ function get_buttons_inner2(){		//	4/12/12
 		}
 	}	
 
+/**
+ * get_remote_type
+ * Insert description here
+ *
+ * @param $inrow
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_remote_type ($inrow) { 							// returns type of remote - 12/3/10
 	if ($inrow['aprs'] == 1) 				{ return $GLOBALS['TRACK_APRS']; }
 	elseif ((int)$inrow['instam'] == 1) 	{ return $GLOBALS['TRACK_INSTAM']; }
@@ -3115,10 +5109,34 @@ function get_remote_type ($inrow) { 							// returns type of remote - 12/3/10
 	else 									{ return $GLOBALS['TRACK_NONE']; }
 	}  				// end function
 
+/**
+ * is_cloud
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_cloud() {						// 12/4/10
 	return (!(get_variable('_cloud')==0));
 	}
 
+/**
+ * get_unit
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_unit(){									//			returns unit index string - 3/19/11
 	if  (!(array_key_exists('user_unit_id', $_SESSION)) && 
 		(!@intval($_SESSION['user_unit_id'])> 0)) {return FALSE;}
@@ -3136,6 +5154,18 @@ function get_unit(){									//			returns unit index string - 3/19/11
 			}		// end if/else
 		}		// end function get_unit()
 
+/**
+ * shut_down
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function shut_down(){				// 5/25/11
 	do_log($GLOBALS['LOG_INTRUSION'],0);	
 ?>
@@ -3147,6 +5177,18 @@ function shut_down(){				// 5/25/11
 <?php
 	}		 // end function shut_down()		
 
+/**
+ * win_shut_down
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function win_shut_down() {				// for use in window vs. frame
 	do_log($GLOBALS['LOG_INTRUSION'],0);	
 ?>
@@ -3176,12 +5218,38 @@ function get_index_str ($in_str) {
 		return substr($date_in, 8, 8);
 		}
 
+/**
+ * format_date_2
+ * Insert description here
+ *
+ * @param $date_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function format_date_2($date_in){								// datetime: 2012-11-03 14:13:45 - 11/29/2012
 		$date_wk = (strlen(trim($date_in))== 19)? strtotime(trim($date_in)) : trim($date_in) ;			// force to integer
 		if (get_variable('locale')==1)	{ return date("j/n/y H:i", intval($date_wk));}					// 08/27/10 - Revised to show UK format for locale = 1	
 		else 							{ return date(get_variable("date_format"), intval($date_wk)); }
 		}
 
+/**
+ * log_error
+ * Insert description here
+ *
+ * @param $err_arg
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function log_error($err_arg) {									// reports non-fatal error - 11/29/2012
 		@session_start();											//
 		if ( ! ( array_key_exists ( $err_arg, $_SESSION ) ) ) {		// limit to once per session to avoid log overload
@@ -3190,6 +5258,18 @@ function get_index_str ($in_str) {
 			}
 		}				// end function log_error()
 
+/**
+ * get_maptype_str
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function get_maptype_str () {			// 3/27/2013
 		switch(get_variable('maptype')) { 
 			case "1":			return "ROADMAP";			break;
@@ -3213,6 +5293,18 @@ function replace_newline($string) {
 	return (string)str_replace(array("\r", "\r\n", "\n"), '', $string);
 	}
 
+/**
+ * get_contact_addr
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_contact_addr () {		// 6/1/2013 - returns user email addr if available 
 	$contact_addr =  is_email(get_variable('email_reply_to'))? get_variable('email_reply_to') :  FALSE;
 	if (!($contact_addr)) {$contact_addr = 	is_email(get_variable('email_from'))? get_variable('email_from') :  FALSE; }

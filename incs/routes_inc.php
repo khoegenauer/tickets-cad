@@ -17,6 +17,20 @@ error_reporting(E_ALL);
 */
 // 			alert(map.getZoom());
 
+/**
+ * get_assigned_td
+ * Insert description here
+ *
+ * @param $unit_id
+ * @param $on_click
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/15/11
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns`  
 		LEFT JOIN `$GLOBALS[mysql_prefix]ticket` t ON ($GLOBALS[mysql_prefix]assigns.ticket_id = t.id)
@@ -51,6 +65,21 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
 		}		// end else
 	}		// end function get_assigned_td()
 
+/**
+ * do_list
+ * Insert description here
+ *
+ * @param $unit_id
+ * @param $capabilities
+ * @param $searchtype
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_list($unit_id ="", $capabilities ="", $searchtype) {		// 12/18/10
 		global $unav_id_str, $row_ticket, $dispatches_disp, $dispatches_act, $from_top, $eol, $sidebar_width, $sortby_distance ;
 		
@@ -471,6 +500,19 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
 			var email= false;
 			
 <?php	
+/**
+ * get_cd_str
+ * Insert description here
+ *
+ * @param $in_row
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 			function get_cd_str($in_row) {			// unit row in, 
 				global $unit_id;
 //																			// first, already on this run?		

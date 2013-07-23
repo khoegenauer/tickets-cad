@@ -12,6 +12,24 @@ if (empty($_SESSION)) {
 	}
 do_login(basename(__FILE__));
 
+/**
+ * get_the_emails
+ * Insert description here
+ *
+ * @param $url
+ * @param $user
+ * @param $password
+ * @param $port
+ * @param $ssl
+ * @param $timeout
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_the_emails($url, $user, $password, $port, $ssl="", $timeout=10 ) {	//	Called from AJAX file to get emails in background - AJAX file called by top.php
 //	print $url . "," . $user . "," . $password . "," . $port . "," .  $ssl . "," . $timeout . "<BR />"; 
 	$simple = get_msg_variable('email_svr_simple');

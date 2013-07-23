@@ -4,10 +4,36 @@ require_once('../../incs/functions.inc.php');
 require_once('../incs/portal.inc.php');
 include('../../incs/html2text.php');
 
+/**
+ * br2nl
+ * Insert description here
+ *
+ * @param $input
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function br2nl($input) {
 	return preg_replace('/<br(\s+)?\/?>/i', "\n", $input);
 	}
 	
+/**
+ * get_contact_details
+ * Insert description here
+ *
+ * @param $the_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_contact_details($the_id) {
 	$the_ret = array();
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` `u` WHERE `id` = " . $the_id . " LIMIT 1";

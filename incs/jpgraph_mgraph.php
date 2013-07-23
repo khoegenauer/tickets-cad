@@ -13,6 +13,20 @@
 // CLASS MGraph
 // Description: Create a container image that can hold several graph 
 //=============================================================================
+/**
+ * MGraph
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class MGraph {
 
     protected $img=NULL;
@@ -29,17 +43,59 @@ class MGraph {
 	$background_image_y=NULL, $background_image_x=NULL;
 
     // Create a new instane of the combined graph
+    /**
+     * MGraph
+     * Insert description here
+     *
+     * @param $aWidth
+     * @param $aHeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function MGraph($aWidth=NULL,$aHeight=NULL) {
 	$this->iWidth = $aWidth;
 	$this->iHeight = $aHeight;
     }
 
     // Specify background fill color for the combined graph
+    /**
+     * SetFillColor
+     * Insert description here
+     *
+     * @param $aColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFillColor($aColor) {
 	$this->iFillColor = $aColor;
     }
 
     // Add a frame around the combined graph
+    /**
+     * SetFrame
+     * Insert description here
+     *
+     * @param $aFlg
+     * @param $aColor
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFrame($aFlg,$aColor='black',$aWeight=1) {
 	$this->iDoFrame = $aFlg;
 	$this->iFrameColor = $aColor;
@@ -47,11 +103,39 @@ class MGraph {
     }
 
     // Specify a background image blend    
+    /**
+     * SetBackgroundImageMix
+     * Insert description here
+     *
+     * @param $aMix
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetBackgroundImageMix($aMix) {
 	$this->background_image_mix = $aMix ;
     }
 
     // Specify a background image
+    /**
+     * SetBackgroundImage
+     * Insert description here
+     *
+     * @param $aFileName
+     * @param $aCenter_aX
+     * @param $aY
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetBackgroundImage($aFileName,$aCenter_aX=NULL,$aY=NULL) {
 	// Second argument can be either a boolean value or 
 	// a numeric
@@ -92,6 +176,19 @@ class MGraph {
 
 
     // Private helper function for backgound image
+    /**
+     * _loadBkgImage
+     * Insert description here
+     *
+     * @param $aFile
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _loadBkgImage($aFile='') {
 	if( $aFile == '' )
 	    $aFile = $this->background_image;
@@ -130,6 +227,18 @@ class MGraph {
 	return $img;
     }	
 
+    /**
+     * _strokeBackgroundImage
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _strokeBackgroundImage() {
 	if( $this->background_image == '' ) 
 	    return;
@@ -159,10 +268,44 @@ class MGraph {
 	$this->_imageCp($bkgimg,$x,$y,0,0,$bw,$bh,$this->background_image_mix);
     }
 
+    /**
+     * _imageCp
+     * Insert description here
+     *
+     * @param $aSrcImg
+     * @param $x
+     * @param $y
+     * @param $fx
+     * @param $fy
+     * @param $w
+     * @param $h
+     * @param $mix
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _imageCp($aSrcImg,$x,$y,$fx,$fy,$w,$h,$mix=100) {
 	imagecopymerge($this->img,$aSrcImg,$x,$y,$fx,$fy,$w,$h,$mix);
     }
 
+    /**
+     * _imageCreate
+     * Insert description here
+     *
+     * @param $aWidth
+     * @param $aHeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _imageCreate($aWidth,$aHeight) {
 	if( $aWidth <= 1 || $aHeight <= 1 ) {
 	    JpGraphError::RaiseL(12006,$aWidth,$aHeight);
@@ -184,6 +327,20 @@ class MGraph {
 	}
     }
 
+    /**
+     * _polygon
+     * Insert description here
+     *
+     * @param $p
+     * @param $closed
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _polygon($p,$closed=FALSE) {
 	if( $this->iLineWeight==0 ) return;
 	$n=count($p);
@@ -199,6 +356,19 @@ class MGraph {
 	}
     }
 
+    /**
+     * _filledPolygon
+     * Insert description here
+     *
+     * @param $pts
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _filledPolygon($pts) {
 	$n=count($pts);
 	for($i=0; $i < $n; ++$i) 
@@ -206,6 +376,22 @@ class MGraph {
 	imagefilledpolygon($this->img,$pts,count($pts)/2,$this->iCurrentColor);
     }
 	
+    /**
+     * _rectangle
+     * Insert description here
+     *
+     * @param $xl
+     * @param $yu
+     * @param $xr
+     * @param $yl
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _rectangle($xl,$yu,$xr,$yl) {
 	for($i=0; $i < $this->iLineWeight; ++$i ) 
 	    $this->_polygon(array($xl+$i,$yu+$i,$xr-$i,$yu+$i,
@@ -213,22 +399,110 @@ class MGraph {
 				  $xl+$i,$yu+$i));
     }
 	
+    /**
+     * _filledRectangle
+     * Insert description here
+     *
+     * @param $xl
+     * @param $yu
+     * @param $xr
+     * @param $yl
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _filledRectangle($xl,$yu,$xr,$yl) {
 	$this->_filledPolygon(array($xl,$yu,$xr,$yu,$xr,$yl,$xl,$yl));
     }
 
+    /**
+     * _setColor
+     * Insert description here
+     *
+     * @param $aColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _setColor($aColor) {
 	$this->iCurrentColor = $this->iRGB->Allocate($aColor);
     }
 
+    /**
+     * AddMix
+     * Insert description here
+     *
+     * @param $aGraph
+     * @param $x
+     * @param $y
+     * @param $mix
+     * @param $fx
+     * @param $fy
+     * @param $w
+     * @param $h
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AddMix($aGraph,$x=0,$y=0,$mix=100,$fx=0,$fy=0,$w=0,$h=0) {
 	$this->_gdImgHandle($aGraph->Stroke( _IMG_HANDLER),$x,$y,$fx=0,$fy=0,$w,$h,$mix);
     }
     
+    /**
+     * Add
+     * Insert description here
+     *
+     * @param $aGraph
+     * @param $x
+     * @param $y
+     * @param $fx
+     * @param $fy
+     * @param $w
+     * @param $h
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Add($aGraph,$x=0,$y=0,$fx=0,$fy=0,$w=0,$h=0) {
 	$this->_gdImgHandle($aGraph->Stroke( _IMG_HANDLER),$x,$y,$fx=0,$fy=0,$w,$h);
     }
 
+    /**
+     * _gdImgHandle
+     * Insert description here
+     *
+     * @param $agdCanvas
+     * @param $x
+     * @param $y
+     * @param $fx
+     * @param $fy
+     * @param $w
+     * @param $h
+     * @param $mix
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _gdImgHandle($agdCanvas,$x,$y,$fx=0,$fy=0,$w=0,$h=0,$mix=100) {
 	if( $w == 0 )  $w = @imagesx($agdCanvas);
 	if( $w === NULL ) {
@@ -240,6 +514,22 @@ class MGraph {
 	$this->iGraphs[$this->iCnt++] = array($agdCanvas,$x,$y,$fx,$fy,$w,$h,$mix);
     }
 
+    /**
+     * SetMargin
+     * Insert description here
+     *
+     * @param $lm
+     * @param $rm
+     * @param $tm
+     * @param $bm
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetMargin($lm,$rm,$tm,$bm) {
 	$this->lm = $lm;
 	$this->rm = $rm;
@@ -247,11 +537,36 @@ class MGraph {
 	$this->bm = $bm;
     }
 
+    /**
+     * SetExpired
+     * Insert description here
+     *
+     * @param $aFlg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetExpired($aFlg=true) {
 	$this->expired = $aFlg;
     }
 
     // Generate image header
+    /**
+     * Headers
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Headers() {
 	
 	// In case we are running from the command line with the client version of
@@ -278,6 +593,20 @@ HTTP headers have already been sent.</font></td></tr><tr><td><b>Explanation:</b>
 	header("Content-type: image/$this->img_format");
     }
 
+    /**
+     * SetImgFormat
+     * Insert description here
+     *
+     * @param $aFormat
+     * @param $aQuality
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetImgFormat($aFormat,$aQuality=75) {
 	$this->image_quality = $aQuality;
 	$aFormat = strtolower($aFormat);
@@ -317,6 +646,19 @@ HTTP headers have already been sent.</font></td></tr><tr><td><b>Explanation:</b>
     }
 
     // Stream image to browser or to file
+    /**
+     * Stream
+     * Insert description here
+     *
+     * @param $aFile
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stream($aFile="") {
 	$func="image".$this->img_format;
 	if( $this->img_format=="jpeg" && $this->image_quality != null ) {
@@ -334,6 +676,19 @@ HTTP headers have already been sent.</font></td></tr><tr><td><b>Explanation:</b>
 //("Can't create or stream image to file $aFile Check that PHP has enough permission to write a file to the current directory.");
     }
 
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $aFileName
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($aFileName='') {
 	// Find out the necessary size for the container image
 	$w=0; $h=0;

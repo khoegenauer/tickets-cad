@@ -5,6 +5,19 @@ if (!empty($_POST)) extract($_POST);
 	    else if (!empty($HTTP_POST_VARS)) extract($HTTP_POST_VARS);
 if (!empty($_GET)) extract($_GET);	    
 
+/**
+ * dump
+ * Insert description here
+ *
+ * @param $variable
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function dump($variable) {
 	echo "<PRE>";				// pretty it a bit
 	var_dump($variable) ;

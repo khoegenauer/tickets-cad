@@ -76,6 +76,20 @@ else {						// unset
 		}
 	}		// end if/else initialize $mode
 
+/**
+ * get_butts
+ * Insert description here
+ *
+ * @param $ticket_id
+ * @param $unit_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_butts($ticket_id, $unit_id) {
 	global $patient;
 	$win_height =  get_variable('map_height') + 120;
@@ -104,6 +118,19 @@ function get_butts($ticket_id, $unit_id) {
 	print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Dispatch' onClick = \"var dispWindow = window.open('routes_nm.php?frm_mode=1&ticket_id={$ticket_id}', 'dispWindow', 'resizable=1, scrollbars, height=480, width=" . round (0.8 * ($_SESSION['scr_width'])) . ", left=100,top=100,screenX=100,screenY=100'); dispWindow.focus();\" />\n"; // 2/1/10
 	}				// end function get butts()
 
+/**
+ * adj_time
+ * Insert description here
+ *
+ * @param $time_stamp
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function adj_time($time_stamp) {
 	$temp = mysql2timestamp($time_stamp);					// MySQL to integer form
 	return date ("H:i", $temp);

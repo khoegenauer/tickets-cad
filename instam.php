@@ -7,6 +7,19 @@ error_reporting(E_ALL);		// 10/1/08
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10
 
+/**
+ * do_my_instam
+ * Insert description here
+ *
+ * @param $key
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_my_instam($key) {				// 3/17/09
 	// http://www.instamapper.com/api?action=getPositions&key=4899336036773934943
 	

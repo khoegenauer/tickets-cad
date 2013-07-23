@@ -74,6 +74,22 @@ foreach($the_contacts as $val) {
 $the_addressbook .= "</SELECT>";
 $folder = strip_tags($_GET['folder']);
 
+/**
+ * the_ticket
+ * Insert description here
+ *
+ * @param $theRow
+ * @param $theWidth
+ * @param $search
+ * @param $dist
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function the_ticket($theRow, $theWidth=500, $search=FALSE, $dist=TRUE) {						// returns table - 6/26/10
 	global $iw_width, $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
 	$tickno = (get_variable('serial_no_ap')==0)?  "&nbsp;&nbsp;<I>(#" . $theRow['id'] . ")</I>" : "";			// 1/25/09
@@ -147,6 +163,19 @@ function the_ticket($theRow, $theWidth=500, $search=FALSE, $dist=TRUE) {						//
 	return $print;
 	}		// end function do ticket(
 
+/**
+ * get_respname
+ * Insert description here
+ *
+ * @param $theid
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_respname($theid) {	//	Gets responder ID from SMS Gateway ID
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `id` = '" . $theid . "' LIMIT 1";
 	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -159,6 +188,19 @@ function get_respname($theid) {	//	Gets responder ID from SMS Gateway ID
 	return $the_name;
 	}
 
+/**
+ * get_tickname
+ * Insert description here
+ *
+ * @param $theid
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_tickname($theid) {	//	Gets responder ID from SMS Gateway ID
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id` = '" . $theid . "' LIMIT 1";
 	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -355,6 +397,19 @@ $prev_msg = (array_key_exists(($this_msg - 1), $the_messages)) ? $the_messages[(
 $next_but = ($next_msg != "Last") ? "<SPAN class='plain' id='next_but' onMouseover='do_hover(this);' onMouseout='do_plain(this);'  style='float: right; color: #000000; display: inline-block; vertical-align: middle;' onClick=\"go_to(" . $next_msg . ", '" . $screen . "');\">Next</SPAN>" : "<SPAN class='plain' id='next_but' style='float: right; color: #707070; display: inline-block; vertical-align: middle;'>Next</SPAN>";
 $prev_but = ($prev_msg != "First") ? "<SPAN class='plain'  id='prev_but' onMouseover='do_hover(this);' onMouseout='do_plain(this);'  style='float: right; color: #000000; display: inline-block; vertical-align: middle;' onClick=\"go_to(" . $prev_msg . ", '" . $screen . "');\">Prev</SPAN>" : "<SPAN class='plain' id='prev_but' style='float: right; color: #707070; display: inline-block; vertical-align: middle;'>Prev</SPAN>";
 
+/**
+ * br2nl
+ * Insert description here
+ *
+ * @param $input
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function br2nl($input) {
 	return preg_replace('/<br(\s+)?\/?>/i', "\n", $input);
 	}

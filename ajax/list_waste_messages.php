@@ -24,6 +24,19 @@ if(in_array('6', $columns_arr)) { $the_win_width = $the_win_width + $cols_width[
 if(in_array('7', $columns_arr)) { $the_win_width = $the_win_width + $cols_width[6];}
 if(in_array('8', $columns_arr)) { $the_win_width = $the_win_width + $cols_width[7];}
 
+/**
+ * br2nl
+ * Insert description here
+ *
+ * @param $input
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function br2nl($input) {
 	return preg_replace('/<br(\s+)?\/?>/i', "\n", $input);
 	}

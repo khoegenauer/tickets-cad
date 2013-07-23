@@ -136,6 +136,18 @@ if($istest) {
 	dump($_POST);
 	}
 
+/**
+ * show_top
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function show_top() {				// generates the document introduction
 ?>
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -270,22 +282,78 @@ function get_lines(){							// returns pixel count
 <?php
 	}		// end function show_top()
 
+/**
+ * my_to_date
+ * Insert description here
+ *
+ * @param $in_date
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function my_to_date($in_date) {			// date_time format to user's spec
 		$temp = mysql2timestamp($in_date);		// 9/29/10		
 		return (good_date_time($in_date)) ?  date(get_variable("date_format"), $temp): "";		// 
 		}
 	
+/**
+ * my_to_date_sh
+ * Insert description here
+ *
+ * @param $in_date
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function my_to_date_sh($in_date) {			// short date_time string
 		$temp = mysql2timestamp($in_date);		// 9/29/10
 		return (good_date_time($in_date)) ?  date("H:i", $temp): "";		// 
 		}
 
+/**
+ * my_gregoriantojd
+ * Insert description here
+ *
+ * @param $da
+ * @param $mo
+ * @param $yr
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function my_gregoriantojd ( $da, $mo, $yr) {		// 1/10/2013
 		return strtotime ("{$da} {$mo} {$yr}");
 		}
 		
 	$jd_today = my_gregoriantojd (date ("M"), date ("j"), date ("Y"));			// julian today - see get_disp_cell() - 1/7/2013
 
+/**
+ * get_disp_cell
+ * Insert description here
+ *
+ * @param $row_element
+ * @param $form_element
+ * @param $theClass
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function get_disp_cell($row_element, $form_element, $theClass ) {		// returns td cell with disp times or checkbox - 1/8/2013
 		$can_update = (array_key_exists ('level', $_SESSION) )? ( is_administrator() || is_user()): FALSE;			// 1/8/2013
 		global $jd_today; 
@@ -691,6 +759,20 @@ setTimeout('do_post()', 1000);
 				}
 
 			$assigns = array();				// map unit id to ticket id
+/**
+ * get_cd_str
+ * Insert description here
+ *
+ * @param $unit_row
+ * @param $ticket_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 			function get_cd_str ($unit_row, $ticket_id) {
 				global $assigns;
 //				dump($assigns);
@@ -864,6 +946,20 @@ setTimeout('do_post()', 1000);
 
 //			snap(basename(__FILE__), __LINE__);
 		
+/**
+ * handle_mail
+ * Insert description here
+ *
+ * @param $to_str
+ * @param $ticket_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 			function handle_mail($to_str, $ticket_id) {				// 6/16/09 
 				global $istest;
 				
@@ -1060,6 +1156,20 @@ setTimeout('do_post()', 1000);
 			break;				// end case 'add_db' ==== } =====
 				
 	case 'board' :			// ===== { =====
+/**
+ * cb_shorten
+ * Insert description here
+ *
+ * @param $instring
+ * @param $limit
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function cb_shorten($instring, $limit) {
 //			return (strlen($instring) > $limit)? substr($instring, 0, $limit-4) . "..." : $instring ;
 			return (strlen($instring) > $limit)? substr($instring, 0, $limit): $instring;	// &#133
@@ -1229,6 +1339,20 @@ setTimeout('do_post()', 1000);
 	
 	<CENTER>
 <?php
+/**
+ * get_un_stat_sel
+ * Insert description here
+ *
+ * @param $s_id
+ * @param $b_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function get_un_stat_sel($s_id, $b_id) {					// returns select list as string 
 			global $guest;
 			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder`, `$GLOBALS[mysql_prefix]un_status` 
@@ -2396,6 +2520,19 @@ setTimeout('do_post()', 1000);
 	case 'list' :			// 1770 - 1990  { ========================================================
 		$guest = is_guest();		// 10/31/09
 		
+/**
+ * get_deltas
+ * Insert description here
+ *
+ * @param $in_row
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function get_deltas ($in_row) {					// returns array of strings or FALSE
 			global $thresh_n, $thresh_m, $thresh_h;
 			$deltas = array("","","","","","","" );		// length 7
@@ -2483,6 +2620,19 @@ setTimeout('do_post()', 1000);
 		$row["problemend"]
 		*/
 			
+/**
+ * show_diff
+ * Insert description here
+ *
+ * @param $secs
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function show_diff($secs) {				// seconds in, returns formatted conversion
 			$days = floor ( $secs/86400 ); //calculate the days
 			$diff = $secs - ($days*86400); // subtract the days

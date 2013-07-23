@@ -187,6 +187,19 @@ DEFINE("_FORCE_IMGDIR",'/tmp/jpgimg/');
 
 require_once('gd_image.inc.php');
 
+/**
+ * CheckPHPVersion
+ * Insert description here
+ *
+ * @param $aMinVersion
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function CheckPHPVersion($aMinVersion)
 {
     list($majorC, $minorC, $editC) = split('[/.-]', PHP_VERSION);
@@ -222,6 +235,23 @@ if( !function_exists("imagetypes") || !function_exists('imagecreatefromstring') 
 //
 // Setup PHP error handler
 //
+/**
+ * _phpErrorHandler
+ * Insert description here
+ *
+ * @param $errno
+ * @param $errmsg
+ * @param $filename
+ * @param $linenum
+ * @param $vars
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function _phpErrorHandler($errno,$errmsg,$filename, $linenum, $vars) {
     // Respect current error level
     if( $errno & error_reporting() ) {
@@ -244,12 +274,37 @@ if( isset($GLOBALS['php_errormsg']) && CATCH_PHPERRMSG &&
 
 
 // Useful mathematical function
+/**
+ * sign
+ * Insert description here
+ *
+ * @param $a
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function sign($a) {return $a >= 0 ? 1 : -1;}
 
 // Utility function to generate an image name based on the filename we
 // are running from and assuming we use auto detection of graphic format
 // (top level), i.e it is safe to call this function
 // from a script that uses JpGraph
+/**
+ * GenImgName
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function GenImgName() {
     // Determine what format we should use when we save the images
     $supported = imagetypes();
@@ -281,10 +336,36 @@ function GenImgName() {
 // time measurement of generating graphs. Multiple
 // timers can be started.
 //===================================================
+/**
+ * JpgTimer
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class JpgTimer {
     private $start, $idx;	
 //---------------
 // CONSTRUCTOR
+    /**
+     * JpgTimer
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function JpgTimer() {
 	$this->idx=0;
     }
@@ -293,6 +374,18 @@ class JpgTimer {
 // PUBLIC METHODS	
 
     // Push a new timer start on stack
+    /**
+     * Push
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Push() {
 	list($ms,$s)=explode(" ",microtime());	
 	$this->start[$this->idx++]=floor($ms*1000) + 1000*$s;	
@@ -300,6 +393,18 @@ class JpgTimer {
 
     // Pop the latest timer start and return the diff with the
     // current time
+    /**
+     * Pop
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Pop() {
 	assert($this->idx>0);
 	list($ms,$s)=explode(" ",microtime());	
@@ -314,6 +419,20 @@ $gJpgBrandTiming = BRAND_TIMING;
 // CLASS DateLocale
 // Description: Hold localized text used in dates
 //===================================================
+/**
+ * DateLocale
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class DateLocale {
  
     public $iLocale = 'C'; // environmental locale be used by default
@@ -321,6 +440,18 @@ class DateLocale {
 
 //---------------
 // CONSTRUCTOR	
+    /**
+     * DateLocale
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DateLocale() {
 	settype($this->iDayAbb, 'array');
 	settype($this->iShortDay, 'array');
@@ -333,6 +464,19 @@ class DateLocale {
 
 //---------------
 // PUBLIC METHODS	
+    /**
+     * Set
+     * Insert description here
+     *
+     * @param $aLocale
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Set($aLocale) {
 	if ( in_array($aLocale, array_keys($this->iDayAbb)) ){ 
 	    $this->iLocale = $aLocale;
@@ -380,26 +524,100 @@ class DateLocale {
     }
 
 
+    /**
+     * GetDayAbb
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetDayAbb() {
 	return $this->iDayAbb[$this->iLocale];
     }
 	
+    /**
+     * GetShortDay
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetShortDay() {
 	return $this->iShortDay[$this->iLocale];
     }
 
+    /**
+     * GetShortMonth
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetShortMonth() {
 	return $this->iShortMonth[$this->iLocale];
     }
 	
+    /**
+     * GetShortMonthName
+     * Insert description here
+     *
+     * @param $aNbr
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetShortMonthName($aNbr) {
 	return $this->iShortMonth[$this->iLocale][$aNbr];
     }
 
+    /**
+     * GetLongMonthName
+     * Insert description here
+     *
+     * @param $aNbr
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetLongMonthName($aNbr) {
 	return $this->iMonthName[$this->iLocale][$aNbr];
     }
 
+    /**
+     * GetMonth
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetMonth() {
 	return $this->iMonthName[$this->iLocale];
     }
@@ -412,10 +630,36 @@ $gJpgDateLocale = new DateLocale();
 // CLASS Footer
 // Description: Encapsulates the footer line in the Graph
 //=======================================================
+/**
+ * Footer
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class Footer {
     public $iLeftMargin = 3, $iRightMargin = 3, $iBottomMargin = 3 ;
     public $left,$center,$right;
 
+    /**
+     * Footer
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Footer() {
 	$this->left = new Text();
 	$this->left->ParagraphAlign('left');
@@ -425,12 +669,40 @@ class Footer {
 	$this->right->ParagraphAlign('right');
     }
 
+    /**
+     * SetMargin
+     * Insert description here
+     *
+     * @param $aLeft
+     * @param $aRight
+     * @param $aBottom
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetMargin($aLeft=3,$aRight=3,$aBottom=3) {
 	$this->iLeftMargin = $aLeft;
 	$this->iRightMargin = $aRight;
 	$this->iBottomMargin = $aBottom;
     }
 
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($aImg) {
 	$y = $aImg->height - $this->iBottomMargin;
 	$x = $this->iLeftMargin;
@@ -452,6 +724,20 @@ class Footer {
 // CLASS Graph
 // Description: Main class to handle graphs
 //===================================================
+/**
+ * Graph
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class Graph {
     public $cache=null;		// Cache object (singleton)
     public $img=null;			// Img object (singleton)
@@ -531,6 +817,23 @@ class Graph {
     // aTimeOut		Timeout in minutes for image in cache
     // aInline		If true the image is streamed back in the call to Stroke()
     //			If false the image is just created in the cache
+    /**
+     * Graph
+     * Insert description here
+     *
+     * @param $aWidth
+     * @param $aHeight
+     * @param $aCachedName
+     * @param $aTimeOut
+     * @param $aInline
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Graph($aWidth=300,$aHeight=200,$aCachedName="",$aTimeOut=0,$aInline=true) {
 	GLOBAL $gJpgBrandTiming;
 	// If timing is used create a new timing object
@@ -595,6 +898,26 @@ class Graph {
 // PUBLIC METHODS	
     
     // Enable final image perspective transformation
+    /**
+     * Set3DPerspective
+     * Insert description here
+     *
+     * @param $aDir
+     * @param $aHorizon
+     * @param $aSkewDist
+     * @param $aQuality
+     * @param $aFillColor
+     * @param $aBorder
+     * @param $aMinSize
+     * @param $aHorizonPos
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Set3DPerspective($aDir=1,$aHorizon=100,$aSkewDist=120,$aQuality=false,$aFillColor='#FFFFFF',$aBorder=false,$aMinSize=true,$aHorizonPos=0.5) {
 	$this->iImgTrans = true;
 	$this->iImgTransHorizon = $aHorizon;
@@ -608,39 +931,150 @@ class Graph {
     }
 
     // Set Image format and optional quality
+    /**
+     * SetImgFormat
+     * Insert description here
+     *
+     * @param $aFormat
+     * @param $aQuality
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetImgFormat($aFormat,$aQuality=75) {
 	$this->img->SetImgFormat($aFormat,$aQuality);
     }
 
     // Should the grid be in front or back of the plot?
+    /**
+     * SetGridDepth
+     * Insert description here
+     *
+     * @param $aDepth
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetGridDepth($aDepth) {
 	$this->grid_depth=$aDepth;
     }
 
+    /**
+     * SetIconDepth
+     * Insert description here
+     *
+     * @param $aDepth
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetIconDepth($aDepth) {
 	$this->iIconDepth=$aDepth;
     }
 	
     // Specify graph angle 0-360 degrees.
+    /**
+     * SetAngle
+     * Insert description here
+     *
+     * @param $aAngle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAngle($aAngle) {
 	$this->img->SetAngle($aAngle);
     }
 
+    /**
+     * SetAlphaBlending
+     * Insert description here
+     *
+     * @param $aFlg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAlphaBlending($aFlg=true) {
 	$this->img->SetAlphaBlending($aFlg);
     }
 
     // Shortcut to image margin
+    /**
+     * SetMargin
+     * Insert description here
+     *
+     * @param $lm
+     * @param $rm
+     * @param $tm
+     * @param $bm
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetMargin($lm,$rm,$tm,$bm) {
 	$this->img->SetMargin($lm,$rm,$tm,$bm);
     }
 
+    /**
+     * SetY2OrderBack
+     * Insert description here
+     *
+     * @param $aBack
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetY2OrderBack($aBack=true) {
 	$this->y2orderback = $aBack;
     }
 
     // Rotate the graph 90 degrees and set the margin 
     // when we have done a 90 degree rotation
+    /**
+     * Set90AndMargin
+     * Insert description here
+     *
+     * @param $lm
+     * @param $rm
+     * @param $tm
+     * @param $bm
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Set90AndMargin($lm=0,$rm=0,$tm=0,$bm=0) {
 	$lm = $lm ==0 ? floor(0.2 * $this->img->width)  : $lm ;
 	$rm = $rm ==0 ? floor(0.1 * $this->img->width)  : $rm ;
@@ -658,11 +1092,37 @@ class Graph {
 	$this->yaxis->SetLabelAlign('center','bottom');
     }
 	
+    /**
+     * SetClipping
+     * Insert description here
+     *
+     * @param $aFlg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetClipping($aFlg=true) {
 	$this->iDoClipping = $aFlg ;
     }
 
     // Add a plot object to the graph
+    /**
+     * Add
+     * Insert description here
+     *
+     * @param $aPlot
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Add($aPlot) {
 	if( $aPlot == null )
 	    JpGraphError::RaiseL(25010);//("Graph::Add() You tried to add a null plot to the graph.");
@@ -685,6 +1145,19 @@ class Graph {
 	    $this->plots[] = $aPlot;
     }
 
+    /**
+     * AddTable
+     * Insert description here
+     *
+     * @param $aTable
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AddTable($aTable) {
 	if( is_array($aTable) ) {
 	    for($i=0; $i < count($aTable); ++$i )
@@ -695,6 +1168,19 @@ class Graph {
 	}	
     }
 
+    /**
+     * AddIcon
+     * Insert description here
+     *
+     * @param $aIcon
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AddIcon($aIcon) {
 	if( is_array($aIcon) ) {
 	    for($i=0; $i < count($aIcon); ++$i )
@@ -706,6 +1192,19 @@ class Graph {
     }
 
     // Add plot to second Y-scale
+    /**
+     * AddY2
+     * Insert description here
+     *
+     * @param $aPlot
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AddY2($aPlot) {
 	if( $aPlot == null )
 	    JpGraphError::RaiseL(25011);//("Graph::AddY2() You tried to add a null plot to the graph.");	
@@ -726,6 +1225,20 @@ class Graph {
     }
 	
     // Add plot to the extra Y-axes
+    /**
+     * AddY
+     * Insert description here
+     *
+     * @param $aN
+     * @param $aPlot
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AddY($aN,$aPlot) {
 
 	if( $aPlot == null )
@@ -744,6 +1257,20 @@ class Graph {
     }
 
     // Add text object to the graph
+    /**
+     * AddText
+     * Insert description here
+     *
+     * @param $aTxt
+     * @param $aToY2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AddText($aTxt,$aToY2=false) {
 	if( $aTxt == null )
 	    JpGraphError::RaiseL(25014);//("Graph::AddText() You tried to add a null text to the graph.");		
@@ -766,6 +1293,20 @@ class Graph {
     }
 	
     // Add a line object (class PlotLine) to the graph
+    /**
+     * AddLine
+     * Insert description here
+     *
+     * @param $aLine
+     * @param $aToY2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AddLine($aLine,$aToY2=false) {
 	if( $aLine == null )
 	    JpGraphError::RaiseL(25015);//("Graph::AddLine() You tried to add a null line to the graph.");	
@@ -789,6 +1330,20 @@ class Graph {
     }
 
     // Add vertical or horizontal band
+    /**
+     * AddBand
+     * Insert description here
+     *
+     * @param $aBand
+     * @param $aToY2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AddBand($aBand,$aToY2=false) {
 	if( $aBand == null )
 	    JpGraphError::RaiseL(25016);//(" Graph::AddBand() You tried to add a null band to the graph.");
@@ -811,6 +1366,22 @@ class Graph {
 	}
     }
 
+    /**
+     * SetBackgroundGradient
+     * Insert description here
+     *
+     * @param $aFrom
+     * @param $aTo
+     * @param $aGradType
+     * @param $aStyle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetBackgroundGradient($aFrom='navy',$aTo='silver',$aGradType=2,$aStyle=BGRAD_FRAME) {
 	$this->bkg_gradtype=$aGradType;
 	$this->bkg_gradstyle=$aStyle;
@@ -819,6 +1390,21 @@ class Graph {
     } 
 	
     // Set a country flag in the background
+    /**
+     * SetBackgroundCFlag
+     * Insert description here
+     *
+     * @param $aName
+     * @param $aBgType
+     * @param $aMix
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetBackgroundCFlag($aName,$aBgType=BGIMG_FILLPLOT,$aMix=100) {
 	$this->background_cflag = $aName;
 	$this->background_cflag_type = $aBgType;
@@ -826,6 +1412,21 @@ class Graph {
     }
 
     // Alias for the above method
+    /**
+     * SetBackgroundCountryFlag
+     * Insert description here
+     *
+     * @param $aName
+     * @param $aBgType
+     * @param $aMix
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetBackgroundCountryFlag($aName,$aBgType=BGIMG_FILLPLOT,$aMix=100) {
 	$this->background_cflag = $aName;
 	$this->background_cflag_type = $aBgType;
@@ -834,6 +1435,21 @@ class Graph {
 
 
     // Specify a background image
+    /**
+     * SetBackgroundImage
+     * Insert description here
+     *
+     * @param $aFileName
+     * @param $aBgType
+     * @param $aImgFormat
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetBackgroundImage($aFileName,$aBgType=BGIMG_FILLPLOT,$aImgFormat="auto") {
 
 	if( !USE_TRUECOLOR ) {
@@ -862,16 +1478,59 @@ class Graph {
 	$this->background_image_format=$aImgFormat;
     }
 
+    /**
+     * SetBackgroundImageMix
+     * Insert description here
+     *
+     * @param $aMix
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetBackgroundImageMix($aMix) {
 	$this->background_image_mix = $aMix ;
     }
 	
     // Specify axis style (boxed or single)
+    /**
+     * SetAxisStyle
+     * Insert description here
+     *
+     * @param $aStyle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAxisStyle($aStyle) {
         $this->iAxisStyle = $aStyle ;
     }
 	
     // Set a frame around the plot area
+    /**
+     * SetBox
+     * Insert description here
+     *
+     * @param $aDrawPlotFrame
+     * @param $aPlotFrameColor
+     * @param 0
+     * @param 0
+     * @param 0
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetBox($aDrawPlotFrame=true,$aPlotFrameColor=array(0,0,0),$aPlotFrameWeight=1) {
 	$this->boxed = $aDrawPlotFrame;
 	$this->box_weight = $aPlotFrameWeight;
@@ -879,22 +1538,83 @@ class Graph {
     }
 	
     // Specify color for the plotarea (not the margins)
+    /**
+     * SetColor
+     * Insert description here
+     *
+     * @param $aColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColor($aColor) {
 	$this->plotarea_color=$aColor;
     }
 	
     // Specify color for the margins (all areas outside the plotarea)
+    /**
+     * SetMarginColor
+     * Insert description here
+     *
+     * @param $aColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetMarginColor($aColor) {
 	$this->margin_color=$aColor;
     }
 	
     // Set a frame around the entire image
+    /**
+     * SetFrame
+     * Insert description here
+     *
+     * @param $aDrawImgFrame
+     * @param $aImgFrameColor
+     * @param 0
+     * @param 0
+     * @param 0
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFrame($aDrawImgFrame=true,$aImgFrameColor=array(0,0,0),$aImgFrameWeight=1) {
 	$this->doframe = $aDrawImgFrame;
 	$this->frame_color = $aImgFrameColor;
 	$this->frame_weight = $aImgFrameWeight;
     }
 
+    /**
+     * SetFrameBevel
+     * Insert description here
+     *
+     * @param $aDepth
+     * @param $aBorder
+     * @param $aBorderColor
+     * @param $aColor1
+     * @param $aColor2
+     * @param $aFlg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFrameBevel($aDepth=3,$aBorder=false,$aBorderColor='black',$aColor1='white@0.4',$aColor2='darkgray@0.4',$aFlg=true) {
 	$this->framebevel = $aFlg ;
 	$this->framebeveldepth = $aDepth ;
@@ -907,6 +1627,24 @@ class Graph {
     }
 
     // Set the shadow around the whole image
+    /**
+     * SetShadow
+     * Insert description here
+     *
+     * @param $aShowShadow
+     * @param $aShadowWidth
+     * @param $aShadowColor
+     * @param 102
+     * @param 102
+     * @param 102
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetShadow($aShowShadow=true,$aShadowWidth=5,$aShadowColor=array(102,102,102)) {
 	$this->doshadow = $aShowShadow;
 	$this->shadow_color = $aShadowColor;
@@ -917,6 +1655,23 @@ class Graph {
 
     // Specify x,y scale. Note that if you manually specify the scale
     // you must also specify the tick distance with a call to Ticks::Set()
+    /**
+     * SetScale
+     * Insert description here
+     *
+     * @param $aAxisType
+     * @param $aYMin
+     * @param $aYMax
+     * @param $aXMin
+     * @param $aXMax
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetScale($aAxisType,$aYMin=1,$aYMax=1,$aXMin=1,$aXMax=1) {
 	$this->axtype = $aAxisType;
 
@@ -960,6 +1715,21 @@ class Graph {
     }
 	
     // Specify secondary Y scale
+    /**
+     * SetY2Scale
+     * Insert description here
+     *
+     * @param $aAxisType
+     * @param $aY2Min
+     * @param $aY2Max
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetY2Scale($aAxisType="lin",$aY2Min=1,$aY2Max=1) {
 	if( $aAxisType=="lin" ) 
 	    $this->y2scale = new LinearScale($aY2Min,$aY2Max);
@@ -983,11 +1753,40 @@ class Graph {
     }
 
     // Set the delta position (in pixels) between the multiple Y-axis
+    /**
+     * SetYDeltaDist
+     * Insert description here
+     *
+     * @param $aDist
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetYDeltaDist($aDist) {
 	$this->iYAxisDeltaPos = $aDist;
     }
 
     // Specify secondary Y scale
+    /**
+     * SetYScale
+     * Insert description here
+     *
+     * @param $aN
+     * @param $aAxisType
+     * @param $aYMin
+     * @param $aYMax
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetYScale($aN,$aAxisType="lin",$aYMin=1,$aYMax=1) {
 
 	if( $aAxisType=="lin" ) 
@@ -1009,6 +1808,20 @@ class Graph {
     // Specify density of ticks when autoscaling 'normal', 'dense', 'sparse', 'verysparse'
     // The dividing factor have been determined heuristically according to my aesthetic 
     // sense (or lack off) y.m.m.v !
+    /**
+     * SetTickDensity
+     * Insert description here
+     *
+     * @param $aYDensity
+     * @param $aXDensity
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTickDensity($aYDensity=TICKD_NORMAL,$aXDensity=TICKD_NORMAL) {
 	$this->xtick_factor=30;
 	$this->ytick_factor=25;		
@@ -1048,6 +1861,18 @@ class Graph {
 	
 
     // Get a string of all image map areas	
+    /**
+     * GetCSIMareas
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetCSIMareas() {
 	if( !$this->iHasStroked )
 	    $this->Stroke(_CSIM_SPECIALFILE);
@@ -1105,6 +1930,19 @@ class Graph {
     }
 	
     // Get a complete <MAP>..</MAP> tag for the final image map
+    /**
+     * GetHTMLImageMap
+     * Insert description here
+     *
+     * @param $aMapName
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetHTMLImageMap($aMapName) {
 	$im = "<map name=\"$aMapName\" id=\"$aMapName\" >\n";
 	$im .= $this->GetCSIMareas();
@@ -1112,6 +1950,20 @@ class Graph {
 	return $im;
     }
 
+    /**
+     * CheckCSIMCache
+     * Insert description here
+     *
+     * @param $aCacheName
+     * @param $aTimeOut
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function CheckCSIMCache($aCacheName,$aTimeOut=60) {
 	global $_SERVER;
 
@@ -1161,6 +2013,18 @@ class Graph {
     }
 
     // Build the argument string to be used with the csim images
+    /**
+     * GetURLArguments
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetURLArguments() {
 		
 	// This is a JPGRAPH internal defined that prevents
@@ -1198,10 +2062,38 @@ class Graph {
 	return $urlarg;
     }
 
+    /**
+     * SetCSIMImgAlt
+     * Insert description here
+     *
+     * @param $aAlt
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetCSIMImgAlt($aAlt) {
 	$this->iCSIMImgAlt = $aAlt;
     }
 
+    /**
+     * StrokeCSIM
+     * Insert description here
+     *
+     * @param $aScriptName
+     * @param $aCSIMName
+     * @param $aBorder
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeCSIM($aScriptName='auto',$aCSIMName='',$aBorder=0) {
 	if( $aCSIMName=='' ) {
 	    // create a random map name
@@ -1272,6 +2164,19 @@ class Graph {
 	}
     }
 
+    /**
+     * GetTextsYMinMax
+     * Insert description here
+     *
+     * @param $aY2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetTextsYMinMax($aY2=false) {
 	if( $aY2 ) 
 	    $txts = $this->y2texts;
@@ -1299,6 +2204,19 @@ class Graph {
 	    return null;
     }
 
+    /**
+     * GetTextsXMinMax
+     * Insert description here
+     *
+     * @param $aY2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetTextsXMinMax($aY2=false) {
 	if( $aY2 ) 
 	    $txts = $this->y2texts;
@@ -1326,6 +2244,18 @@ class Graph {
 	    return null;
     }
 
+    /**
+     * GetXMinMax
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetXMinMax() {
 	list($min,$ymin) = $this->plots[0]->Min();
 	list($max,$ymax) = $this->plots[0]->Max();
@@ -1359,6 +2289,18 @@ class Graph {
 	return array($min,$max);
     }
 
+    /**
+     * AdjustMarginsForTitles
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AdjustMarginsForTitles() {
 	$totrequired = 
 	    ($this->title->t != '' ? 
@@ -1413,6 +2355,19 @@ class Graph {
     // Stroke the graph
     // $aStrokeFileName	If != "" the image will be written to this file and NOT
     // streamed back to the browser
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $aStrokeFileName
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($aStrokeFileName="") {		
 
 	// Fist make a sanity check that user has specified a scale
@@ -2002,6 +2957,23 @@ class Graph {
 	}
     }
 
+    /**
+     * SetAxisLabelBackground
+     * Insert description here
+     *
+     * @param $aType
+     * @param $aXFColor
+     * @param $aXColor
+     * @param $aYFColor
+     * @param $aYColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAxisLabelBackground($aType,$aXFColor='lightgray',$aXColor='black',$aYFColor='lightgray',$aYColor='black') {
 	$this->iAxisLblBgType = $aType;
 	$this->iXAxisLblBgFillColor = $aXFColor;
@@ -2013,6 +2985,18 @@ class Graph {
 //---------------
 // PRIVATE METHODS	
 
+    /**
+     * StrokeAxisLabelBackground
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeAxisLabelBackground() {
 	// Types 
 	// 0 = No background
@@ -2093,6 +3077,19 @@ class Graph {
 	}
     }
 
+    /**
+     * StrokeAxis
+     * Insert description here
+     *
+     * @param $aStrokeLabels
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeAxis($aStrokeLabels=true) {
 	
 	if( $aStrokeLabels ) {
@@ -2180,6 +3177,21 @@ class Graph {
 
 
     // Private helper function for backgound image
+    /**
+     * LoadBkgImage
+     * Insert description here
+     *
+     * @param $aImgFormat
+     * @param $aFile
+     * @param $aImgStr
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     static function LoadBkgImage($aImgFormat='',$aFile='',$aImgStr='') {
 	if( $aImgStr != '' ) {
 	    return Image::CreateFromString($aImgStr);
@@ -2235,6 +3247,18 @@ class Graph {
 	return $img;
     }	
 
+    /**
+     * StrokeBackgroundGrad
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeBackgroundGrad() {
 	if( $this->bkg_gradtype < 0  ) 
 	    return;
@@ -2267,6 +3291,18 @@ class Graph {
 	}
     }
 
+    /**
+     * StrokeFrameBackground
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeFrameBackground() {
 	if( $this->background_image != "" && $this->background_cflag != "" ) {
 	    JpGraphError::RaiseL(25040);//('It is not possible to specify both a background image and a background country flag.');
@@ -2356,6 +3392,18 @@ class Graph {
 
     // Private
     // Draw a frame around the image
+    /**
+     * StrokeFrame
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeFrame() {
 	if( !$this->doframe ) return;
 
@@ -2396,6 +3444,18 @@ class Graph {
 	}
     }
 
+    /**
+     * FillMarginArea
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FillMarginArea() {
 	$hadj=0; $vadj=0;
 	if( $this->doshadow ) {
@@ -2418,6 +3478,18 @@ class Graph {
 				    $this->img->height-$this->img->bottom_margin-1); 
     }
 
+    /**
+     * FillPlotArea
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FillPlotArea() {
 	$this->img->PushColor($this->plotarea_color);
 	$this->img->FilledRectangle($this->img->left_margin,
@@ -2428,6 +3500,18 @@ class Graph {
     }
     
     // Stroke the plot area with either a solid color or a background image
+    /**
+     * StrokePlotArea
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokePlotArea() {
 	// Note: To be consistent we really should take a possible shadow
 	// into account. However, that causes some problem for the LinearScale class
@@ -2453,6 +3537,18 @@ class Graph {
 	}	
     }	
 
+    /**
+     * StrokeIcons
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeIcons() {
 	$n = count($this->iIcons);
 	for( $i=0; $i < $n; ++$i ) {
@@ -2460,6 +3556,18 @@ class Graph {
 	}
     }
 	
+    /**
+     * StrokePlotBox
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokePlotBox() {
 	// Should we draw a box around the plot area?
 	if( $this->boxed ) {
@@ -2475,12 +3583,46 @@ class Graph {
 	}						
     }		
 
+    /**
+     * SetTitleBackgroundFillStyle
+     * Insert description here
+     *
+     * @param $aStyle
+     * @param $aColor1
+     * @param $aColor2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTitleBackgroundFillStyle($aStyle,$aColor1='black',$aColor2='white') {
 	$this->titlebkg_fillstyle = $aStyle;
 	$this->titlebkg_scolor1 = $aColor1;
 	$this->titlebkg_scolor2 = $aColor2;
     }
 
+    /**
+     * SetTitleBackground
+     * Insert description here
+     *
+     * @param $aBackColor
+     * @param $aStyle
+     * @param $aFrameStyle
+     * @param $aFrameColor
+     * @param $aFrameWeight
+     * @param $aBevelHeight
+     * @param $aEnable
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTitleBackground($aBackColor='gray', $aStyle=TITLEBKG_STYLE1, $aFrameStyle=TITLEBKG_FRAME_NONE, $aFrameColor='black', $aFrameWeight=1, $aBevelHeight=3, $aEnable=true) {
 	$this->titlebackground = $aEnable;
 	$this->titlebackground_color = $aBackColor;
@@ -2492,6 +3634,18 @@ class Graph {
     }
 
 
+    /**
+     * StrokeTitles
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeTitles() {
 
 	$margin=3;
@@ -2653,6 +3807,18 @@ class Graph {
 
     }
 
+    /**
+     * StrokeTexts
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeTexts() {
 	// Stroke any user added text objects
 	if( $this->texts != null ) {
@@ -2669,6 +3835,18 @@ class Graph {
 
     }
 
+    /**
+     * StrokeTables
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeTables() {
 	if( $this->iTables != null ) {
 	    $n = count($this->iTables);
@@ -2678,6 +3856,18 @@ class Graph {
 	}
     }
 
+    /**
+     * DisplayClientSideaImageMapAreas
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DisplayClientSideaImageMapAreas() {
 	// Debug stuff - display the outline of the image map areas
 	$csim='';
@@ -2709,17 +3899,56 @@ class Graph {
     }
 
     // Text scale offset in world coordinates
+    /**
+     * SetTextScaleOff
+     * Insert description here
+     *
+     * @param $aOff
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTextScaleOff($aOff) {
 	$this->text_scale_off = $aOff;
 	$this->xscale->text_scale_off = $aOff;
     }
 
     // Text width of bar to be centered in absolute pixels
+    /**
+     * SetTextScaleAbsCenterOff
+     * Insert description here
+     *
+     * @param $aOff
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTextScaleAbsCenterOff($aOff) {
 	$this->text_scale_abscenteroff = $aOff;
     }
 
     // Get Y min and max values for added lines
+    /**
+     * GetLinesYMinMax
+     * Insert description here
+     *
+     * @param $aLines
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetLinesYMinMax( $aLines ) {
 	$n = count($aLines);
 	if( $n == 0 ) return false;
@@ -2738,6 +3967,19 @@ class Graph {
     }
 
     // Get X min and max values for added lines
+    /**
+     * GetLinesXMinMax
+     * Insert description here
+     *
+     * @param $aLines
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetLinesXMinMax( $aLines ) {
 	$n = count($aLines);
 	if( $n == 0 ) return false ;
@@ -2756,6 +3998,19 @@ class Graph {
     }
 
     // Get min and max values for all included plots
+    /**
+     * GetPlotsYMinMax
+     * Insert description here
+     *
+     * @param $aPlots
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetPlotsYMinMax($aPlots) {
 	$n = count($aPlots);
 	$i=0;
@@ -2793,27 +4048,110 @@ class Graph {
 // CLASS LineProperty
 // Description: Holds properties for a line
 //===================================================
+/**
+ * LineProperty
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class LineProperty {
     public $iWeight=1, $iColor="black",$iStyle="solid",$iShow=true;
 	
 //---------------
 // PUBLIC METHODS	
+    /**
+     * SetColor
+     * Insert description here
+     *
+     * @param $aColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColor($aColor) {
 	$this->iColor = $aColor;
     }
 	
+    /**
+     * SetWeight
+     * Insert description here
+     *
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetWeight($aWeight) {
 	$this->iWeight = $aWeight;
     }
 	
+    /**
+     * SetStyle
+     * Insert description here
+     *
+     * @param $aStyle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetStyle($aStyle) {
 	$this->iStyle = $aStyle;
     }
 		
+    /**
+     * Show
+     * Insert description here
+     *
+     * @param $aShow
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Show($aShow=true) {
 	$this->iShow=$aShow;
     }
 	
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $aImg
+     * @param $aX1
+     * @param $aY1
+     * @param $aX2
+     * @param $aY2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($aImg,$aX1,$aY1,$aX2,$aY2) {
 	if( $this->iShow ) {
 	    $aImg->PushColor($this->iColor);
@@ -2835,6 +4173,20 @@ class LineProperty {
 // CLASS Text
 // Description: Arbitrary text object that can be added to the graph
 //===================================================
+/**
+ * Text
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class Text {
     public $t,$margin=0;
     public $x=0,$y=0,$halign="left",$valign="top",$color=array(0,0,0);
@@ -2852,6 +4204,21 @@ class Text {
 // CONSTRUCTOR
 
     // Create new text at absolute pixel coordinates
+    /**
+     * Text
+     * Insert description here
+     *
+     * @param $aTxt
+     * @param $aXAbsPos
+     * @param $aYAbsPos
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Text($aTxt="",$aXAbsPos=0,$aYAbsPos=0) {
 	if( ! is_string($aTxt) ) {
 	    JpGraphError::RaiseL(25050);//('First argument to Text::Text() must be s atring.');
@@ -2864,11 +4231,40 @@ class Text {
 //---------------
 // PUBLIC METHODS	
     // Set the string in the text object
+    /**
+     * Set
+     * Insert description here
+     *
+     * @param $aTxt
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Set($aTxt) {
 	$this->t = $aTxt;
     }
 	
     // Alias for Pos()
+    /**
+     * SetPos
+     * Insert description here
+     *
+     * @param $aXAbsPos
+     * @param $aYAbsPos
+     * @param $aHAlign
+     * @param $aVAlign
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetPos($aXAbsPos=0,$aYAbsPos=0,$aHAlign="left",$aVAlign="top") {
 	//$this->Pos($aXAbsPos,$aYAbsPos,$aHAlign,$aVAlign);
 	$this->x = $aXAbsPos;
@@ -2877,12 +4273,41 @@ class Text {
 	$this->valign = $aVAlign;
     }
 
+    /**
+     * SetScalePos
+     * Insert description here
+     *
+     * @param $aX
+     * @param $aY
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetScalePos($aX,$aY) {
 	$this->iScalePosX = $aX;
 	$this->iScalePosY = $aY;
     }
 	
     // Specify alignment for the text
+    /**
+     * Align
+     * Insert description here
+     *
+     * @param $aHAlign
+     * @param $aVAlign
+     * @param $aParagraphAlign
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Align($aHAlign,$aVAlign="top",$aParagraphAlign="") {
 	$this->halign = $aHAlign;
 	$this->valign = $aVAlign;
@@ -2891,32 +4316,116 @@ class Text {
     }		
     
     // Alias
+    /**
+     * SetAlign
+     * Insert description here
+     *
+     * @param $aHAlign
+     * @param $aVAlign
+     * @param $aParagraphAlign
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAlign($aHAlign,$aVAlign="top",$aParagraphAlign="") {
 	$this->Align($aHAlign,$aVAlign,$aParagraphAlign);
     }
 
     // Specifies the alignment for a multi line text
+    /**
+     * ParagraphAlign
+     * Insert description here
+     *
+     * @param $aAlign
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function ParagraphAlign($aAlign) {
 	$this->paragraph_align = $aAlign;
     }
 
     // Specifies the alignment for a multi line text
+    /**
+     * SetParagraphAlign
+     * Insert description here
+     *
+     * @param $aAlign
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetParagraphAlign($aAlign) {
 	$this->paragraph_align = $aAlign;
     }
 
+    /**
+     * SetShadow
+     * Insert description here
+     *
+     * @param $aShadowColor
+     * @param $aShadowWidth
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetShadow($aShadowColor='gray',$aShadowWidth=3) {
 	$this->ishadowwidth=$aShadowWidth;
 	$this->shadow=$aShadowColor;
 	$this->boxed=true;
     }
 
+    /**
+     * SetWordWrap
+     * Insert description here
+     *
+     * @param $aCol
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetWordWrap($aCol) {
 	$this->iWordwrap = $aCol ;
     }
 	
     // Specify that the text should be boxed. fcolor=frame color, bcolor=border color,
     // $shadow=drop shadow should be added around the text.
+    /**
+     * SetBox
+     * Insert description here
+     *
+     * @param $aFrameColor
+     * @param 255
+     * @param 255
+     * @param 255
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetBox($aFrameColor=array(255,255,255),$aBorderColor=array(0,0,0),$aShadowColor=false,$aCornerRadius=4,$aShadowWidth=3) {
 	if( $aFrameColor==false )
 	    $this->boxed=false;
@@ -2933,6 +4442,19 @@ class Text {
     }
 	
     // Hide the text
+    /**
+     * Hide
+     * Insert description here
+     *
+     * @param $aHide
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Hide($aHide=true) {
 	$this->hide=$aHide;
     }
@@ -2941,11 +4463,39 @@ class Text {
     // but I added this "inverse" of Hide() to harmonize
     // with some classes which I designed more recently (especially) 
     // jpgraph_gantt
+    /**
+     * Show
+     * Insert description here
+     *
+     * @param $aShow
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Show($aShow=true) {
 	$this->hide=!$aShow;
     }
 	
     // Specify font
+    /**
+     * SetFont
+     * Insert description here
+     *
+     * @param $aFamily
+     * @param $aStyle
+     * @param $aSize
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFont($aFamily,$aStyle=FS_NORMAL,$aSize=10) {
 	$this->font_family=$aFamily;
 	$this->font_style=$aStyle;
@@ -2953,6 +4503,21 @@ class Text {
     }
 			
     // Center the text between $left and $right coordinates
+    /**
+     * Center
+     * Insert description here
+     *
+     * @param $aLeft
+     * @param $aRight
+     * @param $aYAbsPos
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Center($aLeft,$aRight,$aYAbsPos=false) {
 	$this->x = $aLeft + ($aRight-$aLeft	)/2;
 	$this->halign = "center";
@@ -2961,15 +4526,54 @@ class Text {
     }
 	
     // Set text color
+    /**
+     * SetColor
+     * Insert description here
+     *
+     * @param $aColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColor($aColor) {
 	$this->color = $aColor;
     }
 	
+    /**
+     * SetAngle
+     * Insert description here
+     *
+     * @param $aAngle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAngle($aAngle) {
 	$this->SetOrientation($aAngle);
     }
 	
     // Orientation of text. Note only TTF fonts can have an arbitrary angle
+    /**
+     * SetOrientation
+     * Insert description here
+     *
+     * @param $aDirection
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetOrientation($aDirection=0) {
 	if( is_numeric($aDirection) )
 	    $this->dir=$aDirection;	
@@ -2981,6 +4585,19 @@ class Text {
     }
 	
     // Total width of text
+    /**
+     * GetWidth
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetWidth($aImg) {
 	$aImg->SetFont($this->font_family,$this->font_style,$this->font_size);
 	$w = $aImg->GetTextWidth($this->t,$this->dir);
@@ -2988,6 +4605,19 @@ class Text {
     }
 	
     // Hight of font
+    /**
+     * GetFontHeight
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetFontHeight($aImg) {
 	$aImg->SetFont($this->font_family,$this->font_style,$this->font_size);
 	$h = $aImg->GetFontHeight();
@@ -2995,12 +4625,38 @@ class Text {
 
     }
 
+    /**
+     * GetTextHeight
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetTextHeight($aImg) {
 	$aImg->SetFont($this->font_family,$this->font_style,$this->font_size);	
 	$h = $aImg->GetTextHeight($this->t,$this->dir);
 	return $h;
     }
 
+    /**
+     * GetHeight
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetHeight($aImg) {
 	// Synonym for GetTextHeight()
 	$aImg->SetFont($this->font_family,$this->font_style,$this->font_size);	
@@ -3010,10 +4666,38 @@ class Text {
 
     // Set the margin which will be interpretated differently depending
     // on the context.
+    /**
+     * SetMargin
+     * Insert description here
+     *
+     * @param $aMarg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetMargin($aMarg) {
 	$this->margin = $aMarg;
     }
 
+    /**
+     * StrokeWithScale
+     * Insert description here
+     *
+     * @param $aImg
+     * @param $axscale
+     * @param $ayscale
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeWithScale($aImg,$axscale,$ayscale) {
 	if( $this->iScalePosX === null ||
 	    $this->iScalePosY === null ) {
@@ -3026,12 +4710,39 @@ class Text {
 	}
     }
 
+    /**
+     * SetCSIMTarget
+     * Insert description here
+     *
+     * @param $aURITarget
+     * @param $aAlt
+     * @param $aWinTarget
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetCSIMTarget($aURITarget,$aAlt='',$aWinTarget='') {
 	$this->iCSIMtarget = $aURITarget;
 	$this->iCSIMalt = $aAlt;
 	$this->iCSIMWinTarget = $aWinTarget;
     }
 
+    /**
+     * GetCSIMareas
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetCSIMareas() {
 	if( $this->iCSIMtarget !== '' ) 
 	    return $this->iCSIMarea;
@@ -3040,6 +4751,21 @@ class Text {
     }
 
     // Display text in image
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $aImg
+     * @param $x
+     * @param $y
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($aImg,$x=null,$y=null) {
 
 	if( !empty($x) ) $this->x = round($x);
@@ -3088,10 +4814,36 @@ class Text {
     }
 } // Class
 
+/**
+ * GraphTabTitle
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class GraphTabTitle extends Text{
     private $corner = 6 , $posx = 7, $posy = 4;
     private $fillcolor='lightyellow',$bordercolor='black';
     private $align = 'left', $width=TABTITLE_WIDTHFIT;
+    /**
+     * GraphTabTitle
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GraphTabTitle() {
 	$this->t = '';
 	$this->font_style = FS_BOLD;
@@ -3099,33 +4851,128 @@ class GraphTabTitle extends Text{
 	$this->color = 'darkred';
     }
 
+    /**
+     * SetColor
+     * Insert description here
+     *
+     * @param $aTxtColor
+     * @param $aFillColor
+     * @param $aBorderColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColor($aTxtColor,$aFillColor='lightyellow',$aBorderColor='black') {
 	$this->color = $aTxtColor;
 	$this->fillcolor = $aFillColor;
 	$this->bordercolor = $aBorderColor;
     }
 
+    /**
+     * SetFillColor
+     * Insert description here
+     *
+     * @param $aFillColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFillColor($aFillColor) {
 	$this->fillcolor = $aFillColor;
     }
 
+    /**
+     * SetTabAlign
+     * Insert description here
+     *
+     * @param $aAlign
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTabAlign($aAlign) {
 	$this->align = $aAlign;
     }
     
+    /**
+     * SetWidth
+     * Insert description here
+     *
+     * @param $aWidth
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetWidth($aWidth) {
 	$this->width = $aWidth ;
     }
 
+    /**
+     * Set
+     * Insert description here
+     *
+     * @param $t
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Set($t) {
 	$this->t = $t;
 	$this->hide = false;
     }
 
+    /**
+     * SetCorner
+     * Insert description here
+     *
+     * @param $aD
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetCorner($aD) {
 	$this->corner = $aD ;
     }
 
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $aImg
+     * @param $aDummy1
+     * @param $aDummy2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($aImg,$aDummy1=null,$aDummy2=null) {
 	if( $this->hide ) 
 	    return;
@@ -3212,6 +5059,20 @@ class GraphTabTitle extends Text{
 // CLASS SuperScriptText
 // Description: Format a superscript text
 //===================================================
+/**
+ * SuperScriptText
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class SuperScriptText extends Text {
     private $iSuper="";
     private $sfont_family="",$sfont_style="",$sfont_size=8;
@@ -3219,11 +5080,41 @@ class SuperScriptText extends Text {
     private $iSDir=0;
     private $iSimple=false;
 
+    /**
+     * SuperScriptText
+     * Insert description here
+     *
+     * @param $aTxt
+     * @param $aSuper
+     * @param $aXAbsPos
+     * @param $aYAbsPos
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SuperScriptText($aTxt="",$aSuper="",$aXAbsPos=0,$aYAbsPos=0) {
 	parent::Text($aTxt,$aXAbsPos,$aYAbsPos);
 	$this->iSuper = $aSuper;
     }
 
+    /**
+     * FromReal
+     * Insert description here
+     *
+     * @param $aVal
+     * @param $aPrecision
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FromReal($aVal,$aPrecision=2) {
 	// Convert a floating point number to scientific notation
 	$neg=1.0;
@@ -3248,11 +5139,40 @@ class SuperScriptText extends Text {
 	$this->iSuper = $l;
     }
 
+    /**
+     * Set
+     * Insert description here
+     *
+     * @param $aTxt
+     * @param $aSuper
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Set($aTxt,$aSuper="") {
 	$this->t = $aTxt;
 	$this->iSuper = $aSuper;
     }
 
+    /**
+     * SetSuperFont
+     * Insert description here
+     *
+     * @param $aFontFam
+     * @param $aFontStyle
+     * @param $aFontSize
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetSuperFont($aFontFam,$aFontStyle=FS_NORMAL,$aFontSize=8) {
 	$this->sfont_family = $aFontFam;
 	$this->sfont_style = $aFontStyle;
@@ -3260,6 +5180,19 @@ class SuperScriptText extends Text {
     }
 
     // Total width of text
+    /**
+     * GetWidth
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetWidth($aImg) {
 	$aImg->SetFont($this->font_family,$this->font_style,$this->font_size);
 	$w = $aImg->GetTextWidth($this->t);
@@ -3270,6 +5203,19 @@ class SuperScriptText extends Text {
     }
 	
     // Hight of font (approximate the height of the text)
+    /**
+     * GetFontHeight
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetFontHeight($aImg) {
 	$aImg->SetFont($this->font_family,$this->font_style,$this->font_size);	
 	$h = $aImg->GetFontHeight();
@@ -3279,6 +5225,19 @@ class SuperScriptText extends Text {
     }
 
     // Hight of text
+    /**
+     * GetTextHeight
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetTextHeight($aImg) {
 	$aImg->SetFont($this->font_family,$this->font_style,$this->font_size);
 	$h = $aImg->GetTextHeight($this->t);
@@ -3287,6 +5246,23 @@ class SuperScriptText extends Text {
 	return $h;
     }
 
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $aImg
+     * @param $ax
+     * @param 1
+     * @param $ay
+     * @param 1
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($aImg,$ax=-1,$ay=-1) {
 	
         // To position the super script correctly we need different
@@ -3388,6 +5364,20 @@ class SuperScriptText extends Text {
 // CLASS Grid
 // Description: responsible for drawing grid lines in graph
 //===================================================
+/**
+ * Grid
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class Grid {
     protected $img;
     protected $scale;
@@ -3397,12 +5387,39 @@ class Grid {
     protected $fill=false,$fillcolor=array('#EFEFEF','#BBCCFF');
 //---------------
 // CONSTRUCTOR
+    /**
+     * Grid
+     * Insert description here
+     *
+     * @param $aAxis
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Grid($aAxis) {
 	$this->scale = $aAxis->scale;
 	$this->img = $aAxis->img;
     }
 //---------------
 // PUBLIC METHODS
+    /**
+     * SetColor
+     * Insert description here
+     *
+     * @param $aMajColor
+     * @param $aMinColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColor($aMajColor,$aMinColor=false) {
 	$this->grid_color=$aMajColor;
 	if( $aMinColor === false ) 
@@ -3410,27 +5427,94 @@ class Grid {
 	$this->grid_mincolor = $aMinColor;
     }
 	
+    /**
+     * SetWeight
+     * Insert description here
+     *
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetWeight($aWeight) {
 	$this->weight=$aWeight;
     }
 	
     // Specify if grid should be dashed, dotted or solid
+    /**
+     * SetLineStyle
+     * Insert description here
+     *
+     * @param $aType
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLineStyle($aType) {
 	$this->type = $aType;
     }
 	
     // Decide if both major and minor grid should be displayed
+    /**
+     * Show
+     * Insert description here
+     *
+     * @param $aShowMajor
+     * @param $aShowMinor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Show($aShowMajor=true,$aShowMinor=false) {
 	$this->show=$aShowMajor;
 	$this->showMinor=$aShowMinor;
     }
     
+    /**
+     * SetFill
+     * Insert description here
+     *
+     * @param $aFlg
+     * @param $aColor1
+     * @param $aColor2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFill($aFlg=true,$aColor1='lightgray',$aColor2='lightblue') {
 	$this->fill = $aFlg;
 	$this->fillcolor = array( $aColor1, $aColor2 );
     }
 	
     // Display the grid
+    /**
+     * Stroke
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke() {
 	if( $this->showMinor && !$this->scale->textscale ) {
 	    $tmp = $this->grid_color;
@@ -3448,6 +5532,19 @@ class Grid {
 //--------------
 // Private methods	
     // Draw the grid
+    /**
+     * DoStroke
+     * Insert description here
+     *
+     * @param $aTicksPos
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DoStroke($aTicksPos) {
 	if( !$this->show )
 	    return;	
@@ -3540,6 +5637,20 @@ class Grid {
 // This was a design decision to make the code easier to
 // follow. 
 //===================================================
+/**
+ * AxisPrototype
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class AxisPrototype {
     public $scale=null; 
     public $img=null;
@@ -3565,6 +5676,24 @@ class AxisPrototype {
 
 //---------------
 // CONSTRUCTOR
+    /**
+     * Axis
+     * Insert description here
+     *
+     * @param $img
+     * @param $aScale
+     * @param $color
+     * @param 0
+     * @param 0
+     * @param 0
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Axis($img,$aScale,$color=array(0,0,0)) {
 	$this->img = $img;
 	$this->scale = $aScale;
@@ -3590,18 +5719,73 @@ class AxisPrototype {
 //---------------
 // PUBLIC METHODS	
 	
+    /**
+     * SetLabelFormat
+     * Insert description here
+     *
+     * @param $aFormStr
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLabelFormat($aFormStr) {
 	$this->scale->ticks->SetLabelFormat($aFormStr);
     }
 
+    /**
+     * SetLabelFormatString
+     * Insert description here
+     *
+     * @param $aFormStr
+     * @param $aDate
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLabelFormatString($aFormStr,$aDate=false) {
 	$this->scale->ticks->SetLabelFormat($aFormStr,$aDate);
     }
 	
+    /**
+     * SetLabelFormatCallback
+     * Insert description here
+     *
+     * @param $aFuncName
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLabelFormatCallback($aFuncName) {
 	$this->scale->ticks->SetFormatCallback($aFuncName);
     }
 
+    /**
+     * SetLabelAlign
+     * Insert description here
+     *
+     * @param $aHAlign
+     * @param $aVAlign
+     * @param $aParagraphAlign
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLabelAlign($aHAlign,$aVAlign="top",$aParagraphAlign='left') {
 	$this->label_halign = $aHAlign;
 	$this->label_valign = $aVAlign;
@@ -3609,35 +5793,129 @@ class AxisPrototype {
     }		
 
     // Don't display the first label
+    /**
+     * HideFirstTickLabel
+     * Insert description here
+     *
+     * @param $aShow
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function HideFirstTickLabel($aShow=false) {
 	$this->show_first_label=$aShow;
     }
 
+    /**
+     * HideLastTickLabel
+     * Insert description here
+     *
+     * @param $aShow
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function HideLastTickLabel($aShow=false) {
 	$this->show_last_label=$aShow;
     }
 
     // Manually specify the major and (optional) minor tick position and labels
+    /**
+     * SetTickPositions
+     * Insert description here
+     *
+     * @param $aMajPos
+     * @param $aMinPos
+     * @param $aLabels
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTickPositions($aMajPos,$aMinPos=NULL,$aLabels=NULL) {
 	$this->scale->ticks->SetTickPositions($aMajPos,$aMinPos,$aLabels);
     }
 
     // Manually specify major tick positions and optional labels
+    /**
+     * SetMajTickPositions
+     * Insert description here
+     *
+     * @param $aMajPos
+     * @param $aLabels
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetMajTickPositions($aMajPos,$aLabels=NULL) {
 	$this->scale->ticks->SetTickPositions($aMajPos,NULL,$aLabels);
     }
 
     // Hide minor or major tick marks
+    /**
+     * HideTicks
+     * Insert description here
+     *
+     * @param $aHideMinor
+     * @param $aHideMajor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function HideTicks($aHideMinor=true,$aHideMajor=true) {
 	$this->scale->ticks->SupressMinorTickMarks($aHideMinor);
 	$this->scale->ticks->SupressTickMarks($aHideMajor);
     }
 
     // Hide zero label
+    /**
+     * HideZeroLabel
+     * Insert description here
+     *
+     * @param $aFlag
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function HideZeroLabel($aFlag=true) {
 	$this->scale->ticks->SupressZeroLabel();
     }
 	
+    /**
+     * HideFirstLastLabel
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function HideFirstLastLabel() {
 	// The two first calls to ticks method will supress 
 	// automatically generated scale values. However, that
@@ -3651,26 +5929,92 @@ class AxisPrototype {
     }
 	
     // Hide the axis
+    /**
+     * Hide
+     * Insert description here
+     *
+     * @param $aHide
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Hide($aHide=true) {
 	$this->hide=$aHide;
     }
 
     // Hide the actual axis-line, but still print the labels
+    /**
+     * HideLine
+     * Insert description here
+     *
+     * @param $aHide
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function HideLine($aHide=true) {
 	$this->hide_line = $aHide;
     }
 
+    /**
+     * HideLabels
+     * Insert description here
+     *
+     * @param $aHide
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function HideLabels($aHide=true) {
 	$this->hide_labels = $aHide;
     }
     
 
     // Weight of axis
+    /**
+     * SetWeight
+     * Insert description here
+     *
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetWeight($aWeight) {
 	$this->weight = $aWeight;
     }
 
     // Axis color
+    /**
+     * SetColor
+     * Insert description here
+     *
+     * @param $aColor
+     * @param $aLabelColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColor($aColor,$aLabelColor=false) {
 	$this->color = $aColor;
 	if( !$aLabelColor ) $this->label_color = $aColor;
@@ -3678,22 +6022,75 @@ class AxisPrototype {
     }
 	
     // Title on axis
+    /**
+     * SetTitle
+     * Insert description here
+     *
+     * @param $aTitle
+     * @param $aAdjustAlign
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTitle($aTitle,$aAdjustAlign="high") {
 	$this->title->Set($aTitle);
 	$this->title_adjust=$aAdjustAlign;
     }
 	
     // Specify distance from the axis
+    /**
+     * SetTitleMargin
+     * Insert description here
+     *
+     * @param $aMargin
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTitleMargin($aMargin) {
 	$this->title_margin=$aMargin;
     }
 	
     // Which side of the axis should the axis title be?
+    /**
+     * SetTitleSide
+     * Insert description here
+     *
+     * @param $aSideOfAxis
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTitleSide($aSideOfAxis) {
 	$this->title_side = $aSideOfAxis;
     }
 
     // Utility function to set the direction for tick marks
+    /**
+     * SetTickDirection
+     * Insert description here
+     *
+     * @param $aDir
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTickDirection($aDir) {
     	// Will be deprecated from 1.7    	
     	if( ERR_DEPRECATED )
@@ -3701,23 +6098,76 @@ class AxisPrototype {
 	$this->scale->ticks->SetSide($aDir);
     }
     
+    /**
+     * SetTickSide
+     * Insert description here
+     *
+     * @param $aDir
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTickSide($aDir) {
 	$this->scale->ticks->SetSide($aDir);
     }
 	
     // Specify text labels for the ticks. One label for each data point
+    /**
+     * SetTickLabels
+     * Insert description here
+     *
+     * @param $aLabelArray
+     * @param $aLabelColorArray
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTickLabels($aLabelArray,$aLabelColorArray=null) {
 	$this->ticks_label = $aLabelArray;
 	$this->ticks_label_colors = $aLabelColorArray;
     }
 	
     // How far from the axis should the labels be drawn
+    /**
+     * SetTickLabelMargin
+     * Insert description here
+     *
+     * @param $aMargin
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTickLabelMargin($aMargin) {
 	if( ERR_DEPRECATED )    	
 	    JpGraphError::RaiseL(25056);//('SetTickLabelMargin() is deprecated. Use Axis::SetLabelMargin() instead.');
       	$this->tick_label_margin=$aMargin;
     }
 
+    /**
+     * SetLabelMargin
+     * Insert description here
+     *
+     * @param $aMargin
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLabelMargin($aMargin) {
 	$this->tick_label_margin=$aMargin;
     }
@@ -3725,12 +6175,40 @@ class AxisPrototype {
     // Specify that every $step of the ticks should be displayed starting
     // at $start
     // DEPRECATED FUNCTION: USE SetTextTickInterval() INSTEAD
+    /**
+     * SetTextTicks
+     * Insert description here
+     *
+     * @param $step
+     * @param $start
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTextTicks($step,$start=0) {
 	JpGraphError::RaiseL(25057);//(" SetTextTicks() is deprecated. Use SetTextTickInterval() instead.");		
     }
 
     // Specify that every $step of the ticks should be displayed starting
     // at $start	
+    /**
+     * SetTextTickInterval
+     * Insert description here
+     *
+     * @param $aStep
+     * @param $aStart
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTextTickInterval($aStep,$aStart=0) {
 	$this->scale->ticks->SetTextLabelStart($aStart);
 	$this->tick_step=$aStep;
@@ -3738,6 +6216,19 @@ class AxisPrototype {
 	 
     // Specify that every $step tick mark should have a label 
     // should be displayed starting
+    /**
+     * SetTextLabelInterval
+     * Insert description here
+     *
+     * @param $aStep
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTextLabelInterval($aStep) {
 	if( $aStep < 1 )
 	    JpGraphError::RaiseL(25058);//(" Text label interval must be specified >= 1.");
@@ -3745,6 +6236,19 @@ class AxisPrototype {
     }
 	
     // Which side of the axis should the labels be on?
+    /**
+     * SetLabelPos
+     * Insert description here
+     *
+     * @param $aSidePos
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLabelPos($aSidePos) {
     	// This will be deprecated from 1.7
 	if( ERR_DEPRECATED )    	
@@ -3752,11 +6256,39 @@ class AxisPrototype {
 	$this->labelPos=$aSidePos;
     }
     
+    /**
+     * SetLabelSide
+     * Insert description here
+     *
+     * @param $aSidePos
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLabelSide($aSidePos) {
 	$this->labelPos=$aSidePos;
     }
 
     // Set the font
+    /**
+     * SetFont
+     * Insert description here
+     *
+     * @param $aFamily
+     * @param $aStyle
+     * @param $aSize
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFont($aFamily,$aStyle=FS_NORMAL,$aSize=10) {
 	$this->font_family = $aFamily;
 	$this->font_style = $aStyle;
@@ -3764,17 +6296,56 @@ class AxisPrototype {
     }
 
     // Position for axis line on the "other" scale
+    /**
+     * SetPos
+     * Insert description here
+     *
+     * @param $aPosOnOtherScale
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetPos($aPosOnOtherScale) {
 	$this->pos=$aPosOnOtherScale;
     }
 
     // Set the position of the axis to be X-pixels delta to the right 
     // of the max X-position (used to position the multiple Y-axis)
+    /**
+     * SetPosAbsDelta
+     * Insert description here
+     *
+     * @param $aDelta
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetPosAbsDelta($aDelta) {
       $this->iDeltaAbsPos=$aDelta;
     }
 	
     // Specify the angle for the tick labels
+    /**
+     * SetLabelAngle
+     * Insert description here
+     *
+     * @param $aAngle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLabelAngle($aAngle) {
 	$this->label_angle = $aAngle;
     }	
@@ -3790,13 +6361,59 @@ class AxisPrototype {
 // This was a design decision to make the code easier to
 // follow. 
 //===================================================
+/**
+ * Axis
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class Axis extends AxisPrototype {
 
+    /**
+     * Axis
+     * Insert description here
+     *
+     * @param $img
+     * @param $aScale
+     * @param $color
+     * @param 0
+     * @param 0
+     * @param 0
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Axis($img,$aScale,$color=array(0,0,0)) {
 	parent::Axis($img,$aScale,$color);
     }
 	
     // Stroke the axis.
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $aOtherAxisScale
+     * @param $aStrokeLabels
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($aOtherAxisScale,$aStrokeLabels=true) {		
 	if( $this->hide ) return;		
 	if( is_numeric($this->pos) ) {
@@ -3886,6 +6503,21 @@ class Axis extends AxisPrototype {
 //---------------
 // PRIVATE METHODS	
     // Draw all the tick labels on major tick marks
+    /**
+     * StrokeLabels
+     * Insert description here
+     *
+     * @param $aPos
+     * @param $aMinor
+     * @param $aAbsLabel
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeLabels($aPos,$aMinor=false,$aAbsLabel=false) {
 
 	$this->img->SetColor($this->label_color);
@@ -4009,6 +6641,20 @@ class Axis extends AxisPrototype {
 // Description: Abstract base class for drawing linear and logarithmic
 // tick marks on axis
 //===================================================
+/**
+ * Ticks
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class Ticks {
     public $label_formatstr='';   // C-style format string to use for labels
     public $label_formfunc='';
@@ -4029,6 +6675,19 @@ class Ticks {
 
 //---------------
 // CONSTRUCTOR
+    /**
+     * Ticks
+     * Insert description here
+     *
+     * @param $aScale
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Ticks($aScale) {
 	$this->scale=$aScale;
 	$this->precision = -1;
@@ -4037,86 +6696,308 @@ class Ticks {
 //---------------
 // PUBLIC METHODS	
     // Set format string for automatic labels
+    /**
+     * SetLabelFormat
+     * Insert description here
+     *
+     * @param $aFormatString
+     * @param $aDate
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLabelFormat($aFormatString,$aDate=FALSE) {
 	$this->label_formatstr=$aFormatString;
 	$this->label_usedateformat=$aDate;
     }
 	
+    /**
+     * SetLabelDateFormat
+     * Insert description here
+     *
+     * @param $aFormatString
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLabelDateFormat($aFormatString) {
 	$this->label_dateformatstr=$aFormatString;
     }
 	
+    /**
+     * SetFormatCallback
+     * Insert description here
+     *
+     * @param $aCallbackFuncName
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFormatCallback($aCallbackFuncName) {
 	$this->label_formfunc = $aCallbackFuncName;
     }
 	
     // Don't display the first zero label
+    /**
+     * SupressZeroLabel
+     * Insert description here
+     *
+     * @param $aFlag
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SupressZeroLabel($aFlag=true) {
 	$this->supress_zerolabel=$aFlag;
     }
 	
     // Don't display minor tick marks
+    /**
+     * SupressMinorTickMarks
+     * Insert description here
+     *
+     * @param $aHide
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SupressMinorTickMarks($aHide=true) {
 	$this->supress_minor_tickmarks=$aHide;
     }
 	
     // Don't display major tick marks
+    /**
+     * SupressTickMarks
+     * Insert description here
+     *
+     * @param $aHide
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SupressTickMarks($aHide=true) {
 	$this->supress_tickmarks=$aHide;
     }
 	
     // Hide the first tick mark
+    /**
+     * SupressFirst
+     * Insert description here
+     *
+     * @param $aHide
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SupressFirst($aHide=true) {
 	$this->supress_first=$aHide;
     }
 	
     // Hide the last tick mark
+    /**
+     * SupressLast
+     * Insert description here
+     *
+     * @param $aHide
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SupressLast($aHide=true) {
 	$this->supress_last=$aHide;
     }
 
     // Size (in pixels) of minor tick marks
+    /**
+     * GetMinTickAbsSize
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetMinTickAbsSize() {
 	return $this->minor_abs_size;
     }
 	
     // Size (in pixels) of major tick marks
+    /**
+     * GetMajTickAbsSize
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetMajTickAbsSize() {
 	return $this->major_abs_size;		
     }
 	
+    /**
+     * SetSize
+     * Insert description here
+     *
+     * @param $aMajSize
+     * @param $aMinSize
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetSize($aMajSize,$aMinSize=3) {
 	$this->major_abs_size = $aMajSize;		
 	$this->minor_abs_size = $aMinSize;		
     }
 
     // Have the ticks been specified
+    /**
+     * IsSpecified
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function IsSpecified() {
 	return $this->is_set;
     }
 		
     // Specify number of decimals in automatic labels
     // Deprecated from 1.4. Use SetFormatString() instead
+    /**
+     * SetPrecision
+     * Insert description here
+     *
+     * @param $aPrecision
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetPrecision($aPrecision) { 	
     	if( ERR_DEPRECATED )
 	    JpGraphError::RaiseL(25063);//('Ticks::SetPrecision() is deprecated. Use Ticks::SetLabelFormat() (or Ticks::SetFormatCallback()) instead');
 	$this->precision=$aPrecision;
     }
 
+    /**
+     * SetSide
+     * Insert description here
+     *
+     * @param $aSide
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetSide($aSide) {
 	$this->direction=$aSide;
     }
 	
     // Which side of the axis should the ticks be on
+    /**
+     * SetDirection
+     * Insert description here
+     *
+     * @param $aSide
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetDirection($aSide=SIDE_RIGHT) {
 	$this->direction=$aSide;
     }
 	
     // Set colors for major and minor tick marks
+    /**
+     * SetMarkColor
+     * Insert description here
+     *
+     * @param $aMajorColor
+     * @param $aMinorColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetMarkColor($aMajorColor,$aMinorColor="") {
 	$this->SetColor($aMajorColor,$aMinorColor);
     }
     
+    /**
+     * SetColor
+     * Insert description here
+     *
+     * @param $aMajorColor
+     * @param $aMinorColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColor($aMajorColor,$aMinorColor="") {
 	$this->majcolor=$aMajorColor;
 		
@@ -4127,6 +7008,19 @@ class Ticks {
 	    $this->mincolor=$aMinorColor;
     }
 	
+    /**
+     * SetWeight
+     * Insert description here
+     *
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetWeight($aWeight) {
 	$this->weight=$aWeight;
     }
@@ -4137,6 +7031,20 @@ class Ticks {
 // CLASS LinearTicks
 // Description: Draw linear ticks on axis
 //===================================================
+/**
+ * LinearTicks
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class LinearTicks extends Ticks {
     public $minor_step=1, $major_step=2;
     public $xlabel_offset=0,$xtick_offset=0;
@@ -4148,6 +7056,18 @@ class LinearTicks extends Ticks {
 
 //---------------
 // CONSTRUCTOR
+    /**
+     * LinearTicks
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function LinearTicks() {
 	$this->precision = -1;
     }
@@ -4157,16 +7077,54 @@ class LinearTicks extends Ticks {
 	
 	
     // Return major step size in world coordinates
+    /**
+     * GetMajor
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetMajor() {
 	return $this->major_step;
     }
 	
     // Return minor step size in world coordinates
+    /**
+     * GetMinor
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetMinor() {
 	return $this->minor_step;
     }
 	
     // Set Minor and Major ticks (in world coordinates)
+    /**
+     * Set
+     * Insert description here
+     *
+     * @param $aMajStep
+     * @param $aMinStep
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Set($aMajStep,$aMinStep=false) {
 	if( $aMinStep==false ) 
 	    $aMinStep=$aMajStep;
@@ -4181,10 +7139,39 @@ class LinearTicks extends Ticks {
 	$this->is_set = true;
     }
 
+    /**
+     * SetMajTickPositions
+     * Insert description here
+     *
+     * @param $aMajPos
+     * @param $aLabels
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetMajTickPositions($aMajPos,$aLabels=NULL) {
 	$this->SetTickPositions($aMajPos,NULL,$aLabels);
     }
 
+    /**
+     * SetTickPositions
+     * Insert description here
+     *
+     * @param $aMajPos
+     * @param $aMinPos
+     * @param $aLabels
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTickPositions($aMajPos,$aMinPos=NULL,$aLabels=NULL) {
 	if( !is_array($aMajPos) || ($aMinPos!==NULL && !is_array($aMinPos)) ) {
 	    JpGraphError::RaiseL(25065);//('Tick positions must be specifued as an array()');
@@ -4201,6 +7188,19 @@ class LinearTicks extends Ticks {
     }
 
     // Specify all the tick positions manually and possible also the exact labels 
+    /**
+     * _doManualTickPos
+     * Insert description here
+     *
+     * @param $aScale
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _doManualTickPos($aScale) { 
 	$n=count($this->iManualTickPos);
 	$m=count($this->iManualMinTickPos);
@@ -4256,6 +7256,19 @@ class LinearTicks extends Ticks {
 	}
     }
 
+    /**
+     * _doAutoTickPos
+     * Insert description here
+     *
+     * @param $aScale
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _doAutoTickPos($aScale) {
 	$maj_step_abs = $aScale->scale_factor*$this->major_step;		
 	$min_step_abs = $aScale->scale_factor*$this->minor_step;		
@@ -4335,11 +7348,39 @@ class LinearTicks extends Ticks {
 	}	
     }
 
+    /**
+     * AdjustForDST
+     * Insert description here
+     *
+     * @param $aFlg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AdjustForDST($aFlg=true) {
 	$this->iAdjustForDST = $aFlg;
     }
 
 
+    /**
+     * _doLabelFormat
+     * Insert description here
+     *
+     * @param $aVal
+     * @param $aIdx
+     * @param $aNbrTicks
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _doLabelFormat($aVal,$aIdx,$aNbrTicks) {
 
 	// If precision hasn't been specified set it to a sensible value
@@ -4399,6 +7440,21 @@ class LinearTicks extends Ticks {
     }
 
     // Stroke ticks on either X or Y axis
+    /**
+     * _StrokeTicks
+     * Insert description here
+     *
+     * @param $aImg
+     * @param $aScale
+     * @param $aPos
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _StrokeTicks($aImg,$aScale,$aPos) {
 	$hor = $aScale->type == 'x';
 	$aImg->SetLineWeight($this->weight);
@@ -4453,6 +7509,21 @@ class LinearTicks extends Ticks {
     }
 
     // Draw linear ticks
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $aImg
+     * @param $aScale
+     * @param $aPos
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($aImg,$aScale,$aPos) {
 	if( $this->iManualTickPos != NULL ) 
 	    $this->_doManualTickPos($aScale);
@@ -4469,6 +7540,21 @@ class LinearTicks extends Ticks {
     // $lo specifies the label offset and $to specifies the tick offset
     // this comes in handy for example in bar graphs where we wont no offset for the
     // tick but have the labels displayed halfway under the bars.
+    /**
+     * SetXLabelOffset
+     * Insert description here
+     *
+     * @param $aLabelOff
+     * @param $aTickOff
+     * @param 1
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetXLabelOffset($aLabelOff,$aTickOff=-1) {
 	$this->xlabel_offset=$aLabelOff;
 	if( $aTickOff==-1 )	// Same as label offset
@@ -4480,6 +7566,19 @@ class LinearTicks extends Ticks {
     }
 
     // Which tick label should we start with?
+    /**
+     * SetTextLabelStart
+     * Insert description here
+     *
+     * @param $aTextLabelOff
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTextLabelStart($aTextLabelOff) {
 	$this->text_label_start=$aTextLabelOff;
     }
@@ -4490,6 +7589,20 @@ class LinearTicks extends Ticks {
 // CLASS LinearScale
 // Description: Handle linear scaling between screen and world 
 //===================================================
+/**
+ * LinearScale
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class LinearScale {
     public $textscale=false; // Just a flag to let the Plot class find out if
     // we are a textscale or not. This is a cludge since
@@ -4514,6 +7627,21 @@ class LinearScale {
     private $gracetop=0,$gracebottom=0;
 //---------------
 // CONSTRUCTOR
+    /**
+     * LinearScale
+     * Insert description here
+     *
+     * @param $aMin
+     * @param $aMax
+     * @param $aType
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function LinearScale($aMin=0,$aMax=0,$aType="y") {
 	assert($aType=="x" || $aType=="y" );
 	assert($aMin<=$aMax);
@@ -4528,6 +7656,18 @@ class LinearScale {
 // PUBLIC METHODS	
     // Check if scale is set or if we should autoscale
     // We should do this is either scale or ticks has not been set
+    /**
+     * IsSpecified
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function IsSpecified() {
 	if( $this->GetMinVal()==$this->GetMaxVal() ) {		// Scale not set
 	    return false;
@@ -4538,6 +7678,19 @@ class LinearScale {
     // Set the minimum data value when the autoscaling is used. 
     // Usefull if you want a fix minimum (like 0) but have an
     // automatic maximum
+    /**
+     * SetAutoMin
+     * Insert description here
+     *
+     * @param $aMin
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAutoMin($aMin) {
 	$this->autoscale_min=$aMin;
     }
@@ -4545,17 +7698,57 @@ class LinearScale {
     // Set the minimum data value when the autoscaling is used. 
     // Usefull if you want a fix minimum (like 0) but have an
     // automatic maximum
+    /**
+     * SetAutoMax
+     * Insert description here
+     *
+     * @param $aMax
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAutoMax($aMax) {
 	$this->autoscale_max=$aMax;
     }
 
     // If the user manually specifies a scale should the ticks
     // still be set automatically?
+    /**
+     * SetAutoTicks
+     * Insert description here
+     *
+     * @param $aFlag
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAutoTicks($aFlag=true) {
 	$this->auto_ticks = $aFlag;
     }
 
     // Specify scale "grace" value (top and bottom)
+    /**
+     * SetGrace
+     * Insert description here
+     *
+     * @param $aGraceTop
+     * @param $aGraceBottom
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetGrace($aGraceTop,$aGraceBottom=0) {
 	if( $aGraceTop<0 || $aGraceBottom < 0  )
 	    JpGraphError::RaiseL(25069);//(" Grace must be larger then 0");
@@ -4564,16 +7757,55 @@ class LinearScale {
     }
 	
     // Get the minimum value in the scale
+    /**
+     * GetMinVal
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetMinVal() {
 	return $this->scale[0];
     }
 	
     // get maximum value for scale
+    /**
+     * GetMaxVal
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetMaxVal() {
 	return $this->scale[1];
     }
 		
     // Specify a new min/max value for sclae	
+    /**
+     * Update
+     * Insert description here
+     *
+     * @param $aImg
+     * @param $aMin
+     * @param $aMax
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Update($aImg,$aMin,$aMax) {
 	$this->scale=array($aMin,$aMax);		
 	$this->world_size=$aMax-$aMin;		
@@ -4581,6 +7813,19 @@ class LinearScale {
     }
 	
     // Translate between world and screen
+    /**
+     * Translate
+     * Insert description here
+     *
+     * @param $aCoord
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Translate($aCoord) {
 	if( !is_numeric($aCoord) ) {
 	    if( $aCoord != '' && $aCoord != '-' && $aCoord != 'x' ) 
@@ -4594,6 +7839,19 @@ class LinearScale {
 	
     // Relative translate (don't include offset) usefull when we just want
     // to know the relative position (in pixels) on the axis
+    /**
+     * RelTranslate
+     * Insert description here
+     *
+     * @param $aCoord
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function RelTranslate($aCoord) {
 	if( !is_numeric($aCoord) ) {
 	    if( $aCoord != '' && $aCoord != '-' && $aCoord != 'x'  ) 
@@ -4606,11 +7864,41 @@ class LinearScale {
     }
 	
     // Restrict autoscaling to only use integers
+    /**
+     * SetIntScale
+     * Insert description here
+     *
+     * @param $aIntScale
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetIntScale($aIntScale=true) {
 	$this->intscale=$aIntScale;
     }
 	
     // Calculate an integer autoscale
+    /**
+     * IntAutoScale
+     * Insert description here
+     *
+     * @param $img
+     * @param $min
+     * @param $max
+     * @param $maxsteps
+     * @param $majend
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function IntAutoScale($img,$min,$max,$maxsteps,$majend=true) {
 	// Make sure limits are integers
 	$min=floor($min);
@@ -4735,6 +8023,23 @@ class LinearScale {
 	
     // Calculate autoscale. Used if user hasn't given a scale and ticks
     // $maxsteps is the maximum number of major tickmarks allowed.
+    /**
+     * AutoScale
+     * Insert description here
+     *
+     * @param $img
+     * @param $min
+     * @param $max
+     * @param $maxsteps
+     * @param $majend
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AutoScale($img,$min,$max,$maxsteps,$majend=true) {
 	if( $this->intscale ) {	
 	    $this->IntAutoScale($img,$min,$max,$maxsteps,$majend);
@@ -4844,6 +8149,19 @@ class LinearScale {
     // margins in the image. If the margins in the image are changed
     // this method should be called for every scale that is registred with
     // that image. Should really be installed as an observer of that image.
+    /**
+     * InitConstants
+     * Insert description here
+     *
+     * @param $img
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function InitConstants($img) {
 	if( $this->type=="x" ) {
 	    $this->world_abs_size=$img->width - $img->left_margin - $img->right_margin;
@@ -4869,6 +8187,20 @@ class LinearScale {
     // $start	=scale start in absolute pixels (for x-scale this is an y-position
     //				 and for an y-scale this is an x-position
     // $len 		=absolute length in pixels of scale 			
+    /**
+     * SetConstants
+     * Insert description here
+     *
+     * @param $aStart
+     * @param $aLen
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetConstants($aStart,$aLen) {
 	$this->world_abs_size=$aLen;
 	$this->off=$aStart;
@@ -4897,6 +8229,24 @@ class LinearScale {
     // 	[$numsteps,$adjmin,$adjmax,$minstep,$majstep]
     // If $majend==true then the first and last marks on the axis will be major
     // labeled tick marks otherwise it will be adjusted to the closest min tick mark
+    /**
+     * CalcTicks
+     * Insert description here
+     *
+     * @param $maxsteps
+     * @param $min
+     * @param $max
+     * @param $a
+     * @param $b
+     * @param $majend
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function CalcTicks($maxsteps,$min,$max,$a,$b,$majend=true) {
 	$diff=$max-$min; 
 	if( $diff==0 )
@@ -4936,6 +8286,23 @@ class LinearScale {
 	return array($numsteps,$adjmin,$adjmax,$minstep,$majstep);
     }
 
+    /**
+     * CalcTicksFreeze
+     * Insert description here
+     *
+     * @param $maxsteps
+     * @param $min
+     * @param $max
+     * @param $a
+     * @param $b
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function CalcTicksFreeze($maxsteps,$min,$max,$a,$b) {
 	// Same as CalcTicks but don't adjust min/max values
 	$diff=$max-$min; 
@@ -4959,6 +8326,23 @@ class LinearScale {
     }
 
 	
+    /**
+     * IntCalcTicks
+     * Insert description here
+     *
+     * @param $maxsteps
+     * @param $min
+     * @param $max
+     * @param $a
+     * @param $majend
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function IntCalcTicks($maxsteps,$min,$max,$a,$majend=true) {
 	$diff=$max-$min; 
 	if( $diff==0 )
@@ -5000,6 +8384,22 @@ class LinearScale {
     }
 
 
+    /**
+     * IntCalcTicksFreeze
+     * Insert description here
+     *
+     * @param $maxsteps
+     * @param $min
+     * @param $max
+     * @param $a
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function IntCalcTicksFreeze($maxsteps,$min,$max,$a) {
 	// Same as IntCalcTick but don't change min/max values
 	$diff=$max-$min; 
@@ -5028,6 +8428,22 @@ class LinearScale {
 
 	
     // Determine the minimum of three values witha  weight for last value
+    /**
+     * MatchMin3
+     * Insert description here
+     *
+     * @param $a
+     * @param $b
+     * @param $c
+     * @param $weight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function MatchMin3($a,$b,$c,$weight) {
 	if( $a < $b ) {
 	    if( $a < ($c*$weight) ) 
@@ -5045,10 +8461,37 @@ class LinearScale {
 // CLASS RGB
 // Description: Color definitions as RGB triples
 //===================================================
+/**
+ * RGB
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class RGB {
     public $rgb_table; 
     public $img;
 
+    /**
+     * RGB
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function RGB($aImg=null) {
 	$this->img = $aImg;
 		
@@ -5499,6 +8942,19 @@ class RGB {
     // 3. array(r,g,b)	RGB triple
     // This function translates this to a native RGB format and returns an 
     // RGB triple.
+    /**
+     * Color
+     * Insert description here
+     *
+     * @param $aColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Color($aColor) {
 	if (is_string($aColor)) {
 	    // Strip of any alpha factor
@@ -5574,6 +9030,20 @@ class RGB {
 	
     // Compare two colors
     // return true if equal
+    /**
+     * Equal
+     * Insert description here
+     *
+     * @param $aCol1
+     * @param $aCol2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Equal($aCol1,$aCol2) {
 	$c1 = $this->Color($aCol1);
 	$c2 = $this->Color($aCol2);
@@ -5585,6 +9055,20 @@ class RGB {
 	
     // Allocate a new color in the current image
     // Return new color index, -1 if no more colors could be allocated
+    /**
+     * Allocate
+     * Insert description here
+     *
+     * @param $aColor
+     * @param $aAlpha
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Allocate($aColor,$aAlpha=0.0) {
 	list ($r, $g, $b, $a) = $this->color($aColor);
 	// If alpha is specified in the color string then this
@@ -5605,6 +9089,20 @@ class RGB {
 // all the legend text for the graph
 //===================================================
 DEFINE('_DEFAULT_LPM_SIZE',8);
+/**
+ * Legend
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class Legend {
     public $txtcol=array();
     private $color=array(0,0,0); // Default fram color
@@ -5624,33 +9122,124 @@ class Legend {
     private $reverse = false ;
 //---------------
 // CONSTRUCTOR
+    /**
+     * Legend
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Legend() {
 	// Empty
     }
 //---------------
 // PUBLIC METHODS	
+    /**
+     * Hide
+     * Insert description here
+     *
+     * @param $aHide
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Hide($aHide=true) {
 	$this->hide=$aHide;
     }
 	
+    /**
+     * SetHColMargin
+     * Insert description here
+     *
+     * @param $aXMarg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetHColMargin($aXMarg) {
 	$this->xmargin = $aXMarg;
     }
 
+    /**
+     * SetVColMargin
+     * Insert description here
+     *
+     * @param $aSpacing
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetVColMargin($aSpacing) {
 	$this->ymargin = $aSpacing ;
     }
 
+    /**
+     * SetLeftMargin
+     * Insert description here
+     *
+     * @param $aXMarg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLeftMargin($aXMarg) {
 	$this->xlmargin = $aXMarg;
     }
 
 
     // Synonym
+    /**
+     * SetLineSpacing
+     * Insert description here
+     *
+     * @param $aSpacing
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLineSpacing($aSpacing) {
 	$this->ymargin = $aSpacing ;
     }
 
+    /**
+     * SetShadow
+     * Insert description here
+     *
+     * @param $aShow
+     * @param $aWidth
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetShadow($aShow='gray',$aWidth=2) {
 	if( is_string($aShow) ) {
 	    $this->shadow_color = $aShow;
@@ -5661,55 +9250,220 @@ class Legend {
 	$this->shadow_width=$aWidth;
     }
 
+    /**
+     * SetMarkAbsSize
+     * Insert description here
+     *
+     * @param $aSize
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetMarkAbsSize($aSize) {
 	$this->mark_abs_vsize = $aSize ;
 	$this->mark_abs_hsize = $aSize ;
     }
 
+    /**
+     * SetMarkAbsVSize
+     * Insert description here
+     *
+     * @param $aSize
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetMarkAbsVSize($aSize) {
 	$this->mark_abs_vsize = $aSize ;
     }
 
+    /**
+     * SetMarkAbsHSize
+     * Insert description here
+     *
+     * @param $aSize
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetMarkAbsHSize($aSize) {
 	$this->mark_abs_hsize = $aSize ;
     }
 
+    /**
+     * SetLineWeight
+     * Insert description here
+     *
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLineWeight($aWeight) {
 	$this->weight = $aWeight;
     }
 
+    /**
+     * SetFrameWeight
+     * Insert description here
+     *
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFrameWeight($aWeight) {
 	$this->frameweight = $aWeight;
     }
 	
+    /**
+     * SetLayout
+     * Insert description here
+     *
+     * @param $aDirection
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLayout($aDirection=LEGEND_VERT) {
 	$this->layout_n = $aDirection==LEGEND_VERT ? 1 : 99 ;
     }
 	
+    /**
+     * SetColumns
+     * Insert description here
+     *
+     * @param $aCols
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColumns($aCols) {
 	$this->layout_n = $aCols ;
     }
 
+    /**
+     * SetReverse
+     * Insert description here
+     *
+     * @param $f
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetReverse($f=true) {
 	$this->reverse = $f ;
     }
 
     // Set color on frame around box
+    /**
+     * SetColor
+     * Insert description here
+     *
+     * @param $aFontColor
+     * @param $aColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColor($aFontColor,$aColor='black') {
 	$this->font_color=$aFontColor;
 	$this->color=$aColor;
     }
 	
+    /**
+     * SetFont
+     * Insert description here
+     *
+     * @param $aFamily
+     * @param $aStyle
+     * @param $aSize
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFont($aFamily,$aStyle=FS_NORMAL,$aSize=10) {
 	$this->font_family = $aFamily;
 	$this->font_style = $aStyle;
 	$this->font_size = $aSize;
     }
 	
+    /**
+     * SetPos
+     * Insert description here
+     *
+     * @param $aX
+     * @param $aY
+     * @param $aHAlign
+     * @param $aVAlign
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetPos($aX,$aY,$aHAlign="right",$aVAlign="top") {
 	$this->Pos($aX,$aY,$aHAlign,$aVAlign);
     }
 
+    /**
+     * SetAbsPos
+     * Insert description here
+     *
+     * @param $aX
+     * @param $aY
+     * @param $aHAlign
+     * @param $aVAlign
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAbsPos($aX,$aY,$aHAlign="right",$aVAlign="top") {
 	$this->xabspos=$aX;
 	$this->yabspos=$aY;
@@ -5718,6 +9472,22 @@ class Legend {
     }
 
 
+    /**
+     * Pos
+     * Insert description here
+     *
+     * @param $aX
+     * @param $aY
+     * @param $aHAlign
+     * @param $aVAlign
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Pos($aX,$aY,$aHAlign="right",$aVAlign="top") {
 	if( !($aX<1 && $aY<1) )
 	    JpGraphError::RaiseL(25120);//(" Position for legend must be given as percentage in range 0-1");
@@ -5727,18 +9497,75 @@ class Legend {
 	$this->valign=$aVAlign;
     }
 
+    /**
+     * SetFillColor
+     * Insert description here
+     *
+     * @param $aColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFillColor($aColor) {
 	$this->fill_color=$aColor;
     }
 	
+    /**
+     * Add
+     * Insert description here
+     *
+     * @param $aTxt
+     * @param $aColor
+     * @param $aPlotmark
+     * @param $aLinestyle
+     * @param $csimtarget
+     * @param $csimalt
+     * @param $csimwintarget
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Add($aTxt,$aColor,$aPlotmark='',$aLinestyle=0,$csimtarget='',$csimalt='',$csimwintarget='') {
 	$this->txtcol[]=array($aTxt,$aColor,$aPlotmark,$aLinestyle,$csimtarget,$csimalt,$csimwintarget);
     }
 
+    /**
+     * GetCSIMAreas
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetCSIMAreas() {
 	return $this->csimareas;
     }
 	
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke(&$aImg) {
 	// Constant
 	$fillBoxFrameWeight=1;
@@ -5982,6 +9809,20 @@ class Legend {
 // CLASS DisplayValue
 // Description: Used to print data values at data points
 //===================================================
+/**
+ * DisplayValue
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class DisplayValue {
     public $margin=5;
     public $show=false;
@@ -5993,51 +9834,202 @@ class DisplayValue {
     private $color="navy",$negcolor="";
     private $iHideZero=false;
 
+    /**
+     * Show
+     * Insert description here
+     *
+     * @param $aFlag
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Show($aFlag=true) {
 	$this->show=$aFlag;
     }
 
+    /**
+     * SetColor
+     * Insert description here
+     *
+     * @param $aColor
+     * @param $aNegcolor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColor($aColor,$aNegcolor="") {
 	$this->color = $aColor;
 	$this->negcolor = $aNegcolor;
     }
 
+    /**
+     * SetFont
+     * Insert description here
+     *
+     * @param $aFontFamily
+     * @param $aFontStyle
+     * @param $aFontSize
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFont($aFontFamily,$aFontStyle=FS_NORMAL,$aFontSize=10) {
 	$this->ff=$aFontFamily;
 	$this->fs=$aFontStyle;
 	$this->fsize=$aFontSize;
     }
 
+    /**
+     * ApplyFont
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function ApplyFont($aImg) {
 	$aImg->SetFont($this->ff,$this->fs,$this->fsize);
     }
 
+    /**
+     * SetMargin
+     * Insert description here
+     *
+     * @param $aMargin
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetMargin($aMargin) {
 	$this->margin = $aMargin;
     }
 
+    /**
+     * SetAngle
+     * Insert description here
+     *
+     * @param $aAngle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAngle($aAngle) {
 	$this->angle = $aAngle;
     }
 
+    /**
+     * SetAlign
+     * Insert description here
+     *
+     * @param $aHAlign
+     * @param $aVAlign
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAlign($aHAlign,$aVAlign='') {
 	$this->halign = $aHAlign;
 	$this->valign = $aVAlign;
     }
 
+    /**
+     * SetFormat
+     * Insert description here
+     *
+     * @param $aFormat
+     * @param $aNegFormat
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFormat($aFormat,$aNegFormat="") {
 	$this->format= $aFormat;
 	$this->negformat= $aNegFormat;
     }
 
+    /**
+     * SetFormatCallback
+     * Insert description here
+     *
+     * @param $aFunc
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFormatCallback($aFunc) {
 	$this->iFormCallback = $aFunc;
     }
 
+    /**
+     * HideZero
+     * Insert description here
+     *
+     * @param $aFlag
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function HideZero($aFlag=true) {
 	$this->iHideZero=$aFlag;
     }
 
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $img
+     * @param $aVal
+     * @param $x
+     * @param $y
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($img,$aVal,$x,$y) {
 	
 	if( $this->show ) 
@@ -6097,6 +10089,20 @@ class DisplayValue {
 // CLASS Plot
 // Description: Abstract base class for all concrete plot classes
 //===================================================
+/**
+ * Plot
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class Plot {
     public $numpoints=0;
     public $value;
@@ -6114,6 +10120,20 @@ class Plot {
     protected $center=false;
 //---------------
 // CONSTRUCTOR
+    /**
+     * Plot
+     * Insert description here
+     *
+     * @param $aDatay
+     * @param $aDatax
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Plot($aDatay,$aDatax=false) {
 	$this->numpoints = count($aDatay);
 	if( $this->numpoints==0 )
@@ -6137,24 +10157,96 @@ class Plot {
     // Stroke the plot
     // "virtual" function which must be implemented by
     // the subclasses
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $aImg
+     * @param $aXScale
+     * @param $aYScale
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($aImg,$aXScale,$aYScale) {
 	JpGraphError::RaiseL(25122);//("JpGraph: Stroke() must be implemented by concrete subclass to class Plot");
     }
 
+    /**
+     * HideLegend
+     * Insert description here
+     *
+     * @param $f
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function HideLegend($f=true) {
 	$this->hidelegend = $f;
     }
 
+    /**
+     * DoLegend
+     * Insert description here
+     *
+     * @param $graph
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DoLegend($graph) {
 	if( !$this->hidelegend )
 	    $this->Legend($graph);
     }
 
+    /**
+     * StrokeDataValue
+     * Insert description here
+     *
+     * @param $img
+     * @param $aVal
+     * @param $x
+     * @param $y
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeDataValue($img,$aVal,$x,$y) {
 	$this->value->Stroke($img,$aVal,$x,$y);
     }
 	
     // Set href targets for CSIM	
+    /**
+     * SetCSIMTargets
+     * Insert description here
+     *
+     * @param $aTargets
+     * @param $aAlts
+     * @param $aWinTargets
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetCSIMTargets($aTargets,$aAlts='',$aWinTargets='') {
 	$this->csimtargets=$aTargets;
 	$this->csimwintargets=$aWinTargets;
@@ -6162,12 +10254,37 @@ class Plot {
     }
  	
     // Get all created areas
+    /**
+     * GetCSIMareas
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetCSIMareas() {
 	return $this->csimareas;
     }	
 	
     // "Virtual" function which gets called before any scale
     // or axis are stroked used to do any plot specific adjustment
+    /**
+     * PreStrokeAdjust
+     * Insert description here
+     *
+     * @param $aGraph
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function PreStrokeAdjust($aGraph) {
 	if( substr($aGraph->axtype,0,4) == "text" && (isset($this->coords[1])) )
 	    JpGraphError::RaiseL(25123);//("JpGraph: You can't use a text X-scale with specified X-coords. Use a \"int\" or \"lin\" scale instead.");
@@ -6175,6 +10292,18 @@ class Plot {
     }
 	
     // Get minimum values in plot
+    /**
+     * Min
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Min() {
 	if( isset($this->coords[1]) )
 	    $x=$this->coords[1];
@@ -6209,6 +10338,18 @@ class Plot {
     }
 	
     // Get maximum value in plot
+    /**
+     * Max
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Max() {
 	if( isset($this->coords[1]) )
 	    $x=$this->coords[1];
@@ -6245,10 +10386,39 @@ class Plot {
 	return array($xm,$ym);
     }
 	
+    /**
+     * SetColor
+     * Insert description here
+     *
+     * @param $aColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColor($aColor) {
 	$this->color=$aColor;
     }
 	
+    /**
+     * SetLegend
+     * Insert description here
+     *
+     * @param $aLegend
+     * @param $aCSIM
+     * @param $aCSIMAlt
+     * @param $aCSIMWinTarget
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLegend($aLegend,$aCSIM='',$aCSIMAlt='',$aCSIMWinTarget='') {
 	$this->legend = $aLegend;
 	$this->legendcsimtarget = $aCSIM;
@@ -6256,25 +10426,90 @@ class Plot {
 	$this->legendcsimalt = $aCSIMAlt;
     }
 
+    /**
+     * SetWeight
+     * Insert description here
+     *
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetWeight($aWeight) {
 	$this->weight=$aWeight;
     }
 		
+    /**
+     * SetLineWeight
+     * Insert description here
+     *
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLineWeight($aWeight=1) {
 	$this->line_weight=$aWeight;
     }
 	
+    /**
+     * SetCenter
+     * Insert description here
+     *
+     * @param $aCenter
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetCenter($aCenter=true) {
 	$this->center = $aCenter;
     }
 	
     // This method gets called by Graph class to plot anything that should go
     // into the margin after the margin color has been set.
+    /**
+     * StrokeMargin
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeMargin($aImg) {
 	return true;
     }
 
     // Framework function the chance for each plot class to set a legend
+    /**
+     * Legend
+     * Insert description here
+     *
+     * @param $aGraph
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Legend($aGraph) {
 	if( $this->legend != "" )
 	    $aGraph->legend->Add($this->legend,$this->color,"",0,$this->legendcsimtarget,
@@ -6292,6 +10527,20 @@ class Plot {
 // Usefull to add static borders inside a plot to show
 // for example set-values
 //===================================================
+/**
+ * PlotLine
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class PlotLine {
     public $scaleposition, $direction=-1; 
     protected $weight=1;
@@ -6301,6 +10550,22 @@ class PlotLine {
 
 //---------------
 // CONSTRUCTOR
+    /**
+     * PlotLine
+     * Insert description here
+     *
+     * @param $aDir
+     * @param $aPos
+     * @param $aColor
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function PlotLine($aDir=HORIZONTAL,$aPos=0,$aColor="black",$aWeight=1) {
 	$this->direction = $aDir;
 	$this->color=$aColor;
@@ -6311,6 +10576,22 @@ class PlotLine {
 //---------------
 // PUBLIC METHODS	
 
+    /**
+     * SetLegend
+     * Insert description here
+     *
+     * @param $aLegend
+     * @param $aCSIM
+     * @param $aCSIMAlt
+     * @param $aCSIMWinTarget
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLegend($aLegend,$aCSIM='',$aCSIMAlt='',$aCSIMWinTarget='') {
 	$this->legend = $aLegend;
 	$this->legendcsimtarget = $aCSIM;
@@ -6318,26 +10599,104 @@ class PlotLine {
 	$this->legendcsimalt = $aCSIMAlt;
     }
 
+    /**
+     * HideLegend
+     * Insert description here
+     *
+     * @param $f
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function HideLegend($f=true) {
 	$this->hidelegend = $f;
     }
 
+    /**
+     * SetPosition
+     * Insert description here
+     *
+     * @param $aScalePosition
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetPosition($aScalePosition) {
 	$this->scaleposition=$aScalePosition;
     }
 	
+    /**
+     * SetDirection
+     * Insert description here
+     *
+     * @param $aDir
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetDirection($aDir) {
 	$this->direction = $aDir;
     }
 	
+    /**
+     * SetColor
+     * Insert description here
+     *
+     * @param $aColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColor($aColor) {
 	$this->color=$aColor;
     }
 	
+    /**
+     * SetWeight
+     * Insert description here
+     *
+     * @param $aWeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetWeight($aWeight) {
 	$this->weight=$aWeight;
     }
 
+    /**
+     * SetLineStyle
+     * Insert description here
+     *
+     * @param $aStyle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLineStyle($aStyle) {
 	$this->iLineStyle = $aStyle;
     }
@@ -6345,12 +10704,38 @@ class PlotLine {
 //---------------
 // PRIVATE METHODS
 
+    /**
+     * DoLegend
+     * Insert description here
+     *
+     * @param $graph
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DoLegend(&$graph) {
 	if( !$this->hidelegend )
 	    $this->Legend($graph);
     }
 
     // Framework function the chance for each plot class to set a legend
+    /**
+     * Legend
+     * Insert description here
+     *
+     * @param $aGraph
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Legend(&$aGraph) {
 	if( $this->legend != "" ) {
 	    $dummyPlotMark = new PlotMark();
@@ -6360,10 +10745,38 @@ class PlotLine {
 	}
     }
 
+    /**
+     * PreStrokeAdjust
+     * Insert description here
+     *
+     * @param $aGraph
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function PreStrokeAdjust($aGraph) {
 	// Nothing to do
     }
 	
+    /**
+     * Stroke
+     * Insert description here
+     *
+     * @param $aImg
+     * @param $aXScale
+     * @param $aYScale
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stroke($aImg,$aXScale,$aYScale) {
 	$aImg->SetColor($this->color);
 	$aImg->SetLineWeight($this->weight);	

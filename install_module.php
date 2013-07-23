@@ -26,6 +26,19 @@ $tickets_dir = getcwd();
 
 <?php
 
+/**
+ * prefix
+ * Insert description here
+ *
+ * @param $tbl
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function prefix ($tbl) {		/* returns concatenated string */
 	global $mysql_prefix;
 	return  $mysql_prefix . $tbl;
@@ -47,6 +60,18 @@ if($result) {
 print "Module Table Created";
 }
 
+/**
+ * get_mod_to_install
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_mod_to_install() {
 	$to_install = array();
 	$current = array();
@@ -84,6 +109,19 @@ function get_mod_to_install() {
 	return $ret_str;
 	}
 
+/**
+ * module_tabs_exist
+ * Insert description here
+ *
+ * @param $name
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function module_tabs_exist($name) {
 	$query 		= "SELECT COUNT(*) FROM `$GLOBALS[mysql_prefix]modules`";
 	$result 	= mysql_query($query);
@@ -102,6 +140,19 @@ function module_tabs_exist($name) {
 		}
 	}
 	
+/**
+ * mod_table_exists
+ * Insert description here
+ *
+ * @param $tablename
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function mod_table_exists($tablename) {			//check if mysql table exists, if it's a re-install
 	$query 		= "SELECT COUNT(*) FROM $tablename";
 	$result 	= mysql_query($query);
@@ -113,6 +164,19 @@ function mod_table_exists($tablename) {			//check if mysql table exists, if it's
 	}
 	}
 	
+/**
+ * get_structure
+ * Insert description here
+ *
+ * @param $structurefile
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_structure($structurefile) {
 	$xml_file = "./structure.xml";
 	$data="";
@@ -137,6 +201,20 @@ function get_structure($structurefile) {
 	return $data;
 	}	// end function get_structure
 	
+/**
+ * write_path
+ * Insert description here
+ *
+ * @param $filepath
+ * @param $tickets_dir
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function write_path($filepath, $tickets_dir) {
 	global $docRoot, $tickets_dir;
 	if (!$fp = fopen($tickets_dir.$filepath . '/path.inc.php', 'a')) {

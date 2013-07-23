@@ -8,6 +8,19 @@ error_reporting(E_ALL);
 @session_start();
 require_once('./incs/functions.inc.php');	
 
+/**
+ * get_status_name
+ * Insert description here
+ *
+ * @param $val
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_status_name($val) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]un_status` WHERE `id` = " . $val;
 	$result = mysql_query($query);	

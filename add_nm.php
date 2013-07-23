@@ -103,6 +103,18 @@ while ($row_f = stripslashes_deep(mysql_fetch_assoc($result_f))) {
 	}
 $facilities = mysql_affected_rows();		// 3/24/10
 
+/**
+ * get_res_row
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_res_row() {				// writes empty ticket if none exists - returns a row - 11/5/10
 	$by = $_SESSION['user_id'];			// 5/27/10
 
@@ -137,6 +149,19 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 
 	if ($get_add == 'true')	{
 
+/**
+ * updt_ticket
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function updt_ticket($id) {							/* 1/25/09 */
 			global $addrs, $NOTIFY_TICKET;
 	

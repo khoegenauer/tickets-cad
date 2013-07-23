@@ -71,6 +71,19 @@ $incident_name = get_text("Incident name")
 global $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
 */
 
+/**
+ * edit_ticket
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function edit_ticket($id) {							/* post changes */
 		global $addrs, $NOTIFY_TICKET, $mode;			// 9/8/10
 

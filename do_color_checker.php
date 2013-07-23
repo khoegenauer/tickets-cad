@@ -113,6 +113,18 @@ unset($result);
 $icons = $GLOBALS['icons'];				// 1/1/09
 $sm_icons = $GLOBALS['sm_icons'];
 
+/**
+ * get_icon_legend
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_icon_legend (){			// returns legend string - 1/1/09
 	global $u_types, $sm_icons, $icons;
 	$query = "SELECT DISTINCT `type` FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `name`";

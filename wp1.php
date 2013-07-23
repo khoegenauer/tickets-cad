@@ -6,6 +6,21 @@ require_once('incs/functions.inc.php');		//7/28/10
 // The advantage over fopen/fread is that a timeout can be set so that your webpage does not hang on the API if it takes too long
 // The disadvantage is that the http headers have to be parsed and stripped off, which this code does for you.
 
+/**
+ * loadapijson
+ * Insert description here
+ *
+ * @param $domain
+ * @param $path
+ * @param $timeout
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function loadapijson($domain, $path, $timeout) {
 		
 		$fp = fsockopen($domain, 80, $errno, $errstr, $timeout);

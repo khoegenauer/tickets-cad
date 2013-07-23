@@ -31,6 +31,19 @@ require_once($_SESSION['fip']);		//7/28/10
 
 if (!(empty($_POST))) {
 
+/**
+ * test_instam
+ * Insert description here
+ *
+ * @param $key
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function test_instam($key) {		// returns array, or FALSE
 
 			// snap(basename(__FILE__) . __LINE__, $key_val);

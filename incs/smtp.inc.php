@@ -12,6 +12,24 @@
 //														*** note empty security position! ***
 
 
+/**
+ * do_swift_mail
+ * Insert description here
+ *
+ * @param $my_smtp_ary
+ * @param $my_to_ary
+ * @param $my_subject_str
+ * @param $my_message_str
+ * @param $my_from_ary
+ * @param $my_replyto_str
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_swift_mail ($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_str, $my_from_ary, $my_replyto_str) { // 7/5/10 - per Kurt Jack
 	require_once 'lib/swift_required.php';
 		if (!(empty($my_smtp_ary))) {									// SMTP?
@@ -45,6 +63,24 @@ function do_swift_mail ($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_s
 	} 				// end function real_smtp
 
 
+/**
+ * do_native_mail
+ * Insert description here
+ *
+ * @param $my_smtp_ary
+ * @param $my_to_ary
+ * @param $my_subject_str
+ * @param $my_message_str
+ * @param $my_from_ary
+ * @param $my_replyto_str
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_native_mail ($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_str, $my_from_ary, $my_replyto_str) {
 	$bccc = ((count($my_from_ary)>1) && (strtoupper(substr (trim($my_from_ary[1]), 0, 1 )=="B"))) ? "Bcc: " : "Cc: ";
 	

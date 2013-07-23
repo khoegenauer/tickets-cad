@@ -29,6 +29,20 @@
 
   // ================================================================== LatLng
 
+  /**
+   * LatLng
+   * Insert description here
+   *
+   * @category
+   * @package
+   * @author
+   * @copyright
+   * @license
+   * @version
+   * @link
+   * @see
+   * @since
+   */
   class LatLng {
 
     var $lat;
@@ -364,6 +378,20 @@
   // =================================================================== OSRef
 
   // References given with OSRef are accurate to 1m.
+  /**
+   * OSRef
+   * Insert description here
+   *
+   * @category
+   * @package
+   * @author
+   * @copyright
+   * @license
+   * @version
+   * @link
+   * @see
+   * @since
+   */
   class OSRef {
 
     var $easting;
@@ -537,6 +565,20 @@
 
   // ================================================================== UTMRef
 
+  /**
+   * UTMRef
+   * Insert description here
+   *
+   * @category
+   * @package
+   * @author
+   * @copyright
+   * @license
+   * @version
+   * @link
+   * @see
+   * @since
+   */
   class UTMRef {
 
     var $easting;
@@ -667,6 +709,20 @@
 
   // ================================================================== RefEll
 
+  /**
+   * RefEll
+   * Insert description here
+   *
+   * @category
+   * @package
+   * @author
+   * @copyright
+   * @license
+   * @version
+   * @link
+   * @see
+   * @since
+   */
   class RefEll {
 
     var $maj;
@@ -690,18 +746,70 @@
 
   // ================================================== Mathematical Functions
 
+  /**
+   * sinSquared
+   * Insert description here
+   *
+   * @param $x
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   function sinSquared($x) {
     return sin($x) * sin($x);
   }
 
+  /**
+   * cosSquared
+   * Insert description here
+   *
+   * @param $x
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   function cosSquared($x) {
     return cos($x) * cos($x);
   }
 
+  /**
+   * tanSquared
+   * Insert description here
+   *
+   * @param $x
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   function tanSquared($x) {
     return tan($x) * tan($x);
   }
 
+  /**
+   * sec
+   * Insert description here
+   *
+   * @param $x
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   function sec($x) {
     return 1.0 / cos($x);
   }

@@ -14,14 +14,57 @@
 // Description: Utility class to help generate data for function plots. 
 // The class supports both parametric and regular functions.
 //===================================================
+/**
+ * FuncGenerator
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class FuncGenerator {
     private $iFunc='',$iXFunc='',$iMin,$iMax,$iStepSize;
 	
+    /**
+     * FuncGenerator
+     * Insert description here
+     *
+     * @param $aFunc
+     * @param $aXFunc
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FuncGenerator($aFunc,$aXFunc='') {
 	$this->iFunc = $aFunc;
 	$this->iXFunc = $aXFunc;
     }
 	
+    /**
+     * E
+     * Insert description here
+     *
+     * @param $aXMin
+     * @param $aXMax
+     * @param $aSteps
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function E($aXMin,$aXMax,$aSteps=50) {
 	$this->iMin = $aXMin;
 	$this->iMax = $aXMax;
@@ -51,6 +94,20 @@ class FuncGenerator {
 //              normally isn't available directly on the keyboard, for example
 //              mathematical and greek symbols.
 //=============================================================================
+/**
+ * SymChar
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class  SymChar {
     static function Get($aSymb,$aCapital=FALSE) {
         $iSymbols = array(
@@ -141,6 +198,20 @@ DEFINE('DSUTILS_YEAR2',12); // Major ticks on a bi-yearly basis
 DEFINE('DSUTILS_YEAR5',13); // Major ticks on a five-yearly basis
 
 
+/**
+ * DateScaleUtils
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class DateScaleUtils {
     public $iMin=0, $iMax=0;
 
@@ -149,10 +220,37 @@ class DateScaleUtils {
     private $tickPositions=array(),$minTickPositions=array();
     private $iUseWeeks = true;
 
+    /**
+     * UseWeekFormat
+     * Insert description here
+     *
+     * @param $aFlg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function UseWeekFormat($aFlg) {
 	$this->iUseWeeks = $aFlg;
     }
 
+    /**
+     * doYearly
+     * Insert description here
+     *
+     * @param $aType
+     * @param $aMinor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function doYearly($aType,$aMinor=false) {
 	$i=0; $j=0;
 	$m = $this->startmonth;
@@ -208,6 +306,20 @@ class DateScaleUtils {
 	}
     }
 
+    /**
+     * doDaily
+     * Insert description here
+     *
+     * @param $aType
+     * @param $aMinor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function doDaily($aType,$aMinor=false) {
 	$m = $this->startmonth;
 	$y = $this->startyear;
@@ -254,6 +366,20 @@ class DateScaleUtils {
 	}
     }
 
+    /**
+     * doWeekly
+     * Insert description here
+     *
+     * @param $aType
+     * @param $aMinor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function doWeekly($aType,$aMinor=false) {
 	$hpd = 3600*24;
 	$hpw = 3600*24*7;
@@ -300,6 +426,20 @@ class DateScaleUtils {
 	}
     }
 
+    /**
+     * doMonthly
+     * Insert description here
+     *
+     * @param $aType
+     * @param $aMinor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function doMonthly($aType,$aMinor=false) {
 	$monthcount=0;
 	$m = $this->startmonth;
@@ -391,6 +531,22 @@ class DateScaleUtils {
 	return array($this->tickPositions,$this->minTickPositions);
     }
 
+    /**
+     * GetTicks
+     * Insert description here
+     *
+     * @param $aData
+     * @param $aType
+     * @param $aMinor
+     * @param $aEndPoints
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetTicks($aData,$aType=1,$aMinor=false,$aEndPoints=false) {
 	$n = count($aData);
 	$temp = GetTicksFromMinMax($aData[0],$aData[$n-1],$aType,$aMinor,$aEndPoints);
@@ -398,6 +554,22 @@ class DateScaleUtils {
 	return $temp;
     }
 
+    /**
+     * GetAutoTicks
+     * Insert description here
+     *
+     * @param $aMin
+     * @param $aMax
+     * @param $aMaxTicks
+     * @param $aMinor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetAutoTicks($aMin,$aMax,$aMaxTicks=10,$aMinor=false) {
 	$diff = $aMax - $aMin;
 	$spd = 3600*24;
@@ -441,6 +613,23 @@ class DateScaleUtils {
 	}
     }
 
+    /**
+     * GetTicksFromMinMax
+     * Insert description here
+     *
+     * @param $aMin
+     * @param $aMax
+     * @param $aType
+     * @param $aMinor
+     * @param $aEndPoints
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetTicksFromMinMax($aMin,$aMax,$aType,$aMinor=false,$aEndPoints=false) {
 	$this->starthour = date('G',$aMin);
 	$this->startmonth = date('n',$aMin);
@@ -485,6 +674,20 @@ class DateScaleUtils {
 //=============================================================================
 // Class ReadFileData
 //=============================================================================
+/**
+ * ReadFileData
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 Class ReadFileData {
 
     //----------------------------------------------------------------------------
@@ -499,6 +702,22 @@ Class ReadFileData {
     // Returns: 
     // The number of data values read on success, FALSE on failure
     //----------------------------------------------------------------------------
+    /**
+     * FromCSV
+     * Insert description here
+     *
+     * @param $aFile
+     * @param $aData
+     * @param $aSepChar
+     * @param $aMaxLineLength
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     static function FromCSV($aFile,&$aData,$aSepChar=',',$aMaxLineLength=1024) {
 	$rh = fopen($aFile,'r');
 	if( $rh === false )

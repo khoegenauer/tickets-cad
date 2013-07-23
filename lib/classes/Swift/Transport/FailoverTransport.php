@@ -89,6 +89,18 @@ class Swift_Transport_FailoverTransport
   
   // -- Protected methods
   
+  /**
+   * _getNextTransport
+   * Insert description here
+   *
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   protected function _getNextTransport()
   {
     if (!isset($this->_currentTransport))
@@ -98,6 +110,18 @@ class Swift_Transport_FailoverTransport
     return $this->_currentTransport;
   }
   
+  /**
+   * _killCurrentTransport
+   * Insert description here
+   *
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   protected function _killCurrentTransport()
   {
     $this->_currentTransport = null;

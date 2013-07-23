@@ -44,6 +44,20 @@ USAGE SAMPLE
     define ('COLS_NO_STACK',0);
     define ('COLS_STACKED',1);
 
+/**
+ * baaChart
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class baaChart  {
 
     /********************************************************
@@ -155,12 +169,44 @@ class baaChart  {
         $this->stackbase = array();
         $this->showvals = array();
     }
+    /**
+     * setMargins
+     * Insert description here
+     *
+     * @param $l
+     * @param $t
+     * @param $r
+     * @param $b
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function setMargins ($l=0, $t=0, $r=0, $b=0) {
         if ($t>0) $this->tm = $t;
         if ($b>0) $this->bm = $b;
         if ($l>0) $this->lm = $l;
         if ($r>0) $this->rm = $r;
     }
+    /**
+     * setBgColor
+     * Insert description here
+     *
+     * @param $r
+     * @param $g
+     * @param $b
+     * @param $trans
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function setBgColor ($r, $g, $b, $trans=false) {
         $this->bgd = imagecolorallocate($this->image,$r,$g,$b);
         if ($this->pic != '') $trans = 1;
@@ -168,28 +214,136 @@ class baaChart  {
             imagecolortransparent($this->image,$this->bgd);
         $this->transparent = $trans;
     }
+    /**
+     * setChartBgColor
+     * Insert description here
+     *
+     * @param $r
+     * @param $g
+     * @param $b
+     * @param $asbg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function setChartBgColor ($r, $g, $b, $asbg=0) {
         if ($this->pic != '') $asbg = 1;
         $this->cbgd = $asbg ? $this->bgd : imagecolorallocate($this->image,$r,$g,$b);
         $this->cbgd2 = $this->cbgd;
     }
+    /**
+     * setChartBgColor2
+     * Insert description here
+     *
+     * @param $r
+     * @param $g
+     * @param $b
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function setChartBgColor2 ($r, $g, $b) {
         $this->cbgd2 = imagecolorallocate($this->image,$r,$g,$b);
     }
+    /**
+     * setTextColor
+     * Insert description here
+     *
+     * @param $r
+     * @param $g
+     * @param $b
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function setTextColor ($r, $g, $b) {
         $this->txtcol = imagecolorallocate($this->image,$r,$g,$b);
     }
+    /**
+     * setGridColor
+     * Insert description here
+     *
+     * @param $r
+     * @param $g
+     * @param $b
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function setGridColor ($r, $g, $b) {
         $this->gridcol = imagecolorallocate($this->image,$r,$g,$b);
     }
+    /**
+     * setSeriesColor
+     * Insert description here
+     *
+     * @param $n
+     * @param $r
+     * @param $g
+     * @param $b
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function setSeriesColor ($n, $r, $g, $b) {
         if ($n<1) $n=1;
         $this->scolors[$n-1] = imagecolorallocate($this->image,$r,$g,$b);
     }
+    /**
+     * setTitle
+     * Insert description here
+     *
+     * @param $aTitle
+     * @param $aSub
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function setTitle ($aTitle,$aSub='') {
         if ($aTitle) $this->title = $aTitle;
         if ($aSub) $this->subtitle = $aSub;
     }
+    /**
+     * setYAxis
+     * Insert description here
+     *
+     * @param $title
+     * @param $min
+     * @param $max
+     * @param $gridint
+     * @param $grid
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function setYAxis($title='',$min=0,$max=0,$gridint=0,$grid=0) {
         $this->ytitle = $title;
         $this->ymin = $min;
@@ -197,14 +351,57 @@ class baaChart  {
         $this->ygrid = $grid;
         $this->ygridint = $gridint < 2 ? 10 : $gridint;
     }
+    /**
+     * setXAxis
+     * Insert description here
+     *
+     * @param $title
+     * @param $grid
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function setXAxis ($title, $grid=0) {
         $this->xtitle = $title;
         $this->xgrid = $grid;
     }
+    /**
+     * setXLabels
+     * Insert description here
+     *
+     * @param $labs
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function setXLabels ($labs) {
         $this->xlabels = is_array($labs) ? $labs : explode(",",$labs);
         $this->xcount = count($this->xlabels);
     }
+    /**
+     * addDataSeries
+     * Insert description here
+     *
+     * @param $type
+     * @param $stacked
+     * @param $vals
+     * @param $legend
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function addDataSeries ($type,$stacked,$vals,$legend) {
         $n = $this->seriescount++;
         $this->stypes[$n] = $type;
@@ -223,16 +420,69 @@ class baaChart  {
         $this->legends[$n] = $legend=='' ? '_' : $legend;
         $this->showvals[$n] = 0;
     }
+    /**
+     * setBgImagePos
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function setBgImagePos($x, $y) {
              $this->bgx = $x;
              $this->bgy = $y;
     }
+    /**
+     * setBgImageAlpha
+     * Insert description here
+     *
+     * @param $val
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function setBgImageAlpha($val) {
              $this->pictrans = $val;
     }
+    /**
+     * showValues
+     * Insert description here
+     *
+     * @param $series
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function showValues($series) {
              $this->showvals[$series] = 1;
     }
+    /**
+     * drawGraph
+     * Insert description here
+     *
+     * @param $filename
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function drawGraph($filename='') {
         header("Content-Type: image/png");
         $this->_draw();
@@ -242,6 +492,19 @@ class baaChart  {
         if ($this->bgimage) imagedestroy( $this->bgimage );
         exit();
     }
+    /**
+     * display
+     * Insert description here
+     *
+     * @param $filename
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function display($filename='') {
              $this->drawGraph($filename);
     }
@@ -272,6 +535,23 @@ class baaChart  {
         for ($i=0; $i<$this->seriescount; $i++) $this->_plotSeries($i);
     }
 
+    /**
+     * _drawpieval
+     * Insert description here
+     *
+     * @param $i
+     * @param $alpha
+     * @param $x
+     * @param $y
+     * @param $r
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _drawpieval($i,$alpha,$x,$y,$r) {
         $pietot = 0;
         for ($s=0; $s<$this->seriescount; $s++) {
@@ -299,6 +579,18 @@ class baaChart  {
         }
     }
 
+    /**
+     * pielegends
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function pielegends() {
         $pietot = 0;
         for ($s=0; $s<$this->seriescount; $s++) {
@@ -323,6 +615,18 @@ class baaChart  {
         }
     }
 
+    /**
+     * _calcrmargin
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _calcrmargin() {
         if ($this->ispiechart) {
             $this->pielegends();
@@ -344,6 +648,18 @@ class baaChart  {
         }
     }
 
+    /**
+     * _drawlegends
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _drawlegends() {
         $legx = $this->lm + $this->cwidth + 5;
         $legy = $this->tm;
@@ -375,12 +691,42 @@ class baaChart  {
         }
     }
 
+    /**
+     * _val2y
+     * Insert description here
+     *
+     * @param $v
+     * @param $base
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _val2y($v, $base=0) {
         $rv = $v + $base - $this->ymin;
         $ppu = $this->cheight/($this->ymax - $this->ymin);
         return $this->tm + $this->cheight - ($rv * $ppu) ;
     }
 
+    /**
+     * _drawmarker
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     * @param $m
+     * @param $c
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _drawmarker($x,$y,$m, $c) {
         $fill = $m < 0 ? $c : $this->white;
         $line = $m < 0 ? $c : $this->black;
@@ -414,6 +760,19 @@ class baaChart  {
         }
     }
 
+    /**
+     * _plotseries
+     * Insert description here
+     *
+     * @param $i
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _plotseries($i) {
         $valposArray = array();
         switch ($this->stypes[$i]) {
@@ -486,6 +845,19 @@ class baaChart  {
         }
     }
 
+    /**
+     * _drawVals
+     * Insert description here
+     *
+     * @param $posArray
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _drawVals($posArray) {
              $marray = array();
              foreach ($this->data as $i => $parray) {
@@ -537,6 +909,18 @@ class baaChart  {
 
     }
 
+    /**
+     * _drawtitles
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _drawtitles() {
         $cw = imagefontwidth(5);
         $l = strlen($this->title);
@@ -551,6 +935,18 @@ class baaChart  {
 
     }
 
+    /**
+     * _drawaxes
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _drawaxes() {
         if ($this->ispiechart) return;
         $changed = 0;
@@ -577,6 +973,18 @@ class baaChart  {
         $this->_drawxaxis();
     }
 
+    /**
+     * _drawyaxis
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _drawyaxis() {
         $x0 = $this->lm;
         $y0 = $this->tm + $this->cheight;
@@ -603,6 +1011,18 @@ class baaChart  {
         imagestringup($this->image,3,$x,$y,$this->ytitle,$this->txtcol);
     }
 
+    /**
+     * _maxlab
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _maxlab() {
         $max = 0;
         for ($i=0; $i < $this->xcount; $i++) {
@@ -613,6 +1033,18 @@ class baaChart  {
         return $max;
     }
 
+    /**
+     * _drawxaxis
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _drawxaxis() {
         $maxlabwid = $this->_maxlab();
         $x0 = $this->lm;
@@ -640,6 +1072,18 @@ class baaChart  {
         imagestring($this->image,3,$x,$y,$this->xtitle,$this->txtcol);
     }
 
+    /**
+     * _calcymax
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _calcymax() {
 
         $b = array_keys($this->stypes,'C');
@@ -666,6 +1110,18 @@ class baaChart  {
         return $m;
     }
 
+    /**
+     * _backgroundImage
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _backgroundImage() {
 
         switch ($this->pict) {

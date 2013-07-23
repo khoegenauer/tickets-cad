@@ -44,6 +44,19 @@ foreach($status_array AS $val) {
 	}
 $status_sel .= "</SELECT>";
 
+/**
+ * get_contact_details
+ * Insert description here
+ *
+ * @param $the_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_contact_details($the_id) {
 	$the_ret = array();
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` `u` WHERE `id` = " . $the_id . " LIMIT 1";
@@ -59,6 +72,19 @@ function get_contact_details($the_id) {
 	return $the_ret;
 	}
 
+/**
+ * get_user_name
+ * Insert description here
+ *
+ * @param $the_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_user_name($the_id) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` `u` WHERE `id` = " . $the_id . " LIMIT 1";
 	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
@@ -69,6 +95,19 @@ function get_user_name($the_id) {
 	return $the_ret;
 	}
 
+/**
+ * get_facilityname
+ * Insert description here
+ *
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_facilityname($value) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = " . $value . " LIMIT 1";		 
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);

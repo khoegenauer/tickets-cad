@@ -82,6 +82,18 @@ else {			// not empty then is finished
 	
 	}		// end if/else
 
+/**
+ * do_is_closed
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_is_closed() {
 	global $row;
 ?>		
@@ -93,6 +105,19 @@ function do_is_closed() {
 <?php		
 	}				// end function do_is_closed()
 	
+/**
+ * do_is_start
+ * Insert description here
+ *
+ * @param $in_row
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_is_start($in_row) {				// 3/22/10
 	global $disposition;
 ?>
@@ -242,6 +267,18 @@ function do_is_start($in_row) {				// 3/22/10
 <?php
 	}		//end function do_is_start()
 
+/**
+ * do_is_finished
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_is_finished(){
 		if (!get_variable('military_time'))	{			//put together date from the dropdown box and textbox values
 			if ((array_key_exists('frm_meridiem_problemstart', $_POST)) && ($_POST['frm_meridiem_problemstart'] == 'pm')){		// 4/20/11

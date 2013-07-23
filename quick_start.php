@@ -302,6 +302,18 @@ function do_icon_view(val, thediv) {
 </script>
 </HEAD>
 <?php 
+/**
+ * count_responders
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function count_responders() {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder`";
 	$result = mysql_query($query);	
@@ -309,6 +321,20 @@ function count_responders() {
 	return $count_responders;
 	}
 	
+/**
+ * do_setting
+ * Insert description here
+ *
+ * @param $which
+ * @param $what
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_setting ($which, $what) {				// 7/7/09
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]settings` WHERE `name`= '$which' LIMIT 1";		// 5/25/09
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);

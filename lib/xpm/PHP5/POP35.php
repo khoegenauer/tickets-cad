@@ -24,6 +24,20 @@ if (!class_exists('FUNC5')) require_once 'FUNC5.php';
 
 $_RESULT = array();
 
+/**
+ * POP35
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class POP35 {
 
 	const CRLF = "\r\n";
@@ -32,6 +46,21 @@ class POP35 {
 	const COUT = 5;
 	const BLEN = 1024;
 
+/**
+ * _ok
+ * Insert description here
+ *
+ * @param $conn
+ * @param $resp
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static private function _ok($conn, &$resp, $debug = null) {
 		if (!is_resource($conn)) return FUNC5::trace($debug, 'invalid resource connection', 1);
 		else {
@@ -53,6 +82,26 @@ class POP35 {
 		}
 	}
 
+/**
+ * connect
+ * Insert description here
+ *
+ * @param $host
+ * @param $user
+ * @param $pass
+ * @param $port
+ * @param $vssl
+ * @param $tout
+ * @param $context
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function connect($host = null, $user = null, $pass = null, $port = null, $vssl = null, $tout = null, $context = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -95,6 +144,22 @@ class POP35 {
 		}
 	}
 
+/**
+ * auth
+ * Insert description here
+ *
+ * @param $conn
+ * @param $user
+ * @param $pass
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function auth($conn = null, $user = null, $pass = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -120,6 +185,20 @@ class POP35 {
 		}
 	}
 
+/**
+ * disconnect
+ * Insert description here
+ *
+ * @param $conn
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function disconnect($conn = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -133,6 +212,20 @@ class POP35 {
 		}
 	}
 
+/**
+ * pnoop
+ * Insert description here
+ *
+ * @param $conn
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function pnoop($conn = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -150,6 +243,20 @@ class POP35 {
 		}
 	}
 
+/**
+ * prset
+ * Insert description here
+ *
+ * @param $conn
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function prset($conn = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -167,6 +274,20 @@ class POP35 {
 		}
 	}
 
+/**
+ * pquit
+ * Insert description here
+ *
+ * @param $conn
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function pquit($conn = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -184,6 +305,20 @@ class POP35 {
 		}
 	}
 
+/**
+ * pstat
+ * Insert description here
+ *
+ * @param $conn
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function pstat($conn = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -207,6 +342,21 @@ class POP35 {
 		}
 	}
 
+/**
+ * pdele
+ * Insert description here
+ *
+ * @param $conn
+ * @param $msg
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function pdele($conn = null, $msg = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -227,6 +377,21 @@ class POP35 {
 		}
 	}
 
+/**
+ * pretr
+ * Insert description here
+ *
+ * @param $conn
+ * @param $msg
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function pretr($conn = null, $msg = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -258,6 +423,21 @@ class POP35 {
 		}
 	}
 
+/**
+ * plist
+ * Insert description here
+ *
+ * @param $conn
+ * @param $msg
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function plist($conn = null, $msg = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -309,6 +489,21 @@ class POP35 {
 		}
 	}
 
+/**
+ * puidl
+ * Insert description here
+ *
+ * @param $conn
+ * @param $msg
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function puidl($conn = null, $msg = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;

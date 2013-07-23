@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * get_facilityname
+ * Insert description here
+ *
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_facilityname($value) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = " . $value . " LIMIT 1";		 
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -7,6 +20,20 @@ function get_facilityname($value) {
 	return $row['name'];
 	}
  
+/**
+ * exportMysqlToCsv
+ * Insert description here
+ *
+ * @param $user
+ * @param $filename
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function exportMysqlToCsv($user,$filename = 'requests.csv'){
     $csv_terminated = "\n";
     $csv_separator = ",";

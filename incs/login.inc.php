@@ -21,6 +21,19 @@
 6/1/2013 revised 'contact us' addr to user addr if available
 */
 
+/**
+ * do_logout
+ * Insert description here
+ *
+ * @param $return
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_logout($return=FALSE){						/* logout - destroy session data */
 	global $hide_dispatched, $hide_status_groups;
 	@session_start();
@@ -50,6 +63,18 @@ function do_logout($return=FALSE){						/* logout - destroy session data */
 	do_login('main.php', TRUE);				// wait for login
 	}
 // ==========================================================================
+/**
+ * check_conn
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function check_conn () {				// returns TRUE/FALSE
 		$url = "http://maps.google.com/";
 		$response="";
@@ -98,6 +123,19 @@ function do_logout($return=FALSE){						/* logout - destroy session data */
 			
 		}	// end function check_conn ()
 
+/**
+ * set_filenames
+ * Insert description here
+ *
+ * @param $internet
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function set_filenames($internet) {
 		$normal = (($internet == 1) || (($internet == 3) && (check_conn ())));		// check_conn()  returns TRUE/FALSE = 8/31/10			
 	
@@ -115,6 +153,19 @@ function do_logout($return=FALSE){						/* logout - destroy session data */
 
 // ==========================================================================
 
+/**
+ * is_expired
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function is_expired($id) {		// returns boolean
 	global $now ;
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `id` = {$id} LIMIT 1;";	
@@ -123,11 +174,40 @@ function is_expired($id) {		// returns boolean
 	return ((is_resource($result)) && (mysql_affected_rows()==1) && ($row['expires'] > $now));
 	}
 
+/**
+ * redir
+ * Insert description here
+ *
+ * @param $url
+ * @param $time
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function redir($url, $time = 0) {
 	echo '<meta http-equiv="refresh" content="', $time, ';URL=', $url, '">';
 	die; 
 	} 
 
+/**
+ * do_login
+ * Insert description here
+ *
+ * @param $requested_page
+ * @param $outinfo
+ * @param $hh
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do login/ses sion code - returns array - 2/12/09, 3/8/09
 	global $hide_dispatched, $hide_status_groups;
 	@session_start();

@@ -23,6 +23,19 @@ $tickets_dir = getcwd();
 
 <?php
 
+/**
+ * module_tabs_exist
+ * Insert description here
+ *
+ * @param $name
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function module_tabs_exist($name) {
 	$query 		= "SELECT COUNT(*) FROM `$GLOBALS[mysql_prefix]modules`";
 	$result 	= mysql_query($query);
@@ -41,6 +54,19 @@ function module_tabs_exist($name) {
 		}
 	}
 	
+/**
+ * mod_table_exists
+ * Insert description here
+ *
+ * @param $tablename
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function mod_table_exists($tablename) {			//check if mysql table exists, if it's a re-install
 	$query 		= "SELECT COUNT(*) FROM $tablename";
 	$result 	= mysql_query($query);
@@ -86,6 +112,19 @@ if (isset($_POST['module_choice'])) { // Handle the form.
 	$module_name = $row['mod_name'];
 	$table = $row['table'];	
 
+/**
+ * rmdir_recurse
+ * Insert description here
+ *
+ * @param $path
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function rmdir_recurse($path) {  
 		$path = rtrim($path, '/').'/';  
 		$handle = opendir($path);  

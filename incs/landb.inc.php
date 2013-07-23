@@ -1,4 +1,17 @@
 <?php
+/**
+ * do_landb_server
+ * Insert description here
+ *
+ * @param $query_arg
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_landb_server($query_arg) {
 
 ?>

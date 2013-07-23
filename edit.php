@@ -92,6 +92,19 @@ $zoom_tight = FALSE;		// default is FALSE (no tight zoom); replace with a decima
 */
 	$addrs = FALSE;										// notifies address array doesn't exist
 
+/**
+ * edit_ticket
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function edit_ticket($id) {							/* post changes */
 		global $addrs, $NOTIFY_TICKET;
 

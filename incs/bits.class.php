@@ -36,23 +36,89 @@ define( "BIT_29", 268435456 );
 define( "BIT_30", 536870912 );
 define( "BIT_31", 1073741824 );
 
+/**
+ * CBitField
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class CBitField {
   var $bitfield = 0;
+  /**
+   * CBitField
+   * Insert description here
+   *
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   function CBitField () {
       $this -> bitfield = ($this -> bitfield | 0);
   }
+  /**
+   * QueryBit
+   * Insert description here
+   *
+   * @param $bit
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   function QueryBit ($bit) {
     if (($this -> bitfield & $bit) > 0 )
       return 1;
     else
       return 0;
   }
+  /**
+   * SetBit
+   * Insert description here
+   *
+   * @param $bit
+   * @param $boolean
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   function SetBit ($bit, $boolean) {
     if ($boolean == 1)
       $this -> bitfield |= $bit;
     else
       $this -> bitfield &= ~$bit;
   }
+  /**
+   * FlipBit
+   * Insert description here
+   *
+   * @param $bit
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   function FlipBit ($bit) {
     $this -> bitfield ^= $bit;
   }

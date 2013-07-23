@@ -44,6 +44,20 @@ $ECC_PRIME_SQUARED = $ECC_SQUARED / (1 - $ECC_SQUARED);
 $E1 = (1 - sqrt(1 - $ECC_SQUARED)) / (1 + sqrt(1 - $ECC_SQUARED));
 $UTMZone = null;
 
+/**
+ * getZoneNumber
+ * Insert description here
+ *
+ * @param $lat
+ * @param $lon
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function getZoneNumber($lat, $lon) {
 
 	$lat = (float)$lat;
@@ -84,6 +98,21 @@ function getZoneNumber($lat, $lon) {
 	} // END get$zoneNumber() function
 
 
+/**
+ * LLtoUTM
+ * Insert description here
+ *
+ * @param $lat
+ * @param $lon
+ * @param $utmcoords
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function LLtoUTM($lat,$lon, $utmcoords) {
 	global $UTMZone, $ECC_SQUARED, $UNDEFINED_STR, $UTMEasting, $UTMNorthing, $zoneNumber, $DEG_2_RAD, $EASTING_OFFSET, $k0, $EQUATORIAL_RADIUS, $ECC_PRIME_SQUARED, $ECC_PRIME_SQUARED;
 	// $utmcoords is a 2-D array declared by the calling routine
@@ -151,6 +180,21 @@ function LLtoUTM($lat,$lon, $utmcoords) {
 	return $utmcoords;
 	}
 
+/**
+ * LLtoUSNG
+ * Insert description here
+ *
+ * @param $lat
+ * @param $lon
+ * @param $precision
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function LLtoUSNG($lat, $lon, $precision=5) {				// note default precision
 	if((empty($lat)) || (empty($lon))) {return "";}
 	global $NORTHING_OFFSET, $UTMNorthing, $zoneNumber, $UTMEasting, $UTMZone;
@@ -206,6 +250,19 @@ function LLtoUSNG($lat, $lon, $precision=5) {				// note default precision
 
 ***************************************************************************/
 
+/**
+ * UTMLetterDesignator
+ * Insert description here
+ *
+ * @param $lat
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function UTMLetterDesignator($lat) {
 	$lat = (float)$lat;
 
@@ -267,6 +324,19 @@ function UTMLetterDesignator($lat) {
 
 ***************************************************************************/
 
+/**
+ * findSet
+ * Insert description here
+ *
+ * @param $zoneNum
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function findSet ($zoneNum) {
 
 	$zoneNum = (int) $zoneNum;
@@ -311,6 +381,21 @@ function findSet ($zoneNum) {
 
 ***************************************************************************/
 
+/**
+ * findGridLetters
+ * Insert description here
+ *
+ * @param $zoneNum
+ * @param $northing
+ * @param $easting
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function findGridLetters($zoneNum, $northing, $easting) {
 	global $BLOCK_SIZE,$GRIDSQUARE_SET_ROW_SIZE, $GRIDSQUARE_SET_COL_SIZE ;
 
@@ -364,6 +449,21 @@ function findGridLetters($zoneNum, $northing, $easting) {
 
 ***************************************************************************/
 
+/**
+ * lettersHelper
+ * Insert description here
+ *
+ * @param $set
+ * @param $row
+ * @param $col
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function lettersHelper($set, $row, $col) {
 	global $GRIDSQUARE_SET_COL_SIZE, $GRIDSQUARE_SET_ROW_SIZE;
 
@@ -430,6 +530,20 @@ function lettersHelper($set, $row, $col) {
 	}
 // END lettersHelper() function
 
+/**
+ * charat
+ * Insert description here
+ *
+ * @param $str
+ * @param $pos
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function charat($str, $pos) {
 		return substr ($str, $pos, 1 );
 		}

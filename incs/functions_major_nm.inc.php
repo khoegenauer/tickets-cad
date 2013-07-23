@@ -28,10 +28,35 @@ $patient = get_text("Patient");
 $incident = get_text("Incident");
 $incidents = get_text("Incidents");
 
+/**
+ * do_updated
+ * Insert description here
+ *
+ * @param $instr
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_updated ($instr) {		// 11/3/2012
 	return substr($instr, 8, 8);
 	}
 
+/**
+ * get_can_edit
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_can_edit() {				// 5/1/11
 	if (empty($_SESSION)) {return FALSE;}
 	else	{
@@ -52,6 +77,19 @@ function get_can_edit() {				// 5/1/11
 	}		// end function 
 
 if (!(function_exists ('get_lat'))) {
+/**
+ * get_lat
+ * Insert description here
+ *
+ * @param $in_lat
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function get_lat($in_lat) {					// 9/7/08
 		if (empty($in_lat)) {return"";}			// 9/14/08
 		$format = get_variable('lat_lng');
@@ -73,6 +111,19 @@ if (!(function_exists ('get_lat'))) {
 	
 if (!(function_exists ('get_lng'))) {
 	
+/**
+ * get_lng
+ * Insert description here
+ *
+ * @param $in_lng
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function get_lng($in_lng) {					// 9/7/08
 		if (empty($in_lng)) {return"";}			// 9/14/08
 		$format = get_variable('lat_lng');
@@ -93,6 +144,21 @@ if (!(function_exists ('get_lng'))) {
 	}
 
 //	{ -- dummy
+/**
+ * list_tickets
+ * Insert description here
+ *
+ * @param $sort_by_field
+ * @param $sort_value
+ * @param $my_offset
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list tickets ===================================================
 
 	$time = microtime(true); // Gets microseconds
@@ -1517,6 +1583,21 @@ $temp  = (string) ( round((microtime(true) - $time), 3));
 
 //	} { -- dummy
 
+/**
+ * show_ticket
+ * Insert description here
+ *
+ * @param $id
+ * @param $print
+ * @param $search
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function show_ticket($id,$print='false', $search = FALSE) {								/* show specified ticket */
 	global $istest,  $nature, $disposition, $patient, $incident, $incidents;			// 12/3/10
 	
@@ -1652,6 +1733,19 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 
 // =============== 10/30/09 
 
+/**
+ * my_to_date
+ * Insert description here
+ *
+ * @param $in_date
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function my_to_date($in_date) {			// date_time format to user's spec
 //			$temp = mktime(substr($in_date,11,2),substr($in_date,14,2),substr($in_date,17,2),substr($in_date,5,2),substr($in_date,8,2),substr($in_date,0,4));
 			$temp = mysql2timestamp($d1);		// 9/29/10
@@ -1692,6 +1786,22 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 //	} {		-- dummy
 
 
+/**
+ * do_ticket
+ * Insert description here
+ *
+ * @param $theRow
+ * @param $theWidth
+ * @param $search
+ * @param $dist
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_ticket($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// returns table - 6/26/10 - 11/16/10
 //	global $disposition;
 	global $iw_width, $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
@@ -1770,6 +1880,22 @@ function do_ticket($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// retu
 	return $print;
 	}		// end function do ticket(
 
+/**
+ * do_ticket_wm
+ * Insert description here
+ *
+ * @param $theRow
+ * @param $theWidth
+ * @param $search
+ * @param $dist
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_ticket_wm($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// returns table - 6/26/10
 	global $iw_width, $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
 
@@ -1846,6 +1972,22 @@ function do_ticket_wm($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// r
 	return $print;
 	}		// end function do ticket_wm()
 
+/**
+ * do_ticket_only
+ * Insert description here
+ *
+ * @param $theRow
+ * @param $theWidth
+ * @param $search
+ * @param $dist
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_ticket_only($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// returns table - 6/26/10
 //	dump(__LINE__);
 	global $iw_width, $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
@@ -1912,6 +2054,22 @@ function do_ticket_only($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						//
 	
 //	} -- dummy
 
+/**
+ * do_ticket_extras
+ * Insert description here
+ *
+ * @param $theRow
+ * @param $theWidth
+ * @param $search
+ * @param $dist
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_ticket_extras($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// returns table - 6/26/10
 //	dump(__LINE__);
 	global $iw_width, $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
@@ -1930,6 +2088,22 @@ function do_ticket_extras($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						
 	return $print;
 	}		// end function do ticket_extras()
 	
+/**
+ * do_ticket_messages
+ * Insert description here
+ *
+ * @param $theRow
+ * @param $theWidth
+ * @param $search
+ * @param $dist
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_ticket_messages($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// returns table - 6/26/10
 //	dump(__LINE__);
 	global $iw_width, $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10

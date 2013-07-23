@@ -17,6 +17,20 @@
 // Description: Wrapper class with some goodies to form the
 // Interface to low level image drawing routines.
 //===================================================
+/**
+ * Image
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class Image {
     public $left_margin=30,$right_margin=30,$top_margin=20,$bottom_margin=30;
     public $img=null;
@@ -41,6 +55,22 @@ class Image {
     protected $iInterlace=false;
     //---------------
     // CONSTRUCTOR
+    /**
+     * Image
+     * Insert description here
+     *
+     * @param $aWidth
+     * @param $aHeight
+     * @param $aFormat
+     * @param $aSetAutoMargin
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Image($aWidth,$aHeight,$aFormat=DEFAULT_GFORMAT,$aSetAutoMargin=true) {
 	$this->CreateImgCanvas($aWidth,$aHeight);
 	if( $aSetAutoMargin )
@@ -54,11 +84,37 @@ class Image {
     }
 
     // Enable interlacing in images
+    /**
+     * SetInterlace
+     * Insert description here
+     *
+     * @param $aFlg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetInterlace($aFlg=true) {
 	$this->iInterlace=$aFlg;
     }
 
     // Should we use anti-aliasing. Note: This really slows down graphics!
+    /**
+     * SetAntiAliasing
+     * Insert description here
+     *
+     * @param $aFlg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAntiAliasing($aFlg=true) {
 	$this->use_anti_aliasing = $aFlg;
 	if( function_exists('imageantialias') ) {
@@ -69,6 +125,20 @@ class Image {
 	}
     }
 
+    /**
+     * CreateRawCanvas
+     * Insert description here
+     *
+     * @param $aWidth
+     * @param $aHeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function CreateRawCanvas($aWidth=0,$aHeight=0) {
 	if( $aWidth <= 1 || $aHeight <= 1 ) {
 	    JpGraphError::RaiseL(25082,$aWidth,$aHeight);//("Illegal sizes specified for width or height when creating an image, (width=$aWidth, height=$aHeight)");
@@ -98,6 +168,18 @@ class Image {
 	    $this->rgb = new RGB($this->img);				
     }
 
+    /**
+     * CloneCanvasH
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function CloneCanvasH() {
 	$oldimage = $this->img;
 	$this->CreateRawCanvas($this->width,$this->height);
@@ -105,6 +187,20 @@ class Image {
 	return $oldimage;
     }
     
+    /**
+     * CreateImgCanvas
+     * Insert description here
+     *
+     * @param $aWidth
+     * @param $aHeight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function CreateImgCanvas($aWidth=0,$aHeight=0) {
 
 	$old = array($this->img,$this->width,$this->height);
@@ -134,6 +230,30 @@ class Image {
 	return $old ;
     }
 
+    /**
+     * CopyCanvasH
+     * Insert description here
+     *
+     * @param $aToHdl
+     * @param $aFromHdl
+     * @param $aToX
+     * @param $aToY
+     * @param $aFromX
+     * @param $aFromY
+     * @param $aWidth
+     * @param $aHeight
+     * @param $aw
+     * @param 1
+     * @param $ah
+     * @param 1
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function CopyCanvasH($aToHdl,$aFromHdl,$aToX,$aToY,$aFromX,$aFromY,$aWidth,$aHeight,$aw=-1,$ah=-1) {
 	if( $aw === -1 ) {
 	    $aw = $aWidth;
@@ -146,11 +266,58 @@ class Image {
 	$f($aToHdl,$aFromHdl,$aToX,$aToY,$aFromX,$aFromY, $aWidth,$aHeight,$aw,$ah);
     }
 
+    /**
+     * Copy
+     * Insert description here
+     *
+     * @param $fromImg
+     * @param $toX
+     * @param $toY
+     * @param $fromX
+     * @param $fromY
+     * @param $toWidth
+     * @param $toHeight
+     * @param $fromWidth
+     * @param 1
+     * @param $fromHeight
+     * @param 1
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Copy($fromImg,$toX,$toY,$fromX,$fromY,$toWidth,$toHeight,$fromWidth=-1,$fromHeight=-1) {
 	$this->CopyCanvasH($this->img,$fromImg,$toX,$toY,$fromX,$fromY,
 			   $toWidth,$toHeight,$fromWidth,$fromHeight);
     }
 
+    /**
+     * CopyMerge
+     * Insert description here
+     *
+     * @param $fromImg
+     * @param $toX
+     * @param $toY
+     * @param $fromX
+     * @param $fromY
+     * @param $toWidth
+     * @param $toHeight
+     * @param $fromWidth
+     * @param 1
+     * @param $fromHeight
+     * @param 1
+     * @param $aMix
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function CopyMerge($fromImg,$toX,$toY,$fromX,$fromY,$toWidth,$toHeight,$fromWidth=-1,$fromHeight=-1,$aMix=100) {
 	if( $aMix == 100 ) {
 	    $this->CopyCanvasH($this->img,$fromImg,
@@ -179,18 +346,57 @@ class Image {
 	}
     }
 
+    /**
+     * GetWidth
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     static function GetWidth($aImg=null) {
 	if( $aImg === null ) 
 	    $aImg = $this->img;
 	return imagesx($aImg);
     }
 
+    /**
+     * GetHeight
+     * Insert description here
+     *
+     * @param $aImg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     static function GetHeight($aImg=null) {
 	if( $aImg === null ) 
 	    $aImg = $this->img;
 	return imagesy($aImg);
     }
     
+    /**
+     * CreateFromString
+     * Insert description here
+     *
+     * @param $aStr
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     static function CreateFromString($aStr) {
 	$img = imagecreatefromstring($aStr);
 	if( $img === false ) {
@@ -199,20 +405,71 @@ class Image {
 	return $img;
     }
 
+    /**
+     * SetCanvasH
+     * Insert description here
+     *
+     * @param $aHdl
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetCanvasH($aHdl) {
 	$this->img = $aHdl;
 	$this->rgb->img = $aHdl;
     }
 
+    /**
+     * SetCanvasColor
+     * Insert description here
+     *
+     * @param $aColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetCanvasColor($aColor) {
 	$this->canvascolor = $aColor ;
     }
 
+    /**
+     * SetAlphaBlending
+     * Insert description here
+     *
+     * @param $aFlg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAlphaBlending($aFlg=true) {
 	ImageAlphaBlending($this->img,$aFlg);
     }
 
 	
+    /**
+     * SetAutoMargin
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAutoMargin() {	
 	GLOBAL $gJpgBrandTiming;
 	$min_bm=5;
@@ -231,6 +488,21 @@ class Image {
     //---------------
     // PUBLIC METHODS	
 	
+    /**
+     * SetFont
+     * Insert description here
+     *
+     * @param $family
+     * @param $style
+     * @param $size
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetFont($family,$style=FS_NORMAL,$size=10) {
 	$this->font_family=$family;
 	$this->font_style=$style;
@@ -250,6 +522,20 @@ class Image {
     }
 
     // Get the specific height for a text string
+    /**
+     * GetTextHeight
+     * Insert description here
+     *
+     * @param $txt
+     * @param $angle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetTextHeight($txt="",$angle=0) {
 	$tmp = explode("\n",$txt);
 	$n = count($tmp);
@@ -282,18 +568,58 @@ class Image {
     }
 	
     // Estimate font height
+    /**
+     * GetFontHeight
+     * Insert description here
+     *
+     * @param $angle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetFontHeight($angle=0) {
 	$txt = "XOMg";
 	return $this->GetTextHeight($txt,$angle);
     }
 	
     // Approximate font width with width of letter "O"
+    /**
+     * GetFontWidth
+     * Insert description here
+     *
+     * @param $angle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetFontWidth($angle=0) {
 	$txt = 'O';
 	return $this->GetTextWidth($txt,$angle);
     }
 	
     // Get actual width of text in absolute pixels
+    /**
+     * GetTextWidth
+     * Insert description here
+     *
+     * @param $txt
+     * @param $angle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetTextWidth($txt,$angle=0) {
 
 	$tmp = explode("\n",$txt);
@@ -340,6 +666,30 @@ class Image {
     }
 	
     // Draw text with a box around it
+    /**
+     * StrokeBoxedText
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     * @param $txt
+     * @param $dir
+     * @param $fcolor
+     * @param $bcolor
+     * @param $shadowcolor
+     * @param $paragraph_align
+     * @param $xmarg
+     * @param $ymarg
+     * @param $cornerradius
+     * @param $dropwidth
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeBoxedText($x,$y,$txt,$dir=0,$fcolor="white",$bcolor="black",
 			     $shadowcolor=false,$paragraph_align="left",
 			     $xmarg=6,$ymarg=4,$cornerradius=0,$dropwidth=3) {
@@ -414,12 +764,45 @@ class Image {
     }
 
     // Set text alignment	
+    /**
+     * SetTextAlign
+     * Insert description here
+     *
+     * @param $halign
+     * @param $valign
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTextAlign($halign,$valign="bottom") {
 	$this->text_halign=$halign;
 	$this->text_valign=$valign;
     }
 	
 
+    /**
+     * _StrokeBuiltinFont
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     * @param $txt
+     * @param $dir
+     * @param $paragraph_align
+     * @param $aBoundingBox
+     * @param $aDebug
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _StrokeBuiltinFont($x,$y,$txt,$dir=0,$paragraph_align="left",&$aBoundingBox,$aDebug=false) {
 
 	if( is_numeric($dir) && $dir!=90 && $dir!=0) 
@@ -487,6 +870,19 @@ class Image {
 	}
     }
 
+    /**
+     * AddTxtCR
+     * Insert description here
+     *
+     * @param $aTxt
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function AddTxtCR($aTxt) {
 	// If the user has just specified a '\n'
 	// instead of '\n\t' we have to add '\r' since
@@ -500,6 +896,20 @@ class Image {
 	return implode("\n\r",$e);
     }
 
+    /**
+     * GetTTFBBox
+     * Insert description here
+     *
+     * @param $aTxt
+     * @param $aAngle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetTTFBBox($aTxt,$aAngle=0) {
 	$bbox = @ImageTTFBBox($this->font_size,$aAngle,$this->font_file,$aTxt);
 	if( $bbox === false ) {
@@ -509,6 +919,20 @@ class Image {
 	return $bbox;
     }
 
+    /**
+     * GetBBoxTTF
+     * Insert description here
+     *
+     * @param $aTxt
+     * @param $aAngle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetBBoxTTF($aTxt,$aAngle=0) {
 	// Normalize the bounding box to become a minimum
 	// enscribing rectangle
@@ -562,16 +986,63 @@ class Image {
 	return $bbox;
     }
 
+    /**
+     * GetBBoxHeight
+     * Insert description here
+     *
+     * @param $aTxt
+     * @param $aAngle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetBBoxHeight($aTxt,$aAngle=0) {
 	$box = $this->GetBBoxTTF($aTxt,$aAngle);
 	return $box[1]-$box[7]+1;
     }
 
+    /**
+     * GetBBoxWidth
+     * Insert description here
+     *
+     * @param $aTxt
+     * @param $aAngle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetBBoxWidth($aTxt,$aAngle=0) {
 	$box = $this->GetBBoxTTF($aTxt,$aAngle);
 	return $box[2]-$box[0]+1;	
     }
 
+    /**
+     * _StrokeTTF
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     * @param $txt
+     * @param $dir
+     * @param $paragraph_align
+     * @param $aBoundingBox
+     * @param $debug
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function _StrokeTTF($x,$y,$txt,$dir=0,$paragraph_align="left",&$aBoundingBox,$debug=false) {
 
 	// Setupo default inter line margin for paragraphs to
@@ -744,6 +1215,24 @@ class Image {
 	}
     }
 	
+    /**
+     * StrokeText
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     * @param $txt
+     * @param $dir
+     * @param $paragraph_align
+     * @param $debug
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeText($x,$y,$txt,$dir=0,$paragraph_align="left",$debug=false) {
 
 	$x = round($x);
@@ -766,6 +1255,22 @@ class Image {
 	return $boundingbox;
     }
 	
+    /**
+     * SetMargin
+     * Insert description here
+     *
+     * @param $lm
+     * @param $rm
+     * @param $tm
+     * @param $bm
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetMargin($lm,$rm,$tm,$bm) {
 	$this->left_margin=$lm;
 	$this->right_margin=$rm;
@@ -779,10 +1284,37 @@ class Image {
 	}
     }
 
+    /**
+     * SetTransparent
+     * Insert description here
+     *
+     * @param $color
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTransparent($color) {
 	imagecolortransparent ($this->img,$this->rgb->allocate($color));
     }
 	
+    /**
+     * SetColor
+     * Insert description here
+     *
+     * @param $color
+     * @param $aAlpha
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetColor($color,$aAlpha=0) {
 	$this->current_color_name = $color;
 	$this->current_color=$this->rgb->allocate($color,$aAlpha);
@@ -794,6 +1326,19 @@ class Image {
 	return $this->current_color;
     }
 	
+    /**
+     * PushColor
+     * Insert description here
+     *
+     * @param $color
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function PushColor($color) {
 	if( $color != "" ) {
 	    $this->colorstack[$this->colorstackidx]=$this->current_color_name;
@@ -806,6 +1351,18 @@ class Image {
 	}
     }
 	
+    /**
+     * PopColor
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function PopColor() {
 	if($this->colorstackidx<1)
 	    JpGraphError::RaiseL(25098);//(" Negative Color stack index. Unmatched call to PopColor()");
@@ -814,16 +1371,61 @@ class Image {
     }
 	
 	
+    /**
+     * SetLineWeight
+     * Insert description here
+     *
+     * @param $weight
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLineWeight($weight) {
 	imagesetthickness($this->img,$weight);
 	$this->line_weight = $weight;
     }
 	
+    /**
+     * SetStartPoint
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetStartPoint($x,$y) {
 	$this->lastx=round($x);
 	$this->lasty=round($y);
     }
 	
+    /**
+     * Arc
+     * Insert description here
+     *
+     * @param $cx
+     * @param $cy
+     * @param $w
+     * @param $h
+     * @param $s
+     * @param $e
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Arc($cx,$cy,$w,$h,$s,$e) {
 	// GD Arc doesn't like negative angles
 	while( $s < 0) $s += 360;
@@ -833,6 +1435,25 @@ class Image {
 		 $s,$e,$this->current_color);
     }
     
+    /**
+     * FilledArc
+     * Insert description here
+     *
+     * @param $xc
+     * @param $yc
+     * @param $w
+     * @param $h
+     * @param $s
+     * @param $e
+     * @param $style
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FilledArc($xc,$yc,$w,$h,$s,$e,$style='') {
 	while( $s < 0 ) $s += 360;
 	while( $e < 0 ) $e += 360;
@@ -844,10 +1465,48 @@ class Image {
 	}
     }
 
+    /**
+     * FilledCakeSlice
+     * Insert description here
+     *
+     * @param $cx
+     * @param $cy
+     * @param $w
+     * @param $h
+     * @param $s
+     * @param $e
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FilledCakeSlice($cx,$cy,$w,$h,$s,$e) {
 	$this->CakeSlice($cx,$cy,$w,$h,$s,$e,$this->current_color_name);
     }
 
+    /**
+     * CakeSlice
+     * Insert description here
+     *
+     * @param $xc
+     * @param $yc
+     * @param $w
+     * @param $h
+     * @param $s
+     * @param $e
+     * @param $fillcolor
+     * @param $arccolor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function CakeSlice($xc,$yc,$w,$h,$s,$e,$fillcolor="",$arccolor="") {
 	$s = round($s); $e = round($e);
 	$w = round($w); $h = round($h);
@@ -876,19 +1535,80 @@ class Image {
 	}
     }
 
+    /**
+     * Ellipse
+     * Insert description here
+     *
+     * @param $xc
+     * @param $yc
+     * @param $w
+     * @param $h
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Ellipse($xc,$yc,$w,$h) {
 	$this->Arc($xc,$yc,$w,$h,0,360);
     }
 			
+    /**
+     * Circle
+     * Insert description here
+     *
+     * @param $xc
+     * @param $yc
+     * @param $r
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Circle($xc,$yc,$r) {
 	imageellipse($this->img,round($xc),round($yc),$r*2,$r*2,$this->current_color);
     }
 	
+    /**
+     * FilledCircle
+     * Insert description here
+     *
+     * @param $xc
+     * @param $yc
+     * @param $r
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FilledCircle($xc,$yc,$r) {
 	imagefilledellipse($this->img,round($xc),round($yc),2*$r,2*$r,$this->current_color);
     }
 	
     // Linear Color InterPolation
+    /**
+     * lip
+     * Insert description here
+     *
+     * @param $f
+     * @param $t
+     * @param $p
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function lip($f,$t,$p) {
 	$p = round($p,1);
 	$r = $f[0] + ($t[0]-$f[0])*$p;
@@ -898,6 +1618,19 @@ class Image {
     }
 
     // Set line style dashed, dotted etc
+    /**
+     * SetLineStyle
+     * Insert description here
+     *
+     * @param $s
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetLineStyle($s) {
 	if( is_numeric($s) ) {
 	    if( $s<1 || $s>4 ) 
@@ -919,6 +1652,23 @@ class Image {
     }
 	
     // Same as Line but take the line_style into account
+    /**
+     * StyleLine
+     * Insert description here
+     *
+     * @param $x1
+     * @param $y1
+     * @param $x2
+     * @param $y2
+     * @param $aStyle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StyleLine($x1,$y1,$x2,$y2,$aStyle='') {
 	if( $this->line_weight <= 0 )
 	    return;
@@ -949,6 +1699,24 @@ class Image {
 	}
     }
 	
+    /**
+     * DashedLine
+     * Insert description here
+     *
+     * @param $x1
+     * @param $y1
+     * @param $x2
+     * @param $y2
+     * @param $dash_length
+     * @param $dash_space
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DashedLine($x1,$y1,$x2,$y2,$dash_length=1,$dash_space=4) {
 
 	if( $this->line_weight <= 0 )
@@ -974,6 +1742,22 @@ class Image {
 	$this->lastx=$x2; $this->lasty=$y2;		
     } 
 
+    /**
+     * Line
+     * Insert description here
+     *
+     * @param $x1
+     * @param $y1
+     * @param $x2
+     * @param $y2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Line($x1,$y1,$x2,$y2) {
 
 	if( $this->line_weight <= 0 )
@@ -988,6 +1772,21 @@ class Image {
 	$this->lastx=$x2; $this->lasty=$y2;		
     }
 
+    /**
+     * Polygon
+     * Insert description here
+     *
+     * @param $p
+     * @param $closed
+     * @param $fast
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Polygon($p,$closed=FALSE,$fast=FALSE) {
 
 	if( $this->line_weight <= 0 ) 
@@ -1017,6 +1816,19 @@ class Image {
 	}
     }
 	
+    /**
+     * FilledPolygon
+     * Insert description here
+     *
+     * @param $pts
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FilledPolygon($pts) {
 	$n=count($pts);
 	if( $n == 0 ) {
@@ -1027,14 +1839,65 @@ class Image {
 	imagefilledpolygon($this->img,$pts,count($pts)/2,$this->current_color);
     }
 	
+    /**
+     * Rectangle
+     * Insert description here
+     *
+     * @param $xl
+     * @param $yu
+     * @param $xr
+     * @param $yl
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Rectangle($xl,$yu,$xr,$yl) {
 	$this->Polygon(array($xl,$yu,$xr,$yu,$xr,$yl,$xl,$yl,$xl,$yu));
     }
 	
+    /**
+     * FilledRectangle
+     * Insert description here
+     *
+     * @param $xl
+     * @param $yu
+     * @param $xr
+     * @param $yl
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FilledRectangle($xl,$yu,$xr,$yl) {
 	$this->FilledPolygon(array($xl,$yu,$xr,$yu,$xr,$yl,$xl,$yl));
     }
 
+    /**
+     * FilledRectangle2
+     * Insert description here
+     *
+     * @param $xl
+     * @param $yu
+     * @param $xr
+     * @param $yl
+     * @param $color1
+     * @param $color2
+     * @param $style
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FilledRectangle2($xl,$yu,$xr,$yl,$color1,$color2,$style=1) {
 	// Fill a rectangle with lines of two colors
 	if( $style===1 ) {
@@ -1064,6 +1927,28 @@ class Image {
 	}
     }
 
+    /**
+     * ShadowRectangle
+     * Insert description here
+     *
+     * @param $xl
+     * @param $yu
+     * @param $xr
+     * @param $yl
+     * @param $fcolor
+     * @param $shadow_width
+     * @param $shadow_color
+     * @param 102
+     * @param 102
+     * @param 102
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function ShadowRectangle($xl,$yu,$xr,$yl,$fcolor=false,$shadow_width=3,$shadow_color=array(102,102,102)) {
 	// This is complicated by the fact that we must also handle the case where
         // the reactangle has no fill color
@@ -1082,6 +1967,23 @@ class Image {
 	}
     }
 
+    /**
+     * FilledRoundedRectangle
+     * Insert description here
+     *
+     * @param $xt
+     * @param $yt
+     * @param $xr
+     * @param $yl
+     * @param $r
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FilledRoundedRectangle($xt,$yt,$xr,$yl,$r=5) {
 	if( $r==0 ) {
 	    $this->FilledRectangle($xt,$yt,$xr,$yl);
@@ -1113,6 +2015,23 @@ class Image {
 
     }
 
+    /**
+     * RoundedRectangle
+     * Insert description here
+     *
+     * @param $xt
+     * @param $yt
+     * @param $xr
+     * @param $yl
+     * @param $r
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function RoundedRectangle($xt,$yt,$xr,$yl,$r=5) {    
 
 	if( $r==0 ) {
@@ -1137,11 +2056,49 @@ class Image {
 	$this->Arc($xr-$r,$yl-$r,$r*2,$r*2,0,90);
     }
 
+    /**
+     * FilledBevel
+     * Insert description here
+     *
+     * @param $x1
+     * @param $y1
+     * @param $x2
+     * @param $y2
+     * @param $depth
+     * @param $color1
+     * @param $color2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FilledBevel($x1,$y1,$x2,$y2,$depth=2,$color1='white@0.4',$color2='darkgray@0.4') {
 	$this->FilledRectangle($x1,$y1,$x2,$y2);
 	$this->Bevel($x1,$y1,$x2,$y2,$depth,$color1,$color2);
     }
 
+    /**
+     * Bevel
+     * Insert description here
+     *
+     * @param $x1
+     * @param $y1
+     * @param $x2
+     * @param $y2
+     * @param $depth
+     * @param $color1
+     * @param $color2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Bevel($x1,$y1,$x2,$y2,$depth=2,$color1='white@0.4',$color2='black@0.5') {
 	$this->PushColor($color1);
 	for( $i=0; $i < $depth; ++$i ) {
@@ -1158,26 +2115,97 @@ class Image {
 	$this->PopColor();
     }
 
+    /**
+     * StyleLineTo
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StyleLineTo($x,$y) {
 	$this->StyleLine($this->lastx,$this->lasty,$x,$y);
 	$this->lastx=$x;
 	$this->lasty=$y;
     }
 	
+    /**
+     * LineTo
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function LineTo($x,$y) {
 	$this->Line($this->lastx,$this->lasty,$x,$y);
 	$this->lastx=$x;
 	$this->lasty=$y;
     }
 	
+    /**
+     * Point
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Point($x,$y) {
 	imagesetpixel($this->img,round($x),round($y),$this->current_color);
     }
 	
+    /**
+     * Fill
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Fill($x,$y) {
 	imagefill($this->img,round($x),round($y),$this->current_color);
     }
 
+    /**
+     * FillToBorder
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     * @param $aBordColor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FillToBorder($x,$y,$aBordColor) {
 	$bc = $this->rgb->allocate($aBordColor);
 	if( $bc == -1 ) {
@@ -1186,11 +2214,36 @@ class Image {
 	imagefilltoborder($this->img,round($x),round($y),$bc,$this->current_color);
     }
 
+    /**
+     * SetExpired
+     * Insert description here
+     *
+     * @param $aFlg
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetExpired($aFlg=true) {
 	$this->expired = $aFlg;
     }
 	
     // Generate image header
+    /**
+     * Headers
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Headers() {
 	
 	// In case we are running from the command line with the client version of
@@ -1220,11 +2273,37 @@ class Image {
     }
 
     // Adjust image quality for formats that allow this
+    /**
+     * SetQuality
+     * Insert description here
+     *
+     * @param $q
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetQuality($q) {
 	$this->quality = $q;
     }
 	
     // Stream image to browser or to file
+    /**
+     * Stream
+     * Insert description here
+     *
+     * @param $aFile
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Stream($aFile="") {
 	$func="image".$this->img_format;
 	if( $this->img_format=="jpeg" && $this->quality != null ) {
@@ -1246,12 +2325,38 @@ class Image {
     }
 		
     // Clear resource tide up by image
+    /**
+     * Destroy
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Destroy() {
 	imagedestroy($this->img);
     }
 	
     // Specify image format. Note depending on your installation
     // of PHP not all formats may be supported.
+    /**
+     * SetImgFormat
+     * Insert description here
+     *
+     * @param $aFormat
+     * @param $aQuality
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetImgFormat($aFormat,$aQuality=75) {		
 	$this->quality = $aQuality;
 	$aFormat = strtolower($aFormat);
@@ -1303,11 +2408,42 @@ class Image {
 // Description: Exactly as Image but draws the image at
 // a specified angle around a specified rotation point.
 //===================================================
+/**
+ * RotImage
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class RotImage extends Image {
     public $a=0;
     public $dx=0,$dy=0,$transx=0,$transy=0; 
     private $m=array();
 	
+    /**
+     * RotImage
+     * Insert description here
+     *
+     * @param $aWidth
+     * @param $aHeight
+     * @param $a
+     * @param $aFormat
+     * @param $aSetAutoMargin
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function RotImage($aWidth,$aHeight,$a=0,$aFormat=DEFAULT_GFORMAT,$aSetAutoMargin=true) {
 	$this->Image($aWidth,$aHeight,$aFormat,$aSetAutoMargin);
 	$this->dx=$this->left_margin+$this->plotwidth/2;
@@ -1315,6 +2451,20 @@ class RotImage extends Image {
 	$this->SetAngle($a);	
     }
 	
+    /**
+     * SetCenter
+     * Insert description here
+     *
+     * @param $dx
+     * @param $dy
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetCenter($dx,$dy) {
 	$old_dx = $this->dx;
 	$old_dy = $this->dy;
@@ -1324,6 +2474,20 @@ class RotImage extends Image {
 	return array($old_dx,$old_dy);
     }
 	
+    /**
+     * SetTranslation
+     * Insert description here
+     *
+     * @param $dx
+     * @param $dy
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTranslation($dx,$dy) {
 	$old = array($this->transx,$this->transy);
 	$this->transx = $dx;
@@ -1331,6 +2495,18 @@ class RotImage extends Image {
 	return $old;
     }
 
+    /**
+     * UpdateRotMatrice
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function UpdateRotMatrice()  {
 	$a = $this->a;
 	$a *= M_PI/180;
@@ -1344,6 +2520,19 @@ class RotImage extends Image {
 	$this->m[1][2] = $this->dy*(1-$ca) - $sa*$this->dx ;
     }
 
+    /**
+     * SetAngle
+     * Insert description here
+     *
+     * @param $a
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetAngle($a) {
 	$tmp = $this->a;
 	$this->a = $a;
@@ -1351,17 +2540,65 @@ class RotImage extends Image {
 	return $tmp;
     }
 
+    /**
+     * Circle
+     * Insert description here
+     *
+     * @param $xc
+     * @param $yc
+     * @param $r
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Circle($xc,$yc,$r) {
 	list($xc,$yc) = $this->Rotate($xc,$yc);
 	parent::Circle($xc,$yc,$r);
     }
 
+    /**
+     * FilledCircle
+     * Insert description here
+     *
+     * @param $xc
+     * @param $yc
+     * @param $r
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FilledCircle($xc,$yc,$r) {
 	list($xc,$yc) = $this->Rotate($xc,$yc);
 	parent::FilledCircle($xc,$yc,$r);
     }
 
 	
+    /**
+     * Arc
+     * Insert description here
+     *
+     * @param $xc
+     * @param $yc
+     * @param $w
+     * @param $h
+     * @param $s
+     * @param $e
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Arc($xc,$yc,$w,$h,$s,$e) {
 	list($xc,$yc) = $this->Rotate($xc,$yc);
 	$s += $this->a;
@@ -1369,6 +2606,25 @@ class RotImage extends Image {
 	parent::Arc($xc,$yc,$w,$h,$s,$e);
     }
 
+    /**
+     * FilledArc
+     * Insert description here
+     *
+     * @param $xc
+     * @param $yc
+     * @param $w
+     * @param $h
+     * @param $s
+     * @param $e
+     * @param $style
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FilledArc($xc,$yc,$w,$h,$s,$e,$style='') {
 	list($xc,$yc) = $this->Rotate($xc,$yc);
 	$s += $this->a;
@@ -1376,6 +2632,22 @@ class RotImage extends Image {
 	parent::FilledArc($xc,$yc,$w,$h,$s,$e);
     }
 
+    /**
+     * SetMargin
+     * Insert description here
+     *
+     * @param $lm
+     * @param $rm
+     * @param $tm
+     * @param $bm
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetMargin($lm,$rm,$tm,$bm) {
 	parent::SetMargin($lm,$rm,$tm,$bm);
 	$this->dx=$this->left_margin+$this->plotwidth/2;
@@ -1383,6 +2655,20 @@ class RotImage extends Image {
 	$this->UpdateRotMatrice();
     }
 	
+    /**
+     * Rotate
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Rotate($x,$y) {
 	// Optimization. Ignore rotation if Angle==0 || Angle==360
 	if( $this->a == 0 || $this->a == 360 ) {
@@ -1395,12 +2681,49 @@ class RotImage extends Image {
 	}
     }
 	
+    /**
+     * CopyMerge
+     * Insert description here
+     *
+     * @param $fromImg
+     * @param $toX
+     * @param $toY
+     * @param $fromX
+     * @param $fromY
+     * @param $toWidth
+     * @param $toHeight
+     * @param $fromWidth
+     * @param 1
+     * @param $fromHeight
+     * @param 1
+     * @param $aMix
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function CopyMerge($fromImg,$toX,$toY,$fromX,$fromY,$toWidth,$toHeight,$fromWidth=-1,$fromHeight=-1,$aMix=100) {
 	list($toX,$toY) = $this->Rotate($toX,$toY);
 	parent::CopyMerge($fromImg,$toX,$toY,$fromX,$fromY,$toWidth,$toHeight,$fromWidth,$fromHeight,$aMix);
 
     }
 
+    /**
+     * ArrRotate
+     * Insert description here
+     *
+     * @param $pnts
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function ArrRotate($pnts) {
 	$n = count($pnts)-1;
 	for($i=0; $i < $n; $i+=2) {
@@ -1410,23 +2733,89 @@ class RotImage extends Image {
 	return $pnts;
     }
 
+    /**
+     * DashedLine
+     * Insert description here
+     *
+     * @param $x1
+     * @param $y1
+     * @param $x2
+     * @param $y2
+     * @param $dash_length
+     * @param $dash_space
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function DashedLine($x1,$y1,$x2,$y2,$dash_length=1,$dash_space=4) {
 	list($x1,$y1) = $this->Rotate($x1,$y1);
 	list($x2,$y2) = $this->Rotate($x2,$y2);
 	parent::DashedLine($x1,$y1,$x2,$y2,$dash_length,$dash_space);
     }
 	
+    /**
+     * Line
+     * Insert description here
+     *
+     * @param $x1
+     * @param $y1
+     * @param $x2
+     * @param $y2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Line($x1,$y1,$x2,$y2) {
 	list($x1,$y1) = $this->Rotate($x1,$y1);
 	list($x2,$y2) = $this->Rotate($x2,$y2);
 	parent::Line($x1,$y1,$x2,$y2);
     }
 
+    /**
+     * Rectangle
+     * Insert description here
+     *
+     * @param $x1
+     * @param $y1
+     * @param $x2
+     * @param $y2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Rectangle($x1,$y1,$x2,$y2) {
 	// Rectangle uses Line() so it will be rotated through that call
 	parent::Rectangle($x1,$y1,$x2,$y2);
     }
 	
+    /**
+     * FilledRectangle
+     * Insert description here
+     *
+     * @param $x1
+     * @param $y1
+     * @param $x2
+     * @param $y2
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FilledRectangle($x1,$y1,$x2,$y2) {
 	if( $y1==$y2 || $x1==$x2 )
 	    $this->Line($x1,$y1,$x2,$y2);
@@ -1434,6 +2823,21 @@ class RotImage extends Image {
 	    $this->FilledPolygon(array($x1,$y1,$x2,$y1,$x2,$y2,$x1,$y2));
     }
 	
+    /**
+     * Polygon
+     * Insert description here
+     *
+     * @param $pnts
+     * @param $closed
+     * @param $fast
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Polygon($pnts,$closed=FALSE,$fast=FALSE) {
 	// Polygon uses Line() so it will be rotated through that call unless
 	// fast drawing routines are used in which case a rotate is needed
@@ -1444,15 +2848,60 @@ class RotImage extends Image {
 	    parent::Polygon($pnts,$closed,$fast);
     }
 	
+    /**
+     * FilledPolygon
+     * Insert description here
+     *
+     * @param $pnts
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function FilledPolygon($pnts) {
 	parent::FilledPolygon($this->ArrRotate($pnts));
     }
 	
+    /**
+     * Point
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Point($x,$y) {
 	list($xp,$yp) = $this->Rotate($x,$y);
 	parent::Point($xp,$yp);
     }
 	
+    /**
+     * StrokeText
+     * Insert description here
+     *
+     * @param $x
+     * @param $y
+     * @param $txt
+     * @param $dir
+     * @param $paragraph_align
+     * @param $debug
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function StrokeText($x,$y,$txt,$dir=0,$paragraph_align="left",$debug=false) {
 	list($xp,$yp) = $this->Rotate($x,$y);
 	return parent::StrokeText($xp,$yp,$txt,$dir,$paragraph_align,$debug);
@@ -1463,10 +2912,38 @@ class RotImage extends Image {
 // CLASS ImgStreamCache
 // Description: Handle caching of graphs to files
 //===================================================
+/**
+ * ImgStreamCache
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class ImgStreamCache {
     private $cache_dir, $img=null, $timeout=0; 	// Infinite timeout
     //---------------
     // CONSTRUCTOR
+    /**
+     * ImgStreamCache
+     * Insert description here
+     *
+     * @param $aImg
+     * @param $aCacheDir
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function ImgStreamCache($aImg, $aCacheDir=CACHE_DIR) {
 	$this->img = $aImg;
 	$this->cache_dir = $aCacheDir;
@@ -1479,11 +2956,40 @@ class ImgStreamCache {
     // timeout value it will be overwritten with a newer version.
     // If timeout is set to 0 this is the same as infinite large timeout and if
     // timeout is set to -1 this is the same as infinite small timeout
+    /**
+     * SetTimeout
+     * Insert description here
+     *
+     * @param $aTimeout
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTimeout($aTimeout) {
 	$this->timeout=$aTimeout;	
     }
 	
     // Output image to browser and also write it to the cache
+    /**
+     * PutAndStream
+     * Insert description here
+     *
+     * @param $aImage
+     * @param $aCacheFileName
+     * @param $aInline
+     * @param $aStrokeFileName
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function PutAndStream($aImage,$aCacheFileName,$aInline,$aStrokeFileName) {
 	// Some debugging code to brand the image with numbe of colors
 	// used
@@ -1570,6 +3076,19 @@ class ImgStreamCache {
     // Check if a given image is in cache and in that case
     // pass it directly on to web browser. Return false if the
     // image file doesn't exist or exists but is to old
+    /**
+     * GetAndStream
+     * Insert description here
+     *
+     * @param $aCacheFileName
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetAndStream($aCacheFileName) {
 	$aCacheFileName = $this->cache_dir.$aCacheFileName;		 
 	if ( USE_CACHE && file_exists($aCacheFileName) && $this->timeout>=0 ) {
@@ -1593,6 +3112,19 @@ class ImgStreamCache {
     //---------------
     // PRIVATE METHODS	
     // Create all necessary directories in a path
+    /**
+     * MakeDirs
+     * Insert description here
+     *
+     * @param $aFile
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function MakeDirs($aFile) {
 	$dirs = array();
 	while ( !(file_exists($aFile)) ) {

@@ -25,10 +25,38 @@ if(in_array('6', $columns_arr)) { $the_win_width = $the_win_width + $cols_width[
 if(in_array('7', $columns_arr)) { $the_win_width = $the_win_width + $cols_width[6];}
 if(in_array('8', $columns_arr)) { $the_win_width = $the_win_width + $cols_width[7];}
 
+/**
+ * br2nl
+ * Insert description here
+ *
+ * @param $input
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function br2nl($input) {
 	return preg_replace('/<br(\s+)?\/?>/i', "\n", $input);
 	}
 	
+/**
+ * array_sort_by_column
+ * Insert description here
+ *
+ * @param $arr
+ * @param $col
+ * @param $dir
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
     $sort_col = array();
     foreach ($arr as $key=> $row) {
@@ -37,6 +65,21 @@ function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
 	array_multisort($sort_col, $dir, $arr);
 	}
 	
+/**
+ * search
+ * Insert description here
+ *
+ * @param $array
+ * @param $key
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function search($array, $key, $value) {
     $results = array();
 	foreach($array AS $subarray) {

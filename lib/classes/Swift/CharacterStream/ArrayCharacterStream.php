@@ -300,6 +300,20 @@ class Swift_CharacterStream_ArrayCharacterStream
     $this->_array_size = 0;
   }
   
+  /**
+   * _reloadBuffer
+   * Insert description here
+   *
+   * @param $fp
+   * @param $len
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private function _reloadBuffer($fp, $len)
   {
     if (!feof($fp) && ($bytes = fread($fp, $len)) !== false)
@@ -314,6 +328,18 @@ class Swift_CharacterStream_ArrayCharacterStream
     return false;
   }
   
+  /**
+   * _initializeMaps
+   * Insert description here
+   *
+   *
+   * @return
+   *
+   * @access
+   * @static
+   * @see
+   * @since
+   */
   private static function _initializeMaps()
   {
     if (!isset(self::$_charMap))

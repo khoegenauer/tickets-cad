@@ -54,11 +54,38 @@ while ($row_cs = stripslashes_deep(mysql_fetch_assoc($result_cs))) {
 	}
 	
 //-----------------Functions-----------------
+/**
+ * datediff
+ * Insert description here
+ *
+ * @param $value1
+ * @param $value2
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function datediff($value1,$value2) {   
 	$diff = $value1-$value2;  
 	return $diff;
 	}
 
+/**
+ * parsedate
+ * Insert description here
+ *
+ * @param $diff
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function parsedate($diff){	
 	$seconds = 0;   
 	$hours   = 0;   

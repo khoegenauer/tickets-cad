@@ -195,10 +195,38 @@ $hidden = find_hidden($curr_cats);
 $shown = find_showing($curr_cats);
 $un_stat_cats = get_all_categories();
 
+/**
+ * do_updated
+ * Insert description here
+ *
+ * @param $instr
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_updated ($instr) {		// 11/3/2012
 	return substr($instr, 8, 8);
 	}
 
+/**
+ * list_tickets
+ * Insert description here
+ *
+ * @param $sort_by_field
+ * @param $sort_value
+ * @param $my_offset
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list tickets ===================================================
 	global $istest, $iw_width, $units_side_bar_height, $do_blink, $nature, $disposition, $patient, $incident, $incidents, $gt_status, $curr_cats, $cat_sess_stat, $hidden, $shown, $un_stat_cats;	// 12/3/10
 	$time = microtime(true); // Gets microseconds
@@ -3610,6 +3638,19 @@ function createfacMarker(fac_point, fac_tabs, id, fac_icon, type, region) {		// 
 	side_bar_html+="<TABLE><TR class='heading_2'><TH width = <?php print $ctrls_width;?> ALIGN='center'>Facilities</TH></TR><TR class='odd'><TD COLSPAN=99 CLASS='td_label' ><form action='#'>";			//	12/03/10, 3/15/11
 <?php
 if(!empty($fac_categories)) {
+/**
+ * get_fac_icon
+ * Insert description here
+ *
+ * @param $fac_cat
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function get_fac_icon($fac_cat){			// returns legend string
 		$icons = $GLOBALS['fac_icons'];
 		$sm_fac_icons = $GLOBALS['sm_fac_icons'];
@@ -3645,6 +3686,19 @@ if(!empty($fac_categories)) {
 
 <?php
 } else {
+/**
+ * get_fac_icon
+ * Insert description here
+ *
+ * @param $fac_cat
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function get_fac_icon($fac_cat){			// returns legend string
 		$icons = $GLOBALS['fac_icons'];
 		$sm_fac_icons = $GLOBALS['sm_fac_icons'];
@@ -3780,6 +3834,21 @@ function tester() {
 
 //	} { -- dummy
 
+/**
+ * show_ticket
+ * Insert description here
+ *
+ * @param $id
+ * @param $print
+ * @param $search
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function show_ticket($id,$print='false', $search = FALSE) {								/* show specified ticket */
 	global $iw_width, $istest, $zoom_tight, $nature, $disposition, $patient, $incident, $incidents, $col_width;	// 12/3/10, 8/4/11
 	$tickno = (get_variable('serial_no_ap')==0)?  "&nbsp;&nbsp;<I>(#{$id})</I>" : "";			// 1/25/09, 2/18/12
@@ -3944,6 +4013,19 @@ print get_buttons_inner2();	//	4/12/12
 		print "<BR /><BR /><BR />";
 // =============== 10/30/09 
 
+/**
+ * my_to_date
+ * Insert description here
+ *
+ * @param $in_date
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function my_to_date($in_date) {			// date_time format to user's spec
 //			$temp = mktime(substr($in_date,11,2),substr($in_date,14,2),substr($in_date,17,2),substr($in_date,5,2),substr($in_date,8,2),substr($in_date,0,4));
 			$temp = mysql2timestamp($d1);		// 9/29/10
@@ -4473,6 +4555,22 @@ function createfacMarker(fac_point, fac_name, id, fac_icon) {
 	}				// end function show_ticket() =======================================================
 //	} {		-- dummy
 
+/**
+ * do_ticket
+ * Insert description here
+ *
+ * @param $theRow
+ * @param $theWidth
+ * @param $search
+ * @param $dist
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_ticket($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// returns table - 6/26/10
 //	dump(__LINE__);
 	global $iw_width, $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
@@ -4548,6 +4646,22 @@ function do_ticket($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// retu
 	return $print;
 	}		// end function do ticket()
 
+/**
+ * do_ticket_only
+ * Insert description here
+ *
+ * @param $theRow
+ * @param $theWidth
+ * @param $search
+ * @param $dist
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_ticket_only($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// returns table - 6/26/10
 //	dump(__LINE__);
 	global $iw_width, $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
@@ -4614,6 +4728,22 @@ function do_ticket_only($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						//
 	
 //	} -- dummy
 
+/**
+ * do_ticket_extras
+ * Insert description here
+ *
+ * @param $theRow
+ * @param $theWidth
+ * @param $search
+ * @param $dist
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_ticket_extras($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// returns table - 6/26/10
 //	dump(__LINE__);
 	global $iw_width, $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
@@ -4632,6 +4762,22 @@ function do_ticket_extras($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						
 	return $print;
 	}		// end function do ticket_extras()
 	
+/**
+ * do_ticket_messages
+ * Insert description here
+ *
+ * @param $theRow
+ * @param $theWidth
+ * @param $search
+ * @param $dist
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_ticket_messages($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// returns table - 6/26/10
 //	dump(__LINE__);
 	global $iw_width, $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
@@ -4643,6 +4789,21 @@ function do_ticket_messages($theRow, $theWidth, $search=FALSE, $dist=TRUE) {				
 	return $print;
 	}		// end function do ticket_extras()
 
+/**
+ * popup_ticket
+ * Insert description here
+ *
+ * @param $id
+ * @param $print
+ * @param $search
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function popup_ticket($id,$print='false', $search = FALSE) {								/* 7/9/09 - show specified ticket */
 	global $istest, $iw_width;
 
@@ -5027,6 +5188,22 @@ function createfacMarker(fac_point, fac_name, id, fac_icon) {
 <?php
 	}				// end function popup_ticket() =======================================================
 							// 3/30/2013
+/**
+ * do_ticket_wm
+ * Insert description here
+ *
+ * @param $theRow
+ * @param $theWidth
+ * @param $search
+ * @param $dist
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_ticket_wm($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// returns table - 6/26/10
 	global $iw_width, $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
 

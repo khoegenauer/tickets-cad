@@ -20,6 +20,18 @@ if(!((isset($_GET['user'])) || (isset($_GET['username'])))) {
 	
 //---------Core Functions-----------------//
 	
+/**
+ * write_track_log
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function write_track_log() {
 	if (!$fp = fopen('tracker_log.txt', 'a'))
 		print '<LI> <FONT CLASS="warn">Cannot open Tracker Log for writing</FONT>';
@@ -33,6 +45,20 @@ function write_track_log() {
 	fclose($fp);
 	}
 
+/**
+ * parse_date_time
+ * Insert description here
+ *
+ * @param $date
+ * @param $time
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function parse_date_time($date, $time) {	//	If the source is GPSGate, this takes the incoming Date and Time and put's it into a format suitable for MySQL.
 	date_default_timezone_set("UTC");
 	$year = substr($date, 0, 4);
@@ -45,6 +71,19 @@ function parse_date_time($date, $time) {	//	If the source is GPSGate, this takes
 	return $date_time;
 	}
 	
+/**
+ * raw2lat_dez
+ * Insert description here
+ *
+ * @param $degree
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function raw2lat_dez($degree) { 
 	$myLat_dezimal = 0;
 	$degreeParts=explode(".",$degree);
@@ -58,6 +97,19 @@ function raw2lat_dez($degree) {
 	return $myLat_dezimal;
 }
 
+/**
+ * raw2long_dez
+ * Insert description here
+ *
+ * @param $degree
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function raw2long_dez($degree) { 
 	$degreeParts=explode(".",$degree);
 	$degreePart=substr($degreeParts[0],0,3);

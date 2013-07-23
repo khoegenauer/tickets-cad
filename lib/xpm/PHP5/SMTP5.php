@@ -24,6 +24,20 @@ if (!class_exists('MIME5')) require_once 'MIME5.php';
 
 $_RESULT = array();
 
+/**
+ * SMTP5
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class SMTP5 {
 
 	const CRLF = "\r\n";
@@ -32,6 +46,23 @@ class SMTP5 {
 	const COUT = 5;
 	const BLEN = 1024;
 
+/**
+ * _cres
+ * Insert description here
+ *
+ * @param $conn
+ * @param $resp
+ * @param $code1
+ * @param $code2
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static private function _cres($conn = null, &$resp, $code1 = null, $code2 = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		$err = array();
@@ -61,6 +92,24 @@ class SMTP5 {
 		}
 	}
 
+/**
+ * mxconnect
+ * Insert description here
+ *
+ * @param $host
+ * @param $port
+ * @param $tout
+ * @param $name
+ * @param $context
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function mxconnect($host = null, $port = null, $tout = null, $name = null, $context = null, $debug = null) {
 		global $_RESULT;
 		$_RESULT = array();
@@ -81,6 +130,28 @@ class SMTP5 {
 		return $con;
 	}
 
+/**
+ * connect
+ * Insert description here
+ *
+ * @param $host
+ * @param $port
+ * @param $user
+ * @param $pass
+ * @param $vssl
+ * @param $tout
+ * @param $name
+ * @param $context
+ * @param $login
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function connect($host = null, $port = null, $user = null, $pass = null, $vssl = null, $tout = null, $name = null, $context = null, $login = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -168,6 +239,23 @@ class SMTP5 {
 		}
 	}
 
+/**
+ * send
+ * Insert description here
+ *
+ * @param $conn
+ * @param $addrs
+ * @param $mess
+ * @param $from
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function send($conn = null, $addrs = null, $mess = null, $from = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -213,6 +301,20 @@ class SMTP5 {
 		}
 	}
 
+/**
+ * disconnect
+ * Insert description here
+ *
+ * @param $conn
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function disconnect($conn = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -225,6 +327,20 @@ class SMTP5 {
 		}
 	}
 
+/**
+ * quit
+ * Insert description here
+ *
+ * @param $conn
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function quit($conn = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -239,6 +355,21 @@ class SMTP5 {
 		return $ret;
 	}
 
+/**
+ * helo
+ * Insert description here
+ *
+ * @param $conn
+ * @param $host
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function helo($conn = null, $host = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -262,6 +393,21 @@ class SMTP5 {
 		}
 	}
 
+/**
+ * ehlo
+ * Insert description here
+ *
+ * @param $conn
+ * @param $host
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function ehlo($conn = null, $host = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -285,6 +431,23 @@ class SMTP5 {
 		}
 	}
 
+/**
+ * auth
+ * Insert description here
+ *
+ * @param $conn
+ * @param $user
+ * @param $pass
+ * @param $type
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function auth($conn = null, $user = null, $pass = null, $type = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -343,6 +506,21 @@ class SMTP5 {
 		}
 	}
 
+/**
+ * from
+ * Insert description here
+ *
+ * @param $conn
+ * @param $addr
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function from($conn = null, $addr = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -363,6 +541,21 @@ class SMTP5 {
 		}
 	}
 
+/**
+ * to
+ * Insert description here
+ *
+ * @param $conn
+ * @param $addr
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function to($conn = null, $addr = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -383,6 +576,21 @@ class SMTP5 {
 		}
 	}
 
+/**
+ * data
+ * Insert description here
+ *
+ * @param $conn
+ * @param $mess
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function data($conn = null, $mess = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -417,6 +625,20 @@ class SMTP5 {
 		}
 	}
 
+/**
+ * rset
+ * Insert description here
+ *
+ * @param $conn
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function rset($conn = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;
@@ -432,6 +654,22 @@ class SMTP5 {
 		return $ret;
 	}
 
+/**
+ * recv
+ * Insert description here
+ *
+ * @param $conn
+ * @param $code1
+ * @param $code2
+ * @param $debug
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	static public function recv($conn = null, $code1 = null, $code2 = null, $debug = null) {
 		if (!FUNC5::is_debug($debug)) $debug = debug_backtrace();
 		global $_RESULT;

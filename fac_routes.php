@@ -33,6 +33,18 @@ if($istest) {
 	dump($_POST);
 	}
 	
+/**
+ * get_ticket_id
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_ticket_id () {				// 5/4/11
 
 	if (array_key_exists('ticket_id', ($_REQUEST))) {
@@ -63,6 +75,18 @@ $icons = $GLOBALS['icons'];
 $sm_icons = $GLOBALS['sm_icons'];
 $fac_icons = $GLOBALS['fac_icons'];
 
+/**
+ * get_icon_legend
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_icon_legend (){
 	global $u_types, $sm_icons;
 	$query = "SELECT DISTINCT `type` FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `name`";
@@ -75,6 +99,22 @@ function get_icon_legend (){
 	return $print;
 	}			// end function get_icon_legend ()
 
+/**
+ * do_fac
+ * Insert description here
+ *
+ * @param $theFac
+ * @param $theWidth
+ * @param $search
+ * @param $dist
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_fac($theFac, $theWidth, $search=FALSE, $dist=TRUE) {
 
 	$print = "<TABLE BORDER='0'ID='left' width='" . $theWidth . "'>\n";		//
@@ -689,6 +729,19 @@ require_once('./incs/links.inc.php');
 
 	}			// end if/else !empty($_POST)
 
+/**
+ * do_list
+ * Insert description here
+ *
+ * @param $unit_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_list($unit_id ="") {
 	global $row_fac, $dispatches, $from_top, $from_left, $eol, $conversion;
 	

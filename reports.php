@@ -292,6 +292,20 @@ p.page { page-break-after: always; }
 
 <?php
 
+/**
+ * date_range
+ * Insert description here
+ *
+ * @param $dr_date_in
+ * @param $dr_func_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function date_range($dr_date_in, $dr_func_in) {			// returns array of MySQL-formatted dates
 		$temp = explode(",", $dr_date_in);					// into m, d, y
 		$range = array();				// mktime ($hour, $minute, $second, $month, $day, $year)$temp[0] $temp[1] $temp[2]
@@ -374,11 +388,37 @@ p.page { page-break-after: always; }
 			}		// end switch ()
 		}				// end function date range()
 
+/**
+ * date_part
+ * Insert description here
+ *
+ * @param $in_date
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function date_part($in_date) {						// return date part of date/time string
 		$temp = explode (" ", $in_date);
 		return $temp[0];
 		}		// end function date_part()
 
+/**
+ * time_part
+ * Insert description here
+ *
+ * @param $in_date
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function time_part($in_date) {						// "2007-12-02 21:07:30"
 		$temp = explode (" ", $in_date);
 		return substr($temp[1], 0, 5);
@@ -387,15 +427,56 @@ p.page { page-break-after: always; }
 
 // =================================================== DISPATCH LOG =========================================	1/31/09
 
+/**
+ * do_dispreport
+ * Insert description here
+ *
+ * @param $date_in
+ * @param $func_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_dispreport($date_in, $func_in) {				// $frm_date, $mode as params - 6/8/11
 		global $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
 		global $evenodd, $types;
 		global $w_tiny, $w_small, $w_medium, $w_large;		// 4/14/11
 
+/**
+ * the_time
+ * Insert description here
+ *
+ * @param $in_val
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function the_time($in_val) {
 			return date("j H:i", (int)$in_val);
 			}
 
+/**
+ * do_cells
+ * Insert description here
+ *
+ * @param $in_1
+ * @param $in_2
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function do_cells ($in_1, $in_2) {
 			global $row, $out_row_1, $out_row_2;
 			if (is_date($row['in_1'])) {
@@ -407,6 +488,20 @@ p.page { page-break-after: always; }
 			$out_row_2 .= "<TD>{$out_val2}</TD>";
 			}
 		
+/**
+ * do_cell
+ * Insert description here
+ *
+ * @param $in_1
+ * @param $in_2
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 		function do_cell ($in_1, $in_2) {
 			return (is_date($in_2))? format_date_2($in_1) : "";
 			}		
@@ -502,6 +597,20 @@ p.page { page-break-after: always; }
 
 // =================================================== UNIT LOG =========================================
 
+/**
+ * do_unitreport
+ * Insert description here
+ *
+ * @param $date_in
+ * @param $func_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_unitreport($date_in, $func_in) {				// $frm_date, $mode as params
 		global $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
 		global $evenodd, $types;
@@ -683,6 +792,20 @@ p.page { page-break-after: always; }
 
 // =============================================== STATION LOG  ===========================================
 
+/**
+ * do_sta_report
+ * Insert description here
+ *
+ * @param $date_in
+ * @param $func_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_sta_report($date_in, $func_in) {				// $frm_date, $mode as params
 		global $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
 		global $evenodd, $istest, $types;
@@ -783,6 +906,20 @@ p.page { page-break-after: always; }
 
 // ================================================== INCIDENT SUMMARY =========================================
 
+/**
+ * do_inc_report
+ * Insert description here
+ *
+ * @param $date_in
+ * @param $func_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_inc_report($date_in, $func_in) {				// Incidents summary report - $frm_date, $mode as params
 		global $evenodd, $img_width, $types ;
 		global $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
@@ -917,6 +1054,19 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 
 // ================================================== INCIDENT LOG REPORT =========================================
 
+/**
+ * do_inc_log_report
+ * Insert description here
+ *
+ * @param $the_ticket_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_inc_log_report($the_ticket_id) {			// 3/18/10	
 		global $types;
 		global $w_tiny, $w_small, $w_medium, $w_large;		// 4/14/11
@@ -1184,6 +1334,20 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 	
 // ================================================== AFTER-ACTION REPORT =========================================
 
+/**
+ * do_aa_report
+ * Insert description here
+ *
+ * @param $date_in
+ * @param $func_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_aa_report($date_in, $func_in) {				// after action report $frm_date, $mode as params - 9/27/10
 		global $types, $incident, $disposition;				// 12/7/10
 		global $w_tiny, $w_small, $w_medium, $w_large;		// 4/14/11
@@ -1241,6 +1405,19 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 		}			// end function
 
 // ================================= INCIDENT MANAGEMENT REPORT ================================= 10/4/10
+/**
+ * my_stripslashes_deep
+ * Insert description here
+ *
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function my_stripslashes_deep($value) {
    	if (is_array($value))	{$value = array_map('my_stripslashes_deep', $value);}   	
    	else 					{$value = stripslashes($value); }
@@ -1249,6 +1426,20 @@ function my_stripslashes_deep($value) {
 
 	$logs = array();
 
+/**
+ * do_im_report
+ * Insert description here
+ *
+ * @param $date_in
+ * @param $func_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function do_im_report($date_in, $func_in) {				// incident mgmt report $frm_date, $mode as params - 9/27/10
 		global $types, $tick_array,$deltas, $counts, $severities, $units_str, $evenodd, $logs, $types ;
 		global $types, $incident, $disposition;				// 12/7/10
@@ -1261,6 +1452,19 @@ function my_stripslashes_deep($value) {
 
 		$from_to = date_range($date_in,$func_in);			// get date range as array
 		$where = " WHERE `problemstart` >= '{$from_to[0]}' AND `problemstart` < '{$from_to[1]}'";
+/**
+ * do_print
+ * Insert description here
+ *
+ * @param $row_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 			function do_print($row_in) {
 				global $today, $today_ref, $line_ctr, $units_str, $severities, $evenodd;
 				global $w_tiny, $w_small, $w_medium, $w_large;
@@ -1318,6 +1522,19 @@ function my_stripslashes_deep($value) {
 				$line_ctr++;
 				}		// end function do print()
 		
+/**
+ * do_stats
+ * Insert description here
+ *
+ * @param $in_row
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 			function do_stats($in_row) {		// 
 				global $deltas, $counts;
 				if ((intval( $in_row['problemstart'])>0) && (intval ($in_row['problemend'])>0)) {
@@ -1328,6 +1545,19 @@ function my_stripslashes_deep($value) {
 				$counts[3]++;	
 				}		// end function do stats()
 																					// 12/7/10
+/**
+ * do_print_log
+ * Insert description here
+ *
+ * @param $ary_in
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 			function do_print_log($ary_in) {		//     ["code"]=> string(1) "3" ["info"]=>  string(14) "test test test"  ["when"]=>   string(10) "1302117158"
 				global $today, $today_ref, $line_ctr,$evenodd, $types ;
 				global $w_tiny, $w_small, $w_medium, $w_large;
@@ -1367,6 +1597,19 @@ function my_stripslashes_deep($value) {
 				}
 			unset ($result);
 
+/**
+ * check_logs
+ * Insert description here
+ *
+ * @param $in_time
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 			function check_logs($in_time) {						//  prints qualifying log entries
 				global $logs;
 				while ((!(empty($logs))) && ($logs[0]['when']<= $in_time ))	{

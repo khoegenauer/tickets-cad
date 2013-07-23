@@ -1,5 +1,21 @@
 <?php
 // error handler function
+/**
+ * myErrorHandler
+ * Insert description here
+ *
+ * @param $errno
+ * @param $errstr
+ * @param $errfile
+ * @param $errline
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function myErrorHandler($errno, $errstr, $errfile, $errline)
 {
     switch ($errno) {
@@ -29,6 +45,20 @@ function myErrorHandler($errno, $errstr, $errfile, $errline)
 }
 
 // function to test the error handling
+/**
+ * scale_by_log
+ * Insert description here
+ *
+ * @param $vect
+ * @param $scale
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function scale_by_log($vect, $scale)
 {
     if (!is_numeric($scale) || $scale <= 0) {

@@ -49,6 +49,19 @@ Badge: <INPUT TYPE='text' NAME = 'frm_badge' SIZE = '24' value='' />	<!-- ex: -6
 	else {
 		require_once('./incs/functions.inc.php');
 
+/**
+ * do_glat_test
+ * Insert description here
+ *
+ * @param $user
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_glat_test($user) {				// given user id,  returns Google Latitude id, timestamp and coords as a 4-element array, if found - else FALSE
 	$ret_val = array("", "", "", "");
 	$the_url = "http://www.google.com/latitude/apps/badge/api?user={$user}&type=json";

@@ -14,6 +14,20 @@
 // Create a new data array from an existing data array but with more points.
 // The new points are interpolated using a cubic spline algorithm
 //------------------------------------------------------------------------
+/**
+ * Spline
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class Spline {
     // 3:rd degree polynom approximation
 
@@ -21,6 +35,20 @@ class Spline {
     private $y2;		 // 2:nd derivate of ydata	
     private $n=0;
 
+    /**
+     * Spline
+     * Insert description here
+     *
+     * @param $xdata
+     * @param $ydata
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Spline($xdata,$ydata) {
 	$this->y2 = array();
 	$this->xdata = $xdata;
@@ -60,6 +88,19 @@ class Spline {
     }
 
     // Return the two new data vectors
+    /**
+     * Get
+     * Insert description here
+     *
+     * @param $num
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Get($num=50) {
 	$n = $this->n ;
 	$step = ($this->xdata[$n-1]-$this->xdata[0]) / ($num-1);
@@ -75,6 +116,19 @@ class Spline {
     }
 
     // Return a single interpolated Y-value from an x value
+    /**
+     * Interpolate
+     * Insert description here
+     *
+     * @param $xpoint
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Interpolate($xpoint) {
 
 	$max = $this->n-1;
@@ -109,6 +163,20 @@ class Spline {
 // CLASS Bezier
 // Create a new data array from a number of control points
 //------------------------------------------------------------------------
+/**
+ * Bezier
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class Bezier {
 /**
  * @author Thomas Despoix, openXtrem company
@@ -121,6 +189,21 @@ class Bezier {
     private $datay = array();
     private $n=0;
  
+    /**
+     * Bezier
+     * Insert description here
+     *
+     * @param $datax
+     * @param $datay
+     * @param $attraction_factor
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Bezier($datax, $datay, $attraction_factor = 1) {
 	// Adding control point multiple time will raise their attraction power over the curve
 	$this->n = count($datax);
@@ -143,6 +226,19 @@ class Bezier {
 	$this->n *= $attraction_factor;
     }
 
+    /**
+     * Get
+     * Insert description here
+     *
+     * @param $steps
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Get($steps) {
 	$datax = array();
 	$datay = array();
@@ -158,6 +254,19 @@ class Bezier {
 	return array($datax, $datay);
     }
  
+    /**
+     * GetPoint
+     * Insert description here
+     *
+     * @param $mu
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function GetPoint($mu) {
 	$n = $this->n - 1;
 	$k = 0;

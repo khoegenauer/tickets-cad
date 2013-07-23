@@ -7,6 +7,19 @@
 extract($_GET);
 set_time_limit(0);
 require_once('functions.inc.php');
+/**
+ * get_provider_name
+ * Insert description here
+ *
+ * @param $val
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_provider_name($val) {
 	switch($val) {
 		case 0:
@@ -23,6 +36,20 @@ function get_provider_name($val) {
 		}
 	}
 
+/**
+ * update_msg_setting
+ * Insert description here
+ *
+ * @param $which
+ * @param $what
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function update_msg_setting ($which, $what) {		//	3/15/11
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]msg_settings` WHERE `name`= '$which' LIMIT 1";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -34,6 +61,20 @@ function update_msg_setting ($which, $what) {		//	3/15/11
 	return TRUE;
 	}				// end function update_setting ()
 	
+/**
+ * update_delivered
+ * Insert description here
+ *
+ * @param $who
+ * @param $what
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function update_delivered($who, $what) {
 	$deliveredto = array();
 	$thetemp = array();
@@ -94,6 +135,19 @@ function update_delivered($who, $what) {
 		}
 	}
 	
+/**
+ * format_smsdate
+ * Insert description here
+ *
+ * @param $time
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function format_smsdate($time) {	//	new replacement version after SMS Responder upgrade
 	$needle = "/";
 	if(strpos($time,$needle) === false) {
@@ -108,6 +162,19 @@ function format_smsdate($time) {	//	new replacement version after SMS Responder 
 	return $datestring;
 	}
 	
+/**
+ * format_smsdate_2
+ * Insert description here
+ *
+ * @param $time
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function format_smsdate_2($time) {	//	old function replaced after SMS Responder Upgrade
 	$times12=array(1,2,3,4,5,6,7,8,9,10,11,12);
 	$times24=array(13,14,15,16,17,18,19,20,21,22,23,00);
@@ -135,6 +202,19 @@ function format_smsdate_2($time) {	//	old function replaced after SMS Responder 
 	return $datestring;
 	}
 
+/**
+ * check_validxml
+ * Insert description here
+ *
+ * @param $page
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function check_validxml($page) {
 	libxml_use_internal_errors(true);
 	if($xml = simplexml_load_file($page)) {
@@ -144,6 +224,19 @@ function check_validxml($page) {
 		}
 	}
 	
+/**
+ * check_server
+ * Insert description here
+ *
+ * @param $url
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function check_server($url) {
 	if (function_exists("curl_init")) {
 		if($url == NULL) return false;
@@ -199,12 +292,37 @@ function check_server($url) {
 		}
 	}
 
+/**
+ * get_reader_name
+ * Insert description here
+ *
+ * @param $id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_reader_name($id){								/* get owner name from id */
 	$result	= mysql_query("SELECT user FROM `$GLOBALS[mysql_prefix]user` WHERE `id`='$id' LIMIT 1") or do_error("get_owner(i:$id)::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$row	= stripslashes_deep(mysql_fetch_assoc($result));
 	return (mysql_affected_rows()==0 )? "None" : $row['user'];
 	}
 
+/**
+ * can_delete_msg
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function can_delete_msg(){
 	if($_SESSION['level'] ==  $GLOBALS['LEVEL_SUPER']) {
 		$ret = 1;
@@ -214,6 +332,21 @@ function can_delete_msg(){
 	return $ret;
 	}
 	
+/**
+ * GetBetween
+ * Insert description here
+ *
+ * @param $content
+ * @param $start
+ * @param $end
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function GetBetween($content,$start,$end){	//	Function to check for presence of text between two delimiters
   	$r = explode($start, $content);
     	if (isset($r[1])){
@@ -223,6 +356,21 @@ function GetBetween($content,$start,$end){	//	Function to check for presence of 
     	return '';
 	}
 	
+/**
+ * auto_status
+ * Insert description here
+ *
+ * @param $message
+ * @param $responder
+ * @param $datestring
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function auto_status($message, $responder, $datestring) {	//	6/21/13
 	$time = strtotime($datestring);
 	$now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
@@ -254,6 +402,19 @@ function auto_status($message, $responder, $datestring) {	//	6/21/13
 	return $the_ret;
 	}
 
+/**
+ * ReplaceImap
+ * Insert description here
+ *
+ * @param $txt
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function ReplaceImap($txt) {	//	function to clean up body text
 	$carimap = array("=C3=A9", "=C3=A8", "=C3=AA", "=C3=AB", "=C3=A7", "=C3=A0", "=20", "=C3=80", "=C3=89");
 	$carhtml = array("é", "è", "ê", "ë", "ç", "à", "&nbsp;", "À", "É");
@@ -261,6 +422,19 @@ function ReplaceImap($txt) {	//	function to clean up body text
 	return $txt;
 	}
 	
+/**
+ * clean_hdr_fm_text
+ * Insert description here
+ *
+ * @param $thetext
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function clean_hdr_fm_text($thetext) {
 	$start = "------=";
 	$end = "--";
@@ -285,6 +459,24 @@ function clean_hdr_fm_text($thetext) {
 	}
 
 // Xpertmailer version
+/**
+ * get_emails
+ * Insert description here
+ *
+ * @param $url
+ * @param $user
+ * @param $password
+ * @param $port
+ * @param $ssl
+ * @param $timeout
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_emails($url, $user, $password, $port, $ssl="", $timeout=10 ) {	//	Called from AJAX file to get emails in background - AJAX file called by top.php
 //	print $url . "," . $user . "," . $password . "," . $port . "," . $ssl . "," . $timeout . "<BR />";
 	$no_whitelist = intval(get_msg_variable('no_whitelist'));
@@ -409,6 +601,28 @@ function get_emails($url, $user, $password, $port, $ssl="", $timeout=10 ) {	//	C
 	return $ret;
 	}	
 	
+/**
+ * store_email
+ * Insert description here
+ *
+ * @param $msg_type
+ * @param $recipients
+ * @param $messageid
+ * @param $subject
+ * @param $message
+ * @param $ticket_id
+ * @param $resp_id
+ * @param $time
+ * @param $from_address
+ * @param $fromname
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function store_email($msg_type, $recipients, $messageid, $subject, $message, $ticket_id = 0, $resp_id = 0, $time, $from_address, $fromname) {	//	stores incoming and outgoing emails in messages table
 	$counter = 0;
 	$message = addslashes($message);
@@ -430,6 +644,18 @@ function store_email($msg_type, $recipients, $messageid, $subject, $message, $ti
 	return $counter;
 	}
 
+/**
+ * white_list
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function white_list() {	//	function to check sender is in allowed list - allowed list determines which incoming emails will be stored and viewable.
 	$the_ret = array();
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]known_sources`";
@@ -454,6 +680,19 @@ function white_list() {	//	function to check sender is in allowed list - allowed
 	return $the_ret;
 	}
 
+/**
+ * get_resp_id
+ * Insert description here
+ *
+ * @param $resp_handle
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_resp_id($resp_handle) {	//	Gets responder ID from SMS Gateway ID
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `smsg_id` = '" . $resp_handle . "' LIMIT 1";
 	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -466,6 +705,19 @@ function get_resp_id($resp_handle) {	//	Gets responder ID from SMS Gateway ID
 	return $the_id;
 	}
 	
+/**
+ * get_resp_id2
+ * Insert description here
+ *
+ * @param $theEmail
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_resp_id2($theEmail) {	//	Gets responder ID from email
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `contact_via` = '" . $theEmail . "' LIMIT 1";
 	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -478,6 +730,19 @@ function get_resp_id2($theEmail) {	//	Gets responder ID from email
 	return $the_id;
 	}
 	
+/**
+ * get_resp_name
+ * Insert description here
+ *
+ * @param $resp_handle
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_resp_name($resp_handle) {	//	Gets responder ID from SMS Gateway ID
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `smsg_id` = '" . $resp_handle . "' LIMIT 1";
 	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -490,6 +755,27 @@ function get_resp_name($resp_handle) {	//	Gets responder ID from SMS Gateway ID
 	return $the_name;
 	}	
 
+/**
+ * send_message
+ * Insert description here
+ *
+ * @param $server
+ * @param $orgcode
+ * @param $apipin
+ * @param $message
+ * @param $reciptype
+ * @param $recipients
+ * @param $importance
+ * @param $replyto
+ * @param $mode
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function send_message($server,$orgcode,$apipin,$message,$reciptype,$recipients,$importance,$replyto,$mode) {	//	Sends message to SMS Gateway
 //	print $server . "," . $orgcode . "," . $apipin . "," . $message . "," . $reciptype . "," . $recipients . "," . $importance . "," . $replyto . "," . $mode . "<BR />";
 	$smsg_server_inuse = array();
@@ -576,6 +862,23 @@ function send_message($server,$orgcode,$apipin,$message,$reciptype,$recipients,$
 	return $result;	
 	}
 	
+/**
+ * get_responses
+ * Insert description here
+ *
+ * @param $server
+ * @param $orgcode
+ * @param $apipin
+ * @param $messageid
+ * @param $mode
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function get_responses($server,$orgcode,$apipin,$messageid,$mode) {	//	Polls SMS Gateway for responses - called function do_smsg_retrieve(..
 	$smsg_server_inuse = array();
 	$smsg_server_inuse[0] = ($server == 1) ? get_msg_variable('smsg_og_serv1') : get_msg_variable('smsg_og_serv2');
@@ -649,6 +952,21 @@ function get_responses($server,$orgcode,$apipin,$messageid,$mode) {	//	Polls SMS
 	return $result;	
 	}
 	
+/**
+ * xml2array
+ * Insert description here
+ *
+ * @param $contents
+ * @param $get_attributes
+ * @param $priority
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function xml2array($contents, $get_attributes=1, $priority = 'tag') { 	//	function to parse incoming XML from SMS Gateway into a PHP array
     if(!$contents) return array(); 
 
@@ -772,6 +1090,18 @@ function xml2array($contents, $get_attributes=1, $priority = 'tag') { 	//	functi
     return($xml_array); 
 	}  
 	
+/**
+ * check_xml_response
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function check_xml_response() {
 	$server = (get_msg_variable('smsg_force_sec') == 0) ? (get_msg_variable('smsg_server_inuse')) : 2; 	//	Gets current server in use - primary or backup
 	$data = send_message($server,'','','','','','','','');	//	Calls function that does the sending
@@ -807,6 +1137,28 @@ function check_xml_response() {
 		}	
 	}
 
+/**
+ * do_smsg_send
+ * Insert description here
+ *
+ * @param $orgcode
+ * @param $apipin
+ * @param $subject
+ * @param $message
+ * @param $reciptype
+ * @param $recipients
+ * @param $importance
+ * @param $replyto
+ * @param $mode
+ * @param $ticket_id
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_smsg_send($orgcode,$apipin,$subject,$message,$reciptype,$recipients,$importance,$replyto,$mode,$ticket_id) {	//	Collects data for message - called from FIP function do_send(...)
 	$now = time() - (intval(intval(get_variable('delta_mins')))*60);
 	$ret_arr=array();
@@ -827,6 +1179,19 @@ function do_smsg_send($orgcode,$apipin,$subject,$message,$reciptype,$recipients,
 	return $count;
 	}
 
+/**
+ * XmlIsWellFormed
+ * Insert description here
+ *
+ * @param $xmlContent
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function XmlIsWellFormed($xmlContent) {
 	libxml_use_internal_errors(true);
 	$doc = new DOMDocument('1.0', 'utf-8');
@@ -842,6 +1207,21 @@ function XmlIsWellFormed($xmlContent) {
 	return false;
 	}
 	
+/**
+ * do_smsg_retrieve
+ * Insert description here
+ *
+ * @param $orgcode
+ * @param $apipin
+ * @param $mode
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_smsg_retrieve($orgcode,$apipin,$mode) {	// retrieves responses from SMS Gateway called from AJAX file which is called from top.php
 	$rtn_msg = "";
 	$stat_up = array();
@@ -936,6 +1316,27 @@ function do_smsg_retrieve($orgcode,$apipin,$mode) {	// retrieves responses from 
 	return $stat_up;
 	}
 
+/**
+ * store_msg
+ * Insert description here
+ *
+ * @param $recipients
+ * @param $messageid
+ * @param $subject
+ * @param $message
+ * @param $fromname
+ * @param $ticket_id
+ * @param $time
+ * @param $ogtime
+ * @param $type
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function store_msg($recipients, $messageid, $subject, $message, $fromname, $ticket_id, $time, $ogtime, $type) {	//	Stores incoming and outgoing SMS Messages from or to Gateway in Messages table
 	$message = addslashes($message);
 	$subject = addslashes($subject);

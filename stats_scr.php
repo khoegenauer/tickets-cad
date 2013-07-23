@@ -19,6 +19,18 @@ if ((!empty($_GET))&& ((isset($_GET['logout'])) && ($_GET['logout'] == 'true')))
 else {
 	do_login(basename(__FILE__));
 	}	
+/**
+ * found_user
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function found_user() {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]stats_settings` WHERE `user_id` = {$_SESSION['user_id']}";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -44,6 +56,19 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 
 	$do_mu_init = "mu_init();";	// start multi-user function
 	
+/**
+ * get_stat_type_name
+ * Insert description here
+ *
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function get_stat_type_name($value) {
 		$type_name = "Not Used";
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]stats_type` WHERE `st_id` = {$value}";
@@ -55,6 +80,19 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 		return $type_name;
 		}
 		
+/**
+ * get_stat_type_type
+ * Insert description here
+ *
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function get_stat_type_type($value) {
 		$stat_type = "Not Used";
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]stats_type` WHERE `st_id` = {$value}";
@@ -66,6 +104,19 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 		return $stat_type;
 		}
 
+/**
+ * parsedate
+ * Insert description here
+ *
+ * @param $diff
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function parsedate($diff){	
 		$seconds = 0;   
 		$hours   = 0;   
@@ -270,6 +321,19 @@ if((isset($_GET['fm_sub'])) && ($_GET['fm_sub'])) {
 	var mu_interval = 10000;
 </SCRIPT>
 <?php
+/**
+ * makeSeconds
+ * Insert description here
+ *
+ * @param $a
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function makeSeconds($a) {
 		$string = explode("-", $a);
 		$days = $string[0];

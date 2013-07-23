@@ -7,6 +7,22 @@ error_reporting(E_ALL);
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10
 
+/**
+ * between
+ * Insert description here
+ *
+ * @param $in_str
+ * @param $start_str
+ * @param $end_str
+ * @param $begin
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function between ($in_str, $start_str, $end_str, $begin = 0) {		// returns string between two given values
 	$temp1 = stripos ( $in_str, $start_str , $begin);				// position of start_str
 	$temp2 = stripos ($in_str, $end_str, $temp1);					// position of end_str

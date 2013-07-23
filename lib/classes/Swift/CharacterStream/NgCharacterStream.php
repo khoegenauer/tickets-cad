@@ -29,6 +29,20 @@
  * @author Xavier De Cock <xdecock@gmail.com>
  */
 
+/**
+ * Swift_CharacterStream_NgCharacterStream
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 Class Swift_CharacterStream_NgCharacterStream
   implements Swift_CharacterStream
 {

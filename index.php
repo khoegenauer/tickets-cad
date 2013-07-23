@@ -124,6 +124,19 @@ function count_responders() {	//	5/11/12 For quick start.
 	return $count_responders;
 	}
 
+/**
+ * table_exists
+ * Insert description here
+ *
+ * @param $name
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function table_exists($name) {			//	3/15/11
 	$tablename = "$GLOBALS[mysql_prefix]" . "$name";
 	$query 	= "SELECT COUNT(*) FROM $tablename";
@@ -136,11 +149,39 @@ function table_exists($name) {			//	3/15/11
 		}
 	}
 
+/**
+ * do_insert_day_colors
+ * Insert description here
+ *
+ * @param $name
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_insert_day_colors($name,$value) {			//	3/15/11
 	$query = "INSERT INTO `$GLOBALS[mysql_prefix]css_day` (name,value) VALUES('$name','$value')";
 	$result = mysql_query($query) or die("DO_INSERT_DAY_COLORS($name,$value) failed, execution halted");
 	}
 
+/**
+ * do_insert_night_colors
+ * Insert description here
+ *
+ * @param $name
+ * @param $value
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_insert_night_colors($name,$value) {			//	3/15/11
 	$query = "INSERT INTO `$GLOBALS[mysql_prefix]css_night` (name,value) VALUES('$name','$value')";
 	$result = mysql_query($query) or die("DO_INSERT_NIGHT_COLORS($name,$value) failed, execution halted");
@@ -215,6 +256,20 @@ if (!table_exists("css_night")) {			//	3/15/11
 	do_insert_night_colors('label_text', '000000');			//	3/15/11
 	} // end if !table_exists css_night
 
+/**
+ * do_caption
+ * Insert description here
+ *
+ * @param $temp
+ * @param $repl
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_caption ($temp, $repl="") { 				// adds a 'captions' table entry - 12/4/10
 	if($repl == "") { $repl = $temp; }
 	$caption = quote_smart($temp);
@@ -228,6 +283,20 @@ function do_caption ($temp, $repl="") { 				// adds a 'captions' table entry - 1
 	return;
 	}
 	
+/**
+ * do_setting
+ * Insert description here
+ *
+ * @param $which
+ * @param $what
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_setting ($which, $what) {				// 7/7/09
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]settings` WHERE `name`= '$which' LIMIT 1";		// 5/25/09
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -239,6 +308,20 @@ function do_setting ($which, $what) {				// 7/7/09
 	return TRUE;
 	}				// end function do_setting ()
 	
+/**
+ * do_msg_setting
+ * Insert description here
+ *
+ * @param $which
+ * @param $what
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function do_msg_setting ($which, $what) {				// 5/25/13
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]msg_settings` WHERE `name`= '$which' LIMIT 1";		// 5/25/09
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -250,6 +333,20 @@ function do_msg_setting ($which, $what) {				// 5/25/13
 	return TRUE;
 	}				// end function do_msg_setting ()
 
+/**
+ * update_setting
+ * Insert description here
+ *
+ * @param $which
+ * @param $what
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function update_setting ($which, $what) {		//	3/15/11
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]settings` WHERE `name`= '$which' LIMIT 1";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -261,6 +358,20 @@ function update_setting ($which, $what) {		//	3/15/11
 	return TRUE;
 	}				// end function update_setting ()
 
+/**
+ * update_msg_settings
+ * Insert description here
+ *
+ * @param $which
+ * @param $what
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function update_msg_settings ($which, $what) {		//	3/15/11
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]msg_settings` WHERE `name`= '$which' LIMIT 1";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -272,6 +383,18 @@ function update_msg_settings ($which, $what) {		//	3/15/11
 	return TRUE;
 	}				// end function update_msg_settings ()
 	
+/**
+ * microtime_float
+ * Insert description here
+ *
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function microtime_float() {
     list($usec, $sec) = explode(" ", microtime());
     return ((float)$usec + (float)$sec);
@@ -1459,6 +1582,21 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 
 		}		// end (!($version ==...) ==================================================			
 
+/**
+ * update_disp_stat
+ * Insert description here
+ *
+ * @param $which
+ * @param $what
+ * @param $old
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 	function update_disp_stat ($which, $what, $old) {		//	10/26/11
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]settings` WHERE `name`= '$which' AND `value` = '$old' LIMIT 1";
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);

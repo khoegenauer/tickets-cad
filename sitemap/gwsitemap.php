@@ -113,6 +113,19 @@ if (is_array($divs)){
 }
 
 
+/**
+ * showlist
+ * Insert description here
+ *
+ * @param $path
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function showlist($path){
 	global $ignore, $id, $divs, $imgpath, $types, $startin, $extension;
 	$dirs=array();
@@ -167,6 +180,19 @@ function showlist($path){
 	}
 }
 
+/**
+ * getTitle
+ * Insert description here
+ *
+ * @param $file
+ *
+ * @return
+ *
+ * @access
+ * @static
+ * @see
+ * @since
+ */
 function getTitle($file){
 	global $htmltypes;
 	$title="";

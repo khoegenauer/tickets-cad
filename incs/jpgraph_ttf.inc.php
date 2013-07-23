@@ -72,9 +72,37 @@ DEFINE("FF_FONT2",4);
 // UTF-8 depending on how the library have been configured and
 // what font family is being used
 //=================================================================
+/**
+ * LanguageConv
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class LanguageConv {
     private $g2312 = null ;
 
+    /**
+     * Convert
+     * Insert description here
+     *
+     * @param $aTxt
+     * @param $aFF
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Convert($aTxt,$aFF) {
 	if( LANGUAGE_GREEK ) {
 	    if( GREEK_FROM_WINDOWS ) {
@@ -126,6 +154,19 @@ class LanguageConv {
     }
 
     // Translate iso encoding to unicode
+    /**
+     * iso2uni
+     * Insert description here
+     *
+     * @param $isoline
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     public static function iso2uni ($isoline){
 	$uniline='';
 	for ($i=0; $i < strlen($isoline); $i++){
@@ -137,6 +178,19 @@ class LanguageConv {
     }
 
     // Translate greek iso encoding to unicode
+    /**
+     * gr_iso2uni
+     * Insert description here
+     *
+     * @param $isoline
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     public static function gr_iso2uni ($isoline) {
 	$uniline='';
 	for ($i=0; $i < strlen($isoline); $i++)	{
@@ -148,6 +202,19 @@ class LanguageConv {
     }
 
     // Translate greek win encoding to unicode
+    /**
+     * gr_win2uni
+     * Insert description here
+     *
+     * @param $winline
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     public static function gr_win2uni ($winline) {
 	$uniline='';
 	for ($i=0; $i < strlen($winline); $i++) {
@@ -163,6 +230,19 @@ class LanguageConv {
 	return $uniline;
     }
 
+    /**
+     * heb_iso2uni
+     * Insert description here
+     *
+     * @param $isoline
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     public static function heb_iso2uni($isoline) {
 	$isoline = hebrev($isoline);
 	$o = '';
@@ -181,11 +261,37 @@ class LanguageConv {
 // Description: Handle TTF font names and mapping and loading of 
 //              font files
 //=============================================================
+/**
+ * TTF
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class TTF {
     private $font_files,$style_names;
 
 //---------------
 // CONSTRUCTOR
+    /**
+     * TTF
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function TTF() {
 
 	// String names for font styles to be used in error messages
@@ -308,6 +414,20 @@ class TTF {
 //---------------
 // PUBLIC METHODS	
     // Create the TTF file from the font specification
+    /**
+     * File
+     * Insert description here
+     *
+     * @param $family
+     * @param $style
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function File($family,$style=FS_NORMAL) {
 	$fam = @$this->font_files[$family];
 	if( !$fam ) {

@@ -33,6 +33,20 @@
     * How easy is that?
     */
     
+    /**
+     * PorterStemmer
+     * Insert description here
+     *
+     * @category
+     * @package
+     * @author
+     * @copyright
+     * @license
+     * @version
+     * @link
+     * @see
+     * @since
+     */
     class PorterStemmer
     {
         /**

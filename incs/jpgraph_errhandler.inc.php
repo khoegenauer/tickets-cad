@@ -14,8 +14,34 @@
 GLOBAL $__jpg_err_locale ;
 $__jpg_err_locale = DEFAULT_ERR_LOCALE;
 
+/**
+ * ErrMsgText
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class ErrMsgText {
     private $lt=NULL;
+    /**
+     * ErrMsgText
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function ErrMsgText() {
 	GLOBAL $__jpg_err_locale;
 	$file = 'lang/'.$__jpg_err_locale.'.inc.php';
@@ -33,6 +59,24 @@ class ErrMsgText {
 	$this->lt = $_jpg_messages;
     }
 
+    /**
+     * Get
+     * Insert description here
+     *
+     * @param $errnbr
+     * @param $a1
+     * @param $a2
+     * @param $a3
+     * @param $a4
+     * @param $a5
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Get($errnbr,$a1=null,$a2=null,$a3=null,$a4=null,$a5=null) {
 	GLOBAL $__jpg_err_locale;
 	if( !isset($this->lt[$errnbr]) ) {
@@ -91,18 +135,90 @@ class ErrMsgText {
 // (to hide the global error parameter and avoid having a GLOBAL directive
 // in all methods.
 //
+/**
+ * JpGraphError
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class JpGraphError {
     private static $__jpg_err;
+    /**
+     * Install
+     * Insert description here
+     *
+     * @param $aErrObject
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     public static function Install($aErrObject) {
 	self::$__jpg_err = new $aErrObject;
     }
+    /**
+     * Raise
+     * Insert description here
+     *
+     * @param $aMsg
+     * @param $aHalt
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     public static function Raise($aMsg,$aHalt=true){
 	self::$__jpg_err->Raise($aMsg,$aHalt);
     }
+    /**
+     * SetErrLocale
+     * Insert description here
+     *
+     * @param $aLoc
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     public static function SetErrLocale($aLoc) {
 	GLOBAL $__jpg_err_locale ;
 	$__jpg_err_locale = $aLoc;
     }
+    /**
+     * RaiseL
+     * Insert description here
+     *
+     * @param $errnbr
+     * @param $a1
+     * @param $a2
+     * @param $a3
+     * @param $a4
+     * @param $a5
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     public static function RaiseL($errnbr,$a1=null,$a2=null,$a3=null,$a4=null,$a5=null) {
 	$t = new ErrMsgText();
 	$msg = $t->Get($errnbr,$a1,$a2,$a3,$a4,$a5);
@@ -117,25 +233,91 @@ class JpGraphError {
 //=============================================================
 // The default trivial text error handler.
 //=============================================================
+/**
+ * JpGraphErrObject
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class JpGraphErrObject {
 
     protected $iTitle = "JpGraph Error";
     protected $iDest = false;
 
 
+    /**
+     * JpGraphErrObject
+     * Insert description here
+     *
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function JpGraphErrObject() {
 	// Empty. Reserved for future use
     }
 
+    /**
+     * SetTitle
+     * Insert description here
+     *
+     * @param $aTitle
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetTitle($aTitle) {
 	$this->iTitle = $aTitle;
     }
 
+    /**
+     * SetStrokeDest
+     * Insert description here
+     *
+     * @param $aDest
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function SetStrokeDest($aDest) { 
 	$this->iDest = $aDest; 
     }
 
     // If aHalt is true then execution can't continue. Typical used for fatal errors
+    /**
+     * Raise
+     * Insert description here
+     *
+     * @param $aMsg
+     * @param $aHalt
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Raise($aMsg,$aHalt=true) {
 	$aMsg = $this->iTitle.' '.$aMsg;
 	if ($this->iDest) {
@@ -156,8 +338,36 @@ class JpGraphErrObject {
 //==============================================================
 // An image based error handler
 //==============================================================
+/**
+ * JpGraphErrObjectImg
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 class JpGraphErrObjectImg extends JpGraphErrObject {
 
+    /**
+     * Raise
+     * Insert description here
+     *
+     * @param $aMsg
+     * @param $aHalt
+     *
+     * @return
+     *
+     * @access
+     * @static
+     * @see
+     * @since
+     */
     function Raise($aMsg,$aHalt=true) {
 	$img_iconerror = 
 	    'iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAaV'.

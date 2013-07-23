@@ -24,9 +24,37 @@ if (!class_exists('FUNC')) require_once 'FUNC.php';
 
 if (version_compare(phpversion(), '5', '>=')) {
 	if (!class_exists('MIME5')) require_once 'PHP5/MIME5.php';
+/**
+ * MIME
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 	class MIME extends MIME5 { }
 } else {
 	if (!class_exists('MIME4')) require_once 'PHP4/MIME4.php';
+/**
+ * MIME
+ * Insert description here
+ *
+ * @category
+ * @package
+ * @author
+ * @copyright
+ * @license
+ * @version
+ * @link
+ * @see
+ * @since
+ */
 	class MIME extends MIME4 { }
 }
 

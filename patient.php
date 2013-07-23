@@ -547,7 +547,6 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 ?>
 		<TABLE BORDER="0">
 		<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'>Add <?php print get_text("Patient");?> Record</FONT></TD></TR>	<!-- 5/4/11 -->
-		<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><SPAN ID='region_flags' style='background: #00FFFF; font-weight: bold;'></SPAN></TD></TR>	<!-- 5/4/11 -->		
 		<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR>				<!-- 5/4/11 -->			
 		<FORM METHOD="post" NAME='patientAdd' onSubmit='return validate(document.patientAdd);'  ACTION="patient.php?ticket_id=<?php print $_GET['ticket_id'];?>&action=add">
 		<TR CLASS='even'><TD class='td_label'><B><?php print get_text("Patient ID");?>:</B> <font color='red' size='-1'>*</font></TD><TD><INPUT TYPE="text" NAME="frm_name" value="" size="32"></TD></TR>

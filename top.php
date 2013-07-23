@@ -29,10 +29,13 @@
 5/4/11 day/night color changes added
 5/10/11 log window width increased
 6/28/11 try/catch added to accommodate main's new auto-refresh
+2/10/12	added logout() call to error detection 3 places
+2/25/12 action and patient data to button light-up
+2/27/12 div's added for latest ticket, assigns, action and patient
 */
 
 error_reporting(E_ALL);
-require_once('./incs/functions.inc.php');		//7/28/10
+require_once('./incs/functions.inc.php');		// 7/28/10
 require_once('./incs/browser.inc.php');			// 6/12/10
 @session_start();
 
@@ -144,27 +147,31 @@ if(file_exists("./incs/modules.inc.php")) {
 		sendRequest ('get_latest_id.php',get_latest_id_cb, "");	
 		}			// end function do_loop()		
 
+	var arr_lgth_good = 8;								// size of a valid returned array - 2/25/12
 	function get_latest_id_cb(req) {					// get_latest_id callback() - 8/16/10
 
 		try {
 			var the_id_arr=JSON.decode(req.responseText);	// 1/7/11
 			}
 		catch (e) {
-			alert(136);
+			alert("<?php echo 'error: ' . basename(__FILE__) . '@' .  __LINE__;?>");
 			alert(req.responseText);
+			do_logout();				// 2/10/12			
 			return;
 			}
 
 		try {			
-			var the_arr_lgth = the_id_arr.length;
+			var the_arr_lgth = the_id_arr.length;		// sanity check
 			}
 		catch (e) {
-			alert(144);
+			alert("<?php echo 'error: ' . basename(__FILE__) . '@' .  __LINE__;?>");
+			do_logout();				// 2/10/12
 			return;
 			}			
 		
-		if (the_arr_lgth != 6)  {
-			alert("server error at <?php print basename(__FILE__) . " " . __LINE__;?> ");
+		if (the_arr_lgth != arr_lgth_good)  {
+			alert("<?php echo 'error: ' . basename(__FILE__) . '@' .  __LINE__;?>");
+			do_logout();				// 2/10/12
 			}
 
 		var temp = parseInt(the_id_arr[0]);				// new chat invite?
@@ -173,6 +180,7 @@ if(file_exists("./incs/modules.inc.php")) {
 			chat_signal();								// light the chat button
 			}
 	
+		$("div_ticket_id").innerHTML = the_id_arr[1].trim();	// 2/19/12
 		var temp =  parseInt(the_id_arr[1]);			// ticket?
 		if (temp > ticket_id) {
 			ticket_id = temp;
@@ -189,10 +197,21 @@ if(file_exists("./incs/modules.inc.php")) {
 			unit_signal();								// light the unit button
 			}
 
+		$("div_assign_id").innerHTML = the_id_arr[4].trim();			// 2/19/12
+//		alert("201 " + the_id_arr[4].trim());
 		if (the_id_arr[4].trim() != dispatch)  {		// 1/21/11
-
 			dispatch = the_id_arr[4].trim();
-			unit_signal();								// light the unit button
+			unit_signal();								// sit scr to blue
+			}
+
+		if (the_id_arr[5].trim() != $("div_action_id").innerHTML)  {		// 2/25/12
+			misc_signal();													// situation button blue if ...
+			$("div_action_id").innerHTML = the_id_arr[5].trim();
+			}
+
+		if (the_id_arr[6].trim() != $("div_patient_id").innerHTML)  {		// 2/25/12
+			misc_signal();													// situation button blue if ...
+			$("div_patient_id").innerHTML = the_id_arr[6].trim();
 			}
 
 		}			// end function get_latest_id_cb()		
@@ -223,8 +242,8 @@ if(file_exists("./incs/modules.inc.php")) {
 //				the_id_str = syncAjax("get_latest_id.php");			// note synch call
 				var the_id_arr=JSON.decode(req.responseText);				// 1/7/11
 				
-				if (the_id_arr.length != 6)  {
-					alert("server error at <?php print basename(__FILE__) . " " . __LINE__;?> ");
+				if (the_id_arr.length != 8)  {						// 2/25/12
+					alert("<?php echo 'error: ' . basename(__FILE__) . '@' .  __LINE__;?>");
 					}
 				else {
 					chat_id =  parseInt(the_id_arr[0]);	
@@ -232,6 +251,10 @@ if(file_exists("./incs/modules.inc.php")) {
 					unit_id =  parseInt(the_id_arr[2]);		
 					updated =  the_id_arr[3].trim();					// timestamp this unit
 					dispatch = the_id_arr[4].trim();					// 1/21/11
+					$("div_ticket_id").innerHTML = the_id_arr[1].trim();	// 2/19/12
+					$("div_assign_id").innerHTML = the_id_arr[4].trim();	// 2/19/12			
+					$("div_action_id").innerHTML = the_id_arr[5].trim();	// 2/25/12			
+					$("div_patient_id").innerHTML = the_id_arr[6].trim();	// 2/25/12			
 					}
 
 				mu_get();				// start loop
@@ -300,7 +323,7 @@ if(file_exists("./incs/modules.inc.php")) {
 			return AJAX.responseText;																				 
 			} 
 		else {
-			alert ("201: failed")
+			alert("<?php echo 'error: ' . basename(__FILE__) . '@' .  __LINE__;?>");
 			return false;
 			}																						 
 		}		// end function sync Ajax()
@@ -330,10 +353,16 @@ if(file_exists("./incs/modules.inc.php")) {
 		lit["main"] = true;
 		}
 		
-	function tick_signal() {										// light the button
+	function tick_signal() {										// red light the button
 		CngClass("main", "signal_r");
 		lit["main"] = true;
 		do_audible();				// 6/12/10
+		}
+																	// 2/25/12
+	function misc_signal() {										// blue light to situation button if not already lit 
+		if (lit["main"]) {return; }									// already lit - possibly red
+		CngClass("main", "signal_b");
+		lit["main"] = true;
 		}
 
 	function CngClass(obj, the_class){
@@ -451,7 +480,6 @@ if(file_exists("./incs/modules.inc.php")) {
 
 <?php } ?>
 
-//		alert(383);
 		$('gout').style.display = 'none';		// hide the logout button
 		document.gout_form.submit();			// send logout 
 		}
@@ -609,15 +637,16 @@ if(file_exists("./incs/modules.inc.php")) {
 		}
 
 <?php
-$start_up_str = (empty($_SESSION))? "": " mu_init();"; 
-$the_whom = (empty($_SESSION))? NOT_STR: $_SESSION['user']; 
-$the_level = (empty($_SESSION))? "na": get_level_text($_SESSION['level']); 
-$day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_night'])) ? $_SESSION['day_night'] : 'Day';
+$start_up_str = 	(array_key_exists('user', $_SESSION))? "": " mu_init();"; 
+$the_whom = 		(array_key_exists('user', $_SESSION))? $_SESSION['user']: NOT_STR; 
+$the_level = 		(array_key_exists('level', $_SESSION))? get_level_text($_SESSION['level']):"na"; 
+
+$day_night = (array_key_exists('day_night', $_SESSION)) ? $_SESSION['day_night'] : 'Day';
 print "\n\t var the_whom = '{$the_whom}'\n";
 print "\t var the_level ='{$the_level}'\n"; 
 
 function get_daynight() {
-	$day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_night'])) ? $_SESSION['day_night'] : 'Day';
+	$day_night = ((array_key_exists('day_night', $_SESSION)) && ($_SESSION['day_night'])) ? $_SESSION['day_night'] : 'Day';
 	return $day_night;
 	}
 ?>
@@ -711,8 +740,12 @@ function get_daynight() {
 		
 	</SCRIPT>
 </HEAD>
-
 <BODY ID="main_body" onLoad = "top_init();">	<!-- 3/15/11 -->
+<DIV ID = "div_ticket_id" STYLE="display:none;"></DIV>
+<DIV ID = "div_assign_id" STYLE="display:none;"></DIV>
+<DIV ID = "div_action_id" STYLE="display:none;"></DIV> <!-- 2/25/12 -->
+<DIV ID = "div_patient_id" STYLE="display:none;"></DIV>
+
 	<TABLE ALIGN='left'>
 		<TR VALIGN='top'>
 			<TD ROWSPAN=2><IMG SRC="<?php print get_variable('logo');?>" BORDER=0 /></TD>

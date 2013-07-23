@@ -10,7 +10,7 @@ require_once('incs/functions.inc.php');		//7/28/10
 $speed_type = 1;	//	Speed Measure - 1 = mph, 2 = kph, 3 = knots
 $measurements = 1;	//	Measuments - 1 = feet, 2 = meters
 $debug = 0;	//	writes incoming stream to text file if debug = 1
-if($debug == 0) {
+if($debug == 1) {
 	write_track_log();
 	}
 if(!((isset($_GET['user'])) || (isset($_GET['username'])))) {
@@ -82,9 +82,9 @@ if(isset($_GET['pw'])) {	// is the client GPSGate
 	$date = isset($_GET['date']) ? $_GET['date']: date("Ymd");
 	$time = isset($_GET['time']) ? $_GET['time']: date("His.000");
 	$myTime = parse_date_time($date, $time);
-	$myLongitude = isset($_GET['longitude']) ? $_GET['longitude']: die("Failed no Longitude");
-	$myLatitude = isset($_GET['latitude']) ? $_GET['latitude']: die("Failed no Latitude");
-	$myUser = isset($_GET['username']) ? $_GET['username']: die("Failed no Username");
+	$myLongitude = isset($_GET['longitude']) ? $_GET['longitude']: 0;
+	$myLatitude = isset($_GET['latitude']) ? $_GET['latitude']: 0;
+	$myUser = isset($_GET['username']) ? $_GET['username']: 0;
 	$myDirection = $head;
 	switch ($speed_type) {
 		case 1:

@@ -7,7 +7,7 @@ if(!(file_exists("./incs/mysql.inc.php"))) {
 
 require_once('./incs/functions.inc.php');	
 
-$version = "2.20 B beta - 12/23/11";	
+$version = "2.20 G beta - 6/22/12";	
 
 /*
 10/1/08 added error reporting
@@ -83,6 +83,11 @@ $version = "2.20 B beta - 12/23/11";
 7/5/11 ogts field added to responder schema, settings
 8/2/11 tables mmarkup and cats schema added
 9/26/11 Changed Value field in settings table to varcahr (128) to fix issues with fiueld length for SMTP mail settings
+4/17/12 Version number change
+5/1/12 table captions field size increses from 38 to 64
+5/11/12 Added extra indexes to Assigns and log table.
+5/11/12 Added code for invocation of quick start choice on first login.
+6/21/12 Version number change
 */
 
 //snap(basename(__FILE__) . " " . __LINE__  , count($_SESSION));
@@ -107,6 +112,12 @@ if ($istest) {											// 12/13/09
 SET @@global.sql_mode= '';
 sql-mode="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
 */
+function count_responders() {	//	5/11/12 For quick start.
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder`";
+	$result = mysql_query($query);	
+	$count_responders = mysql_num_rows($result);
+	return $count_responders;
+	}
 
 function table_exists($name) {			//	3/15/11
 	$tablename = "$GLOBALS[mysql_prefix]" . "$name";
@@ -251,7 +262,19 @@ if (!($version == $old_version)) {		// current? - 5/19/10 ======================
 	//	do_setting ('unit_status_chg','0');			// 7/21/10
 		do_setting ('group_or_dispatch','0');			// 12/16/10
 		do_setting ('title_string','');			// 12/16/10		
-		
+		do_setting ('regions_control','0');			// 12/16/10		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD INDEX ( `ticket_id` )";	//	5/11/12
+		$result = mysql_query($query);
+
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD INDEX ( `responder_id` )";	//	5/11/12
+		$result = mysql_query($query);
+
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD INDEX ( `clear` )";	//	5/11/12
+		$result = mysql_query($query);
+
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]log` ADD INDEX ( `code` )";	//	5/11/12
+		$result = mysql_query($query);
+	
 		$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]facilities` (`id` bigint(8) NOT NULL auto_increment, `name` text, `direcs` tinyint(2) NOT NULL default '1' COMMENT '0=>no directions, 1=> yes', `description` text NOT NULL, `capab` varchar(255) default NULL COMMENT 'Capability', `status_id` int(4) NOT NULL default '0', `other` varchar(96) default NULL, `handle` varchar(24) default NULL, `contact_name` varchar(64) default NULL, `contact_email` varchar(64) default NULL, `contact_phone` varchar(15) default NULL, `security_contact` varchar(64) default NULL, `security_email` varchar(64) default NULL, `security_phone` varchar(15) default NULL, `opening_hours` mediumtext, `access_rules` mediumtext, `security_reqs` mediumtext, `pager_p` varchar(64) default NULL, `pager_s` varchar(64) default NULL, `send_no` varchar(64) default NULL, `lat` double default NULL, `lng` double default NULL, `type` tinyint(1) default NULL, `updated` datetime default NULL, `user_id` int(4) default NULL, `callsign` varchar(24) default NULL, `_by` int(7) NOT NULL, `_from` varchar(16) NOT NULL, `_on` datetime NOT NULL, PRIMARY KEY  (`id`), UNIQUE KEY `ID` (`id`)) ENGINE=MyISAM AUTO_INCREMENT=43 DEFAULT CHARSET=latin1 AUTO_INCREMENT=43;";
 		$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);			// 7/7/09
 		
@@ -506,32 +529,36 @@ if (!($version == $old_version)) {		// current? - 5/19/10 ======================
 	
 		$the_table = "$GLOBALS[mysql_prefix]captions";
 	
-		if (!(mysql_table_exists($the_table))) {					// 8/13/10, 8/25/10
-							
+		if (!(mysql_table_exists($the_table))) {					// 8/13/10, 8/25/10, 5/1/12							
 			$query = "CREATE TABLE IF NOT EXISTS `{$the_table}` (
 				  `id` int(7) NOT NULL AUTO_INCREMENT,
-				  `capt` varchar(36) NOT NULL,
-				  `repl` varchar(36) NOT NULL,
+				  `capt` varchar(64) NOT NULL,
+				  `repl` varchar(64) NOT NULL,
 				  `_by` int(7) NOT NULL DEFAULT '0',
 				  `_from` varchar(16) NOT NULL DEFAULT '''''',
 				  `_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				  PRIMARY KEY (`id`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;";
-			$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/12/10	
-	
-			require_once ("./incs/capts.inc.php");		// get_text captions as an array 8/17/10
-														//
-			for ($i=0; $i< count($capts); $i++) {		// 8/29/10
-				$temp = quote_smart($capts[$i]);
-		
-				$query = "INSERT INTO `{$the_table}` (`capt`, `repl`) VALUES ($temp, $temp);";
+			}
+		else {				// 5/1/12
+			$query = "ALTER TABLE `{$the_table}` CHANGE `capt` `capt` VARCHAR( 64 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+				CHANGE `repl` `repl` VARCHAR( 64 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL"; 
+			}		// end  (!(mysql_table_exists($the_table)))
+
+		$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		
+		require_once ("./incs/capts.inc.php");		// get_text captions as an array 8/17/10
+													//
+		for ($i=0; $i< count($capts); $i++) {		// 8/29/10
+			$temp = quote_smart($capts[$i]);
+			$query = "SELECT `repl` FROM `{$the_table}` WHERE `repl` = {$temp} LIMIT 1;";		// 5/1/12
+			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+			if (mysql_num_rows ($result) == 0) {
+				$query = "INSERT INTO `{$the_table}` (`capt`, `repl`) VALUES ({$temp}, {$temp});";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 				}
-			
-			unset ($result);
-	
-			}	// end if (!(mysql_table_exists($the_table))
-									// 10/19/10
+			}		
+		unset ($result);	
+								// 10/19/10
 	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]log` CHANGE `info` `info` VARCHAR( 256 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	
@@ -1191,6 +1218,13 @@ if (!($version == $old_version)) {		// current? - 5/19/10 ======================
 						(11, 'Average time to close ticket', 'avg');";
 			$result_insert = mysql_query($query_insert) or do_error($query_insert , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	6/10/11	
 		}
+	}
+	
+if((count_responders()== 0) && (get_variable('title_string') == "") && ((!empty($_GET)) && ($_GET['first_start'] == "yes"))) {	//	5/11/12 For quick start routine
+	print '<BR /><BR /><BR /><B>Do you wish to use the Tickets Quick start routine?';
+	print '<BR /><BR /><A style="cursor: pointer;" onClick="document.quick.submit()"><< Yes Please >></A>&nbsp;&nbsp;&nbsp;<A style="cursor: pointer;" HREF="index.php"><< No just start Tickets >></A>';
+	print "<FORM NAME='quick' METHOD='POST' ACTION='quick_start.php'>";
+	print "<INPUT TYPE='hidden' NAME='run_quick' VALUE='yes'></FORM>";
 	}
 
 ?>

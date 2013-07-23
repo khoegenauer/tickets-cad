@@ -92,6 +92,65 @@ function get_category($unit) {
 	return $status_category;	
 	}	// end function get_category($unit);
 	
+function get_all_categories() {
+	global $hide_status_groups, $hide_dispatched;
+	$status_category=array();
+	require_once('mysql.inc.php');
+	if($hide_status_groups == 0) {
+		$query = "SELECT `$GLOBALS[mysql_prefix]responder`.`un_status_id`, 
+			`$GLOBALS[mysql_prefix]responder`.`id`, 		
+			`$GLOBALS[mysql_prefix]un_status`.`status_val`, 
+			`$GLOBALS[mysql_prefix]un_status`.`group`,
+			`$GLOBALS[mysql_prefix]un_status`.`hide`
+			FROM `$GLOBALS[mysql_prefix]responder`
+			RIGHT JOIN `$GLOBALS[mysql_prefix]un_status` ON `$GLOBALS[mysql_prefix]responder`.`un_status_id`=`$GLOBALS[mysql_prefix]un_status`.`id`";	
+		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+			$unit = $row['id'];
+			$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `$GLOBALS[mysql_prefix]assigns`.`responder_id` = '{$unit}' AND (`clear` IS NULL OR DATE_FORMAT(`clear`,'%Y') = '0000' )";	//2/12/11
+			$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+			$deployed = mysql_num_rows($result2);
+			if($deployed == 0) {			
+				$status_id = $row['un_status_id'];
+				$status_hide = $row['hide'];
+				if($status_hide == "y") {
+					$status_category[$unit] = "Not Available";
+					} else {
+					$status_category[$unit] = "Available";
+					}
+				} else {
+				$status_category[$unit] = "Dispatched";	
+				}
+			}
+		} else {
+
+		$query = "SELECT `$GLOBALS[mysql_prefix]responder`.`un_status_id`, 
+			`$GLOBALS[mysql_prefix]responder`.`id`, 			
+			`$GLOBALS[mysql_prefix]un_status`.`status_val`, 
+			`$GLOBALS[mysql_prefix]un_status`.`group`,			
+			`$GLOBALS[mysql_prefix]un_status`.`hide`
+			FROM `$GLOBALS[mysql_prefix]responder`
+			RIGHT JOIN `$GLOBALS[mysql_prefix]un_status` ON `$GLOBALS[mysql_prefix]responder`.`un_status_id`=`$GLOBALS[mysql_prefix]un_status`.`id`";	
+		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+			$unit = $row['id'];
+			$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `$GLOBALS[mysql_prefix]assigns`.`responder_id` = '{$unit}' AND (`clear` IS NULL OR DATE_FORMAT(`clear`,'%Y') = '0000' )";	//2/12/11
+			$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+			$deployed = mysql_num_rows($result2);
+			if($deployed == 0) {			
+				if(($row['group']=="") || ($row['group']==NULL) || ($row['group']=="NULL")) {
+					$status_category[$unit] = "?";
+					} else {
+					$status_category[$unit] = $row['group'];
+					}				
+				} else {
+				$status_category[$unit] = "Dispatched";
+				}	
+			}
+		}
+		return $status_category;	
+	}	// end function get_category($unit);
+	
 function get_no_units() {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder`";	
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
@@ -99,9 +158,9 @@ function get_no_units() {
 	return $num_units;
 	}
 	
-function get_session_status() {
+function get_session_status($curr_cats) {
 	$category_stat = array();
-	$cats_in_use = get_category_butts();
+	$cats_in_use = $curr_cats;
 	$i = 0;
 	foreach($cats_in_use as $key => $value) {
 		$cat_key = "show_hide_" . $value;
@@ -115,16 +174,16 @@ function get_session_status() {
 	return $category_stat;
 	}	//	end function get_session_status()
 
-function find_hidden() {
-	$stat_array = get_session_status();
+function find_hidden($curr_cats) {
+	$stat_array = get_session_status($curr_cats);
 	$counter=0;
 	$string = "h";
 	foreach($stat_array as $val) {$string == $val ? $counter++ : null;}
 	return $counter;
 	}
 
-function find_showing() {
-	$stat_array = get_session_status();
+function find_showing($curr_cats) {
+	$stat_array = get_session_status($curr_cats);
 	$counter=0;
 	$string = "s";
 	foreach($stat_array as $val) {$string == $val ? $counter++ : null;}

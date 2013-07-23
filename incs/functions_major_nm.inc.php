@@ -11,6 +11,9 @@
 5/7/11 added $the_disp_stat string to units TD line
 6/10/11 Where clause updated in all major queries to support Group functionality
 6/14/11 corrected sql re 'units assigned' count
+4/5/12 revised top tr to accommodate auto-refresh blink
+4/12/12 Revised Regions control buttons
+6/20/12 applied get_text() to Units, Responders
 */
 
 @session_start();
@@ -190,14 +193,16 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 	$user_level = is_super() ? 9999 : $_SESSION['user_id']; 
 	$regions_inuse = get_regions_inuse($user_level);
 	$group = get_regions_inuse_numbers($user_level);
-//	dump($group);
-//	dump(get_tickets_allocated($group));
-
+	print get_buttons_inner();
+	print get_buttons_inner2();
 ?>
+<DIV style='z-index: 1;'>
 <TABLE BORDER=0>
-	<A NAME=top></a>
-	<TR CLASS='even'><TD COLSPAN='3' ALIGN='center'><FONT CLASS='header'><?php print $heading; ?> </FONT><SPAN ID='sev_counts' STYLE = 'margin-left: 40px'></SPAN></TD></TR>	<!-- 5/2/10 -->
-	<TR CLASS='header'><TD COLSPAN='3' ALIGN='center'><SPAN ID='region_flags' style='background: #00FFFF; font-weight: bold;'></SPAN></TD></TR>	<!-- 5/2/10, 3/15/11, 5/4/11 -->
+	<TR CLASS='header' style = "height:32px;">	<!-- 4/5/12 -->
+		<TD COLSPAN='99' ALIGN='center' ID = "hdr_td_str"  CLASS='header' STYLE='background-color: inherit;'>
+		<?php print $heading; ?>
+		<SPAN ID='sev_counts' CLASS='sev_counts'></SPAN>
+	</TD></TR>
 	<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='3' ALIGN='center'>&nbsp;</TD></TR>				<!-- 3/15/11 -->
 	<TR><TD VALIGN='TOP' align='left'>
 		<TABLE><TR class = 'heading'><TH width = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> ALIGN='center' COLSPAN='99'>Incidents </TH></TR>
@@ -207,7 +212,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 		</TD></TR></TABLE>
 	<TD style="width: 20px;">&nbsp;&nbsp;</TD>
 	<TD VALIGN='top' align='left'>
-		<TABLE><TR class = 'heading'><TH width = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> ALIGN='center' COLSPAN='99'>Responders </TH></TR><TR><TD>				<!-- 3/15/11 -->		
+		<TABLE><TR class = 'heading'><TH width = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> ALIGN='center' COLSPAN='99'><?php print get_text("Units");?> </TH></TR><TR><TD>				<!-- 3/15/11 -->		
 		<DIV ID = 'side_bar_r' style="max-height: <?php print $the_height;?>px; min-height: 200px; overflow-y: scroll; overflow-x: hidden;"></DIV>
 		<DIV ID = 'side_bar_rl'></DIV>				<!-- 3/15/11 -->		
 		<DIV ID = 'units_legend'></DIV>
@@ -219,7 +224,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 	</TD></TR>				<!-- 3/15/11 -->			
 	<TR><TD CLASS='td_label' COLSPAN='99' ALIGN='center'>
 		<A HREF="mailto:info@TicketsCAD.org?subject=Question/Comment on Tickets Dispatch System"><u>Contact us</u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom"></A>
-		</TD></TR></TABLE>
+		</TD></TR></TABLE></DIV>
 		
 	<FORM NAME='unit_form' METHOD='get' ACTION='<?php echo $_SESSION['unitsfile'];?>'>
 	<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
@@ -247,47 +252,6 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 	</FORM>
 
 <SCRIPT>
-//================================= 7/18/10
-	$('region_flags').innerHTML = "<?php print $regs_string; ?>";			// 5/2/10
-<?php
-
-	function get_buttons($user_id) {		//	5/3/11
-		$regs_viewed = "";
-		if(isset($_SESSION['viewed_groups'])) {
-			$regs_viewed= explode(",",$_SESSION['viewed_groups']);
-			}
-
-		$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id' ORDER BY `group`";			//	5/3/11
-		$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-
-		$al_buttons="";	
-		while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	//	5/3/11
-			if(!empty($regs_viewed)) {
-				if(in_array($row2['group'], $regs_viewed)) {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				} else {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				}
-				} else {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				}
-			}
-//		dump($al_buttons);
-		return $al_buttons;
-	}
-	
-if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
-?>
-	side_bar_html= "";
-	side_bar_html+="<TABLE><TR class='heading_2'><TH width = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> ALIGN='center' COLSPAN='99'>Viewed <?php print get_text("Regions");?></TH></TR><TR class='even'><TD COLSPAN=99 CLASS='td_label' ><form name='region_form' METHOD='post' action='main.php'><DIV>";
-	side_bar_html += "<?php print get_buttons($_SESSION['user_id']);?>";
-	side_bar_html+="</DIV></form></TD></TR><TR><TD>&nbsp;</TD></TR><TR><TD ALIGN='center'><INPUT TYPE='button' VALUE='Update' onClick='form_validate(document.region_form);'></TD></TR></TABLE>";
-	$("region_boxes").innerHTML = side_bar_html;		
-
-<?php
-} 
-?>
-
 	spe=500;
 	NameOfYourTags="mi";
 	swi=1;
@@ -345,7 +309,7 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
 			return false;
 			}
 		else {
-			parent.frames['upper'].show_msg ('Unit status update applied!')
+			parent.frames['upper'].show_msg ('<?php print get_text("Units");?> status update applied!')
 			return true;
 			}				// end if/else (payload.substring(... )
 		}		// end function to_server()
@@ -1192,12 +1156,12 @@ $temp  = (string) ( round((microtime(true) - $time), 3));
 ?>	
 	side_bar_html += "<TR CLASS = 'even' VALIGN='baseline'><TD COLSPAN=99 ALIGN='center' STYLE = 'height:20px;'>";
 	side_bar_html += "<I>Sort:&nbsp;&nbsp;&nbsp;&nbsp;";
-	side_bar_html += "Unit &raquo; 	<input type = radio name = 'frm_order' value = 1 <?php print $checked[1];?> onClick = 'do_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+	side_bar_html += "<?php print get_text("Units");?> &raquo; 	<input type = radio name = 'frm_order' value = 1 <?php print $checked[1];?> onClick = 'do_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	side_bar_html += "Type &raquo; 	<input type = radio name = 'frm_order' value = 2 <?php print $checked[2];?> onClick = 'do_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	side_bar_html += "Status &raquo; <input type = radio name = 'frm_order' value = 3 <?php print $checked[3];?> onClick = 'do_sort_sub(this.value);' />";
 	side_bar_html += "</I></TD></TR>";
 <?php	
-		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD>&nbsp;<B>Unit</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(null, null); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD>&nbsp; <B>Status</B></TD><TD COLSPAN=2><B>" . $incident . "</B></TD><TD><B>&nbsp;As of</B></TD></TR>\"\n" ;
+		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD>&nbsp;<B>" . get_text("Units") . "</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(null, null); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD>&nbsp; <B>Status</B></TD><TD COLSPAN=2><B>" . $incident . "</B></TD><TD><B>&nbsp;As of</B></TD></TR>\"\n" ;
 		}
 
 	$aprs = $instam = $locatea = $gtrack = $glat = $t_tracker = $ogts = FALSE;		//7/23/09, 5/11/11
@@ -1337,14 +1301,14 @@ $temp  = (string) ( round((microtime(true) - $time), 3));
 
 ?>
 	var legends = "<TR class='even'><TD ALIGN='center' COLSPAN='99'><TABLE ALIGN='center' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> >";	//	3/15/11
-	legends += "<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR><TR class='even'><TD ALIGN='center' COLSPAN='99'><B>Responders Legend</B></TD></TR>";	//	3/15/11
+	legends += "<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR><TR class='even'><TD ALIGN='center' COLSPAN='99'><B><?php print get_text("Units");?> Legend</B></TD></TR>";	//	3/15/11
 	legends += "<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'>&nbsp;&nbsp;<B>M</B>obility:&nbsp;&nbsp; stopped: <FONT COLOR='red'>&bull;</FONT>&nbsp;&nbsp;&nbsp;moving: <FONT COLOR='green'>&bull;</FONT>&nbsp;&nbsp;&nbsp;fast: <FONT COLOR='white'>&bull;</FONT>&nbsp;&nbsp;&nbsp;silent: <FONT COLOR='black'>&bull;</FONT>&nbsp;&nbsp;</TD></TR>";	//	3/15/11
 	legends += "<TR CLASS='" + colors[(i)%2] +"'><TD COLSPAN='99' ALIGN='center'><?php print get_units_legend();?></TD></TR></TABLE>";	//	3/15/11
 
 	$("side_bar_r").innerHTML = side_bar_html;										// side_bar_html to responders div		
 	$("side_bar_rl").innerHTML = legends + "</TABLE>";		//	12/03/10
 	side_bar_html= "";		//	12/03/10	
-	side_bar_html+="<TABLE><TR class='heading_2'><TH width = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> ALIGN='center' COLSPAN='99'>Units</TH></TR><TR class='even'><TD COLSPAN=99 CLASS='td_label' ><form action='#'>";			//	12/03/10, 3/15/11
+	side_bar_html+="<TABLE><TR class='heading_2'><TH width = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> ALIGN='center' COLSPAN='99'><?php print get_text("Units");?></TH></TR><TR class='even'><TD COLSPAN=99 CLASS='td_label' ><form action='#'>";			//	12/03/10, 3/15/11
 
 	
 // ====================================  Add Facilities to Map 8/1/09 ================================================

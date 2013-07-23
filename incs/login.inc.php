@@ -14,6 +14,8 @@
 3/19/11 get_unit() added for unit login, $_SESSION['user_unit_id']
 5/10/11 logo changed
 7/3/11 key check corrected
+3/1/12 Changed level['MEMBER'] to level['UNIT']
+6/1/12 Hide Guest loging notice if guest account doesn't exist.
 */
 
 function do_logout($return=FALSE){						/* logout - destroy session data */
@@ -271,12 +273,10 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 				$host  = $_SERVER['HTTP_HOST'];
 				$uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 
-//				$extra = ($row['level']== $GLOBALS['LEVEL_UNIT'])? 'mobile.php' : 'main.php?log_in=1';				// 8/29/10
-
 				$unit_id = get_unit();				// 3/19/11
 				$level = $row['level'];
 				
-				if($level == $GLOBALS['LEVEL_UNIT']) {
+				if($level == $GLOBALS['LEVEL_UNIT']) {	//	3/1/12
 					$extra = 'mobile.php';
 					} else if ($level == $GLOBALS['LEVEL_STATS'] ) {
 					$extra = 'stats_scr.php?stats=stats';
@@ -449,6 +449,14 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 //	print (array_key_exists ('frm_user', $_POST))? 		$_POST['frm_user'] . "/" : "";
 //	print (array_key_exists ('frm_passwd', $_POST))? 	$_POST['frm_passwd']: "";
 
+//	6/1/12
+		$guest_exists = 0;
+		$query_guest 	= "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `user`='guest'";
+		$result_guest = mysql_query($query_guest) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		if (mysql_num_rows($result_guest)==1) {
+			$guest_exists = 1;
+			}
+// End of code to check for guest account existence
 ?>
 		<TR CLASS='even'><TD ROWSPAN=6 VALIGN='middle' ALIGN='left' bgcolor=#EFEFEF><BR /><BR />&nbsp;&nbsp;<IMG BORDER=0 SRC='open_source_button.png' <?php print $my_click; ?>><BR /><BR />
 		&nbsp;&nbsp;<img src="php.png" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD CLASS="td_label"><?php print get_text("User"); ?>:</TD>
@@ -460,7 +468,13 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 			<TD><INPUT TYPE="radio" NAME="frm_daynight" VALUE="Day" checked>Day&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="radio" NAME="frm_daynight" value="Night">Night</TD></TR>
 		<TR CLASS="even"><TD COLSPAN=2>&nbsp;&nbsp;</TD></TR>
 		<TR CLASS='even'><TD></TD><TD><INPUT TYPE="submit" VALUE="<?php print get_text("Log In"); ?>"></TD></TR>
-		<TR CLASS='even'><TD COLSPAN=3 ALIGN='center'><BR />&nbsp;&nbsp;&nbsp;&nbsp;Visitors may login as <B>guest</B> with password <B>guest</B>.&nbsp;&nbsp;&nbsp;&nbsp;</TD></TR>
+<?php
+		if($guest_exists == 1) {	//	6/1/12
+?>
+			<TR CLASS='even'><TD COLSPAN=3 ALIGN='center'><BR />&nbsp;&nbsp;&nbsp;&nbsp;Visitors may login as <B>guest</B> with password <B>guest</B>.&nbsp;&nbsp;&nbsp;&nbsp;</TD></TR>
+<?php
+		}
+?>
 		<TR CLASS='even'><TD COLSPAN=3>&nbsp;</TD></TR>
 		<TR CLASS='even'><TD COLSPAN=3>&nbsp;</TD></TR>
 	 	</TABLE>

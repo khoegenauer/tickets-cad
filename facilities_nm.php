@@ -15,6 +15,7 @@ $zoom_tight = FALSE;		// replace with a decimal number to over-ride the standard
 6/10/11 Added group functonality
 7/1/11 permissions corrected
 8/1/11 state length increased to 4 chars
+2/8/12 Fixed error on single region operation - editing a unit removes region 1 region allocation.
 */
 
 @session_start();
@@ -66,13 +67,6 @@ function get_icon_legend (){			// returns legend string
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
 	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">			<!-- 3/15/11 -->
-	<STYLE>
-		.disp_stat	{ FONT-WEIGHT: bold; FONT-SIZE: 9px; COLOR: #FFFFFF; BACKGROUND-COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;}
-		.box { background-color: #DEE3E7; border: 2px outset #606060; color: #000000; padding: 0px; position: absolute; z-index:1000; width: 180px; }
-		.bar { background-color: #FFFFFF; border-bottom: 2px solid #000000; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
-		.bar_header { height: 20px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}	
-		.content { padding: 1em; }
-	</STYLE>	
 	<SCRIPT  SRC='./js/misc_function.js' type='text/javascript'></SCRIPT>  <!-- 4/14/10 -->
 	<SCRIPT >
 
@@ -89,6 +83,20 @@ function get_icon_legend (){			// returns legend string
 
 	var lat_lng_frmt = <?php print get_variable('lat_lng'); ?>;
 
+	function set_regions_control() {
+		var reg_control = "<?php print get_variable('regions_control');?>";
+		var regions_showing = "<?php print get_num_groups();?>";
+		if(regions_showing) {
+			if (reg_control == 0) {
+				$('top_reg_box').style.display = 'none';
+				$('regions_outer').style.display = 'block';
+				} else {
+				$('top_reg_box').style.display = 'block';
+				$('regions_outer').style.display = 'none';			
+				}
+			}
+		}
+	
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -269,7 +277,21 @@ function get_icon_legend (){			// returns legend string
 	function do_add_reset(the_form) {
 		the_form.reset();
 		}
-	
+		
+	function do_hover (the_id) {
+		CngClass(the_id, 'hover');
+		return true;
+		}
+
+	function do_plain (the_id) {				// 8/21/10
+		CngClass(the_id, 'plain');
+		return true;
+		}
+
+	function CngClass(obj, the_class){
+		$(obj).className=the_class;
+		return true;
+		}		
 	</SCRIPT>
 
 
@@ -623,7 +645,7 @@ var buttons_html = "";
 			$the_lng = empty($_POST['frm_lng'])? "0.999999" : quote_smart(trim($_POST['frm_lng'])) ;
 			
 			$curr_groups = $_POST['frm_exist_groups']; 	//	4/14/11
-			$groups = "," . implode(',', $_POST['frm_group']) . ","; 	//	4/14/11
+			$groups = isset($_POST['frm_group']) ? ", " . implode(',', $_POST['frm_group']) . "," : $_POST['frm_exist_groups'];	//	3/28/12 - fixes error when accessed from view ticket screen..	
 			$fac_id = $_POST['frm_id'];
 			$fac_stat = $_POST['frm_status_id'];
 			$by = $_SESSION['user_id'];			
@@ -671,7 +693,6 @@ var buttons_html = "";
 						}
 					}
 				foreach($ex_grps as $existing_grps) { 	//	4/14/11
-					print $existing_grps;
 					if(!in_array($existing_grps, $_POST['frm_group'])) {
 						$query  = "DELETE FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type` = 3 AND `group` = $existing_grps AND `resource_id` = {$fac_id}";
 						$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);	
@@ -764,7 +785,8 @@ var buttons_html = "";
 			</TD></TR>			
 			
 <?php
-		if(is_super()) {		//	4/12/11	
+	if(get_num_groups()) {
+		if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>		
 			<TR CLASS='even' VALIGN="top">	<!--  4/12/11 -->
 			<TD CLASS="td_label"><A HREF="#"  TITLE="Sets Regions that Facility is allocated to - click + to expand, - to collapse"><?php print get_text("Region");?></A>: 
@@ -776,7 +798,7 @@ var buttons_html = "";
 			$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	6/10/11
 			print get_user_group_butts(($_SESSION['user_id']));	//	6/10/11		
 			
-		} elseif(is_admin()) {
+			} elseif((is_admin()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
 ?>		
 			<TR CLASS='even' VALIGN="top">	<!--  4/12/11 -->
 			<TD CLASS="td_label"><A HREF="#"  TITLE="Sets Regions that Facility is allocated to - click + to expand, - to collapse"><?php print get_text("Region");?></A>: 
@@ -790,18 +812,23 @@ var buttons_html = "";
 ?>	
 			</TD></TR>
 <?php
-		} else {
+			} else {
 ?>
 			<TR CLASS='even' VALIGN="top">	<!--  4/12/11 -->
 			<TD CLASS="td_label"><A HREF="#"  TITLE="Sets Regions that Facility is allocated to - click + to expand, - to collapse"><?php print get_text("Region");?></A>: 
 			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
-			<TD
+			<TD>
 <?php
 			$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	6/10/11
 			print get_user_group_butts_readonly($_SESSION['user_id']);	//	6/10/11		
 ?>	
 			</TD></TR>
+<?php
+			}
+		} else {
+?>
+		<INPUT TYPE="hidden" NAME="frm_group[]" VALUE="1">	 <!-- 6/10/11 -->
 <?php
 		}
 ?>
@@ -920,7 +947,8 @@ var buttons_html = "";
 			</TD></TR>
 
 <?php
-		if(is_super()) {		//	4/12/11
+	if(get_num_groups()) {
+		if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>			
 			<TR CLASS='even' VALIGN='top'>
 			<TD CLASS='td_label'><?php print get_text('Group');?></A>:
@@ -931,8 +959,7 @@ var buttons_html = "";
 			$alloc_groups = implode(',', get_allocates(3, $id));	//	6/10/11
 			print get_sub_group_butts(($_SESSION['user_id']), 3, $id) ;	//	6/10/11		
 			print "</TD></TR>";		// 4/12/11
-			
-		} elseif(is_admin()) {	//	4/12/11	
+			} elseif((is_admin()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
 ?>
 			<TR CLASS='even' VALIGN='top'>;
 			<TD CLASS='td_label'><?php print get_text('Group');?></A>:
@@ -943,8 +970,7 @@ var buttons_html = "";
 			$alloc_groups = implode(',', get_allocates(3, $id));	//	6/10/11
 			print get_sub_group_butts(($_SESSION['user_id']), 3, $id) ;	//	6/10/11	
 			print "</TD></TR>";		// 4/12/11		
-
-		} else {
+			} else {
 ?>
 			<TR CLASS='even' VALIGN='top'>;
 			<TD CLASS='td_label'><?php print get_text('Group');?></A>:
@@ -956,9 +982,13 @@ var buttons_html = "";
 			print get_sub_group_butts_readonly(($_SESSION['user_id']), 3, $id) ;	//	4/
 			print "</TD></TR>";		// 4/12/11				
 			}
+		} else {
+?>
+		<INPUT TYPE="hidden" NAME="frm_group[]" VALUE="1">	 <!-- 2/8/12 -->
+<?php
+		}
 ?>
 		<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>
-
 		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Type - Select from pulldown menu">Type</A>:&nbsp;<font color='red' size='-1'>*</font></TD>
 			<TD ALIGN='left'><FONT SIZE='-2'>
 				<SELECT NAME='frm_type'>
@@ -1031,7 +1061,7 @@ var buttons_html = "";
 		<INPUT TYPE="hidden" NAME = "frm_lat" VALUE="<?php print $row['lat'] ;?>"/>
 		<INPUT TYPE="hidden" NAME = "frm_lng" VALUE="<?php print $row['lng'] ;?>"/>
 		<INPUT TYPE="hidden" NAME = "frm_log_it" VALUE=""/>
-		<INPUT TYPE="hidden" NAME="frm_exist_groups" VALUE="<?php print $alloc_groups;?>">			
+		<INPUT TYPE="hidden" NAME="frm_exist_groups" VALUE="<?php print (isset($alloc_groups)) ? $alloc_groups : 1;?>">	<!-- 2/8/12 -->		
 		</FORM></TABLE>
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
 		<!-- 1231 -->
@@ -1169,12 +1199,11 @@ var buttons_html = "";
 		print "<SPAN STYLE = 'margin-left:100px;'>{$caption}<SPAN>";
 ?>
 		</HEAD><!-- 1387 -->
-		<BODY onLoad = "ck_frames()" >
+		<BODY onLoad = "ck_frames(); set_regions_control();" >
 		<A NAME='top'>		<!-- 11/11/09 -->
 		<DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0></div>		
 		<?php
 		require_once('./incs/links.inc.php');
-//		$groupname = isset($_SESSION['group_name']) ? $_SESSION['group_name'] : "";	//	4/11/11	
 		$required = 250 + (mysql_affected_rows()*40);;
 		$the_height = (integer)  min (round($facs_side_bar_height * $_SESSION['scr_height']), $required );		// set the max
 		$user_level = is_super() ? 9999 : $_SESSION['user_id']; 
@@ -1220,10 +1249,12 @@ var buttons_html = "";
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 		unset($result);		
 ?>
+			<DIV id='top_reg_box' style='display: none;'>
+				<DIV id='region_boxes' class='header_reverse' style='align: center; width: 100%; text-align: center; margin-left: auto; margin-right: auto; height: 30px; z-index: 1;'></DIV>
+			</DIV>
 			<DIV style='z-index: 1;'>		
 			<TABLE ID='outer' style='width: 100%;'>
 			<TR CLASS='header'><TD ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'><?php print $heading; ?> </FONT></TD></TR>	<!-- 4/11/11 -->
-			<TR CLASS='header'><TD ALIGN='center'><SPAN ID='region_flags' style='background: #00FFFF; font-weight: bold;'></SPAN></TD></TR>	<!-- 5/2/10, 3/15/11, 6/10/11 -->
 			<TR CLASS='spacer'><TD CLASS='spacer' ALIGN='center'>&nbsp;</TD></TR>				<!-- 4/11/11 -->
 			<TR><TD ALIGN='left' width='50%'>
 			<TABLE ID = 'sidebar' BORDER = 0 style='text-align: left;'>
@@ -1245,56 +1276,22 @@ var buttons_html = "";
 	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
 		$regs_col_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "s")) ? "" : "none";	//	6/10/11
 		$regs_exp_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "h")) ? "" : "none";	//	6/10/11	
-?>			
-			<DIV id = 'outer' style = "position:fixed; right:<?php print $from_right;?>%; top:<?php print $from_top;?>%; z-index: 1000; ">		<!-- 5/3/11 -->
+?>		
+		<DIV id = 'regions_outer' style = "position: fixed; right: 20%; top: 10%; z-index: 1000;">
 			<DIV id="boxB" class="box" style="z-index:1000;">
-			<div class="bar_header" class="heading_2" STYLE="z-index: 1000;">Viewed <?php print get_text("Regions");?>
-			<SPAN id="collapse_regs" style = "display: <?php print $regs_col_butt;?>; z-index:1001; cursor: pointer;" onclick="hideDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/collapse.png" ALIGN="right"></SPAN>
-			<SPAN id="expand_regs" style = "display: <?php print $regs_exp_butt;?>; z-index:1001; cursor: pointer;" onclick="showDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/expand.png" ALIGN="right"></SPAN></div>
-				<DIV class="bar" STYLE="color:red; z-index: 1000;"
+				<div class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;">Viewed Regions
+				<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+				<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
 					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
-			  <DIV id="region_boxes" class="content" style="z-index: 1000;"></DIV>
+				<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV>
+				</DIV>
 			</DIV>
-			</DIV>	
-<?php
+		</DIV>
+<?php		
 	}
-		function get_buttons($user_id) {		//	5/3/11
-			if(isset($_SESSION['viewed_groups'])) {
-				$regs_viewed= explode(",",$_SESSION['viewed_groups']);
-				}
-			
-			$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id' ORDER BY `group`";			//	5/3/11
-			$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-
-			$al_buttons="";	
-			while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	//	5/3/11
-				if(!empty($regs_viewed)) {
-					if(in_array($row2['group'], $regs_viewed)) {
-						$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-					} else {
-						$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-					}
-					} else {
-						$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-					}
-				}
-			return $al_buttons;
-		}
-		
-		if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
-?>
-			<SCRIPT>
-			side_bar_html= "";
-			side_bar_html+="<TABLE><TR class='even'><TD CLASS='td_label'><form name='region_form' METHOD='post' action='<?php print basename(__FILE__);?>'><DIV>";
-			side_bar_html += "<?php print get_buttons($_SESSION['user_id']);?>";
-			side_bar_html+="</DIV></form></TD></TR><TR><TD COLSPAN=99>&nbsp;</TD></TR><TR><TD ALIGN='center' COLSPAN=99><INPUT TYPE='button' VALUE='Update' onClick='form_validate(document.region_form);'></TD></TR></TABLE>";
-			$("region_boxes").innerHTML = side_bar_html;	
-			$('region_flags').innerHTML = "<?php print $regs_string; ?>";			// 5/2/10					
-			</SCRIPT>
-<?php
-		} 			
+		print get_buttons_inner();	//	3/28/12
+		print get_buttons_inner2();	//	3/28/12			
 ?>			
-
 		<FORM NAME='view_form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
 		<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
 		<INPUT TYPE='hidden' NAME='view' VALUE='true'>

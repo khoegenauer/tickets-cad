@@ -84,6 +84,8 @@ $show_tick_left = FALSE;	// controls left-side vs. right-side appearance of inci
 5/28/11 intrusion detection added
 6/10/11 Added Regions / Groups
 8/1/11 Added functions do_landb, drawBanner to support banners and boundaries.
+3/13/12 corrected log record written re dispatch
+6/20/12 applied get_text() to "Units"
 */
 
 do_login(basename(__FILE__));		// 
@@ -542,7 +544,7 @@ if((array_key_exists('func', $_REQUEST)) && ($_REQUEST['func'] == "do_db")) {	//
 		$row_addr = stripslashes_deep(mysql_fetch_assoc($result));
 		if (is_email($row_addr['contact_via'])) {array_push($addrs, $row_addr['contact_via']); }		// to array for emailing to unit
 
-		do_log($GLOBALS['LOG_UNIT_STATUS'], $frm_ticket_id, $assigns[$i], $frm_status_id);
+		do_log($GLOBALS['LOG_CALL_DISP'], $frm_ticket_id, $assigns[$i], $frm_status_id);		// 3/13/12
 		if ($frm_facility_id != 0) {
 			do_log($GLOBALS['LOG_FACILITY_DISP'], $frm_ticket_id, $assigns[$i], $frm_status_id);
 			}
@@ -1007,7 +1009,7 @@ function createXMLHTTPObject() {
 				&nbsp;</SPAN>
 			<BR />
 			<BR />
-			<SPAN CLASS="legend" STYLE="text-align: center; vertical-align: middle;">Units Legend:</SPAN><BR /><BR /><DIV CLASS="legend" ALIGN='center' VALIGN='middle' style='padding: 20px; text-align: center; vertical-align: middle; width: <?php print get_variable('map_width');?>px;'>	<!-- 3/15/11 -->
+			<SPAN CLASS="legend" STYLE="text-align: center; vertical-align: middle;"><?php print get_text("Units");?> Legend:</SPAN><BR /><BR /><DIV CLASS="legend" ALIGN='center' VALIGN='middle' style='padding: 20px; text-align: center; vertical-align: middle; width: <?php print get_variable('map_width');?>px;'>	<!-- 3/15/11 -->
 <?php
 		print get_icon_legend ();
 ?>
@@ -1119,61 +1121,6 @@ function createXMLHTTPObject() {
 					$al_names = "ALL. Superadmin Level";
 				}
 			}
-
-
-		$from_right = 20;	//	5/3/11
-		$from_top = 50;		//	5/3/11	
-		
-	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
-		$regs_col_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "s")) ? "" : "none";	//	6/10/11
-		$regs_exp_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "h")) ? "" : "none";	//	6/10/11			
-?>
-		<div id = 'outer' style = "position:fixed; right:<?php print $from_right;?>%; top:<?php print $from_top;?>%; z-index: 1000; ">		<!-- 5/3/11 -->
-		<div id="boxC" class="box2" style="z-index:1000;">
-		<div class="bar_header" class="heading_2" STYLE="z-index: 1000;">Viewed <?php print get_text("Regions");?>
-		<SPAN id="collapse_regs" style = "display: <?php print $regs_col_butt;?>; z-index:1001; cursor: pointer;" onclick="hideDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/collapse.png" ALIGN="right"></SPAN>
-		<SPAN id="expand_regs" style = "display: <?php print $regs_exp_butt;?>; z-index:1001; cursor: pointer;" onclick="showDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/expand.png" ALIGN="right"></SPAN></div>
-		<div class="bar2" STYLE="color:red; z-index: 1000;"
-				onmousedown="dragStart(event, 'boxC')"><i>Drag me</i></div>
-		<div id="region_boxes" class="content" style="z-index: 1000;"></div>
-		</div>
-		</div>
-<?php
-}
-		function get_buttons($user_id) {		//	5/3/11
-			if(isset($_SESSION['viewed_groups'])) {
-				$regs_viewed= explode(",",$_SESSION['viewed_groups']);
-				}
-			
-			$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id' ORDER BY `group`";			//	5/3/11
-			$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-
-			$al_buttons="";	
-			while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	//	5/3/11
-				if(!empty($regs_viewed)) {
-					if(in_array($row2['group'], $regs_viewed)) {
-						$al_buttons.="<DIV style='float: left; width: 100%; text-align: left;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-					} else {
-						$al_buttons.="<DIV style='float: left; width: 100%; text-align: left;'><INPUT TYPE='checkbox' name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-					}
-					} else {
-						$al_buttons.="<DIV style='float: left; width: 100%; text-align: left;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-					}
-				}
-			return $al_buttons;
-			}
-		
-		if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
-?>
-			<SCRIPT>
-				side_bar_html= "";
-				side_bar_html+="<TABLE><TR class='even'><TD CLASS='td_label'><form name='region_form' METHOD='post' action='#'><DIV>";
-				side_bar_html += "<?php print get_buttons($_SESSION['user_id']);?>";
-				side_bar_html+="</DIV></form></TD></TR><TR><TD COLSPAN=99>&nbsp;</TD></TR><TR><TD ALIGN='center' COLSPAN=99><INPUT TYPE='button' VALUE='Update' onClick='form_validate(document.region_form);'></TD></TR></TABLE>";
-				$("region_boxes").innerHTML = side_bar_html;		
-			</SCRIPT>
-<?php
-			} 			
 ?>				
 		<A NAME="page_bottom" /> <!-- 5/13/10 -->	
 		<FORM NAME='reLoad_Form' METHOD = 'get' ACTION="<?php print basename( __FILE__); ?>">

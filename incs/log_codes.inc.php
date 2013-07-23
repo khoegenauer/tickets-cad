@@ -5,13 +5,15 @@
 4/28/11 add'l get_texts, error added
 5/25/11 intrusion detection added
 6/19/11 add LOG_CALL_EDIT
+3/11/12 add to_quarters
+3/22/12 add ICS message code
 */
-
+error_reporting(E_ALL);
 $patient = get_text("Patient");
 $facility = get_text("Facility");
 $unit = get_text("Unit");
 $incident = get_text("Incident");
-
+$to_quarters = get_text("to quarters");				// 3/11/12
 $types = array();
 
 	$types[$GLOBALS['LOG_SIGN_IN']]							="Sign in";
@@ -28,8 +30,9 @@ $types = array();
 	$types[$GLOBALS['LOG_UNIT_STATUS']]						="{$unit} status change";
 	$types[$GLOBALS['LOG_UNIT_COMPLETE']]					="{$unit} completed";
 	$types[$GLOBALS['LOG_UNIT_CHANGE']]						="{$unit} updated";
-	
-	$types[$GLOBALS['LOG_CALL_EDIT']]						="Call edit";				// 6/19/11
+	$types[$GLOBALS['LOG_UNIT_TO_QUARTERS']]				="{$unit} {$to_quarters}";		// 3/11/12
+
+	$types[$GLOBALS['LOG_CALL_EDIT']]						="Call edit";					// 6/19/11
 	$types[$GLOBALS['LOG_CALL_DISP']]						="{$unit} dispatched";
 	$types[$GLOBALS['LOG_CALL_RESP']]						="{$unit} responding";
 	$types[$GLOBALS['LOG_CALL_ONSCN']]						="{$unit} on scene";
@@ -56,6 +59,8 @@ $types = array();
 	$types[$GLOBALS['LOG_FACILITY_ONSCN']]					="{$facility} on scene";
 	$types[$GLOBALS['LOG_FACILITY_CLR']]					="{$facility} cleared";
 	$types[$GLOBALS['LOG_FACILITY_RESET']]					="{$facility} reset";
+
+	$types[$GLOBALS['LOG_ICS213_MESSAGE_SEND']]				="ICS213 message sent";				// 3/22/12
 	$types[$GLOBALS['LOG_ERROR']]							="Error";					
 	$types[$GLOBALS['LOG_INTRUSION']]						="Security alert: intrusion detected";					
 

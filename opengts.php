@@ -1,6 +1,7 @@
 <?php
 /*
 7/4/11	initial release
+4/20/12 fix to accommodate empty json element, per KB email
 */
 error_reporting(E_ALL);
 
@@ -24,6 +25,13 @@ extract ($_POST);
 <BODY>
 
 <?php
+function customError($errno, $errstr)
+  {
+  echo "Error:</b> [$errno] $errstr<br /><br />";
+  echo "<b>Data format error - Ending Script</b><br /><br /><br /><br />";
+  die();
+  } 
+set_error_handler("customError"); 
 		function test_opengts( $_url, $_account, $_pw ) {		// returns array, or FALSE
 //			target	http://track.kmbnet.net:8080/events/data.json?a=sysadmin&p=12test34&g=all&limit=1
 
@@ -49,21 +57,28 @@ extract ($_POST);
 			if (strpos ( $data, "Invalid")) return "- Account/Password error";
 			
 			if (!($data)) return "- connect error " . __LINE__;
+//			dump($url);
+//			dump($data);
+//			$data = utf8_decode($data);
+//			dump(mb_check_encoding ( $data, 'UTF-8'));
 			$jsonresp = json_decode ($data, true); 		// 
+//			dump($jsonresp);
 			$result = json_last_error();
-
-			if ($result != JSON_ERROR_NONE) {return "- data error " . __LINE__;}
+			if (($result != JSON_ERROR_NONE) || (!(is_array($jsonresp)))) {return " - data error " . __LINE__;}
 			if (strpos ( $data, "Invalid device")) return "- device error";
+//			dump(gettype($jsonresp));
+			
 			foreach ($jsonresp["DeviceList"] as $device) {
-				echo "<TABLE ALIGN='center'BORDER = 1 STYLE = 'margin-top:20px;'>\n";
-				foreach ($device["EventData"][0] as $key => $value) {
-				    echo "<TR><TD>{$key}</TD><TD>{$value}</TD></TR>\n";
-					}	// 			// end inner foreach ()
-//				dump($device["EventData"][0]["GPSPoint_lat"]);
-//				dump($jsonresp["DeviceList"][0]["EventData"][0]["GPSPoint_lat"]);
-				echo "<TABLE >";
-
-				 echo "<br />\n";
+				if (!(empty($device['EventData'][0]))) {				// 4/20/12
+//					dump($device["EventData"][0]["Timestamp"]);
+					echo "<TABLE ALIGN='center'BORDER = 1 STYLE = 'margin-top:20px;'>\n";
+					foreach ($device["EventData"][0] as $key => $value) {
+					    echo "<TR><TD>{$key}</TD><TD>{$value}</TD></TR>\n";
+						}	// 			// end inner foreach ()
+					echo "<TABLE >";
+	
+					echo "<br />\n";
+					}		// end if (!(empty(...)))
 				}				// end outer foreach ()
 			return "" ;		// good data
 		}		// end function test opengts()
@@ -78,7 +93,14 @@ switch ($_func) {
 <FORM NAME= 'frm_og' METHOD='get' ACTION = '<?php print basename(__FILE__);?>'>
 <input type = hidden name = '_func' value = 'test'>
 <TABLE ALIGN='center' STYLE = 'margin-top:40px;'>
-<TR CLASS  = 'even'><TH COLSPAN=2><?php echo "OpenGTS Test Fails for<br /><br /> URL: '{$_POST['frm_url']}',  Account:'{$_POST['frm_account']}',  PW:'{$_POST['frm_pw']}'";?></TH></TR>
+<TR CLASS  = 'even'>
+	<TH COLSPAN=2><?php echo "OpenGTS Test Fails for<br /><br /> 
+	URL: '{$_POST['frm_url']}',  
+	Account:'{$_POST['frm_account']}',  
+	PW:'{$_POST['frm_pw']}'
+	<br /><br />{$temp}
+	";?>	
+	</TH></TR>
 
 <TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR /><BR />
 	<INPUT TYPE='button' VALUE = 'Another' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;

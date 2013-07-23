@@ -147,6 +147,7 @@ if(file_exists("./incs/modules.inc.php")) {	//	10/28/10
 	require_once('./incs/modules.inc.php');
 	}
 do_login(basename(__FILE__));
+
 $key_field_size = 30;						// 7/23/09
 $st_size = (get_variable("locale") ==0)?  2: 4;		
 
@@ -2370,22 +2371,8 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 			$resp_stat = $_POST['frm_un_status_id'];
 			$by = $_SESSION['user_id'];
 		
-//			if (($_POST['frm_clr_pos'])=='on') {$the_lat = $the_lng = "NULL";}			// 11/15/09
-
-			if ($_postmap_clear=='on') {$the_lat = $the_lng = "NULL";}					// 11/19/09
-			else {
-				if (intval($_POST['frm_facility_sel'])> 0 ) {							// obtain facility location - 6/20/12
-					$query_fac = "SELECT `lat`, `lng`, `id` FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = {$_POST['frm_facility_sel']} LIMIT 1";
-//					dump($query_fac);
-					$result_fac = mysql_query($query_fac) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
-					if (mysql_num_rows($result_fac) ==1) {
-						$row_fac = stripslashes_deep(mysql_fetch_assoc($result_fac));
-						$the_lat = doubleval($row_fac['lat']);							// apply to unit location
-						$the_lng = doubleval($row_fac['lng']);
-						}	
-					}
-				}				// end else {}
-			
+//			if (($_POST['frm_clr_pos'])=='on') {$the_lat = $the_lng = "NULL";}				// 11/15/09
+			if ($_postmap_clear=='on') {$the_lat = $the_lng = "NULL";}				// 11/19/09
 			$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET
 				`name`= " . 		quote_smart(trim($_POST['frm_name'])) . ",
 				`street`= " . 		quote_smart(trim($_POST['frm_street'])) . ",
@@ -2405,10 +2392,10 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 				`locatea`= " . 		quote_smart(trim($_POST['frm_locatea'])) . ",
 				`gtrack`= " . 		quote_smart(trim($_POST['frm_gtrack'])) . ",
 				`glat`= " . 		quote_smart(trim($_POST['frm_glat'])) . ",
-				`t_tracker`= " . 	quote_smart(trim($_POST['frm_t_tracker'])) . ",	
+				`t_tracker`= " . 		quote_smart(trim($_POST['frm_t_tracker'])) . ",	
 				`ogts`= " . 		quote_smart(trim($_POST['frm_ogts'])) . ",
-				`ring_fence`= " . 	quote_smart(trim($_POST['frm_ringfence'])) . ",		
-				`excl_zone`= " . 	quote_smart(trim($_POST['frm_excl_zone'])) . ",						
+				`ring_fence`= " . 		quote_smart(trim($_POST['frm_ringfence'])) . ",		
+				`excl_zone`= " . 		quote_smart(trim($_POST['frm_excl_zone'])) . ",						
 				`direcs`= " . 		quote_smart(trim($_POST['frm_direcs'])) . ",
 				`lat`= " . 			$the_lat . ",
 				`lng`= " . 			$the_lng . ",
@@ -2974,28 +2961,6 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 2/24/
 		<TR CLASS='even'><TD CLASS="td_label"><A HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required">City</A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_edit_Form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
-<?php								// 6/20/12
-		$query_fac	= "SELECT `f`.`id` AS `fac_id`, `lat`, `lng`, `type`, `handle` FROM `$GLOBALS[mysql_prefix]facilities` `f`
-			LEFT JOIN `$GLOBALS[mysql_prefix]fac_types` `t` ON `f`.type = `t`.id 
-			ORDER BY `handle`";
-		$result_fac	= mysql_query($query_fac) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
-		if (mysql_num_rows($result_fac) > 0) {
-?>
-		<TR CLASS = "even" VALIGN='middle'>
-			<TD CLASS="td_label">Locate at Facility:&nbsp;</TD>
-			<TD ALIGN='left'><FONT SIZE='-2'>
-			<SELECT NAME='frm_facility_sel'>
-			<OPTION VALUE=0 SELECTED>Select</OPTION>
-<?php
-		while ($row_fac = stripslashes_deep(mysql_fetch_assoc($result_fac))) {
-			echo "\t\t<OPTION VALUE = {$row_fac['fac_id']} CLASS = ''>{$row_fac['handle']}</OPTION>\n";
-			}
-?>
-			</SELECT></TD></TR>		
-<?php		
-			}			// end if ()
-?>
-		<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Phone number">Phone</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="12" MAXLENGTH="48" TYPE="text" NAME="frm_phone" VALUE="<?php print $row['phone'] ;?>" /></TD></TR> <!-- 7/5/10 -->
 
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=56 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>

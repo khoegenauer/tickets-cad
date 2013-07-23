@@ -100,8 +100,8 @@ $COLS_COMMENTS = 8;		// run comments -  8 characters as default
 9/29/10 do_diff moved to FIP, use mysql2timestamp for conversion
 9/1/10 added updates to responder meta-data three places
 3/15/11 changed stylesheet.php to stylesheet.php
+6/20/12 corrections to responder schema/sql
 */
-
 
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10
@@ -799,12 +799,10 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 									quote_smart($frm_by_id));
 		
 				$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
-									// apply status update to unit status
+									// apply status update to unit status - 6/20/12
 				$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET
 					`user_id`= " . 		quote_smart(trim($_SESSION['user_id'])) . ",
-					`_by`= " . 			quote_smart(trim($_SESSION['user_id'])) . ",
-					`_from`= " . 		quote_smart(trim($_SERVER['REMOTE_ADDR'])) . ",
-					`_on`= " . 			quote_smart(trim($now)) . "
+					`updated`= " . 		quote_smart(trim($now)) . "
 					WHERE `id` = " .quote_smart($frm_unit_id)  ." LIMIT 1";	// 11/8/08
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 		
@@ -2024,12 +2022,19 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 				do_log($GLOBALS['LOG_INCIDENT_CHANGE'], $frm_ticket_id);
 				}
 				
-			if (isset($frm_unit_status_id)) {		// 10/4/10
+/*
 				$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET 
 					`un_status_id`= " . quote_smart($frm_unit_status_id) . ", 
 					`_by`= " . 			quote_smart(trim($_SESSION['user_id'])) . ",
 					`_from`= " . 		quote_smart(trim($_SERVER['REMOTE_ADDR'])) . ",
 					`_on`= " . 			quote_smart(trim($now)) . ",
+					`updated` = " . quote_smart($now) . " 
+					WHERE `id` = " . quote_smart($frm_unit_id) ." LIMIT 1";
+*/
+
+			if (isset($frm_unit_status_id)) {		// 10/4/10, 6/20/12
+				$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET 
+					`un_status_id`= " . quote_smart($frm_unit_status_id) . ", 
 					`updated` = " . quote_smart($now) . " 
 					WHERE `id` = " . quote_smart($frm_unit_id) ." LIMIT 1";
 				$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);

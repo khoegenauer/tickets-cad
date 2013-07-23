@@ -16,6 +16,8 @@ $zoom_tight = FALSE;		// replace with a decimal number to over-ride the standard
 4/5/11 get_new_colors added
 6/10/11 changes for multi region capability
 8/1/11 state length increased to 4 chars
+2/8/12 Fixed error on single region operation - editing a unit removes region 1 region allocation.
+3/24/12 fixed to accommodate OGTS in validate()
 */
 
 session_start();
@@ -26,7 +28,7 @@ if(file_exists("./incs/modules.inc.php")) {	//	10/28/10
 	}
 do_login(basename(__FILE__));
 require_once($_SESSION['fmp']);		// 8/27/10
-
+$facility = get_text("Facility");
 $key_field_size = 30;						// 7/23/09
 $st_size = (get_variable("locale") ==0)?  2: 4;		
 
@@ -55,13 +57,6 @@ unset($result);
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" />
 	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">			<!-- 3/15/11 -->
-	<STYLE>
-		.disp_stat	{ FONT-WEIGHT: bold; FONT-SIZE: 9px; COLOR: #FFFFFF; BACKGROUND-COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;}
-		.box { background-color: #DEE3E7; border: 2px outset #606060; color: #000000; padding: 0px; position: absolute; z-index:1000; width: 180px; }
-		.bar { background-color: #FFFFFF; border-bottom: 2px solid #000000; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
-		.bar_header { height: 20px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}	
-		.content { padding: 1em; }
-	</STYLE>	
 	<SCRIPT  SRC='./js/misc_function.js' type='text/javascript'></SCRIPT>  <!-- 4/14/10 -->
 	<SCRIPT >
 
@@ -78,6 +73,20 @@ unset($result);
 
 	var lat_lng_frmt = <?php print get_variable('lat_lng'); ?>;				// 9/9/08
 
+	function set_regions_control() {
+		var reg_control = "<?php print get_variable('regions_control');?>";
+		var regions_showing = "<?php print get_num_groups();?>";
+		if(regions_showing) {
+			if (reg_control == 0) {
+				$('top_reg_box').style.display = 'none';
+				$('regions_outer').style.display = 'block';
+				} else {
+				$('top_reg_box').style.display = 'block';
+				$('regions_outer').style.display = 'none';			
+				}
+			}
+		}
+
 	function $() {															// 12/20/08
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -89,6 +98,28 @@ unset($result);
 			elements.push(element);
 			}
 		return elements;
+		}
+		
+	function CngClass(obj, the_class){
+		$(obj).className=the_class;
+		return true;
+		}
+
+	function do_hover (the_id) {
+		CngClass(the_id, 'hover');
+		return true;
+		}
+	function do_lo_hover (the_id) {
+		CngClass(the_id, 'lo_hover');
+		return true;
+		}
+	function do_plain (the_id) {				// 8/21/10
+		CngClass(the_id, 'plain');
+		return true;
+		}
+	function do_lo_plain (the_id) {
+		CngClass(the_id, 'lo_plain');
+		return true;
 		}
 
 	function get_new_colors() {
@@ -199,8 +230,9 @@ unset($result);
 		ShowLayer(elid, "block");
 		}
 		
-	function any_track(theForm) {					// returns boolean 8/8/09, 5/11/11
-		return ((theForm.frm_aprs.value.trim()==1)||(theForm.frm_instam.value.trim()==1)||(theForm.frm_locatea.value.trim()==1)||(theForm.frm_gtrack.value.trim()==1)||(theForm.frm_glat.value.trim()==1)||(theForm.frm_t_tracker.value.trim()==1));
+	function any_track(theForm) {					// returns boolean 8/8/09, 5/11/11, 3/24/12 
+//		return ((theForm.frm_aprs.value.trim()==1)||(theForm.frm_instam.value.trim()==1)||(theForm.frm_locatea.value.trim()==1)||(theForm.frm_gtrack.value.trim()==1)||(theForm.frm_glat.value.trim()==1)||(theForm.frm_t_tracker.value.trim()==1));
+		return (theForm.frm_track_disp.selectedIndex > 0);
 		}
 
 	function validate(theForm) {						// Responder form contents validation	8/11/09
@@ -219,11 +251,11 @@ unset($result);
 		theForm.frm_direcs.value = (theForm.frm_direcs_disp.checked)? 1:0;
 		var errmsg="";
 								// 2/24/09, 3/24/10
-		if (theForm.frm_name.value.trim()=="")													{errmsg+="Unit NAME is required.\n";}
-		if (theForm.frm_handle.value.trim()=="")												{errmsg+="Unit HANDLE is required.\n";}
-		if (theForm.frm_icon_str.value.trim()=="")												{errmsg+="Unit ICON is required.\n";}
-		if (theForm.frm_type.options[theForm.frm_type.selectedIndex].value==0)					{errmsg+="Unit TYPE selection is required.\n";}	// 1/1/09
-//		if (!(any_track(theForm)))																{errmsg+="Unit TRACKING selection is required.\n";}	// 1/1/09
+		if (theForm.frm_name.value.trim()=="")													{errmsg+="<?php print get_text("Units");?> NAME is required.\n";}
+		if (theForm.frm_handle.value.trim()=="")												{errmsg+="<?php print get_text("Units");?> HANDLE is required.\n";}
+		if (theForm.frm_icon_str.value.trim()=="")												{errmsg+="<?php print get_text("Units");?> ICON is required.\n";}
+		if (theForm.frm_type.options[theForm.frm_type.selectedIndex].value==0)					{errmsg+="<?php print get_text("Units");?> TYPE selection is required.\n";}	// 1/1/09
+//		if (!(any_track(theForm)))																{errmsg+="<?php print get_text("Units");?> TRACKING selection is required.\n";}	// 1/1/09
 		
 		if (any_track(theForm)){
 			if (theForm.frm_callsign.value.trim()=="")											{errmsg+="License information is required with Tracking.\n";}
@@ -231,8 +263,8 @@ unset($result);
 		else {
 			if (!(theForm.frm_callsign.value.trim()==""))										{errmsg+="License information used ONLY with Tracking.\n";}
 			}
-		if (theForm.frm_un_status_id.options[theForm.frm_un_status_id.selectedIndex].value==0)	{errmsg+="Unit STATUS is required.\n";}
-		if (theForm.frm_descr.value.trim()=="")													{errmsg+="Unit DESCRIPTION is required.\n";}
+		if (theForm.frm_un_status_id.options[theForm.frm_un_status_id.selectedIndex].value==0)	{errmsg+="<?php print get_text("Units");?> STATUS is required.\n";}
+		if (theForm.frm_descr.value.trim()=="")													{errmsg+="<?php print get_text("Units");?> DESCRIPTION is required.\n";}
 		if (errmsg!="") {
 			alert ("Please correct the following and re-submit:\n\n" + errmsg);
 			return false;
@@ -453,7 +485,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 ?>
 	var side_bar_html = "<TABLE border=0 CLASS='sidebar' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.6));?> >";
-	side_bar_html += "<TR class='even'>	<TD></TD><TD ALIGN='left'><B>Unit</B></TD><TD ALIGN='left'><B>Handle</B></TD><TD ALIGN='left'><B>Dispatch</B></TD><TD ALIGN='left'><B>Status</B></TD><TD ALIGN='left'><B>M</B></TD><TD ALIGN='left'><B>As of</B></TD></TR>";
+	side_bar_html += "<TR class='even'>	<TD></TD><TD ALIGN='left'><B><?php print get_text("Units");?></B></TD><TD ALIGN='left'><B>Handle</B></TD><TD ALIGN='left'><B>Dispatch</B></TD><TD ALIGN='left'><B>Status</B></TD><TD ALIGN='left'><B>M</B></TD><TD ALIGN='left'><B>As of</B></TD></TR>";
 	var which;
 	var i = <?php print $start; ?>;					// sidebar/icon index
 	var points = false;								// none
@@ -705,7 +737,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 	if ($_postfrm_remove == 'yes') {					//delete Responder - checkbox - 8/12/09
 		$query = "DELETE FROM $GLOBALS[mysql_prefix]responder WHERE `id`=" . $_POST['frm_id'];
 		$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
-		$caption = "<B>Unit <I>" . stripslashes_deep($_POST['frm_name']) . "</I> has been deleted from database.</B><BR /><BR />";
+		$caption = "<B>" . get_text("Units") . "<I>" . stripslashes_deep($_POST['frm_name']) . "</I> has been deleted from database.</B><BR /><BR />";
 		}
 	else {
 		if ($_getgoedit == 'true') {
@@ -713,7 +745,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			$the_lat = empty($_POST['frm_lat'])? "0.999999" : quote_smart(trim($_POST['frm_lat'])) ; // 2/24/09
 			$the_lng = empty($_POST['frm_lng'])? "0.999999" : quote_smart(trim($_POST['frm_lng'])) ;
 			$curr_groups = $_POST['frm_exist_groups']; 	//	4/14/11
-			$groups = "," . implode(',', $_POST['frm_group']) . ","; 	//	4/14/11
+			$groups = isset($_POST['frm_group']) ? ", " . implode(',', $_POST['frm_group']) . "," : $_POST['frm_exist_groups'];	//	3/28/12 - fixes error when accessed from view ticket screen..	
 			$resp_id = $_POST['frm_id'];
 			$resp_stat = $_POST['frm_un_status_id'];
 			$by = $_SESSION['user_id'];
@@ -764,14 +796,13 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 						}
 					}
 				foreach($ex_grps as $existing_grps) { 	//	4/14/11
-					print $existing_grps;
 					if(!in_array($existing_grps, $_POST['frm_group'])) {
 						$query  = "DELETE FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type` = 2 AND `group` = $existing_grps AND `resource_id` = {$resp_id}";
 						$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);	
 						}
 					}
 				}			
-			$mobstr = (($frm_mobile) && ($frm_aprs)||($frm_instam))? "Mobile": "Unit ";
+			$mobstr = (($frm_mobile) && ($frm_aprs)||($frm_instam))? "Mobile": get_text("Units");
 			$caption = "<B>" . $mobstr . " '<i>" . stripslashes_deep($_POST['frm_name']) . "</i>' data has been updated.</B><BR /><BR />";
 			}
 		}				// end else {}
@@ -824,8 +855,8 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		}
 		do_log($GLOBALS['LOG_UNIT_STATUS'], 0, mysql_insert_id(), $_POST['frm_un_status_id']);	// 6/2/08
 
-		$mobstr = ($frm_mobile)? "Mobile Unit ": "Station ";
-		$caption = "<B>Unit  <i>" . stripslashes_deep($_POST['frm_name']) . "</i> data has been updated.</B><BR /><BR />";
+		$mobstr = ($frm_mobile)? "Mobile " . get_text("Units"): "Station ";
+		$caption = "<B>" . get_text("Units") . "<i>" . stripslashes_deep($_POST['frm_name']) . "</i> data has been updated.</B><BR /><BR />";
 
 		finished ($caption);		// wrap it up
 		}							// end if ($_getgoadd == 'true')
@@ -846,10 +877,10 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		?>
 		<TABLE BORDER=0 ID='outer'><TR><TD>
 		<TABLE BORDER="0" ID='addform'>
-		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'>Add Unit</FONT></FONT><BR /><BR />
+		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'>Add <?php print get_text("Units");?></FONT></FONT><BR /><BR />
 		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>
 		<FORM NAME= "res_add_Form" METHOD="POST" ACTION="<?php echo basename(__FILE__);?>?func=responder&goadd=true"> <!-- 7/9/09 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Name ">Name</A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Name ">Name</A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
 			<TD COLSPAN=3 ><INPUT MAXLENGTH="64" SIZE="64" TYPE="text" NAME="frm_name" VALUE="" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Handle - local rules, could be callsign or badge number, generally for radio comms use">Handle</A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
 			<TD COLSPAN=3 ><INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_handle" VALUE="" />
@@ -857,47 +888,45 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 <?php
 if(get_num_groups() > 1) {
-		if((is_super()) && (get_num_groups() > 1) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
+		if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>		
 			<TR CLASS='even' VALIGN="top">	<!--  4/12/11 -->
 			<TD CLASS="td_label"><A HREF="#"  TITLE="Sets Regions that Responder is allocated to - click + to expand, - to collapse"><?php print get_text("Region");?></A>: 
 			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
-			<TD>
-			<?php
-			
-			$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	6/10/11
-			print get_user_group_butts(($_SESSION['user_id']));	//	6/10/11		
-			
-		} elseif((is_admin()) && (get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
+			<TD COLSPAN='2'>
+<?php
+			$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	4/18/11
+			print get_user_group_butts(($_SESSION['user_id']));	//	4/18/11		
+			} elseif((is_admin()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
 ?>		
-			<TR CLASS='even' VALIGN="top">	<!--  4/12/11 -->
-			<TD CLASS="td_label"><A HREF="#"  TITLE="Sets Regions that Responder is allocated to - click + to expand, - to collapse"><?php print get_text("Region");?></A>: 
+			<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
+			<TD CLASS="td_label"><A HREF="#" TITLE="Sets Regions that Responder is allocated to - click + to expand, - to collapse"><?php print get_text("Regions");?></A>: 
 			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
-			<TD>
+			</TD>
+			<TD COLSPAN='2'>
 <?php
 
-			$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	6/10/11
-			print get_user_group_butts(($_SESSION['user_id']));	//	6/10/11		
+			$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	4/18/11
+			print get_user_group_butts(($_SESSION['user_id']));	//	4/18/11		
 ?>	
-			</TD></TR>
-<?php
-			} elseif((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
-?>
-			<TR CLASS='even' VALIGN="top">	<!--  4/12/11 -->
-			<TD CLASS="td_label"><A HREF="#"  TITLE="Sets Regions that Responder is allocated to - click + to expand, - to collapse"><?php print get_text("Region");?></A>: 
-			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
-			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
-			<TD>
-<?php
-			$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	6/10/11
-			print get_user_group_butts_readonly(get_allocates(4, $_SESSION['user_id']));	//	6/10/11		
-?>	
-			<SPAN STYLE = 'margin-left:30px'  CLASS="td_label"> Icon: </SPAN>&nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp;<INPUT TYPE = "text" NAME = "frm_icon_str" SIZE = 3 MAXLENGTH=3 VALUE="" />
 			</TD></TR>
 <?php
 			} else {
+?>
+			<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
+			<TD CLASS="td_label"><A HREF="#" TITLE="Sets Regions that Responder is allocated to - click + to expand, - to collapse"><?php print get_text("Regions");?></A>: 
+			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
+			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
+			</TD>
+			<TD COLSPAN='2'>
+<?php
+			$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	4/18/11
+			print get_user_group_butts_readonly(get_allocates(4, $_SESSION['user_id']));	//	4/18/11		
+?>	
+			</TD></TR>
+<?php		
 			}
 		} else {
 ?>
@@ -906,7 +935,7 @@ if(get_num_groups() > 1) {
 		}
 ?>
 		<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>	
-		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A HREF="#" TITLE="Unit Type - Select from pulldown menu">Type</A>: <font color='red' size='-1'>*</font></TD>
+		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Type - Select from pulldown menu">Type</A>: <font color='red' size='-1'>*</font></TD>
 			<TD ALIGN='left'><SELECT NAME='frm_type'><OPTION VALUE=0>Select one</OPTION>		<!-- 1/8/09 -->
 <?php
 	foreach ($u_types as $key => $value) {								// 12/27/08
@@ -915,8 +944,8 @@ if(get_num_groups() > 1) {
 		}
 ?>
 			</SELECT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<A HREF="#" TITLE="Unit is mobile unit?">Mobile</A> &raquo;<INPUT TYPE="checkbox" NAME="frm_mob_disp" />&nbsp;&nbsp;&nbsp;
-			<A HREF="#" TITLE="Unit can be dispatched to multiple incidents?">Multiple</A>  &raquo;<INPUT TYPE="checkbox" NAME="frm_multi_disp" />&nbsp;&nbsp;&nbsp;
+			<A HREF="#" TITLE="<?php print get_text("Units");?> is mobile unit?">Mobile</A> &raquo;<INPUT TYPE="checkbox" NAME="frm_mob_disp" />&nbsp;&nbsp;&nbsp;
+			<A HREF="#" TITLE="<?php print get_text("Units");?> can be dispatched to multiple incidents?">Multiple</A>  &raquo;<INPUT TYPE="checkbox" NAME="frm_multi_disp" />&nbsp;&nbsp;&nbsp;
 			<A HREF="#" TITLE="Calculate directions on dispatch? - required if you wish to use email directions to unit facility">Directions</A> &raquo;<INPUT TYPE="checkbox" NAME="frm_direcs_disp" checked /></TD>
 			</TR>
 
@@ -942,7 +971,7 @@ if(get_num_groups() > 1) {
 				<INPUT ID = "track_key" SIZE="<?php print $key_field_size;?>" MAXLENGTH="<?php print $key_field_size;?>" TYPE="text" NAME="frm_callsign" VALUE="" />&nbsp;
 			</TD>
 			</TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Status - Select from pulldown menu">Status</A>:&nbsp;<font color='red' size='-1'>*</font></TD>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Status - Select from pulldown menu">Status</A>:&nbsp;<font color='red' size='-1'>*</font></TD>
 			<TD ALIGN ='left'><SELECT NAME="frm_un_status_id" onChange = "document.res_add_Form.frm_log_it.value='1'">
 				<OPTION VALUE=0 SELECTED>Select one</OPTION>
 <?php			
@@ -1001,9 +1030,9 @@ if(get_num_groups() > 1) {
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Phone Number">Phone</A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="12" MAXLENGTH="48" TYPE="text" NAME="frm_phone" VALUE="" /></TD></TR> <!-- 7/5/10 -->
 
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=56 ROWS=2></TEXTAREA></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Capability - training, equipment on board etc">Capability</A>:&nbsp;</TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_capab" COLS=56 ROWS=2></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Contact name">Contact Name</A>:&nbsp;</TD>	<TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=56 ROWS=2></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Capability - training, equipment on board etc">Capability</A>:&nbsp;</TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_capab" COLS=56 ROWS=2></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Contact name">Contact Name</A>:&nbsp;</TD>	<TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Contact via - for email to unit this must be a valid email address or email to SMS address">Contact Via</A>:&nbsp;</TD>	<TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_via" VALUE="" /></TD></TR>
 		<TR CLASS = "odd"><TD COLSPAN=4 ALIGN='center'>
 			<INPUT TYPE="button" VALUE="Cancel" onClick="document.can_Form.submit();" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1090,49 +1119,58 @@ if(get_num_groups() > 1) {
 		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'>&nbsp;Edit unit '<?php print $row['name'];?>' data</FONT>&nbsp;&nbsp;(#<?php print $id; ?>)</FONT></FONT><BR /><BR />
 		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>
 		<FORM METHOD="POST" NAME= "res_edit_Form" ACTION="<?php echo basename(__FILE__);?>?func=responder&goedit=true"> <!-- 7/9/09 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Name ">Name</A>: <font color='red' size='-1'>*</font></TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="<?php print $row['name'] ;?>" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Name ">Name</A>: <font color='red' size='-1'>*</font></TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="<?php print $row['name'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label">
 		<A HREF="#" TITLE="Handle - local rules, could be callsign or badge number, generally for radio comms use">Handle</A>: &nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp;</TD>
 		<TD COLSPAN=3><INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_handle" VALUE="<?php print $row['handle'] ;?>" />
 		<SPAN STYLE = 'margin-left:30px'  CLASS="td_label"> Icon: </SPAN>&nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp;<INPUT TYPE = 'text' NAME = 'frm_icon_str' SIZE = 3 MAXLENGTH=3 VALUE='<?php print $row['icon_str'] ;?>'>
 		</TD></TR>
 <?php
-		if(get_num_groups() > 1) {
-			if((is_super()) && (get_num_groups() > 1) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
+		if(get_num_groups()) {
+			if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>			
-			<TR CLASS='even' VALIGN='top'>
-			<TD CLASS='td_label'><?php print get_text('Region');?></A>:
+			<TR CLASS='even' VALIGN='top'>;
+			<TD CLASS='td_label'><A HREF="#" TITLE="Click + to expand control"><?php print get_text('Regions');?></A>:
 			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
 			<TD>
 <?php			
-			$alloc_groups = implode(',', get_allocates(2, $id));	//	6/10/11
-			print get_sub_group_butts(($_SESSION['user_id']), 2, $id) ;	//	6/10/11	
-			print "</TD></TR>";		// 4/12/11
+			$alloc_groups = implode(',', get_allocates(2, $id));	//	4/18/11
+			print get_sub_group_butts(($_SESSION['user_id']), 2, $id) ;	//	4/18/11		
+			print "</TD></TR>";		// 6/10/11
 			
-			} elseif((is_admin()) && (get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11	
+			} elseif((is_admin()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11	
 ?>
 			<TR CLASS='even' VALIGN='top'>;
-			<TD CLASS='td_label'><?php print get_text('Region');?></A>:
+			<TD CLASS="td_label"><A HREF="#" TITLE="Click + to expand control"><?php print get_text('Regions');?></A>:
 			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
 			<TD>
 <?php
-			$alloc_groups = implode(',', get_allocates(2, $id));	//	6/10/11
-			print get_sub_group_butts(($_SESSION['user_id']), 2, $id) ;	//	6/10/11	
-			print "</TD></TR>";		// 4/12/11		
-?>
-			</TD>
-<?php
+			$alloc_groups = implode(',', get_allocates(2, $id));	//	4/18/11
+			print get_sub_group_butts(($_SESSION['user_id']), 2, $id) ;	//	4/18/11	
+			print "</TD></TR>";		// 6/10/11		
+
 			} else {
 ?>
-			<INPUT TYPE="hidden" NAME="frm_group[]" VALUE="1">	 <!-- 6/10/11 -->
+			<TR CLASS='even' VALIGN='top'>;
+			<TD CLASS='td_label'><?php print get_text('Regions');?></A>:
+			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
+			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
+			<TD>
 <?php
+			$alloc_groups = implode(',', get_allocates(3, $id));	//	6/10/11	
+			print get_sub_group_butts_readonly(($_SESSION['user_id']), 2, $id) ;	//	4/
+			print "</TD></TR>";		// 6/10/11			
 			}
+		} else {
+?>
+		<INPUT TYPE="hidden" NAME="frm_group[]" VALUE="1">	 <!-- 6/10/11 -->
+<?php
 		}
 ?>
 		<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>
-		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A HREF="#" TITLE="Unit Type - Select from pulldown menu">Type</A>: <font color='red' size='-1'>*</font></TD>
+		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Type - Select from pulldown menu">Type</A>: <font color='red' size='-1'>*</font></TD>
 		<TD ALIGN='left'><FONT SIZE='-2'>
 			<SELECT NAME='frm_type'>
 <?php
@@ -1143,8 +1181,8 @@ if(get_num_groups() > 1) {
 		}
 ?>
 				</SELECT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<A HREF="#" TITLE="Unit is mobile unit?">Mobile</A> &raquo;<INPUT TYPE="checkbox" NAME="frm_mob_disp" <?php print $mob_checked; ?> />&nbsp;&nbsp;&nbsp;
-				<A HREF="#" TITLE="Unit can be dispatched to multiple incidents?">Multiple</A>  &raquo;<INPUT TYPE="checkbox" NAME="frm_multi_disp" <?php print $multi_checked; ?> />&nbsp;&nbsp;&nbsp;
+				<A HREF="#" TITLE="<?php print get_text("Units");?> is mobile unit?">Mobile</A> &raquo;<INPUT TYPE="checkbox" NAME="frm_mob_disp" <?php print $mob_checked; ?> />&nbsp;&nbsp;&nbsp;
+				<A HREF="#" TITLE="<?php print get_text("Units");?> can be dispatched to multiple incidents?">Multiple</A>  &raquo;<INPUT TYPE="checkbox" NAME="frm_multi_disp" <?php print $multi_checked; ?> />&nbsp;&nbsp;&nbsp;
 				<A HREF="#" TITLE="Calculate directions on dispatch? - required if you wish to use email directions to unit facility">Directions</A> &raquo;<INPUT TYPE="checkbox" NAME="frm_direcs_disp" <?php print $direcs_checked; ?> /></TD>
 		</TR>
 		<TR CLASS = "odd" VALIGN='top'><TD CLASS="td_label"><A HREF="#" TITLE="Tracking Type - select from the pulldown menu - you must also fill in the callsign or tracking id which is used by the tracking provider to identify the unit - each unit should have a unique id.">
@@ -1173,7 +1211,7 @@ if(get_num_groups() > 1) {
 				&nbsp;&raquo; <INPUT ID = "track_key" SIZE="<?php print $key_field_size;?>" MAXLENGTH="<?php print $key_field_size;?>" TYPE="text" NAME="frm_callsign" VALUE="<?php print $row['callsign'];?>" /> <!-- 7/23/09 -->
 			</TD>
 			</TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Status - Select from pulldown menu">Status</A>:&nbsp;</TD>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Status - Select from pulldown menu">Status</A>:&nbsp;</TD>
 			<TD ALIGN='left'><SELECT NAME="frm_un_status_id" onChange = "this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color; document.res_edit_Form.frm_log_it.value='1'">
 <?php
 			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]un_status` ORDER BY `status_val` ASC, `group` ASC, `sort` ASC";
@@ -1193,7 +1231,7 @@ if(get_num_groups() > 1) {
 				}
 			print "\n\t\t</SELECT>\n";
 			unset($result_st);
-
+//
 		if(is_administrator()) {
 ?>
 			<TR CLASS='odd' VALIGN="top">	<!--  6/10/11 -->
@@ -1238,12 +1276,14 @@ if(get_num_groups() > 1) {
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Phone number">Phone</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="12" MAXLENGTH="48" TYPE="text" NAME="frm_phone" VALUE="<?php print $row['phone'] ;?>" /></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=56 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Capability - training, equipment on board etc">Capability</A>:&nbsp; </TD>										<TD COLSPAN=3><TEXTAREA NAME="frm_capab" COLS=56 ROWS=2><?php print $row['capab'];?></TEXTAREA></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Contact name">Contact Name</A>:&nbsp;</TD>	<TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="<?php print $row['contact_name'] ;?>" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=56 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Capability - training, equipment on board etc">Capability</A>:&nbsp; </TD>										<TD COLSPAN=3><TEXTAREA NAME="frm_capab" COLS=56 ROWS=2><?php print $row['capab'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Contact name">Contact Name</A>:&nbsp;</TD>	<TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="<?php print $row['contact_name'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Contact via - for email to unit this must be a valid email address or email to SMS address">Contact Via</A>:&nbsp;</TD>	<TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_via" VALUE="<?php print $row['contact_via'] ;?>" /></TD></TR>
-		<TR CLASS="odd" VALIGN='baseline'><TD CLASS="td_label"><A HREF="#" TITLE="Delete unit from system - disallowed if unit is assigned to any calls.">Remove Unit</A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>>
-		<?php print $cbtext; ?></TD></TR>
+		<TR CLASS="odd" VALIGN='baseline'><TD CLASS="td_label"><A HREF="#" TITLE="Delete unit from system - disallowed if unit is assigned to any calls.">Remove <?php print get_text("Units");?></A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>>
+<?php 	print $cbtext; 
+?>
+		</TD></TR>
 		<TR CLASS = "even">
 			<TD COLSPAN=4 ALIGN='center'><BR><INPUT TYPE="button" VALUE="Cancel" onClick="document.can_Form.submit();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<INPUT TYPE="reset" VALUE="Reset" onClick="track_reset(this.form) ; this.form.reset();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1262,7 +1302,7 @@ if(get_num_groups() > 1) {
 		<INPUT TYPE="hidden" NAME = "frm_t_tracker" VALUE=<?php print $row['t_tracker'] ;?> />	 <!-- 5/11/11 -->	
 		<INPUT TYPE="hidden" NAME = "frm_ogts" VALUE=<?php print $row['ogts'] ;?> />
 		<INPUT TYPE="hidden" NAME = "frm_direcs" VALUE=<?php print $row['direcs'] ;?> />
-		<INPUT TYPE="hidden" NAME="frm_exist_groups" VALUE="<?php print $alloc_groups;?>">	 <!-- 6/10/11 -->
+		<INPUT TYPE="hidden" NAME="frm_exist_groups" VALUE="<?php print (isset($alloc_groups)) ? $alloc_groups : 1;?>">	 <!-- 2/8/12 -->	
 		</FORM></TABLE>
 		</TD></TR></TABLE>
 <?php
@@ -1357,7 +1397,7 @@ if(get_num_groups() > 1) {
 		$temp = $u_types[$row['type']];
 		$the_type = $temp[0];			// name of type
 ?>
-			<FONT CLASS="header">Unit&nbsp;'<?php print $row['name'] ;?>'</FONT> (#<?php print $row['id'];?>) <BR /><BR />
+			<FONT CLASS="header"><?php print get_text("Units");?>&nbsp;'<?php print $row['name'] ;?>'</FONT> (#<?php print $row['id'];?>) <BR /><BR />
 			<TABLE BORDER=0 ID='outer'><TR><TD>
 			<TABLE BORDER=0 ID='view_unit' STYLE='display: block'>
 			<FORM METHOD="POST" NAME= "res_view_Form" ACTION="<?php echo basename(__FILE__);?>?func=responder">
@@ -1550,7 +1590,7 @@ if(get_num_groups() > 1) {
 			print "<SPAN STYLE='margin-left:120px;'>{$caption}</SPAN>";
 ?>
 		</HEAD><!-- 1387 -->
-		<BODY onLoad = "ck_frames()">
+		<BODY onLoad = "ck_frames(); set_regions_control();">
 		<A NAME='top'>		<!-- 11/11/09 -->
 			<DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0></div>
 		
@@ -1597,19 +1637,20 @@ if(get_num_groups() > 1) {
 			$z++;
 			}			
 
-		$heading = "Units - " . get_variable('map_caption');
-		$regs_string = "<FONT SIZE='-1'>Allocated " . get_text("Regions") . ":&nbsp;&nbsp;" . $al_names . "&nbsp;&nbsp;|&nbsp;&nbsp;Currently Viewing " . get_text("Regions") . ":&nbsp;&nbsp;" . $curr_names . "</FONT>";	//	6/10/11		
+		$heading = get_text("Units") . " - " . get_variable('map_caption');
 ?>
-		<DIV style='z-index: 1;'>
+			<DIV id='top_reg_box' style='display: none;'>
+				<DIV id='region_boxes' class='header_reverse' style='align: center; width: 100%; text-align: center; margin-left: auto; margin-right: auto; height: 30px; z-index: 1;'></DIV>
+			</DIV>
+			<DIV style='z-index: 1;'>
 			<TABLE ID='outer' style='width: 100%;'>
 			<TR CLASS='header'><TD ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'><?php print $heading; ?> </FONT></TD></TR>	<!-- 4/11/11 -->
-			<TR CLASS='header'><TD ALIGN='center'><SPAN ID='region_flags' style='background: #00FFFF; font-weight: bold;'></SPAN></TD></TR>	<!-- 5/2/10, 3/15/11, 6/10/11 -->
 			<TR CLASS='spacer'><TD CLASS='spacer' ALIGN='center'>&nbsp;</TD></TR>				<!-- 4/11/11 -->			
 			<TR><TD ALIGN='left'>
 		<DIV ID='resp_table'>	
 			<TABLE BORDER=0 ID='outer' STYLE = 'width:auto;'><TR><TD>
 				<TABLE ID = 'sidebar' BORDER = 0 style='text-align: left;'>
-				<TR class='even'>	<TD colspan=99 ALIGN='center'><B>Units (<DIV id="num_units" style="display: inline;"></DIV>)</B></TD></TR>
+				<TR class='even'>	<TD colspan=99 ALIGN='center'><B><?php print get_text("Units");?> (<DIV id="num_units" style="display: inline;"></DIV>)</B></TD></TR>
 				<TR class='odd'>	<TD colspan=99 ALIGN='center'>Click line or icon for details - or to dispatch</TD></TR>
 			
 				<TR><TD>
@@ -1620,12 +1661,12 @@ if(get_num_groups() > 1) {
 		print "<TR CLASS='odd'><TD COLSPAN=99 ALIGN='center'><DIV style='width: 80%;'>" . get_units_legend() . "</DIV></TD></TR>";
 		print "<TR class='spacer'><TD class='spacer'>&nbsp;</TD></TR>";		
 		$buttons = "<TR><TD COLSPAN=99 ALIGN='center'><BR />
-			<INPUT TYPE = 'button' onClick = 'document.tracks_Form.submit();' VALUE='Unit Tracks' STYLE = 'margin-left: 60px'>";
+			<INPUT TYPE = 'button' onClick = 'document.tracks_Form.submit();' VALUE='" . get_text("Units") . " Tracks' STYLE = 'margin-left: 60px'>";
 		if (!(is_guest())) {
 			if ((!(is_user())) && (!(is_unit()))) {				// 7/27/10
-				$buttons .="<INPUT TYPE='button' value= 'Add a Unit'  onClick ='document.add_Form.submit();' style = 'margin-left:20px'>";	// 10/8/08
+				$buttons .="<INPUT TYPE='button' value= 'Add a " . get_text("Units") . "'  onClick ='document.add_Form.submit();' style = 'margin-left:20px'>";	// 10/8/08
 				}			
-			$buttons .= "<INPUT TYPE = 'button' onClick = 'do_mail_win()' VALUE='Email Units'  style = 'margin-left:20px'>";	// 6/13/09
+			$buttons .= "<INPUT TYPE = 'button' onClick = 'do_mail_win()' VALUE='Email " . get_text("Units") . "'  style = 'margin-left:20px'>";	// 6/13/09
 			}
 
 		$buttons .= "</TD></TR>";
@@ -1645,53 +1686,20 @@ if(get_num_groups() > 1) {
 		$regs_col_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "s")) ? "" : "none";	//	6/10/11
 		$regs_exp_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "h")) ? "" : "none";	//	6/10/11	
 ?>			
-			<DIV id = 'outer' style = "position:fixed; right:<?php print $from_right;?>%; top:<?php print $from_top;?>%; z-index: 1000; ">		<!-- 5/3/11 -->
+		<DIV id = 'regions_outer' style = "position: fixed; right: 20%; top: 10%; z-index: 1000;">
 			<DIV id="boxB" class="box" style="z-index:1000;">
-			<div class="bar_header" class="heading_2" STYLE="z-index: 1000;">Viewed <?php print get_text("Regions");?>
-			<SPAN id="collapse_regs" style = "display: <?php print $regs_col_butt;?>; z-index:1001; cursor: pointer;" onclick="hideDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/collapse.png" ALIGN="right"></SPAN>
-			<SPAN id="expand_regs" style = "display: <?php print $regs_exp_butt;?>; z-index:1001; cursor: pointer;" onclick="showDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/expand.png" ALIGN="right"></SPAN></div>
-				<DIV class="bar" STYLE="color:red; z-index: 1000;"
+				<div class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;">Viewed Regions
+				<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+				<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
 					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
-				<DIV id="region_boxes" class="content" style="z-index: 1000;"></DIV>
+				<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV>
+				</DIV>
 			</DIV>
-			</DIV>			
+		</DIV>
 <?php	
-}		
-	function get_buttons($user_id) {		//	5/3/11
-		if(isset($_SESSION['viewed_groups'])) {
-			$regs_viewed= explode(",",$_SESSION['viewed_groups']);
-			}
-		
-		$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id' ORDER BY `group`";			//	5/3/11
-		$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-
-		$al_buttons="";	
-		while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	//	5/3/11
-			if(!empty($regs_viewed)) {
-				if(in_array($row2['group'], $regs_viewed)) {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				} else {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				}
-				} else {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				}
-			}
-		return $al_buttons;
-		}
-	
-	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
-?>
-		<SCRIPT>
-			side_bar_html= "";
-			side_bar_html+="<TABLE><TR class='even'><TD CLASS='td_label'><form name='region_form' METHOD='post' action='<?php print basename(__FILE__);?>'><DIV>";
-			side_bar_html += "<?php print get_buttons($_SESSION['user_id']);?>";
-			side_bar_html+="</DIV></form></TD></TR><TR><TD COLSPAN=99>&nbsp;</TD></TR><TR><TD ALIGN='center' COLSPAN=99><INPUT TYPE='button' VALUE='Update' onClick='form_validate(document.region_form);'></TD></TR></TABLE>";
-			$("region_boxes").innerHTML = side_bar_html;	
-			$('region_flags').innerHTML = "<?php print $regs_string; ?>";			// 5/2/10			
-		</SCRIPT>
-<?php
-		} 			
+	}		
+		print get_buttons_inner();	//	3/28/12
+		print get_buttons_inner2();	//	3/28/12		
 ?>
 			<FORM NAME='view_form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
 			<INPUT TYPE='hidden' NAME='func' VALUE='responder'>

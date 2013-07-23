@@ -139,6 +139,12 @@ $iw_width = 	"300px";		// map infowindow with
 6/10/11 Added Groups and Boundaries
 6/28/11 do_kml corrections applied
 8/1/11  do_landb revised and relocated
+2/18/12 minor fix
+4/5/12 revised for auto-refresh trigger notification
+4/12/12 Revised Regions control buttons
+6/20/12 applied get_text() to Units
+6/21/12 boolean points => got_points
+6/22/12 set limit to setCenter zoom
 */
 
 $nature = get_text("Nature");			// 12/03/10
@@ -169,8 +175,15 @@ global $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
 
 //	{ -- dummy
 
+$curr_cats = get_category_butts();	//	get current categories.
+$cat_sess_stat = get_session_status($curr_cats);	//	get session current status categories.
+$hidden = find_hidden($curr_cats);
+$shown = find_showing($curr_cats);
+$un_stat_cats = get_all_categories();
+
+
 function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list tickets ===================================================
-	global $istest, $iw_width, $units_side_bar_height, $do_blink, $nature, $disposition, $patient, $incident, $incidents, $gt_status;	// 12/3/10
+	global $istest, $iw_width, $units_side_bar_height, $do_blink, $nature, $disposition, $patient, $incident, $incidents, $gt_status, $curr_cats, $cat_sess_stat, $hidden, $shown, $un_stat_cats;	// 12/3/10
 	$time = microtime(true); // Gets microseconds
 
 	@session_start();		// 
@@ -256,18 +269,18 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 	$user_level = is_super() ? 9999 : $_SESSION['user_id']; 
 	$regions_inuse = get_regions_inuse($user_level);
 	$group = get_regions_inuse_numbers($user_level);
-//	dump($group);
-//	dump(get_tickets_allocated($group));
 	$test_size = 1200;			// scale map down if monitor width LT test value - 6/28/11
 	$map_factor = ($_SESSION['scr_width']< $test_size ) ? ($_SESSION['scr_width'] / $test_size): 1.0;		// a float
-
 	$col_width= max(320, intval($_SESSION['scr_width']* 0.45));
 	$ctrls_width = $col_width * .75;
+	print get_buttons_inner();	//	4/12/12
+	print get_buttons_inner2();	//	4/12/12
 ?>
 <DIV style='z-index: 1;'>
 <TABLE BORDER=0>
-	<A NAME='top'></a>
-	<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'><?php print $heading; ?></FONT>
+	<TR CLASS='header' style = "height:32px;">	<!-- 4/5/12 -->
+		<TD COLSPAN='99' ALIGN='center' ID = "hdr_td_str"  CLASS='header' STYLE='background-color: inherit;'>
+		<?php print $heading; ?>
 		<SPAN ID='sev_counts' CLASS='sev_counts'></SPAN>
 	</TD></TR>
 	<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'>
@@ -288,7 +301,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 			</TD></TR>
 		</TABLE>
 		<TABLE>
-			<TR class = 'heading'><TH width = <?php print $col_width;?> ALIGN='center' COLSPAN='99'>Responders 
+			<TR class = 'heading'><TH width = <?php print $col_width;?> ALIGN='center' COLSPAN='99'><?php print get_text("Units");?> 
 				<SPAN id='collapse_resp' onClick="hideDiv('resp_list_sh', 'collapse_resp', 'expand_resp')" style = "display: <?php print $resp_col_butt;?>;"><IMG SRC = './markers/collapse.png' ALIGN='right'></SPAN>
 				<SPAN id='expand_resp' onClick="showDiv('resp_list_sh', 'collapse_resp', 'expand_resp')" style = "display: <?php print $resp_exp_butt;?>;"><IMG SRC = './markers/expand.png' ALIGN='right'></SPAN>
 			</TH></TR>
@@ -390,45 +403,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 <INPUT TYPE='hidden' NAME='id' VALUE=''>
 <INPUT TYPE='hidden' NAME='edit' VALUE='true'>
 </FORM>
-
 <SCRIPT>
-//================================= 7/18/10
-	$('region_flags').innerHTML = "<?php print $regs_string; ?>";			// 5/2/10
-<?php
-	function get_buttons($user_id) {		//	5/3/11
-		$regs_viewed = "";
-		if(isset($_SESSION['viewed_groups'])) {
-			$regs_viewed= explode(",",$_SESSION['viewed_groups']);
-			}
-		$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id' ORDER BY `group`";			//	5/3/11
-		$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-
-		$al_buttons="";	
-		while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	//	5/3/11
-			if(!empty($regs_viewed)) {
-				if(in_array($row2['group'], $regs_viewed)) {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				} else {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				}
-				} else {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				}
-			}
-//		dump($al_buttons);
-		return $al_buttons;
-	}
-	
-if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
-?>
-	side_bar_html= "";
-	side_bar_html+="<TABLE><TR class='even'><TD COLSPAN=99 CLASS='td_label' ><form name='region_form' METHOD='post' action='main.php'><DIV>";
-	side_bar_html += "<?php print get_buttons($_SESSION['user_id']);?>";
-	side_bar_html+="</DIV></form></TD></TR><TR><TD>&nbsp;</TD></TR><TR><TD ALIGN='center'><INPUT TYPE='button' VALUE='Update' onClick='form_validate(document.region_form);'></TD></TR></TABLE>";
-	$("region_boxes").innerHTML = side_bar_html;		
-<?php
-}
-?>
 	var boundary = new Array();	
 	var bound_names = new Array();
 	
@@ -567,7 +542,7 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
 			return false;
 			}
 		else {
-			parent.frames['upper'].show_msg ('Unit status update applied!')
+			parent.frames['upper'].show_msg ('<?php print get_text("Units");?> status update applied!')
 			return true;
 			}				// end if/else (payload.substring(... )
 		}		// end function to_server()
@@ -740,8 +715,8 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
 
 if (GBrowserIsCompatible()) {
 
-//	$("map").style.backgroundImage = "url(./markers/loading.jpg)";
-	$("map").style.backgroundImage = "url('http://maps.google.com/staticmap?center=<?php echo get_variable('def_lat');?>,<?php echo get_variable('def_lng');?>&zoom=<?php echo get_variable('def_zoom');?>&size=<?php echo round ($map_factor * get_variable('map_width'));?>x<?php echo round ($map_factor * get_variable('map_height'));?>&key=<?php echo get_variable('gmaps_api_key');?> ')";
+	$("map").style.backgroundImage = "url(./markers/loading.jpg)";
+//	$("map").style.backgroundImage = "url('http://maps.google.com/staticmap?center=<?php echo get_variable('def_lng');?>,<?php echo get_variable('def_lat');?>&zoom=<?php echo get_variable('def_zoom');?>&size=<?php echo round ($map_factor * get_variable('map_width'));?>x<?php echo round ($map_factor * get_variable('map_height'));?>&key=<?php echo get_variable('gmaps_api_key');?> ')";
 
 	var colors = new Array ('odd', 'even');
 
@@ -957,10 +932,10 @@ if (GBrowserIsCompatible()) {
 // 	Units show / hide functions				
 		
 	function set_categories() {			//	12/03/10 - checks current session values and sets checkboxes and view states for hide and show.
-		var curr_cats = <?php echo json_encode(get_category_butts()); ?>;
-		var cat_sess_stat = <?php echo json_encode(get_session_status()); ?>;
-		var hidden = <?php print find_hidden(); ?>;
-		var shown = <?php print find_showing(); ?>;
+		var curr_cats = <?php echo json_encode($curr_cats); ?>;
+		var cat_sess_stat = <?php echo json_encode($cat_sess_stat); ?>;
+		var hidden = <?php print json_encode($hidden); ?>;
+		var shown = <?php print json_encode($shown); ?>;
 		var number_of_units = <?php print get_no_units(); ?>;
 		if(hidden!=0) {
 			$('ALL').style.display = '';
@@ -1035,7 +1010,7 @@ if (GBrowserIsCompatible()) {
 		}
 
 	function do_go_button() {							// 12/03/10	Show Hide categories
-		var curr_cats = <?php echo json_encode(get_category_butts()); ?>;
+		var curr_cats = <?php echo json_encode($curr_cats); ?>;
 		if ($('ALL').checked == true) {
 			for (var i = 0; i < curr_cats.length; i++) {
 				var category = curr_cats[i];
@@ -1338,8 +1313,8 @@ if (GBrowserIsCompatible()) {
 				}
 			}
 
-		var hidden = <?php print find_hidden(); ?>;
-		var shown = <?php print find_showing(); ?>;
+		var hidden = <?php print $hidden; ?>;
+		var shown = <?php print $shown; ?>;
 		$('fac_go_button').style.display = 'none';
 		$('fac_can_button').style.display = 'none';
 
@@ -1667,8 +1642,6 @@ var divarea;
 
 	function do_sidebar_unit (instr, id, sym, myclass, tip_str, category) {		
 							// sidebar_string, sidebar_index, row_class, icon_info, mouseover_str - 1/7/09
-//		alert ("1196 id: " + id);							
-//		alert ("1197 sym: " + sym);							
 		var tr_id = category + id;
 		if (isNull(tip_str)) {
 			side_bar_html += "<TR ID = '" + tr_id + "' CLASS='" + colors[(id)%2] +"'><TD CLASS='" + myclass + "' onClick = myclick(" + id + "); ALIGN = 'left'>" + (sym) + "</TD>"+ instr +"</TR>\n";		// 2/6/10 moved onclick to TD
@@ -1710,7 +1683,7 @@ var divarea;
 		}
 
 	function do_sidebar (instr, id, sym, myclass, tip_str) {		// sidebar_string, sidebar_index, row_class, icon_info, mouseover_str - 1/7/09
-		var tr_id = tr_id_fixed_part + id;
+		var tr_id = tr_id_fixed_part + id;		// e.g., 'tr_id_n'
 		side_bar_html += "<TR onClick = 'myclick(" + id + ");' ID =  '" + tr_id + "' onMouseover=\"Tip('" + tip_str + "');\" onmouseout=\"UnTip();\" CLASS='" + colors[id%2] +"'>";
 		side_bar_html += "<TD CLASS='" + myclass + "' ALIGN = 'left'>" + (sym) + "</TD>"+ instr +"</TR>\n";		// 1/3/10 added tip param		
 		}		// end function do sidebar ()
@@ -1735,8 +1708,6 @@ var divarea;
 		}
 
 	function do_sidebar_u_ed (sidebar, line_no, on_click, letter, tip, category) {					// unit edit - letter = icon str
-//		alert ("1251 line_no: " + line_no);							
-//		alert ("1252 letter: " + letter);							
 		var tr_id = category + line_no;
 		side_bar_html += "<TR ID = '" + tr_id + "'  CLASS='" + colors[(line_no+1)%2] +"'>";
 		side_bar_html += "<TD onClick = '" + on_click+ "' CLASS='td_data'>" + letter + "</TD>" + sidebar +"</TR>\n";		// 2/13/09, 10/29/09 removed period
@@ -1785,11 +1756,10 @@ var divarea;
 // Creates marker and sets up click event infowindow 10/21/09 added stat to hide unavailable units, 12/03/10 added category. 3/19/11 added tip param
 	
 	function createMarker(point, tabs, color, stat, id, sym, category, region, tip) {		// 3/19/11
-//		alert(sym);
 		var group = category || 0;			// if absent from call
 		var region = region || 0;
 		var tip_val = tip || "";		// if absent from call
-		points = true;
+		got_points = true;				// 6/21/12
 		var myIcon = new GIcon(baseIcon);
 		
 		var origin = ((sym.length)>3)? (sym.length)-3: 0;			// pick low-order three chars 3/22/11
@@ -1842,7 +1812,7 @@ var divarea;
 
 
 	function createdummyMarker(point, tabs, id) {					// Creates dummymarker and sets up click event infowindow for "no maps" added tickets and units. 7/28/10 
-		points = true;
+		got_points = true;
 		var icon = new GIcon(baseIcon);
 		var icon_url = "./our_icons/question1.png";				// 7/28/10
 		icon.image = icon_url;
@@ -1915,8 +1885,7 @@ var divarea;
 	var map;
 	var center;
 	var zoom = <?php echo get_variable('def_zoom'); ?>;
-	
-	var points = false;
+	var got_points = false;
 <?php
 
 $dzf = get_variable('def_zoom_fixed');
@@ -2055,7 +2024,8 @@ function cs_handleResult(req) {					// the 'called-back' function for show curre
 	var which;
 	var i = 0;			// sidebar/icon index
 
-	map = new GMap2($("map"));		// create the map
+	map = new GMap2($("map"));									// create the map
+
 	var geocoder = null;
 	geocoder = new GClientGeocoder();
 
@@ -2648,7 +2618,7 @@ if(!isset($curr_viewed)) {			//	6/10/11
 
 	side_bar_html ="<TABLE border=0 CLASS='sidebar' WIDTH = <?php print $col_width;?> >\n";		// initialize units sidebar string
 	side_bar_html += "<TR CLASS = 'spacer'><TD CLASS='spacer' COLSPAN=99>&nbsp;</TD></TR>";	//	3/15/11
-	points = false;
+	got_points = false;
 	i++;
 	var j=0;
 
@@ -2665,7 +2635,7 @@ if(!isset($curr_viewed)) {			//	6/10/11
 //	Categories for Unit status
 	
 	$categories = array();													// 12/03/10
-	$categories = get_category_butts();											// 12/03/10
+	$categories = $curr_cats;											// 12/03/10
 
 	$assigns = array();					// 8/3/08
 	$tickets = array();					// ticket id's
@@ -2853,12 +2823,12 @@ if(!isset($curr_viewed)) {			//	6/10/11
 	
 	side_bar_html += "<TR CLASS = 'even'><TD COLSPAN=99 ALIGN='center'>";
 	side_bar_html += "<I><B>Sort</B>:&nbsp;&nbsp;&nbsp;&nbsp;";
-	side_bar_html += "Unit &raquo; 	<input type = radio name = 'frm_order' value = 1 <?php print $checked[1];?> onClick = 'do_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+	side_bar_html += "<?php print get_text("Units");?> &raquo; 	<input type = radio name = 'frm_order' value = 1 <?php print $checked[1];?> onClick = 'do_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	side_bar_html += "Type &raquo; 	<input type = radio name = 'frm_order' value = 2 <?php print $checked[2];?> onClick = 'do_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	side_bar_html += "Status &raquo; <input type = radio name = 'frm_order' value = 3 <?php print $checked[3];?> onClick = 'do_sort_sub(this.value);' />";
 	side_bar_html += "</I></TD></TR>";
 <?php	
-		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD><B>Unit</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(0); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD ALIGN='left' COLSPAN='2'><B>{$incident}</B></TD><TD>&nbsp; <B>Status</B></TD><TD><B>M</B></TD><TD><B>&nbsp;As of</B></TD></TR>\"\n" ;	// 12/17/10
+		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD><B>" . get_text("Units") . "</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(0); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD ALIGN='left' COLSPAN='2'><B>{$incident}</B></TD><TD>&nbsp; <B>Status</B></TD><TD><B>M</B></TD><TD><B>&nbsp;As of</B></TD></TR>\"\n" ;	// 12/17/10
 //		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD><B>Unit</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(0); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD>&nbsp; <B>Status</B></TD><TD ALIGN='left' COLSPAN='2'><B>{$incident}</B></TD><TD><B>M</B></TD><TD><B>&nbsp;As of</B></TD></TR>\"\n" ;	// 12/17/10
 //		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD><B>Unit</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(null, null); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD>&nbsp; <B>Status</B></TD><TD ALIGN='left' COLSPAN='2'><B>{$incident}</B></TD><TD><B>M</B></TD><TD><B>&nbsp;As of</B></TD></TR>\"\n" ;
 		}
@@ -3058,19 +3028,19 @@ if(!isset($curr_viewed)) {			//	6/10/11
 		$tip = isset($tip) ? $tip : "No Tip String";
 
 	if ((!(my_is_float($row['lat']))) || ($quick)) {		// 11/27/09
-		$resp_cat = get_category($row['unit_id']);
+		$resp_cat = $un_stat_cats[$row['unit_id']];
 		print "\t\tdo_sidebar_u_ed (\"{$sidebar_line}\",  {$sb_indx}, '{$on_click}', sym, \"{$tip}\", \"{$resp_cat}\");\n";		// (sidebar, line_no, on_click, letter)
 		}
 	else {
 ?>
 		var the_class = ((map_is_fixed) && (!(mapBounds.containsLatLng(point))))? "emph" : "td_label";
-		do_sidebar_unit ("<?php print $sidebar_line; ?>",  <?php print $sb_indx; ?>, sym, the_class, "<?php print $tip;?>", "<?php print get_category($row['unit_id']);?>");		// (instr, id, sym, myclass, tip)  - 1/3/10
+		do_sidebar_unit ("<?php print $sidebar_line; ?>",  <?php print $sb_indx; ?>, sym, the_class, "<?php print $tip;?>", "<?php print $un_stat_cats[$row['unit_id']];?>");		// (instr, id, sym, myclass, tip)  - 1/3/10
 <?php
 		}
 
 	if (my_is_float($latitude)) {		// map position?
 		$the_color = ($row['mobile']=="1")? 0 : 4;		// icon color black, white		-- 4/18/09
-		$the_group = get_category($row['unit_id']);	//	3/15/11
+		$the_group = $un_stat_cats[$row['unit_id']];	//	3/15/11
 		if (($latitude == "0.999999") && ($longitude == "0.999999")) {	// check for no maps added points 7/28/10
 			$dummylat = get_variable('def_lat');
 			$dummylng = get_variable('def_lng');			
@@ -3100,14 +3070,14 @@ if(!isset($curr_viewed)) {			//	6/10/11
 	print "\n\tside_bar_html+= \"<TR CLASS='\" + colors[i%2] +\"'><TD COLSPAN='7' ALIGN='right'>{$source_legend}</TD></TR>\";\n";
 ?>
 	var legends = "<TR class='even'><TD ALIGN='center' COLSPAN='99'><TABLE ALIGN='center' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> >";	//	3/15/11
-	legends += "<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR><TR class='even'><TD ALIGN='center' COLSPAN='99'><B>Responders Legend</B></TD></TR>";	//	3/15/11
+	legends += "<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR><TR class='even'><TD ALIGN='center' COLSPAN='99'><B><?php print get_text("Units");?> Legend</B></TD></TR>";	//	3/15/11
 	legends += "<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'>&nbsp;&nbsp;<B>M</B>obility:&nbsp;&nbsp; stopped: <FONT COLOR='red'>&bull;</FONT>&nbsp;&nbsp;&nbsp;moving: <FONT COLOR='green'>&bull;</FONT>&nbsp;&nbsp;&nbsp;fast: <FONT COLOR='white'>&bull;</FONT>&nbsp;&nbsp;&nbsp;silent: <FONT COLOR='black'>&bull;</FONT>&nbsp;&nbsp;</TD></TR>";	//	3/15/11
 	legends += "<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'><?php print get_units_legend();?></TD></TR></TABLE>";	//	3/15/11
 
 	$("side_bar_r").innerHTML = side_bar_html;		//	12/03/10
 	$("side_bar_rl").innerHTML = legends + "</TABLE>";		//	12/03/10
 	side_bar_html= "";		//	12/03/10
-	side_bar_html+="<TABLE><TR class='heading_2'><TH width = <?php print $ctrls_width;?> ALIGN='center'>Responders</TH></TR><TR class='odd'><TD COLSPAN=99 CLASS='td_label' ><form action='#'>";			//	12/03/10, 3/15/11
+	side_bar_html+="<TABLE><TR class='heading_2'><TH width = <?php print $ctrls_width;?> ALIGN='center'><?php print get_text("Units");?></TH></TR><TR class='odd'><TD COLSPAN=99 CLASS='td_label' ><form action='#'>";			//	12/03/10, 3/15/11
 <?php
 if($units_ct > 0) {	//	3/15/11
 	foreach($categories as $key => $value) {		//	12/03/10
@@ -3462,17 +3432,18 @@ function createfacMarker(fac_point, fac_name, id, fac_icon, type, region) {
 
 <?php
 
-// =====================================End of functions to show facilities========================================================================
+// =====================================End of functions to show facrilities========================================================================
 ?>
 	if (!(map_is_fixed)){
-		if (!points) {		// any?
+		if (!got_points) {		// any? - 6/21/12
 			map.setCenter(new GLatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
 			}
 		else {
 			center = bounds.getCenter();
-			zoom = map.getBoundsZoomLevel(bounds);
+			var max_zoom = <?php echo get_variable('def_zoom');?>;				// 6/22/12
+			zoom = (map.getBoundsZoomLevel(bounds) > max_zoom )? max_zoom : map.getBoundsZoomLevel(bounds);
 			map.setCenter(center,zoom);
-			}			// end if/else (!points)
+			}			// end if/else (!got_points)
 	}				// end if (!(map_is_fixed))
 	
 	side_bar_html +="</TABLE></TD></TR>\n";		//	3/15/11
@@ -3643,7 +3614,7 @@ else {
 function tester() {
 	alert("2093 " + gmarkers.length);
 	for (i=0; i<gmarkers.length; i++) {
-		alert("2095 " + i + " " + gmarkers[i]['x']);
+		alert("3617 " + i + " " + gmarkers[i]['x']);
 		}
 	}
 </SCRIPT>
@@ -3660,8 +3631,7 @@ function tester() {
 
 function show_ticket($id,$print='false', $search = FALSE) {								/* show specified ticket */
 	global $iw_width, $istest, $zoom_tight, $nature, $disposition, $patient, $incident, $incidents, $col_width;	// 12/3/10, 8/4/11
-	$tickno = (get_variable('serial_no_ap')==0)?  "&nbsp;&nbsp;<I>(#" . $theRow['id'] . ")</I>" : "";			// 1/25/09
-
+	$tickno = (get_variable('serial_no_ap')==0)?  "&nbsp;&nbsp;<I>(#{$id})</I>" : "";			// 1/25/09, 2/18/12
 	if($istest) {
 		print "GET<br />\n";
 		dump($_GET);
@@ -3677,43 +3647,7 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 
 //	Regions stuff	6/10/11		
 		
-	function get_buttons($user_id) {		//	5/3/11
-		$regs_viewed = "";
-		if(isset($_SESSION['viewed_groups'])) {
-			$regs_viewed= explode(",",$_SESSION['viewed_groups']);
-			}
-		$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id' ORDER BY `group`";			//	5/3/11
-		$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-
-		$al_buttons="";	
-		while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	//	5/3/11
-			if(!empty($regs_viewed)) {
-				if(in_array($row2['group'], $regs_viewed)) {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				} else {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				}
-				} else {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				}
-			}
-//		dump($al_buttons);
-		return $al_buttons;
-	}
-	
-	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
-?>
-<SCRIPT>
-		side_bar_html= "";
-		side_bar_html+="<TABLE><TR class='even'><TD COLSPAN=99 CLASS='td_label' ><form name='region_form' METHOD='post' action='main.php'><DIV>";
-		side_bar_html += "<?php print get_buttons($_SESSION['user_id']);?>";
-		side_bar_html+="</DIV></form></TD></TR><TR><TD>&nbsp;</TD></TR><TR><TD ALIGN='center'><INPUT TYPE='button' VALUE='Update' onClick='form_validate(document.region_form);'></TD></TR></TABLE>";
-		if($("region_boxes")) {
-			$("region_boxes").innerHTML = side_bar_html;
-		}
-</SCRIPT>		
-<?php
-	}		
+print get_buttons_inner();	// 4/12/12
 
 //	End of Regions stuff
 	
@@ -3897,7 +3831,7 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 		$asgn_result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 		if (mysql_affected_rows()>0) {
 			print "<P><TABLE  CLASS='print_TD' BORDER = 1 CELLPADDING = 2 STYLE = 'border-collapse: collapse;'>\n";
-			print "<TR><TH>Unit</TH><TH>D</TH><TH>R</TH><TH>E</TH>";
+			print "<TR><TH>" . get_text("Units") . "</TH><TH>D</TH><TH>R</TH><TH>E</TH>";
 			print ($facilities)? "<TH>FE</TH><TH>FA</TH>": "";
 			print "<TH>C</TH>";
 			print ($miles)? "<TH>M/S</TH><TH>M/OS/E</TH>": "";
@@ -4232,7 +4166,13 @@ function createfacMarker(fac_point, fac_name, id, fac_icon) {
 
 <?php
 
-	$query_fac = "SELECT *,UNIX_TIMESTAMP(updated) AS updated, `$GLOBALS[mysql_prefix]facilities`.id AS fac_id, `$GLOBALS[mysql_prefix]facilities`.description AS facility_description, `$GLOBALS[mysql_prefix]fac_types`.name AS fac_type_name, `$GLOBALS[mysql_prefix]facilities`.name AS facility_name FROM `$GLOBALS[mysql_prefix]facilities` LEFT JOIN `$GLOBALS[mysql_prefix]fac_types` ON `$GLOBALS[mysql_prefix]facilities`.type = `$GLOBALS[mysql_prefix]fac_types`.id LEFT JOIN `$GLOBALS[mysql_prefix]fac_status` ON `$GLOBALS[mysql_prefix]facilities`.status_id = `$GLOBALS[mysql_prefix]fac_status`.id ORDER BY `$GLOBALS[mysql_prefix]facilities`.type ASC";
+	$query_fac = "SELECT *,UNIX_TIMESTAMP(updated) AS updated, 
+		`$GLOBALS[mysql_prefix]facilities`.id AS fac_id, 
+		`$GLOBALS[mysql_prefix]facilities`.description AS facility_description, 
+		`$GLOBALS[mysql_prefix]fac_types`.name AS fac_type_name, 
+		`$GLOBALS[mysql_prefix]facilities`.name AS facility_name 
+		FROM `$GLOBALS[mysql_prefix]facilities` 
+		LEFT JOIN `$GLOBALS[mysql_prefix]fac_types` ON `$GLOBALS[mysql_prefix]facilities`.type = `$GLOBALS[mysql_prefix]fac_types`.id LEFT JOIN `$GLOBALS[mysql_prefix]fac_status` ON `$GLOBALS[mysql_prefix]facilities`.status_id = `$GLOBALS[mysql_prefix]fac_status`.id ORDER BY `$GLOBALS[mysql_prefix]facilities`.type ASC";
 	$result_fac = mysql_query($query_fac) or do_error($query_fac, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);	while($row_fac = mysql_fetch_array($result_fac)){
 
 	$eols = array ("\r\n", "\n", "\r");		// all flavors of eol

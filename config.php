@@ -71,6 +71,12 @@
 7/30/11 Map markup and categories replaces landb
 9/27/11 Added Internal Tracker test
 3/11/11 Added link to cleanse regions file.
+12/19/11 courses table tandling, per request T Carswell
+3/4/12 disbled 86-char key check
+3/5/12 obtain key from ... 
+3/22/12 ics 213 link
+4/25/12 audio window correction
+6/20/12 applied get_text() to 'Unit'
 */
 	$asterisk = FALSE;		// user: change to TRUE  in order to make the Pin Control table accessible.	
 	if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/7/09 
@@ -78,7 +84,6 @@
 	session_start();	
 	require_once('./incs/functions.inc.php');
 	do_login(basename(__FILE__));	// session_start()
-	
 	require_once('./incs/config.inc.php');
 	require_once('./incs/usng.inc.php');				// 9/16/08
 	$st_size = (get_variable("locale") ==0)?  2: 4;		
@@ -206,8 +211,8 @@
 		}
 
 
-	function do_audio_test() {				// 8/2/08 -	11/5/09
-		var newwindow_au=window.open("audio.php", "Test_Audio",  "titlebar, resizable=1, scrollbars, height=540,width=600,status=0,toolbar=0,menubar=0,location=0, left=50,top=50,screenX=50,screenY=50"); newwindow_t.focus();
+	function do_audio_test() {				// 8/2/08 -	11/5/09 - 4/25/12
+		var newwindow_au=window.open("audio.php", "Test_Audio",  "titlebar, resizable=1, scrollbars, height=540,width=600,status=0,toolbar=0,menubar=0,location=0, left=50,top=50,screenX=50,screenY=50"); newwindow_au.focus();
 		if (isNull(newwindow_au)) {
 			alert ("Adio test operation requires popups to be enabled. Please adjust your browser options.");
 			return;
@@ -364,7 +369,7 @@
 		if ((theForm.frm_passwd.value.trim().length>0) && (theForm.frm_passwd.value.trim().length<5))	
 																				{errmsg+="\tPasswd length 5 or more is required.\n";}
 		if ((theForm.frm_level[<?php echo $GLOBALS['LEVEL_UNIT'];?>].checked) && (theForm.frm_responder_id.value==0)) 
-																				{errmsg+="\tUnit selection is required.\n";}
+																				{errmsg+="\t<?php print get_text("Units");?> selection is required.\n";}
 		if (errmsg!="") {
 			alert ("Please correct the following and re-submit:\n\n" + errmsg);
 			return false;
@@ -383,7 +388,7 @@
 
 	function validate_set(theForm) {			// limited form contents validation  
 		var errmsg="";
-		if (theForm.gmaps_api_key.value.length!=86)			{errmsg+= "\tInvalid GMaps API key\n";}
+//		if (theForm.gmaps_api_key.value.length!=86)			{errmsg+= "\tInvalid GMaps API key\n";}	// 3/4/12
 		if (errmsg!="") {
 			alert ("Please correct the following and re-submit:\n\n" + errmsg);
 			return false;
@@ -1096,7 +1101,7 @@ if (mysql_num_rows($result)>0) {
 	// 7/12/10
 	
 				$checked = (intval($row['level'])==intval($GLOBALS['LEVEL_UNIT']))? 	"checked":"" ;						// 12/15/08
-	 			print " Unit &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_UNIT'] ."' {$checked} {$disabled}>\n";
+	 			print get_text("Units") . "&raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_UNIT'] ."' {$checked} {$disabled}>\n";
 	//	7/6/11
 				$checked = (intval($row['level'])==intval($GLOBALS['LEVEL_STATS']))? 	"checked":"" ;						// 12/15/08
 	 			print " Statistics &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_STATS'] ."' {$checked} {$disabled}>\n";				
@@ -1120,7 +1125,7 @@ if (mysql_num_rows($result)>0) {
 					print "</DIV";
 				}
 ?>				
-				<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Unit: </TD><TD><?php print $sel_str;?></TD></TR>
+				<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print get_text("Units");?>: </TD><TD><?php print $sel_str;?></TD></TR>
 				<TR VALIGN="baseline" CLASS="spacer"><TD class="spacer" COLSPAN=99 ALIGN='center'>&nbsp;</TD></TR>
 				<TR VALIGN="baseline" CLASS="even"><TD COLSPAN=4 ALIGN='center'>&nbsp;</TD></TR>
 				<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Last name: </TD>
@@ -1179,13 +1184,13 @@ if (mysql_num_rows($result)>0) {
 	
 			if ((array_key_exists('frm_remove', $_POST)) && ($_POST['frm_remove'] == 'yes')) {
 				$ctr = 0;
-				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE owner=" . quote_smart($_POST[frm_id]) . " LIMIT 1";
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE owner=" . quote_smart($_POST['frm_id']) . " LIMIT 1";
 				$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 				$ctr += mysql_affected_rows();
-				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]action` WHERE user=" . quote_smart($_POST[frm_id]) . " LIMIT 1";
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]action` WHERE user=" . quote_smart($_POST['frm_id']) . " LIMIT 1";
 				$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 				$ctr += mysql_affected_rows();
-				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]action` WHERE user=" . quote_smart($_POST[frm_id]) . " LIMIT 1";
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]action` WHERE user=" . quote_smart($_POST['frm_id']) . " LIMIT 1";
 				$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 				$ctr += mysql_affected_rows();
 				if ($ctr > 0) {	
@@ -1235,13 +1240,12 @@ if (mysql_num_rows($result)>0) {
 				$groups = "," . implode(',', $_POST['frm_group']) . ","; 	//	6/10/11	
 				$curr_groups = implode(',', get_allocates(4, $_POST['frm_id']));	//	6/10/11	
 	
-				$ex_grps = explode(',', $curr_groups); 	//	6/10/11 
-				
+				$ex_grps = explode(',', $curr_groups); 	//	6/10/11
 				if($curr_groups != $groups) { 	//	6/10/11
 					foreach($_POST['frm_group'] as $posted_grp) { 	//	6/10/11
 						if(!in_array($posted_grp, $ex_grps)) {
 							$query  = "INSERT INTO `$GLOBALS[mysql_prefix]allocates` (`group` , `type`, `al_as_of` , `al_status` , `resource_id` , `sys_comments` , `user_id`) VALUES 
-									($posted_grp, 4, '$now', 0, $_POST[frm_id], 'Allocated to Group' , $by)";
+									($posted_grp, 4, '$now', 0, " . $_POST['frm_id'] . ", 'Allocated to Group' , $by)";
 							$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);	
 							}
 						}
@@ -1358,7 +1362,7 @@ if (mysql_num_rows($result)>0) {
 						Operator &raquo; <INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_USER'];?>" NAME="frm_level" />&nbsp;&nbsp;
 						Guest &raquo; <INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_GUEST'];?>" NAME="frm_level" /> &nbsp;&nbsp;
 						Member &raquo; <INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_MEMBER'];?>" NAME="frm_level" /> 	<!-- 3/3/09 -->
-						Unit &raquo; <INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_UNIT'];?>" NAME="frm_level"/> <!-- 6/30/09 -->
+						<?php print get_text("Units");?> &raquo; <INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_UNIT'];?>" NAME="frm_level"/> <!-- 6/30/09 -->
 						Statistics &raquo; <INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_STATS'];?>" NAME="frm_level"/> <!-- 7/6/11 -->						
 						</TD></TR>
 <?php
@@ -1384,7 +1388,7 @@ if (mysql_num_rows($result)>0) {
 					}
 ?>							
 						
-					<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Unit: </TD><TD><?php print $sel_str;?></TD></TR>
+					<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print get_text("Units");?>: </TD><TD><?php print $sel_str;?></TD></TR>
 					<TR VALIGN="baseline" CLASS="spacer"><TD class="spacer" COLSPAN=4 ALIGN='center'>&nbsp;</TD></TR>
 					<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Last name: </TD>
 						<TD><INPUT ID="ID3" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_name_l" VALUE="" onChange = "this.value=this.value.trim()"></TD>
@@ -1505,7 +1509,7 @@ if (mysql_num_rows($result)>0) {
 			<TR VALIGN='baseline'><TD CLASS="td_label" ALIGN='right'>Dynamic zoom:</TD><TD ALIGN='center' COLSPAN=2>&nbsp;&nbsp;
 			 		Yes &raquo;<INPUT TYPE='radio' NAME='frm_zoom_fixed' VALUE='0' <?php print $checks_ar[0]; ?> onClick = "document.cen_Form.frm_dfz.value=0";> &nbsp;&nbsp;
 					<B>Situation</B> fixed &raquo;<INPUT TYPE='radio' NAME='frm_zoom_fixed' VALUE='1' <?php print $checks_ar[1]; ?> onClick = "document.cen_Form.frm_dfz.value=1";>&nbsp;&nbsp;
-					<B>Units</B> fixed &raquo;<INPUT TYPE='radio' NAME='frm_zoom_fixed' VALUE='2' <?php print $checks_ar[2]; ?> onClick = "document.cen_Form.frm_dfz.value=2";>&nbsp;&nbsp;
+					<B><?php print get_text("Units");?></B> fixed &raquo;<INPUT TYPE='radio' NAME='frm_zoom_fixed' VALUE='2' <?php print $checks_ar[2]; ?> onClick = "document.cen_Form.frm_dfz.value=2";>&nbsp;&nbsp;
 					<B>Both</B> fixed &raquo;<INPUT TYPE='radio' NAME='frm_zoom_fixed' VALUE='3' <?php print $checks_ar[3]; ?> onClick = "document.cen_Form.frm_dfz.value=3";></TD></TR>
 						
 			<TR><TD>&nbsp;</TD></TR>
@@ -1542,13 +1546,13 @@ if (mysql_num_rows($result)>0) {
 ?>	
 			<BODY onLoad = 'ck_frames()'>
 			
-			<TABLE BORDER="0">
+			<TABLE BORDER="0" STYLE = "margin-left: 100px; margin-top: 40px";>
 			<FORM METHOD="POST" NAME= "api_Form"  onSubmit="return validate_key(document.api_Form);" ACTION="config.php?func=api_key&update=true">
-			<TR CLASS = "even"><TD CLASS="td_label" ALIGN='center'>Obtain GMaps API key at http://www.google.com/apis/maps/signup.html</TD></TR>
+			<TR CLASS = "even"><TD CLASS="td_label" ALIGN='center'>Obtain GMaps API key at https://code.google.com/apis/console/</TD></TR>	<!-- 3/5/12 -->
 			<TR CLASS = "odd"><TD><BR /></TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label">Copy/paste key:</TD></TR>
-			<TR CLASS = "odd"><TD><INPUT MAXLENGTH="88" SIZE="120" TYPE="text" NAME="frm_value" VALUE="<?php print $curr_key; ?>" /></TD></TR>
-			<TR CLASS = "even"><TD ALIGN='center'>
+			<TR CLASS = "odd"><TD><INPUT MAXLENGTH="88" SIZE="88" TYPE="text" NAME="frm_value" VALUE="<?php print $curr_key; ?>" /></TD></TR>
+			<TR CLASS = "even"><TD ALIGN='center'><BR />
 				<INPUT TYPE='button' VALUE='Cancel'  onClick='document.can_Form.submit();'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='reset' VALUE='Reset' onClick = "map_cen_reset();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='submit' VALUE='Submit'></TD></TR>
 			</FORM></TABLE>
 			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename(__FILE__); ?>"></FORM>		
@@ -1556,7 +1560,7 @@ if (mysql_num_rows($result)>0) {
 	<SCRIPT>		
 		function validate_key(theForm) {			// limited form contents validation  
 			var errmsg="";
-			if (theForm.frm_value.value.length!=86)			{errmsg+= "\tEntered GMaps API key is Invalid\n\t - length must be 86 chars.";}
+//			if (theForm.frm_value.value.length!=86)			{errmsg+= "\tEntered GMaps API key is Invalid\n\t - length must be 86 chars.";}
 			if (errmsg!="") {
 				alert ("Please correct and re-submit:\n\n" + errmsg);
 				return false;
@@ -2164,8 +2168,8 @@ ul {
 			<TR CLASS = 'even'><!-- 3/15/11 -->
 				<TD><LI><A HREF="config.php?func=in_nums">Incident Numbers</A></TD>
 				<TD><LI><A HREF="#" onClick = "do_Post('in_types');">Incident types</A> </TD>
-				<TD><LI><A HREF="#" onClick = "do_Post('unit_types');">Unit types</A></TD><!-- 10/8/08,  6/4/09 -->
-				<TD><LI><A HREF="#" onClick = "do_Post('un_status');">Unit status</A>&nbsp;&nbsp;</TD></TR>
+				<TD><LI><A HREF="#" onClick = "do_Post('unit_types');"><?php print get_text("Units");?> types</A></TD><!-- 10/8/08,  6/4/09 -->
+				<TD><LI><A HREF="#" onClick = "do_Post('un_status');"><?php print get_text("Units");?> status</A>&nbsp;&nbsp;</TD></TR>
 <?php
 	}	// end if is super
 	
@@ -2208,10 +2212,33 @@ ul {
 			<TD><LI><A HREF="http://www.ticketscad.org/dbadmin" target="_blank">DB Admin</A></TD>
 			<TD COLSPAN=2></TD>
 			</TR>
-<?php	}	?>
-			</TABLE>
-			<BR />
+<?php	
+		}	
+	$course_table = "$GLOBALS[mysql_prefix]courses_taken";		// 12/19/11 
+	if (mysql_table_exists($course_table)) {
+?>	
+	<FORM NAME = 'course_form' METHOD = 'post' ACTION = 'course_report.php' TARGET = '_blank'>	
+	<INPUT TYPE = 'hidden' NAME = 'user_id' VALUE = ''>
+	</FORM>
+			<TR CLASS = 'even'>		<!-- 12/10/11 -->
+			<TD><LI><A HREF="#" onClick = "do_Post('courses');">Update Courses</A></TD>
+			<TD><LI><A HREF="#" onClick = "do_Post('courses_taken');">Update Courses taken</A></TD>
+			<TD CLASS="td_label" ALIGN="left"><LI> Report &raquo;</TD>
+			<TD><SELECT NAME='frm_user_id' onChange = "document.course_form.user_id.value=this.options[this.selectedIndex].value; document.course_form.submit();">
+				<OPTION VALUE='' selected>Select</OPTION>
+				<OPTION VALUE='0' >All users</OPTION>
 <?php
+	$query 	= "SELECT * FROM  `$GLOBALS[mysql_prefix]user` WHERE ((`name_l` IS NOT NULL) AND (LENGTH(`name_l`) > 0)) ORDER BY `name_l` ASC, `name_f` ASC";    			
+	$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
+	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+		$the_opt = shorten("({$row['user']}) {$row['name_l']}, {$row['name_f']} {$row['name_mi']} ", 32);
+		echo "\t\t\t<OPTION VALUE='{$row['id']}'>{$the_opt}</OPTION>\n";
+		}				// end while()
+	echo "\n\t\t</SELECT></TD></TR>\n";
+		}			// if (mysql_table_exists())
+		
+	echo "\n\t\t</TABLE><BR />";
+			
 	if (is_super()) {									// super or admin - 10/28/10			
 ?>	
 		<LI><B>Modules</B><BR />
@@ -2228,13 +2255,14 @@ ul {
 ?>		
 			<TD><LI><A HREF="install_module.php">Add Tickets Module</A></TD></TR></TABLE>
 <?php
-		if (mysql_table_exists("$GLOBALS[mysql_prefix]ics_213")) 	{		// 6/4/09
+//		if (mysql_table_exists("$GLOBALS[mysql_prefix]ics_213")) 	{		// 6/4/09
 ?>	
+<!--
 		<BR />
 		<LI><A HREF="#" onClick = "do_Post('ics_213');">ICS 213</A>
+-->		
 <?php
-			}		// end if ics213
-
+//			}		// end if ics213
 		if (mysql_table_exists("$GLOBALS[mysql_prefix]evacuees")) 	{		// 6/4/09
 ?>	
 		<BR />
@@ -2258,7 +2286,7 @@ ul {
 			<LI><A HREF="#" onClick = "do_Post('log');">Log</A>
 			<LI><A HREF="#" onClick = "do_Post('settings');">Settings</A>
 			<LI><A HREF="#" onClick = "do_Post('ticket');">Tickets</A>
-			<LI><A HREF="#" onClick = "do_Post('responder');">Units</A>
+			<LI><A HREF="#" onClick = "do_Post('responder');"><?php print get_text("Units");?></A>
 			<LI><A HREF="#" onClick = "do_Post('action');">Actions</A>
 			<LI><A HREF="#" onClick = "do_Post('patient');">Patients</A>	
 			<LI><A HREF="tables.php">Tables</A>
@@ -2269,8 +2297,12 @@ ul {
 ?>
 			<LI><A HREF="#" onClick = "do_audio_test();">Alarm audio test</A>		<!-- 6/22/10 -->
 
-<?php			
+<br />
+			<LI><A HREF="#" onClick = "window.open('ics213.php', 'ics213');">ICS 213</A>		<!-- 3/22/12 -->
+<?php
 		}		// if (is_administrator() || is_super())
+
+//-		
 	print "<BR /><BR />\n";
 	list_users();		// 9/24/08
 

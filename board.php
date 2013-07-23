@@ -110,7 +110,10 @@ Sequence numbering: SELECT a.id, @num := @num + 1 seqno from ticket a, (SELECT @
 2/8/11 added multi to line 712 sql
 3/15/11 Revisions to support user editable color schemes and day/night mode
 4/28/11 handle replaces unit name
-12/17/11 on-scene date handling corrected
+5/9/11 add test for existence of dform element
+6/10/11 changes for regional capability
+4/24/12 Revised SQL station to correct incorrect GROUP BY clause.
+6/20/12 applied get_text() to "Units", don't reset 'dispatch' time on reset
 */
 
 @session_start();
@@ -437,10 +440,10 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 			function our_reset(id, the_form) {									// reset dispatch checks 
 				var dis = <?php print ($guest)? "true": "false"; ?>;			// disallow guest actions
 	
-				the_form.res_times.checked = false;
-				the_form.frm_dispatched.disabled = false;
-				the_form.frm_dispatched.checked = false;
-				the_form.frm_dispatched.disabled = dis;
+				the_form.res_times.checked = false;				// 6/20/12
+//				the_form.frm_dispatched.disabled = false;
+//				the_form.frm_dispatched.checked = false;
+//				the_form.frm_dispatched.disabled = dis;
 				
 				the_form.frm_responding.disabled = false;
 				the_form.frm_responding.checked = false;
@@ -519,7 +522,42 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 	
 		case 'add': 					//  ==== { ==== first build JS array of existing assigns for dupe prevention
 
-			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `status` = " . $GLOBALS['STATUS_OPEN']. " ORDER BY `severity` DESC, `problemstart` ASC "; // highest severity, oldest open
+			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]';";	// 6/10/11
+			$result = mysql_query($query);	// 4/18/11
+			$al_groups = array();
+			while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 4/18/11
+				$al_groups[] = $row['group'];
+				}	
+			
+			if(isset($_SESSION['viewed_groups'])) {		//	6/10/11
+				$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+				}
+
+			if(!isset($curr_viewed)) {			//	6/10/11
+				$x=0;	
+				$where2 = "AND (";
+				foreach($al_groups as $grp) {
+					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
+				} else {
+				$x=0;	
+				$where2 = "AND (";	
+				foreach($curr_viewed as $grp) {
+					$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
+				}				
+
+			$query = "SELECT *, `$GLOBALS[mysql_prefix]ticket`.`id` AS `tick_id`
+					FROM `$GLOBALS[mysql_prefix]ticket` 
+					LEFT JOIN `$GLOBALS[mysql_prefix]allocates` ON `$GLOBALS[mysql_prefix]ticket`.`id`=`$GLOBALS[mysql_prefix]allocates`.`resource_id`				
+					WHERE `status` = {$GLOBALS['STATUS_OPEN']} {$where2} 
+					GROUP BY `tick_id` ORDER BY `severity` DESC, `problemstart` ASC "; // highest severity, oldest open
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 			if (mysql_affected_rows()==1) {			// if a single, do it
 				$row = mysql_fetch_assoc($result);
@@ -575,6 +613,37 @@ setTimeout('do_post()', 1000);
 			
 		case 'add_b': 					//  ==== { ==== 
 			extract ($_POST);
+			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]';";	// 6/10/11
+			$result = mysql_query($query);	// 4/18/11
+			$al_groups = array();
+			while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 4/18/11
+				$al_groups[] = $row['group'];
+				}	
+			
+			if(isset($_SESSION['viewed_groups'])) {		//	6/10/11
+				$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+				}
+
+			if(!isset($curr_viewed)) {			//	6/10/11
+				$x=0;	
+				$where2 = "WHERE (";
+				foreach($al_groups as $grp) {
+					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
+				} else {
+				$x=0;	
+				$where2 = "WHERE (";	
+				foreach($curr_viewed as $grp) {
+					$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
+				}
+			$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 2";	//	6/10/11					
 
 			$assigns = array();				// map unit id to ticket id
 			function get_cd_str ($unit_row, $ticket_id) {
@@ -596,7 +665,8 @@ setTimeout('do_post()', 1000);
 			while($row = stripslashes_deep(mysql_fetch_array($result))) {
 				print "\t\tassigns['" .$row['ticket_id'] .":" . $row['responder_id'] . "']=true;\n";	// build assoc array of ticket:unit pairs
 				}
-?>		
+?>
+		<SCRIPT>	
 		function validate_ad(theForm) {
 			var errmsg="";
 			if (theForm.frm_unit_id_str.value == "")	{errmsg+= "\tSelect one or more units\n";}
@@ -626,11 +696,14 @@ setTimeout('do_post()', 1000);
 		<SCRIPT SRC='./js/misc_function.js' type='text/javascript'></SCRIPT> 		
 		</HEAD>
 <?php
-			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder`";		// 2/12/09   
+			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder`
+					LEFT JOIN `$GLOBALS[mysql_prefix]allocates` ON `$GLOBALS[mysql_prefix]responder`.id=`$GLOBALS[mysql_prefix]allocates`.`resource_id`			
+					{$where2} GROUP BY `$GLOBALS[mysql_prefix]responder`.`id`";		// 2/12/09   
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 			$lines = mysql_affected_rows();
 
-			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id` = {$frm_ticket_id} LIMIT 1"; 		// see case $func = 'add_b'
+			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `$GLOBALS[mysql_prefix]ticket`.`id` = {$frm_ticket_id}
+					LIMIT 1"; 		// see case $func = 'add_b'
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 			$row = mysql_fetch_array($result);
 			$latitude = $row['lat'];
@@ -660,7 +733,7 @@ setTimeout('do_post()', 1000);
 
 			<TABLE BORDER=0 STYLE = "border-collapse:collapse; margin-left:32px" CELLSPACING=0  CELLPADDING=0 >
 			<FORM NAME="add_Form"  ACTION = "<?php print basename(__FILE__); ?>" METHOD = "post">
-			<TR CLASS="even"><TH colspan=4 ALIGN="center">Assign Unit to Incident: <?php print $row['scope'];?></TH></TR>
+			<TR CLASS="even"><TH colspan=4 ALIGN="center">Assign <?php print get_text("Units");?> to Incident: <?php print $row['scope'];?></TH></TR>
 <?php
 			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns`
 						WHERE `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00'";				
@@ -669,18 +742,22 @@ setTimeout('do_post()', 1000);
 				$assigns[$row['responder_id']] = $row['ticket_id'];
 				}
 
-			$capt = "Units:";
+			$capt = get_text("Units") . ":";
 			$dist_capt = "&nbsp;mi SLD";				// 4/27/10
-			$query = "SELECT *, `$GLOBALS[mysql_prefix]responder`.`id` AS `unit_id`,`$GLOBALS[mysql_prefix]responder`.`name` AS `unit_name`,
+			$query = "SELECT *, `$GLOBALS[mysql_prefix]responder`.`id` AS `unit_id`,
+				`$GLOBALS[mysql_prefix]responder`.`name` AS `unit_name`,
 				(((acos(sin(({$latitude}*pi()/180)) * sin((`$GLOBALS[mysql_prefix]responder`.`lat`*pi()/180))+cos(({$latitude}*pi()/180)) * cos((`$GLOBALS[mysql_prefix]responder`.`lat`*pi()/180)) * cos((({$longitude} - `$GLOBALS[mysql_prefix]responder`.`lng`)*pi()/180))))*180/pi())*60*1.1515) AS `distance`
 				FROM `$GLOBALS[mysql_prefix]responder` 
 				LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` `t` ON ( `$GLOBALS[mysql_prefix]responder`.`type` = t.id )					
-				ORDER BY `distance` ASC, `$GLOBALS[mysql_prefix]responder`.`name` ASC";		// 2/12/09   
+				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` ON `$GLOBALS[mysql_prefix]responder`.id=`$GLOBALS[mysql_prefix]allocates`.`resource_id`					
+				{$where2} 
+				GROUP BY `$GLOBALS[mysql_prefix]responder`.`id` 
+				ORDER BY `distance` ASC, `$GLOBALS[mysql_prefix]responder`.`name` ASC";		// 2/12/09 , 6/10/11  
 
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 			$i = 0;
 			while ($row = mysql_fetch_assoc($result))  {
-				$the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$row['icon']];		// 4/26/10,
+				$the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$row['icon']];		// 4/26/10
 				$the_text_color = 	$GLOBALS['UNIT_TYPES_TEXT'][$row['icon']];	
 			
 				$distance = ($row['distance']> 5000.0)? "?" : round($row['distance'],1);
@@ -710,9 +787,9 @@ setTimeout('do_post()', 1000);
 			<TR CLASS='<?php print $evenodd[($i)%2];?>'><TD CLASS="td_label" ALIGN="right">Mileage:</TD> <!--11/4/09-->
 				<TD colspan=4 ALIGN='center'>
 					<SPAN CLASS="td_label"> Start:</SPAN> <INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_strt" VALUE="" TYPE="text" />
-					<SPAN STYLE = "WIDTH: 10PX; DISPLAY: inline-block"></SPAN>
+					<SPAN STYLE = "WIDTH: 60PX; DISPLAY: inline-block"></SPAN>
 					<SPAN CLASS="td_label"> On scene:</SPAN> <INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_onsc" VALUE="" TYPE="text" />
-					<SPAN STYLE = "WIDTH: 10PX; DISPLAY: inline-block"></SPAN>
+					<SPAN STYLE = "WIDTH: 60PX; DISPLAY: inline-block"></SPAN>
 					<SPAN CLASS="td_label">End:</SPAN>
 				<INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_end" VALUE="" TYPE="text" /></TD></TR>
 			 </TABLE>
@@ -928,7 +1005,6 @@ setTimeout('do_post()', 1000);
 			break;				// end case 'add_db' ==== } =====
 				
 	case 'board' :			// ===== { =====
-
 		function cb_shorten($instring, $limit) {
 //			return (strlen($instring) > $limit)? substr($instring, 0, $limit-4) . "..." : $instring ;
 			return (strlen($instring) > $limit)? substr($instring, 0, $limit): $instring;	// &#133
@@ -1279,6 +1355,55 @@ setTimeout('do_post()', 1000);
 //		$order_by = (array_key_exists('sort', $_POST))? "`unit_name` ASC, `handle` ASC " : "`severity` DESC, `tick_scope` ASC, `unit_name` ASC ";			
 		$order_by = (array_key_exists('sort', $_POST))? "`handle` ASC " : "`severity` DESC, `tick_scope` ASC, `unit_name` ASC ";			
 																	// 8/10/10
+																	
+// ============================= Regions Stuff	sets which tickets the user can see.						
+							
+			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]' ORDER BY `id` ASC;";	//	6/10/11
+			$result = mysql_query($query);	// 6/10/11
+			$al_groups = array();
+			$al_names = "";	
+			while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 6/10/11
+				$al_groups[] = $row['group'];
+				$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` WHERE `id`= '$row[group]';";	// 6/10/11
+				$result2 = mysql_query($query2);	// 6/10/11
+				while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	// 6/10/11		
+						$al_names .= $row2['group_name'] . ", ";
+					}
+				}
+
+			if(is_super()) {	//	6/10/11
+				$al_names .= "Superadmin Level";
+			}				
+
+			if(isset($_SESSION['viewed_groups'])) {	//	5/4/11
+				$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+				} else {
+				$curr_viewed = $al_groups;
+				}	
+			
+			if(!isset($_SESSION['viewed_groups'])) {	//	6/10/11
+			$x=0;	
+			$where = "WHERE ((";
+			foreach($al_groups as $grp) {
+				$where2 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where .= "`a`.`group` = {$grp}";
+				$where .= $where2;
+				$x++;
+				}
+			} else {
+			$x=0;	
+			$where = "WHERE ((";		//	6/10/11
+			foreach($curr_viewed as $grp) {
+				$where2 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+				$where .= "`a`.`group` = {$grp}";
+				$where .= $where2;
+				$x++;
+				}
+			}
+			$where .= " AND `a`.`type` = 1) ";
+			
+// ================================ end of regions stuff																				
+																	
 		$query = "SELECT *,UNIX_TIMESTAMP(as_of) AS as_of,
 			`$GLOBALS[mysql_prefix]assigns`.`id` AS `assign_id` ,
 			`$GLOBALS[mysql_prefix]assigns`.`comments` AS `assign_comments`,
@@ -1294,21 +1419,40 @@ setTimeout('do_post()', 1000);
 			`$GLOBALS[mysql_prefix]assigns`.`as_of` AS `assign_as_of`
 			FROM `$GLOBALS[mysql_prefix]assigns` 
 			LEFT JOIN `$GLOBALS[mysql_prefix]ticket`	 `t` ON (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`)
+			LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `a`.`resource_id`)			
 			LEFT JOIN `$GLOBALS[mysql_prefix]user`		 `u` ON (`$GLOBALS[mysql_prefix]assigns`.`user_id` = `u`.`id`)
 			LEFT JOIN `$GLOBALS[mysql_prefix]responder`	 `r` ON (`$GLOBALS[mysql_prefix]assigns`.`responder_id` = `r`.`id`)
-				WHERE (`clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00')    $hide_sql 
- 			ORDER BY {$order_by }";		
-//			dump($query);
-// 			ORDER BY `severity` DESC, `tick_scope` ASC, `unit_name` ASC ";																// 5/25/09, 1/16/08
+			{$where} AND (`clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00') $hide_sql 
+			GROUP BY `$GLOBALS[mysql_prefix]assigns`.`id`
+ 			ORDER BY {$order_by }";		//	4/24/12
+// 			ORDER BY `severity` DESC, `tick_scope` ASC, `unit_name` ASC ";		// 5/25/09, 1/16/08, 4/24/12
 
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 
 		$lines = mysql_affected_rows();
+		
+		if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
+			$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+			} else {
+			$curr_viewed = $al_groups;
+			}
+
+		$curr_names="";	//	6/10/11
+		$z=0;	//	6/10/11
+		foreach($curr_viewed as $grp_id) {	//	6/10/11
+			$counter = (count($curr_viewed) > ($z+1)) ? ", " : "";
+			$curr_names .= get_groupname($grp_id);
+			$curr_names .= $counter;
+			$z++;
+			}
+			
+		$regs_string = "<SPAN style='padding: 2px; color: #000000; background: #00FFFF; font-weight: bold; font-size: 12px;'>Showing " . get_text("Regions") . ":&nbsp;&nbsp;" . $curr_names . "</SPAN>";	//	6/10/11
+		
 		print "\n<SCRIPT>\n\tvar lines = {$lines};\n</SCRIPT>\n";		// hand to JS - 5/23/09
 		if ($lines == 0) {												// empty?
 			
 			print "<TABLE BORDER=0 ALIGN='left' WIDTH = '90%' cellspacing = 1 CELLPADDING = 1  ID='call_board' STYLE='display:block'>";
-			print "<TR CLASS='even'><TD  ALIGN = 'center' WIDTH='80%'><B>Call Board</B>&nbsp;&nbsp;&nbsp;&nbsp;<FONT SIZE='-3'><I> (mouseover/click for details)</I></FONT></TD><TD WIDTH=150px></TD></TR>\n";
+			print "<TR CLASS='even'><TD ALIGN = 'center' WIDTH='80%'><B>Call Board</B>&nbsp;&nbsp;" . $regs_string . "<FONT SIZE='-3'><I> (mouseover/click for details)</I></FONT></TD><TD WIDTH=150px></TD></TR>\n";	//	6/10/11
 			print "<TR><TH ><BR /><BR /><BR />No Current Dispatches<BR /></TH><TH></TH></TR>\n";
 			print "</TABLE>";
 			}
@@ -1317,7 +1461,7 @@ setTimeout('do_post()', 1000);
 			$i = 1;	
 	
 			print "<TABLE BORDER=0 ALIGN='left' WIDTH='88%'  cellspacing = 1 CELLPADDING = 1 ID='call_board' STYLE='display:block'>\n";	// 5/24/09
- 			print "<TR CLASS='even'><TD COLSPAN=18 ALIGN = 'center'><B> Call Board</B><FONT SIZE='-3'><I> &nbsp;&nbsp;&nbsp;&nbsp;(mouseover/click for details)</I></FONT></TD><TD WIDTH=150px></TD></TR>\n";	// 5/24/09
+ 			print "<TR CLASS='even'><TD COLSPAN=18 ALIGN = 'center'><B>Call Board</B><FONT SIZE='-3'>&nbsp;&nbsp;&nbsp;&nbsp;" . $regs_string . "&nbsp;&nbsp;&nbsp;&nbsp;<I>(mouseover/click for details)</I></FONT></TD><TD WIDTH=150px></TD></TR>\n";	// 5/24/09
 			 
 			$doUnit = (($guest)||($user))? "viewU" : "editU";		// 5/11/10
 			$doTick = ($guest)? "viewT" : "editT";				// 06/26/08
@@ -1329,7 +1473,7 @@ setTimeout('do_post()', 1000);
 			
 			$header .= "<TD COLSPAN=4 ALIGN='center' CLASS='emphb' WIDTH='{$TBL_INC_PERC}%' onClick = 'document.can_Form.submit();' TITLE = 'Click to sort by Incident'><U>Incident</U></TD>";		// 9/27/08
 			$header .= "<TD>&nbsp;</TD>";
-			$header .= "<TD COLSPAN=9 ALIGN='center' CLASS='emphb 'WIDTH='{$TBL_UNIT_PERC}%' onClick = 'document.sort_Form.submit();'  TITLE = 'Click to sort by Unit'><U>Unit</U></TD>";			// 3/27/09
+			$header .= "<TD COLSPAN=9 ALIGN='center' CLASS='emphb 'WIDTH='{$TBL_UNIT_PERC}%' onClick = 'document.sort_Form.submit();'  TITLE = 'Click to sort by Unit'><U>" . get_text("Units") . "</U></TD>";			// 3/27/09
 			$header .= "<TD>&nbsp;</TD>";
 			$header .= "<TD COLSPAN=4 ALIGN='center' CLASS='emphb' WIDTH='{$TBL_CALL_PERC}%'>Dispatch</TD>";
 			$header .= "</TR>\n";
@@ -1360,13 +1504,31 @@ setTimeout('do_post()', 1000);
 
 			$unit_ids = array();
 			while($row = stripslashes_deep(mysql_fetch_assoc($result))) {		// major while () - 3/25/09
+//	============================= Regions stuff
+				$query_un = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 2 AND `resource_id` = '$row[unit_id]' ORDER BY `id` ASC;";	// 6/10/11
+				$result_un = mysql_query($query_un);	// 6/10/11
+				$un_groups = array();
+				while ($row_un = stripslashes_deep(mysql_fetch_assoc($result_un))) 	{	// 6/10/11
+					$un_groups[] = $row_un['group'];
+					}
+	
 //				dump($row);
+
+				$inviewed = 0;	//	6/10/11
+				foreach($un_groups as $un_val) {
+					if(in_array($un_val, $al_groups)) {
+						$inviewed++;
+						}
+					}
+					
+//	============================= end of Regions stuff					
 			
 					if ($i == 1) {print $header;}
 					$theClass = ($row['severity']=='')? "":$priorities[$row['severity']];
 					print "<TR CLASS='" . $evenodd[($i+1)%2] . "'>\n";
 					print "<FORM NAME='F$i' METHOD='get' ACTION='' $dis >\n";
 
+				if ($inviewed > 0) {	//	Tests to see whether assigned unit is in one of the users groups 6/10/11
 // 	 INCIDENTS	4 cols + sep	- 9/12/09, 12/9/10
 					$in_strike = 	((!(empty($row['scope']))) && ($row['tick_status']== $GLOBALS['STATUS_CLOSED']))? "<STRIKE>": "";					// 11/7/08
 					$in_strikend = 	((!(empty($row['scope']))) && ($row['tick_status']== $GLOBALS['STATUS_CLOSED']))? "</STRIKE>": "";
@@ -1410,8 +1572,6 @@ setTimeout('do_post()', 1000);
 						$the_bg_color = empty($row_type)?	"transparent" : $GLOBALS['UNIT_TYPES_BG'][$row_type['icon']];		// 3/15/10
 						$the_text_color = empty($row_type)? "black" :		$GLOBALS['UNIT_TYPES_TEXT'][$row_type['icon']];		// 
 						unset ($row_type);
-																																// 4/28/11
-//						$unit_name = empty($row['unit_id']) ? "[#{$row['unit_id']}]" : addslashes($row['unit_name']) ;			// id only if absent
 						$unit_name = empty($row['unit_id']) ? "[#{$row['unit_id']}]" : ($row['unit_name']) ;			// id only if absent
 						$short_name = cb_shorten($row['handle'], $COLS_UNIT);
 						print "\t<TD CLASS='$theClass' onClick = {$doUnit}('{$row['unit_id']}') 
@@ -1547,7 +1707,7 @@ setTimeout('do_post()', 1000);
 					print "\t<TD onmouseover=\"Tip('{$comment}')\" onmouseout=\"UnTip()\" CLASS='$theClass' onClick = 'editA(" . $row['assign_id'] . ")'; >" . $strike .  cb_shorten ($comment, $COLS_COMMENTS) . $strikend . "</TD>\n";	// comment
 
 					
-					print "\t<TD TITLE = 'Click to RESET D R O FE FA C times' CLASS='mylink' ALIGN='center'>
+					print "\t<TD TITLE = 'Click to RESET R O FE FA C times' CLASS='mylink' ALIGN='center'>
 						<INPUT TYPE='radio' NAME = 'res_times' {$dis} onClick = \"do_assgn_reset({$row['assign_id']}, this.form)\" /></TD>\n";
 
 					print "\t<INPUT TYPE='hidden' NAME='frm_the_unit' VALUE='" . addslashes($row['unit_name']) . "'>\n";  
@@ -1557,6 +1717,7 @@ setTimeout('do_post()', 1000);
 					print "\t<INPUT TYPE='hidden' NAME='frm_assign_id' VALUE='" . $row['assign_id'] . "'>\n";		// 1/12/09 
 //					print "\t<INPUT TYPE='hidden' NAME='frm_mailed' VALUE='" . $row['mailed'] . "'>\n";				// 3/25/09
 					print "</FORM>\n</TR>\n";
+				} // end if $inviewed	6/10/11
 					$i++;			 
 				}		// end while($row ...)
 				$lines = $i;
@@ -1667,6 +1828,8 @@ setTimeout('do_post()', 1000);
 		<BODY><CENTER>		<!-- <?php echo __LINE__; ?> -->
 <?php	
 														// if (!empty($row['clear'])) ??????
+			extract($_POST);
+
 			$query = "SELECT *,UNIX_TIMESTAMP(as_of) AS as_of, 
 			UNIX_TIMESTAMP(`dispatched`) AS `dispatched`, 
 			UNIX_TIMESTAMP(`responding`) AS `responding`, 
@@ -1680,7 +1843,8 @@ setTimeout('do_post()', 1000);
 			`u`.`user` AS `theuser`,
 			`t`.`scope` AS `theticket`,
 			`s`.`status_val` AS `thestatus`, 
-			`r`.`name` AS `theunit` 
+			`r`.`name` AS `theunit`,
+			`r`.`id` AS `resp_id`
 			FROM `$GLOBALS[mysql_prefix]assigns` 
 			LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` 	ON (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`)
 			LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON (`$GLOBALS[mysql_prefix]assigns`.`status_id` = `s`.`id`)
@@ -1701,10 +1865,10 @@ setTimeout('do_post()', 1000);
 <?php
 			print $asgn_row['scope'] . "</TD></TR>\n";		
 	
-			if (!$asgn_row['responder_id']=="0"){
+			if (!$asgn_row['resp_id']=="0"){
 //				$unit_name = $asgn_row['name'];
 				$unit_name = $asgn_row['handle'];						// 4/28/11
-				$unit_link = " onClick = \"viewU('" . $asgn_row['responder_id'] . "')\";";
+				$unit_link = " onClick = \"viewU('" . $asgn_row['resp_id'] . "')\";";
 				$highlight = " &raquo;";
 				}
 			else {
@@ -1715,13 +1879,13 @@ setTimeout('do_post()', 1000);
 			print "<TR CLASS='even' VALIGN='baseline'><TD CLASS='td_label' ALIGN='right'>As of:</TD><TD>" . format_date($asgn_row['as_of']) .
 				"&nbsp;&nbsp;&nbsp;&nbsp;By " . $asgn_row['user'] . "</TD></TR>\n";		
 			print "<TR CLASS='odd' VALIGN='baseline' " . $unit_link . ">";
-			print "<TD CLASS='td_label' ALIGN='right'> " . $highlight . "<U>Unit</U>:</TD><TD>" . $unit_name ."</TD></TR>\n";
+			print "<TD CLASS='td_label' ALIGN='right'> " . $highlight . "<U>" . get_text("Units") . "</U>:</TD><TD>" . $unit_name ."</TD></TR>\n";
 	
 			print "<TR CLASS='even' VALIGN='baseline'>\n";
-			print "<TD CLASS='td_label' ALIGN='right'>&nbsp;&nbsp;Unit Status:</TD><TD>";
-			if ($asgn_row['responder_id']!="0"){
+			print "<TD CLASS='td_label' ALIGN='right'>&nbsp;&nbsp;" . get_text("Units") . " Status:</TD><TD>";
+			if ($asgn_row['resp_id']!="0"){
 				print $asgn_row['status_val'];
-				}		// end if (!$asgn_row['responder_id']=="0")
+				}		// end if (!$asgn_row['resp_id']=="0")
 			else {
 				print "NA";
 				}
@@ -1764,13 +1928,15 @@ setTimeout('do_post()', 1000);
 				<INPUT TYPE="BUTTON" VALUE="Cancel"  onClick="history.back();"  CLASS = 'btn' />&nbsp;&nbsp;&nbsp;&nbsp;	
 <?php
 			if(!($guest)){
-				print "<INPUT TYPE='BUTTON' VALUE='Edit' onClick='document.nav_form.func.value=\"edit\";document.nav_form.submit();'  CLASS = 'btn'>\n";
+				print "<INPUT TYPE='BUTTON' VALUE='Edit' onClick='document.nav_form.func.value=\"edit\";document.nav_form.frm_id.value= $frm_id;document.nav_form.submit();'  CLASS = 'btn'>\n";
 				}
 ?>			
 				</TD></TR>
 			 </tbody></table>
 			<INPUT TYPE='hidden' NAME='func' value= ''>
 			<INPUT TYPE='hidden' NAME='lines' value='<?php print $lines; ?>'>
+			<INPUT TYPE='hidden' NAME='resp_id' value='<?php print $asgn_row['resp_id']; ?>'>
+			<INPUT TYPE='hidden' NAME='frm_id' value= '<?php print $frm_id; ?>'/>			
 			</FORM>
 <?php	
 			break;			// end case 'view' == } ==
@@ -1794,10 +1960,10 @@ setTimeout('do_post()', 1000);
 		function validate_ed(theForm) {
 			var errmsg="";
 			if (theForm.frm_unit_id) {						// defined?
-				if (theForm.frm_unit_id.value == 0)			{errmsg+= "\tSelect Unit\n";}
+				if (theForm.frm_unit_id.value == 0)			{errmsg+= "\tSelect <?php print get_text("Units");?>\n";}
 				}
 			if (theForm.frm_unit_status_id) {
-				if (theForm.frm_unit_status_id.value == 0)	{errmsg+= "\tSelect Unit Status\n";}
+				if (theForm.frm_unit_status_id.value == 0)	{errmsg+= "\tSelect <?php print get_text("Units");?> Status\n";}
 				}
 			if (theForm.frm_comments.value == "")			{errmsg+= "\tComments required\n";}
 	
@@ -1844,9 +2010,9 @@ setTimeout('do_post()', 1000);
 				</LEFT>
 			</DIV>
 		
-<?php	
+<?php
 			$query = "SELECT *,UNIX_TIMESTAMP(as_of) AS as_of, `$GLOBALS[mysql_prefix]assigns`.`id` AS `assign_id` , `$GLOBALS[mysql_prefix]assigns`.`comments` AS `assign_comments`,`u`.`user` AS `theuser`, `t`.`scope` AS `theticket`,
-				`s`.`status_val` AS `thestatus`, `r`.`name` AS `theunit` FROM `$GLOBALS[mysql_prefix]assigns` 
+				`s`.`status_val` AS `thestatus`, `r`.`name` AS `theunit`, `r`.`id` AS `resp_id` FROM `$GLOBALS[mysql_prefix]assigns`
 				LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` 	ON (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`)
 				LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON (`$GLOBALS[mysql_prefix]assigns`.`status_id` = `s`.`id`)
 				LEFT JOIN `$GLOBALS[mysql_prefix]user` `u` 		ON (`$GLOBALS[mysql_prefix]assigns`.`user_id` = `u`.`id`)
@@ -1879,9 +2045,9 @@ setTimeout('do_post()', 1000);
 	
 				</TD></TR>
 			<TR CLASS="odd" VALIGN="baseline">
-				<TD CLASS="td_label" ALIGN="right">Unit:</TD>
+				<TD CLASS="td_label" ALIGN="right"><?php print get_text("Units");?>:</TD>
 <?php
-				if ($asgn_row['responder_id']==0) {
+				if ($asgn_row['resp_id']==0) {
 ?>			
 					<TD><SELECT name="frm_unit_id" onChange = "document.edit_Form.frm_log_it.value='1'" >
 						<OPTION value= '0' selected>Select</OPTION>
@@ -1901,7 +2067,7 @@ setTimeout('do_post()', 1000);
 					$do_unit = TRUE;
 					}
 ?>			
-				<TD CLASS="td_label">Unit Status:</TD><TD>
+				<TD CLASS="td_label"><?php print get_text("Units");?> Status:</TD><TD>
 				<SELECT name="frm_unit_status_id"  onChange = "Javascript: unit_st=false; document.edit_Form.frm_log_it.value='1'" <?php print $disabled;?> > 
 <?php																// UNIT STATUS
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]un_status` ORDER BY `group` ASC, `sort` ASC, `status_val` ASC";	
@@ -1997,8 +2163,8 @@ setTimeout('do_post()', 1000);
 				}
 			$chekd = (is_date($asgn_row['on_scene']))? " CHECKED ": "";
 			$the_date = (is_date($asgn_row['on_scene']))? $asgn_row['on_scene']	: $now ;
-			print "\n<TR CLASS='even'><TD CLASS='td_label' ALIGN='right'>On scene:</TD>";		// 12/17/11
-			print "<TD COLSPAN=3><INPUT NAME='frm_os' TYPE='radio' onClick =  \"enable('on_scene')\" $chekd><SPAN ID = 'on_scene' STYLE = 'visibility:" . $the_vis ."'>";
+			print "\n<TR CLASS='even'><TD CLASS='td_label' ALIGN='right'>On scene:</TD>";
+			print "<TD COLSPAN=3><INPUT NAME='frm_ob' TYPE='radio' onClick =  \"enable('on_scene')\" $chekd><SPAN ID = 'on_scene' STYLE = 'visibility:" . $the_vis ."'>";
 			generate_date_dropdown("on_scene",totime($the_date), $the_dis);
 			print "</SPAN></TD></TR>\n";
 
@@ -2095,7 +2261,7 @@ setTimeout('do_post()', 1000);
 			<INPUT TYPE='hidden' NAME='frm_id' value= '<?php print $frm_id; ?>'/>
 <?php
 			if ($do_unit) {
-				print "\t\t<INPUT TYPE='hidden' NAME='frm_unit_id' value= '" .  $asgn_row['responder_id'] . "'/>\n";
+				print "\t\t<INPUT TYPE='hidden' NAME='frm_unit_id' value= '" .  $asgn_row['resp_id'] . "'/>\n";
 				}
 ?>		
 			<INPUT TYPE='hidden' NAME='frm_ticket_id' value= '<?php print $asgn_row['ticket_id'];?>'/>
@@ -2128,7 +2294,7 @@ setTimeout('do_post()', 1000);
 	
 			if (!(empty($frm_complete))) 	{			// is run completed?  6/4/08	// 6/26/08		
 				do_log($GLOBALS['LOG_UNIT_COMPLETE'], $frm_ticket_id, $frm_unit_id);		// set clear times
-				$query = "UPDATE `$GLOBALS[mysql_prefix]assigns` SET `as_of`= " . quote_smart($now) . ", `clear`= " . quote_smart($now) . " WHERE `id` = " .$_POST['frm_id'] . " LIMIT 1";
+				$query = "UPDATE `$GLOBALS[mysql_prefix]assigns` SET `as_of`= " . quote_smart($now) . ", `clear`= " . quote_smart($now) . " WHERE `id` = " . quote_smart($_POST[frm_id]) . " LIMIT 1";
 				$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 				}
 			
@@ -2157,9 +2323,10 @@ setTimeout('do_post()', 1000);
 						 `end_miles`= " . quote_smart($_POST['frm_miles_end']) ;	//10/6/09
 
 			$query .= $date_part;
-			$query .=  " WHERE `id` = " .$_POST['frm_id'] . " LIMIT 1";
+			$query .=  " WHERE `id` = " . quote_smart($_POST['frm_id']) . " LIMIT 1";		// 5/26/11
 
 			$result	= mysql_query($query) or do_error($query,'',mysql_error(), basename( __FILE__), __LINE__);
+//			dump($query);
 	
 			$message = "Update Applied";
 ?>
@@ -2176,7 +2343,7 @@ setTimeout('do_post()', 1000);
 			
 	case 'delete_db':		// =====  {  =====================  6/4/08	
 		
-			$query  = "DELETE FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` = " .$_POST['frm_id'] . " LIMIT 1";	
+			$query  = "DELETE FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` = " . quote_smart($_POST['frm_id']) . " LIMIT 1";	
 			$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 	
 			$message = "Assign record deleted";
@@ -2373,7 +2540,7 @@ setTimeout('do_post()', 1000);
 			$header .= "<TD>&nbsp;</TD>";
 			
 			$header .= ($facilities)? "<TD COLSPAN=2 ALIGN = 'center' CLASS='emph'>Facility</TD><TD>&nbsp;</TD>" : "";
-			$header .= "<TD COLSPAN=1 ALIGN='center' CLASS='emph'>Unit</TD>";			// 3/27/09
+			$header .= "<TD COLSPAN=1 ALIGN='center' CLASS='emph'>" . get_text("Units") . "</TD>";			// 3/27/09
 			$header .= "<TD>&nbsp;</TD>";
 
 			$header .= "<TD COLSPAN=99 ALIGN='center' CLASS='emph' >Dispatch</TD>";

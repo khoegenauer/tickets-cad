@@ -33,6 +33,7 @@ $iw_width= "300px";					// map infowindow with
 7/1/11 permissions corrected
 8/1/11 state length increased to 4 chars
 6/10/11 Added Groups and Boundaries
+6/18/12 'points' boolean to 'got_points'
 */
 
 @session_start();	
@@ -88,13 +89,6 @@ function get_icon_legend (){			// returns legend string
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
 	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">			<!-- 3/15/11 -->
-	<STYLE>
-		.disp_stat	{ FONT-WEIGHT: bold; FONT-SIZE: 9px; COLOR: #FFFFFF; BACKGROUND-COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;}
-		.box { background-color: #DEE3E7; border: 2px outset #606060; color: #000000; padding: 0px; position: absolute; z-index:1000; width: 180px; }
-		.bar { background-color: #FFFFFF; border-bottom: 2px solid #000000; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
-		.bar_header { height: 20px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}	
-		.content { padding: 1em; }
-	</STYLE>	
 	<SCRIPT  SRC="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo get_variable('gmaps_api_key'); ?>"></SCRIPT>
 	<SCRIPT  SRC="./js/usng.js" TYPE="text/javascript"></SCRIPT>
 	<SCRIPT  SRC="./js/lat_lng.js" TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->
@@ -118,6 +112,20 @@ function get_icon_legend (){			// returns legend string
 	parent.upper.light_butt('facy');		// light the button - 8/25/10
 
 	var lat_lng_frmt = <?php print get_variable('lat_lng'); ?>;
+
+	function set_regions_control() {
+		var reg_control = "<?php print get_variable('regions_control');?>";
+		var regions_showing = "<?php print get_num_groups();?>";
+		if(regions_showing) {
+			if (reg_control == 0) {
+				$('top_reg_box').style.display = 'none';
+				$('regions_outer').style.display = 'block';
+				} else {
+				$('top_reg_box').style.display = 'block';
+				$('regions_outer').style.display = 'none';			
+				}
+			}
+		}
 
 	function $() {
 		var elements = new Array();
@@ -652,7 +660,7 @@ function get_icon_legend (){			// returns legend string
 			 	if ((intval($filled) == 1) && (count($points) > 2)) {?>
 						var polyline = new GPolygon(points,add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>);
 <?php			} else {?>
-				        var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>);
+				        var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,0 ,0);
 <?php			} ?>				        
 						map.addOverlay(polyline);
 <?php				
@@ -692,12 +700,24 @@ function get_icon_legend (){			// returns legend string
 		do_landb();				// 7/3/11 - show lines
 		}
 	catch (e) {	}
-*/				
-	</SCRIPT>
+*/	
 
+	function do_hover (the_id) {
+		CngClass(the_id, 'hover');
+		return true;
+		}
 
+	function do_plain (the_id) {				// 8/21/10
+		CngClass(the_id, 'plain');
+		return true;
+		}
+
+	function CngClass(obj, the_class){
+		$(obj).className=the_class;
+		return true;
+		}		
+</SCRIPT>
 <?php
-
 function list_facilities($addon = '', $start) {
 //	global {$_SESSION['fip']}, $fmp, {$_SESSION['editfile']}, {$_SESSION['addfile']}, {$_SESSION['unitsfile']}, {$_SESSION['facilitiesfile']}, {$_SESSION['routesfile']}, {$_SESSION['facroutesfile']};
 	global $iw_width, $u_types, $tolerance;
@@ -800,7 +820,10 @@ var color=0;
 		var url = "persist2.php";
 		sendRequest (url, gb_handleResult, params);					
 		} 	
-	
+		
+	function gb_handleResult(req) {							// 12/03/10	The persist callback function
+		}
+
 	function hideGroup(color) {
 		for (var i = 0; i < gmarkers.length; i++) {
 			if (gmarkers[i]) {
@@ -905,7 +928,7 @@ var color=0;
 		}
 
 	function createMarker(point, tabs, color, id, fac_id) {						// (point, myinfoTabs,<?php print $row['type'];?>, i)
-		points = true;													// at least one
+		got_points = true;													// at least one - 6/18/12
 //		var letter = to_str(id);
 		var fac_id = fac_id;	
 		
@@ -918,7 +941,10 @@ var color=0;
 		marker.id = color;				// for hide/unhide - unused
 
 		GEvent.addListener(marker, "click", function() {		// here for both side bar and icon click
+			alert(943);
 			if (marker) {
+				alert(945);
+			
 				map.closeInfoWindow();
 				which = id;
 				gmarkers[which].hide();
@@ -937,6 +963,9 @@ var color=0;
 					},4000);				// end setTimeout(...)
 
 				}		// end if (marker)
+			else {
+				alert(966);
+				}
 			});			// end GEvent.add Listener()
 
 		gmarkers[id] = marker;									// marker to array for side_bar click function
@@ -948,7 +977,7 @@ var color=0;
 		}				// end function create Marker()
 
 	function createdummyMarker(point, tabs, color, id, fac_id) {						// 7/28/10
-		points = true;													// at least one
+		got_points = true;																	// at least one - 6/18/12
 //		var letter = to_str(id);
 		var fac_id = fac_id;	
 		
@@ -1081,7 +1110,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 	var infoTabs = [];
 	var which;
 	var i = <?php print $start; ?>;					// sidebar/icon index
-	var points = false;								// none
+	var got_points = false;								// none - 6/18/12
 
 	map = new GMap2($("map"));						// create the map
 <?php
@@ -1203,18 +1232,36 @@ $maptype = get_variable('maptype');
 			?>
 
 <?php
-			if (intval($filled) == 1) {		//	6/10/11
+			switch ($row_bn['line_type']) {
+				case "p":		// poly
+					if (intval($filled) == 1) {		//	6/10/11
 ?>
-				var polyline = new GPolygon(points, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, "<?php print $fill_color;?>", <?php print $fill_opacity;?>, {clickable:false});
-				boundary.push(polyline);
-				bound_names.push("<?php print $bn_name;?>"); 			
-				<?php	
-				} else {
+						var polyline = new GPolygon(points, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, "<?php print $fill_color;?>", <?php print $fill_opacity;?>, {clickable:false});
+						boundary.push(polyline);
+						bound_names.push("<?php print $bn_name;?>"); 			
+						<?php	
+						} else {
 ?>
-				var polyline = new GPolyline(points, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, , 0, {clickable:false});
-				boundary.push(polyline);
-				bound_names.push("<?php print $bn_name;?>"); 			
+						var polyline = new GPolyline(points, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>,0 , 0, {clickable:false});
+						boundary.push(polyline);
+						bound_names.push("<?php print $bn_name;?>"); 			
 <?php		
+						}
+?>	
+					map.addOverlay(polyline);
+<?php
+				break;
+				
+				case "c":
+					$temp = explode (";", $line_data);
+					$radius = $temp[1];
+					$coords = explode (",", $temp[0]);
+					$lat = $coords[0];
+					$lng = $coords[1];
+					$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
+					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_opacity}, {$line_width}, add_hash('{$fill_color}'), {$fill_opacity}); // 513\n";
+
+				break;				
 				}
 ?>
 				map.addOverlay(polyline);
@@ -1317,33 +1364,52 @@ $maptype = get_variable('maptype');
 		$query_bn = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id`='$boundary' AND `use_with_f`=1";
 		$result_bn = mysql_query($query_bn)or do_error($query_bn, mysql_error(), basename(__FILE__), __LINE__);
 		while($row_bn = stripslashes_deep(mysql_fetch_assoc($result_bn))) {
-			extract ($row_bn);
-			$bn_name = $row_bn['line_name'];
-			$points = explode (";", $line_data);
-			for ($i = 0; $i < count($points); $i++) {
-				$coords = explode (",", $points[$i]);
+			$the_type = $row_bn['line_type'];
+			switch ($the_type) {
+		
+			case "p":
+				extract ($row_bn);
+				$bn_name = $row_bn['line_name'];
+				$points = explode (";", $line_data);
+				for ($i = 0; $i < count($points); $i++) {
+					$coords = explode (",", $points[$i]);
 ?>
-				thepoint = new GLatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
-				points.push(thepoint);
+					thepoint = new GLatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
+					points.push(thepoint);
 <?php
-				}			// end for ($i = 0 ... )
-		if (intval($filled) == 1) {		//	6/10/11
+					}			// end for ($i = 0 ... )
+				if (intval($filled) == 1) {		//	6/10/11
 ?>
-				var polyline = new GPolygon(points, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, "<?php print $fill_color;?>", <?php print $fill_opacity;?>, {clickable:false});
-				boundary.push(polyline);
-				bound_names.push("<?php print $bn_name;?>"); 			
+					var polyline = new GPolygon(points, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, "<?php print $fill_color;?>", <?php print $fill_opacity;?>, {clickable:false});
+					boundary.push(polyline);
+					bound_names.push("<?php print $bn_name;?>"); 			
 <?php	
-				} else {
+					} else {
 ?>
-				var polyline = new GPolyline(points, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, , 0, {clickable:false});
-				boundary.push(polyline);
-				bound_names.push("<?php print $bn_name;?>"); 			
+					var polyline = new GPolyline(points, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>,0 , 0, {clickable:false});
+					boundary.push(polyline);
+					bound_names.push("<?php print $bn_name;?>"); 			
 <?php		
-				}
+					}
 ?>
-				map.addOverlay(polyline);
+					map.addOverlay(polyline);
 <?php
-			}	//	End while
+			break;
+		
+			case "c":
+				extract ($row_bn);
+				$temp = explode (";", $line_data);
+				$radius = $temp[1];
+				$coords = explode (",", $temp[0]);
+				$lat = $coords[0];
+				$lng = $coords[1];
+				$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
+				echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_opacity}, {$line_width}, add_hash('{$fill_color}'), {$fill_opacity}); // 513\n";
+
+			break;
+		
+			}	// end switch
+		}	//	End while
 //-------------------------END OF FACILITY BOUNDARIES STUFF-------------------------			
 	$fac_gps = get_allocates(3, $row['id']);	//	6/10/11
 		$grp_names = "Groups Assigned: ";	//	6/10/11
@@ -1482,7 +1548,7 @@ $maptype = get_variable('maptype');
 
 ?>
 	if (!(map_is_fixed)) {
-		if (!points) {		// any?
+		if (!got_points) {		// any? - 6/18/12
 			map.setCenter(new GLatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
 			}
 		else {
@@ -1758,7 +1824,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 	}		// end function map()
 
 	function finished ($caption) {
-		print "</HEAD><BODY>";
+		print "</HEAD><BODY> <!-- 1820 -->\n";
 		require_once('./incs/links.inc.php');	// 10/6/09
 		print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:50px; height: 12px; width: 10px;' onclick = 'to_bottom()'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
 		print "<FORM NAME='fin_form' METHOD='get' ACTION='" . basename(__FILE__) . "'>";
@@ -1803,7 +1869,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			$the_lng = empty($_POST['frm_lng'])? "NULL" : quote_smart(trim($_POST['frm_lng'])) ;
 			
 			$curr_groups = $_POST['frm_exist_groups']; 	//	4/14/11
-			$groups = "," . implode(',', $_POST['frm_group']) . ","; 	//	4/14/11
+			$groups = isset($_POST['frm_group']) ? ", " . implode(',', $_POST['frm_group']) . "," : $_POST['frm_exist_groups'];	//	3/28/12 - fixes error when accessed from view ticket screen..	
 			$fac_id = $_POST['frm_id'];
 			$fac_stat = $_POST['frm_status_id'];
 			$by = $_SESSION['user_id'];			
@@ -1851,7 +1917,6 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 						}
 					}
 				foreach($ex_grps as $existing_grps) { 	//	4/14/11
-//					print $existing_grps;
 					if(!in_array($existing_grps, $_POST['frm_group'])) {
 						$query  = "DELETE FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type` = 3 AND `group` = $existing_grps AND `resource_id` = {$fac_id}";
 						$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);	
@@ -1926,7 +1991,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		print do_calls();		// call signs to JS array for validation
 ?>
 		</HEAD>
-		<BODY onLoad = "ck_frames();" onUnload="GUnload()">
+		<BODY onLoad = "ck_frames();" onUnload="GUnload()"> <!-- 1987 -->
 		<A NAME='top'>		<!-- 11/11/09 -->
 <?php
 		require_once('./incs/links.inc.php');
@@ -1946,7 +2011,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			</TD></TR>
 <?php
 	if(get_num_groups() > 1) {
-		if((is_super()) && (get_num_groups() > 1) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
+		if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>		
 			<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
 			<TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Sets Regions that Facility is allocated to - click + to expand, - to collapse"><?php print get_text("Region");?></A>: 
@@ -1958,7 +2023,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	6/10/11
 			print get_user_group_butts(($_SESSION['user_id']));	//	6/10/11		
 			
-			} elseif((is_admin()) && (get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
+			} elseif((is_admin()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
 ?>		
 			<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
 			<TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Sets Regions that Facility is allocated to - click + to expand, - to collapse"><?php print get_text("Region");?></A>: 
@@ -1972,7 +2037,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 ?>	
 			</TD></TR>
 <?php
-			} elseif((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
+			} elseif(COUNT(get_allocates(4, $_SESSION['user_id'])) > 1) {	//	6/10/11
 ?>
 			<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
 			<TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Sets Regions that Facility is allocated to - click + to expand, - to collapse"><?php print get_text("Region");?></A>: 
@@ -1986,6 +2051,9 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			</TD></TR>
 <?php
 			} else {
+?>
+			<INPUT TYPE="hidden" NAME="frm_group[]" VALUE="1">	 <!-- 6/10/11 -->
+<?php
 			}
 		} else {
 ?>
@@ -2119,7 +2187,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		map("a",get_variable('def_lat') , get_variable('def_lng'), FALSE) ;				// call GMap js ADD mode, no icon
 ?>
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
-		<!-- 1100 -->
+		<!-- 2183 -->
 		<A NAME="bottom" /> 
 		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>		
 		</BODY>
@@ -2150,7 +2218,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 //		print do_calls($id);								// generate JS calls array
 ?>
 		</HEAD>
-		<BODY onLoad = "ck_frames(); " onUnload="GUnload()">
+		<BODY onLoad = "ck_frames(); " onUnload="GUnload()"> <!-- 2214 -->
 		<A NAME='top'>		<!-- 11/11/09 -->
 <?php
 		require_once('./incs/links.inc.php');
@@ -2170,7 +2238,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			</TD></TR>
 <?php
 		if(get_num_groups() > 1) {
-			if((is_super()) && (get_num_groups() > 1) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
+			if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>			
 			<TR CLASS='even' VALIGN='top'>;
 			<TD CLASS='td_label'><?php print get_text('Region');?></A>:
@@ -2182,7 +2250,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			print get_sub_group_butts(($_SESSION['user_id']), 3, $id) ;	//	6/10/11	
 			print "</TD></TR>";		// 6/10/11
 			
-			} elseif((is_admin()) && (get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11	
+			} elseif((is_admin()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11	
 ?>
 			<TR CLASS='even' VALIGN='top'>;
 			<TD CLASS='td_label'><?php print get_text('Region');?></A>:
@@ -2197,10 +2265,11 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			} else {
 ?>
 			<TR CLASS='even' VALIGN='top'>;
-			<TD CLASS='td_label'><?php print get_text('Region');?></A>:
+			<TD CLASS='td_label'><?php print get_text('Regions');?></A>:
 			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
 			<TD>
+
 <?php
 			$alloc_groups = implode(',', get_allocates(3, $id));	//	6/10/11	
 			print get_sub_group_butts_readonly(($_SESSION['user_id']), 3, $id) ;	//	4/
@@ -2429,7 +2498,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		</SCRIPT>
 		</HEAD>
 <?php
-		print "\t<BODY onLoad = 'ck_frames()' onUnload='GUnload()'>\n";
+		print "\t<BODY onLoad = 'ck_frames()' onUnload='GUnload()'><!-- 2494 -->\n";
 		print "<A NAME='top'>\n";			// 11/11/09
 		require_once('./incs/links.inc.php');
 		print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:50px; height: 12px; width: 10px;' onclick = 'to_bottom()'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
@@ -2556,19 +2625,15 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			exit();
 			}		// end if ($_GET['view'])
 // ============================================= initial display =======================
-
-		$do_list_and_map = TRUE;
-
-		if($do_list_and_map) {
-			if (!isset($mapmode)) {$mapmode="a";}
-			print "<SPAN STYLE = 'margin-left:100px;'>{$caption}</SPAN>";
-			$caption = "";
+		if (!isset($mapmode)) {$mapmode="a";}
+		print "<SPAN STYLE = 'margin-left:100px;'>{$caption}</SPAN>";
 ?>
-		</HEAD><!-- 1387 -->
-		<BODY onLoad = "ck_frames()" onUnload="GUnload()">
+		</HEAD><!-- 2624 -->
+		<BODY onLoad = "ck_frames(); set_regions_control();" onUnload="GUnload()"> <!-- 2625 -->
 		<SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT><!-- 1/3/10 -->
 		<SCRIPT TYPE="text/javascript" src="./js/ELabel.js"></SCRIPT><!-- 8/1/11 -->		
 		<A NAME='top'>		<!-- 11/11/09 -->
+		<DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;z-index: 1;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0></DIV>
 <?php
 		require_once('./incs/links.inc.php');
 		$required = 250 + (mysql_affected_rows()*40);
@@ -2618,91 +2683,115 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		}
 		
 ?>
-			<DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0></DIV>
+			<DIV id='top_reg_box' style='display: none;'>
+				<DIV id='region_boxes' class='header_reverse' style='align: center; width: 100%; text-align: center; margin-left: auto; margin-right: auto; height: 30px; z-index: 1;'></DIV>
+			</DIV>
 			<DIV style='z-index: 1;'>		
-			<TABLE ID='outer' WIDTH='100%'>
-			<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'><?php print $heading; ?> </FONT></TD></TR>	<!-- 6/10/11 -->
-			<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><SPAN ID='region_flags' style='background: #00FFFF; font-weight: bold;'></SPAN></TD></TR>	<!-- 5/2/10, 3/15/11, 6/10/11 -->
-			<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR>				<!-- 6/10/11 -->
-			<TR><TD WIDTH = '50%'>
-			<TABLE ID = 'sidebar' BORDER = 0 WIDTH='98%'>
-				<TR class='even'>	<TD ALIGN='center'><B>Facilities (<DIV id="num_facilities" style="display: inline;"></DIV>)</B></TD></TR>
-				<TR class='odd'>	<TD ALIGN='center'>Click line or icon for details</TD></TR>			
-				<TR><TD>
-				<DIV ID='side_bar' style="max-height: <?php print $the_height; ?>px;  overflow-y: scroll; overflow-x: hidden;"></DIV></TD></TR>
-				<TR class='spacer'><TD class='spacer'>&nbsp;</TD></TR>
-				<TR><TD ALIGN='center'><DIV style='width: 100%;'><?php print get_facilities_legend();?></DIV></TD></TR>
-				<TR class='spacer'><TD class='spacer'>&nbsp;</TD></TR>
-				<TR><TD ALIGN='center' COLSPAN=99><DIV ID='buttons' style="width: 100%; align: center;"></DIV></TD></TR>
-			</TABLE>
-			</TD><TD WIDTH = '50%'>	
-			<TABLE ID = 'MAP' BORDER=0>
-			<TR class='even'><TD ALIGN='center'>	<!-- 3/15/11 -->
-			<DIV ID='map' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV></TD></TR>	<!-- 3/15/11 -->
-			<TR class='even'><TD ALIGN='center' class='td_label'>  <!-- 3/15/11 -->
-			<SPAN onClick='doGrid()'><u>Grid</U></SPAN>  <!-- 3/15/11 -->
-			<SPAN onClick='doTraffic()'STYLE = 'margin-left:80px;'><U>Traffic</U></SPAN></TD></TR>		<!-- 4/10/09, 3/15/11 -->
-			<TR><TD>&nbsp;</TD></TR><TR class = 'odd'><TD ALIGN='center' class='td_label'>  <!-- 3/15/11 -->
-			<SPAN CLASS="legend" STYLE="font-size: 14px; text-align: center; vertical-align: middle; width: <?php print get_variable('map_width');?>-25px;"><B>Facility Legend:</B></SPAN></TD></TR>  <!-- 3/15/11 -->
-			<TR class = 'even'><TD ALIGN='center'><DIV CLASS="legend" ALIGN='center' VALIGN='middle' style='padding: 20px; text-align: center; vertical-align: middle; width: <?php print get_variable('map_width');?>-25px;'>  <!-- 3/15/11 -->
+				<TABLE ID='outer' WIDTH='100%'>
+					<TR CLASS='spacer'>
+						<TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;
+						</TD>
+					</TR>
+					<TR CLASS='header'>
+						<TD COLSPAN='99' ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'><?php print $heading; ?> </FONT>
+						</TD>
+					</TR>	<!-- 6/10/11 -->
+					<TR CLASS='spacer'>
+						<TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;
+						</TD>
+					</TR>				<!-- 6/10/11 -->
+					<TR>
+						<TD WIDTH = '50%'>
+							<TABLE ID = 'sidebar' BORDER = 0 WIDTH='98%'>
+								<TR class='even'>
+									<TD ALIGN='center'><B>Facilities (<DIV id="num_facilities" style="display: inline;"></DIV>)</B>
+									</TD>
+								</TR>
+								<TR class='odd'>	
+									<TD ALIGN='center'>Click line or icon for details
+									</TD>
+								</TR>			
+								<TR>
+									<TD>
+										<DIV ID='side_bar' style="max-height: <?php print $the_height; ?>px;  overflow-y: scroll; overflow-x: hidden;"></DIV>
+									</TD>
+								</TR>
+								<TR class='spacer'>
+									<TD class='spacer'>&nbsp;
+									</TD>
+								</TR>
+								<TR>
+									<TD ALIGN='center'>
+										<DIV style='width: 100%;'><?php print get_facilities_legend();?></DIV>
+									</TD>
+								</TR>
+								<TR class='spacer'>
+									<TD class='spacer'>&nbsp;
+									</TD>
+								</TR>
+								<TR>
+									<TD ALIGN='center' COLSPAN=99>
+										<DIV ID='buttons' style="width: 100%; align: center;"></DIV>
+									</TD>
+								</TR>
+							</TABLE>
+						</TD>
+						<TD WIDTH = '50%'>	
+							<TABLE ID = 'MAP' BORDER=0>
+								<TR class='even'>
+									<TD ALIGN='center'>	<!-- 3/15/11 -->
+										<DIV ID='map' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
+									</TD>
+								</TR>	<!-- 3/15/11 -->
+								<TR class='even'>
+									<TD ALIGN='center' class='td_label'>  <!-- 3/15/11 -->
+										<SPAN onClick='doGrid()'><u>Grid</U></SPAN>  <!-- 3/15/11 -->
+										<SPAN onClick='doTraffic()'STYLE = 'margin-left:80px;'><U>Traffic</U></SPAN>
+									</TD>
+								</TR>		<!-- 4/10/09, 3/15/11 -->
+								<TR>
+									<TD>&nbsp;</TD>
+								</TR>
+								<TR class = 'odd'>
+									<TD ALIGN='center' class='td_label'>  <!-- 3/15/11 -->
+										<SPAN CLASS="legend" STYLE="font-size: 14px; text-align: center; vertical-align: middle; width: <?php print get_variable('map_width');?>-25px;"><B>Facility Legend:</B></SPAN>
+									</TD>
+								</TR>  <!-- 3/15/11 -->
+								<TR class = 'even'>
+									<TD ALIGN='center'>
+										<DIV CLASS="legend" ALIGN='center' VALIGN='middle' style='padding: 20px; text-align: center; vertical-align: middle; width: <?php print get_variable('map_width');?>-25px;'>  <!-- 3/15/11 -->
+	<?php
+											print get_icon_legend ();
+											$from_right = 20;	//	5/3/11
+											$from_top = 10;		//	5/3/11	
+	?>
+										</DIV>
+									</TD>
+								</TR>
+							</TABLE>
+						</TD>
+					</TR>
+				</TABLE>
+			</DIV>	<!-- end of outer -->
 <?php
-		print get_icon_legend ();
-		$from_right = 20;	//	5/3/11
-		$from_top = 10;		//	5/3/11	
+		if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
+			$regs_col_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "s")) ? "" : "none";	//	6/10/11
+			$regs_exp_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "h")) ? "" : "none";	//	6/10/11	
 ?>
-			</DIV></TD></TR></TABLE></TD></TR></TABLE></DIV>	<!-- end of outer -->
-<?php
-	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
-		$regs_col_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "s")) ? "" : "none";	//	6/10/11
-		$regs_exp_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "h")) ? "" : "none";	//	6/10/11	
-?>			
-			<DIV id = 'outer' style = "position:fixed; right:<?php print $from_right;?>%; top:<?php print $from_top;?>%; z-index: 1000; ">		<!-- 5/3/11 -->
-			<DIV id="boxB" class="box" style="z-index:1000;">
-			<div class="bar_header" class="heading_2" STYLE="z-index: 1000;">Viewed Regions
-			<SPAN id="collapse_regs" style = "display: <?php print $regs_col_butt;?>; z-index:1001; cursor: pointer;" onclick="hideDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/collapse.png" ALIGN="right"></SPAN>
-			<SPAN id="expand_regs" style = "display: <?php print $regs_exp_butt;?>; z-index:1001; cursor: pointer;" onclick="showDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/expand.png" ALIGN="right"></SPAN></div>
-				<DIV class="bar" STYLE="color:red; z-index: 1000;"
-					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
-			  <DIV id="region_boxes" class="content" style="z-index: 1000;"></DIV>
+			<DIV id = 'regions_outer' style = "position: fixed; right: 20%; top: 10%; z-index: 1000;">
+				<DIV id="boxB" class="box" style="z-index:1000;">
+					<div class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;">Viewed Regions
+					<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+					<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
+						onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
+					<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV>
+					</DIV>
+				</DIV>
 			</DIV>
-			</DIV>
-<?php
-}
-		function get_buttons($user_id) {		//	5/3/11
-			if(isset($_SESSION['viewed_groups'])) {
-				$regs_viewed= explode(",",$_SESSION['viewed_groups']);
-				}
-			
-			$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id' ORDER BY `group`";			//	5/3/11
-			$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-
-			$al_buttons="";	
-			while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	//	5/3/11
-				if(!empty($regs_viewed)) {
-					if(in_array($row2['group'], $regs_viewed)) {
-						$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-					} else {
-						$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-					}
-					} else {
-						$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-					}
-				}
-			return $al_buttons;
-			}
-		
-			if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
-?>
-			<SCRIPT>
-				side_bar_html= "";
-				side_bar_html+="<TABLE><TR class='even'><TD CLASS='td_label'><form name='region_form' METHOD='post' action='<?php print basename(__FILE__);?>'><DIV>";
-				side_bar_html += "<?php print get_buttons($_SESSION['user_id']);?>";
-				side_bar_html+="</DIV></form></TD></TR><TR><TD COLSPAN=99>&nbsp;</TD></TR><TR><TD ALIGN='center' COLSPAN=99><INPUT TYPE='button' VALUE='Update' onClick='form_validate(document.region_form);'></TD></TR></TABLE>";
-				$("region_boxes").innerHTML = side_bar_html;	
-				$('region_flags').innerHTML = "<?php print $regs_string; ?>";			// 5/2/10					
-			</SCRIPT>
-<?php
-			} 			
+<?php			
+		}
+			print get_buttons_inner();	//	3/28/12
+			print get_buttons_inner2();	//	3/28/12				
 ?>			
 			<FORM NAME='view_form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
 			<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
@@ -2716,7 +2805,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			</FORM>
 
 			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print  basename(__FILE__);?>?func=responder"></FORM>
-			<!-- 1452 -->
+			<!-- 2801 -->
 			<A NAME="bottom" /> 
 			<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>			
 			</BODY>				<!-- END RESPONDER LIST and ADD -->
@@ -2735,6 +2824,5 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		print list_facilities($buttons, 0);				// ($addon = '', $start)
 		print "\n</HTML> \n";
 		exit();
-		}				// end if($do_list_and_map)
     break;
 ?>

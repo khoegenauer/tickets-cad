@@ -3,7 +3,7 @@
 error_reporting(E_ALL);				// 9/13/08
 $units_side_bar_height = .6;		// max height of units sidebar as decimal fraction of screen height - default is 0.6 (60%)
 $do_blink = TRUE;					// or FALSE , only - 4/11/10
-
+$ld_ticker = "";
 session_start();						// 
 
 require_once('./incs/functions.inc.php');
@@ -44,6 +44,10 @@ require_once($the_inc);
 6/10/11	added groups and boundaries
 6/28/11 auto refresh added
 7/3/11 lazy logout button moved out of try/catch
+3/5/12 handle empty GMaps API key
+3/23/12 auto-refresh changes
+4/12/12 Revised regions control buttons
+6/14/12 Moved position of ck_frames() in onLoad string.
 */
 
 if (isset($_GET['logout'])) {
@@ -151,6 +155,20 @@ if (is_guest()) {													// 8/25/10
 		return !temp;
 		}
 
+	function set_regions_control() {
+		var reg_control = "<?php print get_variable('regions_control');?>";
+		var regions_showing = "<?php print get_num_groups();?>";
+		if(regions_showing) {
+			if (reg_control == 0) {
+				$('top_reg_box').style.display = 'none';
+				$('regions_outer').style.display = 'block';
+				} else {
+				$('top_reg_box').style.display = 'block';
+				$('regions_outer').style.display = 'none';			
+				}
+			}
+		}
+		
 	function $() {									// 1/21/09, 7/18/10
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -161,6 +179,21 @@ if (is_guest()) {													// 8/25/10
 			}
 		return elements;
 		}
+		
+	function do_hover (the_id) {
+		CngClass(the_id, 'hover');
+		return true;
+		}
+
+	function do_plain (the_id) {				// 8/21/10
+		CngClass(the_id, 'plain');
+		return true;
+		}
+
+	function CngClass(obj, the_class){
+		$(obj).className=the_class;
+		return true;
+		}	
 		
 	function fence_get() {								// set cycle
 		if (check_interval!=null) {return;}			// ????
@@ -575,12 +608,100 @@ if (is_guest()) {													// 8/25/10
 			<LINK REL=StyleSheet HREF="./modules/Ticker/css/ticker_css.php?version=<?php print time();?>" TYPE="text/css">
 <?php
 			$ld_ticker = "ticker_init();";	//	3/23/11 To support ticket module
-			} else {
-			$ld_ticker = "";	//	3/23/11 To support ticket module
+			}
 		}
-	} else {
-		$ld_ticker = "";	//	3/23/11 To support ticket module
-	}
+
+//								// 3/23/12 - auto-refresh; develop the notification string
+	$info_str ="";
+	$our_time = mysql_format_date(now() - 30);			// seconds ago ********
+	$query = "
+		(SELECT '2' AS `which`, `t`.`id`, `scope` AS `the_value`  
+			FROM `$GLOBALS[mysql_prefix]patient` `p`
+			LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` ON ( `t`.`id` = `p`.`ticket_id` )
+			WHERE `t`.`updated` > '{$our_time}'  AND `t`.`status` <> {$GLOBALS['STATUS_RESERVED']} LIMIT 1)
+	UNION 
+		(SELECT '1' AS `which`, `t`.`id`, `scope` AS `the_value`  
+			FROM `$GLOBALS[mysql_prefix]action` `a`
+			LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` ON ( `t`.`id` = `a`.`ticket_id` )
+			WHERE `t`.`updated` > '{$our_time}' AND `t`.`status` <> {$GLOBALS['STATUS_RESERVED']} LIMIT 1)
+	UNION 
+		(SELECT '0' AS `which`, `id`, `scope` AS `the_value`
+			FROM `$GLOBALS[mysql_prefix]ticket` `t`
+			WHERE `updated` > '{$our_time}' AND `t`.`status` <> {$GLOBALS['STATUS_RESERVED']} LIMIT 1)
+	UNION
+		(SELECT  '3' AS `which`, `id`, NULL  AS `the_value` FROM `$GLOBALS[mysql_prefix]log` 
+			WHERE `when` = ( SELECT MAX(`when`) FROM `$GLOBALS[mysql_prefix]log` WHERE (`code` IN 
+			('{$GLOBALS['LOG_CALL_DISP']}', '{$GLOBALS['LOG_CALL_RESP']}', '{$GLOBALS['LOG_CALL_ONSCN']}', '{$GLOBALS['LOG_CALL_CLR']}', '{$GLOBALS['LOG_CALL_U2FENR']}', '{$GLOBALS['LOG_CALL_U2FARR']}')
+			))
+		AND (`when` > '{$our_time}') LIMIT 1)
+ 		";
+
+	$result = mysql_query($query)or do_error($query, mysql_error(), basename(__FILE__), __LINE__);
+	$do_blink = (mysql_num_rows ($result) > 0);
+	if (mysql_num_rows ($result) > 0 ) {
+		$row = stripslashes_deep(mysql_fetch_assoc($result));
+		extract ($row);
+		$au_refr_key = "A_R_{$which}_{$our_time}";		// auto-refresh key
+		@session_start();
+		if (!(array_key_exists ($au_refr_key, $_SESSION) && ($_SESSION[$au_refr_key] == $our_time ))) { 		// once only
+			$_SESSION[$au_refr_key] = TRUE;
+			$gt_new = get_text ("New");
+			$gt_incident = get_text ("Incident");
+			$gt_action = get_text ("Add Action");
+			$gt_patient = get_text ("Add Patient");
+			$gt_unit = get_text ("Unit");
+			switch ($which) {
+				case "0": 
+					$info_str = "{$gt_incident}: {$the_value}"; 
+					break;
+				case "1": 
+					$info_str = "{$gt_incident} {$the_value} : {$gt_action}"; 
+					break;
+				case "2": 
+					$info_str = "{$gt_incident} {$the_value} : {$gt_patient}"; 
+					break;
+				case "3": 
+//										4/4/12 - find latests relevant log record
+					$query = "SELECT * FROM `$GLOBALS[mysql_prefix]log` `l`
+						LEFT JOIN `$GLOBALS[mysql_prefix]ticket` 	`t` ON (`l`.`ticket_id` = `t`.`id`)
+						LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON (`l`.`responder_id` = `r`.`id`)
+						WHERE `l`.`id` = {$row['id']}
+						LIMIT 1";
+					$result = mysql_query($query)or do_error($query, mysql_error(), basename(__FILE__), __LINE__);
+					$row = stripslashes_deep(mysql_fetch_assoc($result));
+					extract($row);
+					$temp =  explode("/", get_variable('disp_stat'));
+					if (count ($temp) < 6) {$temp =  explode("/", "D/R/O/FE/FA/Clear");}		// enforce default if user error					
+					switch ($code) {
+						case $GLOBALS['LOG_CALL_DISP']:
+							$info_str = "{$gt_incident} {$scope} : {$gt_unit} {$handle} {$temp[0]}"; 					
+							break;
+						
+						case $GLOBALS['LOG_CALL_RESP']:
+							$info_str = "{$gt_incident} {$scope} : {$gt_unit} {$handle} {$temp[1]}"; 					
+							break;
+						
+						case $GLOBALS['LOG_CALL_ONSCN']:
+							$info_str = "{$gt_incident} {$scope} : {$gt_unit} {$handle} {$temp[2]}"; 					
+							break;
+						
+						case $GLOBALS['LOG_CALL_U2FENR']:
+							$info_str = "{$gt_incident} {$scope} : {$gt_unit} {$handle} {$temp[3]}"; 					
+							break;
+						
+						case $GLOBALS['LOG_CALL_U2FARR']:
+							$info_str = "{$gt_incident} {$scope} : {$gt_unit} {$handle} {$temp[4]}"; 					
+							break;			
+						case $GLOBALS['LOG_CALL_CLR']:
+							$info_str = "{$gt_incident} {$scope} : {$gt_unit} {$handle} {$temp[5]}"; 					
+							break;
+						}				// end switch ($code) 
+			}				// end switch ($which)
+			
+			}				// end if (!(array_key_exists ($au_refr_key ... )))
+			
+		}				// end if (mysql_num_rows ($result) > 0 ) 
+	
 ?>	
 <STYLE TYPE="text/css">
 .box { background-color: #DEE3E7; border: 2px outset #606060; color: #000000; padding: 0px; position: absolute; z-index:1000; width: 180px; }
@@ -588,10 +709,69 @@ if (is_guest()) {													// 8/25/10
 .bar_header { height: 20px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
 .content { padding: 1em; }
 </STYLE>
+<SCRIPT>
+	function start_watch() {							// get initial values from top - 3/23/12
+//		alert(681 + parent.frames["upper"].$("div_assign_id").innerHTML);
+		parent.frames['upper'].mu_init();				// start the polling
+		$("div_ticket_id").innerHTML = parent.frames["upper"].$("div_ticket_id").innerHTML;		// copy for monitoring
+		$("div_assign_id").innerHTML = parent.frames["upper"].$("div_assign_id").innerHTML;
+		$("div_action_id").innerHTML = parent.frames["upper"].$("div_action_id").innerHTML;	
+		$("div_patient_id").innerHTML = parent.frames["upper"].$("div_patient_id").innerHTML;
+		
+		watch_val = window.setInterval("do_watch()",5000);		// - 5 seconds
+		}				// end function start watch()
 
+	function end_watch(){
+		window.clearInterval(watch_val);
+		window.location.reload();
+		}				// end function end_watch()
+
+	function do_watch() {								// monitor for changes
+//		alert(697);
+		if (							// any change?
+			($("div_ticket_id").innerHTML != parent.frames["upper"].$("div_ticket_id").innerHTML) ||
+			($("div_assign_id").innerHTML != parent.frames["upper"].$("div_assign_id").innerHTML) ||
+			($("div_action_id").innerHTML != parent.frames["upper"].$("div_action_id").innerHTML) ||
+			($("div_patient_id").innerHTML != parent.frames["upper"].$("div_patient_id").innerHTML)			
+			)
+				{			  // a change
+//				alert(<?php echo __LINE__;?>);
+				end_watch();
+				window.location.reload();				
+			}
+		}			// end function do_watch()		
+
+	
+	function do_blink() {																// 3/23/12 - 4/5/12
+		$("hdr_td_str").innerHTML = ($("hdr_td_str").innerHTML == "&nbsp;")? the_info  : "&nbsp;" ;
+		blink_count--;								// limit blink duration
+		if (blink_count==0) {end_blink();}
+		}		// end function do_blink()
+
+	var blink_var = false;
+	var blink_count;												// duration of blink
+	var orig_head_str;												// header string value at start of blink
+	var the_info = "<?php echo $info_str; ?>";
+
+	function start_blink () {
+		orig_head_str = $("hdr_td_str").innerHTML;
+		blink_var = setInterval('do_blink()',500);					// on/off cycle is once per second
+		blink_count = 30;											// = 30 seconds
+		}
+	function end_blink() {
+		if (blink_var) {
+			$("hdr_td_str").innerHTML = orig_head_str; 					// restore original value		
+			clearInterval(blink_var);
+			}
+		}		// end function
+<?php
+	$do_blink_str = ($do_blink)? "start_blink()" : "";
+	$end_blink_str = ($do_blink)? "end_blink()" : "";
+?>
+</SCRIPT>
 </HEAD>
 <?php
-	if(!(is_guest())) {	//	4/6/11 Added for add on modules
+	if((!(is_guest())) && ($_SESSION['internet'])) {	//	4/6/11 Added for add on modules
 		if(file_exists("./incs/modules.inc.php")) {
 			get_modules('main');
 			}
@@ -602,7 +782,7 @@ if (is_guest()) {													// 8/25/10
 	$get_sort_by_field = 	(array_key_exists('sort_by_field', ($_GET)))?	$_GET['sort_by_field']:	NULL;
 	$get_sort_value = 		(array_key_exists('sort_value', ($_GET)))?		$_GET['sort_value']:	NULL;	
 	
-	$gunload = ($_SESSION['internet'])? " onUnload='GUnload();'" : "" ;				// 4/22/11
+	$gunload = ($_SESSION['internet'])? "GUnload();" : "" ;				// 3/23/12
 	$fences = (($_SESSION['internet']) && (!($get_id)))? "fence_init();" : "" ;				// 4/22/11	
 	$set_showhide = ((array_key_exists('print', ($_GET)) || (array_key_exists('id', ($_GET)))))? "" : "set_initial_pri_disp(); set_categories(); set_fac_categories();";	//	3/15/11
 	$from_right = 20;	//	5/3/11
@@ -611,35 +791,42 @@ if (is_guest()) {													// 8/25/10
 	$refresh =  ($temp < 15)? 15000: $temp * 1000;
 	$set_to = (intval(trim(get_variable('situ_refr')))>0)? "setTimeout('location.reload(true);', {$refresh});": "";
 	$set_bnds = (($_SESSION['internet']) && (!($get_id)))? "set_bnds();" : "";
-
-
-	
+	$the_api_key = trim(get_variable('gmaps_api_key'));							// 3/5/12	
+	$set_map = (empty($the_api_key))? "document.to_map.submit();" : "";
 ?>
-<BODY onLoad = "<?php print $set_showhide;?> <?php print $set_bnds;?> parent.frames['upper'].document.getElementById('gout').style.display  = 'inline'; ck_frames(); location.href = '#top'; <?php print $do_mu_init;?> <?php print $ld_ticker;?> <?php print $fences;?>" <?php print $gunload;?>>	<!-- 3/15/11 -->
+<BODY onLoad = "ck_frames(); <?php print $ld_ticker;?> set_regions_control(); <?php print $set_showhide;?> <?php print $set_bnds;?> parent.frames['upper'].document.getElementById('gout').style.display  = 'inline'; start_watch(); <?php echo $set_map; ?> location.href = '#top'; <?php print $do_mu_init;?> <?php print $fences;?> <?php print $do_blink_str;?> " onUnload = "end_watch(); end_blink(); <?php print $gunload;?>";>	<!-- 3/15/11, 6/14/12 -->
 <?php
 	include("./incs/links.inc.php");		// 8/13/10
 ?>
+<A NAME='top'></A>
+<DIV id='top_reg_box' style='display: none;'>
+	<DIV id='region_boxes' class='header_reverse' style='align: center; width: 100%; text-align: center; margin-left: auto; margin-right: auto; height: 30px; z-index: 1;'></DIV>
+</DIV>
+<!-- 3/23/12
+<DIV ID='latest' style="display: block-inline; position: fixed; top: 00px; left: 10px; height: auto; width: auto;" ><h3>the ID information:the ID information</h3></div>
+ -->
 <DIV ID='to_bottom' style="position: fixed; top: 20px; left: 20px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png" BORDER=0 /></div>
-
 <SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT><!-- 1/3/10 -->
 
 <A NAME="top" /> <!-- 11/11/09 -->
+<DIV ID = "div_ticket_id" STYLE="display:none;"></DIV>	<!-- 3/23/12 -->
+<DIV ID = "div_assign_id" STYLE="display:none;"></DIV>
+<DIV ID = "div_action_id" STYLE="display:none;"></DIV>
+<DIV ID = "div_patient_id" STYLE="display:none;"></DIV>
+
 <?php
 if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
-$regs_col_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "s")) ? "" : "none";	//	6/10/11
-$regs_exp_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "h")) ? "" : "none";	//	6/10/11	
 ?>
-<div id = 'outer' style = "position:fixed; right:<?php print $from_right;?>%; top:<?php print $from_top;?>%; z-index: 1000; ">		<!-- 6/10/11 -->
-<div id="boxB" class="box" style="z-index:5000;">
-	<div class="bar_header" class="heading_2" STYLE="z-index: 5000;">Viewed <?php print get_text("Regions");?>
-	<SPAN id="collapse_regs" style = "display: <?php print $regs_col_butt;?>; z-index:5001; cursor: pointer;" onclick="hideDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/collapse.png" ALIGN="right"></SPAN>
-	<SPAN id="expand_regs" style = "display: <?php print $regs_exp_butt;?>; z-index:5001; cursor: pointer;" onclick="showDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/expand.png" ALIGN="right"></SPAN></div>
-	<div class="bar" STYLE="color:red; z-index: 5000;"
-       onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></div>
-	<div 
-  <div id="region_boxes" class="content" style="z-index: 5000;"></div>
-</div>
-</div>
+		<DIV id = 'regions_outer' style = "position: fixed; right: 20%; top: 10%; z-index: 1000;">
+			<DIV id="boxB" class="box" style="z-index:1000;">
+				<DIV class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;">Viewed Regions
+				<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+				<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
+					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
+				<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV>
+				</DIV>
+			</DIV>
+		</DIV>
 <?php
 }
 	if ($get_print) {
@@ -673,6 +860,10 @@ $regs_exp_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_box
 <INPUT TYPE='hidden' NAME='status' VALUE='<?php print $GLOBALS['STATUS_SCHEDULED'];?>' />
 <INPUT TYPE='hidden' NAME='func' VALUE='1' />
 </FORM>
+<FORM NAME='to_map' METHOD='get' ACTION = 'config.php'> 	<!-- 3/5/12 -->
+<INPUT TYPE='hidden' NAME='func' VALUE='api_key' />
+</FORM>
+
 <!--
 <span onclick = "parent.top.calls.location.reload(true)">Test1</span>
 <br />

@@ -179,6 +179,16 @@ TD {
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
 	}
+	
+.header_reverse { 
+	font-weight: bold; 
+	font-size: 12pt; 
+	color: <?php print get_css("header_background", $day_night);?>;
+	background-color: <?php print get_css("header_text", $day_night);?>;
+	font-style: normal; 
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	text-decoration: none;
+	}
 
 .update_conf { 
 	font-weight: bold; 
@@ -656,6 +666,95 @@ select.sit {
 	padding-bottom: 5px;
 	z-index: 3;
 	}
+	
+.but_hdr 	{
+	margin-right: 10px;  
+	font: normal 14px Arial, Helvetica, sans-serif; 
+	color:#000000; 
+	padding: 4px 0.5em;
+	text-decoration: none; 
+	background-color: #EFEFEF; 
+	font-weight: bold;
+	}	
+	
+.reg_button { 
+	font: normal 12px Arial, Helvetica, sans-serif; 
+	color:#000000; 
+	padding: 4px 0.5em;
+	text-decoration: none; 
+	background-color: #EFEFEF; 
+	font-weight: bold; 
+	padding-left: 10px;
+	}		
+	
+.disp_stat	{
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: 9px; 
+	COLOR: #FFFFFF; 
+	BACKGROUND-COLOR: #000000; 
+	FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;
+	}
+	
+.plain 	{ 
+	margin-left: 4px;  
+	font: normal 12px Arial, Helvetica, sans-serif; 
+	color:#000000; 
+	border: 1px outset #FFFFFF;
+	padding: 4px 0.5em;
+	text-decoration: none; 
+	float: left; 
+	background-color: #EFEFEF;
+	font-weight: bolder;
+	cursor: pointer;
+	}		
+	
+.hover 	{ 
+	margin-left: 4px;  
+	font: normal 12px Arial, Helvetica, sans-serif; 
+	color:#000000; 
+	border: 1px inset #FFFFFF;
+	padding: 4px 0.5em;
+	text-decoration: none; 
+	float: left; 
+	background-color: #DEE3E7;
+	font-weight: bolder;
+	cursor: pointer;
+	}
 
+.fence_warn {
+	background-color: #FF0000; 
+	font-weight: bold;
+	}
 
-
+.box {
+	background-color: #DEE3E7; 
+	border: 2px outset #606060; 
+	color: #000000; 
+	padding: 0px; 
+	position: absolute; 
+	z-index:1000; 
+	width: 180px; 
+	}
+	
+.bar { 
+	background-color: #FFFFFF; 
+	border-bottom: 2px solid #000000; 
+	cursor: move; 
+	font-weight: bold; 
+	padding: 2px 1em 2px 1em;  
+	z-index:1000; 
+	text-align: center;
+	}
+.bar_header {
+	height: 20px; 
+	background-color: #CECECE; 
+	font-weight: bold; 
+	padding: 2px 1em 2px 1em;  
+	z-index:1000; 
+	text-align: center;
+	}
+	
+.content { 
+	padding: 1em; 
+	float: left; 
+	}

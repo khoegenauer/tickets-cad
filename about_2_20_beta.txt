@@ -110,7 +110,7 @@ Changes for Tickets V 2.10 C
 
 Changes for Tickets V 2.10 D and E
 81.  Instamapper interface has been added to support GPS position data from a number of handhelds, notably the blackberry.
-		(Which means there no Tickets 'page' for the bb;  We take position data from the Instamapper server as required.)
+     (Which means there no Tickets 'page' for the bb;  We take position data from the Instamapper server as required.)
 82.  Support for this interface appears in unit information display.
 83.  Units for which driving directions to an incident wd be inappropriate may now be identified, and directions will not be generated.
 84.  Editing of generated email is now supported, for both email selected off the incident mini-menu and also upon dispatch.
@@ -575,9 +575,55 @@ Changes for Tickets V 2.20 A
 	  statistics types to change the color of the boxes from white to yellow, orange and red (in ascending seriousness).
 	  
 190.  Various fixes to reports, the call board and also to the Situation, Responder and Facility screen format.
- 
-And, as always, we've applied a goodly number of corrections.
 
-June '11
+Changes for Tickets V 2.20 B
+
+191.  Various fixes, no new functionality.
+
+Changes for Tickets V 2.20 C
+
+192.  Fixes to Units and Facilities in no maps mode fixing issue with removal of Regions assignment when editing.
+
+193.  Removed ability to assign Circles and Banners to exclusion zones and Ring fences. Only Polygons work with
+      this feature.
+
+194.  Provided for more graceful response to session timeout and certain internal errors, which will now force a 
+      login.  These are logged, and will appear in the Station Log Report.
+      
+Changes for Tickets V 2.20 D and E  - This is largely a maintenance release with important corrections applied in 
+      several functions.
+
+195.  We've applied a significant changes to the mobile function: Open tickets are now shown, scheduled 
+      incidents are clearly shown with a small clock icon, and - widely requested - it will auto-refresh on
+      a new ticket, a change in dispatch status, or an action or person item written.
+      
+196.  We've accommodated the Google maps api key change; the pre-existing 86-character length requirement
+      has been removed, and the default values based on it are no longer supplied.
+      
+Changes for Tickets V 2.20 F
+
+197.  Revision to Regions view control - now can be docked or undocked from the top bar.
+
+198.  Various fixes to units and facilities causing incorrect region allocations.
+
+199.  Tickets now provides for an outbound simple ICS-213 general message capability, widely used within the 
+      USA response communities. This is somewhat exploratory; we want to gauge user judgements on what other  
+	  NIMS forms might be useful and how these might be communicated.
+
+200.  We've implemented auto-refresh for the main/situation screen. With this, when another user has taken 
+      some action that affects the Situation Screen, that screen refreshes itself, with an information string blinking  
+	  briefly at frame top center.
+
+201.  Revised database indexing to speed up Situation Screen loading. Volume users will see significantly improved 
+      performance..
+
+202.  Along with the usual minor corrections, we have significant corrections applied to the Open GTS interface.
+
+203.  Supporting rapid deployment, we've added a quick start routine which allows users to setup basic settings 
+      and populate a number of responders, types, status settings etc after first install.
+
+204.  Guest login text is now hidden if guest account does not exist.
+
+June '12
 Arnie Shore
 Andy Harvey, UK

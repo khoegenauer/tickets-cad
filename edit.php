@@ -82,6 +82,7 @@ $zoom_tight = FALSE;		// default is FALSE (no tight zoom); replace with a decima
 4/1/11 Added extra update query to update any existing assigns records for the ticket if they are not closed.
 5/4/11 get_new_colors() 				// 
 6/10/11 Added changes required to support regional capability (Ticket region assignment) plus tidied screen for no maps.
+3/28/12 Corrected to errors with Region display.
 */
 	$addrs = FALSE;										// notifies address array doesn't exist
 
@@ -117,13 +118,10 @@ $zoom_tight = FALSE;		// default is FALSE (no tight zoom); replace with a decima
 			}
 
 		if(empty($post_frm_owner)) {$post_frm_owner=0;}
-//		$frm_problemstart = $_POST['frm_year_problemstart']-$_POST['frm_month_problemstart']-$_POST['frm_day_problemstart'] $_POST['frm_hour_problemstart']:$_POST['frm_minute_problemstart']:00";
 		$frm_problemstart = "$_POST[frm_year_problemstart]-$_POST[frm_month_problemstart]-$_POST[frm_day_problemstart] $_POST[frm_hour_problemstart]:$_POST[frm_minute_problemstart]:00$post_frm_meridiem_problemstart";
 
 		$curr_groups = $_POST['frm_exist_groups']; 	//	6/10/11
-		$groups = "," . implode(',', $_POST['frm_group']) . ","; 	//	6/10/11
-//		dump($_POST); 	//	6/10/11
-
+		$groups = isset($_POST['frm_group']) ? ", " . implode(',', $_POST['frm_group']) . "," : $_POST['frm_exist_groups'];	//	3/28/12 - fixes error when accessed from view ticket screen..	
 		if (!get_variable('military_time'))	{			//put together date from the dropdown box and textbox values
 			if ($post_frm_meridiem_problemstart == 'pm'){
 				$_POST['frm_hour_problemstart'] = ($_POST['frm_hour_problemstart'] + 12) % 24;
@@ -825,8 +823,8 @@ $do_unload = ($gmaps)? " onUnload=\"GUnload();\"" : "";
 					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_proto']}');\">" . get_text("Protocol") . ":</TD>";
 			print 	"<TD ID='proto_cell'>{$row['protocol']}</TD></TR>\n";
 
-			if(get_num_groups() > 1) {			
-			if((is_super()) && (get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
+			if(get_num_groups()) {	//	3/28/12 - fixes incorrect display of Regions.		
+			if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 					print "<TR CLASS='even' VALIGN='top'>";
 					print "<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');\">" . get_text('Group') . "</A>: </TD>";
 					print "<TD><SPAN id='expand_gps' onClick=\"$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';\" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>";
@@ -836,7 +834,7 @@ $do_unload = ($gmaps)? " onUnload=\"GUnload();\"" : "";
 					print get_sub_group_butts(($_SESSION['user_id']), 1, $id) ;	//	6/10/11		
 					print "</DIV></TD></TR>";		// 6/10/11
 					
-				} elseif((is_admin()) && (get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11	
+				} elseif((is_admin()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11	
 					print "<TR CLASS='even' VALIGN='top'>";
 					print "<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');\">" . get_text('Group') . "</A>: </TD>";
 					print "<TD><SPAN id='expand_gps' onClick=\"$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';\" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>";

@@ -44,6 +44,7 @@
 7/22/11 - correction per MC email.
 7/24/11 corrections to qualifier per MC email.
 11/4/11 - AS corrections to Unit log per AJ email; handle final unprinted log entry
+5/29/12 - AS corrections to avoid using mysql unixtimestamp and SQL to reduce data load returned
 */
 error_reporting(E_ALL);									// 10/1/08
 $asof = "3/24/10";
@@ -726,14 +727,16 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 
 		$types[$GLOBALS['LOG_ERRONEOUS']]			= "Bad Log entry";	//	3/15/11
 		$where = " WHERE `when` >= '" . $from_to[0] . "' AND `when` < '" . $from_to[1] . "'";
-																				// 1/14/10
+																				// 1/14/10, 5/29/12
 		$query = "
-			SELECT *, UNIX_TIMESTAMP(`when`) AS `when`, `$GLOBALS[mysql_prefix]log`.`id` AS `logid`,`$GLOBALS[mysql_prefix]log`.`info` AS `loginfo`,  t.scope AS `tickname`, `r`.`name` AS `unitname`, `s`.`status_val` AS `theinfo`, `u`.`user` AS `thename` FROM `$GLOBALS[mysql_prefix]log`
-			LEFT JOIN `$GLOBALS[mysql_prefix]ticket` t ON (`$GLOBALS[mysql_prefix]log`.ticket_id = t.id)
-			LEFT JOIN `$GLOBALS[mysql_prefix]responder` r ON (`$GLOBALS[mysql_prefix]log`.responder_id = r.id)
-			LEFT JOIN `$GLOBALS[mysql_prefix]un_status` s ON (`$GLOBALS[mysql_prefix]log`.info = s.id)
-			LEFT JOIN `$GLOBALS[mysql_prefix]user` u ON (`$GLOBALS[mysql_prefix]log`.who = u.id)
-	 		$where ORDER BY `when` ASC
+			SELECT `when`, `l`.`id` AS `logid`,`l`.`info` AS `loginfo`,  t.scope AS `tickname`, `r`.`name` AS `unitname`, `s`.`status_val` AS `theinfo`, `u`.`user` AS `thename`,
+			 `l`.`code`,  `l`.`ticket_id`,  `u`.`user`, `l`.`from`, `r`.`handle`
+			FROM `$GLOBALS[mysql_prefix]log` `l`
+			LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` ON (`l`.`ticket_id` = `t`.`id`)
+			LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON (`l`.`responder_id` = `r`.`id`)
+			LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON (`l`.info = `s`.`id`)
+			LEFT JOIN `$GLOBALS[mysql_prefix]user` `u` ON (`l`.`who` = `u`.`id`)
+	 		$where ORDER BY `when` ASC 
 			";
 //		dump($query);
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
@@ -768,12 +771,14 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 				print "</TR>\n";
 
 			while($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)){			// main loop - top
+//				dump(mysql_format_date(mysql2timestamp($row['when'])));
+//				dump(mysql_format_date($row['when']));
 				if (($row['code']<20) || ($row['code'] == $GLOBALS['LOG_ERROR']) || ($row['code'] == $GLOBALS['LOG_INTRUSION'])  ) {
 					print "<TR CLASS='" . $evenodd[$i%2] . "'>";
 
-					if(!(date("z", $row['when']) == $curr_date))  {								// date change?
-						print "<TD>" . date ('D, M j', $row['when']) ."</TD>";
-						$curr_date = date("z", $row['when']);
+					if(!(date("z", mysql2timestamp($row['when'])) == $curr_date))  {								// date change?
+						print "<TD>" . date ('D, M j', mysql2timestamp($row['when'])) ."</TD>";
+						$curr_date = date("z", mysql2timestamp($row['when']));
 						}
 					else {print "<TD></TD>";}
 //					$the_ticket = (empty($row['tickname']))? "[#" . $row['ticket_id']. "]" : $row['tickname'] ;
@@ -786,12 +791,12 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 						}
 //			$action = (empty($_POST['action'])) ? ( isset( $defaultString ) ? $defaultString : 'default' ) : $_POST['action'];
 //			$the_ticket = (empty($row['tickname']))? (($row['ticket_id']>0 )? "[#" . $row['ticket_id']. "]" :"";) : $row['tickname'] ;
-
-					print "<TD>" . date('H:i',$row['when']) . "</TD>";
+//					dump(mysql_format_date($row['when']));
+					print "<TD>" . date('H:i', mysql2timestamp($row['when'])) . "</TD>";
 					print "<TD>" . $types[$row['code']] . "</TD>";
 //					print "<TD>" . $row['tickname'] . "</TD>";
 					print "<TD>" . $the_ticket . "</TD>";
-					print "<TD>" . $row['name'] . "</TD>";
+					print "<TD>" . $row['handle'] . "</TD>";			// 5/29/12
 //					print "<TD>" . $row['info'] . "</TD>";
 					print "<TD>" . $row['loginfo'] . "</TD>";			// 1/21/09
 					print "<TD>" . $row['user'] . "</TD>";

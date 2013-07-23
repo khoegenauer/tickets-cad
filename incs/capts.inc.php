@@ -1,15 +1,15 @@
 <?php
+error_reporting(E_ALL);		// 10/1/08
+
 /*
 8/21/10 initial version
 8/24/10 "written" added
 8/29/10 convert to array
 12/3/10 get_text functions added
+2/9/12 get_text functions removed, list lengthened with Patient, etc., strings
+3/2/12 corrected "Full name" array element punctuation
+3/4/12 corrected line 73 missing comma, {} 
 */
-$nature = get_text("Nature");			// 12/03/10
-$disposition = get_text("Disposition");
-$patient = get_text("Patient");
-$incident = get_text("Incident");
-$incidents = get_text("Incidents");
 
 $capts = array(
 "911 Contacted",
@@ -18,7 +18,7 @@ $capts = array(
 "Add Action",
 "Add Facility",
 "Add note",
-"Add {$patient}",
+"Add patient",
 "Add Unit",
 "Add user",
 "Add/Edit Notifies",
@@ -42,11 +42,12 @@ $capts = array(
 "Contact phone",
 "Contacts",
 "Current situation",
+"Date of birth",
 "Delete Closed Tickets",
 "Description",
 "Dispatch Unit",
 "Dispatched",
-"{$disposition}",
+"Disposition",
 "Dump DB to screen",
 "E-mail",
 "Edit My Profile",
@@ -55,18 +56,23 @@ $capts = array(
 "Fac's",
 "Facility arrive time",
 "Facility clear time",
+"Facility contact",
 "Facility en-route time",
 "Facility Status",
 "Facility Types",
 "Facility",
+"Full name",
+"Gender" ,
 "Handle",
 "Help",
 "High",
 "ID",
-"{$incident} Lat/Lng",
-"{$incident} name",
-"{$incident} types",
-"{$incident}",
+"Incident Lat/Lng",
+"Incident name",
+"Incident types",
+"Incident",
+"Incidents",
+"Insurance" ,
 "Lat/Lng",
 "Links",
 "Location",
@@ -77,9 +83,9 @@ $capts = array(
 "Medium",
 "Mobile",
 "Module",
-"mouseover caption for help informati",
+"mouseover caption for help information",
 "Name",
-"{$nature}",
+"Nature",
 "New",
 "Next",
 "Normal",
@@ -88,6 +94,8 @@ $capts = array(
 "Opening hours",
 "Optimize Database",
 "P",
+"Patient",
+"Patient ID" ,
 "Password",
 "Perm's",
 "Phone",
@@ -126,6 +134,7 @@ $capts = array(
 "Units",
 "Updated",
 "User",
-"Written",
-"USNG");
+"USNG",
+"Written"
+);
 ?>

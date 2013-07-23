@@ -20,6 +20,7 @@
 3/15/11 changed stylesheet.php to stylesheet.php
 4/22/11 addslashes() added for embedded apostrophes
 6/10/11 Added regional capability - restrictions to shown responders by groups allocated
+6/11/12 Moved javascript functions do_unlock, do_lock and do_asof from main JS section to line 742, spurious do notify() removed
 */
 error_reporting(E_ALL);
 
@@ -30,12 +31,11 @@ require_once($_SESSION['fmp']);		// 8/27/10
 
 if((($istest)) && (!empty($_GET))) {dump ($_GET);}
 if((($istest)) && (!empty($_POST))) {dump ($_POST);}
-
 $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 $api_key = get_variable('gmaps_api_key');
 $gmaps = $_SESSION['internet'];
 $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";								// 6/10/11
-
+// $addrs = notify_user($_REQUEST['ticket_id'],$GLOBALS['NOTIFY_ACTION_CHG']);		// returns array or FALSE - 6/12/12
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -53,7 +53,13 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		.bar { background-color: #FFFFFF; border-bottom: 2px solid #000000; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
 		.bar_header { height: 20px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}	
 		.content { padding: 1em; }
-		.fence_warn {background-color: #FF0000; font-weight: bold;}		
+		.fence_warn {background-color: #FF0000; font-weight: bold;}
+		.plain 	{ margin-left: 4px;  font: normal 12px Arial, Helvetica, sans-serif; color:#000000; border: 1px outset #FFFFFF;
+  				  padding: 4px 0.5em;text-decoration: none; float: left; background-color: #EFEFEF;font-weight: bolder;}		
+		.but_hdr 	{ margin-right: 10px;  font: normal 14px Arial, Helvetica, sans-serif; color:#000000; padding: 4px 0.5em;text-decoration: none;float: left; background-color: #EFEFEF; font-weight: bold;}		
+		.reg_button 	{ font: normal 12px Arial, Helvetica, sans-serif; color:#000000; padding: 4px 0.5em;text-decoration: none; float: left; background-color: #EFEFEF; font-weight: bold; padding-left: 10px;}		
+		.hover 	{ margin-left: 4px;  font: normal 12px Arial, Helvetica, sans-serif; color:#000000; border: 1px inset #FFFFFF;
+  				  padding: 4px 0.5em;text-decoration: none; float: left; background-color: #DEE3E7;font-weight: bolder;}		
 	</STYLE>	
 <?php
 	if ($gmaps) {
@@ -73,20 +79,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			parent.upper.show_butts();										// 1/21/09
 			}
 		}		// end function ck_frames()
-
-	function do_notify() {
-		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
-		var theText= "TICKET - ACTION: ";
-		var theId = '<?php print $_POST['frm_ticket_id'];?>';
-		
-//		mail_it ($to_str, $text, $ticket_id, $text_sel=1, $txt_only = FALSE)
-
-		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId +"&text_sel=1";		// ($to_str, $text, $ticket_id)   10/15/08
-		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
-		}			// end function do notify()
-
-	function handleResult(req) {				// the 'called-back' function
-		}
+																			// 6/12/12
 
 	if(document.all && !document.getElementById) {		// accomodate IE							
 		document.getElementById = function(id) {							
@@ -128,9 +121,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		if (div_area == "incs_list_sh") {
 			var controlarea = "incs_list";
 			}
-		if (div_area == "region_boxes") {
-			var controlarea = "region_boxes";
-			}			
+
 		var divarea = div_area 
 		var hide_cont = hide_cont 
 		var show_cont = show_cont 
@@ -157,9 +148,6 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		if (div_area == "incs_list_sh") {
 			var controlarea = "incs_list";
 			}
-		if (div_area == "region_boxes") {
-			var controlarea = "region_boxes";
-			}				
 		var divarea = div_area
 		var hide_cont = hide_cont 
 		var show_cont = show_cont 
@@ -173,26 +161,6 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		sendRequest (url, gb_handleResult, params);					
 		} 	
 		
-	function do_asof(theForm, theBool) {							// 8/10/08
-//		alert(56);
-//		alert(theForm.name);
-		theForm.frm_year_asof.disabled = theBool;
-		theForm.frm_month_asof.disabled = theBool;
-		theForm.frm_day_asof.disabled = theBool;
-		theForm.frm_hour_asof.disabled = theBool;
-		theForm.frm_minute_asof.disabled = theBool;
-		}
-
-	function do_unlock(theForm) {									// 8/10/08
-		document.getElementById("lock").style.visibility = "hidden";		
-		do_asof(theForm, false)
-		}
-		
-	function do_lock(theForm) {										// 8/10/08
-		do_asof(theForm, true)
-		document.getElementById("lock").style.visibility = "visible";
-		}
-
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
@@ -308,7 +276,22 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			break;
 			}
 		return xmlhttp;
-		}				
+		}
+
+	function do_hover (the_id) {
+		CngClass(the_id, 'hover');
+		return true;
+		}
+
+	function do_plain (the_id) {				// 8/21/10
+		CngClass(the_id, 'plain');
+		return true;
+		}
+
+	function CngClass(obj, the_class){
+		$(obj).className=the_class;
+		return true;
+		}			
 	</SCRIPT>
 	</HEAD>
 <?php 
@@ -617,12 +600,10 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			}			
 
 		$heading = "Add Action";
-		$regs_string = "<FONT SIZE='-1'>Showing Regions:&nbsp;&nbsp;" . $curr_names . "</FONT>";	//	6/10/11		
 ?>
 		<FORM METHOD="post" NAME="add_frm" onSubmit='return validate(this.form);' ACTION="action.php?ticket_id=<?php print $_GET['ticket_id'];?>&action=add">
 		<TABLE BORDER="0">
 		<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'><?php print $heading; ?> </FONT></TD></TR>	<!-- 6/10/11 -->
-		<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><SPAN ID='region_flags' style='background: #00FFFF; font-weight: bold;'></SPAN></TD></TR>	<!-- 6/10/11 -->		
 		<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR>				<!-- 6/10/11 -->	
 		<FORM METHOD="post" NAME="add_frm" onSubmit='return validate(this.form);' ACTION="action.php?ticket_id=<?php print $tick_id;?>&action=add">		<!-- 6/10/11-->
 		<TR CLASS='even'><TD CLASS='td_label'>Description: <font color='red' size='-1'>*</font></TD>
@@ -635,7 +616,6 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		document.add_frm.frm_description.value+= lh_sep + temp_ary[1] + ' ';		
 		document.add_frm.frm_description.focus();		
 		}		// end function set_signal()
-	$('region_flags').innerHTML = "<?php print $regs_string; ?>";			// 5/2/10			
 </SCRIPT>
 		<TR VALIGN = 'TOP' CLASS='even'>		<!-- 11/15/10 -->
 			<TD ALIGN='right' CLASS="td_label"></TD><TD>Signal &raquo;
@@ -739,58 +719,6 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 <?php
 $from_right = 20;	//	6/10/11
 $from_top = 10;		//	6/10/11	
-if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
-
-	$regs_col_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "s")) ? "" : "none";	//	6/10/11
-	$regs_exp_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "h")) ? "" : "none";	//	6/10/11	
-?>			
-			<DIV id = 'outer' style = "position:fixed; right:<?php print $from_right;?>%; top:<?php print $from_top;?>%; z-index: 1000; ">		<!-- 6/10/11 -->
-			<DIV id="boxB" class="box" style="z-index:1000;">
-			<div class="bar_header" class="heading_2" STYLE="z-index: 1000;">Viewed Regions
-			<SPAN id="collapse_regs" style = "display: <?php print $regs_col_butt;?>; z-index:1001; cursor: pointer;" onclick="hideDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/collapse.png" ALIGN="right"></SPAN>
-			<SPAN id="expand_regs" style = "display: <?php print $regs_exp_butt;?>; z-index:1001; cursor: pointer;" onclick="showDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/expand.png" ALIGN="right"></SPAN></div>
-				<DIV class="bar" STYLE="color:red; z-index: 1000;"
-					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
-				<DIV id="region_boxes" class="content" style="z-index: 1000;"></DIV>
-			</DIV>
-			</DIV>			
-<?php
-}			
-	function get_buttons($user_id) {								// 6/10/11
-		if(isset($_SESSION['viewed_groups'])) {
-			$regs_viewed= explode(",",$_SESSION['viewed_groups']);
-			}
-		
-		$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id' ORDER BY `group`";								// 6/10/11
-		$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-
-		$al_buttons="";	
-		while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{								// 6/10/11
-			if(!empty($regs_viewed)) {
-				if(in_array($row2['group'], $regs_viewed)) {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				} else {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				}
-				} else {
-					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
-				}
-			}
-		return $al_buttons;
-		}
-	
-	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
-?>
-		<SCRIPT>
-			side_bar_html= "";
-			side_bar_html+="<TABLE><TR class='even'><TD CLASS='td_label'><form name='region_form' METHOD='post' action='<?php print basename(__FILE__);?>'><DIV>";
-			side_bar_html += "<?php print get_buttons($_SESSION['user_id']);?>";
-			side_bar_html += "<INPUT TYPE='hidden' NAME='ticket_id' VALUE='<?php print $tick_id;?>'>";								// 6/10/11
-			side_bar_html+="</DIV></form></TD></TR><TR><TD COLSPAN=99>&nbsp;</TD></TR><TR><TD ALIGN='center' COLSPAN=99><INPUT TYPE='button' VALUE='Update' onClick='form_validate(document.region_form);'></TD></TR></TABLE>";
-			$("region_boxes").innerHTML = side_bar_html;	
-		</SCRIPT>
-<?php
-		} 			
 ?>	
 </BODY>
 <?php
@@ -798,7 +726,26 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
 ?>
 <SCRIPT LANGUAGE="Javascript">
 init();
+function do_asof(theForm, theBool) {							// 8/10/08, 6/11/12
+//		alert(56);
+//		alert(theForm.name);
+	theForm.frm_year_asof.disabled = theBool;
+	theForm.frm_month_asof.disabled = theBool;
+	theForm.frm_day_asof.disabled = theBool;
+	theForm.frm_hour_asof.disabled = theBool;
+	theForm.frm_minute_asof.disabled = theBool;
+	}
 
+function do_unlock(theForm) {									// 8/10/08, 6/11/12
+	document.getElementById("lock").style.visibility = "hidden";		
+	do_asof(theForm, false)
+	}
+	
+function do_lock(theForm) {										// 8/10/08, 6/11/12
+	do_asof(theForm, true)
+	document.getElementById("lock").style.visibility = "visible";
+	}
+	
 function init () {
 	do_unlock(document.forms[0])
 	var now = new Date();

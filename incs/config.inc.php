@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);		// 3/5/12
+
 /*
 6/9/08  revised to add 'super' priv's level
 7/16/08 revised default military time
@@ -38,6 +40,7 @@
 3/18/11 Added aprs.fi key help.
 6/10/11 Added revisable Title string
 11/7/11	Added Statistics users to count in System Summary
+6/20/12 applied get_text() to 'Units'
  */
 $colors = array ('odd', 'even');
 
@@ -233,7 +236,7 @@ function show_stats(){			/* 6/9/08 show database/user stats */
 	$show_str = $out_str . $total . " total";
 	unset($result);	
 
-	print "<TR CLASS='odd'><TD CLASS='td_label'>Units in database:</TD><TD ALIGN='left'>" . $show_str . "</TD></TR>";
+	print "<TR CLASS='odd'><TD CLASS='td_label'>" . get_text("Units") . " in database:</TD><TD ALIGN='left'>" . $show_str . "</TD></TR>";
 	
 	print "<TR CLASS='even'><TD CLASS='td_label'>Users in database:</TD><TD ALIGN='left'>$super_in_db Super$pluralS, $admin_in_db Administrator$pluralA, $oper_in_db Operator$pluralOp, $guest_in_db Guest$pluralG, $memb_in_db Member$pluralM, $stats_in_db Statistics ".($super_in_db+$oper_in_db+$admin_in_db+$guest_in_db+$memb_in_db+$stats_in_db)." total</TD></TR>";	//	11/07/11
 
@@ -282,7 +285,7 @@ function list_users(){		/* list users */
 		<TD><B>&nbsp;User</B></TD>
 		<TD><B>&nbsp;Online</B></TD>
 		<TD><B>&nbsp;Level</B></TD>
-		<TD><B>&nbsp;Unit</B></TD>
+		<TD><B>&nbsp;" . get_text("Units") . "</B></TD>
 		<TD><B>&nbsp;Call</B></TD>
 		<TD><B>&nbsp;Description</B></TD>
 		<TD><B>&nbsp;Log in</B></TD>
@@ -414,6 +417,7 @@ function get_setting_help($setting){/* get help for settings */
 		case "func_key2": 				return "User Defined Function key 2 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."; break;	//08/05/09
 		case "func_key3": 				return "User Defined Function key 3 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."; break;	//08/05/09
 		case "reverse_geo": 			return "Use Reverse Geocoding when setting location for an incident. 1 for yes, 0 for no. Default is 0"; break;	//11/01/09
+		case "regions_control": 		return "Use 0 for floating regions select control, 1 for docked to top bar"; break;	//11/01/09
 		case "logo": 					return "Enter filename of your site logo file here"; break;	//8/13/10
 		case "pie_charts": 				return "Severity/Incident types/Location pie chart diameters, in pixels"; break;	// 3/21/10
 		case "internet": 				return "Internet/network connection available: 1 (default) for Yes, 2 for No, 3 for maybe - will check network dynamically"; break;	// 8/13/10		

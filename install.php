@@ -45,6 +45,7 @@
 10/29/10  'PASSWORD' => 'MD5' to accommodate old MySQL versions
 12/18/10   write permissions test corrected
 1/10/11 Added default setting for Group or dispatch
+5/11/12 Added code for quick start.
 */
 
 error_reporting(E_ALL);				// 2/3/09
@@ -162,7 +163,7 @@ switch(strtoupper($_SERVER["HTTP_HOST"])) {
 		table_exists($db_prefix."log",$drop_tables);
 		table_exists($db_prefix."logins",$drop_tables);
 		table_exists($db_prefix."mmarkup",$drop_tables);	
-		table_exists($db_prefix."mmarkups_cats",$drop_tables);	
+		table_exists($db_prefix."mmarkup_cats",$drop_tables);	
 		table_exists($db_prefix."modules",$drop_tables);		
 		table_exists($db_prefix."notify",$drop_tables);
 		table_exists($db_prefix."patient",$drop_tables);
@@ -1183,7 +1184,7 @@ switch(strtoupper($_SERVER["HTTP_HOST"])) {
 
 		print '<BR /><BR /><FONT CLASS="warn">Your Tickets installation is now complete - the start page is \'index.php\' .</FONT>';
 		print '<BR /><BR /><FONT CLASS="warn">It is strongly recommended that you move/delete/change rights on install.php after this</FONT>';
-		print '<BR /><BR /><A HREF="index.php"><< Start Tickets</A>';
+		print '<BR /><BR /><A HREF="index.php?first_start=yes"><< Start Tickets >></A>';	//	5/11/12 Changed link for quick start.		
 		}
 //	else if ($_GET['help']) {		//
 	else if (array_key_exists('help', $_GET)) {		// 9/16/08

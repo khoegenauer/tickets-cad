@@ -511,6 +511,7 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE  `ticket_id` = " . get_ticket_id () . "
 					 AND (`responder_id`={$in_row['unit_id']}) 
 					 AND ((`clear` IS NULL) OR (DATE_FORMAT(`clear`,'%y') = '00')) LIMIT 1;";	// 6/25/10
+				snap(__LINE__, $query);
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 				if(mysql_affected_rows()==1) 			{return " CHECKED DISABLED ";}	
 	
@@ -704,12 +705,12 @@ $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `r
 			$elapsed = my_date_diff($problemstart, $end_date);		// 5/13/10
 
 //	==========================================================================================		
-			$search_arg = ((array_key_exists('capabilities', ($_GET))))? "<TR class='even' STYLE = 'white-space:nowrap;'><TD COLSPAN='99' ALIGN='center'>Unit capabilities match: '" . $_GET['capabilities']. "'</TD></TR>": "";
+			$search_arg = ((array_key_exists('capabilities', ($_GET))))? "<TR class='even' STYLE = 'white-space:nowrap;'><TD COLSPAN='99' ALIGN='center'>" . get_text("Units") . " capabilities match: '" . $_GET['capabilities']. "'</TD></TR>": "";
 ?>
 			side_bar_html += "<TR class='even'>	<TD CLASS='<?php print $severityclass; ?>' COLSPAN=99 ALIGN='center'><B>Routes to Incident: <I><?php print shorten($row_ticket['scope'], 20) . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(" . $elapsed; ?>)</I></B></TD></TR>\n";
 			side_bar_html += "<?php print $search_arg;?>";
 			side_bar_html += "<TR class='odd'>	<TD COLSPAN=99 ALIGN='center'>Click line, icon or map for route</TD></TR>\n";
-			side_bar_html += "<TR class='even' STYLE = 'white-space:nowrap;'><TD COLSPAN=3></TD><TD ALIGN='left'>Unit</TD><TD ALIGN='right'>SLD&nbsp;(<?php print $capt;?>)</TD><TD ALIGN='center'>Call</TD><TD ALIGN='left'>Status</TD><TD>M</TD><TD ALIGN='left'>As of</TD></TR>\n";
+			side_bar_html += "<TR class='even' STYLE = 'white-space:nowrap;'><TD COLSPAN=3></TD><TD ALIGN='left'><?php print get_text("Units");?></TD><TD ALIGN='right'>SLD&nbsp;(<?php print $capt;?>)</TD><TD ALIGN='center'>Call</TD><TD ALIGN='left'>Status</TD><TD>M</TD><TD ALIGN='left'>As of</TD></TR>\n";
 	
 <?php
 // major while ... for RESPONDER data starts here
@@ -948,7 +949,7 @@ $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `r
 
 	
 			if (nr_units==0) {
-				side_bar_html +="<TR CLASS='odd'><TD ALIGN='center' COLSPAN=99><BR /><BR /><H3>No Units!</H3></TD></TR>";	
+				side_bar_html +="<TR CLASS='odd'><TD ALIGN='center' COLSPAN=99><BR /><BR /><H3>No <?php print get_text("Units");?>!</H3></TD></TR>";	
 				map.setCenter(new GLatLng(<?php echo $row_ticket['lat']; ?>, <?php echo $row_ticket['lng']; ?>), <?php echo get_variable('def_zoom'); ?>);
 				}
 			else {

@@ -6,7 +6,8 @@
 
 @session_start();
 
-require_once($_SESSION['fip']);
+require_once('./incs/functions.inc.php');
+require_once('./incs/mysql.inc.php');
 error_reporting(E_ALL);				// 2/3/09
 do_login(basename(__FILE__));	// session_start()
 $tickets_dir = getcwd();	
@@ -20,9 +21,95 @@ $tickets_dir = getcwd();
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
+<SCRIPT>
+function $() {									// 1/21/09, 7/18/10
+	var elements = new Array();
+	for (var i = 0; i < arguments.length; i++) {
+		var element = arguments[i];
+		if (typeof element == 'string')		element = document.getElementById(element);
+		if (arguments.length == 1)			return element;
+		elements.push(element);
+		}
+	return elements;
+	}
+	
+function do_hover (the_id) {
+	CngClass(the_id, 'hover');
+	return true;
+	}
+
+function do_plain (the_id) {				// 8/21/10
+	CngClass(the_id, 'plain');
+	return true;
+	}
+
+function CngClass(obj, the_class){
+	$(obj).className=the_class;
+	return true;
+	}	
+</SCRIPT>
 </HEAD><BODY>
 
 <?php
+
+function prefix ($tbl) {		/* returns concatenated string */
+	global $mysql_prefix;
+	return  $mysql_prefix . $tbl;
+	}
+
+$table_name = prefix("modules");	//	check to see if module table exists - if not create.
+$query = "CREATE TABLE IF NOT EXISTS `$table_name` (
+  `id` int(4) NOT NULL AUTO_INCREMENT,
+  `mod_name` varchar(48) NOT NULL,
+  `mod_status` int(4) NOT NULL DEFAULT '0' COMMENT 'Set to 1 for module Active, 0 for module inactive',
+  `table` varchar(18) NOT NULL,		  
+  `affecting_files` varchar(128) NOT NULL COMMENT 'Files that use this module',
+  `httpuser` varchar(48) DEFAULT NULL COMMENT 'For data sources behind protected areas',
+  `httppwd` varchar(48) DEFAULT NULL COMMENT 'For data sources behind protected areas',		  
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
+$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
+if($result) {
+print "Module Table Created";
+}
+
+
+function get_mod_to_install() {
+	$to_install = array();
+	$current = array();
+	if(mod_table_exists("modules") == 1) {
+		$query = "SELECT * FROM $GLOBALS[mysql_prefix]modules`";
+		$result = mysql_query($query);
+		if($result) {
+			while($row = mysql_fetch_assoc($result)) {
+				$current[] = $row['mod_name'];
+				}
+			}
+		}		
+			
+	$entry = array();
+	$path = "./modules";
+	if ($handle = opendir($path)) {
+		while (false !== ($dirname = readdir($handle))) {
+			if ($dirname != "." && $dirname != "..") {
+				$entry[] = $dirname;
+				}
+			}
+		closedir($handle);
+		}
+	foreach ($entry as $val) {
+		if(!(in_array($val, $current))) {
+			$to_install[] = $val;
+			}
+		}
+	$ret_str = "<SELECT NAME='frm_module'>";
+	$i=1;
+	foreach($to_install as $val) {
+		$ret_str .= "<OPTION VALUE=" . $i . ">" . $val . "</OPTION>";
+		}
+	$ret_str .= "</SELECT>";
+	return $ret_str;
+	}
 
 function module_tabs_exist($name) {
 	$query 		= "SELECT COUNT(*) FROM `$GLOBALS[mysql_prefix]modules`";
@@ -53,78 +140,6 @@ function mod_table_exists($tablename) {			//check if mysql table exists, if it's
 	}
 	}
 	
-
-function unzip($file){
-    $zip=zip_open($file);
-
-    if(!$zip) {return("Unable to proccess file '{$file}'");}
-
-    $e='';
-
-    while($zip_entry=zip_read($zip)) {
-		$zdir=dirname(zip_entry_name($zip_entry));
-		$zname=zip_entry_name($zip_entry);
-
-		if(!zip_entry_open($zip,$zip_entry,"r")) {$e.="Unable to proccess file '{$zname}'";continue;}
-		if(!is_dir($zdir)) mkdirr($zdir,0777);
-
-		$zip_fs=zip_entry_filesize($zip_entry);
-		if(empty($zip_fs)) continue;
-
-		$zz=zip_entry_read($zip_entry,$zip_fs);
-
-		$z=fopen($zname,"w");
-		fwrite($z,$zz);
-		fclose($z);
-		zip_entry_close($zip_entry);
-    } 
-    zip_close($zip);
-
-    return($e);
-} 
-
-function unzip_structurefile($file){
-
-	$zip=zip_open($file);
-
-	if(!$zip) {return("Unable to proccess file '{$file}'");}
-
-	$e='';
-
-	while($zip_entry=zip_read($zip)) {
-		$zdir=dirname(zip_entry_name($zip_entry));
-		$zname=zip_entry_name($zip_entry);
-
-		if(!zip_entry_open($zip,$zip_entry,"r")) {$e.="Unable to proccess file '{$zname}'";continue;}
-		if($zname=="structure.xml") {
-			$zip_fs=zip_entry_filesize($zip_entry);
-			if(empty($zip_fs)) continue;
-
-			$zz=zip_entry_read($zip_entry,$zip_fs);
-
-			$z=fopen($zname,"w");
-			fwrite($z,$zz);
-			fclose($z);
-			zip_entry_close($zip_entry);
-			}
-		} 
-	zip_close($zip);
-
-	return($e);
-} 
-
-function mkdirr($pn,$mode=null) {
-
-	if(is_dir($pn)||empty($pn)) return true;
-	$pn=str_replace(array('/', ''),DIRECTORY_SEPARATOR,$pn);
-
-	if(is_file($pn)) {trigger_error('mkdirr() File exists', E_USER_WARNING);return false;}
-
-	$next_pathname=substr($pn,0,strrpos($pn,DIRECTORY_SEPARATOR));
-	if(mkdirr($next_pathname,$mode)) {if(!file_exists($pn)) {return mkdir($pn,$mode);} }
-	return false;
-}
-
 function get_structure($structurefile) {
 	$xml_file = "./structure.xml";
 	$data="";
@@ -168,50 +183,34 @@ function write_path($filepath, $tickets_dir) {
 if (isset($_POST['submit'])) { // Handle the form.
 
 	print "<DIV style='background-color:#CECECE; position: absolute; width: 60%; height: 60%; left: 20%; top: 10%; border:2px inset #FFF2BF; display: block; text-align: center'>";
-
-	$upload_directory = "tmp_uploads";	// check that temporary uploads directory exists
-	if (!(file_exists($upload_directory))) {
-		mkdir ($upload_directory, 0777);
-		chmod($upload_directory, 0777);		
-		}
-
-	chmod($upload_directory, 0777);			
-	$filename = $_FILES['upload']['name'];
-	$temp_dir="./tmp_uploads/";
 	
-	if (move_uploaded_file($_FILES['upload']['tmp_name'], $temp_dir . "$filename")) {	// If file uploaded OK
-		$file = $temp_dir . "/" . $filename;
-		unzip_structurefile($file);
-		$structurefile = "structure.xml";
-//		$data = get_structure($structurefile);
-		$xml = simplexml_load_file($structurefile);
+	$structurefile = "structure.xml";
+	$xml = simplexml_load_file($structurefile);
 					
 	//	Read XML file for details of structure and other information.
 		
-		$modname = $xml->name;
-		$author = $xml->author;
-		$created = $xml->creationDate;
-		$version = $xml->version;
-		$description = $xml->description;
-		$directoryname = $xml->directories->directoryname;
-		print $directoryname;
-		$tablename = $xml->tables->tablename;		
-		$installfile = $xml->configuration->installfile;
-		$installfile = "./" . $installfile;
-		$modincsdir = $xml->directories->incsdirectoryname;
-		$modincsdir = "/" . $modincsdir;
-	
-		$module_dir = $directoryname;
-		$mod_entry_exists = module_tabs_exist($modname); // if a table entry aready exists for the module
-		$mod_table_exists = mod_table_exists($tablename);
+	$modname = $xml->name;
+	$author = $xml->author;
+	$created = $xml->creationDate;
+	$version = $xml->version;
+	$description = $xml->description;
+	$directoryname = $xml->directories->directoryname;
+	$tablename = $xml->tables->tablename;		
+	$installfile = $xml->configuration->installfile;
+	$installfile = "./" . $installfile;
+	$modincsdir = $xml->directories->incsdirectoryname;
+	$modincsdir = "/" . $modincsdir;
 
-		if ((file_exists($module_dir)) && ($mod_entry_exists==1) && ($mod_table_exists==1)) { // checks fully functioning previous existance of module.
+	$mod_entry_exists = module_tabs_exist($modname); // if a table entry aready exists for the module	
+	$mod_table_exists = mod_table_exists($tablename);
+	
+		if ((file_exists($directoryname)) && ($mod_entry_exists==1) && ($mod_table_exists==1)) { // checks fully functioning previous existance of module.
 		   echo "The Module Directory and tables already exist. Please remove existing versions before installing a new one"; 
 		} else { 
-			unzip($file);
+
 			write_path($modincsdir, $tickets_dir);	
 
-		// Print out Module details
+			// Print out Module details
 
 			print "Module Name; "; print $modname; print "<BR />";
 			print "Module Directory; "; print $directoryname; print "<BR />";	
@@ -220,28 +219,21 @@ if (isset($_POST['submit'])) { // Handle the form.
 			print "Version: "; print $version; print "<BR />";
 			print "Description: "; print $description; print "<BR />";
 
-		//	fclose($structurefile);	
 			unlink($structurefile);
 
 			print "<A HREF=$installfile><< Configure Module >></A>";
 			print "</DIV>";
-		}	// end if module exists
-		} else {
-		echo '<p>The file upload failed.</p>';
-	}	// end if file uploaded
-	chmod($upload_directory, 0400);
-	
+		}
 } else { // If form not submitted print form.
 ?>
 	<DIV style='background-color:#CECECE; position: absolute; width: 60%; height: 60%; left: 20%; top: 10%; border:2px inset #FFF2BF; display: block'>	
 	<center>TICKETS MODULES INSTALLATION.</center>
 	<DIV style='background-color:#CECECE; position: absolute; width: 40%; height: 20%; left: 5%; top: 10%; border:2px inset #FFF2BF; display: block'>
-	<TABLE BORDER="0">
-	<TH COLSPAN="2">Upload a new Tickets module<BR /></TH>
-	<FORM enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-	<input type="hidden" name="MAX_FILE_SIZE" value="10000000">
+	<TABLE BORDER="0" style='width: 100%;'>
+	<TH COLSPAN="2">Chose Module to Install<BR /></TH>
+	<FORM action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 	<fieldset>
-	<TR CLASS="even"><TD>File:</TD><TD><input type="file" name="upload" /></TD></fieldset>
+	<TR CLASS="even"><TD>Module:</TD><TD><?php print get_mod_to_install();?></TD></fieldset>
 	<TR CLASS="even"><TD COLSPAN="2" ALIGN="center"><input type="submit" name="submit" value="Submit" /></TD></TR>
 	</FORM></TABLE>
 	</div>

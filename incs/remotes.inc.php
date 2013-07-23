@@ -9,23 +9,34 @@
 4/24/11 - aprs error suppress added
 4/25/11 - glat - check position or time change, sane() added
 6/10/11 - Internal Tickets Tracker added (do_t_tracker)
-7/6/11 do_ogts() added
+7/6/11 -  do_ogts() added
 9/25/11 - do_ogts() revised to accommodate 3-element 'ogts_info' setting
 11/15/11 - fixes to GLat(), LocateA(), do_gtrack() - correct $result => $temp_result
+2/22/12 - applied corrections to sane(), incl revised threshold logic to avoid strtotime()
+3/24/12 - OGTS fixes to accommodate UK  addrresses.
+4/2/12 - accommodate absence of OGTS address data 
+4/18/12 - APRS SQL  and data type corrections applied
+4/20/12 fix to accommodate empty json element, per KB email - snap(__FUNCTION__, __LINE__);
+4/29/12 add'l ogts and aprs error detection and logging
 */
 
-function sane($in_lat, $in_lng, $in_time) {			// applies sanity check to input values
-	if (!(is_float($in_lat)) && (is_float($in_lng)) && (!(is_int($in_time))))	return FALSE;
-	if (($in_lat> 90.0) || ($in_lat> 90.0)) 									return FALSE;
-	if (($in_lat== 0.0) || ($in_lng== 0.0))										return FALSE;
-	if (( $in_lng> 180.0) || ( $in_lng<-180.0))									return FALSE;
-	
-	$ts_threshold_p = mysql2timestamp(strtotime('now - 24 hour'));	// integer time value
-	$ts_threshold_f = mysql2timestamp(strtotime('now + 24 hour'));	
-	return ($in_time>$ts_threshold_p)&& ($in_time>$ts_threshold_f);	
+function sane($in_lat, $in_lng, $in_time) {			// applies sanity check to input values - returns boolean - 2/22/12
+	if ((!(is_float($in_lat))) || 
+		(!(is_float($in_lng))) || 
+		(!(is_int($in_time))))							return FALSE;	// 2/22/12
+	if (abs($in_lat> 90.0)) 							return FALSE;	
+	if ((abs($in_lat== 0.0)) || (abs($in_lng== 0.0)))	return FALSE;
+	if (abs($in_lng)> 180.0)							return FALSE;
+	$one_day = 24*60*60;						// set 24-hour window each side of now - 2/22/12
+	$ts_threshold_p = now() - $one_day;			// past 
+	$ts_threshold_f = now() + $one_day;			// future	- function mysql_format_date()
+	snap( __LINE__, $in_time );	
+	snap( __LINE__, mysql_format_date($in_time) );	
+//	snap( __LINE__, mysql_format_date($ts_threshold_p) );	
+	return (($in_time>$ts_threshold_p) && ($in_time<$ts_threshold_f));		// 2/22/12
 	}				// end function same()
 
-function get_current() {		// 3/16/09, 6/10/11, 7/25/09
+function get_current() {		// 3/16/09, 6/10/11, 7/25/09 
 	$delay = 1;			// minimum time in minutes between  queries - 7/25/09
 	$when = get_variable('_aprs_time');				// misnomer acknowledged
 	if(time() < $when) { 
@@ -256,7 +267,6 @@ function do_locatea() {				//7/29/09
 			$time = $xml->marker['local_time'];
 			$time = date("H:i:s", strtotime($time));	// format as mySQL time
 			$updated = $date . " " . $time;				// updated datetime, e.g., 2009-09-22 13:40:20
-	//		snap(__LINE__, $updated);
 			}
 
 			if (sane($lat, $lng, mysql2timestamp($updated))) {
@@ -331,12 +341,7 @@ function do_glat() {			//7/29/09
 		$glat_id = $ret_val[0];									// 8/24/10
 		$timestamp = $ret_val[1];
 		$updated = mysql_format_date($timestamp);				// to datetime format
-		
 		if ( sane( $lat, $lng, $timestamp )) {					// discard if invalid or stale
-		
-			$queryd	= "DELETE FROM `$GLOBALS[mysql_prefix]tracks` WHERE packet_date < (NOW() - INTERVAL 14 DAY)"; // remove ALL expired track records 
-			$resultd = mysql_query($queryd) or do_error($queryd, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-			unset($resultd);
 																			// 4/25/11
 			$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET 
 				`lat` = '{$lat}', `lng` ='{$lng}', `updated`	= '{$updated}' 
@@ -344,8 +349,8 @@ function do_glat() {			//7/29/09
 				AND  (`callsign` LIKE '%{$glat_id}'))";	
 			$result_temp = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); //11/15/11
 
-			$query = "DELETE FROM `$GLOBALS[mysql_prefix]tracks_hh` WHERE `source` LIKE '%{$glat_id}'";		// remove prior track this device  
-			$result_temp = mysql_query($query);	// 7/28/10, 11/15/11
+//			$query = "DELETE FROM `$GLOBALS[mysql_prefix]tracks_hh` WHERE `source` LIKE '%{$glat_id}'";		// remove prior track this device  
+//			$result_temp = mysql_query($query);	// 7/28/10, 11/15/11
 			
 			$query = "INSERT INTO `$GLOBALS[mysql_prefix]tracks_hh` (`source`, `latitude`, `longitude`, `updated`) VALUES ('$glat_id', '$lat', '$lng', '$updated')";
 			$result_temp = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -354,7 +359,7 @@ function do_glat() {			//7/29/09
 			$result_temp = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 			}			// end if (sane())
 		else {
-//			snap(__LINE__,  $row['callsign'] );
+			snap(__LINE__,  " data error: " . $row['callsign'] );
 			}
 		}			// end while()
 
@@ -365,11 +370,19 @@ function aprs_date_ok ($indate) {	// checks for date/time within 48 hours
 	}
 
 function do_aprs() {				// 3/15/11 - populates the APRS tracks table and updates responder position data
+	function log_aprs_err($message) {								// error logger - 4/29/12
+		@session_start();
+		if (!(array_key_exists ( "aprs_err", $_SESSION ))) {		// limit to once per session
+			do_log($GLOBALS['LOG_ERROR'], 0, 0, $message);
+			$_SESSION['aprs_err'] = TRUE;		
+			}
+		}		// end function
+
 	global $ts_threshold;					// 4/25/11
 	global $istest;
 	$the_key = trim(get_variable('aprs_fi_key'));
 	if (empty($the_key)) {
-		do_log($GLOBALS['LOG_ERROR'], 0, 0, "APRS_FI key required for APRS operation" );
+		log_aprs_err("APRS.FI key required for aprs operation") ;
 		return FALSE;
 		}
 	
@@ -416,6 +429,9 @@ function do_aprs() {				// 3/15/11 - populates the APRS tracks table and updates
 //		dump($the_url);
 		
 		$data=get_remote($the_url);				// returns JSON-decoded values
+		if ((!(is_array($data))) && (!(is_object($data)))) {				// 4/29/12
+			log_aprs_err("APRS JSON data format error");
+			}
 		$temp = $data->result;
 //		snap(__LINE__, $temp);
 		
@@ -424,26 +440,24 @@ function do_aprs() {				// 3/15/11 - populates the APRS tracks table and updates
 		
 			for ($i=0; $i< ($data->found ) ; $i++) {		// extract fields from each entry
 				$entry = (object) $data->entries[$i];
-//				dump($entry);
 				$callsign_in = $entry->name;
 				
 				$lat = $entry->lat;
 				$lng = $entry->lng;
 				$updated =  $entry->time;
-//				snap(__LINE__, $updated);
 				@($course = $entry->course);				// 4/24/11
 				@($mph = $entry->speed);
 				@($alt = @$entry->altitude);
 				$packet_date = $entry->lasttime;
 				$p_d_timestamp = mysql_format_date($packet_date);		// datetime format				
-																		// 4/25/11
-				if (sane($lat, $lng, $updated )){																
+																		// 4/25/11, 4/18/12
+				if (sane(floatval($lat), floatval($lng), intval($updated))){
 					$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET 
 						`lat` = '$lat', `lng` ='$lng', `updated` = '{$p_d_timestamp}' 
 						WHERE ((`aprs` = 1)
-						(AND  `updated` <> '{$p_d_timestamp}')
-						(AND  `callsign` = '{$callsign_in}'))";
-//					snap(__LINE__, $p_d_timestamp);
+						AND (`updated` <> '{$p_d_timestamp}')
+						AND (`callsign` = '{$callsign_in}'))";
+//					snap(__LINE__, $query);
 					$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 					
 					$our_hash = $callsign_in . (string) (abs($lat) + abs($lng)) ;				// a hash - for dupe prevention
@@ -451,9 +465,8 @@ function do_aprs() {				// 3/15/11 - populates the APRS tracks table and updates
 					$query = "INSERT INTO `$GLOBALS[mysql_prefix]tracks` (
 						packet_id, source, latitude, longitude, speed, course, altitude, packet_date, updated) VALUES (
 						'{$our_hash}', '{$callsign_in}', '{$lat}', '{$lng}', '{$mph}', '{$course}', '{$alt}', '{$p_d_timestamp}', '{$now}')";
-						
+//					snap(__LINE__, $query);
 					$result = mysql_query($query);				// ignore duplicate/errors
-					$result_tr = mysql_query($query) or $error = TRUE ;
 					}
 	
 				}		// end for ($i...)	
@@ -462,7 +475,9 @@ function do_aprs() {				// 3/15/11 - populates the APRS tracks table and updates
 		}		// end (mysql_affected_rows() > 0) - any APRS units?
 	}		// end function do_aprs() 
 
-function do_ogts() {			// 9/25/11
+function do_ogts() {			// 3/24/12
+//	snap(__FUNCTION__ , __LINE__);
+
 	function log_ogts_err($message) {					// error logger
 		@session_start();
 		if (!(array_key_exists ( "ogts_err", $_SESSION ))) {		// limit to once per session
@@ -503,49 +518,94 @@ function do_ogts() {			// 9/25/11
 
 	$jsonresp = json_decode ($data, true); 		// an associative array
 	$result = json_last_error();
-	if (!(empty($result))) {
-		log_ogts_err("JSON data format error");
+
+	if ((!(empty($result))) || (!(is_array($jsonresp)))) {		// 4/29/12
+		log_ogts_err("OpenGTS JSON data format error");
 		return FALSE;
 		}
 
 	foreach ($jsonresp["DeviceList"] as $device) {	
-
-		$ogts_id = $device["EventData"][0]['Device'];		
-		$lat = $device["EventData"][0]['GPSPoint_lat'];
-		$lng = $device["EventData"][0]['GPSPoint_lon'];
-		$speed = $device["EventData"][0]['Speed'];
-		$address = $device["EventData"][0]['Address'];
-		$timestamp = $device["EventData"][0]['Timestamp'];		// integer
-		$updated = mysql_format_date($timestamp);				// to datetime format
-
-		$addr_arr = explode (",", $address);
-		$state_arr =  explode (" ", $addr_arr[2]);				// state zip
-		$addr_sql = (count($addr_arr)<4)? "" : ", `street` = '{$addr_arr[0]}',  `city` = '{$addr_arr[1]}',  `state` = '{$state_arr[1]}'";
-
-		if ( sane( $lat, $lng, $timestamp )) {					// discard if invalid or stale																			
-			$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET 
-				`lat` = '{$lat}', `lng` ='{$lng}', `updated`	= '{$updated}'  {$addr_sql}
-				WHERE ((`ogts` = 1)
-				AND  (`callsign` LIKE '%{$ogts_id}')
-				AND (`updated` <> '{$updated}'))";	
-				
-			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-
-			if ((is_resource($result)) && (mysql_affected_rows ($result) > 0)) {			// any update?
-
-				$query = "DELETE FROM `$GLOBALS[mysql_prefix]tracks_hh` WHERE `source` LIKE '%{$ogts_id}'";		// remove prior track this device  
-				$result = mysql_query($query);	// 7/28/10
-				
-				$query = "INSERT INTO `$GLOBALS[mysql_prefix]tracks_hh` (`source`, `latitude`, `longitude`, `updated`) VALUES ('$ogts_id', '$lat', '$lng', '$updated')";
-				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		$ogts_id = $device['Device'];		
+//	//	snap(__LINE__, $ogts_id);
+		if (!(empty($device['EventData']))) {				// 4/20/12
+//	//		snap("good", $ogts_id);	
+			$lat = $device["EventData"][0]['GPSPoint_lat'];
+			$lng = $device["EventData"][0]['GPSPoint_lon'];
+			$speed = $device["EventData"][0]['Speed'];
+			$timestamp = $device["EventData"][0]['Timestamp'];		// integer
+			
+			$updated = mysql_format_date($timestamp);				// to datetime format
+			$addr_arr = array();
 	
-				$queryd	= "DELETE FROM `$GLOBALS[mysql_prefix]tracks` WHERE packet_date < (NOW() - INTERVAL 14 DAY)"; 	// remove ALL expired track records 
-				$resultd = mysql_query($queryd) or do_error($queryd, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-				
-				$query = "INSERT INTO `$GLOBALS[mysql_prefix]tracks` (`source`, `latitude`, `longitude`,`packet_date`, `updated`) VALUES ('$ogts_id', '$lat', '$lng', '$updated', '$updated')";
+			if  (array_key_exists('Address', $device["EventData"][0])) {			//  may/may-not exist
+				$address = $device["EventData"][0]['Address'];
+				$addr_arr = explode (",", $address);
+				if (trim($addr_arr[count($addr_arr)-1])=="UK") {		// 3/24/12
+		//
+	
+					switch (count($addr_arr)) {							// sanity checks added 4/2/12 
+						case 1:
+						case 2:
+							snap(__FUNCTION__ . __LINE__ , trim($addr_arr[0]));		// ex: M8 motorway
+							break;
+						case 3:
+							$street_work_val = substr (trim($addr_arr[0]), 0 , 28);
+							$city_work_val = substr (trim($addr_arr[1]), 0 , 28);
+							$state_work_val = substr (trim($addr_arr[count($addr_arr)-1]),  0 ,  4 );
+							break;
+						case 4:
+							$street_work_val = substr (trim("{$addr_arr[0]} {$addr_arr[1]}")  , 0 , 28);
+							$city_work_val = substr (trim($addr_arr[2]),  0 ,  28);
+							$state_work_val = substr (trim($addr_arr[count($addr_arr)-1]),  0 ,  4 );
+							break;
+						case 5:
+						case 6:
+							$street_work_val = substr (trim("{$addr_arr[0]} {$addr_arr[1]}"), 0, 28);
+							$city_work_val = substr (trim("{$addr_arr[2]}  {$addr_arr[3]} ") , 0, 28);
+							$state_work_val = substr (trim($addr_arr[count($addr_arr)-1]),  0 ,  4 );
+							break;
+						default:
+						}		// end switch()
+					}	// end if (UK)
+				else {
+					$state_arr =  explode (" ", $addr_arr[2]);				// state zip
+					$street_work_val = 	substr (trim($addr_arr[0]),  0 ,  28);
+					$city_work_val = 	substr (trim($addr_arr[1]),  0 ,  28);
+					$state_work_val = 	substr (trim($state_arr[1]), 0 ,  4);
+					}				// end else
+
+				$street_work_val = addslashes($street_work_val);
+				$city_work_val = addslashes($city_work_val);
+				$state_work_val = addslashes($state_work_val);
+				$addr_sql = (!((count($addr_arr)>1) && (count($addr_arr)<7)))? "" : ", `street` = '{$street_work_val}',  `city` = '{$city_work_val}',  `state` = '{$state_work_val}'";
+				}				// end if  (array_key_exists('Address', $device["EventData"][0])
+			else {
+				$addr_sql = "";
+				}
+																				// 4/2/12
+				$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET 
+					`lat` = '{$lat}', `lng` ='{$lng}', `updated` = '{$updated}'  {$addr_sql}
+					WHERE ((`ogts` = 1)
+					AND  (`callsign` LIKE '%{$ogts_id}')
+					AND (`updated` <> '{$updated}'))";	
+	
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-				}			// end if ( msql_affected_rows ($result) > 0)
-			}			// end if (sane())
+//				snap(__LINE__, $query);
+				if ((is_resource($result)) && (mysql_affected_rows ($result) > 0)) {			// any update?
+	
+					$query = "DELETE FROM `$GLOBALS[mysql_prefix]tracks_hh` WHERE `source` LIKE '%{$ogts_id}'";		// remove prior track this device  
+					$result = mysql_query($query);	// 7/28/10
+					
+					$query = "INSERT INTO `$GLOBALS[mysql_prefix]tracks_hh` (`source`, `latitude`, `longitude`, `updated`) VALUES ('$ogts_id', '$lat', '$lng', '$updated')";
+					$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		
+					$queryd	= "DELETE FROM `$GLOBALS[mysql_prefix]tracks` WHERE packet_date < (NOW() - INTERVAL 14 DAY)"; 	// remove ALL expired track records 
+					$resultd = mysql_query($queryd) or do_error($queryd, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+					
+					$query = "INSERT INTO `$GLOBALS[mysql_prefix]tracks` (`source`, `latitude`, `longitude`,`packet_date`, `updated`) VALUES ('$ogts_id', '$lat', '$lng', '$updated', '$updated')";
+					$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+					}			// end if ( msql_affected_rows ($result) > 0)
+			}			// end if (!(empty($device['EventData'])))
 	}			// end foreach() ... as $device
 
 }		// end function do_ogts();
@@ -583,7 +643,7 @@ function do_t_tracker() {		//	6/10/11
 				$query6 = "INSERT INTO `$GLOBALS[mysql_prefix]tracks_hh` (source, latitude, longitude, speed, altitude, updated) VALUES ('$tracking_id', '$ic_lat', '$ic_lng', round({$ic_speed}), $ic_altitude, '$ic_time')";		// 6/24/10
 				$result6 = mysql_query($query6) or do_error($query6, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 				
-				$query7 = "INSERT INTO `$GLOBALS[mysql_prefix]tracks` (source, latitude, longitude, speed, altitude, packet_date, updated) VALUES ('$tracking_id', '$ic_latitude', '$ic_longitude', round({$ic_speed}), $ic_altitude, '$ic_time', '$ic_time')";
+				$query7 = "INSERT INTO `$GLOBALS[mysql_prefix]tracks` (source, latitude, longitude, speed, altitude, packet_date, updated) VALUES ('$tracking_id', '$ic_lat', '$ic_lng', round({$ic_speed}), $ic_altitude, '$ic_time', '$ic_time')";
 				$result7 = mysql_query($query7) or do_error($query7, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 				$response_code7 = ($result7) ? 700 : 799;		
 				}	//end if

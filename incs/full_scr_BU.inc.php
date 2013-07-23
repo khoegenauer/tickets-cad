@@ -16,14 +16,10 @@
 4/11/11 Where clause updated in all major queries to support Group functionality
 6/10/11 Added Groups and Boundaries
 7/3/11 added lines data, do_landb() - 
-6/22/12 set def_zoom as zoom limit
+6/21/12 boolean points => got_points
 */
 error_reporting(E_ALL);
-$curr_cats = get_category_butts();	//	get current categories.
-$cat_sess_stat = get_session_status($curr_cats);	//	get session current status categories.
-$hidden = find_hidden($curr_cats);
-$shown = find_showing($curr_cats);
-$un_stat_cats = get_all_categories();
+
 
 //	dump ( $_GET);
 
@@ -55,7 +51,7 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 	}		
 
 	function full_scr($sort_by_field='',$sort_value='') {	// list tickets ===================================================
-		global $now_num, $now_day, $now_mon, $now_year, $monday, $disposition, $curr_cats, $hidden, $shown, $un_stat_cats, $cat_sess_stat;
+		global $now_num, $now_day, $now_mon, $now_year, $monday, $disposition;
 		
 		if(($_SESSION['scr_width'] < 1300) && ($_SESSION['scr_width'] > 1050)) {		//	4/5/11	sets shorten length depending on client screen width
 			$shorten_length = 11;
@@ -578,11 +574,11 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 // 	Units show / hide functions				
 		
 	function set_categories() {			//	12/03/10 - checks current session values and sets checkboxes and view states for hide and show.
-		var curr_cats = <?php echo json_encode($curr_cats); ?>;
-		var cat_sess_stat = <?php echo json_encode($cat_sess_stat); ?>;
-		var hidden = <?php print json_encode($hidden); ?>;
-		var shown = <?php print json_encode($shown); ?>;
-		var number_of_units = <?php print get_no_units(); ?>;
+		var curr_cats = <?php echo json_encode(get_category_butts()); ?>;
+		var cat_sess_stat = <?php echo json_encode(get_session_status()); ?>;
+		var hidden = <?php print find_hidden(); ?>;
+		var shown = <?php print find_showing(); ?>;
+		var number_of_units = <?php print get_no_units(); ?>;		
 		if(hidden!=0) {
 			$('ALL').style.display = '';
 			$('ALL_BUTTON').style.display = '';
@@ -917,8 +913,8 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 				}
 			}
 
-		var hidden = <?php print find_hidden($curr_cats); ?>;
-		var shown = <?php print find_showing($curr_cats); ?>;
+		var hidden = <?php print find_hidden(); ?>;
+		var shown = <?php print find_showing(); ?>;
 
 		$('fac_go_button').style.display = 'none';
 		$('fac_can_button').style.display = 'none';
@@ -1011,7 +1007,7 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 			}
 	
 		function createMarker(point, tabs, color, stat, id, sym, category) {					// Creates marker and sets up click event infowindow
-			points = true;
+			got_points = true;				// 6/21/12
 			var icon = new GIcon(baseIcon);
 			var icon_url = "./our_icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + sym;				// 1/6/09
 			icon.image = icon_url;
@@ -1052,7 +1048,7 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 			}				// end function create Marker()
 			
 		function createdummyMarker(point, tabs, id) {					// Creates dummymarker and sets up click event infowindow for "no maps" added tickets and units. 7/28/10 
-			points = true;
+			got_points = true;
 			var icon = new GIcon(baseIcon);
 			var icon_url = "./our_icons/question1.png";				// 7/28/10
 			icon.image = icon_url;
@@ -1125,7 +1121,7 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 		var map;
 		var center;
 		var zoom;
-		var points = false;
+		var got_points = false;
 <?php
 	
 	$dzf = get_variable('def_zoom_fixed');
@@ -1243,7 +1239,7 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 			print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";
 		}
 ?>
-
+	
 //		map.addControl(new GSmallMapControl());					// 8/25/08
 		map.setUIToDefault();									// 8/13/10
 
@@ -1750,7 +1746,7 @@ var sidebar_line = "";
 		$('assignments').innerHTML = sidebar_line;	//	assignment list to DIV		
 			
 	// ==========================================      RESPONDER start    ================================================
-			points = false;
+			got_points = false;
 			i++;
 			var j=0;
 <?php
@@ -2598,16 +2594,14 @@ var sidebar_line = "";
 */
 
 		if (!(map_is_fixed)){
-			if (!points) {		// any?
+			if (!got_points) {		// any? - 6/21/12
 				map.setCenter(new GLatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
 				}
 			else {
 				center = bounds.getCenter();
-				var max_zoom = <?php echo get_variable('def_zoom');?>;				// 6/22/12
-				zoom = (map.getBoundsZoomLevel(bounds) > max_zoom )? max_zoom : map.getBoundsZoomLevel(bounds);
-
+				zoom = map.getBoundsZoomLevel(bounds);
 				map.setCenter(center,zoom);
-				}			// end if/else (!points)
+				}			// end if/else (!got_points)
 		}				// end if (!(map_is_fixed))
 	
 		side_bar_html = "";

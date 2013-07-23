@@ -10,7 +10,7 @@ $cols = 6;	// no. of columns in the list presentation
 3/19/11 added edit allow test
 5/26/11 added SQL inject prevention 
 6/26/11 rewrote restore function to copy 'capt' to 'repl' for all records
-
+5/1/12 input size change
 */
 error_reporting(E_ALL);				
 
@@ -146,7 +146,7 @@ $func = (empty($_POST))? "l":$_POST['func'];
 			
 			<TR CLASS='odd' VALIGN='baseline'>
 				<TD><?php print $row['capt'];?>:&nbsp;</TD>
-				<TD><INPUT TYPE = "text" NAME = "frm_repl" VALUE="<?php print $row['repl'];?>" size = 36></TD>	<!-- 8/30/10 -->
+				<TD><INPUT TYPE = "text" NAME = "frm_repl" VALUE="<?php print $row['repl'];?>" size = 64></TD>	<!-- 8/30/10 , 5/1/12-->
 				</TR>
 			<TR CLASS='odd' VALIGN='baseline'>
 				<TD>&nbsp;</TD>

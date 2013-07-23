@@ -1749,7 +1749,6 @@ var obj_sugg;
 <DIV>
 <TABLE BORDER="0" ID = "outer" >
 <TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'><?php print $heading; ?> </FONT></TD></TR>	<!-- 6/10/11 -->
-<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><SPAN ID='region_flags' style='background: #00FFFF; font-weight: bold;'></SPAN></TD></TR>	<!-- 5/2/10, 3/15/11, 6/10/11 -->
 <TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR>				<!-- 6/10/11 -->	
 <TR><TD>
 <TABLE BORDER="0"><BR />
@@ -1823,11 +1822,11 @@ var obj_sugg;
 	<TD ID='proto_cell'></TD>
 	</TR>
 <?php
-if(get_num_groups() > 1) {
-	if((is_super()) && (get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
+if(get_num_groups()) {
+	if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>
 		<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
-		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');"><?php print get_text("Groups");?></A>: </TD>
+		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');"><?php print get_text("Regions");?></A>: </TD>
 		<TD>
 		<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 		<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
@@ -1838,10 +1837,10 @@ if(get_num_groups() > 1) {
 ?>	
 		</TD></TR>		
 <?php
-	} elseif((is_admin()) && (get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
+		} elseif((is_admin()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
 ?>
 		<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
-		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');"><?php print get_text("Groups");?></A>: </TD>
+		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');"><?php print get_text("Regions");?></A>: </TD>
 		<TD>
 		<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 		<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
@@ -1852,10 +1851,10 @@ if(get_num_groups() > 1) {
 ?>	
 		</TD></TR>		
 <?php
-	} elseif((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
+		} else {
 ?>
 		<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
-		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');"><?php print get_text("Groups");?></A>: </TD>
+		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');"><?php print get_text("Regions");?></A>: </TD>
 		<TD>
 		<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 		<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
@@ -1866,7 +1865,6 @@ if(get_num_groups() > 1) {
 ?>	
 		</TD></TR>
 <?php
-	} else {
 		}
 	} else {
 ?>
@@ -1888,7 +1886,6 @@ if(get_num_groups() > 1) {
 ?>
 
 <SCRIPT>
-$('region_flags').innerHTML = "<?php print $regs_string; ?>";			// 5/2/10	
 	function set_signal(inval) {				// 12/18/10
 		var lh_sep = (document.add.frm_description.value.trim().length>0)? " " : "";
 		var temp_ary = inval.split("|", 2);		// inserted separator

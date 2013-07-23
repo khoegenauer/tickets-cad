@@ -153,6 +153,11 @@
 7/6/11 OpenGTS, $GLOBALS['TRACK_NAMES' added
 10/18/11 Added functions for receiving facility control on mobile page.
 10/26/11 Added function is_admin - checks for administrator but not super.
+3/11/12 added LOG_UNIT_TO_QUARTERS
+3/22/12 added ICS 213 log entry
+4/12/12 moved regions view control functions from individual files into FIP
+6/18/12 added cases "S" and "T", and revised match string error notification
+6/20/12 corrections to set_u_updated() re responder schema/sql
 */
 error_reporting(E_ALL);
 
@@ -227,6 +232,7 @@ $GLOBALS['LOG_PATIENT_DELETE']		=17;
 $GLOBALS['LOG_UNIT_STATUS']			=20;
 $GLOBALS['LOG_UNIT_COMPLETE']		=21;		// 	run complete
 $GLOBALS['LOG_UNIT_CHANGE']			=22;
+$GLOBALS['LOG_UNIT_TO_QUARTERS']	=23;		// 3/11/12
 
 $GLOBALS['LOG_CALL_EDIT']			=29;		// 6/17/11
 $GLOBALS['LOG_CALL_DISP']			=30;		// 1/20/09
@@ -256,9 +262,11 @@ $GLOBALS['LOG_FACILITY_ONSCN']		=49;		// 9/22/09
 $GLOBALS['LOG_FACILITY_CLR']		=50;		// 9/22/09
 $GLOBALS['LOG_FACILITY_RESET']		=51;		// 9/22/09
 
+$GLOBALS['LOG_ICS213_MESSAGE_SEND']	=60;		// 3/22/12
+
 $GLOBALS['LOG_ERROR']				=90;		// 1/10/11
 $GLOBALS['LOG_INTRUSION']			=91;		// 5/25/11
-$GLOBALS['LOG_ERRONEOUS']				=0;		// 1/10/11
+$GLOBALS['LOG_ERRONEOUS']			=0;			// 1/10/11
 
 $GLOBALS['icons'] = array("black.png", "blue.png", "green.png", "red.png", "white.png", "yellow.png", "gray.png", "lt_blue.png", "orange.png");
 $GLOBALS['sm_icons']	= array("sm_black.png", "sm_blue.png", "sm_green.png", "sm_red.png", "sm_white.png", "sm_yellow.png", "sm_gray.png", "sm_lt_blue.png", "sm_orange.png");
@@ -776,7 +784,11 @@ function get_num_groups() {		//	6/10/11
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]region`";		//	6/10/11
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 	$num_rows = mysql_num_rows($result);
-	return $num_rows;
+	if($num_rows >= 2) {
+		return true;
+		} else {
+		return false;
+		}
 	}
 	
 function get_first_group($resource, $resource_id) {		//	6/10/11
@@ -1567,8 +1579,8 @@ function mail_it ($to_str, $text, $ticket_id, $text_sel=1, $txt_only = FALSE) {	
 
 /*
 Subject		A
-Inciden		B  Title
-Priorit		C  Priorit
+Incident	B  Title
+Priority	C  Priorit
 Nature		D  Nature
 Written		E  Written
 Updated		F  As of
@@ -1576,14 +1588,17 @@ Reporte		G  By
 Phone: 		H  Phone: 
 Status:		I  Status:
 Address		J  Location
-Descrip		K  Descrip
-Disposi		L  Disposi
+Descrip'n	K  Descrip
+Dispos'n	L  Disposi
 Start/end	M
 Map: " 		N  Map: " 
 Actions		O
 Patients	P
 Host		Q
 911 contact	R				// 6/26/10
+Ticket link S				// 6/20/12
+Facility 	T				// 6/20/12
+
 */
 
 	switch ($text_sel) {		// 7/7/09
@@ -1707,9 +1722,31 @@ Host		Q
 					$message .= (empty($t_row['nine_one_one']))?  "": get_text('911 Contacted') . ": " . wordwrap($t_row['nine_one_one']).$eol;	//	11/10/11
 				    break;
 
-				default:
-				    $message = "Match string error:" . $match_str[$i]. " " . $match_str . $eol ;
+				case "S":		// 6/20/12
+					$temp_arr = explode ("/", $_SERVER['SERVER_PROTOCOL']);		// accommodate https
+					$message .= "Link: {$temp_arr[0]}://{$_SERVER['HTTP_HOST']}:{$_SERVER['SERVER_PORT']}/main.php?id={$ticket_id}";
+					break;
 
+				case "T":							// 6/20/12
+					if ((intval($t_row['rec_facility'])>0) || (intval($t_row['facility'])>0)) {
+						$the_facility = (intval($t_row['rec_facility'])>0)? intval($t_row['rec_facility']) : intval($t_row['facility']);					
+						$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id`={$the_facility} LIMIT 1";	
+						$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	// 3/22/09
+						if (mysql_num_rows ($result)>0) {
+							$f_row = stripslashes_deep(mysql_fetch_array($result));
+							$message .= get_text('Facility') . ": {$f_row['handle']}\n";
+							}
+						}
+				    break;
+				
+				default:
+//				    $message = "Match string error:" . $match_str[$i]. " " . $match_str . $eol ;
+					@session_start();
+					$err_str = "mail error: '{$match_str[$i]}' @ " .  __LINE__;		// 6/18/12
+					if (!(array_key_exists ( $err_str, $_SESSION ))) {		// limit to once per session
+						do_log($GLOBALS['LOG_ERROR'], 0, 0, $err_str);
+						$_SESSION[$err_str] = TRUE;		
+						}
 				}		// end switch ()
 			}		// end if(!($match_...))
 		}		// end for ($i...)
@@ -1865,6 +1902,7 @@ function notify_user($ticket_id, $action_id) {								// 10/20/08, 5/22/11
 			}		
 		}
 	$temp = array_values(array_unique($addrs));		// 5/22/10	
+
 	return (empty($temp))? FALSE: $temp;
 	}
 	
@@ -2053,7 +2091,7 @@ function get_status_sel($unit_in, $status_val_in, $tbl_in) {					// returns sele
 	$the_grp = strval(rand());			//  force initial OPTGROUP value
 	$i = 0;
 	$outstr = ($tbl_in == "u") ? "\t\t<SELECT CLASS='sit' name='frm_status_id' {$dis} STYLE='background-color:{$init_bg_color}; color:{$init_txt_color};' ONCHANGE = 'this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color; do_sel_update({$unit_in}, this.value)' >" :
-	"\t\t<SELECT CLASS='sit' name='frm_status_id' {$dis} STYLE='background-color:{$init_bg_color}; color:{$init_txt_color};' ONCHANGE = 'this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color; do_sel_update_fac({$unit_in}, this.value)' >";	// 12/19/09, 1/1/10. 3/15/11
+	"\t\t<SELECT CLASS='sit' name='frm_status_id' {$dis} STYLE='background-color:{$init_bg_color}; color:{$init_txt_color}; width: 90%;' ONCHANGE = 'this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color; do_sel_update_fac({$unit_in}, this.value)' >";	// 12/19/09, 1/1/10. 3/15/11
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result_st))) {
 		if ($the_grp != $row['group']) {
 			$outstr .= ($i == 0)? "": "\t</OPTGROUP>";
@@ -2120,7 +2158,7 @@ function get_recfac_sel($unit_in, $tickid, $assign_id) {					// 10/18/11 - Gets 
 	$guest = is_guest();
 	$dis = ($guest)? " DISABLED": "";
 	$i = 0;
-	$outstr = "\t\t<SELECT CLASS='sit' name='frm_rec_fac' {$dis} ONCHANGE = 'set_rec_fac(this.value)' >";
+	$outstr = "\t\t<SELECT CLASS='sit' style='width: 90%;' name='frm_rec_fac' {$dis} ONCHANGE = 'set_rec_fac(this.value)' >";
 	if($curr_fac == 0) {
 		$outstr .= "\t\t\t<OPTION VALUE=0 SELECTED>None Selected</OPTION>";	
 		} else {
@@ -2374,21 +2412,17 @@ function get_disp_status ($row_in) {			// 4/26/11
 	if (is_date($dispatched))	{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[0]}&nbsp;" . elapsed ($dispatched) . "</SPAN>";}
 	}
 														
-function set_u_updated ($in_assign) {			// given a disaptch record id, updates unit data - 9/1/10									
+function set_u_updated ($in_assign) {			// given a disaptch record id, updates unit data - 9/1/10, 6/20/12
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` =  {$in_assign} LIMIT 1";
 	$result = mysql_query($query) or do_error($query, "", mysql_error(), basename( __FILE__), __LINE__);
+	$row_temp = mysql_fetch_assoc($result);	
 	
-	$row_temp = mysql_fetch_assoc($result);					// 
 	$now = quote_smart(mysql_format_date(time() - (intval(get_variable('delta_mins'))*60)));														// 9/1/10
 	$user = quote_smart(trim($_SESSION['user_id']));
 	$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET
 		`updated`= 			{$now},
-		`_on`= 				{$now},
-		`user_id`=  		{$user},
-		`_by`=   			{$user},
-		`_from`= " . 		quote_smart(trim($_SERVER['REMOTE_ADDR'])) . "
+		`user_id`=  		{$user}
 		WHERE `id`=			{$row_temp['responder_id']}";
-	
 	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
 	unset($result);
 	return TRUE;
@@ -2450,6 +2484,81 @@ function get_hints($instr) {		// returns associative array - 11/30/10
 		}
 	return($hints);
 	}						// end function
+	
+function get_regions_buttons($user_id) {		//	4/12/12
+	$regs_viewed = "";
+	if(isset($_SESSION['viewed_groups'])) {
+		$regs_viewed= explode(",",$_SESSION['viewed_groups']);
+		}
+	$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id' ORDER BY `group`";			//	5/3/11
+	$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+
+	$al_buttons="";	
+	while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{		//	4/12/12
+		if(!empty($regs_viewed)) {
+			if(in_array($row2['group'], $regs_viewed)) {
+				$al_buttons.="<SPAN class='reg_button'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "</SPAN>";
+			} else {
+				$al_buttons.="<SPAN class='reg_button'><INPUT TYPE='checkbox' name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "</SPAN>";
+			}
+			} else {
+				$al_buttons.="<SPAN class='reg_button'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "</SPAN>";
+			}
+		}
+	return $al_buttons;
+	}
+	
+function get_regions_buttons2($user_id) {		//	4/12/12
+	if(isset($_SESSION['viewed_groups'])) {
+		$regs_viewed= explode(",",$_SESSION['viewed_groups']);
+		}
+	
+	$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id' ORDER BY `group`";			//	5/3/11
+	$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+
+	$al_buttons="";	
+	while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	//	5/3/11
+		if(!empty($regs_viewed)) {
+			if(in_array($row2['group'], $regs_viewed)) {
+				$al_buttons.="<DIV style='display: block; float: left;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
+			} else {
+				$al_buttons.="<DIV style='display: block; float: left;'><INPUT TYPE='checkbox' name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
+			}
+			} else {
+				$al_buttons.="<DIV style='display: block; float: left;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
+			}
+		}
+	return $al_buttons;
+	}
+
+function get_buttons_inner(){		//	4/12/12
+	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
+?>
+		<SCRIPT>
+		side_bar_html= "";
+		side_bar_html +="<form name='region_form' METHOD='post' action='main.php'><DIV><SPAN class='but_hdr'>Regions</SPAN>";
+		side_bar_html +="<?php print get_regions_buttons($_SESSION['user_id']);?>";
+		side_bar_html +="<SPAN id='reg_sub_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='form_validate(document.region_form);'>Update</SPAN>";
+		side_bar_html +="<SPAN id='expand_regs' class='plain' style='z-index:1001; cursor: pointer; float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onclick=\"$('top_reg_box').style.display = 'none'; $('regions_outer').style.display = 'block';\">Undock</SPAN></DIV></form>";
+		$("region_boxes").innerHTML = side_bar_html;	
+		</SCRIPT>
+<?php
+		}
+	}
+
+function get_buttons_inner2(){		//	4/12/12
+	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
+?>
+		<SCRIPT>
+		side_bar_html= "";
+		side_bar_html+="<form name='region_form2' METHOD='post' action='main.php'><DIV><SPAN class='but_hdr'>Regions</SPAN><BR /><BR />";
+		side_bar_html += "<?php print get_regions_buttons2($_SESSION['user_id']);?><BR /><BR />";
+		side_bar_html+="<BR /><BR /><SPAN id='reg_sub_but2' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='form_validate(document.region_form2);'>Update</SPAN></DIV></form>";
+		$("region_boxes2").innerHTML = side_bar_html;			
+		</SCRIPT>
+<?php
+		}
+	}	
 
 function get_remote_type ($inrow) { 							// returns type of remote - 12/3/10
 	if ($inrow['aprs'] == 1) 				{ return $GLOBALS['TRACK_APRS']; }

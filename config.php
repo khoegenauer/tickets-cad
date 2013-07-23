@@ -79,6 +79,8 @@
 6/20/12 applied get_text() to 'Unit'
 10/23/12 Added Level 'Service User' for Portal, added messaging
 3/29/2013 added include for GMaps V3 setcenter
+5/24/2013 ics 213 link made conditional on setting
+6/18/2013 added link for insurance table maint.
 */
 	$asterisk = FALSE;		// user: change to TRUE  in order to make the Pin Control table accessible.	
 	if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/7/09 
@@ -2333,8 +2335,13 @@ ul {
 		<LI><A HREF="config.php?func=notify">Add/Edit Notifies</A>	
 		<LI><A HREF="config.php?func=delete">Delete Closed Tickets</A>
 		<LI><A HREF="#" onClick = "do_audio_test();">Alarm audio test</A>		<!-- 6/22/10 -->
+<?php
+		if (!intval(get_variable('ics_top')==1)) { 		// 5/24/2013
+?>		
 		<LI><A HREF="#" onClick = "window.open('ics213.php', 'ics213');">ICS 213</A>		<!-- 3/22/12 -->		
 <?php
+			}		// end if ( ... ics_top ...)
+			
 		if (mysql_table_exists("$GLOBALS[mysql_prefix]evacuees")) {		// 6/4/09
 ?>	
 			<BR />
@@ -2344,7 +2351,13 @@ ul {
 		if (mysql_table_exists("$GLOBALS[mysql_prefix]constituents")) {		// 6/4/09
 ?>	
 			<BR />
-			<LI><A HREF="#" onClick = "do_Post('constituents');">Constituents</A>
+			<LI><A HREF="#" onClick = "do_Post('constituents');"><?php echo get_text ("Constituents");?></A> <!-- 6/18/2013 -->
+<?php
+			}
+		if (mysql_table_exists("$GLOBALS[mysql_prefix]insurance")) {		// 6/4/09
+?>	
+			<BR />
+			<LI><A HREF="#" onClick = "do_Post('insurance');"><?php echo get_text ("Insurance");?></A> <!-- 6/18/2013 -->
 <?php
 			}
 		if (($asterisk) && mysql_table_exists("$GLOBALS[mysql_prefix]pin_ctrl")) {		// 7/16

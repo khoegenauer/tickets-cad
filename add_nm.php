@@ -89,7 +89,8 @@ if($istest) {print "_POST"; dump($_POST);}
 12/1/10 get_text changes
 12/18/10 set signals added
 1/1/11 Titles array added, scheduled incidents revised
-5/5/11 added get_new_colors() {				// 
+5/5/11 added get_new_colors()	
+6/4/2013 added broadcast()
 */
 
 $api_key = get_variable('gmaps_api_key');
@@ -1195,6 +1196,15 @@ $maptype = get_variable('maptype');	// 08/02/09
 			do_unlock_ps(theForm);								// 8/11/08
 			theForm.frm_phone.value=theForm.frm_phone.value.replace(/\D/g, "" ); // strip all non-digits
 			return true;
+<?php						// 6/4/2013
+		if (intval(get_variable('broadcast')==1)) { 
+?>																						/*	5/22/2013 */
+			var theMessage = "New  <?php print get_text('Incident');?> (" + theForm.frm_scope.value + ") " + theAddr  + " by <?php echo $_SESSION['user'];?>";
+			broadcast(theMessage ) ;
+<?php
+	}			// end if (broadcast)
+?>				
+			theForm.submit();
 			}
 		}				// end function validate(theForm)
 	

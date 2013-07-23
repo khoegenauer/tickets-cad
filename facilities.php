@@ -35,7 +35,9 @@ $iw_width= "300px";					// map infowindow with
 6/10/11 Added Groups and Boundaries
 6/18/12 'points' boolean to 'got_points'
 9/5/12 GMaps V3 key handling added
-1/4/2013 V3 polylines and polygon, setMap conversions made 
+1/4/2013 V3 polylines and polygon, setMap conversions made
+5/30/13 Implement catch for when there are no allocated regions for current user. 
+6/4/2013 beds information added for all operations
 */
 
 @session_start();	
@@ -123,6 +125,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 	<SCRIPT src="./js/elabel_v3.js" TYPE="text/javascript"></SCRIPT> 	<!-- 8/1/11 -->
 	<SCRIPT SRC="./js/domready.js"		TYPE="text/javascript" ></script>
 	<SCRIPT SRC="./js/gmaps_v3_init.js"	TYPE="text/javascript" ></script>
+	<SCRIPT src = "./js/elabel_v3.js"></SCRIPT>	
 	<SCRIPT>
 	var map;		// note global
 
@@ -716,27 +719,27 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		circle.setRadius(radius*5000); 
 
 		}
-		
-	function drawBanner(point, html, text, font_size, color) {        // Create the banner
-	//	alert("<?php echo __LINE__;?> " + color);
-//		var invisibleIcon = new GIcon(G_DEFAULT_ICON, "./markers/markerTransparent.png");      // Custom icon is identical to the default icon, except invisible
+
+	function drawBanner(point, html, text, font_size, color, name) {        // Create the banner - 6/5/2013
 		var invisibleIcon = new google.maps.MarkerImage("./markers/markerTransparent.png");
 		map.setCenter(point, 8);
-//		map.addControl(new GLargeMapControl());
-//		map.addControl(new GMapTypeControl());
 		var the_color = (typeof color == 'undefined')? "#000000" : color ;	// default to black
-
-		var style_str = 'background-color:transparent;font-weight:bold;border:0px black solid;white-space:nowrap; font-size:' + font_size + 'px; font-family:arial; opacity: 0.9; color:' + add_hash(the_color) + ';';
-
-		var contents = '<div><div style= "' + style_str + '">'+text+'<\/div><\/div>';
-		var label=new ELabel(point, contents, null, new GSize(-8,4), 75, 1);
-		google.maps.addOverlay(label);							// 658
+		var label = new ELabel({
+			latlng: point, 
+			label: html, 
+			classname: "label", 
+			offset: new google.maps.Size(-8, 4), 
+			opacity: 100,
+			theSize: font_size + "px",		
+			theColor:add_hash(the_color),
+			overlap: true,
+			clicktarget: false
+			});	
+		label.setMap(map);		
+		var marker = new google.maps.Marker(point,invisibleIcon);	        // Create an invisible google.maps.Marker
+		marker.setMap(map);				
+		}				// end function draw Banner()
 		
-		var marker = new GMarker(point,invisibleIcon);	        // Create an invisible GMarker
-	//	map.addOverlay(marker);														// 661
-		
-		}				// end function draw Banner()		
-
 	function do_landb() {				// JS function - 8/1/11
 		var points = new Array();
 <?php
@@ -796,7 +799,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 					$lng = $coords[1];
 					$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
 					
-					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}, {$name}); // 513\n";
+					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}, '{$name}'); // 513\n";
 					break;
 				case "t":		// text banner
 
@@ -806,7 +809,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 					echo "\n var point = new google.maps.LatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
 					$the_banner = htmlentities($banner, ENT_QUOTES);
 					$the_width = intval( trim($line_width), 10);		// font size
-					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width});\n";
+					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width}, add_hash('{$line_color}'));\n";
 					break;
 				}	// end switch
 		}			// end while ()
@@ -1071,11 +1074,9 @@ function list_facilities($addon = '', $start) {
 		}
 
 	function createMarker(point, tabs, color, id, fac_id) {						// (point, myinfoTabs,<?php print $row['type'];?>, i)
-//		alert(1014);
 		got_points = true;													// at least one
-
-		var image_file = "./our_icons/gen_fac_icon.php?blank=" + escape(icons[color]) + "&text=" + fac_id;
-		var marker = new google.maps.Marker({position: point, map: map, icon: image_file});
+		var fac_image = "./our_icons/gen_fac_icon.php?blank=" + color + "&text=" + fac_id;
+		var marker = new google.maps.Marker({position: point, map: map, icon: fac_image});
 		marker.id = color;				// for hide/unhide - unused
 
 		google.maps.event.addListener(marker, "click", function() {		// here for both side bar and icon click
@@ -1093,52 +1094,30 @@ function list_facilities($addon = '', $start) {
 		return marker;
 		}				// end function create Marker()
 
-	function createdummyMarker(point, tabs, color, id, fac_id) {						// handles no-maps facility
-		got_points = true;																// at least one
-//		var letter = to_str(id);
-		var fac_id = fac_id;	
-		
-		var icon = new GIcon(listIcon);					<?php echo "// " . __LINE__ . "\n";?>
-		var icon_url = "./our_icons/question1.png";
-
-		icon.image = icon_url;		// 
-
-		var dummymarker = new GMarker(point, icon);
+	function createdummyMarker(point,tabs, color, id, fac_id) {
+		got_points = true;											// 6/18/12
+		var image_file = "./our_icons/question1.png";
+		var dummymarker = new google.maps.Marker({position: point, map: map, icon: image_file});		
 		dummymarker.id = color;				// for hide/unhide - unused
-
 		google.maps.event.addListener(dummymarker, "click", function() {		// here for both side bar and icon click
 			if (dummymarker) {
-//				map.closeInfoWindow();
-				which = id;
-				gmarkers[which].hide();
-				dummymarker.openInfoWindowTabsHtml(infoTabs[id]);
-
-				setTimeout(function() {										// wait for rendering complete
-					if ($("detailmap")) {
-						var dMapDiv = $("detailmap");
-//						var detailmap = new GMap2(dMapDiv);
-						var detailmap = new google.maps.Map(dMapDiv);			// 998
-
-						detailmap.addControl(new GSmallMapControl());
-						detailmap.setCenter(point, 17);  						// e.g., 1 = world
-						detailmap.addOverlay(dummymarker);						// 1017
-						}
-					else {
-						}
-					},4000);				// end setTimeout(...)
-
+				try {open_iw.close()} catch(err) {;}
+				map.setZoom(8);
+				map.setCenter(point);
+				infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});	 
+				open_iw = infowindow;				
+				infowindow.open(map, dummymarker);
 				}		// end if (marker)
-			});			// end google.maps.event.add Listener()
-
-		gmarkers[id] = dummymarker;									// marker to array for side_bar click function
+			});			// end google.maps.Event.add Listener()
+		gmarkers[id] = dummymarker;									// marker to array for side bar click function
 		infoTabs[id] = tabs;									// tabs to array
-		if (!(map_is_fixed)) {
-//			alert(1070);
+		if (!(map_is_fixed)) {				// 4/3/09
 			bounds.extend(point);
+			map.fitBounds(bounds);			
 			}
 		return dummymarker;
-		}				// end function createdummyMarker()		
-
+		}				// end function create dummy Marker()
+		
 	function do_sidebar (sidebar, id, the_class, fac_id) {
 		var fac_id = fac_id;
 		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"'>";
@@ -1158,7 +1137,6 @@ function list_facilities($addon = '', $start) {
 		}
 
 	function myclick(id) {					// Responds to sidebar click, then triggers listener above -  note [id]
-//		alert(1085);
 		google.maps.event.trigger(gmarkers[id], "click");
 		location.href = '#top';		// 11/11/090
 		}
@@ -1247,7 +1225,9 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 ?>
 	var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_facilities'>";
-	side_bar_html += "<TR class='even'>	<TD><B>Icon</B></TD><TD><B>Handle</B></TD><TD ALIGN='left'><B>Name</B></TD><TD ALIGN='left'><B><?php print get_text("Type"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("Status"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("As of"); ?></B></TD></TR>";
+	side_bar_html += "<TR class='even'>	<TD><B>Icon</B></TD><TD><B>Handle</B></TD><TD ALIGN='left'><B>Name</B></TD>";
+	side_bar_html += "<TD ALIGN='left'><B><?php print get_text("Type"); ?></B></TD><TD ALIGN='left'>&nbsp;&nbsp;&nbsp;&nbsp;<B>Beds</B></TD>";
+	side_bar_html += "<TD ALIGN='left'><B><?php print get_text("Status"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("As of"); ?></B></TD></TR>";
 	var gmarkers = [];
 	var infoTabs = [];
 	var which;
@@ -1412,31 +1392,35 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$al_groups[] = $row_gp['group'];
 		}	
 
-	if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
-		$curr_viewed= explode(",",$_SESSION['viewed_groups']);
-		}
+	if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+		$where2 = "WHERE `a`.`type` = 3";
+		} else {
+		if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
+			$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+			}
 
-	if(!isset($curr_viewed)) {	
-		$x=0;	//	6/10/11
-		$where2 = "WHERE (";	//	6/10/11
-		foreach($al_groups as $grp) {	//	6/10/11
-			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`a`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
+		if(!isset($curr_viewed)) {	
+			$x=0;	//	6/10/11
+			$where2 = "WHERE (";	//	6/10/11
+			foreach($al_groups as $grp) {	//	6/10/11
+				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`a`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+			} else {
+			$x=0;	//	6/10/11
+			$where2 = "WHERE (";	//	6/10/11
+			foreach($curr_viewed as $grp) {	//	6/10/11
+				$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`a`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
 			}
-	} else {
-		$x=0;	//	6/10/11
-		$where2 = "WHERE (";	//	6/10/11
-		foreach($curr_viewed as $grp) {	//	6/10/11
-			$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`a`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
-			}
-	}
-	$where2 .= "AND `a`.`type` = 3";	//	6/10/11				
-	unset($result);
+		$where2 .= "AND `a`.`type` = 3";	//	6/10/11				
+		unset($result);
+		}	//	end if count($al_groups == 0)
 	//	3/15/11, 6/10/11, 1/19/2013
 
 	$query = "SELECT *, 
@@ -1449,12 +1433,13 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		`f`.type AS type,
 		`f`.street AS street,
 		`f`.city AS city,
-		`f`.state AS state 
+		`f`.state AS state,
+		`t`.`icon` AS icon
 		FROM `$GLOBALS[mysql_prefix]facilities`  `f`
 		LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `f`.`id` = a.resource_id )			
 		LEFT JOIN `$GLOBALS[mysql_prefix]fac_types` `t` ON `f`.type = `t`.id 
 		LEFT JOIN `$GLOBALS[mysql_prefix]fac_status` `s` ON `f`.status_id = `s`.id 
-		{$where2} GROUP BY `f`.id ORDER BY `f`.type ASC";		
+		{$where2} GROUP BY `f`.id ORDER BY `f`.type ASC";			//	6/17/13 added selection of "icon"
 
 //	$query .= " LIMIT 0";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -1559,18 +1544,23 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$index = $row['icon_str'];
 // name
 
-		$display_name = $name = htmlentities($row['name'], ENT_QUOTES);	
+		$display_name = $name = shorten(htmlentities($row['name'], ENT_QUOTES), 20);	
 		$handle = htmlentities($row['handle'], ENT_QUOTES);					// 7/7/11
 
-		$sidebar_line = "&nbsp;&nbsp;<TD WIDTH='15%' TITLE = '{$row['handle']}' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($handle, 15)) ."</SPAN></U></TD>";	//	6/10/11
-		$sidebar_line .= "<TD WIDTH='40%' TITLE = '" . addslashes($name) . "' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'><NOBR>" . addslashes(shorten($name, 24)) ."</NOBR></SPAN></U></TD><TD WIDTH='15%'>{$the_type}</TD>";
-		$sidebar_line .= "<TD WIDTH='20%' CLASS='td_data' TITLE = '" . addslashes ($the_status) . "'> " . get_status_sel($row['id'], $row['status_id'], 'f') . "</TD>";	//	3/15/11
+		$sidebar_line = "&nbsp;&nbsp;<TD WIDTH='20%' TITLE = '{$row['handle']}' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($handle, 15)) ."</SPAN></U></TD>";	//	6/10/11
+		$sidebar_line .= "<TD WIDTH='20%' TITLE = '" . addslashes($name) . "' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'><NOBR>" . addslashes(shorten($name, 24)) ."</NOBR></SPAN></U></TD><TD WIDTH='15%'>{$the_type}</TD>";
+
+		$sep = (empty($row['beds_a']) && empty($row['beds_o']))? "" : "/" ;
+		$beds_str = shorten("{$row['beds_a']}{$sep}{$row['beds_o']} {$row['beds_info']}", 30);
+		$sidebar_line .= "<TD WIDTH='15%' CLASS='td_data' TITLE = 'Beds'>{$beds_str}</TD>";	//	3/15/11
+
+		$sidebar_line .= "<TD WIDTH='15%' CLASS='td_data' TITLE = '" . addslashes ($the_status) . "'> " . get_status_sel($row['id'], $row['status_id'], 'f') . "</TD>";	//	3/15/11
 
 // as of
 		$strike = $strike_end = "";
 		$the_time = $row['updated'];
 		$the_class = "";
-		$sidebar_line .= "<TD WIDTH='20%' CLASS='$the_class'> $strike <NOBR>" . new_format_sb_date($the_time) . "</NOBR> $strike_end</TD>";
+		$sidebar_line .= "<TD WIDTH='15%' CLASS='$the_class'> $strike <NOBR>" . new_format_sb_date($the_time) . "</NOBR> $strike_end</TD>";
 
 // tab 1
 
@@ -1613,7 +1603,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		var the_class = ((map_is_fixed) && (!(bounds.contains(point))))? "emph" : "td_label";
 
 		do_sidebar ("<?php print $sidebar_line; ?>", i, the_class, fac_id);
-		var dummymarker = createdummyMarker(point, myinfoTabs,<?php print $row['type'];?>, i, fac_id);	// 1561 (point,tabs, color, id)
+		var dummymarker = createdummyMarker(point, myinfoTabs,<?php print $row['icon'];?>, i, fac_id);	// 1561 (point,tabs, color, id)	6/17/13 Changed from $row['type'] to $row['icon']
 		dummymarker.setMap(map);
 <?php
 		} else {
@@ -1622,7 +1612,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		var the_class = ((map_is_fixed) && (!(bounds.contains(point))))? "emph" : "td_label";
 
 		do_sidebar ("<?php print $sidebar_line; ?>", i, the_class, fac_id);
-		var marker = createMarker(point, myinfoTabs,<?php print $row['type'];?>, i, fac_id);	// 1548 (point,tabs, color, id)
+		var marker = createMarker(point, myinfoTabs,<?php print $row['icon'];?>, i, fac_id);	// 1548 (point,tabs, color, id)	6/17/13 Changed from $row['type'] to $row['icon']
 		marker.setMap(map);		// 1578
 
 <?php
@@ -1727,7 +1717,7 @@ var buttons_html = "";
 			$groups = isset($_POST['frm_group']) ? ", " . implode(',', $_POST['frm_group']) . "," : $_POST['frm_exist_groups'];	//	3/28/12 - fixes error when accessed from view ticket screen..	
 			$fac_id = $_POST['frm_id'];
 			$fac_stat = $_POST['frm_status_id'];
-			$by = $_SESSION['user_id'];			
+			$by = $_SESSION['user_id'];					// 6/4/2013
 			$query = "UPDATE `$GLOBALS[mysql_prefix]facilities` SET
 				`name`= " . 		quote_smart(trim($_POST['frm_name'])) . ",
 				`street`= " . 		quote_smart(trim($_POST['frm_street'])) . ",
@@ -1737,6 +1727,11 @@ var buttons_html = "";
 				`icon_str`= " . 	quote_smart(trim($_POST['frm_icon_str'])) . ",
 				`boundary`= " . 	quote_smart(trim($_POST['frm_boundary'])) . ",				
 				`description`= " . 	quote_smart(trim($_POST['frm_descr'])) . ",
+
+				`beds_a`= " . 		quote_smart(trim($_POST['frm_beds_a'])) . ",
+				`beds_o`= " . 		quote_smart(trim($_POST['frm_beds_o'])) . ",
+				`beds_info`= " . 	quote_smart(trim($_POST['frm_beds_info'])) . ",
+
 				`capab`= " . 		quote_smart(trim($_POST['frm_capab'])) . ",
 				`status_id`= " .	quote_smart(trim($_POST['frm_status_id'])) . ",
 				`lat`= " . 			$the_lat . ",
@@ -1788,9 +1783,11 @@ var buttons_html = "";
 		$by = $_SESSION['user_id'];		//	4/14/11
 		$frm_lat = (empty($_POST['frm_lat']))? 'NULL': quote_smart(trim($_POST['frm_lat']));		// 7/22/10
 		$frm_lng = (empty($_POST['frm_lng']))? 'NULL': quote_smart(trim($_POST['frm_lng']));		// 7/15/10
-		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));
+		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));							// 6/4/2013
 		$query = "INSERT INTO `$GLOBALS[mysql_prefix]facilities` (
-			`name`, `street`, `city`, `state`, `handle`, `icon_str`, `boundary`, `description`, `capab`, `status_id`, `contact_name`, `contact_email`, `contact_phone`, `security_contact`, `security_email`, `security_phone`, `opening_hours`, `access_rules`, `security_reqs`, `pager_p`, `pager_s`, `lat`, `lng`, `type`, `user_id`, `updated` )
+			`name`, `street`, `city`, `state`, `handle`, `icon_str`, `boundary`, `description`, 
+			`beds_a`, `beds_o`, `beds_info`,
+			`capab`, `status_id`, `contact_name`, `contact_email`, `contact_phone`, `security_contact`, `security_email`, `security_phone`, `opening_hours`, `access_rules`, `security_reqs`, `pager_p`, `pager_s`, `lat`, `lng`, `type`, `user_id`, `updated` )
 			VALUES (" .
 				quote_smart(trim($_POST['frm_name'])) . "," .
 				quote_smart(trim($_POST['frm_street'])) . "," .
@@ -1800,6 +1797,11 @@ var buttons_html = "";
 				quote_smart(trim($_POST['frm_icon_str'])) . "," .
 				quote_smart(trim($_POST['frm_boundary'])) . "," .				
 				quote_smart(trim($_POST['frm_descr'])) . "," .
+
+				quote_smart(trim($_POST['frm_beds_a'])) . "," .
+				quote_smart(trim($_POST['frm_beds_o'])) . "," .
+				quote_smart(trim($_POST['frm_beds_info'])) . "," .
+
 				quote_smart(trim($_POST['frm_capab'])) . "," .
 				quote_smart(trim($_POST['frm_status_id'])) . "," .
 				quote_smart(trim($_POST['frm_contact_name'])) . "," .
@@ -1971,17 +1973,25 @@ var buttons_html = "";
 		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_add_Form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print get_variable('def_city'); ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=40 ROWS=2></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_capab" COLS=40 ROWS=2></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility beds "><?php print get_text("Beds"); ?></A>&nbsp;</TD>
+			<TD COLSPAN=3 >		<!-- 	6/4/2013 -->
+			<SPAN  CLASS = "td_label" STYLE = "margin-left:20px;">Available: </SPAN><INPUT SIZE="16" MAXLENGTH="16" TYPE="text" NAME="frm_beds_a" VALUE="" />			
+			<SPAN  CLASS = "td_label" STYLE = "margin-left:20px;">Occupied: </SPAN><INPUT SIZE="16" MAXLENGTH="16" TYPE="text" NAME="frm_beds_o" VALUE="" />			
+			</TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information"><?php print get_text("Beds"); ?> information</A>:&nbsp;</TD>
+			<TD COLSPAN=3 ><TEXTAREA NAME="frm_beds_info" COLS=60 ROWS=2></TEXTAREA>			
+			</TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_capab" COLS=60 ROWS=2></TEXTAREA></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility main contact name"><?php print get_text("Contact name"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact email - main contact email address"><?php print get_text("Contact email"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_email" VALUE="" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact phone number - main contact phone number"><?php print get_text("Contact phone"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_phone" VALUE="" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact"><?php print get_text("Security contact"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_contact" VALUE="" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact email"><?php print get_text("Security email"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_email" VALUE="" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact phone number"><?php print get_text("Security phone"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_phone" VALUE="" /></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility opening hours - e.g. 24x7x365, 8 - 5 mon to sat etc."><?php print get_text("Opening hours"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_opening_hours" COLS=40 ROWS=2></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility access rules - e.g enter by main entrance, enter by ER entrance, call first etc"><?php print get_text("Access rules"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_access_rules" COLS=40 ROWS=5></TEXTAREA></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility securtiy requirements - e.g. phone security first, visitors must be security cleared etc."><?php print get_text("Security reqs"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_security_reqs" COLS=40 ROWS=5></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility opening hours - e.g. 24x7x365, 8 - 5 mon to sat etc."><?php print get_text("Opening hours"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_opening_hours" COLS=60 ROWS=2></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility access rules - e.g enter by main entrance, enter by ER entrance, call first etc"><?php print get_text("Access rules"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_access_rules" COLS=60 ROWS=5></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility securtiy requirements - e.g. phone security first, visitors must be security cleared etc."><?php print get_text("Security reqs"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_security_reqs" COLS=60 ROWS=5></TEXTAREA></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact primary pager number"><?php print get_text("Primary pager"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_p" VALUE="" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact secondary pager number"><?php print get_text("Secondary pager"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_s" VALUE="" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Latitude and Longitude - set from map click">
@@ -2215,8 +2225,8 @@ var buttons_html = "";
 			$the_grp = $row_st['group'];
 			print "\t\t<OPTGROUP LABEL='$the_grp'>\n";
 			}
-		$sel = ($row['status_id']== $row_st['id'])? " SELECTED" : "";
-		print "\t\t<OPTION VALUE=" . $row_st['id'] . $sel .">" . $row_st['status_val']. "</OPTION>\n";
+		$sel = ($row['status_id']== $row_st['id'])? "SELECTED" : "";
+		print "\t\t<OPTION VALUE={$row_st['id']} {$sel}>{$row_st['status_val']}</OPTION>\n";
 		$i++;
 		}
 	print "\n\t\t</SELECT>\n";
@@ -2229,17 +2239,28 @@ var buttons_html = "";
 		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_edit_Form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=40 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_capab" COLS=40 ROWS=2><?php print $row['capab'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
+
+					<!-- 6/4/2013  -->
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility beds "><?php print get_text("Beds"); ?></A>&nbsp;</TD>
+			<TD COLSPAN=3 >		<!-- 	6/4/2013 -->
+			<SPAN  CLASS = "td_label" STYLE = "margin-left:20px;">Available: </SPAN><INPUT SIZE="16" MAXLENGTH="16" TYPE="text" NAME="frm_beds_a" VALUE="<?php print $row['beds_a'];?>" />			
+			<SPAN  CLASS = "td_label" STYLE = "margin-left:20px;">Occupied: </SPAN><INPUT SIZE="16" MAXLENGTH="16" TYPE="text" NAME="frm_beds_o" VALUE="<?php print $row['beds_o'];?>" />			
+			</TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information"><?php print get_text("Beds"); ?> information</A>:&nbsp;</TD>
+			<TD COLSPAN=3 ><TEXTAREA NAME="frm_beds_info" COLS=60 ROWS=2><?php print $row['beds_info'];?></TEXTAREA>			
+			</TD></TR>
+
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_capab" COLS=60 ROWS=2><?php print $row['capab'];?></TEXTAREA></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility main contact name">Contact name</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="<?php print $row['contact_name'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact email - main contact email address"><?php print get_text("Contact email"); ?></A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_email" VALUE="<?php print $row['contact_email'] ;?>" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact phone number - main contact phone number">Contact phone</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_phone" VALUE="<?php print $row['contact_phone'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact">Security contact</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_contact" VALUE="<?php print $row['security_contact'] ;?>" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact email">Security email</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_email" VALUE="<?php print $row['security_email'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact phone number">Security phone</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_phone" VALUE="<?php print $row['security_phone'] ;?>" /></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility opening hours - e.g. 24x7x365, 8 - 5 mon to sat etc.">Opening hours</A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_opening_hours" COLS=40 ROWS=2><?php print $row['opening_hours'];?></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility access rules - e.g enter by main entrance, enter by ER entrance, call first etc"><?php print get_text("Access rules"); ?></A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_access_rules" COLS=40 ROWS=5><?php print $row['access_rules'];?></TEXTAREA></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility securtiy requirements - e.g. phone security first, visitors must be security cleared etc.">Security reqs</A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_security_reqs" COLS=40 ROWS=5><?php print $row['security_reqs'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility opening hours - e.g. 24x7x365, 8 - 5 mon to sat etc.">Opening hours</A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_opening_hours" COLS=60 ROWS=2><?php print $row['opening_hours'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility access rules - e.g enter by main entrance, enter by ER entrance, call first etc"><?php print get_text("Access rules"); ?></A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_access_rules" COLS=60 ROWS=5><?php print $row['access_rules'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility securtiy requirements - e.g. phone security first, visitors must be security cleared etc.">Security reqs</A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_security_reqs" COLS=60 ROWS=5><?php print $row['security_reqs'];?></TEXTAREA></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact primary pager number">Pager Primary</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_p" VALUE="<?php print $row['pager_p'] ;?>" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact secondary pager number">Pager Secondary</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_s" VALUE="<?php print $row['pager_s'] ;?>" /></TD></TR>
 
@@ -2359,8 +2380,7 @@ var buttons_html = "";
 				}
 				
 			$id = $_GET['id'];
-			$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id`={$id} LIMIT 1";	// 1/19/2013
-
+			$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id`= " . $id . " LIMIT 1";	// 1/19/2013
 			$result	= mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 			$row	= stripslashes_deep(mysql_fetch_assoc($result));
 			$lat = $row['lat'];
@@ -2431,6 +2451,15 @@ var buttons_html = "";
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Status"); ?>:</TD>		<TD><?php print $un_st_val;?>
 			</TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Description"); ?>: </TD>	<TD><?php print $row['description'];?></TD></TR>
+
+					<!-- 6/4/2013  -->
+			<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility beds "><?php print get_text("Beds"); ?> Available/Occupied:</A>&nbsp;</TD>
+				<TD><?php print $row['beds_a'];?>/<?php print $row['beds_o'];?>	</TD></TR><!-- 	6/4/2013 -->
+			<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information"><?php print get_text("Beds"); ?> information</A>:&nbsp;</TD>
+				<TD><?php print $row['beds_info'];?></TD></TR>
+	
+	
+
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Capability"); ?>: </TD>	<TD><?php print $row['capab'];?></TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Contact name"); ?>:</TD>	<TD><?php print $row['contact_name'] ;?></TD></TR>
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Contact email"); ?>:</TD>	<TD><?php print $row['contact_email'] ;?></TD></TR>
@@ -2633,7 +2662,7 @@ var buttons_html = "";
 								</TR>			
 								<TR>
 									<TD>
-										<DIV ID='side_bar' style="max-height: <?php print $the_height; ?>px;  overflow-y: scroll; overflow-x: hidden;"></DIV>
+										<DIV ID='side_bar' style="height: auto;  overflow-y: scroll; overflow-x: hidden;"></DIV>
 									</TD>
 								</TR>
 								<TR class='spacer'>

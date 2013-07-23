@@ -14,6 +14,7 @@ error_reporting(E_ALL);
 01/10/11 Fixed display due to no use of stylesheet.php file.
 3/15/11 Reference to revisable stylesheet for configurable day and night colors.
 5/4/11 get_new_colors added
+6/4/2013 broadcast() added
 
 */
 ?>
@@ -310,7 +311,15 @@ function edit_ticket($id) {							/* post changes */
 			st_unlk(theForm);
 //			theForm.frm_ngs.disabled=false;													// 9/13/08
 			theForm.frm_phone.value=theForm.frm_phone.value.replace(/\D/g, "" ); // strip all non-digits
-			top.upper.calls_start();											 // 1/17/09
+<?php		/* 6/4/2013  */
+		if (intval(get_variable('broadcast')==1)) { 
+?>
+			var theMessage = "Updated  <?php print get_text('Incident');?> (" + theForm.frm_scope.value + ") by <?php echo $_SESSION['user'];?>";
+			broadcast(theMessage ) ;
+<?php
+	}			// end if (broadcast)
+?>				
+
 			return true;
 			}
 		}				// end function validate(theForm)

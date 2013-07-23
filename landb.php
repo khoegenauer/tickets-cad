@@ -4,9 +4,8 @@
 7/2/11 corrections to include filled data as hiddens
 7/3/11 added 2 fields to schema
 7/30/11 table renamed
+5/22/13 Totally revised for google maps API V3
 */
-//	GLog.write("");
-
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
 error_reporting (E_ALL  ^ E_DEPRECATED);
 require_once('incs/functions.inc.php');	
@@ -97,97 +96,116 @@ $_func = (empty($_POST)) ?  "l" : $_POST['_func'];							// list mode as default
 	$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 ?>
 <SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>sensor=false"></SCRIPT>
+<SCRIPT SRC="./js/usng.js" TYPE="text/javascript"></SCRIPT>	<!-- 8/23/08 -->
+<SCRIPT SRC="./js/lat_lng.js" TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->
+<SCRIPT SRC="./js/geotools2.js" TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->
+<SCRIPT SRC="./js/osgb.js" TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->	
+<SCRIPT SRC='./js/graticule_V3.js' type='text/javascript'></SCRIPT> 
+<SCRIPT SRC='./js/misc_function.js' type='text/javascript'></SCRIPT>  <!-- 4/14/10 -->
+<SCRIPT SRC="./js/domready.js"		TYPE="text/javascript" ></script>
+<SCRIPT SRC="./js/gmaps_v3_init.js"	TYPE="text/javascript" ></script>
 <SCRIPT src = "./js/elabel_v3.js"></SCRIPT>
 
 <SCRIPT>
-	var map;		// note global
-	function testBanner () {
-		map = new GMap2(document.getElementById("map"));
-		var marker = drawBanner(points[0],'Some Italic partially opaque text to place on a map','Some  partially opaque text');      
+var map, poly;					// Global variables
+var count = 0;
+var points = new Array();
+var markers = new Array();
+var icon_url ="./markers/";
+var tooltip;
 
-		}		// end function test Banner ()
+var icon_file = new google.maps.MarkerImage(
+	'./markers/yellow.png',
+	new google.maps.Size(16, 28),
+	new google.maps.Point(0,0),
+	new google.maps.Point(8, 28)
+	);
+var shadow = new google.maps.MarkerImage(
+	'./markers/sm_shadow.png',
+	new google.maps.Size(22, 20),
+	new google.maps.Point(0,0),
+	new google.maps.Point(8, 28)
+	);
 	
-
-	function $() {									// 12/20/08
-		var elements = new Array();
-		for (var i = 0; i < arguments.length; i++) {
-			var element = arguments[i];
-			if (typeof element == 'string')
-				element = document.getElementById(element);
-			if (arguments.length == 1)
-				return element;
-			elements.push(element);
-			}
-		return elements;
+var base_icon = new google.maps.MarkerImage(
+	'./markers/sm_red.png',
+	new google.maps.Size(16, 28),
+	new google.maps.Point(0,0),
+	new google.maps.Point(8, 28)
+	);
+			
+function $() {									// 12/20/08
+	var elements = new Array();
+	for (var i = 0; i < arguments.length; i++) {
+		var element = arguments[i];
+		if (typeof element == 'string')
+			element = document.getElementById(element);
+		if (arguments.length == 1)
+			return element;
+		elements.push(element);
 		}
+	return elements;
+	}
 
-	String.prototype.trim = function () {
-		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
-		};
-		
-	function add_hash(in_str) { // prepend # if absent
-		return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
-		}
-
-	function hex_OK (instr) {
-		return (/^(#[A-F0-9]{6})$/i.test(instr));
-		}
-
-	function do_checked(theForm) {								// 126
-		$('fill_tr').style.display = '';
+String.prototype.trim = function () {
+	return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
+	};
 	
-		theForm.frm_filled.value = 1;
-		theForm.frm_filled_n.checked = false;
-		theForm.frm_filled_y.checked = true;
-		}
-	function do_un_checked(theForm) {
-		$('fill_tr').style.display = "none";					// hide input row
+function add_hash(in_str) { // prepend # if absent
+	return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
+	}
 
-		theForm.frm_filled.value = 0;
-		theForm.frm_filled_n.checked = true;
-		theForm.frm_filled_y.checked = false;
-		}
-	
-function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity) {		// 8/19/09
+function hex_OK (instr) {
+	return (/^(#[A-F0-9]{6})$/i.test(instr));
+	}
 
-//	drawCircle(53.479874, -2.246704, 10.0, "#000080", 1, 0.75, "#0000FF", .5);
-
-	var d2r = Math.PI/180;
-	var r2d = 180/Math.PI;
-	var Clat = radius * 0.014483;
-	var Clng = Clat/Math.cos(lat * d2r);
-	var Cpoints = [];
-	for (var i=0; i < 33; i++) {
-		var theta = Math.PI * (i/16);
-		Cy = lat + (Clat * Math.sin(theta));
-		Cx = lng + (Clng * Math.cos(theta));
-		var P = new GPoint(Cx,Cy);
-		Cpoints.push(P);
-		}
-	var polygon = new GPolygon(Cpoints, add_hash(strokeColor), strokeWidth, strokeOpacity, add_hash(fillColor), fillOpacity);
-	map.addOverlay(polygon);
+function do_checked(theForm) {								// 126
+	$('fill_tr').style.display = '';
+	theForm.frm_filled.value = 1;
+	theForm.frm_filled_n.checked = false;
+	theForm.frm_filled_y.checked = true;
 	}
 	
+function do_un_checked(theForm) {
+	$('fill_tr').style.display = "none";					// hide input row
+	theForm.frm_filled.value = 0;
+	theForm.frm_filled_n.checked = true;
+	theForm.frm_filled_y.checked = false;
+	}
 
-	
+function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity) {
+	draw_circle = new google.maps.Circle({
+		center: new google.maps.LatLng(lat,lng),
+		map: map,
+		fillColor: fillColor,
+		fillOpacity: fillOpacity,
+		strokeColor: strokeColor,
+		strokeOpacity: strokeOpacity,
+		strokeWeight: strokeWidth,
+		editable: false
+		});
+	draw_circle.setRadius(radius*5000); 	
+	draw_circle.setMap(map);	
+	}
 
-function drawBanner(point, html, text, font_size) {        // Create the Label
-	var icon = "./markers/markerTransparent.png";      // Custom icon is identical to the default icon, except invisible
-	map.setCenter(point, 8);
-	var style_str = 'background-color:transparent;font-weight:bold;border:0px black solid;white-space:nowrap; font-size:' + font_size + 'em; font-family:arial; opacity: 0.75; font-style:italic;';
-	var contents = '<div><div style= "' + style_str + '">'+text+'<\/div><\/div>';
-	var label=new ELabel(point, contents, null, new GSize(-8,4), 75, 1);
-	map.addOverlay(label);
-	var marker = new google.maps.Marker({
-		position: point, 
-		icon: icon, 
-		draggable: true, 
-		bouncy:false, 
-		dragCrossMove:true
-	});
-//	map.addOverlay(marker);
+function drawBanner(point, html, text, font_size, color, name) {        // Create the banner
+	var invisibleIcon = new google.maps.MarkerImage("./markers/markerTransparent.png");
+	var the_color = (typeof color == 'undefined')? "000000" : color ;	// default to black
+	var label = new ELabel({
+		latlng: point, 
+		label: html, 
+		offset: new google.maps.Size(-8, 4), 
+		opacity: 100,
+		theSize: font_size + "px",		
+		theColor:add_hash(the_color),
+		overlap: true,
+		clicktarget: false
+		});	
+	label.setMap(map);		
+	var marker = new google.maps.Marker(point,invisibleIcon);	        // Create an invisible google.maps.Marker
+	marker.setMap(map);		
 	}				// end function draw Banner()
-	
+
 var circle_OK = false;	
 
 function chk_circle(theForm) {
@@ -209,29 +227,23 @@ function chk_circle(theForm) {
 		strokeWidth = parseInt(theForm.frm_line_width.value);
 		strokeOpacity = parseFloat(theForm.frm_line_opacity.value);
 		fillColor = theForm.frm_fill_color.value;
-//		fillOpacity = parseFloat(theForm.frm_fill_opacity.value);
 		fillOpacity = (theForm.frm_filled.value = 0)? 0: parseFloat(theForm.frm_fill_opacity.value);
-		
-		
-
-//		drawCircle(39.479874, -78.246704, 500.0, "#000080", 1, 0.75, "#0000FF", .5);
-
 		drawCircle(lat, lng, radius, add_hash(strokeColor), strokeWidth, strokeOpacity, add_hash(fillColor), fillOpacity);	// 210
 
 		}
 	}
 
-	function is_ok_radius (instr) {
-		if(instr.trim() == "") 								{return false;}
-		if(instr.trim() == "0.0") 							{return false;}
-		instr_ary = instr.split(".");
-		if ((instr_ary.length)>2)							{return false;}
-		if (instr_ary[0].NaN) 								{return false;}
-		if (((instr_ary.length)==2) && (instr_ary[1].NaN))	{return false;}
-		return true;
-		}
+function is_ok_radius (instr) {
+	if(instr.trim() == "") 								{return false;}
+	if(instr.trim() == "0.0") 							{return false;}
+	instr_ary = instr.split(".");
+	if ((instr_ary.length)>2)							{return false;}
+	if (instr_ary[0].NaN) 								{return false;}
+	if (((instr_ary.length)==2) && (instr_ary[1].NaN))	{return false;}
+	return true;
+	}
 <?php
-	if (!(empty($_POST))) {
+if (!(empty($_POST))) {
 ?>
 	function do_display(the_type) {
 		theForm  = (document.u)? document.u : document.c ;
@@ -239,7 +251,7 @@ function chk_circle(theForm) {
 		case "p":				// poly
 			points.length = 0;							// build points array
 			for (i = 0; i < markers.length; i++) {
-				points.push(markers[i].getLatLng());
+				points.push(markers[i].getPosition());
 				}
 
 			strokeColor = theForm.frm_line_color.value;
@@ -249,7 +261,7 @@ function chk_circle(theForm) {
 			fillOpacity = parseFloat(theForm.frm_fill_opacity.value);
 
 			if (theForm.frm_filled.value == 1) {		 // Polygon mode - filled
-				points.push(markers[0].getLatLng());
+				points.push(markers[0].getPosition());
 				var poly = new google.maps.Polygon({
 					paths: 			points,
 					strokeColor: 	add_hash(strokeColor),
@@ -266,34 +278,24 @@ function chk_circle(theForm) {
 					strokeOpacity: 	strokeOpacity,
 					strokeWeight: 	strokeWidth
 					});					
-				var length = poly.getLength()/1000;
 				}
 			polyline.setMap(map);	
 			break;					// end poly
 		
 		case "c":				// circle
-			var theForm = document.c;
-			var lat = parseFloat(points[0].lat().toFixed(6));
-			var lng = parseFloat(points[0].lng().toFixed(6));
-			var radius = parseFloat(theForm.circ_radius.value);		
-			var center = new google.maps.LatLng(lat, lng);		
+			theForm  = (document.u)? document.u : document.c ;
+			var temp = theForm.frm_line_data.value;
+			var temp = theForm.frm_line_data.value.split(semic);
+			var coords = temp[0].split(comma);
+			var lat = parseFloat(coords[0]);
+			var lng = parseFloat(coords[1]);
+			var radius = parseFloat(theForm.circ_radius.value);
 			strokeColor = theForm.frm_line_color.value;
 			strokeWidth = parseInt(theForm.frm_line_width.value);
 			strokeOpacity = parseFloat(theForm.frm_line_opacity.value);
 			fillColor = theForm.frm_fill_color.value;
-			fillOpacity = (theForm.frm_filled.value = 0)? 0: parseFloat(theForm.frm_fill_opacity.value);			
-			
-			var	draw_circle = new google.maps.Circle({
-				center: center,
-				radius: radius,
-				strokeColor: strokeColor,
-				strokeOpacity: strokeOpacity,
-				strokeWeight: strokeWidth,
-				fillColor: fillColor,
-				fillOpacity: 0.35,
-				map: map
-				});
-			draw_circle.setMap(map);
+			fillOpacity = (theForm.frm_filled.value = 0)? 0: parseFloat(theForm.frm_fill_opacity.value);
+			drawCircle(lat, lng, radius, add_hash(strokeColor), strokeWidth, strokeOpacity, add_hash(fillColor), fillOpacity);	// 324	
 			break;		
 		
 		case "t":				// text
@@ -326,8 +328,6 @@ function chk_circle(theForm) {
 			}
 		else { // test? 
 			if (!(typeof test == 'undefined' )) {		// display for review/approval 
-
-//				do_display(myform.frm_line_type.value); 
 				fillmap(); 
 				return; 
 				}
@@ -354,14 +354,6 @@ function chk_circle(theForm) {
 	}			// end if (!(empty($_POST)))
 ?>	
 
-var map, poly;					// Global variables
-var count = 0;
-var points = new Array();
-var markers = new Array();
-var icon_url ="./markers/";
-var tooltip;
-//var report= document.getElementById("status");
-
 function to_string (in_array) {
 	var sep = "";					// separator
 	var out_str = "";
@@ -371,227 +363,145 @@ function to_string (in_array) {
 		sep="\t";							// tab-separate the points
 		}
 	}
-function addIcon(icon) { // Add icon properties
-	 icon.shadow= icon_url + "shadow.png";
-	 icon.iconSize = new GSize(12, 20);
-	 icon.shadowSize = new GSize(22, 20);
-	 icon.iconAnchor = new GPoint(6, 20);
-	 icon.infoWindowAnchor = new GPoint(5, 1);
-	}
-
-function showTooltip(marker) { // Display tooltips
-	 tooltip.innerHTML = marker.tooltip;
-	 tooltip.style.display = "block";
-	 if(typeof(tooltip.style.filter) == "string") { // Tooltip transparency specially for IE
-		 tooltip.style.filter = "alpha(opacity:70)";
-		 }
-	 var currtype = map.getCurrentMapType().getProjection();
-	 var point= currtype.fromLatLngToPixel(map.fromDivPixelToLatLng(new GPoint(0,0),true),map.getZoom());
-	 var offset= currtype.fromLatLngToPixel(marker.getLatLng(),map.getZoom());
-	 var anchor = marker.getIcon().iconAnchor;
-	 var width = marker.getIcon().iconSize.width + 6;
-	// var height = tooltip.clientHeight +18;
-	 var height = 10;
-	 var pos = new GControlPosition(G_ANCHOR_TOP_LEFT, new GSize(offset.x - point.x - anchor.x + width, offset.y - point.y -anchor.y - height)); 
-	 pos.apply(tooltip);
-	}
-
-
-function leftClick(overlay, point) {
-	alert(378);
-<?php 
-	if ($_func == "r") {	
-		echo "\n\t\t return;\n";		// bypass click handling
-		}
-	else {
-?>
-	if(point) {
-		count++;
-		var icon = new GIcon();	  // Red marker icon
-		icon.image = icon_url + "sm_red.png";
-		addIcon(icon);	 
-<?php $do_drag = ($_func == "r")? "false": "true"; ?>
-										  				// Make markers draggable
-		var marker = new google.maps.Marker({
-			position:point, 
-			icon:icon, 
-			draggable:<?php echo $do_drag;?>, 
-			bouncy:false, 
-			dragCrossMove:true
-			});
-		myMarker.setMap(map);		// add marker with icon		
-		marker.content = count;
-		markers.push(marker);
-		marker.tooltip = "Point "+ count;
-		google.maps.event.addListener(marker, "mouseover", function() {		// here for both side bar and icon click		
-			showTooltip(marker);
-		});
-		google.maps.event.addListener(marker, "mouseout", function() {		// here for both side bar and icon click			
-			tooltip.style.display = "none";
-		});
-
-		google.maps.event.addListener(marker, "drag", function() {		// here for both side bar and icon click			
-			tooltip.style.display= "none";
-			drawOverlay();
-		});
-
-		google.maps.event.addListener(marker, "click", function() {		// here for both side bar and icon click			
-			tooltip.style.display = "none";
-	
-		for(var n = 0; n < markers.length; n++) {	  // Find out which marker to remove
-		 if(markers[n] == marker) {
-		  map.removeOverlay(markers[n]);
-		  break;
-		 }
-		}
-	
-		markers.splice(n, 1);	  						// Shorten array of markers and adjust counter
-		if(markers.length == 0) {
-		  count = 0;
-		}
-		 else {
-		  count = markers[markers.length-1].content;
-		  drawOverlay();
-		}
-		});
-		drawOverlay();
-		}
-<?php	}	?>
-	}				// end function left Click()
 
 function toggleMode() {
-	 if(markers.length > 1) drawOverlay();
+	if(markers.length > 1) drawOverlay();
 	}
 
 function drawOverlay(){				// edit function - input is markers array
 	var lineMode = true;	 											// Check mode
-	if (poly) { map.removeOverlay(poly); }
+	if (poly) { poly.setMap(null); }
 	points.length = 0;
 	for (i = 0; i < markers.length; i++) {
-		points.push(markers[i].getLatLng());
+		points.push(markers[i].getPosition());
 		}
 	if (lineMode) {		 // Polyline mode
-		poly = new GPolyline(points, "#ff0000", 2, .9);
-		var length = poly.getLength()/1000;
-		var unit = " km";
+		poly = new google.maps.Polygon({
+			paths: 			points,
+			strokeColor: 	"#ff0000",
+			strokeOpacity: 	.9,
+			strokeWeight: 	2
+			});	
 		}
 	 else {		 // Polygon mode
-		points.push(markers[0].getLatLng());
-		poly = new GPolygon(points, "#ff0000", 2, .9, "#ff0000", .2);
+		points.push(markers[0].getPosition());
+		poly = new google.maps.Polygon({
+			paths: 			points,
+			strokeColor: 	"#ff0000",
+			strokeOpacity: 	.9,
+			strokeWeight: 	2,
+			fillColor: 		"#ff0000",
+			fillOpacity: 	.2
+			});		
 		}
-	 map.addOverlay(poly);
+	poly.setMap(map);
 	}
 
 function clearMap() { // Clear current map and reset globals
-	 map.clearOverlays();
-	 points.length = 0;
-	 markers.length = 0;
-	 count = 0;
-//	 report.innerHTML = "&nbsp;";
+	map.clearOverlays();
+	points.length = 0;
+	markers.length = 0;
+	count = 0;
 	}
 
 function to_view(id) {						// invoke switch case 'u' for selected id
 	document.to_view_form.id.value = id;
 	document.to_view_form.submit();
 	}
-	
 
-	function buildMap_l() {				// 'list' version	
-		var container = document.getElementById("map");
-		var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
-		var mapOptions = {
-			zoom: <?php print get_variable('def_zoom');?>,
-			center: myLatlng,
-			panControl: true,
-		    zoomControl: true,
-		    scaleControl: true,
-		    mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
-			}	
+function buildMap_l() {				// 'list' version	
+	var container = document.getElementById("map_canvas");
+	var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
+	var mapOptions = {
+		zoom: <?php print get_variable('def_zoom');?>,
+		center: myLatlng,
+		panControl: true,
+		zoomControl: true,
+		scaleControl: true,
+		mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
+		}	
 
-		var map = new google.maps.Map($('map'), mapOptions);				// 481
-		map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
-		var bounds = new google.maps.LatLngBounds();		// Initialize bounds for the map
-
-		tooltip = document.createElement("DIV"); // Add a DIV element for toolips
-		tooltip.className = "tooltip";
-//		map.getPane(G_MAP_MARKER_PANE).appendChild(tooltip);
-		var points = new Array();
+	map = new google.maps.Map($('map_canvas'), mapOptions);				// 481
+	map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
+	var bounds = new google.maps.LatLngBounds();		// Initialize bounds for the map
+	var points = new Array();
 <?php
-		$query = "SELECT * FROM `{$tablename}`";
-		$result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
-		$empty = TRUE;
+	$query = "SELECT * FROM `{$tablename}`";
+	$result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
+	$empty = TRUE;
 //
-		while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
-			$empty = FALSE;
-			extract ($row);
-			$name = $row['line_name'];
-			$use_w_bm = ($use_with_bm==1) ? "CHECKED" : "";	// checkbox settings
-			$use_w_r = ($use_with_r==1) ? "CHECKED" : "";
-			$use_w_f = ($use_with_f==1) ? "CHECKED" : "";
-			$use_w_u_ex = ($use_with_u_ex==1) ? "CHECKED" : "";
-			$use_w_u_rf = ($use_with_u_rf==1) ? "CHECKED" : "";
-
-			
-			switch ($row['line_type']) {
-				case "p":		// poly
-					$points = explode (";", $line_data);
-					for ($i = 0; $i<count($points); $i++) {		//
-						$coords = explode (",", $points[$i]);
+	while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
+		$empty = FALSE;
+		extract ($row);
+		$name = $row['line_name'];
+		$use_w_bm = ($use_with_bm==1) ? "CHECKED" : "";	// checkbox settings
+		$use_w_r = ($use_with_r==1) ? "CHECKED" : "";
+		$use_w_f = ($use_with_f==1) ? "CHECKED" : "";
+		$use_w_u_ex = ($use_with_u_ex==1) ? "CHECKED" : "";
+		$use_w_u_rf = ($use_with_u_rf==1) ? "CHECKED" : "";
+		
+		switch ($row['line_type']) {
+			case "p":		// poly
+				$points = explode (";", $line_data);
+				for ($i = 0; $i<count($points); $i++) {		//
+					$coords = explode (",", $points[$i]);
 ?>
-						var thepoint = new google.maps.LatLng(<?php echo round ( $coords[0], 6);?>, <?php echo round ( $coords[1], 6);?>); 
-						bounds.extend(thepoint);
-						points.push(thepoint);		
+					var thepoint = new google.maps.LatLng(<?php echo round ( $coords[0], 6);?>, <?php echo round ( $coords[1], 6);?>); 
+					bounds.extend(thepoint);
+					points.push(thepoint);		
 <?php					}			// end for ($i = 0 ... )
 
-			 	if ((intval($filled) == 1) && (count($points) > 2)) {?>
-//						var polyline = new google.maps(points,add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>);	// 698
-						var polyline = new google.maps.Polyline({		// Create the polyline
-							paths: points,
-							map: map,
-							strokeColor: 	add_hash("<?php echo $line_color;?>"),
-							strokeOpacity: 	<?php echo $line_opacity;?>,
-							strokeWeight: 	<?php echo $line_width;?>,
-							fillColor: 		add_hash("<?php echo $fill_color;?>"),
-							fillOpacity: 	<?php echo $fill_opacity;?>
-							});
+			if ((intval($filled) == 1) && (count($points) > 2)) {?>
+					var polyline = new google.maps.Polyline({		// Create the polyline
+						paths: points,
+						map: map,
+						strokeColor: 	add_hash("<?php echo $line_color;?>"),
+						strokeOpacity: 	<?php echo $line_opacity;?>,
+						strokeWeight: 	<?php echo $line_width;?>,
+						fillColor: 		add_hash("<?php echo $fill_color;?>"),
+						fillOpacity: 	<?php echo $fill_opacity;?>
+						});
 <?php			} else {?>
-
-// <?php echo __LINE__; ?>
-
-						var polygon = new google.maps.Polygon({		// Create the polygon
-							paths: points,
-							map: map,
-							strokeColor: add_hash("<?php print $line_color;?>"),
-							strokeOpacity: <?php print $line_opacity;?>,
-							strokeWeight: <?php print $line_width;?>,
-							fillColor: add_hash("<?php print $fill_color;?>"),
-							fillOpacity: <?php print $fill_opacity;?>
-							});
+					var polygon = new google.maps.Polygon({		// Create the polygon
+						paths: points,
+						map: map,
+						strokeColor: add_hash("<?php print $line_color;?>"),
+						strokeOpacity: <?php print $line_opacity;?>,
+						strokeWeight: <?php print $line_width;?>,
+						fillColor: add_hash("<?php print $fill_color;?>"),
+						fillOpacity: <?php print $fill_opacity;?>
+						});
 <?php			} 
-
-					break;
-			
-				case "t":		// banner
-
-//					dump($row);
-					$temp = explode (";", $line_data);
-					$banner = $temp[1];
-					$coords = explode (",", $temp[0]);
-					echo "\n var point = new google.maps.LatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
-					$the_banner = htmlentities($banner, ENT_QUOTES);
-					$the_width = intval( trim($line_width), 10);		// font size
-					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width});\n";
-					break;
-			
-				}	// end switch
-				
-		}			// end while ()
+				break;
 		
+			case "c":		// circle
+				$temp = explode (";", $line_data);
+				$radius = $temp[1];
+				$coords = explode (",", $temp[0]);
+				$lat = $coords[0];
+				$lng = $coords[1];
+				$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
+				echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}); //  472\n";
+				break;
+		
+			case "t":		// banner
+				$temp = explode (";", $line_data);
+				$banner = $temp[1];
+				$coords = explode (",", $temp[0]);
+				echo "\n var point = new google.maps.LatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
+				$the_banner = htmlentities($banner, ENT_QUOTES);
+				$the_width = intval( trim($line_width), 10);		// font size
+				echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width});\n";
+				break;
+		
+			}	// end switch
+			
+		}			// end while ()
+	
 	unset($query, $result);
 	$dzf = get_variable('def_zoom_fixed');
 	print "\tvar map_is_fixed = ";
 	print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "true;\n":"false;\n";
-
 ?>
 	if (!(map_is_fixed)) {
 		if (points.length==0) {		// any? - 6/18/12
@@ -604,16 +514,7 @@ function to_view(id) {						// invoke switch case 'u' for selected id
 				});			
 			}
 		}
-
-/*
-		map.addControl(new GLargeMapControl3D()); 									// Zoom control
-		map.addMapType(G_PHYSICAL_MAP);
-		var hierarchy = new GHierarchicalMapTypeControl(); 							// Create a hierarchical map type control
-		hierarchy.addRelationship(G_SATELLITE_MAP, G_HYBRID_MAP, "Labels", true);	// make Hybrid the Satellite default
-		map.addControl(hierarchy); 													// add the control to the map
-		map.addControl(new GScaleControl()); 										// Scale bar
-*/	
-		}				// end function buildMap l()
+	}				// end function buildMap l()
 
 <?php
 	$func = (has_admin())? "u": "v";
@@ -710,7 +611,7 @@ switch ($_func) {
 			</TR></TABLE>
 			</TD>
 			<TD  ID = 'map_td'>
-			<DIV id="map" STYLE = "margin-left:8px; width:<?php print get_variable('map_width');?>px; height:<?php print get_variable('map_height');?>px;" ></DIV>			
+			<DIV id="map_canvas" STYLE = "margin-left:8px; width:<?php print get_variable('map_width');?>px; height:<?php print get_variable('map_height');?>px;" ></DIV>			
 			</TD>
 			</TR></TABLE>
 	<FORM NAME = 'new_form' METHOD = 'post' ACTION = '<?php print basename(__FILE__);?>'>
@@ -729,60 +630,53 @@ switch ($_func) {
 ?>
 <SCRIPT>
 function buildMap_c() {															// 'create' version - 691
-	var container = document.getElementById("map");
-	tooltip = document.createElement("DIV"); 									// Add a DIV element for toolips
-	tooltip.className = "tooltip";
-		var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
-		var mapOptions = {
-			zoom: <?php print get_variable('def_zoom');?>,
-			center: myLatlng,
-			panControl: true,
-		    zoomControl: true,
-		    scaleControl: true,
-		    mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
+	var container = document.getElementById("map_canvas");
+	var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
+	var mapOptions = {
+		zoom: <?php print get_variable('def_zoom');?>,
+		center: myLatlng,
+		panControl: true,
+		zoomControl: true,
+		scaleControl: true,
+		mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
+		}	
+
+	map = new google.maps.Map($('map_canvas'), mapOptions);				// 705
+	var bounds = new google.maps.LatLngBounds();		// Initialize bounds for the map	
+	
+	google.maps.event.addListener(map, "click", function(event) {	
+		var thePos = event.latLng;
+		var thelat = thePos.lat().toFixed(6);
+		var thelng = thePos.lng().toFixed(6);
+<?php 
+		if ($_func == "r") {	
+			echo "\n\t\t return;\n";		// bypass click handling
+			} else {
+?>
+			if(thePos) {
+				count++;
+													// Make markers draggable
+				var marker = new google.maps.Marker({
+					position:thePos, 
+					icon:base_icon, 
+					draggable:true, 
+					bouncy:false, 
+					dragCrossMove:true,
+					title: "Point " + count,
+					map: map
+					});
+				marker.setMap(map);		// add marker with icon		
+				marker.content = count;
+				markers.push(marker);
+
+				drawOverlay();
+				}
+<?php	
 			}	
-
-		var map = new google.maps.Map($('map'), mapOptions);				// 705
-		map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
-		
-  		google.maps.event.addListener(map, 'click', function() {
-  			alert(709);
-  			})		// end function
-
+?>
+		});		// end google.maps.event.add Listener()
 	}				// end function buildMap c()
-		
-/*	
-//	map.getPane(G_MAP_MARKER_PANE).appendChild(tooltip);
-	map = new GMap2(container, {draggableCursor:"auto", draggingCursor:"move"});
-	map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo (get_variable('def_zoom')-4); ?>);
-	map.addControl(new GLargeMapControl3D()); 									// Zoom control
-	map.addMapType(G_PHYSICAL_MAP);
-	var hierarchy = new GHierarchicalMapTypeControl(); 							// Create a hierarchical map type control
-	hierarchy.addRelationship(G_SATELLITE_MAP, G_HYBRID_MAP, "Labels", true);	// make Hybrid the Satellite default
-	map.addControl(hierarchy); 													// add the control to the map
-	map.addControl(new GScaleControl()); 										// Scale bar
-	map.disableDoubleClickZoom();
-	GEvent.addListener(map, "click", leftClick); // Add listener for the click event
-*/	
 
-/*
-	function do_checked(the_Form) {						// 676
-		the_Form.frm_filled.value = 1;
-		the_Form.frm_filled_n.checked = false;
-		the_Form.frm_filled_y.checked = true;
-		}
-	function do_un_checked(the_Form) {
-		try {
-			the_Form.frm_filled.value = 0;		//  un defined for c and t
-			the_Form.frm_filled_n.checked = true;
-			the_Form.frm_filled_y.checked = false;
-			}
-
-		catch(err)  {
-		  // disregard
-		  }
-		}
-*/
 </SCRIPT>
 <BODY onLoad = "buildMap_c(); do_un_checked(document.c); document.c.frm_name.focus();">	
 <?php
@@ -882,7 +776,7 @@ function buildMap_c() {															// 'create' version - 691
 			</FORM>
 		</TD></TR></TABLE>
 		</TD><TD>
-			<DIV id="map" STYLE = "margin-left:8px; width:<?php print get_variable('map_width');?>px; height:<?php print get_variable('map_height');?>px;" ></DIV>
+			<DIV id="map_canvas" STYLE = "margin-left:8px; width:<?php print get_variable('map_width');?>px; height:<?php print get_variable('map_height');?>px;" ></DIV>
 			</TD></TR></TABLE>
 		
 <CENTER>
@@ -955,66 +849,63 @@ function buildMap_c() {															// 'create' version - 691
 	function add_marker( point) {
 		semic = ";";			// separator
 		count++;
-		var icon = new GIcon();	  // Red marker icon
-		icon.image = icon_url + "sm_red.png";
-		addIcon(icon);	 
 <?php $do_drag = ($_func == "r")? "false": "true"; ?>
 										  				// Make markers draggable?
-		var marker = new GMarker(point, {icon:icon, draggable:<?php echo $do_drag;?>, bouncy:false, dragCrossMove:true});
-		map.addOverlay(marker);
+		var marker = new google.maps.Marker({
+			position: point,
+			icon: base_icon, 
+			draggable: <?php echo $do_drag;?>,
+			bouncy: false,
+			dragCrossMove:true,
+			title: "Point " + count,
+			map: map
+			});
+		marker.setMap(map);
 		marker.content = count;
 		markers.push(marker);
-		marker.tooltip = "Point "+ count;
-
 <?php if ($_func != "r") {	?>
-		
-		GEvent.addListener(marker, "mouseover", function() {
-			 showTooltip(marker);
-			});
-		GEvent.addListener(marker, "mouseout", function() {
-			 tooltip.style.display = "none";
-			});
-	
-		GEvent.addListener(marker, "drag", function() {	  // Drag listener
-			 tooltip.style.display= "none";
+		google.maps.event.addListener(marker, "drag", function() {		
 			 drawOverlay();
 			});
 		
-		GEvent.addListener(marker, "click", function() {  // Click listener to remove a marker
-			tooltip.style.display = "none";
-		
+		google.maps.event.addListener(marker, "click", function() {		
 			for(var n = 0; n < markers.length; n++) {	  // Find out which marker to remove
-			 if(markers[n] == marker) {
-			 	map.removeOverlay(markers[n]);
-			 	break;
-			 	}
-			}
+				if(markers[n] == marker) {
+					marker[n].setMap(null);			 
+					break;
+					}
+				}
 		
 			markers.splice(n, 1);	  						// Shorten array of markers and adjust counter
 			if(markers.length == 0) {
 				count = 0;
 				}
-			 else {
-			 	 count = markers[markers.length-1].content;
+			else {
+				count = markers[markers.length-1].content;
 			  	drawOverlay();
 				}
 			});
-
 <?php }	?>			
-			
 		drawOverlay();
 		}				// end function add marker()
 
 	function buildMap_r() {				// 'view' version
-	
-		var container = document.getElementById("map");
-		map = new GMap2(container, {draggableCursor:"auto", draggingCursor:"move"});
-		tooltip = document.createElement("DIV"); // Add a DIV element for toolips
-		tooltip.className = "tooltip";
-//		map.getPane(G_MAP_MARKER_PANE).appendChild(tooltip);
-		var bounds = new GLatLngBounds();						// create  bounding box for centering
+		var container = document.getElementById("map_canvas");
+		var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
+		var mapOptions = {
+			zoom: <?php print get_variable('def_zoom');?>,
+			center: myLatlng,
+			panControl: true,
+			zoomControl: true,
+			scaleControl: true,
+			mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
+			}	
+
+		map = new google.maps.Map($('map_canvas'), mapOptions);				// 481
+		map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
+		var bounds = new google.maps.LatLngBounds();		// Initialize bounds for the map	
 		var points = new Array();
-		
+	
 <?php
 			$query = "SELECT * FROM `{$tablename}` WHERE `id`='{$_POST['id']}' LIMIT 1";
 			$result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
@@ -1028,111 +919,118 @@ function buildMap_c() {															// 'create' version - 691
 			for ($i = 0; $i<count($points); $i++) {
 				$coords = explode (",", $points[$i]);
 ?>
-						var thepoint = new google.maps.LatLng(<?php print $coords[0];?>, <?php print $coords[1];?>);
-						bounds.extend(thepoint);
-						points.push(thepoint);
+				var thepoint = new google.maps.LatLng(<?php print $coords[0];?>, <?php print $coords[1];?>);
+				bounds.extend(thepoint);
+				points.push(thepoint);
 		
 <?php					}			// end for ($i = 0 ... )
 			 	if ((intval($filled) == 1) && (count($points) > 2)) {?>
-						var polyline = new GPolygon(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>);
-<?php			} else {?>
-				        var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>);
-<?php			} ?>				        
-						map.addOverlay(polyline);
+					var polyline = new google.maps.Polygon({
+						paths: 			 points,
+						strokeColor: 	 add_hash("<?php echo $line_color;?>"),
+						strokeOpacity: 	 <?php echo $line_opacity;?>,
+						strokeWeight: 	 <?php echo $line_width;?>,
+						fillColor: 		 add_hash("<?php echo $fill_color;?>"),
+						fillOpacity: 	 <?php echo $fill_opacity;?>
+						});
+<?php				} else {?>
+					var polyline = new google.maps.Polygon({
+						paths: 			points,
+						strokeColor: 	add_hash("<?php echo $line_color;?>"),
+						strokeOpacity: 	<?php echo $line_opacity;?>,
+						strokeWeight: 	<?php echo $line_width;?>
+						});
+<?php				} ?>				        
+				polyline.setMap(map);	
 		map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo (get_variable('def_zoom')-4); ?>);
-		map.addControl(new GLargeMapControl3D()); 									// Zoom control
-		map.addMapType(G_PHYSICAL_MAP);
-		var hierarchy = new GHierarchicalMapTypeControl(); 							// Create a hierarchical map type control
-		hierarchy.addRelationship(G_SATELLITE_MAP, G_HYBRID_MAP, "Labels", true);	// make Hybrid the Satellite default
-		map.addControl(hierarchy); 													// add the control to the map
-		map.addControl(new GScaleControl()); 										// Scale bar
-		map.disableDoubleClickZoom();
-	
 		}				// end function buildMap r()
 
 	function fillmap() {
-//	GLog.write("fillmap() 1002");
-		var bounds = new GLatLngBounds();						// create  bounding box for centering	
+		var bounds = new google.maps.LatLngBounds();		// Initialize bounds for the map	
 <?php
-	for ($i = 0; $i< count($points_ary); $i++) {
-		$temp = explode(",", $points_ary[$i]);
+		for ($i = 0; $i< count($points_ary); $i++) {
+			$temp = explode(",", $points_ary[$i]);
 ?>
-		var thepoint = new google.maps.LatLng(<?php echo $temp[0];?>, <?php echo $temp[1];?>);
-		bounds.extend(thepoint);
-		do_point(<?php echo $temp[0];?>, <?php echo $temp[1];?>);
+			var thepoint = new google.maps.LatLng(<?php echo $temp[0];?>, <?php echo $temp[1];?>);
+			bounds.extend(thepoint);
+			do_point(<?php echo $temp[0];?>, <?php echo $temp[1];?>);
 <?php	
-		}		// end for ($i ... )
+			}		// end for ($i ... )
 ?>
 		center = bounds.getCenter();
-		zoom = map.getBoundsZoomLevel(bounds);
-		map.setCenter(center,zoom);
+		zoom = bounds.getCenter();
+		map.setCenter(center);
+		map.setZoom(zoom);
 		}				// end function fillmap()
 
 
 	function buildMap_u() {				// 'update' version
-		
-		var container = document.getElementById("map");
-		map = new GMap2(container, {draggableCursor:"auto", draggingCursor:"move"});		
-							// Add a div element for toolips
-		tooltip = document.createElement("div");
-		tooltip.className = "tooltip";
-//		map.getPane(G_MAP_MARKER_PANE).appendChild(tooltip);		
-							// Load initial map and a bunch of controls
-		map.addControl(new GLargeMapControl3D()); 									// Zoom control
-		map.addMapType(G_PHYSICAL_MAP);
-		var hierarchy = new GHierarchicalMapTypeControl(); 							// Create a hierarchical map type control
-		hierarchy.addRelationship(G_SATELLITE_MAP, G_HYBRID_MAP, "Labels", true);	// make Hybrid the Satellite default
-		map.addControl(hierarchy); 													// add the control to the map
-		map.addControl(new GScaleControl()); 										// Scale bar
-							// Add listener for the click event
-		GEvent.addListener(map, "click", leftClick);
+		var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
+		var mapOptions = {
+			zoom: <?php print get_variable('def_zoom');?>,
+			center: myLatlng,
+			panControl: true,
+			zoomControl: true,
+			scaleControl: true,
+			draggableCursor:"auto",
+			draggingCursor:"move",			
+			mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
+			}	
+
+		map = new google.maps.Map($('map_canvas'), mapOptions);				// 705		
+							// Add dummy listener for the click event
+		google.maps.event.addListener(map, "click", function() {	
+			});		// end google.maps.event.add Listener()
 		}				// end function buildMap u()
-
-
-function do_point(in_lat, in_lng) {
-	var point = new google.maps.LatLng( in_lat, in_lng);
-	count++;
-	var icon = new GIcon();	// Red marker icon
-	icon.image = icon_url + "sm_red.png";		// sm_red.png
+		
+	function do_point(in_lat, in_lng) {
+		var point = new google.maps.LatLng( in_lat, in_lng);
+		count++;
 <?php 
 		if ($_func != "r") {
-			echo "\n\t addIcon(icon);\n";
 			}	
-		 $do_drag = ($_func == "r")? "false": "true"; 
+		$do_drag = ($_func == "r")? "false": "true"; 
  ?>
-	var marker = new GMarker(point, {icon:icon, draggable:<?php echo $do_drag;?>, bouncy:false, dragCrossMove:true});	// Make markers draggable?
-	map.addOverlay(marker);
-	marker.content = count;
-	markers.push(marker);
-	marker.tooltip = "Point "+ count;
-<?php if ($_func != "r") {	?>
+		var marker = new google.maps.Marker({
+			position: point,
+			icon: base_icon, 
+			draggable: <?php echo $do_drag;?>,
+			bouncy: false,
+			dragCrossMove:true,
+			title: "Point " + count,
+			map: map
+			});
+		marker.setMap(map); 
+		marker.content = count;
+		markers.push(marker);
+<?php 
+		if ($_func != "r") {	
+?>
+			google.maps.event.addListener(marker, "click", function() {		
+			});
 
-	GEvent.addListener(marker, "mouseover", function() { showTooltip(marker);	});
-	GEvent.addListener(marker, "mouseout", function() { tooltip.style.display = "none";	});
-							 // Drag listener
-	GEvent.addListener(marker, "drag", function() {tooltip.style.display= "none"; drawOverlay();	});
-								// Click listener to remove a marker
-	GEvent.addListener(marker, "click", function() {	
-		tooltip.style.display = "none";			
-		for(var n = 0; n < markers.length; n++) {		// Find out which marker to remove
-			if(markers[n] == marker) {
-				map.removeOverlay(markers[n]);
-				break;
-				}
+			google.maps.event.addListener(marker, 'dragend', function(event) {
+				var thePos = event.latLng;
+				var thelat = thePos.lat().toFixed(6);
+				var thelng = thePos.lng().toFixed(6);
+			
+				for(var n = 0; n < markers.length; n++) {		// Find out which marker to remove
+					if(markers[n] == marker) {
+						if (thePos) {
+							drawOverlay();
+							}		// end if (thePos)
+						else {
+							alert(<?php echo __LINE__;?>);
+							}					
+						break;
+						}
+					}
+				});		// end google.maps.event.add Listener()
+<?php
 			}
-		markers.splice(n, 1);	// Shorten array of markers and adjust counter
-		if(markers.length == 0) {
-			count = 0;
-			}
-		else {
-			count = markers[markers.length-1].content;
-			drawOverlay();
-			}
-		});
-<?php	}	?>
- drawOverlay();
-
-}				// end function do_point()
+?>
+		drawOverlay();
+		}				// end function do_point()
 
 	function toggle(the_value) {
 		return (the_value==0)? 1 : 0 ;
@@ -1143,12 +1041,12 @@ function do_point(in_lat, in_lng) {
 <?php
 if ($_func == "r") {
 ?>
-<BODY onLoad = "buildMap_r(); fillmap(); document.u.frm_name.focus();"  onUnload='GUnload();'>
+<BODY onLoad = "buildMap_r(); fillmap(); document.u.frm_name.focus();"'>
 <?php
 	}
 else {
 ?>
-<BODY onLoad = "buildMap_u(); fillmap(); document.u.frm_name.focus();"  onUnload='GUnload();'>	
+<BODY onLoad = "buildMap_u(); fillmap(); document.u.frm_name.focus();"'>	
 <?php	
 	}
 	$visible_true = (intval($row['line_status'])==0)? "CHECKED" : "";
@@ -1280,7 +1178,7 @@ else {
 			</FORM>
 		</TD></TR></TABLE>
 		</TD><TD>
-			<DIV id="map" STYLE = "margin-left:8px; width:<?php print get_variable('map_width');?>px; height:<?php print get_variable('map_height');?>px;" ></DIV>
+			<DIV id="map_canvas" STYLE = "margin-left:8px; width:<?php print get_variable('map_width');?>px; height:<?php print get_variable('map_height');?>px;" ></DIV>
 			</TD></TR></TABLE>
 		
 <CENTER>
@@ -1320,7 +1218,6 @@ else {
 function waiter() {
 	document.navform._func.value="r";
 	document.navform.id.value=<?php echo $_POST['frm_id'];?>
-//	fade("up_id;")	
 	setTimeout("document.navform.submit()",1500);
 	}
 </SCRIPT>
@@ -1347,7 +1244,6 @@ function waiter() {
 
 function waiter() {
 	document.navform._func.value="l";					// view the new entry
-//	fade("dp_id;")	
 	setTimeout("document.navform.submit()",1500);
 	}
 </SCRIPT>

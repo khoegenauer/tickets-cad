@@ -18,6 +18,7 @@
 6/1/12 Hide Guest loging notice if guest account doesn't exist.
 10/23/12 Added Level 'Service User' with redirection
 12/1/2012 include browser identification in log entry
+6/1/2013 revised 'contact us' addr to user addr if available
 */
 
 function do_logout($return=FALSE){						/* logout - destroy session data */
@@ -460,12 +461,10 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 //	print (array_key_exists ('frm_passwd', $_POST))? 	$_POST['frm_passwd']: "";
 
 //	6/1/12
-		$guest_exists = 0;
-		$query_guest 	= "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `user`='guest'";
+		$query_guest 	= "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `user`='guest' LIMIT 1";
 		$result_guest = mysql_query($query_guest) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-		if (mysql_num_rows($result_guest)==1) {
-			$guest_exists = 1;
-			}
+		$guest_exists =  (mysql_num_rows($result_guest)==1);
+		
 // End of code to check for guest account existence
 ?>
 		<TR CLASS='even'><TD ROWSPAN=6 VALIGN='middle' ALIGN='left' bgcolor=#EFEFEF><BR /><BR />&nbsp;&nbsp;<IMG BORDER=0 SRC='open_source_button.png' <?php print $my_click; ?>><BR /><BR />
@@ -479,12 +478,15 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 		<TR CLASS="even"><TD COLSPAN=2>&nbsp;&nbsp;</TD></TR>
 		<TR CLASS='even'><TD></TD><TD><INPUT TYPE="submit" VALUE="<?php print get_text("Log In"); ?>"></TD></TR>
 <?php
-		if($guest_exists == 1) {	//	6/1/12
+		if($guest_exists) {	//	6/1/12
 ?>
 			<TR CLASS='even'><TD COLSPAN=3 ALIGN='center'><BR />&nbsp;&nbsp;&nbsp;&nbsp;Visitors may login as <B>guest</B> with password <B>guest</B>.&nbsp;&nbsp;&nbsp;&nbsp;</TD></TR>
 <?php
-		}
+			}			
 ?>
+		<TR CLASS='even'><TD CLASS='text_small' COLSPAN=99 ALIGN='CENTER'><BR />
+			<A HREF="mailto:<?php echo get_contact_addr ();?>?subject=Question/Comment on Tickets Dispatch System"><u>Contact us</u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom"></A>
+		</TD></TR>
 		<TR CLASS='even'><TD COLSPAN=3>&nbsp;</TD></TR>
 		<TR CLASS='even'><TD COLSPAN=3>&nbsp;</TD></TR>
 	 	</TABLE>
@@ -492,7 +494,7 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 		<INPUT TYPE='hidden' NAME = 'scr_height' VALUE=''>
 		<INPUT TYPE='hidden' NAME = 'frm_referer' VALUE="<?php print $temp; ?>">
 		</FORM><BR /><BR />
-		<a href="http://www.ticketscad.org/"><SPAN CLASS='text_small'>Tickets CAD Project home</SPAN></a>
+<!--		<a href="<?php echo get_contact_addr ();?>/"><SPAN CLASS='text_small'>Contact us</SPAN></a>	 6/1/2013 --> 
 		</CENTER></HTML>
 <?php
 			exit();		// no return value

@@ -264,21 +264,24 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 
 		}		// end drawCircle 
 		
-	function drawBanner(point, html, text, font_size, color) {        // Create the banner
-	//	alert("<?php echo __LINE__;?> " + color);
-		var invisibleIcon = new GIcon(G_DEFAULT_ICON, "./markers/markerTransparent.png");      // Custom icon is identical to the default icon, except invisible
-
+	function drawBanner(point, html, text, font_size, color, name) {        // Create the banner - 6/5/2013
+		var invisibleIcon = new google.maps.MarkerImage("./markers/markerTransparent.png");
 		map.setCenter(point, 8);
-		map.addControl(new GLargeMapControl());
-		map.addControl(new GMapTypeControl());
 		var the_color = (typeof color == 'undefined')? "#000000" : color ;	// default to black
-
-		var style_str = 'background-color:transparent;font-weight:bold;border:0px black solid;white-space:nowrap; font-size:' + font_size + 'px; font-family:arial; opacity: 0.9; color:' + add_hash(the_color) + ';';
-
-		var contents = '<div><div style= "' + style_str + '">'+text+'<\/div><\/div>';
-		var label=new ELabel(point, contents, null, new GSize(-8,4), 75, 1);
-		map.addOverlay(label);
-		var marker = new GMarker(point,invisibleIcon);	        // Create an invisible GMarker
+		var label = new ELabel({
+			latlng: point, 
+			label: html, 
+			classname: "label", 
+			offset: new google.maps.Size(-8, 4), 
+			opacity: 100,
+			theSize: font_size + "px",		
+			theColor:add_hash(the_color),
+			overlap: true,
+			clicktarget: false
+			});	
+		label.setMap(map);		
+		var marker = new google.maps.Marker(point,invisibleIcon);	        // Create an invisible google.maps.Marker
+		marker.setMap(map);				
 		}				// end function draw Banner()
 
 	function add_hash(in_str) { // prepend # if absent
@@ -357,7 +360,7 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 					echo "\n var point = new google.maps.LatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
 					$the_banner = htmlentities($banner, ENT_QUOTES);
 					$the_width = intval( trim($line_width), 10);		// font size
-					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width});\n";
+					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width}, add_hash('{$line_color}'));\n";
 					break;
 				}	// end switch
 		}			// end while ()

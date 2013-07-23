@@ -31,6 +31,8 @@ $units_side_bar_height = .6;		// max height of units sidebar as decimal fraction
 2/17/12 corrected $assigns_stack logic. 
 2/19/12 div's added for latest ticket, assign id's
 2/27/12 blink logic added
+6/3/2013 reload() made conditional on setting value
+6/10/2013 corrections applied to to_refresh form
 */
 
 session_start();	
@@ -402,7 +404,7 @@ function replaceButtonText(buttonId, text) {
 
 	function end_watch(){
 		window.clearInterval(watch_val);
-		window.location.reload();
+		do_reload();			// 6/3/2013
 		}				// end function end_watch()
 
 	function do_watch() {								// monitor for changes - 4/10/10, 6/10/11
@@ -414,9 +416,20 @@ function replaceButtonText(buttonId, text) {
 			)
 				{			  // a change
 				end_watch();
-				window.location.reload();				
+				do_reload();			
 			}
 		}			// end function do_watch()		
+
+	function do_reload() {
+<?php														// 6/3/2013
+	$temp =  explode("/", get_variable('auto_refresh'));
+	if ( (count($temp) == 3 ) && (intval ($temp[2]) == 1) ) {		// do set for window.location.reload()
+?>		
+				window.location.reload();				
+<?php
+		}				// end reload test
+?>	
+		}		// end function do reload()
 
 </SCRIPT>
 <?php			// 7/14/09
@@ -924,8 +937,8 @@ $unload_str = ($_SESSION['internet'])? "GUnload(); end_watch();"  : "end_watch()
 
 	<FORM NAME='to_refresh' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'> <!-- 10/8/10 -->
 	<INPUT TYPE='hidden' NAME='frm_mode' VALUE='<?php print $mode;?>' />
-	<INPUT TYPE='hidden' NAME='assign_id' VALUE='' />		<!-- 5/19/11 -->
-	<INPUT TYPE='hidden' NAME='ticket_id' VALUE='' />		<!-- 2/22/12 -->
+	<INPUT TYPE='hidden' NAME='assign_id' VALUE='<?php print $assign_id;?>' />		<!-- 6/10/2013 -->
+	<INPUT TYPE='hidden' NAME='ticket_id' VALUE='<?php print $ticket_id;?>' />		
 	</FORM>
 <!--
 <p>

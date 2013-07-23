@@ -86,6 +86,8 @@ $zoom_tight = FALSE;		// default is FALSE (no tight zoom); replace with a decima
 12/10/2012 - fix to ajax calls re message format
 11/22/2012 Added Nearby Functionality
 1/17/2013 GMaps V3 conversions made 
+5/22/2013 added broadcast call
+6/2/2013 reverse_geo operation added.
 */
 	$addrs = FALSE;										// notifies address array doesn't exist
 
@@ -485,11 +487,17 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			}
 		else {
 			st_unlk(theForm);
-//			theForm.frm_ngs.disabled=false;													// 9/13/08
 			theForm.frm_phone.value=theForm.frm_phone.value.replace(/\D/g, "" ); // strip all non-digits
-//			top.upper.calls_start();											 // 1/17/09
+								
+<?php				/* 5/22/2013 */
+		if (intval(get_variable('broadcast')==1)) { 
+?>
+			var theMessage = "Updated  <?php print get_text('Incident');?> (" + theForm.frm_scope.value + ") by <?php echo $_SESSION['user'];?>";
+			broadcast(theMessage ) ;
+<?php
+	}			// end if (broadcast)
+?>				
 			theForm.submit();
-//			return true;
 			}
 		}				// end function validate(theForm)
 
@@ -593,6 +601,9 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		return false;
 	}	
 </SCRIPT>
+<?php
+require_once('./incs/socket2me.inc.php');		// 5/22/2013
+?>
 </HEAD>
 
 <?php
@@ -752,15 +763,22 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_loca']}');\">" . get_text("Location") . ": </TD><TD><INPUT SIZE='48' TYPE='text' NAME='frm_street' VALUE=\"{$row['street']}\" MAXLENGTH='48' {$dis}></TD></TR>\n";
 			print "<TR CLASS='odd'>
 					<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_city']}');\">" . get_text("City") . ":</TD>";
-			print 		"<TD><button type='button' onClick='Javascript:loc_lkup(document.edit);'><img src='./markers/glasses.png' alt='Lookup location.' /></button>";
-			print 		"</TD>
-						<TD><INPUT SIZE='32' TYPE='text' 	NAME='frm_city' VALUE=\"{$row['city']}\" MAXLENGTH='32' onChange = 'this.value=capWords(this.value)' {$dis}>\n";
+			print 		"<TD>";
+
+			if($gmaps) {	//	6/4/2013			
+				print "<button type='button' onClick='Javascript:loc_lkup(document.edit);'><img src='./markers/glasses.png' alt='Lookup location.' /></button>";
+			 	}				// end if($gmaps)
+			print 		"</TD>";
+			print 		"<TD><INPUT SIZE='32' TYPE='text' 	NAME='frm_city' VALUE=\"{$row['city']}\" MAXLENGTH='32' onChange = 'this.value=capWords(this.value)' {$dis}>\n";
 			$st_size = (get_variable("locale") ==0)?  2: 4;												// 11/23/10, 3/27/2013
+			
 			print 	"<SPAN STYLE='margin-left:24px'  onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_state']}');\">" . get_text("St") . "</SPAN>:&nbsp;&nbsp;<INPUT SIZE='{$st_size}' TYPE='text' NAME='frm_state' VALUE='" . $row['state'] . "' MAXLENGTH='{$st_size}' {$dis}>";
-			print 		"<BUTTON type='button' onClick='Javascript:do_nearby(this.form);return false;'>Nearby?</BUTTON></TD></TR>\n"; 	//11/22/2012
 
-
+			if ($gmaps) {						// 6/4/2013
+				print "<BUTTON type='button' onClick='Javascript:do_nearby(this.form); return false;'>Nearby?</BUTTON>";
+				}		// end if ($gmaps)
 			print 		"</TD></TR>\n";
+
 			print "<TR CLASS='even'>
 				<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_phone']}');\">" . get_text("Phone") . ":</TD>";
 			print 		"<TD><button type='button'  onClick='Javascript:phone_lkup(document.edit.frm_phone.value);'><img src='./markers/glasses.png' alt='Lookup phone no' /></button>";	// 1/19/09
@@ -1185,7 +1203,6 @@ if (!$disallow) {
 					</DIV>				
 <?php
 	if ($gmaps) {				// 1/1/11
-
 ?>
 	<SCRIPT>
 	var grid_bool = false;		
@@ -1202,7 +1219,6 @@ if (!$disallow) {
 		icons[<?php print $GLOBALS['SEVERITY_MEDIUM'];?>] = "./our_icons/green.png";	// green
 		icons[<?php print $GLOBALS['SEVERITY_HIGH']; ?>] =  "./our_icons/red.png";		// red	
 		icons[<?php print $GLOBALS['SEVERITY_HIGH']; ?>+1] =  "./our_icons/white.png";	// white - not in use
-
 //										some globals		
 		var map_obj = null;				// the map object - note GLOBAL
 		var myMarker;					// the marker object
@@ -1210,11 +1226,18 @@ if (!$disallow) {
 		var lng_var;
 		var zoom_var;
 
-
 	function call_back (in_obj){				// callback function - from gmaps_v3_init()
 		do_lat(in_obj.lat);			// set form values
 		do_lng(in_obj.lng);
 		do_ngs();	
+<?php								// 6/2/2013
+	if (intval(get_variable('reverse_geo'))==1) {
+?>
+		codeLatLng (in_obj.lat, in_obj.lng);				// 6/2/2013 do reverse geo
+
+<?php
+		}	// end 'reverse_geo'?
+?>
 		}
 //				1225 - 1/17/2013
 
@@ -1404,6 +1427,9 @@ if (!$disallow) {
 		}
 		
 // *********************************************************************
+<?php
+	if ($gmaps) {				// 6/4/2013
+?>
 // *********************************************************************
 	function pt_to_map (my_form, lat, lng) {						// 7/5/10
 		myMarker.setMap(null);			// destroy predecessor
@@ -1450,33 +1476,56 @@ if (!$disallow) {
 
 		}				// end function loc lkup()
 
+
 // ****************************************************Reverse Geocoder 10/13/09, 7/5/10
-	var geocoder;
+	var geocoder = new google.maps.Geocoder();
 	var address;
 	var rev_coding_on = '<?php print get_variable('reverse_geo');?>';		// 7/5/10	
 		
-	function getAddress(overlay, latlng) {		//7/5/10
-		var geocoder = new GClientGeocoder();
-		if (rev_coding_on == 1) {	
-			if (latlng != null) {
-				geocoder.getLocations(latlng, function(response) {
-				map.clearOverlays();  
-					if(response.Status.code != 200) {
-						alert("948: Status Code:" + response.Status.code);
-					} else { 
-						place = response.Placemark[0];
-						locality = response.Placemark[0].AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality;   
-						point = new GLatLng(place.Point.coordinates[1],place.Point.coordinates[0]);
-						marker = new GMarker(point);
-						map.addOverlay(marker);
-						document.edit.frm_street.value = place.address;
-						document.edit.frm_city.value = locality.LocalityName;
-						}
-					});
+	function codeLatLng(lat, lng) {
+		var latlng = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+		geocoder.geocode({'latLng': latlng}, function(results, status) {
+			if (status == google.maps.GeocoderStatus.OK) {
+				if (results[1]) {
+				var addr_pieces = results[0].formatted_address.split(",");				
+				switch (addr_pieces.length) {
+					case 1:
+						document.edit.frm_street.value = document.edit.frm_city.value = "";				// state or country
+						document.edit.frm_state.value=addr_pieces[0].substring(0,5).trim() ;			// state or country
+						break;
+				
+					case 2:
+						document.edit.frm_street.value = "";					
+						document.edit.frm_city.value=addr_pieces[0].substring(0,33).trim() ;			// city
+						var temp = addr_pieces[1].substring(0,5).trim().split(" ");					// zipcode
+						document.edit.frm_state.value=temp[0].substring(0,5).trim() ;				// state or country	
+						break;
+				
+					case 3:
+						document.edit.frm_street.value=addr_pieces[0].substring(0,97).trim() ;		// street
+						document.edit.frm_city.value=addr_pieces[1].substring(0,33).trim() ;			// city
+						var temp = addr_pieces[2].substring(0,5).trim().split(" ");					// zipcode
+						document.edit.frm_state.value=temp[0].substring(0,5).trim() ;				// state or country
+						break;
+				
+					default:
+						document.edit.frm_street.value=addr_pieces[0].substring(0,97).trim() ;							// street
+						document.edit.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,33).trim() ;		// city
+						var temp = addr_pieces[(addr_pieces.length-2)].substring(0,5).trim().split(" ");				// zipcode
+						if (temp.length == 2) {
+							document.edit.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,33).trim() ;	// city						
+							document.edit.frm_state.value=temp[0].substring(0,5).trim() ;								// US state							
+							}
+						else {
+							var the_city = addr_pieces[(addr_pieces.length-3)] + ", " + addr_pieces[(addr_pieces.length-2)] ;
+							document.edit.frm_city.value=the_city.substring(0,33).trim() ;								// city						
+							document.edit.frm_state.value=addr_pieces[(addr_pieces.length-1)].substring(0,5).trim()		// country							
+							}
+					}				// end switch
 				}
-			}
-		}
-
+			} else { alert("Geocoder lookup failed due to: " + status); }
+		});
+	}				// end function
 
 // *****************************************************************************
 
@@ -1493,6 +1542,10 @@ if (!$disallow) {
 			}
 		newwindow.focus();
 		}		// end do_nearby()
+		
+<?php
+	}				// end if ($gmaps)
+?>
 
 	</SCRIPT>
 

@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-$facs_side_bar_height = .5;		// max height of units sidebar as decimal fraction of screen height - default is 0.6 (60%)
+$facs_side_bar_height = .5;		// max height of units sidebar as decimal fraction of screen height - default is 0.5 (50%)
 $iw_width = "300px";		// map infowindow with
 $side_bar_height = 0.5;		// height of units sidebar as decimal fraction - default is 0.9 (90%)
 $zoom_tight = FALSE;		// replace with a decimal number to over-ride the standard default zoom setting
@@ -18,6 +18,8 @@ $zoom_tight = FALSE;		// replace with a decimal number to over-ride the standard
 2/8/12 Fixed error on single region operation - editing a unit removes region 1 region allocation.
 10/31/2012 Beds information added
 11/1/2012 remove unix conversion from field 'updated'
+5/30/13 Implement catch for when there are no allocated regions for current user. 
+6/4/2013 beds information added for all operations
 */
 
 function do_updated ($instr) {		// 11/1/2012
@@ -456,32 +458,34 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 6/10/11
 		$al_groups[] = $row['group'];
 		}	
+	if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+		$where2 = "WHERE `a`.`type` = 3";
+		} else {
+		if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
+			$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+			}
 
-	if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
-		$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+		if(!isset($curr_viewed)) {	
+			$x=0;	//	6/10/11
+			$where2 = "WHERE (";	//	6/10/11
+			foreach($al_groups as $grp) {	//	6/10/11
+				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`a`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+			} else {
+			$x=0;	//	6/10/11
+			$where2 = "WHERE (";	//	6/10/11
+			foreach($curr_viewed as $grp) {	//	6/10/11
+				$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`a`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+			}
+		$where2 .= "AND `a`.`type` = 3";	//	6/10/11				
 		}
-
-	if(!isset($curr_viewed)) {	
-		$x=0;	//	6/10/11
-		$where2 = "WHERE (";	//	6/10/11
-		foreach($al_groups as $grp) {	//	6/10/11
-			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`a`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
-			}
-	} else {
-		$x=0;	//	6/10/11
-		$where2 = "WHERE (";	//	6/10/11
-		foreach($curr_viewed as $grp) {	//	6/10/11
-			$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`a`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
-			}
-	}
-	$where2 .= "AND `a`.`type` = 3";	//	6/10/11				
-
 	//	3/15/11, 6/10/11
 	$query = "SELECT *,
 		`t`.`id` AS `type_id`, 	
@@ -649,6 +653,11 @@ var buttons_html = "";
 				`handle`= " . 		quote_smart(trim($_POST['frm_handle'])) . ",
 				`icon_str`= " . 	quote_smart(trim($_POST['frm_icon_str'])) . ",
 				`description`= " . 	quote_smart(trim($_POST['frm_descr'])) . ",
+
+				`beds_a`= " . 		quote_smart(trim($_POST['frm_beds_a'])) . ",
+				`beds_o`= " . 		quote_smart(trim($_POST['frm_beds_o'])) . ",
+				`beds_info`= " . 	quote_smart(trim($_POST['frm_beds_info'])) . ",
+
 				`capab`= " . 		quote_smart(trim($_POST['frm_capab'])) . ",
 				`status_id`= " . quote_smart(trim($_POST['frm_status_id'])) . ",
 				`lat`= " . 			$the_lat . ",
@@ -703,7 +712,9 @@ var buttons_html = "";
 		$frm_lng = (empty($_POST['frm_lng']))? '0.999999': quote_smart(trim($_POST['frm_lng']));
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));
 		$query = "INSERT INTO `$GLOBALS[mysql_prefix]facilities` (
-			`name`, `street`, `city`, `state`, `handle`, `icon_str`, `description`, `capab`, `status_id`, `contact_name`, `contact_email`, `contact_phone`, `security_contact`, `security_email`, `security_phone`, `opening_hours`, `access_rules`, `security_reqs`, `pager_p`, `pager_s`, `lat`, `lng`, `type`, `user_id`, `updated` )
+			`name`, `street`, `city`, `state`, `handle`, `icon_str`, `boundary`, `description`, 
+			`beds_a`, `beds_o`, `beds_info`,
+			`capab`, `status_id`, `contact_name`, `contact_email`, `contact_phone`, `security_contact`, `security_email`, `security_phone`, `opening_hours`, `access_rules`, `security_reqs`, `pager_p`, `pager_s`, `type`, `user_id`, `updated` )
 			VALUES (" .
 				quote_smart(trim($_POST['frm_name'])) . "," .
 				quote_smart(trim($_POST['frm_street'])) . "," .
@@ -712,6 +723,11 @@ var buttons_html = "";
 				quote_smart(trim($_POST['frm_handle'])) . "," .
 				quote_smart(trim($_POST['frm_icon_str'])) . "," .
 				quote_smart(trim($_POST['frm_descr'])) . "," .
+
+				quote_smart(trim($_POST['frm_beds_a'])) . "," .
+				quote_smart(trim($_POST['frm_beds_o'])) . "," .
+				quote_smart(trim($_POST['frm_beds_info'])) . "," .
+
 				quote_smart(trim($_POST['frm_capab'])) . "," .
 				quote_smart(trim($_POST['frm_status_id'])) . "," .
 				quote_smart(trim($_POST['frm_contact_name'])) . "," .
@@ -862,17 +878,27 @@ var buttons_html = "";
 		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_add_Form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print get_variable('def_city'); ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=40 ROWS=2></TEXTAREA></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_capab" COLS=40 ROWS=2></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2></TEXTAREA></TD></TR>
+
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility beds "><?php print get_text("Beds"); ?></A>&nbsp;</TD>
+			<TD COLSPAN=3 >		<!-- 	6/4/2013 -->
+			<SPAN  CLASS = "td_label" STYLE = "margin-left:20px;">Available: </SPAN><INPUT SIZE="16" MAXLENGTH="16" TYPE="text" NAME="frm_beds_a" VALUE="" />			
+			<SPAN  CLASS = "td_label" STYLE = "margin-left:20px;">Occupied: </SPAN><INPUT SIZE="16" MAXLENGTH="16" TYPE="text" NAME="frm_beds_o" VALUE="" />			
+			</TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information"><?php print get_text("Beds"); ?> information</A>:&nbsp;</TD>
+			<TD COLSPAN=3 ><TEXTAREA NAME="frm_beds_info" COLS=60 ROWS=2></TEXTAREA>			
+			</TD></TR>
+
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_capab" COLS=60 ROWS=2></TEXTAREA></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility main contact name"><?php print get_text("Contact name"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact email - main contact email address"><?php print get_text("Contact email"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_email" VALUE="" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact phone number - main contact phone number"><?php print get_text("Contact phone"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_phone" VALUE="" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact"><?php print get_text("Security contact"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_contact" VALUE="" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact email"><?php print get_text("Security email"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_email" VALUE="" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact phone number"><?php print get_text("Security phone"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_phone" VALUE="" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility opening hours - e.g. 24x7x365, 8 - 5 mon to sat etc."><?php print get_text("Opening hours"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_opening_hours" COLS=40 ROWS=2></TEXTAREA></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility access rules - e.g enter by main entrance, enter by ER entrance, call first etc"><?php print get_text("Access rules"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_access_rules" COLS=40 ROWS=5></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility securtiy requirements - e.g. phone security first, visitors must be security cleared etc."><?php print get_text("Security reqs"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_security_reqs" COLS=40 ROWS=5></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility opening hours - e.g. 24x7x365, 8 - 5 mon to sat etc."><?php print get_text("Opening hours"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_opening_hours" COLS=60 ROWS=2></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility access rules - e.g enter by main entrance, enter by ER entrance, call first etc"><?php print get_text("Access rules"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_access_rules" COLS=60 ROWS=5></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility securtiy requirements - e.g. phone security first, visitors must be security cleared etc."><?php print get_text("Security reqs"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_security_reqs" COLS=60 ROWS=5></TEXTAREA></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact primary pager number"><?php print get_text("Primary pager"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_p" VALUE="" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact secondary pager number"><?php print get_text("Secondary pager"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_s" VALUE="" /></TD></TR>
 
@@ -1023,17 +1049,29 @@ var buttons_html = "";
 		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_edit_Form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=40 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_capab" COLS=40 ROWS=2><?php print $row['capab'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
+
+					<!-- 6/4/2013  -->
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility beds "><?php print get_text("Beds"); ?></A>&nbsp;</TD>
+			<TD COLSPAN=3 >		<!-- 	6/4/2013 -->
+			<SPAN  CLASS = "td_label" STYLE = "margin-left:20px;">Available: </SPAN><INPUT SIZE="16" MAXLENGTH="16" TYPE="text" NAME="frm_beds_a" VALUE="<?php print $row['beds_a'];?>" />			
+			<SPAN  CLASS = "td_label" STYLE = "margin-left:20px;">Occupied: </SPAN><INPUT SIZE="16" MAXLENGTH="16" TYPE="text" NAME="frm_beds_o" VALUE="<?php print $row['beds_o'];?>" />			
+			</TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information"><?php print get_text("Beds"); ?> information</A>:&nbsp;</TD>
+			<TD COLSPAN=3 ><TEXTAREA NAME="frm_beds_info" COLS=60 ROWS=2><?php print $row['beds_info'];?></TEXTAREA>			
+			</TD></TR>
+
+
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_capab" COLS=60 ROWS=2><?php print $row['capab'];?></TEXTAREA></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility main contact name">Contact name</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="<?php print $row['contact_name'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact email - main contact email address"><?php print get_text("Contact email"); ?></A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_email" VALUE="<?php print $row['contact_email'] ;?>" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact phone number - main contact phone number">Contact phone</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_phone" VALUE="<?php print $row['contact_phone'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact">Security contact</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_contact" VALUE="<?php print $row['security_contact'] ;?>" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact email">Security email</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_email" VALUE="<?php print $row['security_email'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact phone number">Security phone</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_phone" VALUE="<?php print $row['security_phone'] ;?>" /></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility opening hours - e.g. 24x7x365, 8 - 5 mon to sat etc.">Opening hours</A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_opening_hours" COLS=40 ROWS=2><?php print $row['opening_hours'];?></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility access rules - e.g enter by main entrance, enter by ER entrance, call first etc"><?php print get_text("Access rules"); ?></A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_access_rules" COLS=40 ROWS=5><?php print $row['access_rules'];?></TEXTAREA></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility securtiy requirements - e.g. phone security first, visitors must be security cleared etc.">Security reqs</A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_security_reqs" COLS=40 ROWS=5><?php print $row['security_reqs'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility opening hours - e.g. 24x7x365, 8 - 5 mon to sat etc.">Opening hours</A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_opening_hours" COLS=60 ROWS=2><?php print $row['opening_hours'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility access rules - e.g enter by main entrance, enter by ER entrance, call first etc"><?php print get_text("Access rules"); ?></A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_access_rules" COLS=60 ROWS=5><?php print $row['access_rules'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility securtiy requirements - e.g. phone security first, visitors must be security cleared etc.">Security reqs</A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_security_reqs" COLS=60 ROWS=5><?php print $row['security_reqs'];?></TEXTAREA></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact primary pager number">Pager Primary</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_p" VALUE="<?php print $row['pager_p'] ;?>" /></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact secondary pager number">Pager Secondary</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_s" VALUE="<?php print $row['pager_s'] ;?>" /></TD></TR>
 
@@ -1135,6 +1173,13 @@ var buttons_html = "";
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Status"); ?>:</TD>		<TD><?php print $un_st_val;?>
 				</TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Description"); ?>: </TD>	<TD><?php print $row['description'];?></TD></TR>
+
+					<!-- 6/4/2013  -->
+			<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility beds "><?php print get_text("Beds"); ?> Available/Occupied:</A>&nbsp;</TD>
+				<TD><?php print $row['beds_a'];?>/<?php print $row['beds_o'];?>	</TD></TR><!-- 	6/4/2013 -->
+			<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information"><?php print get_text("Beds"); ?> information</A>:&nbsp;</TD>
+				<TD><?php print $row['beds_info'];?></TD></TR>
+	
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Capability"); ?>: </TD>	<TD><?php print $row['capab'];?></TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Contact name"); ?>:</TD>	<TD><?php print $row['contact_name'] ;?></TD></TR>
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Contact email"); ?>:</TD>	<TD><?php print $row['contact_email'] ;?></TD></TR>
@@ -1252,7 +1297,7 @@ var buttons_html = "";
 				<TR class='even'>	<TD ALIGN='center'><B>Facilities (<DIV id="num_facilities" style="display: inline;"></DIV>)</B></TD></TR>
 				<TR class='odd'>	<TD ALIGN='center'>Click line or icon for details</TD></TR>			
 				<TR><TD>
-				<DIV ID='side_bar' style="height: <?php print $the_height; ?>px;  overflow-y: scroll; overflow-x: hidden; align: center;"></DIV></TD></TR>
+				<DIV ID='side_bar' style="height: auto;  overflow-y: scroll; overflow-x: hidden; align: center;"></DIV></TD></TR>
 				<TR class='spacer'><TD class='spacer'>&nbsp;</TD></TR>
 				<TR><TD ALIGN='center'><DIV style='width: 100%;'><?php print get_facilities_legend();?></DIV></TD></TR>
 				<TR class='spacer'><TD class='spacer'>&nbsp;</TD></TR>

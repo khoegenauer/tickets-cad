@@ -208,87 +208,55 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
 	
 				side_bar_html += "<IMG BORDER=0 SRC='rtarrow.gif' ID = \"R" + id + "\"  STYLE = 'visibility:hidden;' /></TD>";
 				var letter = ""+ id;										// start with 1 - 1/5/09 - 1/29/09
-	
-	//			var the_class = (direcs[id])?  "emph" : "td_label";
 				var the_class = (lats[id])?  "emph" : "td_label";
 				side_bar_html += "<TD CLASS='" + the_class + "' ALIGN='right'>" + letter + " "+ sidebar +"</TD></TR>\n";
 				return null;
-				}				// end function create Marker()
-	
-	
+				}				// end function do_sidebar()
+
 			function createMarker(point,sidebar,tabs, color, id, unit_id) {		// Creates marker and sets up click event infowindow
 				got_points = true;													// at least one
 				do_sidebar(sidebar, color, id, unit_id)
 				var letter = ""+ id;
 											// start with 1 - 1/5/09 - 1/29/09
 				var image_file = "./our_icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + letter;				// 1/5/09				
-
-//				var image_file = "./our_icons/gen_icon.php?blank=" + color + "&text=" + unit_id;				// 1/5/09
-		
 				var marker = new google.maps.Marker({position: point, map: map, icon: image_file});
-				marker.id = color;				// for hide/unhide - unused		
-			
+				marker.id = color;				// for hide/unhide - unused
 				google.maps.event.addListener(marker, "click", function() {		// here for both side bar and icon click
 					try {open_iw.close()} catch(err) {;}
 					map.setCenter(point, 8);
-		
 					var infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});	 
 					open_iw = infowindow;
-					infowindow.open(map, marker);		
+					infowindow.open(map, marker);
 					});			// end google.maps.event.add Listener()
-
-/*
-				GEvent.addListener(marker, "click", function() {		// here for both side bar and icon click
-					map.closeInfoWindow();
-					which = id;
-					gmarkers[which].hide();
-					marker.openInfoWindowTabsHtml(infoTabs[id]);
-					var dMapDiv = document.getElementById("detailmap");
-					var detailmap = new GMap2(dMapDiv);					// 224
-					detailmap.addControl(new GSmallMapControl());
-					detailmap.setCenter(point, 17);  					// larger # = closer
-					detailmap.addOverlay(marker);
-					});
-*/			
 				gmarkers[id] = marker;							// marker to array for side bar click function
 				infoTabs[id] = tabs;							// tabs to array
-//				bounds.extend(point);
 				try{bounds.extend(point);}															// point into BB
 				catch(err)	{}
 				return marker;
 				}				// end function create Marker()
 				
-			function createdummyMarker(point,sidebar,tabs, color, id, unit_id) {		// Creates marker and sets up click event infowindow
-				do_sidebar(sidebar, color, id, unit_id)
-				var icon = new GIcon(listIcon);
-				var uid = unit_id;
-				var letter = ""+ id;
-											// start with 1 - 1/5/09 - 1/29/09
-				var icon_url = "./our_icons/question1.png";				// 1/5/09
-				icon.image = icon_url;
-				var marker = new GMarker(point, icon);
-				marker.id = color;				// for hide/unhide - unused
-			
-/*
-				GEvent.addListener(marker, "click", function() {		// here for both side bar and icon click
-					map.closeInfoWindow();
-					which = id;
-					gmarkers[which].hide();
-					marker.openInfoWindowTabsHtml(infoTabs[id]);
-					var dMapDiv = document.getElementById("detailmap");
-					var detailmap = new GMap2(dMapDiv);					// 254
-					detailmap.addControl(new GSmallMapControl());
-					detailmap.setCenter(point, 17);  					// larger # = closer
-					detailmap.addOverlay(marker);
-					});
-*/			
-				gmarkers[id] = marker;							// marker to array for side bar click function
-				infoTabs[id] = tabs;							// tabs to array
-				bounds.extend(point);							// extend the bounding box		
-		
-				return marker;
-				}				// end function create Marker()				
-		
+			function createdummyMarker(point, tabs, color, id, unit_id) {
+				got_points = true;											// 6/18/12
+				var image_file = "./our_icons/question1.png";
+				var dummymarker = new google.maps.Marker({position: point, map: map, icon: image_file});		
+				dummymarker.id = color;				// for hide/unhide - unused
+				google.maps.event.addListener(dummymarker, "click", function() {		// here for both side bar and icon click
+					if (dummymarker) {
+						try {open_iw.close()} catch(err) {;}
+						map.setZoom(8);
+						map.setCenter(point);
+						infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});	 
+						open_iw = infowindow;				
+						infowindow.open(map, dummymarker);
+						}		// end if (marker)
+					});			// end google.maps.Event.add Listener()
+				gmarkers[id] = dummymarker;									// marker to array for side bar click function
+				infoTabs[id] = tabs;									// tabs to array
+				try{bounds.extend(point);}															// point into BB
+				catch(err)	{}
+				return dummymarker;
+				}				// end function create dummy Marker()
+
 			function myclick(id, unit_id) {								// responds to side bar click
 				var norecfac = "";
 				if (document.getElementById(current_id)) {
@@ -470,42 +438,35 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
 			var which;			// marker last selected
 			var i = 0;			// sidebar/icon index
 
-//			function init() {
-				var icon_file = "./markers/yellow.png";
-				
-				function call_back(){
-	//				alert (457);
-					return;
-					}			// end function
-	
-				map = gmaps_v3_init(call_back, 'map_canvas', 
-					<?php print $lat;?>, 
-					<?php print $lng;?>, 
-					<?php echo get_variable('def_zoom');?>, 
-					icon_file, 
-					<?php echo get_variable('maptype');?>, 
-					false);		
-	
-//				alert(522);
-				
-//				directionsRenderer.setMap(map);										
-//				directionsRenderer.setPanel(document.getElementById('directions'));
-	
-	//			map.addOverlay(new LatLonGraticule()); 
-	
-				bounds = new google.maps.LatLngBounds();				// create empty bounding box
-				var point = new google.maps.LatLng(<?php print $lat;?>, <?php print $lng;?>);			// 480
-				bounds.extend(point);										// Incident into BB
-//				}				// end function init()
+			function call_back (in_obj){				// callback function - from polyline()
+				do_lat(in_obj.lat);			// set form values
+				do_lng(in_obj.lng);
+				do_ngs();	
+				}
 
-			var listIcon = new google.maps.MarkerImage("./markers/yellow.png");
-			listIcon.shadow = "./markers/sm_shadow.png";
-			listIcon.iconSize = new google.maps.Size(20, 34);
-			listIcon.shadowSize = new google.maps.Size(37, 34);
-			listIcon.iconAnchor = new google.maps.Point(8, 28);
-			listIcon.infoWindowAnchor = new google.maps.Point(9, 2);
-			listIcon.infoShadowAnchor = new google.maps.Point(18, 25);
-	
+			var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
+			switch(<?php echo get_variable('maptype');?>) {
+					case (2): the_type= google.maps.MapTypeId.SATELLITE; 	break;
+					case (3): the_type= google.maps.MapTypeId.TERRAIN; 		break;
+					case (4): the_type= google.maps.MapTypeId.HYBRID; 		break;
+					default:  the_type= google.maps.MapTypeId.ROADMAP;
+					}		// end switch
+
+			var mapOptions = {
+				zoom: <?php print get_variable('def_zoom');?>,
+				center: myLatlng,
+				panControl: true,
+				zoomControl: true,
+				scaleControl: true,
+				mapTypeId: the_type
+				}	
+						
+			var map = new google.maps.Map($('map_canvas'), mapOptions);				// 
+
+			bounds = new google.maps.LatLngBounds();				// create empty bounding box
+			var point = new google.maps.LatLng(<?php print $lat;?>, <?php print $lng;?>);			// 480
+			bounds.extend(point);										// Incident into BB
+
 			var nr_units = 	0;
 			var email= false;
 			
@@ -599,7 +560,7 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
 					break;
 					}			
 			$have_position = (!(($latitude==$GLOBALS['NM_LAT_VAL']) && ($longitude==$GLOBALS['NM_LAT_VAL'])));
-			$by_distance = (($sortby_distance)&& ($have_position))? "`distance` ASC, ": "";			// 6/19/10 - user-set variable, 2/5/11 calls assigned added as order element
+//			$by_distance = (($sortby_distance)&& ($have_position))? "ORDER BY `distance` ASC ": "";			// 6/19/10 - user-set variable, 2/5/11 calls assigned added as order element, 6/17/13 moved and changed logic see line 636
 							// 5/30/10, 11/24/10
 
 // ============================= Regions Stuff	
@@ -671,8 +632,10 @@ $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `r
 			$where3 .= " AND `a`.`type` = 2";			
 			
 // ================================ end of regions stuff			
+
+			$order = (($sortby_distance)&& ($have_position))? "ORDER BY `distance` ASC ": "ORDER BY `dispatch` ASC, `calls_assigned` ASC, `handle` ASC, `unit_name` ASC, `unit_id` ASC";
 							
-			$query = "(SELECT *, UNIX_TIMESTAMP(`updated`) AS `updated`, `r`.`name` AS `unit_name`, `t`.`name` AS `type_name`, `r`.`type` AS `type`,
+			$query = "(SELECT *, UNIX_TIMESTAMP(`updated`) AS `updated`, `r`.`handle` AS `unit_handle`, `r`.`name` AS `unit_name`, `t`.`name` AS `type_name`, `r`.`type` AS `type`,
 				`r`.`id` AS `unit_id`, `r`.`capab` AS `capab`,
 				`s`.`status_val` AS `unitstatus`, `contact_via`, 
 				(((acos(sin(({$latitude}*pi()/180)) * sin((`r`.`lat`*pi()/180))+cos(({$latitude}*pi()/180)) * cos((`r`.`lat`*pi()/180)) * cos((({$longitude} - `r`.`lng`)*pi()/180))))*180/pi())*60*{$nm_to_what}) AS `distance`,
@@ -687,7 +650,7 @@ $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `r
 				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON (`r`.`id` = `a`.`resource_id`)					
 				 WHERE  `dispatch` = 0 $where $where2 $where3 GROUP BY unit_id )
 			UNION DISTINCT
-				(SELECT *, UNIX_TIMESTAMP(`updated`) AS `updated`, `r`.`name` AS `unit_name`, `t`.`name` AS `type_name`, `r`.`type` AS `type`,
+				(SELECT *, UNIX_TIMESTAMP(`updated`) AS `updated`, `r`.`handle` AS `unit_handle`, `r`.`name` AS `unit_name`, `t`.`name` AS `type_name`, `r`.`type` AS `type`,
 				`r`.`id` AS `unit_id`, `r`.`capab` AS `capab`,
 				`s`.`status_val` AS `unitstatus`, `contact_via`, 
 				9999 AS `distance`,
@@ -701,7 +664,13 @@ $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `r
 				LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` `t` ON (`r`.`type` = `t`.`id`)
 				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON (`r`.`id` = `a`.`resource_id`)					
 				 WHERE  `dispatch` > 0 $where $where2 $where3 GROUP BY unit_id )
-			 ORDER BY `dispatch` ASC, `calls_assigned` ASC, {$by_distance} `handle` ASC, `unit_name` ASC, `unit_id` ASC 		 ";		//	5/4/11	
+				{$order}";		//	6/17/13				 
+				 
+				 
+				 
+//			 ORDER BY `dispatch` ASC, `calls_assigned` ASC, {$by_distance} `handle` ASC, `unit_name` ASC, `unit_id` ASC 		 ";		//	6/17/13	Old order string
+			 
+			 
 //	 		dump($query);
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	
@@ -715,13 +684,12 @@ $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `r
 			side_bar_html += "<TR class='even'>	<TD CLASS='<?php print $severityclass; ?>' COLSPAN=99 ALIGN='center'><B>Routes to Incident: <I><?php print shorten($row_ticket['scope'], 20) . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(" . $elapsed; ?>)</I></B></TD></TR>\n";
 			side_bar_html += "<?php print $search_arg;?>";
 			side_bar_html += "<TR class='odd'>	<TD COLSPAN=99 ALIGN='center'>Click line, icon or map for route</TD></TR>\n";
-			side_bar_html += "<TR class='even' STYLE = 'white-space:nowrap;'><TD COLSPAN=3></TD><TD ALIGN='left'><?php print get_text("Units");?></TD><TD ALIGN='right'>SLD&nbsp;(<?php print $capt;?>)</TD><TD ALIGN='center'>Call</TD><TD ALIGN='left'>Status</TD><TD>M</TD><TD ALIGN='left'>As of</TD></TR>\n";
+			side_bar_html += "<TR class='even' STYLE = 'white-space:nowrap;'><TD COLSPAN=3></TD><TD ALIGN='left'><?php print get_text("Handles");?></TD><TD ALIGN='left'><?php print get_text("Units");?></TD><TD ALIGN='right'>SLD&nbsp;(<?php print $capt;?>)</TD><TD ALIGN='center'>Call</TD><TD ALIGN='left'>Status</TD><TD>M</TD><TD ALIGN='left'>As of</TD></TR>\n";
 	
 <?php
 // major while ... for RESPONDER data starts here
 				$i = $k = 1;				// sidebar/icon index
 				while ($unit_row = stripslashes_deep(mysql_fetch_assoc($result))) {				// 7/13/09
-	
 					$has_coords = ((my_is_float($unit_row['lat'])) && (my_is_float($unit_row['lng'])));				// 2/25/09, 7/7/09
 					$has_rem_source = ((intval ($unit_row['aprs'])==1)||(intval ($unit_row['instam'])==1)||(intval ($unit_row['locatea'])==1)||(intval ($unit_row['gtrack'])==1)||(intval ($unit_row['glat'])==1));		// 11/15/09
 	
@@ -865,6 +833,7 @@ $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `r
 				    $the_disp_str = "";			
 					if ($unit_row['dispatch']==2) {
 						print "\tsidebar_line = '<TD ALIGN=center><INPUT TYPE=checkbox disabled STYLE = \"visibility: hidden;\"></TD>'";
+						$can_dispatch = false;
 						}
 					else {
 						switch ($unit_row['calls_assigned']) {									// 8/29/10
@@ -884,25 +853,29 @@ $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `r
 							    $the_disp_str = "<SPAN CLASS='disp_stat'>&nbsp;{$unit_row['calls_assigned']}&nbsp;</SPAN>&nbsp;";
 							    break;
 							}			// end switch ()
+						$can_dispatch = true;
 ?>				
-					sidebar_line = "<TD ALIGN='center'><INPUT TYPE='checkbox' <?php print get_cd_str($unit_row); ?> NAME = 'unit_" + <?php print $unit_row['unit_id'];?> + "' onClick='show_butts(to_visible); unit_sets[<?php print $i; ?>]=this.checked;' /></TD>";
+						sidebar_line = "<TD ALIGN='center'><INPUT TYPE='checkbox' <?php print get_cd_str($unit_row); ?> NAME = 'unit_" + <?php print $unit_row['unit_id'];?> + "' onClick='show_butts(to_visible); unit_sets[<?php print $i; ?>]=this.checked;' /></TD>";
 <?php
 						}
-?>				
-	
-					sidebar_line += "<TD TITLE = \"<?php print addslashes($unit_row['unit_name']);?>\">";
+?>	
+<!-- 6/17/13 Added Handle to list fields -->
+					sidebar_line += "<TD TITLE = \"<?php print addslashes($unit_row['unit_handle']);?>\">";
 <?php
-					$the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$unit_row['icon']];		// 2/1/10
+					$the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$unit_row['icon']];
 					$the_text_color = 	$GLOBALS['UNIT_TYPES_TEXT'][$unit_row['icon']];
-					$strike = ($unit_row['dispatch']==0)? "": "color:red;text-decoration:line-through;" ;
-
-					$the_style = "<SPAN STYLE='{$strike}background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>";
-					$str_dist = ($have_position)? number_format(round($unit_row['distance'], 1), 1): "" ;		// 3/5/11
-//					dump(__LINE__);
+					$strike = ($can_dispatch) ? "": "color:red;text-decoration:line-through;" ;	//	6/17/13	Added check for Dispatch disallowed to strikethrough check
+					$the_style = "<SPAN STYLE='" . $strike . " background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>";
 ?>
+					sidebar_line += "<NOBR><?php print $the_style . shorten($unit_row['unit_handle'], 10);?></SPAN></NOBR></TD>";
+
+<!-- End of Handle -->					
+<?php
+					$str_dist = ($have_position)? number_format(round($unit_row['distance'], 1), 1): "" ;		// 3/5/11
+?>
+					sidebar_line += "<TD TITLE = \"<?php print addslashes($unit_row['unit_name']);?>\">";
 					sidebar_line += "<NOBR><?php print $the_style . shorten($unit_row['unit_name'], 20);?></SPAN></NOBR></TD>";
 					sidebar_line += "<TD ALIGN='right'><?php print $str_dist;?></TD>"; // 8/25/08, 4/27/09
-
 					sidebar_line += "<?php print get_assigned_td($unit_row['unit_id']); ?>";		// 3/15/11
 <?php				$the_style = "<SPAN STYLE='{$strike}background-color:{$unit_row['bg_color']}; color:{$unit_row['text_color']};'>"; ?>
 					sidebar_line += "<TD TITLE = \"<?php print $unit_row['unitstatus'];?>\" CLASS='td_data'><?php print $the_style . shorten($unit_row['unitstatus'], 12);?></SPAN></TD>";
@@ -914,7 +887,6 @@ $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `r
 ?>	
 							var point = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);	//  840 for each responder 832
 							var unit_id = <?php print $unit_row['unit_id'];?>;
-//							bounds.extend(point);																// point into BB
 							try{bounds.extend(point);}															// point into BB
 							catch(err)	{}
 
@@ -952,18 +924,13 @@ $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `r
 			if(($row_ticket['lat']==$GLOBALS['NM_LAT_VAL']) && ($row_ticket['lng']==$GLOBALS['NM_LAT_VAL'])) {	// check for facilities entered in no maps mode 8/4/10
 ?>
 				var point = new google.maps.LatLng(<?php print get_variable('def_lat'); ?>, <?php print get_variable('def_lng'); ?>);	// incident
-//				var baseIcon = new GIcon();
-
-				var image_file = new GIcon(baseIcon, "./our_icons/question1.png", null);		// 10/26/08
-//				var thisMarker = new GMarker(point);
+				var image_file = "./our_icons/question1.png";		// 10/26/08
 				var thisMarker = new google.maps.Marker({position: point, map: map, icon: image_file});
 				thisMarker.setMap(map);
-<?php } else { ?>			
+<?php } else { ?>	
+				var tick_id = "<?php print $row_ticket['id'];?>";
 				var point = new google.maps.LatLng(<?php echo $row_ticket['lat']; ?>, <?php echo $row_ticket['lng']; ?>);	// incident
-//				var baseIcon = new GIcon();
-//				var inc_icon = new GIcon(baseIcon, "./markers/sm_black.png", null);		// 10/26/08
-
-				var image_file = "./our_icons/gen_icon.php?blank=" + color + "&text=" + unit_id;				// 1/5/09
+				var image_file = "./our_icons/gen_icon.php?blank=" + color + "&text=" + tick_id;
 				var thisMarker = new google.maps.Marker({position: point, map: map, icon: image_file});
 				thisMarker.setMap(map);
 <?php } ?>			

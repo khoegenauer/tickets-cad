@@ -151,6 +151,14 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			return false;
 			}
 		else {
+<?php
+		if (intval(get_variable('broadcast')==1)) { 		// 6/3/2013
+?>
+			var theMessage = "New  <?php print get_text('Patient');?> record by <?php echo $_SESSION['user'];?>";
+			broadcast(theMessage ) ;
+<?php
+	}			// end if (broadcast)
+?>						
 			theForm.submit();
 			}
 		}				// end function validate(theForm)
@@ -196,6 +204,9 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		}
 
 	</SCRIPT>
+<?php
+require_once('./incs/socket2me.inc.php');		// 5/22/2013
+?>
 	</HEAD>
 <?php 
 	print (($get_action == "add")||($get_action == "update"))? "<BODY onLoad = 'do_notify(); ck_frames();' onUnload='GUnload();'>\n": "<BODY onLoad = 'ck_frames();'>\n";

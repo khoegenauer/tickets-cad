@@ -29,6 +29,8 @@ function ELabel(data) {
   
   // Optional parameters
   this.classname = data.classname || "";
+  this.theColor = data.theColor || "";
+  this.theSize = data.theSize || "";
   this.pixelOffset = data.offset || new google.maps.Size(0,0);
   if (data.opacity) {
     if(data.opacity < 0){data.opacity = 0;}
@@ -45,6 +47,8 @@ ELabel.prototype = new google.maps.OverlayView;
 ELabel.prototype.onAdd = function(map) {
   var div = document.createElement("div");
   div.style.position = "absolute";
+  div.style.fontSize = this.theSize;
+  div.style.color = this.theColor;
   div.innerHTML = '<div class="' + this.classname + '">' + this.html + '</div>' ;
 	this.getPanes().floatShadow.appendChild(div);
   this.map_ = map;

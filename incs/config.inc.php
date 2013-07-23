@@ -42,6 +42,7 @@ error_reporting(E_ALL);		// 3/5/12
 11/7/11	Added Statistics users to count in System Summary
 10/23/12 Added code for messaging and added extra missing settings to reset function
 5/8/2013 date display corrected
+5/21/2013 ICS button title/mouseover, others added.
  */
 $colors = array ('odd', 'even');
 
@@ -186,7 +187,9 @@ function reset_db($user=0,$ticket=0,$responders=0,$facilities=0,$settings=0,$mes
 		do_insert_settings('ogts_info','');				//	10/23/12	
 		do_insert_settings('regions_control','0');				//	10/23/12	
 		do_insert_settings('map_in_portal','1');				//	10/23/12	
-		do_insert_settings('use_messaging','0');				//	10/23/12	
+		do_insert_settings('use_messaging','0');				//	10/23/12
+		do_insert_settings ('ics_top','0');						// 5/21/2013 apply ICS button to top.php if == 1
+		do_insert_settings ('auto_refresh','1/1/1');			// 5/21/2013 auto-refresh for sitscr, fullscr, mobile		
 		}	//
 
 
@@ -254,7 +257,7 @@ function show_stats(){			/* 6/9/08 show database/user stats */
 	print "<TABLE BORDER='0'><TR CLASS='even'><TD CLASS='td_label'COLSPAN=2 ALIGN='center'>System Summary</TD></TR><TR>";	
 
 
-	print "<TR CLASS='even'><TD CLASS='td_label'>Tickets Version:</TD><TD ALIGN='left'><B>" . get_variable('_version') . "</B></TD></TR>";
+	print "<TR CLASS='odd'><TD CLASS='td_label'>Tickets Version:</TD><TD ALIGN='left'><B>" . get_variable('_version') . "</B></TD></TR>";
 	print "<TR CLASS='even'><TD CLASS='td_label'>Server OS:</TD><TD ALIGN='left'>" . php_uname() . "</TD></TR>";	
 	print "<TR CLASS='odd'><TD CLASS='td_label'>PHP Version:</TD><TD ALIGN='left'>" . phpversion() . " under " .$_SERVER['SERVER_SOFTWARE'] . "</TD></TR>";		// 8/8/08
 	print "<TR CLASS='even'><TD CLASS='td_label'>Database:</TD><TD ALIGN='left'>$GLOBALS[mysql_db] on $GLOBALS[mysql_host] running mysql ".mysql_get_server_info()."</TD></TR>";
@@ -484,7 +487,11 @@ function get_setting_help($setting){/* get help for settings */
 		case "title_string": 			return "If text is entered here it replaces the default title in the top bar."; break;	// 6/10/11	
 		case "use_messaging": 			return "Setting determines whether to use Tickets 2-way Messaging interface. Setting 0 (Default) does not use messaging, 1 to use Email, 2 to use SMS Gateway and 3 to use Email and SMS Gateway"; break;	// 6/10/11			
 		case "map_in_portal": 			return "Setting determines whether to show map on portal page or not - 1 (default) shows the map"; break;	// 6/10/11			
-		default: 						return "No help for '$setting'"; break;	//
+		case "ics_top": 				return "Do/don&#39;t (1/0) show ICS button in top button row.  (Default is 0, for \"No\".)";	 break;	// 5/21/2013	
+		case "auto_refresh": 			return "Do/don&#39;t (1/0) Automatic refresh for Sit scr, Full scr, Mobile; slash-separated, with 1 = Yes.  (Default is 1/1/1.)";	 break;	// 5/21/2013	
+		case "broadcast": 				return "Do/don&#39;t (1/0) use &#39;broadcast to other users&#39; - aka HAS, for Hello-All-Stations  (Default is 0, for \"No\")";	 break;	// 5/21/2013	
+		case "hide_booked": 			return "Booked/scheduled runs don&#39;t appear on the situation screen until they are this-many hours from 'now'.  (Default is 48 hours.)";	 break;	// 5/21/2013	
+		default: 						return "No help for '$setting'"; break;	//	 ics_top
 		}
 	}
 	
@@ -532,10 +539,12 @@ function get_msg_settings_help($setting){/* get help for color settings	3/15/11 
 		case "email_port": 					return "Email server port - normally 110. For gmail use port 995"; break;
 		case "email_protocol": 				return "Leave as default POP3"; break;
 		case "email_addon": 				return "Leave as default 'notls'"; break;
+		case "email_del": 					return "Delete (1) or not delete (0) server emails after download"; break;		
 		case "email_folder": 				return "Leave as default INBOX"; break;
 		case "email_userid": 				return "Your login ID for the email server. Either just 'userid' or sometimes 'userid@domain.com'. This is email provider dependant"; break;
 		case "email_password": 				return "Your email server password"; break;
 		case "email_svr_simple":			return "Email server simple or normal authentication - i.e. does this use SSL and a different port. Most public servers do not use simple authentication. 1 for simple 0 for normal."; break;
+		case "no_whitelist": 				return "Use (0) or not use (1) the whitelist functionality which stops storing of emails from unknown senders"; break;
 		case "smsg_provider": 				return "Shows the current SMS Gateway Provider (only provides name translation in the various screens). Only SMS Responder is currently implemented, please leave with this setting. "; break;
 		case "smsg_server":					return "Incoming API page for SMS Gateway provider (the receiving page). Include the http://."; break;
 		case "smsg_server2":				return "If SMS Gateway provider has a backup server this is the address for the receiving page. Include the http://"; break;

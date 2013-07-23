@@ -52,6 +52,7 @@ require_once($the_inc);
 6/14/12 Moved position of ck_frames() in onLoad string.
 10/23/12 Added code for Messaging
 3/26/2013 revised per RC Charlie
+5/26/2013 made auto_refresh conditional on setting value
 */
 
 if (isset($_GET['logout'])) {
@@ -107,13 +108,13 @@ if ($_SESSION['internet']) {				// 8/22/10
 	$api_key = trim(get_variable('gmaps_api_key'));
 	$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 ?>
-<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry,weather&sensor=false"></SCRIPT>
-<SCRIPT  TYPE="text/javascript"SRC="./js/epoly.js"></SCRIPT>
-<!--
-<SCRIPT  TYPE="text/javascript"SRC="./js/epoly_v3.js"></SCRIPT>	
--->
-<SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 8/1/11 -->
-<SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 1/29/2013 -->
+	<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry,weather&sensor=false"></SCRIPT>
+	<SCRIPT  TYPE="text/javascript"SRC="./js/epoly.js"></SCRIPT>
+	<!--
+	<SCRIPT  TYPE="text/javascript"SRC="./js/epoly_v3.js"></SCRIPT>	
+	-->
+	<SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 8/1/11 -->
+	<SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 1/29/2013 -->
 <?php } ?>
 <SCRIPT TYPE="text/javascript" SRC="./js/misc_function.js"></SCRIPT>	<!-- 5/3/11 -->	
 <SCRIPT TYPE="text/javascript" SRC="./js/messaging.js"></SCRIPT>	<!-- 10/23/12 -->
@@ -161,9 +162,13 @@ if (!($_SESSION['internet'])) {				// 8/25/10
 	}
 if (is_guest()) {													// 8/25/10
 ?>	
-	parent.frames["upper"].$("add").style.display  = "none";		// hide 'new' button
+	parent.frames["upper"].$("add").style.display  = 				"none";			// guests disallowed
+	try { parent.frames["upper"].$("ics").style.display  =			"none";}	
+	catch(e) { }
+	try { parent.frames["upper"].$("has_button").style.display  = 	"none";}
+	catch(e) { }	
 <?php
-	}
+	}		// end guest - needs other levels!
 ?>
 
 	var NOT_STR = '<?php echo NOT_STR;?>';			// value if not logged-in, defined in functions.inc.php
@@ -441,44 +446,34 @@ if (is_guest()) {													// 8/25/10
 		$result66 = mysql_query($query66)or do_error($query66, mysql_error(), basename(__FILE__), __LINE__);
 		while ($row66 = stripslashes_deep(mysql_fetch_assoc($result66))) 	{
 			extract ($row66);
-			if((my_is_float($lat)) && (my_is_float($lng))) {
-?>			
-				var resp_name = "<?php print $name;?>";
-				var thepoints = new Array();
-				var newpoint = new google.maps.LatLng(<?php print $lat;?>, <?php print $lng;?>);
-<?php				
+			if((my_is_float($lat)) && (my_is_float($lng))) {		
+				print "\t\t	var resp_name = \"$name\";\n";
+				print "\t\t var thepoints = new Array();\n";
+				print "\t\tvar newpoint = new google.maps.LatLng({$lat}, {$lng});\n";
 				$query67 = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id` = {$ring_fence}";
 				$result67 = mysql_query($query67)or do_error($query67, mysql_error(), basename(__FILE__), __LINE__);
 				$row67 = stripslashes_deep(mysql_fetch_assoc($result67));
-				extract ($row67);
-				$points = explode (";", $line_data);
-?>
-				var boundary1 = new Array();					
-				var fencename = "<?php print $line_name;?>";
-<?php					
-				for ($yy = 0; $yy < count($points); $yy++) {
-					$coords = explode (",", $points[$yy]);
-?>						
-					thepoint = new google.maps.LatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
-					thepoints.push(thepoint);
-<?php
+					extract ($row67);
+					$points = explode (";", $line_data);
+					print "\t\t var boundary1 = new Array();\n";					
+					print "\t\t var fencename = \"$line_name\";\n";
+					for ($yy = 0; $yy < count($points); $yy++) {
+						$coords = explode (",", $points[$yy]);
+						print "\t\t thepoint = new google.maps.LatLng(parseFloat($coords[0]), parseFloat($coords[1]));\n";
+						print "\t\t thepoints.push(thepoint);\n";
 					}			// end for ($yy = 0 ... )
-?>
-//				var pline = new GPolygon(thepoints, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, "<?php print $fill_color;?>", <?php print $fill_opacity;?>, {clickable:false});
-				var pline = new google.maps.Polygon({
+				print "\t\t var pline = new google.maps.Polygon({
 					paths: 			thepoints,
-					strokeColor: 	add_hash("<?php echo $line_color;?>"),
-					strokeOpacity: 	<?php echo $line_opacity;?>,
-					strokeWeight: 	<?php echo $line_width;?>,
-					fillColor: 		add_hash("<?php echo $fill_color;?>"),
-					fillOpacity: 	<?php echo $fill_opacity;?>
-					});
-				boundary1.push(pline);
-				if(!google.maps.geometry.poly.containsLocation(newpoint,pline)) {
-//				if(!pline.Contains(newpoint)) {	
-					blink_text(resp_name, '#FF0000', '#FFFF00', '#FFFF00', '#FF0000');
-					}
-<?php
+					strokeColor: 	add_hash(\"$line_color\"),
+					strokeOpacity: 	$line_opacity,
+					strokeWeight: 	$line_width,
+					fillColor: 		add_hash(\"$fill_color\"),
+					fillOpacity: 	$fill_opacity
+					});\n";
+				print "\t\t boundary1.push(pline);\n";
+				print "\t\t if(!google.maps.geometry.poly.containsLocation(newpoint,pline)) {\n";
+					print "\t\t blink_text(resp_name, '#FF0000', '#FFFF00', '#FFFF00', '#FF0000');\n";
+					print "\t\t }\n";
 				}
 			}
 ?>
@@ -563,42 +558,33 @@ if (is_guest()) {													// 8/25/10
 		while ($row66 = stripslashes_deep(mysql_fetch_assoc($result66))) 	{
 			extract ($row66);
 			if((my_is_float($lat)) && (my_is_float($lng))) {
-?>
-				var resp_name = "<?php print $name;?>";
-				var thepoints = new Array();
-				var newpoint = new google.maps.LatLng(<?php print $lat;?>, <?php print $lng;?>);
-<?php
+				print "\t\t	var resp_name = \"$name\";\n";
+				print "\t\t var thepoints = new Array();\n";
+				print "\t\t var newpoint = new google.maps.LatLng({$lat}, {$lng});\n";
 				$query67 = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id` = {$excl_zone}";
 				$result67 = mysql_query($query67)or do_error($query67, mysql_error(), basename(__FILE__), __LINE__);
 				$row67 = stripslashes_deep(mysql_fetch_assoc($result67));
 					extract ($row67);
 					$points = explode (";", $line_data);
-?>
-					var boundary1 = new Array();					
-					var fencename = "<?php print $line_name;?>";
-<?php
+					print "\t\t var boundary1 = new Array();\n";					
+					print "\t\t var fencename = \"$line_name\";\n";
 					for ($yy = 0; $yy < count($points); $yy++) {
 						$coords = explode (",", $points[$yy]);	
-?>						
-						thepoint = new google.maps.LatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
-						thepoints.push(thepoint);
-<?php
+						print "\t\t thepoint = new google.maps.LatLng(parseFloat($coords[0]), parseFloat($coords[1]));\n";
+						print "\t\t thepoints.push(thepoint);\n";
 					}			// end for ($yy = 0 ... )
-?>
-//					var pline = new GPolygon(thepoints, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, "<?php print $fill_color;?>", <?php print $fill_opacity;?>, {clickable:false});
-					var pline = new google.maps.Polygon({
+					print "\t\t var pline = new google.maps.Polygon({
 					    paths: 			thepoints,
-					    strokeColor: 	add_hash("<?php echo $line_color;?>"),
-					    strokeOpacity: 	<?php echo $line_opacity;?>,
-					    strokeWeight: 	<?php echo $line_width;?>,
-					    fillColor: 		add_hash("<?php echo $fill_color;?>"),
-					    fillOpacity: 	<?php echo $fill_opacity;?>
-						});
-					boundary1.push(pline);
-					if(google.maps.geometry.poly.containsLocation(newpoint, pline)) {	
-						blink_text2(resp_name, '#FF0000', '#FFFF00', '#FFFF00', '#FF0000');
-						}
-<?php
+					    strokeColor: 	add_hash(\"$line_color\"),
+					    strokeOpacity: 	$line_opacity,
+					    strokeWeight: 	$line_width,
+					    fillColor: 		add_hash(\"$fill_color\"),
+					    fillOpacity: 	$fill_opacity
+						});\n";
+					print "\t\t boundary1.push(pline);\n";
+					print "\t\t if(google.maps.geometry.poly.containsLocation(newpoint, pline)) {\n";
+					print "\t\t blink_text2(resp_name, '#00FF00', '#FFFF00', '#FFFF00', '#FF0000');\n";
+					print "\t\t }\n";
 				}
 			}
 ?>
@@ -876,13 +862,22 @@ if (is_guest()) {													// 8/25/10
 		$("div_assign_id").innerHTML = parent.frames["upper"].$("div_assign_id").innerHTML;
 		$("div_action_id").innerHTML = parent.frames["upper"].$("div_action_id").innerHTML;	
 		$("div_patient_id").innerHTML = parent.frames["upper"].$("div_patient_id").innerHTML;
-		
+
+<?php
+	$temp =  explode("/", get_variable('auto_refresh'));			// 5/26/2013
+	if ( (count($temp) == 3 ) && (intval ($temp[0]) == 1) ) {		// do set for window.location.reload()
+?>		
 		watch_val = window.setInterval("do_watch()",5000);		// - 5 seconds
+<?php
+		}
+?>
 		}				// end function start watch()
 
 	function end_watch(){
-		window.clearInterval(watch_val);
-		window.location.reload();
+		if (watch_val) {						// possible null
+			window.clearInterval(watch_val);
+			window.location.reload();
+			}
 		}				// end function end_watch()
 
 	function do_watch() {								// monitor for changes
@@ -894,7 +889,6 @@ if (is_guest()) {													// 8/25/10
 			($("div_patient_id").innerHTML != parent.frames["upper"].$("div_patient_id").innerHTML)			
 			)
 				{			  // a change
-//				alert(<?php echo __LINE__;?>);
 				end_watch();
 				window.location.reload();				
 			}
@@ -990,7 +984,7 @@ if (is_guest()) {													// 8/25/10
 <!-- 3/23/12
 <DIV ID='latest' style="display: block-inline; position: fixed; top: 00px; left: 10px; height: auto; width: auto;" ><h3>the ID information:the ID information</h3></div>
  -->
-<DIV ID='to_bottom' style="position: fixed; top: 20px; left: 20px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png" BORDER=0 /></div>
+<DIV ID='to_bottom' style="position: fixed; top: 20px; left: 20px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png" BORDER=0 ID = "down"/></div>
 <SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT><!-- 1/3/10 -->
 
 <A NAME="top" /> <!-- 11/11/09 -->
@@ -1037,7 +1031,29 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
 		}
 		
 	$sit_scr = (array_key_exists('id', ($_GET)))? $_GET['id'] :	NULL;		//	10/23/12	
-
+	if((module_active("Ticker")==1) && (!($sit_scr))) {			//	10/23/12
+		require_once('./modules/Ticker/incs/ticker.inc.php');
+		$the_markers = buildmarkers();
+		foreach($the_markers AS $value) {
+?>
+<SCRIPT>
+			var the_point = new google.maps.LatLng(<?php print $value[3];?>, <?php print $value[4];?>);		//	10/23/12
+			var the_header = "Traffic Alert";		//	10/23/12
+			var the_text = "<?php print $value[1];?>";		//	10/23/12
+			var the_id = "<?php print $value[0];?>";		//	10/23/12
+			var the_category = "<?php print $value[5];?>";		//	10/23/12
+			var the_descrip = "<DIV style='font-size: 14px; color: #000000; font-weight: bold;'>" + the_header + "</DIV><BR />";		//	10/23/12
+			the_descrip = "<DIV style='font-size: 14px; color: #000000; font-weight: bold;'>" + the_text + "</DIV><BR />";		//	10/23/12			
+			the_descrip += "<DIV style='font-size: 14px; color: #FFFFFF; background-color: #707070; font-weight: bold;'>" + the_category + "</DIV><BR />";		//	10/23/12
+			the_descrip += "<DIV style='font-size: 12px; color: blue; font-weight: normal;'>";		//	10/23/12
+			the_descrip += "<?php print $value[2];?>";		//	10/23/12
+			the_descrip += "</DIV>";		//	10/23/12
+			var rss_marker = create_feedMarker(the_point, the_text, the_descrip, the_id, the_id);		//	10/23/12
+			rss_marker.setMap(map);			
+</SCRIPT>
+<?php
+		}
+	}
 ?>
 <FORM NAME='to_closed' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'> <!-- 11/28/10 not now used - replaced with form to_listtype -->
 <INPUT TYPE='hidden' NAME='status' VALUE='<?php print $GLOBALS['STATUS_CLOSED'];?>' /> <!-- 11/28/10 not now used - replaced with form to_listtype -->
@@ -1066,6 +1082,16 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
 <span onclick = "alert(parent.$('what').rows)">Test3</span>
 -->
 <br /><br />
-<DIV ID='to_top' style="position:fixed; bottom:50px; left:20px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>
+<DIV ID='to_top' style="position:fixed; bottom:50px; left:20px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png" ID = "up" BORDER=0></div>
 <A NAME="bottom" /> <!-- 11/11/09 -->
-</BODY></HTML>
+</BODY>
+<?php
+if (array_key_exists('print', ($_GET))) {
+?>
+<script>
+$("down").style.display = $("up").style.display = "none";
+</script>
+<?php
+	}
+?>
+</HTML>

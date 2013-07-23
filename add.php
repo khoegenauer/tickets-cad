@@ -94,7 +94,7 @@ if($istest) {print "_POST"; dump($_POST);}
 1/29/11	changed coordinates test to string-length
 2/1/11 added table 'hints' as hints source
 2/11/11 condition signals on non-empty table
-2/12/11 facility nanes shortened
+2/12/11 facility names shortened
 2/19/11 draggable button bar replaces tr
 2/27/11 corrected 'append incident nature to incident name'
 3/2/11 added  base64_decode to serialize/unserialize
@@ -107,6 +107,8 @@ if($istest) {print "_POST"; dump($_POST);}
 6/23/11 revised target for action and patient buttons
 11/22/2012 'nearby' capability added
 12/1/2012 show 'nearby' only if internet/maps
+5/22/2013 added broadcast call
+6/2/2013 - reverse geocode added
 */
 
 if (empty($_GET)) {
@@ -438,6 +440,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 ?>
 
 		</SCRIPT>
+<?php
+require_once('./incs/socket2me.inc.php');		// 5/22/2013
+?>
+		
 		</HEAD>
 	<BODY onLoad = "do_notify();document.<?php print $form_name;?>.submit();">
 <?php
@@ -678,17 +684,6 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 			}	
 		}
 
-	var map;						// note globals
-	var geocoder = null;
-	var rev_coding_on;	// 11/01/09
-//	geocoder = new GClientGeocoder();
-	var request;
-	var querySting;   				// will hold the POSTed data
-	var tab1contents				// info window contents - first/only tab
-	var thePoint;
-	var baseIcon;
-	var cross;
-	
 	function writeConsole(content) {
 		top.consoleRef=window.open('','myconsole',
 			'width=800,height=250' +',menubar=0' +',toolbar=0' +',status=0' +',scrollbars=1' +',resizable=1')
@@ -702,6 +697,17 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		return window.screen.width + ' x ' + window.screen.height;
 		}
 
+	var map;						// note globals
+//	var geocoder = null;
+//	var rev_coding_on;	// 11/01/09
+//	geocoder = new GClientGeocoder();
+	var request;
+//	var querySting;   				// will hold the POSTed data
+	var tab1contents				// info window contents - first/only tab
+	var thePoint;
+	var baseIcon;
+	var cross;
+	
 	var grid_bool = false;		
 	function toglGrid() {						// toggle
 		grid_bool = !grid_bool;
@@ -750,8 +756,15 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		do_lat(in_obj.lat);			// set form values
 		do_lng(in_obj.lng);
 		do_ngs();	
-		}
-//				754 - Add
+<?php								// 6/2/2013
+	if (intval(get_variable('reverse_geo'))==1) {
+?>
+		codeLatLng (in_obj.lat, in_obj.lng);				// 6/2/2013
+
+<?php
+		}	// end 'reverse_geo'?
+?>
+		}			// end callback function
 
 		map_obj = gmaps_v3_init(call_back, 'map_canvas', 
 			<?php echo get_variable('def_lat');?>, 
@@ -838,6 +851,15 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		document.add.show_lng.disabled=false;
 		document.add.show_lng.value=do_lng_fmt(document.add.frm_lng.value);
 		document.add.show_lng.disabled=true;
+		}
+
+	function do_ngs() {											// LL to USNG - 6/2/2013
+		var loc = <?php print get_variable('locale');?>;
+		document.forms[0].frm_ngs.disabled=false;
+		if(loc == 0) { document.forms[0].frm_ngs.value = LLtoUSNG(document.forms[0].frm_lat.value, document.forms[0].frm_lng.value, 5);			}
+		if(loc == 1) { document.forms[0].frm_ngs.value = LLtoOSGB(document.forms[0].frm_lat.value, document.forms[0].frm_lng.value);			}
+		if(loc == 2) { document.forms[0].frm_ngs.value = LLtoOSGB(document.forms[0].frm_lat.value, document.forms[0].frm_lng.value);			}			
+		document.forms[0].frm_ngs.disabled=true;
 		}
 
 	function do_grids(theForm) {								// 12/13/10
@@ -1026,7 +1048,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 			alert ("City and State are required for location lookup.");
 			return false;
 			}
-		var geocoder = new google.maps.Geocoder();
+
 		var myAddress = my_form.frm_street.value.trim() + ", " +my_form.frm_city.value.trim() + " "  +my_form.frm_state.value.trim();
 
 		geocoder.geocode( { 'address': myAddress}, function(results, status) {		
@@ -1037,16 +1059,66 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		}				// end function loc_lkup()
 
 
+<?php
+	if ($gmaps)  {		// 6/4/2013
+?>
+
 // **************************************************** Reverse Geocoder 10/13/09, 7/5/10
 
-	var geocoder;
+	var geocoder = new google.maps.Geocoder();
 	var address;
 	var rev_coding_on = '<?php print get_variable('reverse_geo');?>';		// 7/5/10	
 		
-	function getAddress(overlay, latlng) {		//7/5/10
-		var geocoder = new GClientGeocoder();
-		if (rev_coding_on == 1) {	
+	function codeLatLng(lat, lng) {
+		var latlng = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+		geocoder.geocode({'latLng': latlng}, function(results, status) {
+			if (status == google.maps.GeocoderStatus.OK) {
+				if (results[1]) {
+				var addr_pieces = results[0].formatted_address.split(",");				
+				switch (addr_pieces.length) {
+					case 1:
+						document.add.frm_street.value = document.add.frm_city.value = "";				// state or country
+						document.add.frm_state.value=addr_pieces[0].substring(0,5).trim() ;			// state or country
+						break;
+				
+					case 2:
+						document.add.frm_street.value = "";					
+						document.add.frm_city.value=addr_pieces[0].substring(0,33).trim() ;			// city
+						var temp = addr_pieces[1].substring(0,5).trim().split(" ");					// zipcode
+						document.add.frm_state.value=temp[0].substring(0,5).trim() ;				// state or country	
+						break;
+				
+					case 3:
+						document.add.frm_street.value=addr_pieces[0].substring(0,97).trim() ;		// street
+						document.add.frm_city.value=addr_pieces[1].substring(0,33).trim() ;			// city
+						var temp = addr_pieces[2].substring(0,5).trim().split(" ");					// zipcode
+						document.add.frm_state.value=temp[0].substring(0,5).trim() ;				// state or country
+						break;
+				
+					default:
+						document.add.frm_street.value=addr_pieces[0].substring(0,97).trim() ;							// street
+						document.add.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,33).trim() ;		// city
+						var temp = addr_pieces[(addr_pieces.length-2)].substring(0,5).trim().split(" ");				// zipcode
+						if (temp.length == 2) {
+							document.add.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,33).trim() ;	// city						
+							document.add.frm_state.value=temp[0].substring(0,5).trim() ;								// US state							
+							}
+						else {
+							var the_city = addr_pieces[(addr_pieces.length-3)] + ", " + addr_pieces[(addr_pieces.length-2)] ;
+							document.add.frm_city.value=the_city.substring(0,33).trim() ;								// city						
+							document.add.frm_state.value=addr_pieces[(addr_pieces.length-1)].substring(0,5).trim()		// country							
+							}
+					}				// end switch
+				}
+			} else { alert("Geocoder lookup failed due to: " + status); }
+		});
+	}				// end function
+	
 
+
+	function getAddress(overlay, latlng) {		//7/5/10
+//		if (rev_coding_on == 1) {	
+			alert(1076);
 			if (latlng != null) {
 
 				geocoder.getLocations(latlng, function(response) {
@@ -1071,14 +1143,14 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 					}
 				});
 				}
-			}
+//			}
 		}				// end function getAddress()
 
 // *****************************************************************************
 <?php
-// dump(__LINE__);
-// dump($inc_num_ary );
+	}				// end if ($gmaps)  -  6/4/2013
 ?>
+
 	var tbd_str = "TBD";									// 1/11/09
 	var user_inc_name = false;							// 4/21/10
 	function do_inc_name(str, indx) {								// 10/4/08, 7/7/09
@@ -1182,6 +1254,15 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		else {
 			do_unlock_ps(theForm);								// 8/11/08
 			theForm.frm_phone.value=theForm.frm_phone.value.replace(/\D/g, "" ); // strip all non-digits
+			var theAddr = theForm.frm_street.value + " " + theForm.frm_city.value + " " + theForm.frm_state.value;																						
+<?php
+		if (intval(get_variable('broadcast')==1)) { 
+?>																						/*	5/22/2013 */
+			var theMessage = "New  <?php print get_text('Incident');?> (" + theForm.frm_scope.value + ") " + theAddr  + " by <?php echo $_SESSION['user'];?>";
+			broadcast(theMessage ) ;
+<?php
+	}			// end if (broadcast)
+?>				
 			theForm.submit();
 //			return true;
 			}
@@ -1457,7 +1538,9 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 .content { padding: 1em; }
 </STYLE>
 <SCRIPT SRC="./js/misc_function.js" type="text/javascript"></SCRIPT></head>
-
+<?php
+	require_once('./incs/socket2me.inc.php');		// 5/22/2013
+?>
 </HEAD>
 <?php
 $from_left = 500;
@@ -1668,7 +1751,7 @@ function do_nearby(the_form){		// 11/22/2012
 			print "\t<OPTION VALUE=' {$temp_row['id']}'  CLASS='{$temp_row['group']}' title='{$temp_row['description']}'> {$temp_row['type']} </OPTION>\n";
 			if (!(empty($temp_row['protocol']))) {				// 7/7/09 - note string key
 				$temp = addslashes($temp_row['protocol']);
-				print "\n<SCRIPT>protocols[{$temp_row['id']}] = '{$temp}';</SCRIPT>\n";		// 7/16/09, 5/6/10
+				print "\n<SCRIPT>\n\t protocols[{$temp_row['id']}] = \"{$temp}\";\n</SCRIPT>\n";		// 7/16/09, 5/6/10
 				}
 			$i++;
 			}		// end while()

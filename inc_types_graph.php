@@ -2,16 +2,15 @@
 /*
 3/21/10 user-spec for pie diameter added
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
+6/1/2013 corrections to sql and date format 
 */
 
-
-@session_start();
-require_once($_SESSION['fip']);		//7/28/10
+require_once('./incs/functions.inc.php');		//7/28/10
 extract($_GET);
 
 $severities = array();
 $temp = explode ("/", get_variable('pie_charts'));
-$type_diam = (count($temp)> 0 )? $temp[1] : "450";		// 3/21/10
+$type_diam = (count($temp)> 0 )? intval($temp[1]) : "450";		// 3/21/10
 
 $query = "SELECT * FROM `$GLOBALS[mysql_prefix]in_types`  ORDER BY `group` ASC,`sort` ASC, `type` ASC";		// array of incident types text
 $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
@@ -20,13 +19,15 @@ while($row = stripslashes_deep(mysql_fetch_array($result))) {
 	}				// end while($row...)
 
 //$where = " WHERE `when` > '2007-12-01 11:50:59' AND `when` < '2009-03-15 11:50:59' ";
-$where = " WHERE `when` > '" . $p1 . "' AND `when` < '" . $p2 . "' ";
-//																	//	now get log entries and associated incident type, per current value
-$query = "SELECT *, UNIX_TIMESTAMP(`when`) AS `when`, t.id AS `tick_id`,t.scope AS `tick_name`, t.severity AS `tick_severity` FROM `$GLOBALS[mysql_prefix]log`
-	LEFT JOIN `$GLOBALS[mysql_prefix]ticket` t ON (log.ticket_id = t.id)
-	". $where . " AND `code` = '" . $GLOBALS['LOG_INCIDENT_OPEN'] ."'
-	ORDER BY `when` ASC		
-	";
+$where = " WHERE `when` > '{$p1}' AND `when` < '{$p2}' ";
+
+//															//	now get log entries and associated incident type, per current value
+$query = "SELECT `t`.`problemstart`, `t`.`problemend`, `l`.`when`,`t`.`id` AS `tick_id`,
+	`t`.`scope` AS `tick_name`, `t`.`severity` AS `tick_severity` 
+	FROM `$GLOBALS[mysql_prefix]log` `l`
+	LEFT JOIN `$GLOBALS[mysql_prefix]ticket` t ON (l.ticket_id = t.id)
+	{$where} AND `code` = '{$GLOBALS['LOG_INCIDENT_OPEN']}'
+	ORDER BY `when` ASC	";
 
 $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 $inc_types = array();

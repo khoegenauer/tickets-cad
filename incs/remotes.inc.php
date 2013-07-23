@@ -18,6 +18,7 @@
 4/18/12 - APRS SQL  and data type corrections applied
 4/20/12 fix to accommodate empty json element, per KB email - snap(__FUNCTION__, __LINE__);
 4/29/12 add'l ogts and aprs error detection and logging
+6/1/2013 OGTS data error detection revised
 */
 
 function sane($in_lat, $in_lng, $in_time) {			// applies sanity check to input values - returns boolean - 2/22/12
@@ -43,6 +44,7 @@ function get_current() {		// 3/16/09, 6/10/11, 7/25/09
 		return;
 		} 
 	else {
+//		snap(basename(__FILE__), __LINE__);
 		$next = time() + $delay*60;
 		$query = "UPDATE `$GLOBALS[mysql_prefix]settings` SET `value`='$next' WHERE `name`='_aprs_time'";
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -359,8 +361,8 @@ function do_glat() {			//7/29/09
 			$result_temp = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 			}			// end if (sane())
 		else {
-			snap( __LINE__, $timestamp);
-			log_error("Google Latitude data error - {$row['callsign']} @ " . __LINE__ );
+			$err_data = "{$lat} / {$lng} /{$timestamp} ";
+			log_error("Google Latitude data error - {$err_data} @ " . basename(__FILE__) . __LINE__ );
 			}
 		}			// end while()
 
@@ -434,7 +436,6 @@ function do_aprs() {				// 3/15/11 - populates the APRS tracks table and updates
 			log_aprs_err("APRS JSON data format error");
 			}
 		$temp = $data->result;
-//		snap(__LINE__, $temp);
 		
 		if (strtoupper($temp) == "OK"){
 			$now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
@@ -458,7 +459,6 @@ function do_aprs() {				// 3/15/11 - populates the APRS tracks table and updates
 						WHERE ((`aprs` = 1)
 						AND (`updated` <> '{$p_d_timestamp}')
 						AND (`callsign` = '{$callsign_in}'))";
-//					snap(__LINE__, $query);
 					$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 					
 					$our_hash = $callsign_in . (string) (abs($lat) + abs($lng)) ;				// a hash - for dupe prevention
@@ -466,7 +466,6 @@ function do_aprs() {				// 3/15/11 - populates the APRS tracks table and updates
 					$query = "INSERT INTO `$GLOBALS[mysql_prefix]tracks` (
 						packet_id, source, latitude, longitude, speed, course, altitude, packet_date, updated) VALUES (
 						'{$our_hash}', '{$callsign_in}', '{$lat}', '{$lng}', '{$mph}', '{$course}', '{$alt}', '{$p_d_timestamp}', '{$now}')";
-//					snap(__LINE__, $query);
 					$result = mysql_query($query);				// ignore duplicate/errors
 					}
 	
@@ -477,7 +476,23 @@ function do_aprs() {				// 3/15/11 - populates the APRS tracks table and updates
 	}		// end function do_aprs() 
 
 function do_ogts() {			// 3/24/12
-//	snap(__FUNCTION__ , __LINE__);
+
+/*         "EventData": [
+            {
+               "Device": "gc101",
+               "Timestamp": 1370427185,
+               "Timestamp_date": "2013/06/05",
+               "Timestamp_time": "12:13:05",
+               "StatusCode": 64787,
+               "StatusCode_hex": "0xFD13",
+               "StatusCode_desc": "Power_Fail",
+               "GPSPoint": "-25.84038,28.21748",
+               "GPSPoint_lat": -25.84038,
+               "GPSPoint_lon": 28.21748,
+               "Speed": 0.0,
+               "Speed_units": "km/h",
+               "Index": 0
+*/
 
 	function log_ogts_err($message) {					// error logger
 		@session_start();
@@ -521,15 +536,20 @@ function do_ogts() {			// 3/24/12
 	$result = json_last_error();
 
 	if ((!(empty($result))) || (!(is_array($jsonresp)))) {		// 4/29/12
-		log_ogts_err("OpenGTS JSON data format error");
-		return FALSE;
+		if (strlen($jsonresp)==0)	{							// 6/1/2013
+			return TRUE;
+			}
+		else {
+			log_ogts_err("OpenGTS JSON data format error: {$jsonresp} " . strlen($jsonresp) );
+			return FALSE;
+			}
 		}
+
 
 	foreach ($jsonresp["DeviceList"] as $device) {	
 		$ogts_id = $device['Device'];		
-//	//	snap(__LINE__, $ogts_id);
+
 		if (!(empty($device['EventData']))) {				// 4/20/12
-//	//		snap("good", $ogts_id);	
 			$lat = $device["EventData"][0]['GPSPoint_lat'];
 			$lng = $device["EventData"][0]['GPSPoint_lon'];
 			$speed = $device["EventData"][0]['Speed'];
@@ -568,7 +588,7 @@ function do_ogts() {			// 3/24/12
 						default:
 						}		// end switch()
 					}	// end if (UK)
-				else {
+				else {					
 					$state_arr =  explode (" ", $addr_arr[2]);				// state zip
 					$street_work_val = 	substr (trim($addr_arr[0]),  0 ,  28);
 					$city_work_val = 	substr (trim($addr_arr[1]),  0 ,  28);
@@ -591,7 +611,6 @@ function do_ogts() {			// 3/24/12
 					AND (`updated` <> '{$updated}'))";	
 	
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-//				snap(__LINE__, $query);
 				if ((is_resource($result)) && (mysql_affected_rows ($result) > 0)) {			// any update?
 	
 					$query = "DELETE FROM `$GLOBALS[mysql_prefix]tracks_hh` WHERE `source` LIKE '%{$ogts_id}'";		// remove prior track this device  

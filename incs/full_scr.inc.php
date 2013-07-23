@@ -17,6 +17,7 @@
 6/10/11 Added Groups and Boundaries
 7/3/11 added lines data, do_landb() - 
 6/22/12 set def_zoom as zoom limit
+5/30/13 Implement catch for when there are no allocated regions for current user. 
 */
 error_reporting(E_ALL);
 $curr_cats = get_category_butts();	//	get current categories.
@@ -154,6 +155,12 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 	</DIV>
 
 	<DIV ID = 'bottom_bar' class='td_fs_buttons' style='display: table-cell; position: fixed; bottom: 0%; left: 0%; width: 100%; z-index: 3; height: 5%; text-align: center; vertical-align: middle; padding-top: 5px; border-top: 4px outset #CECECE;'>
+
+	<DIV ID = 'msg_span' STYLE = "display:none;">
+		<SPAN ID = "has_message_text" CLASS = "heading"></SPAN>
+		<BUTTON VALUE="OK" onclick = "end_message_show();"  STYLE = "margin-left:20px">OK</BUTTON>
+	</DIV> <!-- new -->
+	<DIV ID = "links" STYLE = "display:inline;">
 	<B><NOBR>	<!-- 2/16/11 Change CSS classes -->
 	<FORM>		
 		<SPAN class='fs_buttons' onClick='maxWindow();'><U>Full screen</U></SPAN>
@@ -183,11 +190,12 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 //			}
 ?>
 		<SPAN class='fs_buttons' onClick = "opener.focus()" STYLE =  'margin-left: 60px'><U>Back</U></SPAN>
-		<A HREF="mailto:shoreas@Gmail.com?subject=Comment%20on%20Tickets%20Dispatch%20System"><SPAN STYLE = 'margin-left: 20px; font-size:10px; '><U>Contact us</U> <IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom; margin-left: 10px;"></SPAN></A>
-		<SPAN class='fs_buttons' onClick = "window.close();" STYLE =  'margin-left: 60px'><U>Close</U></SPAN>
+		<SPAN class='fs_buttons' onClick = "window.close();" STYLE =  'margin-left: 60px'><U>Close</U></SPAN> 
+		<SPAN class='fs_buttons' onClick = "location.reload(true);" STYLE =  'margin-left: 60px'><U>Refresh</U></SPAN> <!-- 5/27/2013 -->
 		</NOBR>
 		</B>
 		</FORM>
+		</DIV>
 		</DIV>
 		
 			
@@ -207,12 +215,39 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 <?php
 	@session_start();							// 
 	$by_severity = array(0, 0, 0);				// counters
+	$host  = $_SERVER['HTTP_HOST'];
+	$uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 ?>
 <script>
-			var map_width = window.screen.width -16;		// 11/6/10
-			var map_height = window.screen.height *.82;		// browser-dependent
-			var div_style_str = "<DIV ID='map_canvas' STYLE='WIDTH:" + map_width + "px; height:" + map_height + "px';></DIV>"
-			document.write (div_style_str);
+	var map_width = window.screen.width -16;		// 11/6/10
+	var map_height = window.screen.height *.82;		// browser-dependent
+	var div_style_str = "<DIV ID='map_canvas' STYLE='WIDTH:" + map_width + "px; height:" + map_height + "px';></DIV>"
+	document.write (div_style_str);
+
+	var user_id = <?php echo $_SESSION['user_id'];?>;		// 5/27/2013
+
+	var socket = new EasyWebSocket('ws://<?php echo "{$host}{$uri}"?>/');		// instantiate
+
+	socket.onmessage = function(event) {					// on incoming - 
+//	alert(232);
+	var ourArr = event.data.split("/");
+	if (ourArr[0] != user_id ) {							// is this mine?
+		var payload = ourArr.slice(1);						// no, drop user_id segment before showing it
+		payload = payload.join ("/");						// array back to string
+		$("has_message_text").innerHTML = payload;
+		$("links").style.display = "none"
+		$("msg_span").style.display = "inline-block"
+
+		window.opener.parent.frames["upper"].do_audible(); 	// sound off!
+
+		}				// end mine?
+	}				// end incoming
+
+	function end_message_show() {
+		$("has_message_text").innerHTML = "";
+		$("links").style.display = "inline";
+		$("msg_span").style.display = "none";	
+		}
 </script>
 		</TD></TR>
 		</TABLE></DIV>
@@ -306,43 +341,38 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 			return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
 			}
 
-		function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity) {		// 8/19/09, 2/26/2013
-		
-	//		drawCircle(53.479874, -2.246704, 10.0, "#000080", 1, 0.75, "#0000FF", .5);
-
-			var circle = new google.maps.Circle({
-					center: new google.maps.LatLng(lat,lng),
-					map: map,
-					fillColor: fillColor,
-					fillOpacity: fillOpacity,
-					strokeColor: strokeColor,
-					strokeOpacity: strokeOpacity,
-					strokeWeight: strokeWidth
-				});
-			circle.setRadius(radius*5000); 
-	
-			}
+	function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity, name) {		// 8/19/09, 2/26/2013
+		var circle = new google.maps.Circle({
+				center: new google.maps.LatLng(lat,lng),
+				map: map,
+				fillColor: fillColor,
+				fillOpacity: fillOpacity,
+				strokeColor: strokeColor,
+				strokeOpacity: strokeOpacity,
+				strokeWeight: strokeWidth
+			});
+		circle.setRadius(radius*5000); 
+		}
 			
-		function drawBanner(point, html, text, font_size, color) {        // Create the banner
-		//	alert("<?php echo __LINE__;?> " + color);
-			var invisibleIcon = new google.maps.MarkerImage(G_DEFAULT_ICON, "./markers/markerTransparent.png");      // Custom icon is identical to the default icon, except invisible
-
-			map.setCenter(point, 8);
-			map.addControl(new GLargeMapControl());
-			map.addControl(new GMapTypeControl());
-			var the_color = (typeof color == 'undefined')? "#000000" : color ;	// default to black
-
-			var style_str = 'background-color:transparent;font-weight:bold;border:0px black solid;white-space:nowrap; font-size:' + font_size + 'px; font-family:arial; opacity: 0.9; color:' + add_hash(the_color) + ';';
-
-			var contents = '<div><div style= "' + style_str + '">'+text+'<\/div><\/div>';
-			var label=new ELabel(point, contents, null, new google.maps.Size(-8,4), 75, 1);
-//			map.addOverlay(label);
-			label.setMap(map);
-			
-			var marker = new google.maps.google.maps.Marker(point,invisibleIcon);	        // Create an invisible marker
-			marker.setMap(map);
-			
-			}				// end function draw Banner()		
+	function drawBanner(point, html, text, font_size, color, name) {        // Create the banner - 6/5/2013
+		var invisibleIcon = new google.maps.MarkerImage("./markers/markerTransparent.png");
+		map.setCenter(point, 8);
+		var the_color = (typeof color == 'undefined')? "#000000" : color ;	// default to black
+		var label = new ELabel({
+			latlng: point, 
+			label: html, 
+			classname: "label", 
+			offset: new google.maps.Size(-8, 4), 
+			opacity: 100,
+			theSize: font_size + "px",		
+			theColor:add_hash(the_color),
+			overlap: true,
+			clicktarget: false
+			});	
+		label.setMap(map);		
+		var marker = new google.maps.Marker(point,invisibleIcon);	        // Create an invisible google.maps.Marker
+		marker.setMap(map);				
+		}				// end function draw Banner()
 
 	function do_landb() {				// JS function - 8/1/11
 		var points = new Array();
@@ -403,7 +433,7 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 					$lng = $coords[1];
 					$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
 					
-					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}, {$name}); // 513\n";
+					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}, '{$name}'); // 513\n";
 					break;
 				case "t":		// text banner
 
@@ -413,7 +443,7 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 					echo "\n var point = new google.maps.LatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
 					$the_banner = htmlentities($banner, ENT_QUOTES);
 					$the_width = intval( trim($line_width), 10);		// font size
-					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width});\n";
+					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width}, add_hash('{$line_color}'));\n";
 					break;
 				}	// end switch
 		}			// end while ()
@@ -1066,68 +1096,62 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 
 		var open_iw = false;
 	
-		function createMarker(point, tabs, color, stat, id, sym, category) {					// Creates marker and sets up click event infowindow
-			points = true;
-			var icon = new google.maps.MarkerImage(baseIcon);
-			var icon_url = "./our_icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + sym;				// 1/6/09
+	function createMarker(point, tabs, color, stat, id, sym, category, region, tip) {		// 1804 - 3/19/11
+		var group = category || 0;			// if absent from call
+		var region = region || 0;
+		var tip_val = tip || "";		// if absent from call
+		got_points = true;				// 6/21/12
+		
+		var origin = ((sym.length)>3)? (sym.length)-3: 0;			// pick low-order three chars 3/22/11
+		var iconStr = sym.substring(origin);						// icon string
+		var image_file = "./our_icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + iconStr;
+		var marker = new google.maps.Marker({position: point, map: map, icon: image_file});		
+		marker.id = color;				// for hide/unhide
+		marker.category = category;		// 12/03/10 for show / hide by status
+		marker.region = region;			// 12/03/10 for show / hide by status		
+		marker.stat = stat;				// 10/21/09
 
-       		var marker = new google.maps.Marker({position: point, map: map, icon: icon_url });
+		google.maps.event.addListener(marker, "click", function() {		// 1811 - here for both side bar and icon click
+			try  {open_iw.close()} catch (e) {;}
+//			if (open_iw) {open_iw.close();} 							// another IW possibly open
+			map.setCenter(point, 8);
 
-			marker.id = color;				// for hide/unhide
-			marker.category = category;		// 12/03/10 for show / hide by status	
-			marker.stat = stat;				// 10/21/09
-	
-			google.maps.event.addListener(marker, "click", function() {		// here for icon click
-				if (open_iw) {open_iw.close();} 							// another IW possibly open
-				var infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 600});	 
-				infowindow.open(map, marker);		
-				open_iw = infowindow;
-				which = id;
+			var infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 400});	 
+			infowindow.open(map, marker);
+			open_iw = infowindow;
+			which = id;
+			});							// end add Listener( ... function())
+		gmarkers[id] = marker;							// marker to array for side_bar click function
+		gmarkers[id]['x'] = "y";							// ????
+		infoTabs[id] = tabs;							// tabs to array
+		bounds.extend(point);
+		return marker;
+		}				// end function create Marker()
 
-				which = id;
-				});				// end click handler function
-
-			gmarkers[id] = marker;							// marker to array for side_bar click function
-			infoTabs[id] = tabs;							// tabs to array
-			bounds.extend(point);
-			return marker;
-			}				// end function create Marker()
 			
-		function createdummyMarker(point, tabs, id) {					// Creates dummymarker and sets up click event infowindow for "no maps" added tickets and units. 7/28/10 
-			points = true;
-			var icon = new google.maps.MarkerImage(baseIcon);
-			var icon_url = "./our_icons/question1.png";				// 7/28/10
-			icon.image = icon_url;
-
-			var dummymarker = new google.maps.Marker(point, icon);
-
-			google.maps.event.addListener(dummymarker, "click", function() {
-
-				map.closeInfoWindow();
-				which = id;
-//				gmarkers[which].hide();
-				gmarkers[which].setMap(null);
-				dummymarker.openInfoWindowTabsHtml(infoTabs[id]);
-
-/*				setTimeout(function() {
-					if ($("detailmap")) {
-						var dMapDiv = $("detailmap");
-						var detailmap = new GMap2(dMapDiv);
-						detailmap.addControl(new GSmallMapControl());
-						detailmap.setCenter(point, 17);
-						detailmap.addOverlay(dummymarker);
-						}
-					else {
-	//					alert($("detailmap"));
-						}
-					},3000);				// end setTimeout(...)
-*/
-				});
-			gmarkers[id] = dummymarker;							// marker to array for side_bar click function
-			infoTabs[id] = tabs;							// tabs to array
+	function createdummyMarker(point, tabs, color, id, unit_id) {
+		got_points = true;											// 6/18/12
+		var image_file = "./our_icons/question1.png";
+		var dummymarker = new google.maps.Marker({position: point, map: map, icon: image_file});		
+		dummymarker.id = color;				// for hide/unhide - unused
+		google.maps.event.addListener(dummymarker, "click", function() {		// here for both side bar and icon click
+			if (dummymarker) {
+				try {open_iw.close()} catch(err) {;}
+				map.setZoom(8);
+				map.setCenter(point);
+				infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});	 
+				open_iw = infowindow;				
+				infowindow.open(map, dummymarker);
+				}		// end if (marker)
+			});			// end google.maps.Event.add Listener()
+		gmarkers[id] = dummymarker;									// marker to array for side bar click function
+		infoTabs[id] = tabs;									// tabs to array
+		if (!(map_is_fixed)) {				// 4/3/09
 			bounds.extend(point);
-			return dummymarker;
-			}				// end function create dummyMarker()			
+			map.fitBounds(bounds);			
+			}
+		return dummymarker;
+		}				// end function create dummy Marker()
 
 		var grid_bool = false;		
 		function toglGrid() {						// toggle, 4/24/13
@@ -1333,26 +1357,30 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 			}
 		$restrict_ticket = ((get_variable('restrict_user_tickets')==1) && !(is_administrator()))? " AND owner=$_SESSION[user_id]" : "";
 		$time_back = mysql_format_date(time() - (get_variable('delta_mins')*60) - ($cwi*3600));
-		
-		if(!isset($_POST['frm_group'])) {
-		$x=0;	
-		$where2 = "AND (";
-		foreach($al_groups as $grp) {
-			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
+		if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13		
+			$where2 = " AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
+			} else {		
+			if(!isset($_POST['frm_group'])) {
+				$x=0;	
+				$where2 = "AND (";
+				foreach($al_groups as $grp) {
+					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
+				} else {
+				$x=0;	
+				$where2 = "AND (";	
+				foreach($_POST['frm_group'] as $grp) {
+					$where3 = (count($_POST['frm_group']) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
+				}
+			$where2 .= " AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";	
 			}
-		} else {
-		$x=0;	
-		$where2 = "AND (";	
-		foreach($_POST['frm_group'] as $grp) {
-			$where3 = (count($_POST['frm_group']) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
-			}
-		}
 
 		switch($func) {				//9/29/09 Added capability for Special Incidents 10/27/09 changed to bring scheduled incidents to front when due.
 				case 0: 
@@ -1604,27 +1632,30 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 	if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
 		$curr_viewed= explode(",",$_SESSION['viewed_groups']);
 		}
-
-	if(!isset($curr_viewed)) {	
-		$x=0;	//	6/10/11
-		$where2 = "AND (";	//	6/10/11
-		foreach($al_groups as $grp) {	//	6/10/11
-			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`a`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
+	if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+		$where2 = " AND `a`.`type` = 2";
+		} else {
+		if(!isset($curr_viewed)) {		
+			$x=0;	//	6/10/11
+			$where2 = "AND (";	//	6/10/11
+			foreach($al_groups as $grp) {	//	6/10/11
+				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`a`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+			} else {
+			$x=0;	//	6/10/11
+			$where2 = "AND (";	//	6/10/11
+			foreach($curr_viewed as $grp) {	//	6/10/11
+				$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`a`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
 			}
-	} else {
-		$x=0;	//	6/10/11
-		$where2 = "AND (";	//	6/10/11
-		foreach($curr_viewed as $grp) {	//	6/10/11
-			$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`a`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
-			}
-	}
-	$where2 .= "AND `a`.`type` = 2";	
+		$where2 .= " AND `a`.`type` = 2";	
+		}
 	
 	$query = "SELECT *,UNIX_TIMESTAMP(as_of) AS as_of,
 		`$GLOBALS[mysql_prefix]assigns`.`id` AS `assign_id` ,
@@ -1853,26 +1884,30 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 6/10/11
 			$al_groups[] = $row['group'];
 			}	
-		if(!isset($_POST['frm_group'])) {
-			$x=0;	//	6/10/11
-			$where2 = "WHERE (";	//	6/10/11
-			foreach($al_groups as $grp) {	//	6/10/11
-				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-				$where2 .= "`a`.`group` = '{$grp}'";
-				$where2 .= $where3;
-				$x++;
+		if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+			$where2 .= " WHERE `a`.`type` = 2";
+			} else {
+			if(!isset($_POST['frm_group'])) {
+				$x=0;	//	6/10/11
+				$where2 = "WHERE (";	//	6/10/11
+				foreach($al_groups as $grp) {	//	6/10/11
+					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`a`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
+				} else {
+				$x=0;	//	6/10/11
+				$where2 = "WHERE (";	//	6/10/11
+				foreach($_POST['frm_group'] as $grp) {	//	6/10/11
+					$where3 = (count($_POST['frm_group']) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`a`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
 				}
-		} else {
-			$x=0;	//	6/10/11
-			$where2 = "WHERE (";	//	6/10/11
-			foreach($_POST['frm_group'] as $grp) {	//	6/10/11
-				$where3 = (count($_POST['frm_group']) > ($x+1)) ? " OR " : ")";	
-				$where2 .= "`a`.`group` = '{$grp}'";
-				$where2 .= $where3;
-				$x++;
-				}
-		}
-		$where2 .= "AND `a`.`type` = 2";
+			$where2 .= " AND `a`.`type` = 2";
+			}
 		
 //-----------------------UNIT RING FENCE STUFF--------------------6/10/11
 ?>
@@ -1899,23 +1934,32 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 			points.push(thepoint);
 <?php
 			}			// end for ($i = 0 ... )
-		if (intval($filled) == 1) {		//	6/10/11
+		if ((intval($filled) == 1) && (count($points) > 2)) {
 ?>
-			var polyline = new google.maps.Polygon(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>, {clickable:false, id:"ringfence"});
-			boundary.push(polyline);
-			bound_names.push("<?php print $bn_name;?>"); 
-<?php	
-			} else {
-?>
-			var polyline = new google.maps.Polyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, 0, 0, {clickable:false, id:"ringfence"});
-			boundary.push(polyline);
-			bound_names.push("<?php print $bn_name;?>"); 
-<?php		
-			}
-?>
-//			map.addOverlay(polyline);
-			polyline.setMap(map);
+			  polyline = new google.maps.Polygon({
+			    paths: 			 points,
+			    strokeColor: 	 add_hash("<?php echo $line_color;?>"),
+			    strokeOpacity: 	 <?php echo $line_opacity;?>,
+			    strokeWeight: 	 <?php echo $line_width;?>,
+			    fillColor: 		 add_hash("<?php echo $fill_color;?>"),
+			    fillOpacity: 	 <?php echo $fill_opacity;?>
+				});
 
+<?php	} else {
+?>
+			  polyline = new google.maps.Polygon({
+			    paths: 			points,
+			    strokeColor: 	add_hash("<?php echo $line_color;?>"),
+			    strokeOpacity: 	<?php echo $line_opacity;?>,
+			    strokeWeight: 	<?php echo $line_width;?>,
+			    fillColor: 		add_hash("<?php echo $fill_color;?>"),
+			    fillOpacity: 	<?php echo $fill_opacity;?>
+				});
+<?php	} ?>				        
+
+			boundary.push(polyline);
+			bound_names.push("<?php print $bn_name;?>"); 
+			polyline.setMap(map);	
 <?php
 		}	//	End while
 //-------------------------END OF UNIT RING FENCE STUFF-------------------------		
@@ -1943,23 +1987,32 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 			points.push(thepoint);
 <?php
 			}			// end for ($i = 0 ... )
-		if (intval($filled) == 1) {		//	6/10/11
+		if ((intval($filled) == 1) && (count($points) > 2)) {
 ?>
-			var polyline = new google.maps.Polygon(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>, {clickable:false, id:"ringfence"});
-			boundary.push(polyline);
-			bound_names.push("<?php print $bn_name;?>"); 
-<?php	
-			} else {
-?>
-			var polyline = new GPogoogle.maps.Polylinelyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, 0, 0, {clickable:false, id:"ringfence"});
-			boundary.push(polyline);
-			bound_names.push("<?php print $bn_name;?>"); 
-<?php		
-			}
-?>
-//			map.addOverlay(polyline);
-			polyline.setMap(map);
+			  polyline = new google.maps.Polygon({
+			    paths: 			 points,
+			    strokeColor: 	 add_hash("<?php echo $line_color;?>"),
+			    strokeOpacity: 	 <?php echo $line_opacity;?>,
+			    strokeWeight: 	 <?php echo $line_width;?>,
+			    fillColor: 		 add_hash("<?php echo $fill_color;?>"),
+			    fillOpacity: 	 <?php echo $fill_opacity;?>
+				});
 
+<?php	} else {
+?>
+			  polyline = new google.maps.Polygon({
+			    paths: 			points,
+			    strokeColor: 	add_hash("<?php echo $line_color;?>"),
+			    strokeOpacity: 	<?php echo $line_opacity;?>,
+			    strokeWeight: 	<?php echo $line_width;?>,
+			    fillColor: 		add_hash("<?php echo $fill_color;?>"),
+			    fillOpacity: 	<?php echo $fill_opacity;?>
+				});
+<?php	} ?>				        
+
+			boundary.push(polyline);
+			bound_names.push("<?php print $bn_name;?>"); 
+			polyline.setMap(map);		
 <?php
 		}	//	End while
 //-------------------------END OF UNIT EXCLUSION ZONE STUFF-------------------------			
@@ -2472,27 +2525,30 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	//	5/4/11
 			$al_groups[] = $row['group'];
 			}	
-		
-		if(!isset($_POST['frm_group'])) {	//	5/4/11
-			$x=0;	//	5/4/11
-			$where2 = "WHERE (";	//	5/4/11
-			foreach($al_groups as $grp) {	//	5/4/11
-				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-				$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-				$where2 .= $where3;
-				$x++;
+		if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+			$where2 = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 3";
+			} else {
+			if(!isset($_POST['frm_group'])) {	//	5/4/11
+				$x=0;	//	5/4/11
+				$where2 = "WHERE (";	//	5/4/11
+				foreach($al_groups as $grp) {	//	5/4/11
+					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
+				} else {
+				$x=0;	//	5/4/11
+				$where2 = "WHERE (";	//	5/4/11
+				foreach($_POST['frm_group'] as $grp) {	//	5/4/11
+					$where3 = (count($_POST['frm_group']) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
 				}
-		} else {
-			$x=0;	//	5/4/11
-			$where2 = "WHERE (";	//	5/4/11
-			foreach($_POST['frm_group'] as $grp) {	//	5/4/11
-				$where3 = (count($_POST['frm_group']) > ($x+1)) ? " OR " : ")";	
-				$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-				$where2 .= $where3;
-				$x++;
-				}
-		}
-		$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	5/4/11
+			$where2 .= " AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	5/4/11
+			}
 		
 		$query_fac = "SELECT *,UNIX_TIMESTAMP(updated) AS updated, `$GLOBALS[mysql_prefix]facilities`.id AS fac_id,
 		`$GLOBALS[mysql_prefix]facilities`.description AS facility_description, 
@@ -2650,14 +2706,31 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 						points.push(thepoint);
 		
 <?php					}			// end for ($i = 0 ... )
-			 	if ((intval($filled) == 1) && (count($points) > 2)) {?>
-						var polyline = new google.maps.Polygon(points,add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>);
-<?php			} else {?>
-				        var polyline = new google.maps.Polyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>);
-<?php			} ?>				        
-//						map.addOverlay(polyline);
-						polyline.setMap(map);
+					if ((intval($filled) == 1) && (count($points) > 2)) {
+?>
+						polyline = new google.maps.Polygon({
+							paths: 			 points,
+							strokeColor: 	 add_hash("<?php echo $line_color;?>"),
+							strokeOpacity: 	 <?php echo $line_opacity;?>,
+							strokeWeight: 	 <?php echo $line_width;?>,
+							fillColor: 		 add_hash("<?php echo $fill_color;?>"),
+							fillOpacity: 	 <?php echo $fill_opacity;?>
+							});
 
+<?php				} else {
+?>
+						polyline = new google.maps.Polygon({
+							paths: 			points,
+							strokeColor: 	add_hash("<?php echo $line_color;?>"),
+							strokeOpacity: 	<?php echo $line_opacity;?>,
+							strokeWeight: 	<?php echo $line_width;?>,
+							fillColor: 		add_hash("<?php echo $fill_color;?>"),
+							fillOpacity: 	<?php echo $fill_opacity;?>
+							});
+<?php				
+					} 
+?>				        
+					polyline.setMap(map);		
 <?php				
 					break;
 			
@@ -2679,7 +2752,7 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 					echo "\n var point = new google.maps.LatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
 					$the_banner = htmlentities($banner, ENT_QUOTES);
 					$the_width = intval( trim($line_width), 10);		// font size
-					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width});\n";
+					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width}, add_hash('{$line_color}'));\n";
 					break;
 			
 				}	// end switch

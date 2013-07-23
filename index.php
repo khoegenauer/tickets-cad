@@ -7,7 +7,7 @@ if(!(file_exists("./incs/mysql.inc.php"))) {
 
 require_once('./incs/functions.inc.php');	
 
-$version = "2.40A Beta - 05/17/13";	
+$version = "2.40B Beta - 6/18/2013";	
 
 /*
 10/1/08 added error reporting
@@ -90,6 +90,8 @@ $version = "2.40A Beta - 05/17/13";
 6/21/12 Version number change
 10/23/12 New code for Messaging and Portal
 04/02/13 version no. change only
+6/6/2013 revisions to allocates schema re indexing, field size
+6/14/2013 Added line to empty the $_SESSION array on first load of Index
 */
 
 //snap(basename(__FILE__) . " " . __LINE__  , count($_SESSION));
@@ -231,6 +233,17 @@ function do_setting ($which, $what) {				// 7/7/09
 	unset ($result);
 	return TRUE;
 	}				// end function do_setting ()
+	
+function do_msg_setting ($which, $what) {				// 5/25/13
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]msg_settings` WHERE `name`= '$which' LIMIT 1";		// 5/25/09
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+	if (mysql_affected_rows()==0) {
+		$query = "INSERT INTO `$GLOBALS[mysql_prefix]msg_settings` ( `id` , `name` , `value` ) VALUES (NULL , '$which', '$what');";
+		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		}
+	unset ($result);
+	return TRUE;
+	}				// end function do_msg_setting ()
 
 function update_setting ($which, $what) {		//	3/15/11
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]settings` WHERE `name`= '$which' LIMIT 1";
@@ -243,7 +256,7 @@ function update_setting ($which, $what) {		//	3/15/11
 	return TRUE;
 	}				// end function update_setting ()
 
-function update_settings ($which, $what) {		//	3/15/11
+function update_msg_settings ($which, $what) {		//	3/15/11
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]msg_settings` WHERE `name`= '$which' LIMIT 1";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	if (mysql_affected_rows()!=0) {
@@ -261,8 +274,8 @@ function microtime_float() {
 
 $old_version = get_variable('_version');
 
-if (!($version == $old_version)) {		// current? - 5/19/10 ==================================================
-	
+if (!($version == $old_version)) {		// current? - 6/6/2013  ==================================================	
+										// not yet 		
 		do_setting ('smtp_acct','');			// 7/7/09  
 		do_setting ('email_from','');			// 7/7/09
 		do_setting ('gtrack_url','');			// 7/7/09
@@ -1312,7 +1325,7 @@ if (!($version == $old_version)) {		// current? - 5/19/10 ======================
 				ADD `beds_info` VARCHAR( 2048 ) NULL DEFAULT NULL COMMENT 'Information' AFTER `beds_o` ";
 			$result = mysql_query($query);
 			
-			update_settings ('smsg_provider', '1');
+			update_msg_settings ('smsg_provider', '1');
 
 			if (table_exists("replacetext") == 0) {		//	10/23/12
 				$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]replacetext` (
@@ -1374,6 +1387,25 @@ if (!($version == $old_version)) {		// current? - 5/19/10 ======================
 			$result = mysql_query($query);		//	10/23/12				
 
 			do_caption("messaging help", "Messaging Help Goes Here");	
+			do_msg_setting ('email_del','1');			// 5/25/13  				
+
+//																	6/7/2013
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]allocates` CHANGE `resource_id` `resource_id` INT( 8 ) NULL DEFAULT NULL";
+			$result = mysql_query($query); 		// disregard error
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]allocates` ADD INDEX ( `resource_id` ) ";	// 6/6/2013
+			$result = mysql_query($query);		// disregard error
+		
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]allocates` ADD INDEX ( `type` ) ";
+			$result = mysql_query($query); 		// disregard error
+		
+			do_setting ('broadcast','0');					// 5/26/2013 do/do-not (1/0) use the broadcast feature - default is do-not
+			do_setting ('hide_booked','48');				// 5/26/2013 hide scheduled/booked until n hours before	
+			do_setting ('ics_top','0');						// 5/21/2013 apply ICS button to top.php if == 1
+			do_setting ('auto_refresh','1/1/1');			// 5/21/2013 auto-refresh for sitscr, fullscr, mobile
+			do_msg_setting ('no_whitelist','0');						// 5/21/2013 apply ICS button to top.php if == 1
+			do_caption("HAS");								// 'Hello all stations' button
+
 		}		// end (!($version ==...) ==================================================			
 
 	function update_disp_stat ($which, $what, $old) {		//	10/26/11
@@ -1385,7 +1417,7 @@ if (!($version == $old_version)) {		// current? - 5/19/10 ======================
 			}
 		unset ($result);
 		return TRUE;
-		}				// end function update_setting ()
+		}				// end function update_disp_stat ()
 	
 	update_disp_stat ('disp_stat','D/R/O/FE/FA/Clear','D/R/O/Clear');		// 10/26/11				
 		
@@ -1487,7 +1519,8 @@ if (!($version == $old_version)) {		// current? - 5/19/10 ======================
 		
 	$temp = explode(" ", get_variable('_version'));	
 	$disp_version = $temp[0];
-	if (table_exists("stats_type") == 1) {	//	6/10/11		
+	
+	if (table_exists("stats_type") == 1) {	//	6/10/11	===============================================================	
 		$query_truncate = "TRUNCATE TABLE `$GLOBALS[mysql_prefix]stats_type`;";		//	6/10/11
 		$result_truncate = mysql_query($query_truncate);
 		
@@ -1534,6 +1567,8 @@ if((count_responders()== 0) && (get_variable('title_string') == "") && ((!empty(
 
 <?php			// 7/14/09
 //	cache buster and logout from statistics module.
+$_SESSION = array();	//	6/14/13
+
 if(isset($_POST['logout'])) {
 	$buster = strval(rand()) . "&logout=1";
 	} else {

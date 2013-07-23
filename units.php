@@ -134,6 +134,9 @@ $groupname = isset($_SESSION['group_name']) ? $_SESSION['group_name'] : "";	//	4
 6/20/12 applied get_text() to Units
 7/20/12 changed 'updated' unixtime to mysql timestamp, to_home disabled
 9/4/12 add reset corrected
+5/30/13 Implement catch for when there are no allocated regions for current user. 
+5/31/2013 track speed display correction applied - for consistency with sit-screen
+6/13/13 revised to remove id conflict on despatch from unit.
 */
 
 @session_start();	
@@ -220,9 +223,9 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 <!-- 	<SCRIPT TYPE="text/javascript" src="./js/ELabel.js"></SCRIPT> 	 -->
 	<SCRIPT SRC="./js/domready.js"		TYPE="text/javascript" ></script>
 	<SCRIPT SRC="./js/gmaps_v3_init.js"	TYPE="text/javascript" ></script>
-
+	<SCRIPT src = "./js/elabel_v3.js"></SCRIPT>
 	<SCRIPT>
-	var map;		// note global
+	var map, label;		// note global
 
 	try {
 		parent.frames["upper"].$("whom").innerHTML  = "<?php print $_SESSION['user'];?>";
@@ -648,17 +651,20 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		while ($row_al = stripslashes_deep(mysql_fetch_assoc($result_al))) 	{	//	6/10/11
 			$al_groups[] = $row_al['group'];
 			}	
+		if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+			$where2 = "WHERE `a`.`type` = 2 AND `r`.`ring_fence` > 0 AND `r`.`lat` != '' AND `r`.`lng` != ''";
+			} else {
+			$x=0;	//	6/10/11
+			$where2 = "WHERE (";	//	6/10/11
+			foreach($al_groups as $grp) {	//	6/10/11
+				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`a`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
 
-		$x=0;	//	6/10/11
-		$where2 = "WHERE (";	//	6/10/11
-		foreach($al_groups as $grp) {	//	6/10/11
-			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`a`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
+			$where2 .= " AND `a`.`type` = 2 AND `r`.`ring_fence` > 0 AND `r`.`lat` != '' AND `r`.`lng` != ''";	//	6/10/11
 			}
-
-		$where2 .= " AND `a`.`type` = 2 AND `r`.`ring_fence` > 0 AND `r`.`lat` != '' AND `r`.`lng` != ''";	//	6/10/11
 		
 		$query66 = "SELECT `r`.`id` AS `responder_id`,
 					`a`.`id` AS `all_id`, 
@@ -675,43 +681,34 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		$result66 = mysql_query($query66)or do_error($query66, mysql_error(), basename(__FILE__), __LINE__);
 		while ($row66 = stripslashes_deep(mysql_fetch_assoc($result66))) 	{
 			extract ($row66);
-			if((my_is_float($lat)) && (my_is_float($lng))) {
-?>			
-				var resp_name = "<?php print $name;?>";
-				var thepoints = new Array();
-				var newpoint = new google.maps.LatLng(<?php print $lat;?>, <?php print $lng;?>);
-<?php				
+			if((my_is_float($lat)) && (my_is_float($lng))) {		
+				print "\t\t	var resp_name = \"$name\";\n";
+				print "\t\t var thepoints = new Array();\n";
+				print "\t\tvar newpoint = new google.maps.LatLng({$lat}, {$lng});\n";
 				$query67 = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id` = {$ring_fence}";
 				$result67 = mysql_query($query67)or do_error($query67, mysql_error(), basename(__FILE__), __LINE__);
 				$row67 = stripslashes_deep(mysql_fetch_assoc($result67));
-				extract ($row67);
-				$points = explode (";", $line_data);
-?>
-				var boundary1 = new Array();					
-				var fencename = "<?php print $line_name;?>";
-<?php					
-				for ($yy = 0; $yy < count($points); $yy++) {
-					$coords = explode (",", $points[$yy]);
-?>						
-					thepoint = new google.maps.LatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
-					thepoints.push(thepoint);
-<?php
+					extract ($row67);
+					$points = explode (";", $line_data);
+					print "\t\t var boundary1 = new Array();\n";					
+					print "\t\t var fencename = \"$line_name\";\n";
+					for ($yy = 0; $yy < count($points); $yy++) {
+						$coords = explode (",", $points[$yy]);
+						print "\t\t thepoint = new google.maps.LatLng(parseFloat($coords[0]), parseFloat($coords[1]));\n";
+						print "\t\t thepoints.push(thepoint);\n";
 					}			// end for ($yy = 0 ... )
-?>
-//				var pline = new GPolygon(thepoints, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, "<?php print $fill_color;?>", <?php print $fill_opacity;?>, {clickable:false});
-				var pline = new google.maps.Polygon({
+				print "\t\t var pline = new google.maps.Polygon({
 					paths: 			thepoints,
-					strokeColor: 	add_hash("<?php echo $line_color;?>"),
-					strokeOpacity: 	<?php echo $line_opacity;?>,
-					strokeWeight: 	<?php echo $line_width;?>,
-					fillColor: 		add_hash("<?php echo $fill_color;?>"),
-					fillOpacity: 	<?php echo $fill_opacity;?>
-					});
-				boundary1.push(pline);
-				if(!google.maps.geometry.poly.containsLocation(newpoint, pline)) {	
-					blink_text_rf(resp_name, '#FF0000', '#FFFF00', '#FFFF00', '#FF0000');
-					}
-<?php
+					strokeColor: 	add_hash(\"$line_color\"),
+					strokeOpacity: 	$line_opacity,
+					strokeWeight: 	$line_width,
+					fillColor: 		add_hash(\"$fill_color\"),
+					fillOpacity: 	$fill_opacity
+					});\n";
+				print "\t\t boundary1.push(pline);\n";
+				print "\t\t if(!google.maps.geometry.poly.containsLocation(newpoint,pline)) {\n";
+					print "\t\t blink_text(resp_name, '#FF0000', '#FFFF00', '#FFFF00', '#FF0000');\n";
+					print "\t\t }\n";
 				}
 			}
 ?>
@@ -768,17 +765,20 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		while ($row_al = stripslashes_deep(mysql_fetch_assoc($result_al))) 	{	//	6/10/11
 			$al_groups[] = $row_al['group'];
 			}	
+		if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+			$where2 = "WHERE `a`.`type` = 2 AND `r`.`excl_zone` > 0 AND `r`.`lat` != '' AND `r`.`lng` != ''";
+			} else {
+			$x=0;	//	6/10/11
+			$where2 = "WHERE (";	//	6/10/11
+			foreach($al_groups as $grp) {	//	6/10/11
+				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`a`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
 
-		$x=0;	//	6/10/11
-		$where2 = "WHERE (";	//	6/10/11
-		foreach($al_groups as $grp) {	//	6/10/11
-			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`a`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
+			$where2 .= " AND `a`.`type` = 2 AND `r`.`excl_zone` > 0 AND `r`.`lat` != '' AND `r`.`lng` != ''";	//	6/10/11
 			}
-
-		$where2 .= " AND `a`.`type` = 2 AND `r`.`excl_zone` > 0 AND `r`.`lat` != '' AND `r`.`lng` != ''";	//	6/10/11
 		
 		$query66 = "SELECT `r`.`id` AS `responder_id`,
 					`a`.`id` AS `all_id`, 
@@ -796,42 +796,33 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		while ($row66 = stripslashes_deep(mysql_fetch_assoc($result66))) 	{
 			extract ($row66);
 			if((my_is_float($lat)) && (my_is_float($lng))) {
-?>
-				var resp_name = "<?php print $name;?>";
-				var thepoints = new Array();
-				var newpoint = new google.maps.LatLng(<?php print $lat;?>, <?php print $lng;?>);
-<?php
+				print "\t\t	var resp_name = \"$name\";\n";
+				print "\t\t var thepoints = new Array();\n";
+				print "\t\t var newpoint = new google.maps.LatLng({$lat}, {$lng});\n";
 				$query67 = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id` = {$excl_zone}";
 				$result67 = mysql_query($query67)or do_error($query67, mysql_error(), basename(__FILE__), __LINE__);
 				$row67 = stripslashes_deep(mysql_fetch_assoc($result67));
 					extract ($row67);
 					$points = explode (";", $line_data);
-?>
-					var boundary1 = new Array();					
-					var fencename = "<?php print $line_name;?>";
-<?php
+					print "\t\t var boundary1 = new Array();\n";					
+					print "\t\t var fencename = \"$line_name\";\n";					
 					for ($yy = 0; $yy < count($points); $yy++) {
 						$coords = explode (",", $points[$yy]);	
-?>						
-						thepoint = new google.maps.LatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
-						thepoints.push(thepoint);
-<?php
+						print "\t\t thepoint = new google.maps.LatLng(parseFloat($coords[0]), parseFloat($coords[1]));\n";
+						print "\t\t thepoints.push(thepoint);\n";						
 					}			// end for ($yy = 0 ... )
-?>
-//					var pline = new GPolygon(thepoints, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, "<?php print $fill_color;?>", <?php print $fill_opacity;?>, {clickable:false});
-					var pline = new google.maps.Polygon({
+					print "\t\t var pline = new google.maps.Polygon({
 					    paths: 			thepoints,
-					    strokeColor: 	add_hash("<?php echo $line_color;?>"),
-					    strokeOpacity: 	<?php echo $line_opacity;?>,
-					    strokeWeight: 	<?php echo $line_width;?>,
-					    fillColor: 		add_hash("<?php echo $fill_color;?>"),
-					    fillOpacity: 	<?php echo $fill_opacity;?>
-						});
-					boundary1.push(pline);
-					if(google.maps.geometry.poly.containsLocation(newpoint, pline)) {		
-						blink_text2_rf(resp_name, '#FF0000', '#FFFF00', '#FFFF00', '#FF0000');
-						}
-<?php
+					    strokeColor: 	add_hash(\"$line_color\"),
+					    strokeOpacity: 	$line_opacity,
+					    strokeWeight: 	$line_width,
+					    fillColor: 		add_hash(\"$fill_color\"),
+					    fillOpacity: 	$fill_opacity
+						});\n";					
+					print "\t\t boundary1.push(pline);\n";
+					print "\t\t if(google.maps.geometry.poly.containsLocation(newpoint, pline)) {\n";
+					print "\t\t blink_text2_rf(resp_name, '#00FF00', '#FFFF00', '#FFFF00', '#FF0000');\n";
+					print "\t\t }\n";						
 				}
 			}
 ?>
@@ -1255,25 +1246,25 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 
 		}
 		
-	function drawBanner(point, html, text, font_size, color) {        // Create the banner
-	//	alert("<?php echo __LINE__;?> " + color);
-		var invisibleIcon = google.maps.MarkerImage("./markers/markerTransparent.png");      // Custom icon is identical to the default icon, except invisible
-//
+	function drawBanner(point, html, text, font_size, color, name) {        // Create the banner - 6/5/2013
+		var invisibleIcon = new google.maps.MarkerImage("./markers/markerTransparent.png");
 		map.setCenter(point, 8);
-//		map.addControl(new GLargeMapControl());
-//		map.addControl(new GMapTypeControl());
 		var the_color = (typeof color == 'undefined')? "#000000" : color ;	// default to black
-
-		var style_str = 'background-color:transparent;font-weight:bold;border:0px black solid;white-space:nowrap; font-size:' + font_size + 'px; font-family:arial; opacity: 0.9; color:' + add_hash(the_color) + ';';
-
-		var contents = '<div><div style= "' + style_str + '">'+text+'<\/div><\/div>';
-		var label=new ELabel(point, contents, null, new google.maps.Size(-8,4), 75, 1);
-		map.addOverlay(label);
-		
-		var marker = new GMarker(point,invisibleIcon);	        // Create an invisible GMarker
-	//	map.addOverlay(marker);
-		
-		}				// end function draw Banner()		
+		var label = new ELabel({
+			latlng: point, 
+			label: html, 
+			classname: "label", 
+			offset: new google.maps.Size(-8, 4), 
+			opacity: 100,
+			theSize: font_size + "px",		
+			theColor:add_hash(the_color),
+			overlap: true,
+			clicktarget: false
+			});	
+		label.setMap(map);		
+		var marker = new google.maps.Marker(point,invisibleIcon);	        // Create an invisible google.maps.Marker
+		marker.setMap(map);				
+		}				// end function draw Banner()
 
 	function do_landb() {				// JS function - 8/1/11
 		var points = new Array();
@@ -1334,7 +1325,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 					$lng = $coords[1];
 					$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
 					
-					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}, {$name}); // 513\n";
+					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}, '{$name}'); // 513\n";
 					break;
 				case "t":		// text banner
 
@@ -1344,7 +1335,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 					echo "\n var point = new google.maps.LatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
 					$the_banner = htmlentities($banner, ENT_QUOTES);
 					$the_width = intval( trim($line_width), 10);		// font size
-					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width});\n";
+					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width}, add_hash('{$line_color}'));\n";
 					break;
 				}	// end switch
 		}			// end while ()
@@ -1568,9 +1559,7 @@ var color=0;
 
 	function createMarker(point, tabs, color, id, unit_id) {		// (point, myinfoTabs,<?php print $row['type'];?>, i)
 		got_points = true;													// at least one
-
-//		var image_file = "./our_icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + iconStr;
-		var image_file = "./our_icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + unit_id;		// 4/1/2013
+		var image_file = "./our_icons/gen_icon.php?blank=" + color + "&text=" + unit_id;		// 4/1/2013
 		var marker = new google.maps.Marker({position: point, map: map, icon: image_file});
 		marker.id = color;				// for hide/unhide - unused
 
@@ -1591,13 +1580,10 @@ var color=0;
 			}
 		return marker;
 		}				// end function create Marker()
-		
 
-	function createdummyMarker(point,tabs, color, id, unit_id) {	// (point, myinfoTabs,<?php print $row['type'];?>, i)
+	function createdummyMarker(point, tabs, color, id, unit_id) {
 		got_points = true;											// 6/18/12
-//		var unit_id = unit_id;										// 2/13/09
 		var image_file = "./our_icons/question1.png";
-
 		var dummymarker = new google.maps.Marker({position: point, map: map, icon: image_file});		
 		dummymarker.id = color;				// for hide/unhide - unused
 		google.maps.event.addListener(dummymarker, "click", function() {		// here for both side bar and icon click
@@ -1605,14 +1591,11 @@ var color=0;
 				try {open_iw.close()} catch(err) {;}
 				map.setZoom(8);
 				map.setCenter(point);
-				infowindow = new google.maps.InfoWindow({ content: html, maxWidth: 300});	 
+				infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});	 
 				open_iw = infowindow;				
 				infowindow.open(map, dummymarker);
 				}		// end if (marker)
-
-
 			});			// end google.maps.Event.add Listener()
-
 		gmarkers[id] = dummymarker;									// marker to array for side bar click function
 		infoTabs[id] = tabs;									// tabs to array
 		if (!(map_is_fixed)) {				// 4/3/09
@@ -1620,7 +1603,7 @@ var color=0;
 			map.fitBounds(bounds);			
 			}
 		return dummymarker;
-		}				// end function create dummy Marker()		
+		}				// end function create dummy Marker()
 
 	function do_sidebar (sidebar, id, the_class, sidebar_id) {
 		var sidebar_id = sidebar_id;
@@ -1867,30 +1850,34 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			$al_groups[] = $row_al['group'];
 			}	
 
-		if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
-			$curr_viewed= explode(",",$_SESSION['viewed_groups']);
-			}
+		if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+			$where2 = "WHERE `a`.`type` = 2";
+			} else {
+			if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
+				$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+				}
 
-		if(!isset($curr_viewed)) {	
-			$x=0;	//	6/10/11
-			$where2 = "WHERE (";	//	6/10/11
-			foreach($al_groups as $grp) {	//	6/10/11
-				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-				$where2 .= "`a`.`group` = '{$grp}'";
-				$where2 .= $where3;
-				$x++;
+			if(!isset($curr_viewed)) {	
+				$x=0;	//	6/10/11
+				$where2 = "WHERE (";	//	6/10/11
+				foreach($al_groups as $grp) {	//	6/10/11
+					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`a`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
+				} else {
+				$x=0;	//	6/10/11
+				$where2 = "WHERE (";	//	6/10/11
+				foreach($curr_viewed as $grp) {	//	6/10/11
+					$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`a`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
 				}
-		} else {
-			$x=0;	//	6/10/11
-			$where2 = "WHERE (";	//	6/10/11
-			foreach($curr_viewed as $grp) {	//	6/10/11
-				$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-				$where2 .= "`a`.`group` = '{$grp}'";
-				$where2 .= $where3;
-				$x++;
-				}
-		}
-		$where2 .= "AND `a`.`type` = 2";	//	6/10/11		
+			$where2 .= "AND `a`.`type` = 2";	//	6/10/11
+			}
 		
 //-----------------------UNIT RING FENCE STUFF--------------------6/10/11
 ?>
@@ -2157,9 +2144,16 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 //  status, mobility  - 4/14/10
 		$sidebar_line .= "<TD WIDTH='20%' TITLE = '" . addslashes ($the_status) . "'> " . get_status_sel($row['unit_id'], $row['un_status_id'], "u") .
 		$the_bull = "";														// define the bullet
-		if ($row_track['speed']>50) {$the_bull = "<FONT COLOR = 'white'><B>{$GLOBALS['TRACK_2L'][$track_type]}</B></FONT>";}
-		if ($row_track['speed']<50) {$the_bull = "<FONT COLOR = 'green'><B>{$GLOBALS['TRACK_2L'][$track_type]}</B></FONT>";}
-		if ($row_track['speed']==0) {$the_bull = "<FONT COLOR = 'red'><B>{$GLOBALS['TRACK_2L'][$track_type]}</B></FONT>";}
+
+		if 	($row_track){				// 5/31/2013
+			if ($row_track['speed']>=50) {$the_bull = "<FONT COLOR = 'blue'><B>{$GLOBALS['TRACK_2L'][$track_type]}</B></FONT>";} 
+			if ($row_track['speed']<50) {$the_bull = "<FONT COLOR = 'green'><B>{$GLOBALS['TRACK_2L'][$track_type]}</B></FONT>";}
+			if ($row_track['speed']==0) {$the_bull = "<FONT COLOR = 'red'><B>{$GLOBALS['TRACK_2L'][$track_type]}</B></FONT>";}
+			} 
+		else {
+			$the_bull = "<FONT COLOR = 'black'><STRIKE><B>{$GLOBALS['TRACK_2L'][$track_type]}</B></STRIKE></FONT>";	// no data - 5/31/2013
+			}
+	
 		$tip = htmlentities ($row['callsign'], ENT_QUOTES); 
 		$tip_str = "onMouseover=\\\"Tip('{$tip}')\\\" onmouseout=\\\"UnTip();\\\" "; 
 		$sidebar_line .= "<TD WIDTH='2%' {$tip_str}>{$the_bull}</TD>";					// 4/14/10
@@ -2297,8 +2291,8 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 9/2/1
 	var zoom_var;
 	var markersArray = new Array(); 
 	var icon_file = "./markers/crosshair.png";
-<?php	
-	if(($the_lat==$GLOBALS['NM_LAT_VAL']) && ($the_lng==$GLOBALS['NM_LAT_VAL'])) {	// check of Tickets entered in "no maps" mode 7/28/10	
+<?php			/* 5/25/2013 */
+	if(($lat==$GLOBALS['NM_LAT_VAL']) && ($lng==$GLOBALS['NM_LAT_VAL'])) {	// check of Tickets entered in "no maps" mode 7/28/10	
 ?>
 		var icon_file = {
 			url: "./our_icons/question1.png",
@@ -2369,8 +2363,8 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 9/2/1
 		return false;
 		}			
 <?php	
-	if ($icon)	{							// icon display?	
-		if(($the_lat==$GLOBALS['NM_LAT_VAL']) && ($the_lng==$GLOBALS['NM_LAT_VAL'])) {	// check of Tickets entered in "no maps" mode 7/28/10	
+	if ($icon)	{							// icon display?				 5/25/2013 
+		if(($lat==$GLOBALS['NM_LAT_VAL']) && ($lng==$GLOBALS['NM_LAT_VAL'])) {	// check of Tickets entered in "no maps" mode 7/28/10	
 ?>
 			var point = new google.maps.LatLng(<?php print get_variable('def_lat') . ", " . get_variable('def_lng'); ?>); // 887
 			var marker = new google.maps.Marker({position: point, map: map, icon: icon_file, draggable: false});
@@ -2384,7 +2378,6 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 9/2/1
 	}		// end if ($icon)
 	else {
 ?>
-//		var baseIcon = new GIcon();				// 9/16/08
 		var baseIcon = new google.maps.MarkerImage("./markers/crosshair.png");
 
 		baseIcon.iconSize=new google.maps.Size(32,32);
@@ -2473,7 +2466,7 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 9/2/1
 						do_lat (marker.getPosition().lat());		// set form values
 						do_lng (marker.getPosition().lng());
 						do_ngs();								// 8/22/08
-						alert(<?php print __LINE__;?>);
+
 						});
 	//				map.addOverlay(marker);
 					}		// end if (latlng)
@@ -2755,7 +2748,6 @@ function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 
 					do_lat (marker.getPosition().lat());		// set form values
 					do_lng (marker.getPosition().lng());
 					do_ngs();								// 8/22/08
-					alert(<?php print __LINE__;?>);
 
 					});
 				map.addOverlay(marker);
@@ -3236,7 +3228,7 @@ function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 
 
 	if ($_getedit == 'true') {
 		$id = $_GET['id'];
-		$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `id`={$id}";
+		$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `id`= " . $id;
 		$result	= mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 		$row	= mysql_fetch_array($result);
 		$track_type = get_remote_type ($row) ;			// 7/6/11
@@ -3897,31 +3889,34 @@ fence_init();
 		while ($row_al = stripslashes_deep(mysql_fetch_assoc($result_al))) 	{	// 4/18/11
 			$al_groups[] = $row_al['group'];
 			}	
-		
-		if(isset($_SESSION['viewed_groups'])) {		//	6/10/11
-			$curr_viewed= explode(",",$_SESSION['viewed_groups']);
-			}
+		if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+			$where2 = " AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
+			} else {		
+			if(isset($_SESSION['viewed_groups'])) {		//	6/10/11
+				$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+				}
 
-		if(!isset($curr_viewed)) {			//	6/10/11
-			$x=0;	
-			$where2 = "AND (";
-			foreach($al_groups as $grp) {
-				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-				$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-				$where2 .= $where3;
-				$x++;
+			if(!isset($curr_viewed)) {			//	6/10/11
+				$x=0;	
+				$where2 = "AND (";
+				foreach($al_groups as $grp) {
+					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
+				} else {
+				$x=0;	
+				$where2 = "AND (";	
+				foreach($curr_viewed as $grp) {
+					$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
 				}
-			} else {
-			$x=0;	
-			$where2 = "AND (";	
-			foreach($curr_viewed as $grp) {
-				$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-				$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-				$where2 .= $where3;
-				$x++;
-				}
+			$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";	//	6/10/11	
 			}
-		$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";	//	6/10/11				
 		
 		$query_t = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` 
 					LEFT JOIN `$GLOBALS[mysql_prefix]allocates` ON `$GLOBALS[mysql_prefix]ticket`.id=`$GLOBALS[mysql_prefix]allocates`.`resource_id`	
@@ -3930,13 +3925,14 @@ fence_init();
 		$result_t = mysql_query($query_t) or do_error($query_t, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		$i=0;			
 		while ($row_t = stripslashes_deep(mysql_fetch_array($result_t))) 	{
+//			dump($row_t);
 			switch($row_t['severity'])		{								//color tickets by severity
 			 	case $GLOBALS['SEVERITY_MEDIUM']: 	$severityclass='severity_medium'; break;
 				case $GLOBALS['SEVERITY_HIGH']: 	$severityclass='severity_high'; break;
 				default: 							$severityclass='severity_normal'; break;
 				}
 
-			print "\t<TR CLASS ='" .  $evenodd[($i+1)%2] . "' onClick = 'to_routes(\"" . $row_t['id'] . "\")'>\n";
+			print "\t<TR CLASS ='" .  $evenodd[($i+1)%2] . "' onClick = 'to_routes(\"" . $row_t[0] . "\")'>\n";		//	6/13/13 Revised to remove id conflict.
 			print "\t\t<TD CLASS='{$severityclass}' TITLE ='{$row_t['scope']}'>" . 						shorten($row_t['scope'], 24) . "</TD>\n";
 			print "\t\t<TD CLASS='{$severityclass}' TITLE ='{$row_t['description']}'>" . 				shorten($row_t['description'], 24) . "</TD>\n";
 			print "\t\t<TD CLASS='{$severityclass}' TITLE ='{$row_t['street']} {$row_t['city']}'>" . 	shorten($row_t['street'], 24) . "</TD>\n";
@@ -4244,16 +4240,13 @@ fence_init();
 //			var unit_ids = new Array();				// parallel to gmarkers array
 			
 			function go_home (marker_index)  {			// sets associated icon at facility location, etc. 
-				alert(gmarkers.length);
 				gmarkers[0].setLatLng(new google.maps.LatLng(48.25, 21));
  				map.setCenter(new google.maps.LatLng(0, 0), 4);
-				alert(3664);
 			
 //				var the_point  = new google.maps.Point(fac_positions[unit_ids[marker_index]][0], fac_positions[unit_ids[marker_index]][1]);
 				var the_point  = new google.maps.Point(0.0, 0.0);
 				gmarkers[0].setLatLng(new google.maps.Point(0.0, 0.0));
 				
-				alert(3669);
 //				alert(unit_ids[marker_index]);			// pick up unit id
 //				temp = fac_positions[unit_ids[marker_index]][0];
 //				alert(temp);

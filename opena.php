@@ -4,6 +4,7 @@
 10/1/08	 added error reporting call
 10/1/08	 relocated variable extract
 3/15/11 changed stylesheet.php to stylesheet.php
+6/10/2013 revised to extract json object attrib's
 */
 error_reporting(E_ALL);				//10/1/08
 require_once('./incs/functions.inc.php');		//7/28/10
@@ -49,32 +50,29 @@ if (!empty($_GET)) {
 	$call_str = $_GET['frm_call'];
 	$key_str =  $_GET['frm_key'];
 	$the_url = "http://api.aprs.fi/api/get?name={$call_str}&what=loc&apikey={$key_str}&format=json";
-
-	$data=get_remote($the_url);				// returns JSON-decoded values
+//		Call is VE6GG  API Key is 30429.mLY7wgrnfT2R6D
+	$data=get_remote($the_url, TRUE);				// returns JSON-decoded values, ($url, $json=TRUE) {				// 11/26/10	, 4/23/11
 	$temp = $data->result;
 	if (strtoupper($temp) != "OK"){
-		print "<BR /><H3>Key fails!</H3><BR /><BR />";
+		print "<BR /><H3>Test fails!  \"{$data->{'description'}}\"</H3><BR /><BR />";
 		}
 	else {
-		print "<BR /><H3>Connection to aprs.fi succeeds - key OK!</H3>";
+		print "<BR /><H3>Test with aprs.fi succeeds!</H3>";
 		$temp = ($data->found );			// match count
 		if($temp==0) {
 			print "<BR /><H3>No data for '{$_GET['frm_call']}'</H3><BR />";		
 			}
 		else {			
 			$entry = (object) $data->entries[0];
-			
-			$callsign_in = $entry->name;
-			
-			$lat = $entry->lat;
-			$lng = $entry->lng;
-			$updated =  $entry->time;
-			$course = $entry->course;
-		
-			$mph = $entry->speed;
-			$alt = @$entry->altitude;								// possibly absent
-			$packet_date = $entry->lasttime;
-			$p_d_timestamp = mysql_format_date($packet_date);		// datetime format	
+			$lat = 			(property_exists($entry, 'lat')) ? 		$entry->lat			: "na"; 
+			$lng = 			(property_exists($entry, 'lng')) ? 		$entry->lng			: "na"; 
+			$updated = 		(property_exists($entry, 'time')) ? 	$entry->time		: "na"; 
+			$course = 		(property_exists($entry, 'course')) ?	$entry->course		: "na"; 
+			$mph = 			(property_exists($entry, 'speed')) ?	$entry->speed		: "na"; 
+			$alt = 			(property_exists($entry, 'altitude')) ? $entry->altitude	: "na"; 
+			$callsign_in = 	(property_exists($entry, 'name')) ? 	$entry->name		: "na"; 			
+			$p_d_timestamp = (property_exists($entry, 'lasttime'))? mysql_format_date($entry->lasttime) : "na";		// to timestamp	
+
 			print "Lat: {$lat}, Long: {$lng}, Time: {$p_d_timestamp}, Course: {$course}, Speed: {$mph}<BR><BR><BR><BR>" ; 
 			}
 		}			// end if/else OK

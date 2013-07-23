@@ -49,6 +49,7 @@
 12/1/2012 - re-do re unix SQL time replacement
 1/7/2013 - date correction, use setting disp_stat for column headings
 2/4/2013 - Change to after action report to add associated messages to ticket detail.
+5/31/2013 - strtotime() applied for date arithnetic/conversion
 */
 error_reporting(E_ALL);									// 10/1/08
 $asof = "3/24/10";
@@ -408,8 +409,7 @@ p.page { page-break-after: always; }
 		
 		function do_cell ($in_1, $in_2) {
 			return (is_date($in_2))? format_date_2($in_1) : "";
-			}
-		
+			}		
 
 		$from_to = date_range($date_in,$func_in);	// get date range as array
 
@@ -882,10 +882,10 @@ p.page { page-break-after: always; }
 			while($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)){			//
 //				dump ($row['id']);
 				}																// end while($row ...
-//				 		graphics date range in db format and calculated img width
-$s_urlstr =  "sever_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencode($from_to[1] . "&p3=" . $img_width);	//8/9/08
-$t_urlstr =  "inc_types_graph.php?p1=" . 	urlencode($from_to[0]) . "&p2=" . urlencode($from_to[1] . "&p3=" . $img_width);
-$c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencode($from_to[1] . "&p3=" . $img_width);
+//		graphics date range in db format and calculated img width - when` < '2013-06-01 23:59:59&p3=391'  AND `code` = '10'
+$s_urlstr =  "sever_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencode($from_to[1]) . "&p3={$img_width}";	//8/9/08
+$t_urlstr =  "inc_types_graph.php?p1=" . 	urlencode($from_to[0]) . "&p2=" . urlencode($from_to[1]) . "&p3={$img_width}";
+$c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencode($from_to[1]) . "&p3={$img_width}";
 
 ?>
 </TABLE>
@@ -1264,14 +1264,14 @@ function my_stripslashes_deep($value) {
 			function do_print($row_in) {
 				global $today, $today_ref, $line_ctr, $units_str, $severities, $evenodd;
 				global $w_tiny, $w_small, $w_medium, $w_large;
-				
+//																			5/31/2013					
 					if (empty($today)) {
-						$today_ref = date("z", $row_in['problemstart']);
+						$today_ref = date("z", strtotime($row_in['problemstart']));
 						$today = substr( format_date_2($row_in['problemstart']), 0, 5);
 						}
 					else {
-						if (!($today_ref == (date("z", $row_in['problemstart'])))) {				// date change?
-							$today_ref = date("z", $row_in['problemstart']);
+						if (!($today_ref == (date("z", strtotime($row_in['problemstart']))))) {				// date change?
+							$today_ref = date("z", strtotime($row_in['problemstart']));
 							$today = substr( format_date_2($row_in['problemstart']), 0, 5);
 							}
 						}			

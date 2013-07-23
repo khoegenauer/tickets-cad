@@ -553,30 +553,33 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 			while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 4/18/11
 				$al_groups[] = $row['group'];
 				}	
-			
-			if(isset($_SESSION['viewed_groups'])) {		//	6/10/11
-				$curr_viewed= explode(",",$_SESSION['viewed_groups']);
-				}
+			if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+				$where2 = "";
+				} else {			
+				if(isset($_SESSION['viewed_groups'])) {		//	6/10/11
+					$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+					}
 
-			if(!isset($curr_viewed)) {			//	6/10/11
-				$x=0;	
-				$where2 = "AND (";
-				foreach($al_groups as $grp) {
-					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-					$where2 .= $where3;
-					$x++;
+				if(!isset($curr_viewed)) {			//	6/10/11
+					$x=0;	
+					$where2 = "AND (";
+					foreach($al_groups as $grp) {
+						$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+						$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+						$where2 .= $where3;
+						$x++;
+						}
+					} else {
+					$x=0;	
+					$where2 = "AND (";	
+					foreach($curr_viewed as $grp) {
+						$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+						$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+						$where2 .= $where3;
+						$x++;
+						}
 					}
-				} else {
-				$x=0;	
-				$where2 = "AND (";	
-				foreach($curr_viewed as $grp) {
-					$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-					$where2 .= $where3;
-					$x++;
-					}
-				}				
+				}
 
 			$query = "SELECT *, `$GLOBALS[mysql_prefix]ticket`.`id` AS `tick_id`
 					FROM `$GLOBALS[mysql_prefix]ticket` 
@@ -644,31 +647,34 @@ setTimeout('do_post()', 1000);
 			while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 4/18/11
 				$al_groups[] = $row['group'];
 				}	
-			
-			if(isset($_SESSION['viewed_groups'])) {		//	6/10/11
-				$curr_viewed= explode(",",$_SESSION['viewed_groups']);
-				}
+			if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+				$where2 = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 2";
+				} else {			
+				if(isset($_SESSION['viewed_groups'])) {		//	6/10/11
+					$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+					}
 
-			if(!isset($curr_viewed)) {			//	6/10/11
-				$x=0;	
-				$where2 = "WHERE (";
-				foreach($al_groups as $grp) {
-					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-					$where2 .= $where3;
-					$x++;
+				if(!isset($curr_viewed)) {			//	6/10/11
+					$x=0;	
+					$where2 = "WHERE (";
+					foreach($al_groups as $grp) {
+						$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+						$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+						$where2 .= $where3;
+						$x++;
+						}
+					} else {
+					$x=0;	
+					$where2 = "WHERE (";	
+					foreach($curr_viewed as $grp) {
+						$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+						$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+						$where2 .= $where3;
+						$x++;
+						}
 					}
-				} else {
-				$x=0;	
-				$where2 = "WHERE (";	
-				foreach($curr_viewed as $grp) {
-					$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-					$where2 .= $where3;
-					$x++;
-					}
+				$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 2";	//	6/10/11				
 				}
-			$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 2";	//	6/10/11					
 
 			$assigns = array();				// map unit id to ticket id
 			function get_cd_str ($unit_row, $ticket_id) {
@@ -1410,33 +1416,36 @@ setTimeout('do_post()', 1000);
 			if(is_super()) {	//	6/10/11
 				$al_names .= "Superadmin Level";
 			}				
-
-			if(isset($_SESSION['viewed_groups'])) {	//	5/4/11
-				$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+			if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+				$where = "WHERE `a`.`type` = 1";
 				} else {
-				$curr_viewed = $al_groups;
-				}	
-			
-			if(!isset($_SESSION['viewed_groups'])) {	//	6/10/11
-			$x=0;	
-			$where = "WHERE ((";
-			foreach($al_groups as $grp) {
-				$where2 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-				$where .= "`a`.`group` = {$grp}";
-				$where .= $where2;
-				$x++;
+				if(isset($_SESSION['viewed_groups'])) {	//	5/4/11
+					$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+					} else {
+					$curr_viewed = $al_groups;
+					}	
+				
+				if(!isset($_SESSION['viewed_groups'])) {	//	6/10/11
+					$x=0;	
+					$where = "WHERE ((";
+					foreach($al_groups as $grp) {
+						$where2 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+						$where .= "`a`.`group` = {$grp}";
+						$where .= $where2;
+						$x++;
+						}
+					} else {
+					$x=0;	
+					$where = "WHERE ((";		//	6/10/11
+					foreach($curr_viewed as $grp) {
+						$where2 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+						$where .= "`a`.`group` = {$grp}";
+						$where .= $where2;
+						$x++;
+						}
+					}
+				$where .= " AND `a`.`type` = 1) ";
 				}
-			} else {
-			$x=0;	
-			$where = "WHERE ((";		//	6/10/11
-			foreach($curr_viewed as $grp) {
-				$where2 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-				$where .= "`a`.`group` = {$grp}";
-				$where .= $where2;
-				$x++;
-				}
-			}
-			$where .= " AND `a`.`type` = 1) ";
 			
 // ================================ end of regions stuff																				
 																	

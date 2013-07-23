@@ -22,7 +22,8 @@
 6/10/11 Added regional capability - restrictions to shown responders by groups allocated
 6/11/12 Moved javascript functions do_unlock, do_lock and do_asof from main JS section to line 742, spurious do notify() removed
 */
-error_reporting(E_ALL);
+if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
+error_reporting (E_ALL  ^ E_DEPRECATED);
 
 @session_start();
 require_once('./incs/functions.inc.php');		//7/28/10
@@ -199,6 +200,15 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			return false;
 			}
 		else {
+<?php
+		if (intval(get_variable('broadcast')==1)) { 
+?>
+								/*	5/22/2013 */
+			var theMessage = "New  <?php print get_text('Action');?> record by <?php echo $_SESSION['user'];?>";
+			broadcast(theMessage ) ;
+<?php
+	}			// end if (broadcast)
+?>				
 			theForm.submit();
 			}
 		}				// end function validate(theForm)
@@ -293,6 +303,9 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		return true;
 		}			
 	</SCRIPT>
+<?php
+require_once('./incs/socket2me.inc.php');		// 5/22/2013
+?>
 	</HEAD>
 <?php 
 	print (($get_action == "add")||($get_action == "update"))? "<BODY onLoad = 'do_notify(); ck_frames();' onUnload='GUnload();'>\n": "<BODY onLoad = 'ck_frames();'>\n";

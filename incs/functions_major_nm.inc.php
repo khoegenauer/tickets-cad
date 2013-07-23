@@ -16,6 +16,8 @@
 6/20/12 applied get_text() to Units, Responders
 9/30/12 lifted restriction per GD email- ????
 11/3/2012 facilities beds handling added
+5/20/2013 - revised get_elapsed_time calls, corrected function show_ticket()
+5/26/2013 added 'hide_booked' variable handling
 */
 
 @session_start();
@@ -792,30 +794,36 @@ function cs_handleResult(req) {					// the 'called-back' function for show curre
 if(isset($_SESSION['viewed_groups'])) {		//	5/4/11
 	$curr_viewed= explode(",",$_SESSION['viewed_groups']);
 	}
-
-if(!isset($curr_viewed)) {			//	5/4/11
-	$x=0;	
-	$where2 = "AND (";
-	foreach($al_groups as $grp) {
-		$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-		$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-		$where2 .= $where3;
-		$x++;
+if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13		
+	$where2 = " AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
+	} else {	
+	if(!isset($curr_viewed)) {			//	5/4/11
+		$x=0;	
+		$where2 = "AND (";
+		foreach($al_groups as $grp) {
+			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+			$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+			$where2 .= $where3;
+			$x++;
+			}
+		} else {
+		$x=0;	
+		$where2 = "AND (";	
+		foreach($curr_viewed as $grp) {
+			$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+			$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+			$where2 .= $where3;
+			$x++;
+			}
 		}
-	} else {
-	$x=0;	
-	$where2 = "AND (";	
-	foreach($curr_viewed as $grp) {
-		$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-		$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-		$where2 .= $where3;
-		$x++;
-		}
+	$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";			
 	}
+
+	$hide_limit = get_variable('hide_booked');		// 5/26/2013
 	
 	switch($func) {		
 		case 0: 
-			$where = "WHERE (`$GLOBALS[mysql_prefix]ticket`.`status`='{$GLOBALS['STATUS_OPEN']}' OR (`$GLOBALS[mysql_prefix]ticket`.`status`='{$GLOBALS['STATUS_SCHEDULED']}' AND `$GLOBALS[mysql_prefix]ticket`.`booked_date` <= (NOW() + INTERVAL 2 DAY)) OR 
+			$where = "WHERE (`$GLOBALS[mysql_prefix]ticket`.`status`='{$GLOBALS['STATUS_OPEN']}' OR (`$GLOBALS[mysql_prefix]ticket`.`status`='{$GLOBALS['STATUS_SCHEDULED']}' AND `$GLOBALS[mysql_prefix]ticket`.`booked_date` <= (NOW() + INTERVAL {$hide_limit} HOUR)) OR 
 				(`$GLOBALS[mysql_prefix]ticket`.`status`='{$GLOBALS['STATUS_CLOSED']}'  AND `$GLOBALS[mysql_prefix]ticket`.`problemend` >= '{$time_back}')){$where2}";	//	11/29/10, 4/18/11, 4/18/11
 			break;
 		case 1:
@@ -905,7 +913,6 @@ if(!isset($curr_viewed)) {			//	5/4/11
 	else 								{$js_func = "myclick_ed_tick";}
 // ===========================  begin major while() for tickets==========
 $temp  = (string) ( round((microtime(true) - $time), 3));
-//	snap (__LINE__, $temp );
 ?>
 		var incs_array = [];
 		var incs_groups = [];		
@@ -1119,27 +1126,30 @@ $temp  = (string) ( round((microtime(true) - $time), 3));
 	if(isset($_SESSION['viewed_groups'])) {
 		$curr_viewed= explode(",",$_SESSION['viewed_groups']);
 		}
-
-	if(!isset($curr_viewed)) {	
-		$x=0;	//	4/18/11
-		$where2 = "WHERE (";	//	4/18/11
-		foreach($al_groups as $grp) {	//	4/18/11
-			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`a`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
+	if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13		
+		$where2 = "WHERE `a`.`type` = 2";
+		} else {
+		if(!isset($curr_viewed)) {	
+			$x=0;	//	4/18/11
+			$where2 = "WHERE (";	//	4/18/11
+			foreach($al_groups as $grp) {	//	4/18/11
+				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`a`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+			} else {
+			$x=0;	//	4/18/11
+			$where2 = "WHERE (";	//	4/18/11
+			foreach($curr_viewed as $grp) {	//	4/18/11
+				$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`a`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
 			}
-	} else {
-		$x=0;	//	4/18/11
-		$where2 = "WHERE (";	//	4/18/11
-		foreach($curr_viewed as $grp) {	//	4/18/11
-			$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`a`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
-			}
-	}
-	$where2 .= "AND `a`.`type` = 2";
+		$where2 .= "AND `a`.`type` = 2";
+		}
 
 	$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated`, `t`.`id` AS `type_id`, `r`.`id` AS `unit_id`, `r`.`name` AS `name`,
 		`s`.`description` AS `stat_descr`,  `r`.`description` AS `unit_descr`, `t`.`description` AS `type_descr`,
@@ -1341,27 +1351,30 @@ $temp  = (string) ( round((microtime(true) - $time), 3));
 	if(isset($_SESSION['viewed_groups'])) {
 		$curr_viewed= explode(",",$_SESSION['viewed_groups']);
 		}
-
-	if(!isset($curr_viewed)) {	
-		$x=0;	//	5/4/11
-		$where2 = "WHERE (";	//	5/4/11
-		foreach($al_groups as $grp) {	//	5/4/11
-			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
+	if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13		
+		$where2 = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 3";
+		} else {	
+		if(!isset($curr_viewed)) {	
+			$x=0;	//	5/4/11
+			$where2 = "WHERE (";	//	5/4/11
+			foreach($al_groups as $grp) {	//	5/4/11
+				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+			} else {
+			$x=0;	//	5/4/11
+			$where2 = "WHERE (";	//	5/4/11
+			foreach($curr_viewed as $grp) {	//	5/4/11
+				$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
 			}
-	} else {
-		$x=0;	//	5/4/11
-		$where2 = "WHERE (";	//	5/4/11
-		foreach($curr_viewed as $grp) {	//	5/4/11
-			$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
-			}
-	}
-	$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	5/4/11
+		$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	5/4/11
+		}
 																// 11/3/2012
 	$query_fac = "SELECT *,`$GLOBALS[mysql_prefix]facilities`.`updated` AS `updated`, 
 		`$GLOBALS[mysql_prefix]facilities`.id AS `fac_id`, 
@@ -1510,14 +1523,6 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 	$can_edit = get_can_edit();
 	$tickno = (get_variable('serial_no_ap')==0)?  "&nbsp;&nbsp;<I>(#{$id})</I>" : "";			// 1/25/09
 
-	if($istest) {
-		print "GET<br />\n";
-		dump($_GET);
-		print "POST<br />\n";
-		dump($_POST);
-		}
-
-
 	if ($id == '' OR $id <= 0 OR !check_for_rows("SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE id='$id'")) {	/* sanity check */
 		print "Invalid Ticket ID: '$id'<BR />";
 		return;
@@ -1529,11 +1534,11 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 	$query = "SELECT *,
 		`problemstart` AS `my_start`,
 		FROM_UNIXTIME(UNIX_TIMESTAMP(problemstart)) AS `test`,
-		UNIX_TIMESTAMP(problemstart) AS problemstart,
-		UNIX_TIMESTAMP(problemend) AS problemend,
-		UNIX_TIMESTAMP(date) AS date,
-		UNIX_TIMESTAMP(booked_date) AS booked_date,		
-		UNIX_TIMESTAMP(`$GLOBALS[mysql_prefix]ticket`.`updated`) AS updated,		
+		problemstart,
+		problemend,
+		date,
+		booked_date,		
+		`$GLOBALS[mysql_prefix]ticket`.`updated`,		
 		`$GLOBALS[mysql_prefix]ticket`.`description` AS `tick_descr`,
 		`$GLOBALS[mysql_prefix]ticket`.`street` AS `tick_street`,
 		`$GLOBALS[mysql_prefix]ticket`.`city` AS `tick_city`,
@@ -1552,6 +1557,7 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 		LEFT JOIN `$GLOBALS[mysql_prefix]facilities` rf ON `rf`.id = `$GLOBALS[mysql_prefix]ticket`.rec_facility 
 		WHERE `$GLOBALS[mysql_prefix]ticket`.`id`= $id $restrict_ticket";			// 7/16/09, 8/12/09
 
+//	dump ($query);
 
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	if (!mysql_num_rows($result)){	//no tickets? print "error" or "restricted user rights"
@@ -1582,9 +1588,7 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 		print "<TR CLASS='print_TD'  VALIGN='top'><TD ALIGN='left'>" . get_text("911 Contacted") . ":</TD>
 				<TD ALIGN='left'>" .  nl2br($row['nine_one_one']) . "</TD></TR>\n";	//	8/12/09
 
-		$end_date = (intval($row['problemend'])> 1)? $row['problemend']:  (time() - (intval(get_variable('delta_mins'))*60));
-
-		$elapsed = my_date_diff($end_date, $end_date);
+		$elapsed = get_elapsed_time($row);
 		print "<TR CLASS='print_TD'><TD ALIGN='left'>" . get_text("Status") . ":</TD>	
 				<TD ALIGN='left'>" . get_status($row['status']) . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$elapsed}</TD></TR>\n";
 		print "<TR CLASS='print_TD'><TD ALIGN='left'>" . get_text("Reported by") . ":</TD>
@@ -1593,10 +1597,10 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 				<TD ALIGN='left'>" . format_phone ($row['phone']) . "</TD></TR>\n";
 		$by_str = ($row['call_taker'] ==0)?	"" : "&nbsp;&nbsp;by " . get_owner($row['call_taker']) . "&nbsp;&nbsp;";		// 1/7/10
 		print "<TR CLASS='print_TD'><TD ALIGN='left'>" . get_text("Written") . ":</TD>	
-				<TD ALIGN='left'>" . format_date($row['date']) . $by_str;
-		print 		"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Updated:&nbsp;&nbsp;" . format_date($row['updated']) . "</TD></TR>\n";
+				<TD ALIGN='left'>" . format_date_2($row['date']) . $by_str;
+		print 		"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Updated:&nbsp;&nbsp;" . format_date_2($row['updated']) . "</TD></TR>\n";
 		print empty($row['booked_date']) ? "" : "<TR CLASS='print_TD'><TD ALIGN='left'>Scheduled date:</TD>	
-				<TD ALIGN='left'>" . format_date($row['booked_date']) . "</TD></TR>\n";	// 10/6/09	
+				<TD ALIGN='left'>" . format_date_2($row['booked_date']) . "</TD></TR>\n";	// 10/6/09	
 		print "<TR CLASS='print_TD' ><TD ALIGN='left' COLSPAN='2'>&nbsp;
 				<TD ALIGN='left'></TR>\n";			// separator
 		print empty($row['fac_name'])? "" : "<TR CLASS='print_TD' ><TD ALIGN='left'>" . $incident . " at Facility:</TD>	
@@ -1606,9 +1610,10 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 		print empty($row['comments'])? "" : "<TR CLASS='print_TD'  VALIGN='top'><TD ALIGN='left'>{$disposition}:</TD>
 				<TD ALIGN='left'>" .  nl2br($row['comments']) . "</TD></TR>\n";	
 		print "<TR CLASS='print_TD' ><TD ALIGN='left'>" . get_text("Run Start") . ":</TD>				
-				<TD ALIGN='left'>" . format_date($row['problemstart']);
-		$elapsed_str = (!(empty($closed)))? $elapsed : "" ;				
-		print	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End:&nbsp;&nbsp;" . format_date($row['problemend']) . "&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
+				<TD ALIGN='left'>" . format_date_2($row['problemstart']);
+		$elapsed_str = (!(empty($closed)))? $elapsed : "" ;	
+		$end_date = ( good_date_time ( format_date_2($row['problemend'] ) ) ) ? format_date_2 ($row['problemend']): "";
+		print	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End:&nbsp;&nbsp;{$end_date}&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
 	
 		$locale = get_variable('locale');	// 08/03/09
 		switch($locale) { 
@@ -1636,15 +1641,14 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 		print show_log ($row[0]);				// log
 		print "</TD></TR>";
 		print "<TR><TD colspan=2 ALIGN='left'>";
-		print show_assigns(0, $theRow[0]);				// 'id' ambiguity - 7/27/09
+
+		print show_assigns(0, $row['tick_id']);				// 'id' ambiguity - 7/27/09 - 5/21/2013
 		print "</TD></TR>";
 		print "<TR><TD colspan=99 ALIGN='left'>";
-		print show_actions($theRow[0], "date", FALSE, FALSE);
+		print show_actions( $row['tick_id'], "date", FALSE, FALSE );		//  5/21/2013
 		print "</TD></TR>";
-//		print "<TR STYLE = 'display:none;'><TD colspan=2><SPAN ID='oldlat'>" . $row['lat'] . "</SPAN><SPAN ID='oldlng'>" . $row['lng'] . "</SPAN></TD></TR>";
 		print "</TABLE>\n";
 
-//		print show_actions($row['tick_id'], "date", FALSE, FALSE);		// lists actions and patient data, print - 10/30/09
 
 // =============== 10/30/09 
 
@@ -1713,21 +1717,20 @@ function do_ticket($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// retu
 	$print .= "<TR CLASS='even'  VALIGN='top'><TD ALIGN='left'>" . get_text("911 Contacted") . ":</TD>	<TD ALIGN='left'>" . highlight($search, nl2br($theRow['nine_one_one'])) . "</TD></TR>\n";	//	6/26/10
 	$print .= "<TR CLASS='odd'><TD ALIGN='left'>" . get_text("Reported by") . ":</TD>	<TD ALIGN='left'>" . highlight($search,$theRow['contact']) . "</TD></TR>\n";
 	$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("Phone") . ":</TD>			<TD ALIGN='left'>" . format_phone ($theRow['phone']) . "</TD></TR>\n";
-	$end_date = (intval($theRow['problemend'])> 1)? $theRow['problemend']:  (time() - (intval(get_variable('delta_mins'))*60));
-	$elapsed = my_date_diff($theRow['problemstart'], $end_date);
+	$elapsed = get_elapsed_time($theRow);
 	$elaped_str = (intval($theRow['problemend'])> 1)? "" : "&nbsp;&nbsp;&nbsp;&nbsp;({$elapsed})";	
 	$print .= "<TR CLASS='odd'><TD ALIGN='left'>" . get_text("Status") . ":</TD>		<TD ALIGN='left'>" . get_status($theRow['status']) . "{$elaped_str}</TD></TR>\n";
 	$by_str = ($theRow['call_taker'] ==0)?	"" : "&nbsp;&nbsp;by " . get_owner($theRow['call_taker']) . "&nbsp;&nbsp;";		// 1/7/10
-	$print .= "<TR CLASS='even'><TD ALIGN='left'>" . get_text("Written") . ":</TD>		<TD ALIGN='left'>" . format_date($theRow['date']) . $by_str;
-	$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Updated:&nbsp;&nbsp;" . format_date($theRow['updated']) . "</TD></TR>\n";
-	$print .=  empty($theRow['booked_date']) ? "" : "<TR CLASS='odd'><TD ALIGN='left'>Scheduled date:</TD>		<TD ALIGN='left'>" . format_date($theRow['booked_date']) . "</TD></TR>\n";	// 10/6/09
+	$print .= "<TR CLASS='even'><TD ALIGN='left'>" . get_text("Written") . ":</TD>		<TD ALIGN='left'>" . format_date_2(strtotime($theRow['date'])) . $by_str;
+	$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Updated:&nbsp;&nbsp;" . format_date_2(strtotime($theRow['updated'])) . "</TD></TR>\n";
+	$print .=  empty($theRow['booked_date']) ? "" : "<TR CLASS='odd'><TD ALIGN='left'>Scheduled date:</TD>		<TD ALIGN='left'>" . format_date_2(strtotime($theRow['booked_date'])) . "</TD></TR>\n";	// 10/6/09
 
 	$print .= "<TR CLASS='even' ><TD ALIGN='left' COLSPAN='2'>&nbsp;	<TD ALIGN='left'></TR>\n";			// separator
 	$print .= empty($theRow['fac_name']) ? "" : "<TR CLASS='odd' ><TD ALIGN='left'>" . $incident . " at Facility:</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['fac_name']) . "</TD></TR>\n";	// 8/1/09
 	$print .= empty($theRow['rec_fac_name']) ? "" : "<TR CLASS='even' ><TD ALIGN='left'>Receiving Facility:</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['rec_fac_name']) . "</TD></TR>\n";	// 10/6/09
 
 	$print .= empty($theRow['comments'])? "" : "<TR CLASS='odd'  VALIGN='top'><TD ALIGN='left'>{$disposition}:</TD>	<TD ALIGN='left'>" . highlight($search, nl2br($theRow['comments'])) . "</TD></TR>\n";
-	$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("Run Start") . ":</TD>					<TD ALIGN='left'>" . format_date($theRow['problemstart']);
+	$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("Run Start") . ":</TD>					<TD ALIGN='left'>" . format_date_2(strtotime($theRow['problemstart']));
 	$elaped_str = (intval($theRow['problemend'])> 1)?  $elapsed : "";
 	$print .= 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End:&nbsp;&nbsp;" . format_date($theRow['problemend']) . "&nbsp;&nbsp;({$elaped_str})</TD></TR>\n";
 
@@ -1791,9 +1794,8 @@ function do_ticket_wm($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// r
 	$print .= "<TR CLASS='even'  VALIGN='top'><TD ALIGN='left'>" . get_text("911 Contacted") . ":</TD>	<TD ALIGN='left'>" . highlight($search, nl2br($theRow['nine_one_one'])) . "</TD></TR>\n";	//	6/26/10
 	$print .= "<TR CLASS='odd'><TD ALIGN='left'>" . get_text("Reported by") . ":</TD>	<TD ALIGN='left'>" . highlight($search,$theRow['contact']) . "</TD></TR>\n";
 	$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("Phone") . ":</TD>			<TD ALIGN='left'>" . format_phone ($theRow['phone']) . "</TD></TR>\n";
-	$end_date = (is_null($theRow['problemend'])) ? $theRow['problemend']: date("Y-m-d H:i:00", (time() - (intval(get_variable('delta_mins'))*60)));	// 11/29/2012
-	$elapsed =  my_date_diff($theRow['problemstart'], $end_date);
-	$elapsed_str = get_elapsed_time ($theRow['problemstart'], $theRow['problemend']);			
+	$elapsed =  get_elapsed_time ($theRow);
+	$elapsed_str = get_elapsed_time ($theRow);			
 	$print .= "<TR CLASS='odd'><TD ALIGN='left'>" . get_text("Status") . ":</TD>		<TD ALIGN='left'>" . get_status($theRow['status']) . "&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
 	$by_str = ($theRow['call_taker'] ==0)?	"" : "&nbsp;&nbsp;by " . get_owner($theRow['call_taker']) . "&nbsp;&nbsp;";		// 1/7/10
 	$print .= "<TR CLASS='even'><TD ALIGN='left'>" . get_text("Written") . ":</TD>		<TD ALIGN='left'>" . format_date_2(strtotime($theRow['date'])) . $by_str;
@@ -1869,9 +1871,8 @@ function do_ticket_only($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						//
 	$print .= "<TR CLASS='even'  VALIGN='top'><TD ALIGN='left'>" . get_text("911 Contacted") . ":</TD>	<TD ALIGN='left'>" . highlight($search, nl2br($theRow['nine_one_one'])) . "</TD></TR>\n";	//	6/26/10
 	$print .= "<TR CLASS='odd'><TD ALIGN='left'>" . get_text("Reported by") . ":</TD>	<TD ALIGN='left'>" . highlight($search,$theRow['contact']) . "</TD></TR>\n";
 	$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("Phone") . ":</TD>			<TD ALIGN='left'>" . format_phone ($theRow['phone']) . "</TD></TR>\n";
-	$end_date = (is_null($theRow['problemend'])) ? $theRow['problemend']: date("Y-m-d H:i:00", (time() - (intval(get_variable('delta_mins'))*60)));	// 11/29/2012
-	$elapsed =  my_date_diff($theRow['problemstart'], $end_date);
-	$elapsed_str = get_elapsed_time ($theRow['problemstart'], $theRow['problemend']);			
+	$elapsed = get_elapsed_time ($theRow);	
+	$elapsed_str = get_elapsed_time ($theRow);			
 	$print .= "<TR CLASS='odd'><TD ALIGN='left'>" . get_text("Status") . ":</TD>		<TD ALIGN='left'>" . get_status($theRow['status']) . "&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
 	$by_str = ($theRow['call_taker'] ==0)?	"" : "&nbsp;&nbsp;by " . get_owner($theRow['call_taker']) . "&nbsp;&nbsp;";		// 1/7/10
 	$print .= "<TR CLASS='even'><TD ALIGN='left'>" . get_text("Written") . ":</TD>		<TD ALIGN='left'>" . format_date_2($theRow['date']) . $by_str;

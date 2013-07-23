@@ -483,7 +483,7 @@ if(empty($_POST)) {
 		LEFT JOIN `$GLOBALS[mysql_prefix]in_types` `ty` 	ON (`$GLOBALS[mysql_prefix]ticket`.`in_types_id` = `ty`.`id`)	
 		LEFT JOIN `$GLOBALS[mysql_prefix]facilities` 		ON (`$GLOBALS[mysql_prefix]facilities`.id = `$GLOBALS[mysql_prefix]ticket`.`facility`) 
 		LEFT JOIN `$GLOBALS[mysql_prefix]facilities` rf 	ON (`rf`.id = `$GLOBALS[mysql_prefix]ticket`.`rec_facility`) 
-		WHERE `$GLOBALS[mysql_prefix]ticket`.`ID`= " . $tick_id . " " . $restrict_ticket;			// 7/16/09, 8/12/09
+		WHERE `$GLOBALS[mysql_prefix]ticket`.`id`= " . $tick_id . " " . $restrict_ticket;			// 7/16/09, 8/12/09
 
 	$tick_result = mysql_query($tick_query) or do_error($tick_query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	if (!mysql_num_rows($tick_result)){	//no tickets? print "error" or "restricted user rights"

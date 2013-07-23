@@ -15,6 +15,8 @@
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 3/15/11 Added reference to stylesheet.php for revisable day night colors plus other bug fixes and revisions to show/hide buttons.
 4/1/11 Set font size of Incident and Assignment lists based on screen size to ensure readability and consistent tabular layout.
+5/27/2013 added HAS message handling
+6/3/2013 added auto-reload operation, removed predecessor, corrected references to window.opener
 */
 error_reporting(E_ALL);			// 9/13/08
 set_time_limit(0); 				// 6/18/10
@@ -32,7 +34,7 @@ if ((!empty($_GET))&& ((isset($_GET['logout'])) && ($_GET['logout'] == 'true')))
 else {
 //	snap(__LINE__, basename(__FILE__));
 	do_login(basename(__FILE__));
-	$do_mu_init = (array_key_exists('log_in', $_GET))? "parent.frames['upper'].mu_init();" : "";	// start multi-user function, 3/15/11	
+	$do_mu_init = (array_key_exists('log_in', $_GET))? "window.opener.parent.frames['upper'].mu_init();" : "";	// start multi-user function, 3/15/11	
 	}
 if ($istest) {
 	print "GET<BR/>\n";
@@ -45,20 +47,23 @@ if ($istest) {
 		}
 	}
 
-$remotes = get_current();								// returns array - 3/16/09
-//snap(basename(__FILE__), __LINE__);
-														// set auto-refresh if any mobile units														
-$interval = intval(get_variable('auto_poll'));
-$refresh = ((($remotes['aprs']) || ($remotes['instam'])) && ($interval>0))? "\t<META HTTP-EQUIV='REFRESH' CONTENT='" . intval($interval*60) . "'>\n": "";	//10/4/08
-$temp = get_variable('auto_poll');				// 1/28/09
-$poll_val = ($temp==0)? "none" : $temp ;
-	
+// $remotes = get_current();								// returns array - 3/16/09 - removed 6/3/2013
+// snap(basename(__FILE__), __LINE__);
+if ($_SESSION['internet']) {				// 8/22/10
+	$api_key = trim(get_variable('gmaps_api_key'));
+	$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
+	}
+else {
+	$err_arg = "Internet setting error:" . basename(__FILE__) . "@" . __LINE__;
+	do_log ($GLOBALS['LOG_ERROR'], 0, 0, $err_arg);		// logs supplied error message
+	$key_str = "";
+	}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
 <HEAD>
 <TITLE>Tickets - Full Screen Module</TITLE>
-<?php print $refresh;?>
+	<!-- 6/3/2013 removed refresh auto-poll -->
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="Expires" CONTENT="0">
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -75,7 +80,9 @@ $poll_val = ($temp==0)? "none" : $temp ;
 	<SCRIPT TYPE="text/javascript" SRC="./js/misc_function.js"></SCRIPT>	<!-- 5/3/11 -->	
 	<SCRIPT TYPE="text/javascript" SRC="./js/domready.js"></script>	
 	<SCRIPT SRC='../js/usng.js' TYPE='text/javascript'></SCRIPT>
-	<SCRIPT SRC="../js/graticule_V3.js" type="text/javascript"></SCRIPT>	
+	<SCRIPT SRC="../js/graticule_V3.js" type="text/javascript"></SCRIPT>
+	<SCRIPT SRC="./js/easyws.js"></SCRIPT>		<!-- 5/27/2013 -->	
+
 	<SCRIPT>
 	var grid;
 	
@@ -104,9 +111,49 @@ $poll_val = ($temp==0)? "none" : $temp ;
 		
 	function maxWindow() {
 		window.moveTo(0,0); 		// reset origin
-		window.resizeTo(window.screen.width,  window.screen.height);		// // fill screen
+		window.resizeTo(window.screen.width,  window.screen.height);		// fill screen
 		history.go(0);
 		}		// end function maxWindow()
+
+	function do_reload() {
+		window.location.reload();				// do the deed!
+		}		// end function do reload()
+
+
+	var watch_val;										// interval var - for clearInterval() - 6/3/2013
+
+	function start_watch() {							// get initial values from top
+		window.opener.parent.frames['upper'].mu_init();				// start the polling
+		$("div_ticket_id").innerHTML = window.opener.parent.frames["upper"].$("div_ticket_id").innerHTML;		// copy for monitoring
+		$("div_assign_id").innerHTML = window.opener.parent.frames["upper"].$("div_assign_id").innerHTML;
+		$("div_action_id").innerHTML = window.opener.parent.frames["upper"].$("div_action_id").innerHTML;	
+		$("div_patient_id").innerHTML = window.opener.parent.frames["upper"].$("div_patient_id").innerHTML;
+		
+		watch_val = window.setInterval("do_watch()",5000);		// 4/7/10 - 5 seconds
+		}				// end function start watch()
+
+	function end_watch(){
+		window.clearInterval(watch_val);
+		do_reload();			// 6/3/2013
+		}				// end function end_watch()
+
+	function do_watch() {								// monitor for changes - 4/10/10, 6/10/11
+		if (							// any change?
+			($("div_ticket_id").innerHTML != window.opener.parent.frames["upper"].$("div_ticket_id").innerHTML) ||
+			($("div_assign_id").innerHTML != window.opener.parent.frames["upper"].$("div_assign_id").innerHTML) ||
+			($("div_action_id").innerHTML != window.opener.parent.frames["upper"].$("div_action_id").innerHTML) ||
+			($("div_patient_id").innerHTML != window.opener.parent.frames["upper"].$("div_patient_id").innerHTML)			
+			) 
+				{		
+				alert(148);
+				end_watch();	  // a change
+				do_reload();			
+				}
+		}			// end function do_watch()		
+
+
+
+
 
 	//*****************************************************************************
 	// Do not remove this notice.
@@ -266,10 +313,17 @@ $poll_val = ($temp==0)? "none" : $temp ;
 </style>
 </HEAD>
 <?php
-	$gunload = ($_SESSION['internet'])? "'GUnload();'" : "" ;	//3/15/11
+	$temp =  explode("/", get_variable('auto_refresh'));
+	$do_start_watch = ( ( count($temp) == 3 ) && (intval ($temp[1]) == 1 ) ) ? "start_watch();" : "";	// set JS string
 ?>
-<BODY onLoad = "set_initial_pri_disp(); set_categories(); set_fac_categories(); check_sidemenu(); <?php print $do_mu_init;?> <?php print $gunload;?>">	<!-- 3/15/11 -->
+<BODY onLoad = "set_initial_pri_disp(); set_categories(); set_fac_categories(); check_sidemenu(); <?php print $do_mu_init;?> <?php print $do_start_watch;?> ">	<!-- 3/15/11 -->
 <SCRIPT SRC='./js/wz_tooltip.js' type='text/javascript'></SCRIPT>
+
+	<DIV ID = "div_ticket_id" STYLE="display:none;"></DIV>	<!-- 6/3/2013 -->
+	<DIV ID = "div_assign_id" STYLE="display:none;"></DIV>
+	<DIV ID = "div_action_id" STYLE="display:none;"></DIV>
+	<DIV ID = "div_patient_id" STYLE="display:none;"></DIV>
+
 <TABLE><TR><TD>
 <?php
 //require_once('./incs/links.inc.php');

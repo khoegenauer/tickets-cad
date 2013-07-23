@@ -1,0 +1,981 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<HTML>
+
+	<HEAD><TITLE>Tickets - Main Module</TITLE>
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+	<META HTTP-EQUIV="Expires" CONTENT="0" />
+	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
+	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
+	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
+	<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAiLlX5dJnXCkZR5Yil2cQ5BT2yXp_ZAY8_ufC3CFXhHIE1NvwkxRGkBZARk7Vp6dHzzw2qCN6kP4pTQ"></SCRIPT>
+	<SCRIPT>
+/*
+//	parent.frames["upper"].location.reload( true );
+	if(document.all && !(document.getElementById)) {		// accomodate IE
+		document.getElementById = function(id) {
+			return document.all[id];
+			}
+		}
+*/
+	try {
+		parent.frames["upper"].document.getElementById("whom").innerHTML  = "admin";
+		parent.frames["upper"].document.getElementById("level").innerHTML = "Super";
+		parent.frames["upper"].$("script").innerHTML  = "main";
+		parent.frames["upper"].document.getElementById("poll_id").innerHTML  = "3";
+		}
+	catch(e) {
+		}
+
+	function ck_frames() {		//  onLoad = "ck_frames()"
+		return;
+		if(self.location.href==parent.location.href) {
+			self.location.href = 'index.php';
+			}
+		else {
+			parent.upper.show_butts();										// 1/21/09
+			}
+		}		// end function ck_frames()
+
+	function $() {									// 1/19/09
+		var elements = new Array();
+		for (var i = 0; i < arguments.length; i++) {
+			var element = arguments[i];
+			if (typeof element == 'string')
+				element = document.getElementById(element);
+			if (arguments.length == 1)
+				return element;
+			elements.push(element);
+			}
+		return elements;
+		}
+
+	/* function $() Sample Usage:
+	var obj1 = document.getElementById('element1');
+	var obj2 = document.getElementById('element2');
+	function alertElements() {
+	  var i;
+	  var elements = $('a','b','c',obj1,obj2,'d','e');
+	  for ( i=0;i
+	*/
+/**
+ * Concatenates the values of a variable into an easily readable string
+ * by Matt Hackett [scriptnode.com]
+ * @param {Object} x The variable to debug
+ * @param {Number} max The maximum number of recursions allowed (keep low, around 5 for HTML elements to prevent errors) [default: 10]
+ * @param {String} sep The separator to use between [default: a single space ' ']
+ * @param {Number} l The current level deep (amount of recursion). Do not use this parameter: it's for the function's own use
+ */
+	function print_r(x, max, sep, l) {
+		l = l || 0;
+		max = max || 10;
+		sep = sep || ' ';
+		if (l > max) {
+			return "[WARNING: Recursion limit exceeded]\n";
+			}
+		var
+			i,
+			r = '',
+			t = typeof x,
+			tab = '';
+		if (x === null) {
+			r += "(null)\n";
+			}
+		else if (t == 'object') {
+			l++;
+			for (i = 0; i < l; i++) {
+				tab += sep;
+				}
+			if (x && x.length) {
+				t = 'array';
+				}
+			r += '(' + t + ") :\n";
+			for (i in x) {
+				try {
+					r += tab + '[' + i + '] : ' + print_r(x[i], max, sep, (l + 1));
+					}
+				catch(e) {
+					return "[ERROR: " + e + "]\n";
+					}
+				}
+			}
+		else {
+			if (t == 'string') {
+				if (x == '') {
+					x = '(empty)';
+					}
+				}
+			r += '(' + t + ') ' + x + "\n";
+			}
+		return r;
+		};
+//	var_dump = print_r;
+
+
+	</SCRIPT>
+	<SCRIPT SRC='./js/usng.js' TYPE='text/javascript'></SCRIPT>		<!-- 10/14/08 -->
+	<SCRIPT SRC='./js/graticule.js' type='text/javascript'></SCRIPT>
+
+<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+</HEAD>
+
+<BODY onload = "ck_frames(); " onunload="GUnload();">
+<SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT><!-- 1/3/10 -->
+
+<A NAME="top"> <!-- 11/11/09 -->
+<CENTER>
+<DIV ID='links' STYLE="display:none;"><A ID = 'func_key0'  CLASS = 'unselected' href='http://openises.sourceforge.net/' target='Open ISES' onMouseover = "ChngClass(this.id, 'selected')" onMouseout = "ChngClass(this.id, 'unselected')" onClick = 'launch("http://openises.sourceforge.net/", "Open ISES")'; return false;">Open ISES</a>
+ <br/> <br/></DIV><!-- display:none/block/inline -->
+
+
+<SCRIPT>
+	function ChngClass(obj, the_class){					// changes object obj to class the_class - 8/24/09
+        $(obj).className=the_class;
+        }
+
+	var wor; 				// global variable - window reference
+	var PreviousUrl; 		// global variable - will hold the url currently in the opened window for this link
+
+	starting = false;
+
+	function launch(strUrl, strName ) {
+		var random_x=100 + Math.floor(Math.random()*200);
+		var random_y=100 + Math.floor(Math.random(random_x)*200);	// a different random
+		var strFeat = "titlebar, location=0, resizable=1, scrollbars, height=640,width=800,status=1,toolbar=1,menubar=1,location=0, left=" + random_x + ",top=" + random_y + ",screenX=" + random_x + ",screenY=" + random_y;
+
+		if(wor == null || wor.closed) {
+			wor = window.open(strUrl, strName, strFeat);
+			}
+		else if(previousUrl != strUrl) {
+			wor = window.open(strUrl, strName, strFeat);
+			if(wor.focus) {	wor.focus();};
+			}
+		else { if(wor.focus) { wor.focus();	};
+			};
+		PreviousUrl = strUrl;	/* explanation: we store the current url in order to compare url in the event of another call of this function. */
+		$('links').style.display='none';		// hide links
+		}		// end function launch()
+</SCRIPT>
+</CENTER>
+<TABLE BORDER=0>
+	<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header'>Current Situation - Monroe </FONT></TD></TR>	<!-- 1/17/09 -->
+	<TR CLASS='odd'><TD COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR>
+	<TR><TD VALIGN='TOP' width='400px' >
+		<DIV ID = 'side_bar'></DIV>
+		<DIV ID = 'side_bar_r' style="height: 80px; overflow-y: scroll; overflow-x: none;"></DIV>
+		<DIV STYLE = "height:12px">&nbsp;</DIV>
+		<DIV ID = 'units_legend'></DIV>
+		<DIV ID = 'side_bar_f'  ></DIV>
+
+		</TD>
+		<TD></TD>
+		<TD CLASS='td_label'>
+			<DIV ID='map' STYLE='WIDTH: 512PX; HEIGHT: 512PX'></DIV>
+
+			<BR /><CENTER><A HREF='#' onClick='doGrid()'><u>Grid</U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doTraffic()'><U>Traffic</U></A><BR /><BR />
+
+		Units:<IMG STYLE = 'margin-left:12px;' SRC = './icons/sm_white.png' BORDER=0><IMG SRC = './icons/sm_black.png' BORDER=0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 10/21/09 -->
+
+		<SPAN ID="show_it" STYLE="display: none" onClick = "do_show_Units();"><U>Show</U></SPAN>
+		<SPAN ID="hide_it" STYLE="display: ''" onClick = "do_hide_Units();"><U>Hide</U></SPAN>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<SPAN ID="hide_unavail" STYLE="display: ''" onClick = "hide_unit_stat_unavail();"><U>Hide unavailable</U></SPAN>	<!-- 10/21/09 -->
+
+		<SPAN ID="show_unavail" STYLE="display: ''" onClick = "show_unit_stat_unavail();"><U>Show unavailable</U></SPAN>	<!-- 10/21/09 -->
+
+		<BR /><BR />
+
+		Facilities:<IMG  STYLE = 'margin-left:12px;' SRC = './icons/sm_shield_green.png' BORDER=0><IMG SRC = './icons/sm_square_red.png' BORDER=0>	<!-- 10/21/09 -->
+
+		<SPAN  STYLE = 'margin-left:12px;' ID="hide_fac" STYLE="display: ''" onClick = "hide_Facilities();"><U>Hide</U></SPAN>
+		<SPAN  STYLE = 'margin-left:12px;' ID="show_fac" STYLE="display: none" onClick = "show_Facilities();"><U>Show</U></SPAN>
+
+		<BR /><BR />
+
+		<SPAN ID="incidents" STYLE="display: inline-block">
+		Incident Priority:<IMG STYLE = 'margin-left:12px;' SRC = './icons/sm_blue.png' BORDER=0><IMG SRC = './icons/sm_green.png' BORDER=0><IMG SRC = './icons/sm_red.png' BORDER=0>&nbsp;&nbsp;	<!-- 10/21/09 -->
+		<A HREF="#" onClick = "hideGroup(1)">Typical: 	<IMG SRC = './icons/sm_blue.png' BORDER=0></A>&nbsp;&nbsp;&nbsp;&nbsp; <!-- 1/9/09 -->
+		<A HREF="#" onClick = "hideGroup(2)">	High: 	<IMG SRC = './icons/sm_green.png' BORDER=0></A>&nbsp;&nbsp;&nbsp;&nbsp;
+		<A HREF="#" onClick = "hideGroup(3)">Highest: 	<IMG SRC = './icons/sm_red.png' BORDER=0></A>
+		</SPAN>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN ID="show_all_icon" STYLE="display: none"><A HREF="#" onClick = "show_All()">Show all: <IMG SRC = './markers/sm_white.png' BORDER=0></A></SPAN>
+		</NOBR></CENTER><BR />
+
+<BR />
+		</TD>
+
+		</CENTER><BR /></TD>
+	</TR>
+
+	<TR><TD COLSPAN='99'> </TD></TR>
+	<TR><TD CLASS='td_label' COLSPAN=3 ALIGN='center'>
+		&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="mailto:shoreas@Gmail.com?subject=Question/Comment on Tickets Dispatch System"><u>Contact us</u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom"></A>
+		</TD></TR></TABLE>
+	<FORM NAME='unit_form' METHOD='get' ACTION='units.php'>
+	<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
+	<INPUT TYPE='hidden' NAME='view' VALUE=''>
+	<INPUT TYPE='hidden' NAME='edit' VALUE=''>
+	<INPUT TYPE='hidden' NAME='id' VALUE=''>
+	</FORM>
+
+	<FORM NAME='tick_form' METHOD='get' ACTION='edit.php'>				<!-- 11/27/09 -->
+	<INPUT TYPE='hidden' NAME='id' VALUE=''>
+	</FORM>
+
+	<FORM NAME='facy_form' METHOD='get' ACTION='facilities.php'>		<!-- 11/27/09 -->
+	<INPUT TYPE='hidden' NAME='id' VALUE=''>
+	<INPUT TYPE='hidden' NAME='edit' VALUE='true'>
+	</FORM>
+
+<SCRIPT>
+
+	function writeConsole(content) {
+		top.consoleRef=window.open('','myconsole',
+			'width=800,height=250' +',menubar=0' +',toolbar=0' +',status=0' +',scrollbars=1' +',resizable=1')
+	 	top.consoleRef.document.writeln('<html><head><title>Console</title></head>'
+			+'<body bgcolor=white onLoad="self.focus()">' +content +'</body></html>'
+			)				// end top.consoleRef.document.writeln()
+	 	top.consoleRef.document.close();
+		}				// end function writeConsole(content)
+
+
+	function isNull(val) {								// checks var stuff = null;
+		return val === null;
+		}
+
+	function to_session(the_name, the_value) {								// generic session variable writer - 3/8/10, 4/4/10
+		function local_handleResult(req) {			// the called-back function
+			}			// end function local handleResult
+
+		var params = "f_n=" + the_name;				// 1/20/09
+		params += "&f_v=" + the_value;				// 4/4/10
+		sendRequest ('do_session.php',local_handleResult, params);			// does the work via POST
+		}
+
+
+	function to_server(the_unit, the_status) {							// write unit status data via ajax xfer
+		var querystr = "frm_responder_id=" + the_unit;
+		querystr += "&frm_status_id=" + the_status;
+
+		var url = "as_up_un_status.php?" + querystr;			//
+		var payload = syncAjax(url);						//
+		if (payload.substring(0,1)=="-") {
+			alert ("<php print __LINE__;?>: msg failed ");
+			return false;
+			}
+		else {
+			parent.frames['upper'].show_msg ('Unit status update applied!')
+			return true;
+			}				// end if/else (payload.substring(... )
+		}		// end function to_server()
+
+	function syncAjax(strURL) {							// synchronous ajax function
+		if (window.XMLHttpRequest) {
+			AJAX=new XMLHttpRequest();
+			}
+		else {
+			AJAX=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+		if (AJAX) {
+//			alert("257 " + strURL);
+			AJAX.open("GET", strURL, false);
+			AJAX.send(null);							// e
+			return AJAX.responseText;
+			}
+		else {
+			alert ("269: failed");
+			return false;
+			}
+		}		// end function sync Ajax(strURL)
+
+	var starting = false;
+
+	function do_mail_win(the_name, the_addrs) {
+		if(starting) {return;}					// dbl-click catcher
+		starting=true;
+		var url = (isNull(the_name))? "do_unit_mail.php?" : "do_unit_mail.php?name=" + escape(the_name) + "&addrs=" + escape(the_addrs);	//
+		newwindow_mail=window.open(url, "mail_edit",  "titlebar, location=0, resizable=1, scrollbars, height=320,width=720,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
+		if (isNull(newwindow_mail)) {
+			alert ("Email edit operation requires popups to be enabled -- please adjust your browser options.");
+			return;
+			}
+		newwindow_mail.focus();
+		starting = false;
+		}		// end function do mail_win()
+
+	function do_fac_mail_win(the_name, the_addrs) {			// 3/8/10
+		if(starting) {return;}					// dbl-click catcher
+		starting=true;
+		var url = (isNull(the_name))? "do_fac_mail.php?" : "do_fac_mail.php?name=" + escape(the_name) + "&addrs=" + escape(the_addrs);	//
+		newwindow_mail=window.open(url, "mail_edit",  "titlebar, location=0, resizable=1, scrollbars, height=320,width=720,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
+		if (isNull(newwindow_mail)) {
+			alert ("Email edit operation requires popups to be enabled -- please adjust your browser options.");
+			return;
+			}
+		newwindow_mail.focus();
+		starting = false;
+		}		// end function do mail_win()
+
+
+	function to_str(instr) {			// 0-based conversion - 2/13/09
+//		alert("143 " + instr);
+		function ord( string ) {
+		    return (string+'').charCodeAt(0);
+			}
+
+		function chr( ascii ) {
+		    return String.fromCharCode(ascii);
+			}
+		function to_char(val) {
+			return(chr(ord("A")+val));
+			}
+
+		var lop = (instr % 26);													// low-order portion, a number
+		var hop = ((instr - lop)==0)? "" : to_char(((instr - lop)/26)-1) ;		// high-order portion, a string
+		return hop+to_char(lop);
+		}
+
+	function sendRequest(url,callback,postData) {								// 2/14/09
+		var req = createXMLHTTPObject();
+		if (!req) return;
+		var method = (postData) ? "POST" : "GET";
+		req.open(method,url,true);
+		req.setRequestHeader('User-Agent','XMLHTTP/1.0');
+		if (postData)
+			req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		req.onreadystatechange = function () {
+			if (req.readyState != 4) return;
+			if (req.status != 200 && req.status != 304) {
+				return;
+				}
+			callback(req);
+			}
+		if (req.readyState == 4) return;
+		req.send(postData);
+		}
+
+	var XMLHttpFactories = [
+		function () {return new XMLHttpRequest()	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		];
+
+	function createXMLHTTPObject() {
+		var xmlhttp = false;
+		for (var i=0;i<XMLHttpFactories.length;i++) {
+			try {
+				xmlhttp = XMLHttpFactories[i]();
+				}
+			catch (e) {
+				continue;
+				}
+			break;
+			}
+		return xmlhttp;
+		}
+
+var quick = false;
+var tr_id_fixed_part = "tr_id_";		// 3/2/10
+
+if (GBrowserIsCompatible()) {
+
+//	$("map").style.backgroundImage = "url(./markers/loading.jpg)";
+	$("map").style.backgroundImage = "url('http://maps.google.com/staticmap?center=41.767942,-83.725552&zoom=11&size=512x512&key=ABQIAAAAiLlX5dJnXCkZR5Yil2cQ5BT2yXp_ZAY8_ufC3CFXhHIE1NvwkxRGkBZARk7Vp6dHzzw2qCN6kP4pTQ ')";
+
+	var colors = new Array ('odd', 'even');
+
+	function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity) {		// 8/19/09
+
+//		drawCircle(53.479874, -2.246704, 10.0, "#000080", 1, 0.75, "#0000FF", .5);
+
+		var d2r = Math.PI/180;
+		var r2d = 180/Math.PI;
+		var Clat = radius * 0.014483;
+		var Clng = Clat/Math.cos(lat * d2r);
+		var Cpoints = [];
+		for (var i=0; i < 33; i++) {
+			var theta = Math.PI * (i/16);
+			Cy = lat + (Clat * Math.sin(theta));
+			Cx = lng + (Clng * Math.cos(theta));
+			var P = new GPoint(Cx,Cy);
+			Cpoints.push(P);
+			}
+		var polygon = new GPolygon(Cpoints, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity);
+		map.addOverlay(polygon);
+		}
+
+	function hideGroup(color) {							// 8/7/09 Revised function to correct incorrect display
+		for (var i = 0; i < gmarkers.length; i++) {
+			if (gmarkers[i]) {
+				if (gmarkers[i].id == color) {
+					gmarkers[i].show();
+					}
+				else {
+					gmarkers[i].hide();			// 1/11/09
+					}
+				}		// end if (gmarkers[i])
+			} 	// end for ()
+		$("show_all_icon").style.display = "inline-block";
+		$("incidents").style.display = "inline-block";
+
+		}			// end function
+
+
+	function show_All() {						// 8/7/09 Revised function to correct incorrect display
+		for (var i = 0; i < gmarkers.length; i++) {
+			if (gmarkers[i]) {
+				gmarkers[i].show();
+				}
+			} 	// end for ()
+		$("show_all_icon").style.display = "none";
+		$("allIcons").style.display = "inline-block";
+		$("incidents").style.display = "inline-block";
+		}			// end function
+
+
+	function show_Units() {						// 8/7/09 Revised function to correct incorrect display
+		for (var i = 0; i < gmarkers.length; i++) {			// traverse gmarkers array for icon type==0 - 2/12/09
+			if (gmarkers[i]) {
+				if ((gmarkers[i].id == 0) || (gmarkers[i].id == 4)) {
+					gmarkers[i].show();
+					}
+				else {
+//					gmarkers[i].hide();						// hide incidents - 1/8/09
+					}
+				}		// end if (gmarkers[i])
+			} 	// end for ()
+		$("incidents").style.display = "inline-block";
+		$("show_all_icon").style.display =	"inline-block";
+		$('show_it').style.display='none';
+		$('hide_it').style.display='inline';
+		}
+
+	function hide_Units () {								// 10/17/08
+		for (var i = 0; i < gmarkers.length; i++) {			// traverse gmarkers array for icon type==0
+			if (gmarkers[i]) {
+				if ((gmarkers[i].id == 0) || (gmarkers[i].id == 4)) {			// 8/7/09 Revised function to correct incorrect display
+					gmarkers[i].hide();
+					}
+				else {
+					gmarkers[i].show();
+					}
+				}		// end if (gmarkers[i])
+			} 	// end for ()
+		$("incidents").style.display = 		"inline-block";
+		$("show_all_icon").style.display =	"inline-block";
+		$("show_it").style.display=			"inline";				// 12/02/09
+		$("hide_it").style.display=			"none";
+		}				// end function hide_units ()
+
+	function show_hide_rows(instr) {				// instr is '' or 'none' - 3/8/10
+//		alert("452 " + instr);
+		for (i = 0; i< rowIds.length; i++) {
+			var rowId = rowIds[i];					// row id - 3/3/10
+//			alert("455 " + rowId);
+			$(rowId).style.display = instr;			// hide each 'unavailable' row
+			}
+		}				// end function show_hide_rows()
+
+	function hide_unit_stat_unavail() {								// 10/21/09
+		for (var i = 0; i < gmarkers.length; i++) {			// traverse gmarkers array for icon type==0
+			if (gmarkers[i]) {
+				if (gmarkers[i].stat == 1) {
+					gmarkers[i].hide();
+					}
+				else {
+					gmarkers[i].show();
+					}
+				}		// end if (gmarkers[i])
+			} 	// end for ()
+
+		show_hide_rows('none');								// hide 'unavailable' rows - 3/8/10
+
+		$("incidents").style.display = 			"inline-block";
+		$("show_all_icon").style.display =		"inline-block";
+		$("show_unavail").style.display=		"inline";
+		$("hide_unavail").style.display=		"none";
+		to_session('show_hide_unav', "h");					// set session vbl
+		}				// end function hide unit_stat_unavail ()
+
+	function show_unit_stat_unavail() {								// 10/21/09, 4/6/10
+		for (var i = 0; i < gmarkers.length; i++) {					// traverse gmarkers array for icon type==0
+			if (gmarkers[i]) {
+				gmarkers[i].show();
+				}
+			} 	// end for ()
+
+		show_hide_rows('');				// show 'unavailable' rows - 3/8/10
+
+		$("incidents").style.display = "inline-block";
+		$("show_all_icon").style.display	=	"inline-block";
+		$("show_unavail").style.display		=	"none";
+		setTimeout ('$("hide_unavail").style.display = "inline-block"', 250);		// 3/8/10
+		to_session('show_hide_unav', "s");											// set session vbl
+		}				// end function show unit_stat_unavail ()
+
+	function do_hide_Units() {						// 2/14/09
+		var params = "f_n=f1&v_n=h&sess_id=05odgcebousb376rb26j1kr903";					// flag 1, value h
+		var url = "persist.php";
+		sendRequest (url, h_handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
+		}			// end function do notify()
+
+	function hide_Facilities() {								// 8/1/09
+		for (var i = 0; i < fmarkers.length; i++) {			// traverse gmarkers array for icon type==0
+			if (fmarkers[i]) {
+					fmarkers[i].hide();
+					}
+			} 	// end for ()
+		$("hide_fac").style.display = "none";
+		$("show_fac").style.display = "inline-block";
+		$("fac_table").style.display = "none";
+		to_session('show_hide_fac', "h");					// set session vbl
+		}				// end function hide_Facilities ()
+
+	function show_Facilities () {							// 8/1/09
+		for (var i = 0; i < fmarkers.length; i++) {			// traverse gmarkers array for icon type==0
+			if (fmarkers[i]) {
+					fmarkers[i].show();
+					}
+			} 	// end for ()
+		$("hide_fac").style.display = "inline-block";
+		$("show_fac").style.display = "none";
+		$("fac_table").style.display = "inline-block";
+		to_session('show_hide_fac', "s");					// set session vbl
+		location.href = "#bottom";				// 11/11/09
+
+		}				// end function show_Facilities ()
+
+	function h_handleResult(req) {					// the 'called-back' persist function - hide
+		hide_Units();
+		}
+
+	var starting = false;
+
+	function do_mail_fac_win(id) {			// Facility email 9/22/09
+		if(starting) {return;}
+		starting=true;
+		var url = "do_fac_mail.php?fac_id=" + id;
+		newwindow_in=window.open (url, 'Email_Window',  'titlebar, resizable=1, scrollbars, height=300,width=600,status=0,toolbar=0,menubar=0,location=0, left=50,top=150,screenX=100,screenY=300');
+		if (isNull(newwindow_in)) {
+			alert ("This requires popups to be enabled. Please adjust your browser options.");
+			return;
+			}
+		newwindow_in.focus();
+		starting = false;
+		}
+
+	function do_show_Units() {
+		var params = "f_n=f1&v_n=s&sess_id=05odgcebousb376rb26j1kr903";					// flag 1, value s
+		var url = "persist.php";
+		sendRequest (url, s_handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
+		}			// end function do show_Units()
+
+	function s_handleResult(req) {					// the 'called-back' persist function - show
+		show_Units();
+		}
+
+	function do_sidebar (instr, id, sym, myclass, tip_str) {		// sidebar_string, sidebar_index, row_class, icon_info, mouseover_str - 1/7/09
+		var tr_id = tr_id_fixed_part + id;
+		if (isNull(tip_str)) {
+			side_bar_html += "<TR ID = '" + tr_id + "' CLASS='" + colors[id%2] +"'><TD CLASS='" + myclass + "' onClick = myclick(" + id + "); ALIGN = 'left'>" + (sym) + "</TD>"+ instr +"</TR>\n";		// 2/6/10 moved onclick to TD
+			}
+		else {
+			side_bar_html += "<TR ID =  '" + tr_id + "' onMouseover=\"Tip('" + tip_str + "');\" onmouseout=\"UnTip();\" CLASS='" + colors[id%2] +"'><TD CLASS='" + myclass + "' onClick = myclick(" + id + "); ALIGN = 'left'>" + (sym) + "</TD>"+ instr +"</TR>\n";		// 1/3/10 added tip param
+			}
+		}		// end function do sidebar ()
+
+	function do_sel_update (in_unit, in_val) {							// 12/17/09
+		to_server(in_unit, in_val)
+		}
+
+	function myclick(id) {					// Responds to sidebar click, then triggers listener above -  note [i]
+		GEvent.trigger(gmarkers[id], "click");
+		location.href = "#top";
+		}
+
+	function do_sidebar_t_ed (sidebar, line_no, rcd_id, letter, tip_str) {		// ticket edit, tip str added 1/3/10
+		if (isNull(tip_str)) {
+			side_bar_html += "<TR CLASS='" + colors[(line_no)%2] +"' onClick = myclick_ed_tick(" + rcd_id + ");>";
+			}
+		else {
+			side_bar_html += "<TR onMouseover=\"Tip('" + tip_str.replace("'", "") + "');\" onmouseout=\"UnTip();\" CLASS='" + colors[(line_no)%2] +"' onClick = myclick_ed_tick(" + rcd_id + ");>";
+			}
+		side_bar_html += "<TD CLASS='td_data'>" + letter + "</TD>" + sidebar +"</TR>\n";		// 2/13/09, 10/29/09 removed period
+		}
+
+	function do_sidebar_u_iw (instr, id, sym, myclass) {						// constructs unit incident sidebar row - 1/7/09
+		var tr_id = tr_id_fixed_part + id;
+		side_bar_html += "<TR ID = '" + tr_id + "' CLASS='" + colors[id%2] +"' onClick = myclick(" + id + ");><TD CLASS='" + myclass + "'>" + (sym) + "</TD>"+ instr +"</TR>\n";		// 10/30/09 removed period
+		}		// end function do sidebar ()
+
+	function myclick_ed_tick(id) {				// Responds to sidebar click - edit ticket data
+
+		document.tick_form.id.value=id;			// 11/27/09
+		document.tick_form.action='?php print $the_action; ?>';			// 11/27/09
+		document.tick_form.submit();
+		}
+
+	function do_sidebar_u_ed (sidebar, line_no, on_click, letter) {					// unit edit
+		var tr_id = tr_id_fixed_part + line_no;
+		side_bar_html += "<TR ID = '" + tr_id + "'  CLASS='" + colors[(line_no)%2] +"'>";
+		side_bar_html += "<TD onClick = '" + on_click+ "' CLASS='td_data'>" + letter + "</TD>" + sidebar +"</TR>\n";		// 2/13/09, 10/29/09 removed period
+		}
+
+	function myclick_nm(id) {				// Responds to sidebar click - view responder data
+		document.unit_form.id.value=id;	// 11/27/09
+		if (quick) {
+			document.unit_form.edit.value="true";
+			}
+		else {
+			document.unit_form.view.value="true";
+			}
+		document.unit_form.submit();
+		}
+
+	function do_sidebar_fac_ed (fac_instr, fac_id, fac_sym, myclass) {					// constructs facilities sidebar row 9/22/09
+		side_bar_html += "<TR CLASS='" + colors[fac_id%2] +"' onClick = fac_click_ed(" + fac_id + ");>";
+		side_bar_html += "<TD CLASS='" + myclass + "'><B>" + (fac_sym) + "</B></TD>";
+		side_bar_html += fac_instr +"</TR>\n";		// 10/30/09 removed period
+		location.href = "#top";
+		}		// end function do sidebar_fac_iw ()
+
+	function do_sidebar_fac_iw (fac_instr, fac_id, fac_sym, myclass) {					// constructs facilities sidebar row 9/22/09
+		side_bar_html += "<TR CLASS='" + colors[fac_id%2] +"' onClick = fac_click_iw(" + fac_id + ") WIDTH = '100%';>"
+		side_bar_html += "<TD CLASS='" + myclass + "'><B>" + (fac_sym) + "</B></TD>";
+		side_bar_html += fac_instr +"</TR>\n";		// 10/30/09 removed period
+		location.href = "#top";
+		}		// end function do sidebar_fac ()
+
+	function fac_click_iw(fac_id) {						// Responds to facilities sidebar click, triggers listener above 9/22/09
+		GEvent.trigger(fmarkers[fac_id], "click");
+		location.href = "#top";
+		}
+
+	function fac_click_ed(id) {							// Responds to facility sidebar click - edit data
+		document.facy_form.id.value=id;					// 11/27/09
+		document.facy_form.submit();
+		}
+
+	function createMarker(point, tabs, color, stat, id, sym) {					// Creates marker and sets up click event infowindow 10/21/09 added stat to hide unavailable units
+		points = true;
+		var icon = new GIcon(baseIcon);
+		var icon_url = "./icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + sym;				// 1/6/09
+		icon.image = icon_url;
+
+		var marker = new GMarker(point, icon);
+		marker.id = color;				// for hide/unhide
+		marker.stat = stat;				// 10/21/09
+
+		GEvent.addListener(marker, "click", function() {					// here for both side bar and icon click
+
+			map.closeInfoWindow();
+			which = id;
+			gmarkers[which].hide();
+			marker.openInfoWindowTabsHtml(infoTabs[id]);
+
+			setTimeout(function() {											// wait for rendering complete - 11/6/08
+				if ($("detailmap")) {				// 10/9/08
+					var dMapDiv = $("detailmap");
+					var detailmap = new GMap2(dMapDiv);
+					detailmap.addControl(new GSmallMapControl());
+					detailmap.setCenter(point, 17);  						// larger # = closer
+					detailmap.addOverlay(marker);
+					}
+				else {
+//					alert(62);
+//					alert($("detailmap"));
+					}
+				},3000);				// end setTimeout(...)
+
+			});
+		gmarkers[id] = marker;							// marker to array for side_bar click function
+		infoTabs[id] = tabs;							// tabs to array
+		if (!(map_is_fixed)){
+			bounds.extend(point);
+			}
+		return marker;
+		}				// end function create Marker()
+
+	var the_grid;
+	var grid = false;
+	function doGrid() {
+		if (grid) {
+			map.removeOverlay(the_grid);
+			}
+		else {
+			the_grid = new LatLonGraticule();
+			map.addOverlay(the_grid);
+			}
+		grid = !grid;
+		}			// end function doGrid
+
+    var trafficInfo = new GTrafficOverlay();
+    var toggleState = true;
+
+	function doTraffic() {				// 10/16/08
+		if (toggleState) {
+	        map.removeOverlay(trafficInfo);
+	     	}
+		else {
+	        map.addOverlay(trafficInfo);
+	    	}
+        toggleState = !toggleState;			// swap
+	    }				// end function doTraffic()
+
+
+	var icons=[];						// note globals
+	icons[0] = 											 4;	// units white
+	icons[0+1] = 1;	// blue
+	icons[1+1] = 2;	// yellow
+	icons[2+1] =  3;	// red
+	icons[2+2] =  0;	// black
+
+	var map;
+	var center;
+	var zoom = 11;
+
+	var points = false;
+	var map_is_fixed = true;
+
+function do_add_note (id) {				// 8/12/09
+	var url = "add_note.php?ticket_id="+ id;
+	var noteWindow = window.open(url, 'mailWindow', 'resizable=1, scrollbars, height=240, width=600, left=100,top=100,screenX=100,screenY=100');
+	noteWindow.focus();
+	}
+
+function do_track(callsign) {
+	if (parent.frames["upper"].logged_in()) {
+//		if(starting) {return;}					// 6/6/08
+//		starting=true;
+		map.closeInfoWindow();
+		var width = 512+360;
+		var spec ="titlebar, resizable=1, scrollbars, height=640,width=" + width + ",status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300";
+		var url = "track_u.php?source="+callsign;
+
+		newwindow=window.open(url, callsign,  spec);
+		if (isNull(newwindow)) {
+			alert ("Track display requires popups to be enabled. Please adjust your browser options.");
+			return;
+			}
+//		starting = false;
+		newwindow.focus();
+		}
+	}				// end function do track()
+
+function do_popup(id) {					// added 7/9/09
+	if (parent.frames["upper"].logged_in()) {
+		map.closeInfoWindow();
+		var mapWidth = 512+32;
+		var mapHeight = 512+150;		// 3/12/10
+		var spec ="titlebar, resizable=1, scrollbars, height=" + mapHeight + ", width=" + mapWidth + ", status=no,toolbar=no,menubar=no,location=0, left=100,top=300,screenX=100,screenY=300";
+		var url = "incident_popup.php?id="+id;
+
+		newwindow=window.open(url, id, spec);
+		if (isNull(newwindow)) {
+			alert ("Popup Incident display requires popups to be enabled. Please adjust your browser options.");
+			return;
+			}
+//		starting = false;
+		newwindow.focus();
+		}
+	}				// end function do popup()
+	var side_bar_html = "<TABLE border=0 CLASS='sidebar' WIDTH = 601 >";
+	side_bar_html += "<TR class='even'><TH colspan=99 align='center'>Click/Mouse-over for information  </TH></TR>";
+	side_bar_html += "<TR class='odd'><TD></TD><TD align='left' COLSPAN=2><B>Incident</B></TD><TD align='left'><B>Nature</B></TD><TD align='left'><B>&nbsp;Addr</B></TD><TD align='left'><B>P</B></TD><TD align='left'><B>A</B></TD><TD align='left'><B>&nbsp;&nbsp;As of</B></TD></TR>";
+	var gmarkers = [];
+	var fmarkers = [];
+	var rowIds = [];		// 3/8/10
+	var infoTabs = [];
+	var facinfoTabs = [];
+	var which;
+	var i = 0;			// sidebar/icon index
+
+	$("show_unavail").style.display=			"none";				// 10/21/09
+	$("hide_unavail").style.display=			"inline";
+
+	map = new GMap2($("map"));		// create the map
+	var geocoder = null;
+	geocoder = new GClientGeocoder();
+
+
+	map.addControl(new GSmallMapControl());					// 8/25/08
+	map.addControl(new GMapTypeControl());
+
+	map.setCenter(new GLatLng(41.767942, -83.725552), 11);
+
+	mapBounds=new GLatLngBounds(map.getBounds().getSouthWest(), map.getBounds().getNorthEast());		// 4/4/09
+
+	var bounds = new GLatLngBounds();						// create  bounding box
+	map.addMapType(G_PHYSICAL_MAP);
+
+	map.enableScrollWheelZoom();
+
+	var baseIcon = new GIcon();
+	baseIcon.shadow = "./markers/sm_shadow.png";		// ./markers/sm_shadow.png
+
+	baseIcon.iconSize = new GSize(20, 34);
+	baseIcon.shadowSize = new GSize(37, 34);
+	baseIcon.iconAnchor = new GPoint(9, 34);
+	baseIcon.infoWindowAnchor = new GPoint(9, 2);
+	baseIcon.infoShadowAnchor = new GPoint(18, 25);
+	GEvent.addListener(map, "infowindowclose", function() {		// re-center after  move/zoom
+		map.setCenter(center,zoom);
+		map.addOverlay(gmarkers[which])
+		});
+
+		var scheduled = '';
+		var sym = (0+1).toString();						// for sidebar
+		var sym2= scheduled + (0+1).toString();			// for icon
+
+		var myinfoTabs = [
+			new GInfoWindowTab("20/Sever...", "<TABLE CLASS='infowin'  width='300px' ><TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>20/Severe Trauma/Amputation</B></TD></TR><TR CLASS='odd'><TD>As of:</TD><TD>3/29/10 14:23</TD></TR><TR CLASS='even'><TD>Reported by:</TD><TD>Unknown</TD></TR><TR CLASS='odd'><TD>Phone:</TD><TD>(734) 856-2604</TD></TR><TR CLASS='even'><TD>Addr:</TD><TD>9244 Whiteford Center Rd<BR/>Ottawa Lake mi</TD></TR><TR CLASS='odd'><TD ALIGN='left'>Status:</TD><TD ALIGN='left'>Open&nbsp;&nbsp;&nbsp;(5 days, 20 hrs, 50 mins)</TD></TR><TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'><FONT SIZE='-1'>&nbsp;<A HREF='routes.php?ticket_id=20'><U>Dispatch</U></A>&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='main.php?id=20'><U>Details</U></A>&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='edit.php?id=20'><U>Edit</U></A><BR /><BR /><SPAN onClick = do_popup('20');><FONT COLOR='blue'><B><U>Popup</B></U></FONT></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = 'do_add_note (20);'><FONT COLOR='blue'><B><U>Add note</B></U></FONT></SPAN><BR /><BR /><A HREF='patient.php?ticket_id=20'><U>Add Patient</U></A>&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='action.php?ticket_id=20'><U>Add Action</U></A></FONT></TD></TR></TABLE>"),
+			new GInfoWindowTab("More ...", "<TABLE CLASS='infowin'  width='300px' ><TR CLASS='even'>	<TD>Description:</TD><TD>48 YOM hand amputation on saw</TD></TR><TR CLASS='odd'>		<TD>Disposition:</TD><TD></TD></TR><TR CLASS='even'>	<TD>USNG:</TD><TD>17T KG 76733 28866</TD></TR><TR>					<TD COLSPAN=2> <BR /><TABLE ALIGN='center' BORDER=0 width='100%'> <TR><TD ALIGN='center' COLSPAN=99><B>Active/Recent Dispatches</B> (1)</TD> 	<TR CLASS= 'even'><TD TITLE=''></TD><TD>3/30/10 11:34</TD><TD>guest</TD></TR></TABLE> </TD></TR><TR CLASS='even'>	<TD COLSPAN=2 ALIGN='center'>&nbsp;<A HREF='routes.php?ticket_id=20'><U>Dispatch</U></A>&nbsp;&nbsp;<A HREF='main.php?id=20'><U>Details</U></A>&nbsp;&nbsp;&nbsp;&nbsp;<BR /><A HREF='patient.php?ticket_id=20'><U>Add Patient</U></A>&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='action.php?ticket_id=20'><U>Add Action</U></A>&nbsp;&nbsp;</TD></TR></TABLE>"),
+			new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>")
+			];
+
+		var point = new GLatLng(41.7802379, -83.6865543);	// for each ticket
+		if (!(map_is_fixed)){																// 4/3/09
+			bounds.extend(point);
+			}
+
+		var marker = createMarker(point, myinfoTabs,3, 0, 0, sym2);	// (point,tabs, color, id, sym) - 1/6/09, 10/21/09 added 0 for stat display to avoid conflicts with unit marker hide by unavailable status
+		map.addOverlay(marker);
+
+		var the_class = ((map_is_fixed) && (!(mapBounds.containsLatLng(point))))? "emph" : "td_label";
+		 do_sidebar ("<TD CLASS='severity_high'  COLSPAN=2 onClick ='myclick(0)'><NOBR>20/Severe Trauma... </NOBR></TD><TD CLASS='severity_high' onClick ='myclick(0)' ><NOBR>Severe Trauma </NOBR></TD><TD CLASS='severity_high' onClick ='myclick(0)' ><NOBR>9244 Whiteford C... </NOBR></TD><TD CLASS='td_data'><NOBR> 0 </TD><TD CLASS='td_data'> 0 </NOBR></TD><TD CLASS='td_data'><NOBR> Mar-29 14:23</NOBR></TD>", 0, (0 + 0+1), the_class, "Unknown/9244 Whiteford Center Rd/Ottawa Lake/mi/7348562604/20/Severe Trauma/Amputation")
+;		var scheduled = '';
+		var sym = (1+1).toString();						// for sidebar
+		var sym2= scheduled + (1+1).toString();			// for icon
+
+		var myinfoTabs = [
+			new GInfoWindowTab("21/test", "<TABLE CLASS='infowin'  width='300px' ><TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>21/test</B></TD></TR><TR CLASS='odd'><TD>As of:</TD><TD>3/30/10 04:09</TD></TR><TR CLASS='even'><TD>Reported by:</TD><TD>test</TD></TR><TR CLASS='odd'><TD>Phone:</TD><TD></TD></TR><TR CLASS='even'><TD>Addr:</TD><TD></TD></TR><TR CLASS='odd'><TD ALIGN='left'>Status:</TD><TD ALIGN='left'>Open&nbsp;&nbsp;&nbsp;(6 days, 7 hrs, 3 mins)</TD></TR><TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'><FONT SIZE='-1'>&nbsp;<A HREF='routes.php?ticket_id=21'><U>Dispatch</U></A>&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='main.php?id=21'><U>Details</U></A>&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='edit.php?id=21'><U>Edit</U></A><BR /><BR /><SPAN onClick = do_popup('21');><FONT COLOR='blue'><B><U>Popup</B></U></FONT></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = 'do_add_note (21);'><FONT COLOR='blue'><B><U>Add note</B></U></FONT></SPAN><BR /><BR /><A HREF='patient.php?ticket_id=21'><U>Add Patient</U></A>&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='action.php?ticket_id=21'><U>Add Action</U></A></FONT></TD></TR></TABLE>"),
+			new GInfoWindowTab("More ...", "<TABLE CLASS='infowin'  width='300px' ><TR CLASS='even'>	<TD>Description:</TD><TD>[no description]</TD></TR><TR CLASS='odd'>		<TD>Disposition:</TD><TD></TD></TR><TR CLASS='even'>	<TD>USNG:</TD><TD>17T KG 84801 36954</TD></TR><TR>					<TD COLSPAN=2></TD></TR><TR CLASS='even'>	<TD COLSPAN=2 ALIGN='center'>&nbsp;<A HREF='routes.php?ticket_id=21'><U>Dispatch</U></A>&nbsp;&nbsp;<A HREF='main.php?id=21'><U>Details</U></A>&nbsp;&nbsp;&nbsp;&nbsp;<BR /><A HREF='patient.php?ticket_id=21'><U>Add Patient</U></A>&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='action.php?ticket_id=21'><U>Add Action</U></A>&nbsp;&nbsp;</TD></TR></TABLE>"),
+			new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>")
+			];
+
+		var point = new GLatLng(41.855242, -83.592499);	// for each ticket
+		if (!(map_is_fixed)){																// 4/3/09
+			bounds.extend(point);
+			}
+
+		var marker = createMarker(point, myinfoTabs,1, 0, 1, sym2);	// (point,tabs, color, id, sym) - 1/6/09, 10/21/09 added 0 for stat display to avoid conflicts with unit marker hide by unavailable status
+		map.addOverlay(marker);
+
+		var the_class = ((map_is_fixed) && (!(mapBounds.containsLatLng(point))))? "emph" : "td_label";
+		 do_sidebar ("<TD CLASS='severity_normal'  COLSPAN=2 onClick ='myclick(1)'><NOBR>21/test </NOBR></TD><TD CLASS='severity_normal' onClick ='myclick(1)' ><NOBR> </NOBR></TD><TD CLASS='severity_normal' onClick ='myclick(1)' ><NOBR>  </NOBR></TD><TD CLASS='td_data'><NOBR> 0 </TD><TD CLASS='td_data'> 0 </NOBR></TD><TD CLASS='td_data'><NOBR> Mar-30 04:09</NOBR></TD>", 1, (0 + 1+1), the_class, "test/////21/test")
+;			 side_bar_html += "<TR CLASS='odd'><TD COLSPAN=99 ALIGN = 'center'> <SPAN onClick = 'document.to_closed.submit()'><B>to <U> Closed Incidents</U></SPAN>  </B><BR /><BR /></TD></TR>";
+
+
+	side_bar_html +="</TABLE>\n";
+	$("side_bar").innerHTML = side_bar_html;				// side_bar_html to incidents div
+
+
+// ==========================================      RESPONDER start    ================================================
+
+	side_bar_html ="<TABLE border=0 CLASS='sidebar' WIDTH = 601 >\n";		// initialize units sidebar string
+	points = false;
+	i++;
+	var j=0;
+
+
+		side_bar_html += "<TR CLASS='even'><TD></TD><TD><B>Unit</B> (1) </TD>	<TD onClick = 'do_mail_win(null, null); ' ALIGN = 'center'><IMG SRC='mail_red.png' ></TD><TD>&nbsp;<B>Status</B></TD><TD COLSPAN=2><B>Incident</B></TD><TD><B>M</B></TD><TD><B>&nbsp;As of</B></TD></TR>"
+		var sym = 'f 2';
+		var point = new GLatLng(41.744933, -83.632736);	// 753
+			var myinfoTabs = [
+				new GInfoWindowTab("Whitef...", "<TABLE CLASS='infowin'  width='300px' ><TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>Whiteford Chief 2</B> - Explorer O</TD></TR><TR CLASS='odd'><TD>Description:</TD><TD>Chief 2</TD></TR><TR CLASS='even'><TD>Status:</TD><TD> Available</TD></TR><TR CLASS='odd'><TD>Contact:</TD><TD>Bob Vanklingeren Via: </TD></TR><TR CLASS='even'><TD>As of:</TD><TD>9/10/09 18:53</TD></TR><TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'><A HREF='units.php?func=responder&view=true&dispfac=true&id=14'><U>To Facility</U></A>&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='units.php?func=responder&view=true&disp=true&id=14'><U>Dispatch</U></A>&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='units.php?func=responder&edit=true&id=14'><U>Edit</U></A>&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='units.php?func=responder&view=true&id=14'><U>View</U></A></TD></TR></TABLE>"),
+				new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>")
+				];
+		var the_class = ((map_is_fixed) && (!(mapBounds.containsLatLng(point))))? "emph" : "td_label";
+		do_sidebar ("<TD onClick = 'myclick(2)'><SPAN STYLE='background-color:#C6C3C6;  opacity: .7; color:#000000;'>  Whiteford Ch...</B></U></SPAN></TD>	<TD ALIGN='center'>na</TD><TD>		<SELECT CLASS='sit' name='frm_status_id'  STYLE='background-color:green; color:white;' ONCHANGE = 'this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color; do_sel_update(14, this.value)' >		<OPTGROUP LABEL=''>			<OPTION VALUE=7 STYLE='background-color:red; color:white;'  onMouseover = 'style.backgroundColor = this.backgroundColor;'>Dispatched </OPTION>	</OPTGROUP>		<OPTGROUP LABEL='av'>			<OPTION VALUE=1 SELECTED STYLE='background-color:green; color:white;'  onMouseover = 'style.backgroundColor = this.backgroundColor;'>In-Service </OPTION>	</OPTGROUP>		<OPTGROUP LABEL='inserv'>			<OPTION VALUE=3 STYLE='background-color:tan; color:black;'  onMouseover = 'style.backgroundColor = this.backgroundColor;'>Enroute </OPTION>			<OPTION VALUE=4 STYLE='background-color:yellow; color:black;'  onMouseover = 'style.backgroundColor = this.backgroundColor;'>On-Scene </OPTION>			<OPTION VALUE=5 STYLE='background-color:palegreen; color:black;'  onMouseover = 'style.backgroundColor = this.backgroundColor;'>Transporting </OPTION>	</OPTGROUP>		<OPTGROUP LABEL='Special'>			<OPTION VALUE=6 STYLE='background-color:navy; color:white;'  onMouseover = 'style.backgroundColor = this.backgroundColor;'>Special </OPTION>	</OPTGROUP>		<OPTGROUP LABEL='unav'>			<OPTION VALUE=2 STYLE='background-color:black; color:white;'  onMouseover = 'style.backgroundColor = this.backgroundColor;'>Out-Service </OPTION>		</OPTGROUP>		</SELECT></TD><TD COLSPAN=2>na</TD><TD onClick = 'myclick(2)' CLASS='td_data'> <FONT COLOR = 'black'>IN</FONT></TD><TD onClick = 'myclick(2)' CLASS=''> <STRIKE>Sep-10 18:53</STRIKE></TD>",  2, sym, the_class, "");		// (instr, id, sym, myclass, tip)  - 1/3/10
+		var marker = createMarker(point, myinfoTabs, 4, 1,  2, sym);	// 859  - 4/18/09, 10/21/09 added status to allow hiding of unavailable units.
+		map.addOverlay(marker);
+
+		var rowId = tr_id_fixed_part + 2;			// row index for row hide/show - 3/2/10
+		rowIds.push(rowId);													// form is "tr_id_??" where ?? is the row no.
+
+	side_bar_html+= "<TR CLASS='" + colors[i%2] +"'><TD COLSPAN=7 ALIGN='center'><TD></TD></TD></TR>";
+	$("side_bar_r").innerHTML = side_bar_html;										// side_bar_html to responders div
+
+	var legends = "<TABLE ALIGN='center'><TR CLASS='even'><TD COLSPAN=99 ALIGN='center'>&nbsp;&nbsp;<B>M</B>obility:&nbsp;&nbsp; stopped: <FONT COLOR='red'>&bull;</FONT>&nbsp;&nbsp;&nbsp;moving: <FONT COLOR='green'>&bull;</FONT>&nbsp;&nbsp;&nbsp;fast: <FONT COLOR='white'>&bull;</FONT>&nbsp;&nbsp;&nbsp;silent: <FONT COLOR='black'>&bull;</FONT>&nbsp;&nbsp;</TD></TR>";
+	legends+= "<TR CLASS='" + colors[(i)%2] +"'><TD COLSPAN=99 ALIGN='center'><SPAN CLASS = 'odd' ALIGN = 'center'><SPAN CLASS = 'even' ALIGN = 'center'> Units: </SPAN>&nbsp;<SPAN STYLE='background-color:#C6C3C6; opacity: .7; color:#000000'> Explorer O</SPAN>&nbsp;</SPAN></TD></TR>";
+
+	$("units_legend").innerHTML = legends + "</TABLE>";
+
+	 show_unit_stat_unavail();
+// ==================================== Add Facilities to Map 8/1/09 ================================================
+	side_bar_html ="<TABLE WIDTH='100%'>\n";
+	var icons=[];
+	var g=0;
+
+	var fmarkers = [];
+
+	var baseIcon = new GIcon();
+	baseIcon.shadow = "./markers/sm_shadow.png";
+
+	baseIcon.iconSize = new GSize(30, 30);
+	baseIcon.iconAnchor = new GPoint(15, 30);
+	baseIcon.infoWindowAnchor = new GPoint(9, 2);
+
+	var fac_icon = new GIcon(baseIcon);
+	fac_icon.image = icons[1];
+
+	$("hide_fac").style.display = "none";
+	$("show_fac").style.display = "inline-block";
+
+function createfacMarker(fac_point, fac_name, id, fac_icon) {
+	var fac_marker = new GMarker(fac_point, fac_icon);
+	// Show this markers index in the info window when it is clicked
+	var fac_html = fac_name;
+	fmarkers[id] = fac_marker;
+	GEvent.addListener(fac_marker, "click", function() {fac_marker.openInfoWindowHtml(fac_html);});
+	return fac_marker;
+	}
+
+
+		side_bar_html += "<TH colspan='99'><TABLE ID='fac_table' STYLE='display: none; width:601px;'><TR><TH ALIGN='center' COLSPAN=8><BR>Facilities</TH></TR>"
+
+		side_bar_html += "<TR CLASS='even'><TH></TH><TH ALIGN='center'><I><B>No Facilities!</I></B></TH></TR>"
+	side_bar_html += "</TD></TR>\n";
+	if (!(map_is_fixed)){
+		if (!points) {		// any?
+			map.setCenter(new GLatLng(41.767942, -83.725552), 11);
+			}
+		else {
+			center = bounds.getCenter();
+			zoom = map.getBoundsZoomLevel(bounds);
+			map.setCenter(center,zoom);
+			}			// end if/else (!points)
+	}				// end if (!(map_is_fixed))
+
+	side_bar_html +="<TR><TD COLSPAN='99'></TD></TR><TR><TD COLSPAN=99><TABLE ALIGN='center'>";
+
+	side_bar_html +="<TR><TD COLSPAN=99 ALIGN='center'><SPAN CLASS='even'><SPAN CLASS='odd' ALIGN = 'right'> Facilities: </SPAN></SPAN></TD></TR>";		// legend row
+	side_bar_html +="</TABLE></TD></TR></TABLE>\n";
+	$("side_bar_f").innerHTML = side_bar_html;	//side_bar_html to facilities div
+
+	side_bar_html = "";
+
+		 hide_Facilities();
+	show_Units();
+
+
+// =============================================================================================================
+	}		// end if (GBrowserIsCompatible())
+else {
+	alert("Sorry, browser compatibility problem. Contact your tech support group.");
+	}
+</SCRIPT>
+<FORM NAME='to_closed' METHOD='get' ACTION = 'main.php'>
+<INPUT TYPE='hidden' NAME='status' VALUE='1'>
+</FORM>
+<FORM NAME='to_all' METHOD='get' ACTION = 'main.php'> <!-- 1/23/09 -->
+<INPUT TYPE='hidden' NAME='status' VALUE='2'>
+</FORM>
+<FORM NAME='to_scheduled' METHOD='get' ACTION = 'main.php'> <!-- 1/23/09 -->
+<INPUT TYPE='hidden' NAME='status' VALUE='3'>
+</FORM>
+
+<A NAME="bottom"> <!-- 11/11/09 -->
+<!-- <INPUT TYPE = 'button' onClick= 'parent.frames["upper"].show_msg ("hello");' VALUE='test'> -->
+</BODY></HTML>

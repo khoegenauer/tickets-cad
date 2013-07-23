@@ -1,20 +1,30 @@
 <?php 
-	require_once('functions.inc.php'); 
-	do_login(basename(__FILE__));
-	extract ($_GET);
-	if (!isset($my_session)) {session_start();}
-	extract ($my_session);
-//	dump ($my_session);
+error_reporting(E_ALL);		// 10/1/08
 
-/*	chat_messages : id message when chat_room_id user_id 	*/
+$cycle = 5000;			// user reviseable delay between polls, in milliseconds
+$list_length = 99;		// chat list length maximum
 
-	$hours = (intval(get_variable('chat_time'))>0)? intval(get_variable('chat_time')) : 4;	// force to default
-	
-	$old = mysql_format_date(time() - (get_variable('delta_mins')*60) - ($hours*60*60)); // n hours ago
+/*
+12/26/09 rather complete re-write, to include invitations, list length limiting, who's logged on
+1/23/10 PHP sessions replaces custom session handler
+5/29/10 revised chat read for asynch ajax
+7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
+*/
+@session_start();	
 
-	$query  = "DELETE FROM `$GLOBALS[mysql_prefix]chat_messages` WHERE `when`< '" . $old . "'";
-	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
-	
+require_once($_SESSION['fip']);		//7/28/10
+
+if(empty($_SESSION)) {session_start();}		// 
+do_login(basename(__FILE__));
+extract ($_GET);
+
+$hours = (intval(get_variable('chat_time'))>0)? intval(get_variable('chat_time')) : 4;	// force to default
+
+$old = mysql_format_date(time() - (get_variable('delta_mins')*60) - ($hours*60*60)); // n hours ago
+
+$query  = "DELETE FROM `$GLOBALS[mysql_prefix]chat_messages` WHERE `when`< '" . $old . "'";
+$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
+
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -24,23 +34,37 @@
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
+	<META HTTP-EQUIV="Script-date" CONTENT="8/24/08">
 	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
 <SCRIPT>
 
-try {
-	window.opener.document.getElementById("whom").innerHTML  = "<?php print $my_session['user_name'];?>";
-	window.opener.document.getElementById("level").innerHTML = "<?php print get_level_text($my_session['level']);?>";
-	window.opener.document.getElementById("script").innerHTML = "<?php print LessExtension(basename( __FILE__));?>";
-	}
-catch(e) {
-	}
-
+	try {
+		window.opener.document.getElementById("whom").innerHTML  = "<?php print $_SESSION['user'];?>";
+		window.opener.document.getElementById("level").innerHTML = "<?php print get_level_text($_SESSION['level']);?>";
+		window.opener.document.getElementById("script").innerHTML = "<?php print LessExtension(basename( __FILE__));?>";
+		}
+	catch(e) {
+		}
+	var me = "<?php print $_SESSION['user'];?>";
     var colors = new Array();
     colors[0] = '#DEE3E7';
     colors[1] = '#EFEFEF';
+    colors[2] = '#FFFFFF';
     var the_to = false;				// timeout object
+    var first = true;
 	window.onBlur = clearTimeout (the_to);
   
+	function $() {									// 1/21/09
+		var elements = new Array();
+		for (var i = 0; i < arguments.length; i++) {
+			var element = arguments[i];
+			if (typeof element == 'string')		element = document.getElementById(element);
+			if (arguments.length == 1)			return element;
+			elements.push(element);
+			}
+		return elements;
+		}
+
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
@@ -121,47 +145,120 @@ catch(e) {
 			return AJAX.responseText;																				 
 			} 
 		else {
-			alert ("57: failed")
+			alert ("129: failed")
 			return false;
 			}																						 
 		}		// end function sync Ajax(strURL)
-
+	
 	var last_msg_id=0;									// initial value at page load
 
-	function rd_chat_msg() {							// read chat messages via ajax xfer
-		var querystr = "?last_id=" + last_msg_id;
-		var url = "chat_rd.php" + querystr;	
-		var payload = syncAjax(url);		
+	function rd_chat_msg() {							// read chat messages via ajax xfer - 5/29/10
+		var our_max = (first)? 5 : <?php print $list_length ;?>;		// startup limiter
+		var params = "last_id=" + last_msg_id + "&max_ct=" + our_max ;
+		first = false;													// standard limiter
+		sendRequest ('chat_rd.php',handleResult, params);	// 
+		}
+
+	function handleResult(req) {									// the called-back phone lookup function
+		var payload = req.responseText;		
 		if (payload.substring(0,1)=="-") {
-			alert ("wr_chat msg failed - 120");
+			alert ("chat failed -  <?php print __LINE__;?>");
 			return false;
 			}
 		else {
+//			alert("158 " + payload);
 			var person = document.getElementById("person");
 			var lines = payload.split(0xFF, 99) 											// lines FF-delimited
 			for (i=0;i<lines.length; i++) {
 				var theLine = lines[i].split("\t", 6);										// tab-delimited
 				if (theLine.length>1){
 					var tr = person.insertRow(-1);
-					tr.style.backgroundColor = colors[theLine[3] % 2];
+					var the_color = (theLine[0]==me)? colors[2]: colors[theLine[3] % 2];	// highlight if this user
+					tr.style.backgroundColor = the_color;
 					tr.insertCell(-1).appendChild(document.createTextNode(theLine[1]));		// time
 					tr.insertCell(-1).appendChild(document.createTextNode(theLine[0]));		// user
 					tr.insertCell(-1).appendChild(document.createTextNode(theLine[2]));		// message
-<?php
-			if ($istest) {
-					print "\ntr.insertCell(-1).appendChild(document.createTextNode(theLine[3]));\n";
-					}
-?>					
-					last_msg_id = theLine[3];
+					
+<?php	if ($istest) { print "\ntr.insertCell(-1).appendChild(document.createTextNode(theLine[3]));\n"; }?>				
+					
+					last_msg_id = (theLine[3]>last_msg_id)? theLine[3]:last_msg_id ;
+					location.href = "#bottom";				// make input line visible
 					}
 				}			// end for (i=... )
 			}			// end if/else (payload.substring(... )
-		}		// end function rd_chat_msg()
+		trim_list(<?php print $list_length; ?>);		// delete rows
+		
+		ctr = $('person').rows.length;		// now clear out local-inserted rows
+		for (i=ctr-1; i>=0;i--) {
+			while (($('person').rows[i]) && ($('person').rows[i].cells[0].innerHTML == "")) {
+				$('person').deleteRow(i);
+				}
+			}
+		}		// end function handleResult()
+
+	function sendRequest(url,callback,postData) {
+		var req = createXMLHTTPObject();
+		if (!req) return;
+		var method = (postData) ? "POST" : "GET";
+		req.open(method,url,true);
+		req.setRequestHeader('User-Agent','XMLHTTP/1.0');
+		if (postData)
+			req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		req.onreadystatechange = function () {
+			if (req.readyState != 4) return;
+			if (req.status != 200 && req.status != 304) {
+<?php if ($istest) {print "\t\t\talert('HTTP error ' + req.status + '" . __LINE__ . "');\n";} ?>
+				return;
+				}
+			callback(req);
+			}
+		if (req.readyState == 4) return;
+		req.send(postData);
+		}
+	
+	var XMLHttpFactories = [
+		function () {return new XMLHttpRequest()	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		];
+	
+	function createXMLHTTPObject() {
+		var xmlhttp = false;
+		for (var i=0;i<XMLHttpFactories.length;i++) {
+			try { xmlhttp = XMLHttpFactories[i](); }
+			catch (e) { continue; }
+			break;
+			}
+		return xmlhttp;
+		}
+
+	function wr_invite(target) {							// write chat message via ajax xfer
+		var url = "chat_invite.php?frm_to=" + target.trim() + "&frm_user=" + document.chat_form.frm_user.value;		// user id or broadcast
+		var payload = syncAjax(url);						// send lookup url
+		if (payload.substring(0,1)=="-") {					// stringObject.substring(start,stop)
+			alert ("chat failed -  <?php print __LINE__;?>");
+			set_to();										// set timeout again
+			return false;
+			}
+		else {
+			return;
+			}				// end if/else (payload.substring(... )
+		}		// end function wr invite msg()
+		
 
 	function wr_chat_msg(the_Form) {							// write chat message via ajax xfer
 		if (the_Form.frm_message.value.trim()=="") {return;}
+
+		var person = document.getElementById("person");		// into table
+
+		var new_tr = person.insertRow(-1);
+		new_tr.style.backgroundColor = colors[2];
+		new_tr.insertCell(-1).appendChild(document.createTextNode(""));		// empty time
+		new_tr.insertCell(-1).appendChild(document.createTextNode("<?php print $_SESSION['user'];?>"));		// user
+		new_tr.insertCell(-1).appendChild(document.createTextNode(the_Form.frm_message.value.trim()));		// message
+
 		clear_to();
-		the_to = false;
 		var querystr = "?frm_message=" + URLEncode(the_Form.frm_message.value.trim());
 		querystr += "&frm_room=" + URLEncode(the_Form.frm_room.value.trim());
 		querystr += "&frm_user=" + URLEncode(the_Form.frm_user.value.trim());
@@ -170,7 +267,7 @@ catch(e) {
 		var url = "chat_wr.php" + querystr;					// phone no. or addr string
 		var payload = syncAjax(url);						// send lookup url
 		if (payload.substring(0,1)=="-") {					// stringObject.substring(start,stop)
-			alert ("wr_chat msg failed - 157");
+			alert ("wr_chat msg failed -  <?php print __LINE__;?>");
 			set_to();										// set timeout again
 			return false;
 			}
@@ -182,22 +279,22 @@ catch(e) {
 			}				// end if/else (payload.substring(... )
 		}		// end function wr_chat_ msg()
 
-	function do_focus () {		// test for focus() support
-//		if (!document.all) { document.chat_form.frm_message.focus();}
-//		else {alert("is IE");}
-		document.chat_form.frm_message.focus();
+ 	function show_hide(the_id) {						// display then hide given id
+		$(the_id).style.display='inline';
+		setTimeout("$('sent_msg').style.display='none';", 3000);
 		}
-	
+
+	function do_focus () {	
+		document.chat_form.frm_message.focus();
+		}	
 
 	function do_enter(e) {										// enter key submits form
 		var keynum;
 		var keychar;
 		if(window.event)	{keynum = e.keyCode;	} 			// IE
 		else if(e.which)	{keynum = e.which;	}				// Mozilla/Opera
-	
 		if (keynum==13) {										// allow enter key
 			wr_chat_msg(document.forms[0]) ;					// submit to server-side script
-//			document.chat_form.frm_message.focus();
 			do_focus ()
 			}
 		else {
@@ -207,15 +304,11 @@ catch(e) {
 		} //	end function do_enter(e)
 
 	function announce() {										//end announcement
-//		for (i=0;i<document.forms.length;i++) {
-//			alert (document.forms[i].name);
-//			}
-		
-		wr_chat_msg(document.forms[0]);
+		wr_chat_msg(document.chat_form);
 		}
 
-	function set_to() {											// set timeout
-		if (!the_to) {the_to=setTimeout('getMessages()', 5000)}
+	function set_to() {										// set timeout
+		if (!the_to) {the_to=setTimeout('getMessages()', <?php print $cycle; ?>)}
 		}
 		
 	function clear_to() {
@@ -224,37 +317,96 @@ catch(e) {
 		}
 		
 	function getMessages(){
+//		alert(<?php print __LINE__;?>)
 		clear_to();
 		rd_chat_msg();
 		set_to();												// set timeout again
-//		document.chat_form.frm_message.focus();
 		do_focus ();
 		}
 
-</SCRIPT>
-</HEAD>
-<BODY onLoad = "announce();getMessages(); set_to(); do_focus();" onunload="wr_chat_msg(document.chat_form_2); clearTimeout(the_to);"> 
-<TABLE ID="person" border="0" width='80%'>
-</TABLE>
-		<FONT CLASS="header">Chat</FONT><BR /><BR />
-		<FORM METHOD="post" NAME='chat_form' onSubmit="return false;">
-		<INPUT TYPE="text" NAME="frm_message" SIZE=80 onkeypress="return do_enter(event)" VALUE=' has joined this chat.'>
-		<CENTER><BR />
-		<INPUT TYPE="button" VALUE = "Send" onClick="wr_chat_msg(document.forms[0]);" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<?php
-		if ($istest) {
-			print "<INPUT TYPE=\"button\" VALUE = \"Get\" onClick=\"rd_chat_msg();\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
+	function do_send_inv(in_val) {
+		show_hide('sent_msg');
+		wr_invite(in_val);
+		$('send_butt').style.display='none';
+		do_can ();			// hide some buttons and reset select
+		}
+
+	function trim_list(ctr) {			// delete oldest rows from display
+		ctr = $('person').rows.length;
+		while ($('person').rows.length>ctr){
+			var main = $('person');
+			main.deleteRow(-1);
 			}
-?>		
-		<INPUT TYPE="button" VALUE = "Close" onClick = "this.disabled=true; self.close()"></CENTER>
+		}
+
+	function do_can () {
+		$('send_butt').style.display='none';
+		$('can_butt').style.display='none';
+		document.chat_form.chat_invite.options[0].selected = true;
+		}		// end function do_can ()
+
+	</SCRIPT>
+</HEAD>
+<BODY onLoad = "if (!(window.opener)) {window.close();};announce();getMessages(); set_to(); do_focus();" onUnload="wr_chat_msg(document.chat_form_2); clearTimeout(the_to);"> 
+<TABLE ID="person" border="0" width='60%'>
+</TABLE>
+<?php
+					// who's logged-in?
+	$now = mysql_format_date(time() - (get_variable('delta_mins')*60));		// 1/23/10
+					
+//	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]session`  WHERE `user_id` <> {$_SESSION['user_id']} ORDER BY `user_name`";	// 6/15/08 
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user`  WHERE `id` <> {$_SESSION['user_id']} AND `expires` >'{$now}' ORDER BY `user`";	// 1/23/10 
+
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+	$who = $sep = "";
+	while ($row = stripslashes_deep(mysql_fetch_array($result))) {
+//		$who .=  $sep . $row['user_name'] . " " . ($row['last_in'] - (get_variable('delta_mins')*60)) . $sep;			// 2/3/09
+		$who .=  $sep . $row['user'] ;		// 1/23/10
+		$sep = ", ";
+		}
+	if (mysql_affected_rows()==0) { $who = "no others";};
+?>
+		<FONT CLASS="header">Chat</FONT> <I>(logged-in: <?php print $who; ?>)</I><BR /><BR />
+		<FORM METHOD="post" NAME='chat_form' onSubmit="return false;">
+		<NOBR>
+<!--	<INPUT TYPE="text" NAME="frm_message" SIZE=80 onchange="return do_enter(event)" VALUE=' has joined this chat.'> -->
+		<INPUT TYPE="text" NAME="frm_message" SIZE=80 onkeypress="return do_enter(event)" VALUE=' has joined this chat.'>
+<!--	<INPUT TYPE="text" NAME="frm_message" SIZE=80 > -->
+
+		<INPUT TYPE="button" VALUE = "Send" onClick="wr_chat_msg(document.forms[0]);"  style='margin-left:20px;' >
+		<BR /><NOBR>
+
 		<INPUT TYPE='hidden' NAME = 'frm_room' VALUE='0'>
-		<INPUT TYPE='hidden' NAME = 'frm_user' VALUE='<?php print $my_session['user_id'];?>'>
+		<INPUT TYPE='hidden' NAME = 'frm_user' VALUE='<?php print $_SESSION['user_id'];?>'>
 		<INPUT TYPE='hidden' NAME = 'frm_from' VALUE='<?php print $_SERVER['REMOTE_ADDR']; ?>'>
+
+		<SPAN ID = 'botton_row' STYLE='margin-left:120px;'>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<B>Invite </B><SELECT NAME='chat_invite' 
+				onChange = "$('send_butt').style.display='inline';$('can_butt').style.display='inline';"> 
+		<OPTION VALUE="" SELECTED>Select</OPTION>	
+		<OPTION VALUE=0>All</OPTION>	
+
+<?php
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `id` != {$_SESSION['user_id']} ";
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
+
+	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+		print "\t\t<OPTION VALUE={$row['id']}>{$row['user']}</OPTION>\n";	
+		}
+	print "\t</SELECT>\n";
+?>
+		<INPUT ID = 'send_butt' TYPE='button' VALUE = 'Send invite' style='margin-left:10px; display:none' onClick = "do_send_inv(document.chat_form.chat_invite.value);">
+		<SPAN ID= 'sent_msg' STYLE = 'margin-left:60px; display:none;'><B>Invitation Sent!</B></span>
+		<INPUT ID = 'can_butt' TYPE='button' VALUE = 'Cancel' style='margin-left:10px; display:none' onClick = "$('send_butt').style.display='none';$('can_butt').style.display='none';document.chat_form.chat_invite.options[0].selected = true;">
+		<INPUT TYPE="button" VALUE = "Close"  style='margin-left:60px;'onClick = "this.disabled=true; clear_to(); opener.chat_win_close(); self.close()">
+		<NOBR></CENTER>
+		</SPAN>
 		</FORM>
 		<FORM METHOD="post" NAME='chat_form_2' onSubmit="return false;">
 		<INPUT TYPE="hidden" NAME = "frm_message" VALUE=' has left this chat.'>
 		<INPUT TYPE='hidden' NAME = 'frm_room' VALUE='0'>
-		<INPUT TYPE='hidden' NAME = 'frm_user' VALUE='<?php print $my_session['user_id'];?>'>
+		<INPUT TYPE='hidden' NAME = 'frm_user' VALUE='<?php print $_SESSION['user_id'];?>'>
 		<INPUT TYPE='hidden' NAME = 'frm_from' VALUE='<?php print $_SERVER['REMOTE_ADDR']; ?>'>
 		</FORM>
 		<A NAME="bottom"></A>

@@ -1,10 +1,16 @@
-<?php 
-require_once('functions.inc.php'); 
+<?php
+/*
+9/16/08 correction to $_GET variable name
+7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
+*/
+
+@session_start();
+require_once($_SESSION['fip']);		//7/28/10
 
 //	dump($_GET);	// (505) 266-4450
 //	$url = "http://www.google.com/search?q=4108498721";
 //	$url = "http://www.google.com/search?q=Arnold+Shore+Annapolis%2C+MD";
-	$url = "http://www.google.com/search?q=". urlencode($_GET['qq']);
+	$url = "http://www.google.com/search?q=". urlencode($_GET['q']);		// 9/16/08
 
 	$data = "";
 	if (function_exists("curl_init")) {

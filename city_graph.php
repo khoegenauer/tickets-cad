@@ -1,6 +1,17 @@
 <?php  
-require_once('functions.inc.php'); 
+/*
+3/21/10 settings value for pie diameter added
+7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
+*/
+
+
+@session_start();
+require_once($_SESSION['fip']);		//7/28/10
 extract($_GET);
+
+$severities = array();
+$temp = explode ("/", get_variable('pie_charts'));
+$location_diam = (count($temp)> 0 )? $temp[2] : "300";		// 3/21/10
 
 $where = " WHERE `when` > '" . $p1 . "' AND `when` < '" . $p2 . "' ";
 
@@ -23,7 +34,8 @@ while($row = stripslashes_deep(mysql_fetch_array($result), MYSQL_ASSOC)){			// b
 //dump ($cities);
 
 include('baaChart.php');
-$mygraph = new baaChart(350);
+$width = isset($img_width)? $img_width: $location_diam;		// 3/21/10
+$mygraph = new baaChart($width);
 $mygraph->setTitle("Incidents by Location", "");
 
 foreach($cities as $key => $val) {

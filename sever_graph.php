@@ -1,6 +1,18 @@
 <?php  
-require_once('functions.inc.php'); 
+/*
+3/21/10 settings value for pie diameter added
+7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
+*/
+
+
+@session_start();
+@session_start();
+require_once($_SESSION['fip']);		//7/28/10
 extract($_GET);
+
+$severities = array();
+$temp = explode ("/", get_variable('pie_charts'));
+$severity_diam = (count($temp)> 0 )? $temp[0] : "300";		// 3/21/10
 
 $where = " WHERE `when` > '" . $p1 . "' AND `when` < '" . $p2 . "' ";
 $query = "
@@ -11,7 +23,6 @@ $query = "
 	";
 //dump ($query);
 $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
-$severities = array();
 
 while($row = stripslashes_deep(mysql_fetch_array($result), MYSQL_ASSOC)){			// build assoc arrays of types and counts
 	if (array_key_exists($row['severity'], $severities)) {
@@ -25,7 +36,8 @@ while($row = stripslashes_deep(mysql_fetch_array($result), MYSQL_ASSOC)){			// b
 //$severities = ksort ($severities);
 $legends = array ("NORMAL", "MEDIUM", "HIGH");
 include('baaChart.php');
-$mygraph = new baaChart(350);
+$width = isset($img_width)? $img_width: $severity_diam;		// 3/21/10
+$mygraph = new baaChart($width);
 //$mygraph->setTitle($from, $to);
 $mygraph->setTitle("Incidents by Severity", "");
 

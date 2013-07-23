@@ -138,7 +138,7 @@
 		
 		for ($i=0;$i<$broj;$i++) {						//dump all tables:
 			$table_name = $backup->tables[$i]; 			//get table name
-			if(strrpos($table_name, $mysql_prefix) === 0) {
+			if(($mysql_prefix != "")  || (strrpos($table_name, $mysql_prefix) === 0)) {
 				$backup->dump_table($table_name); 			//dump it to output (buffer)
 				$the_db_dump .=htmlspecialchars($backup->output); 	//write output
 				}
@@ -1824,7 +1824,7 @@ if (mysql_num_rows($result)>0) {
 	
 		for ($i=0;$i<$broj;$i++) {						//dump all tables:
 			$table_name = $backup->tables[$i]; 			//get table name
-			if(strrpos($table_name, $mysql_prefix) === 0) {
+			if(($mysql_prefix != "")  || (strrpos($table_name, $mysql_prefix) === 0)) {
 				$backup->dump_table($table_name); 			//dump it to output (buffer)
 				$_echo .=htmlspecialchars($backup->output); 	//write output
 				}	
@@ -2362,6 +2362,7 @@ ul {
 			<TABLE BORDER=0><TR CLASS = 'odd'>				
 			<TD><LI><A HREF="config.php?func=msg_settings">Messaging Settings</A></TD>	<!-- 10/23/12 -->
 			<TD><LI><A HREF="msg_archive.php">Message Archiving</A></TD>				<!-- 10/23/12 -->	
+			<TD><LI><A HREF="#" onClick = "do_Post('known_sources');">Email White List</A></TD>			<!-- 10/23/12 -->			
 			<TD><LI><A HREF="#" onClick = "get_msgs();">Get all Messages</A></TD>			<!-- 10/23/12 -->		
 			<TD><LI><A HREF="#" onClick = "do_Post('std_msgs');">Edit Standard Messages</A></TD>			<!-- 10/23/12 -->
 			<TD><LI><A HREF="#" onClick = "do_Post('replacetext');">Message Text replacement</A></TD>			<!-- 10/23/12 -->			

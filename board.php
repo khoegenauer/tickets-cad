@@ -589,7 +589,7 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 ?>
 <SCRIPT>
 function do_post() {
-	document.temp_Form.frm_ticket_id.value=<?php print $row['id'];?>;
+	document.temp_Form.frm_ticket_id.value=<?php print $row['tick_id'];?>;
 	document.temp_Form.submit();
 	}
 setTimeout('do_post()', 1000);	
@@ -614,7 +614,7 @@ setTimeout('do_post()', 1000);
 					while ($row = mysql_fetch_array($result))  {
 						$addr = substr($row['street'] . " " . $row['city'] . " " . $row['state'], 0, 24);
 						$descr = substr($row['scope'] , 0, 24) . " - " . $addr ;
-						print "\t\t\t<OPTION value='{$row['id']}'> {$descr}</OPTION>\n";		
+						print "\t\t\t<OPTION value='{$row['tick_id']}'> {$descr}</OPTION>\n";		
 //						$the_ticket_id = $row['id'];
 						}
 ?>

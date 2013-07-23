@@ -8,6 +8,8 @@
 7/20/10 gmaps call removed, quote_smart added for injection prevention
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 9/30/10 major re-do based on using $id_stack as list of qualifying ticket id's
+3/15/11 changed stylesheet.php to stylesheet.php
+4/5/11 get_new_colors() added
 */
 error_reporting(E_ALL);
 
@@ -31,7 +33,7 @@ $evenodd = array ("even", "odd");
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
 <SCRIPT>
 
 function ck_frames() {		//  onLoad = "ck_frames()"
@@ -50,6 +52,11 @@ try {
 	}
 catch(e) {
 	}
+
+function get_new_colors() {								// 4/5/11
+	window.location.href = '<?php print basename(__FILE__);?>';
+	}
+
 
 function $() {									// 2/11/09
 	var elements = new Array();

@@ -8,7 +8,6 @@ $map_size = .75;			// map size multiplier - as a percent of full size
 $butts_width = 0;
 
 $units_side_bar_height = .6;		// max height of units sidebar as decimal fraction of screen height - default is 0.6 (60%)
-
 /*
 7/13/10 initial release
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
@@ -19,6 +18,12 @@ $units_side_bar_height = .6;		// max height of units sidebar as decimal fraction
 8/30/10 option size added
 9/3/10 added user call selection via $mode
 10/8/10 added self-refresh to update 'Other current calls ', DEFINES 
+11/10/10 'other calls' centering revised
+3/15/11 added reference to stylesheet.php for revisable day night colors
+3/19/11 frame logic added per main.php
+4/5/11 get_new_colors() added
+5/19/11 f_arr_btn button label corrected, unit handle replaces name in list, refresh to current assign selection
+5/23/11 Actions/Persons buttons now available to operator/user.
 */
 
 session_start();	
@@ -41,6 +46,7 @@ if ($istest) {
 	}
 $internet = $_SESSION['internet'];	
 require_once('incs/functions_major_nm.inc.php');				// 7/28/10
+$patient = get_text("Patient");									// 12/1/10
 
 // 0=>unit, 1=>my calls, 2=> all calls - 9/3/10 
 																// set/initialize $mode 
@@ -61,24 +67,23 @@ else {						// unset
 //dump(__LINE__);
 //dump($mode);
 
-function get_butts($ticket_id, $unit_id) {	
+function get_butts($ticket_id, $unit_id) {
+	global $patient;
 	$win_height =  get_variable('map_height') + 120;
 	$win_width = get_variable('map_width') + 10;
 	if ($_SESSION['internet']) {
 		print "<INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Map' onClick  = \"var popWindow = window.open('map_popup.php?id={$ticket_id}', 'PopWindow', 'resizable=1, scrollbars, height={$win_height}, width={$win_width}, left=250,top=50,screenX=250,screenY=50'); popWindow.focus();\" />\n"; // 7/3/10
 		}
-	if (can_edit()) {
+	if (can_edit()) {		// 5/23/11
 		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'New' onClick = \"var newWindow = window.open('add_nm.php?mode=1', 'addWindow', 'resizable=1, scrollbars, height=500, width=600, left=100,top=100,screenX=100,screenY=100'); newWindow.focus();\" />\n"; // 8/9/10
-		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Edit' onClick = \"var mailWindow = window.open('edit_nm.php?mode=1&id={$ticket_id}', 'editWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100'); newWindow.focus();\" />\n"; // 2/1/10
+		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Edit' onClick = \"var newWindow = window.open('edit_nm.php?mode=1&id={$ticket_id}', 'editWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100'); newWindow.focus();\" />\n"; // 2/1/10
 
 		if (!is_closed($ticket_id)) {		// 10/5/09
-			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Close' onClick = \"var mailWindow = window.open('close_in.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=480, width=600, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\" />\n";  // 8/20/09
+			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Close' onClick = \"var mailWindow = window.open('close_in.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=480, width=700, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\" />\n";  // 8/20/09
 			}
-		} 		// end if ($can_edit())
-	if (is_administrator() || is_super() || is_unit()){
 		if (!is_closed($ticket_id)) {
 			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Action' onClick  = \"var actWindow = window.open('action_w.php?mode=1&ticket_id={$ticket_id}', 'ActWindow', 'resizable=1, scrollbars, height=480, width=900, left=250,top=50,screenX=250,screenY=50'); popWindow.focus();\" />\n"; // 7/3/10
-			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Person' onClick  = \"var popWindow = window.open('patient_w.php?mode=1&ticket_id={$ticket_id}', 'PerWindow', 'resizable=1, scrollbars, height=400, width=600, left=250,top=50,screenX=250,screenY=50'); actWindow.focus();\" />\n"; // 7/3/10
+			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '{$patient}' onClick  = \"var popWindow = window.open('patient_w.php?mode=1&ticket_id={$ticket_id}', 'PerWindow', 'resizable=1, scrollbars, height=400, width=600, left=250,top=50,screenX=250,screenY=50'); actWindow.focus();\" />\n"; // 7/3/10
 			}
 		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Notify' onClick  = \"var notWindow = window.open('config.php?mode=1&func=notify&id={$ticket_id}', 'NotWindow', 'resizable=1, scrollbars, height=400, width=600, left=250,top=50,screenX=250,screenY=50'); notWindow.focus();\" />\n"; // 7/3/10
 		}
@@ -94,6 +99,7 @@ function adj_time($time_stamp) {
 	}
 
 // $api_key = get_variable('gmaps_api_key');		// 
+	$vers = rand(1,99999);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -101,11 +107,11 @@ function adj_time($time_stamp) {
 
 	<HEAD><TITLE>Tickets - Mobile Terminal Module</TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
-	<META HTTP-EQUIV="Expires" CONTENT="0" />
+	<META HTTP-EQUIV="Expires" CONTENT="-1" />	<!-- 3/15/11 -->
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css" />
+	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print $vers;?>" TYPE="text/css" />	<!-- 3/15/11 -->
 	<STYLE>
 		input.btn_chkd 		{ margin-top: <?php print $button_spacing;?>px; width: <?php print $button_width;?>px; height: <?php print $button_height;?>px; color:#050;  font: bold 120% 'trebuchet ms',helvetica,sans-serif; background-color:#EFEFEF;  border:1px solid;  border-color: #696 #363 #363 #696; border-width: 4px; border-STYLE: inset;text-align: center; } 
 		input.btn_not_chkd 	{ margin-top: <?php print $button_spacing;?>px; width: <?php print $button_width;?>px; height: <?php print $button_height;?>px; color:#050;  font: bold 120% 'trebuchet ms',helvetica,sans-serif; background-color:#DEE3E7;  border-color: #696 #363 #363 #696; border-width: 4px; border-STYLE: outset;text-align: center; } 
@@ -117,10 +123,37 @@ function adj_time($time_stamp) {
 		A 					{ FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #000099; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none}
 		.disp_stat 			{ FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #FFFFFF; BACKGROUND-COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;}
 		option				{ FONT-SIZE: 16px;}
+		input				{background-color:transparent;}		/* Benefit IE radio buttons */
 
 	</STYLE>	
 	<SCRIPT TYPE="text/javascript" src="./js/misc_function.js"></SCRIPT>
 	<SCRIPT>
+<?php
+if ( get_variable('call_board') == 2) {		// 3/19/11
+	$cb_per_line = 22;						// adjust as needed
+	$cb_fixed_part = 60;
+	$cb_min = 96;
+	$cb_max = 300;
+	
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00' ";	// active calls
+	$result = @mysql_query($query);
+	$lines = mysql_affected_rows();
+	unset($result);
+	$height = (($lines*$cb_per_line ) + $cb_fixed_part);
+	$height = ($height<$cb_min)? $cb_min: $height;		// vs min
+	$height = ($height>$cb_max)? $cb_max: $height;		// vs max
+?>
+frame_rows = parent.document.getElementById('the_frames').getAttribute('rows');	// get current configuration
+var rows = frame_rows.split(",", 4);
+rows[1] = <?php print $height ;?>;						// new cb frame height, re-use top
+frame_rows = rows.join(",");
+parent.document.getElementById('the_frames').setAttribute('rows', frame_rows);
+parent.calls.location.href = 'board.php';							// 7/21/10
+
+<?php
+	}		// end if ( get_variable('call_board') == 2) 
+?>	
+//	- 3/19/11	
 	function $() {									// 1/21/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -143,37 +176,48 @@ function adj_time($time_stamp) {
 			}
 <?php
 		}		// end unit login
-														// identify 'my' unit
-	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` `r`
-				LEFT JOIN `$GLOBALS[mysql_prefix]user` `u` ON (`r`.`id` = `u`.`responder_id`)
-				WHERE `u`.`id` = {$_SESSION['user_id']}
-				LIMIT 1";
-	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-	$resp_row = stripslashes_deep(mysql_fetch_assoc($result));
-				
-?>
-	var frame_rows;			// frame
-	parent.upper.show_butts();										// 1/21/09
-	parent.frames["upper"].document.getElementById("gout").style.display  = "inline";
 
-	try {
-		parent.frames["upper"].$("user_id").innerHTML  = 	"<?php print $_SESSION['user_id'];?>";
-		parent.frames["upper"].$("whom").innerHTML  = 		"<?php print $_SESSION['user'];?>";
-		parent.frames["upper"].$("level").innerHTML = 		"<?php print get_level_text($_SESSION['level']);?>";
-		parent.frames["upper"].$("script").innerHTML  = 	"<?php print LessExtension(basename(__FILE__));?>";
-<?php
-	if (is_unit()) {									// we have a unit?
-?>	
-		parent.frames["upper"].$("term").innerHTML  = 		"<?php print $resp_row['name'];?>";
-		parent.frames["upper"].$("add").style.display  = "none";		// hide 'New'
-<?php
-		}
+$temp = get_variable('auto_poll');				// 1/28/09
+$poll_val = ($temp==0)? "none" : $temp ;
+$temp = get_unit();															// 3/19/11
+$term_str = ($temp )? $temp : "Mobile" ;
+$day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_night']))? $_SESSION['day_night'] : 'Day';	//	3/15/11
 ?>
+	try {
+		parent.frames["upper"].$("manual").style.display  = "inline";								// manual link - 5/27/11
+		parent.frames["upper"].$("gout").style.display  = "inline";									// logout button
+		parent.frames["upper"].$("user_id").innerHTML  = "<?php print $_SESSION['user_id'];?>";	
+		parent.frames["upper"].$("whom").innerHTML  = "<?php print $_SESSION['user'];?>";			// user name
+		parent.frames["upper"].$("level").innerHTML = "<?php print get_level_text($_SESSION['level']);?>";
+		parent.frames["upper"].$("script").innerHTML  = "<?php print LessExtension(basename(__FILE__));?>";				// module name
+		parent.frames["upper"].$("main_body").style.backgroundColor  = "<?php print get_css('page_background', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("main_body").style.color  = "<?php print get_css('normal_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("tagline").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("user_id").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("unit_id").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("script").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("time_of_day").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("whom").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("level").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("logged_in_txt").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("perms_txt").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("modules_txt").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("time_txt").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+
+		parent.frames["upper"].$("term").innerHTML  = "<?php print $term_str;?>";				// responder or 'Mobile' name - 3/19/11
+
 		}
 	catch(e) {
 		}
+	var frame_rows;			// frame
+	parent.upper.show_butts();										// 1/21/09
+
+	function get_new_colors() {								// 4/5/11
+		window.location.href = '<?php print basename(__FILE__);?>';
+		}
 
 <?php																	// 4/10/10
+	
 	if ((intval(get_variable('call_board')) == 2)&& (is_unit())) {						// hide the frame
 ?>
 	frame_rows = parent.document.getElementById('the_frames').getAttribute('rows');
@@ -284,10 +328,15 @@ function replaceButtonText(buttonId, text) {
 		return;
 		}
 </SCRIPT>
+<?php			// 7/14/09
+$buster = strval(rand());			//  cache buster
+?>
+	<FRAME SRC="main.php?stuff=<?php print $buster;?>" NAME="main" />
 </HEAD>
 
 <?php																// 0=>unit, 1=>my calls, 2=> all calls - 9/3/10 
 //dump($mode);
+//dump($_GET);
 if ((($mode==0) || ($mode==1))) {									// pull $the_unit, $the_unit_name, this user
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` `u` 
 		LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON ( `u`.`responder_id` = `r`.`id` )
@@ -304,11 +353,11 @@ else {
 	}
 	
 $restrict = (($mode==UNIT) || ($mode==MINE))? " `responder_id` = {$the_unit} AND ": "";		// 8/20/10, 9/3/10 
-																						// all open assigns
+																							// 5/19/11 -  all open assigns
 $query = "SELECT *, 
 	`a`.`id` AS `assign_id`,
 	`r`.`id` AS `unit_id`,
-	`r`.`name` AS `unit_name`,
+	`r`.`handle` AS `unit_name`,
 	`t`.`street` AS `tick_street`,
 	`t`.`city` AS `tick_city`
 	FROM `$GLOBALS[mysql_prefix]assigns` `a`
@@ -410,13 +459,18 @@ else {
 		params += "&frm_tick=" +<?php print $ticket_id;?>;
 		params += "&frm_unit=" +<?php print $unit_id;?>;
 		params += "&frm_vals=" + dbfns[which];
-//		alert("362 " + params);
 		sendRequest ('assigns_t.php',handleResult, params);			// does the work
 		var curr_time = do_time();
 		replaceButtonText(btn_ids[which], btn_labels[which] + curr_time)
-		CngClass(btn_ids[which], 'btn_chkd');
+		CngClass(btn_ids[which], 'btn_chkd');				// CngClass(obj, the_class){
 		parent.frames['upper'].show_msg (btn_labels_full[which] + curr_time);
 <?php
+	if (array_key_exists('assign_id', ($_GET))) {			// 5/19/11
+?>	
+		document.to_refresh.assign_id.value = <?php print $_GET['assign_id']; ?>
+<?php
+	}
+
 if (get_variable('call_board')==2			) {	
 	print "\n\t parent.top.calls.do_refresh();\n";
 	}
@@ -429,6 +483,7 @@ else {
 <?php
 $unload_str = ($_SESSION['internet'])? " onUnload='GUnload();'"  : "";
 ?>
+
 	<BODY onLoad = "ck_frames(); <?php echo $unload_str;?> ">
 		<SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT>
 	<DIV ID='to_bottom' style="position:fixed; top:10px; left:150px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png" BORDER=0 /></div>
@@ -443,11 +498,11 @@ $unload_str = ($_SESSION['internet'])? " onUnload='GUnload();'"  : "";
 		else {
 			$unit_str = "";
 			}		
-		$margin = ($_SESSION['internet'])? 222: 20;
+		$margin = 20;				// 11/10/10
 
 ?>
 
-<TABLE ID='outermost' BORDER=0>
+<TABLE ID='outermost' BORDER=0 CLASS='normal'>	<!-- 3/15/11 -->
 <TR>
 	<TD ROWSPAN=2 ID = 'left col'>
 		<TABLE BORDER=0><TR><TD>
@@ -457,9 +512,9 @@ $unload_str = ($_SESSION['internet'])? " onUnload='GUnload();'"  : "";
 		</TD></TR></TABLE>
 	</TD>
 	<TD ID = 'ctr top' ALIGN='center'>
-		<TABLE BORDER=0 ><TR><TD>
+		<TABLE BORDER=0 ><TR><TD ALIGN='left'>	<!-- 3/15/11 -->	
 <?php
-			echo "<SPAN STYLE = 'display:inline; margin-left:{$margin}px;'>Current calls {$unit_str}</SPAN><BR />\n";
+			echo "<CENTER><SPAN CLASS='normal_text' STYLE = 'display:inline; margin-left:{$margin}px;'>Current calls {$unit_str}</SPAN></CENTER><BR />\n";	//	3/15/11
 			for ($i = 0; $i<count($assigns_stack); $i++) {
 				$the_icon = $assigns_stack[$i]['icon'];
 				$the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$the_icon];		// 8/29/10
@@ -476,7 +531,7 @@ $unload_str = ($_SESSION['internet'])? " onUnload='GUnload();'"  : "";
 //				dump($the_ticket);
 				$the_disp_stat = get_disp_status ($assigns_stack[$i]);		// 8/29/10
 				print "<INPUT TYPE = 'radio' NAME = 'others' VALUE='{$i}' {$checked} STYLE='margin-left: {$margin}px;' \
-					onClick = 'location.href=\"" . basename(__FILE__) . "?assign_id={$assigns_stack[$i]['assign_id']}&frm_mode={$mode}\";'>&nbsp;{$the_disp_stat}&nbsp;{$the_ticket}<BR />\n";	
+					onClick = 'location.href=\"" . basename(__FILE__) . "?assign_id={$assigns_stack[$i]['assign_id']}&frm_mode={$mode}\";'>&nbsp;{$the_disp_stat}&nbsp;<FONT CLASS='normal_text'>{$the_ticket}</FONT><BR />\n";	
 				}
 ?>
 		</TD></TR></TABLE>
@@ -532,13 +587,13 @@ $unload_str = ($_SESSION['internet'])? " onUnload='GUnload();'"  : "";
 ?>
 			<INPUT ID='f_enr_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE="Fac'y enroute" onClick = "set_assign('e');"/>
 <?php				} 	
-				if (is_date($time_farr)) { 
+				if (is_date($time_farr)) { 		// 5/19/11
 ?>
-			<INPUT ID='time_farr' TYPE= 'button' CLASS='btn_chkd' VALUE="Fac'y arr @ <?php print adj_time($time_farr);?>" onClick = 'toss();'/>
+			<INPUT ID='f_arr_btn' TYPE= 'button' CLASS='btn_chkd' VALUE="Fac'y arr @ <?php print adj_time($time_farr);?>" onClick = 'toss();'/>
 <?php			}	
 				else  { 
 ?>
-			<INPUT ID='time_farr' TYPE= 'button' CLASS='btn_not_chkd' VALUE="Fac'y arrive" onClick = "set_assign('a');"/>
+			<INPUT ID='f_arr_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE="Fac'y arrive" onClick = "set_assign('a');"/>
 <?php				} 	
 				}		//  end if (facility ... )
 				
@@ -634,6 +689,7 @@ $unload_str = ($_SESSION['internet'])? " onUnload='GUnload();'"  : "";
 
 	<FORM NAME='to_refresh' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'> <!-- 10/8/10 -->
 	<INPUT TYPE='hidden' NAME='frm_mode' VALUE='<?php print $mode;?>' />
+	<INPUT TYPE='hidden' NAME='assign_id' VALUE='' />		<!-- 5/19/11 -->
 	</FORM>
 <p>
 <a href="javascript:decreaseFontSize();">-</a> 

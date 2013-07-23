@@ -15,18 +15,27 @@
 8/8/10  corrected div height calculation, scroll => auto
 8/15/10 dupe prvention added
 8/27/10 missing fmp call
+12/17/10 signals handling added
+1/27/11 gmaps call removed
+3/15/11 changed stylesheet.php to stylesheet.php
+4/22/11 addslashes() added for embedded apostrophes
+5/26/11 added intrusion detection
 */
 error_reporting(E_ALL);
 
 @session_start();
-require_once($_SESSION['fip']);		//7/28/10
+require_once('./incs/functions.inc.php');		//7/28/10
 do_login(basename(__FILE__));
-require_once($_SESSION['fmp']);		// 8/27/10
+if ((isset($_REQUEST['ticket_id'])) && 	(strlen(trim($_REQUEST['ticket_id']))>6)) {	shut_down();}			// 5/26/11
 
+require_once($_SESSION['fmp']);		// 8/27/10
+//$istest = TRUE;
 if((($istest)) && (!empty($_GET))) {dump ($_GET);}
 if((($istest)) && (!empty($_POST))) {dump ($_POST);}
 
 $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
+$api_key = get_variable('gmaps_api_key');
+$gmaps = $_SESSION['internet'];
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -37,16 +46,14 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<META HTTP-EQUIV="Script-date" CONTENT="8/24/08">
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
-<SCRIPT src="./js/multiSelect.js"></SCRIPT>
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
 <?php
-if ($get_action == 'add') {		
-	$api_key = get_variable('gmaps_api_key');		// empty($_GET)
-?>
-	<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
-	<SCRIPT src="./js/graticule.js" type="text/javascript"></SCRIPT>
+	if ($gmaps) {
+?>	
+<SCRIPT SRC="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
+<SCRIPT SRC="./js/graticule.js" type="text/javascript"></SCRIPT>
 <?php
-	}					// end if ($get_action == 'add')
+		}
 ?>
 <SCRIPT>
 	function ck_frames() {		//  onLoad = "ck_frames()"
@@ -164,9 +171,11 @@ if ($get_action == 'add') {
 
 	if ($get_action == 'add') {
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));
+		$the_ticket_id = isset($_GET['ticket_id'])?   quote_smart($_GET['ticket_id']) : "" ;		// 5/26/11
+//		dump(__LINE__);
+		if (($_GET['ticket_id'] == '') OR ($_GET['ticket_id'] <= 0) OR (!check_for_rows("SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE id={$the_ticket_id}")))
+			print "<FONT CLASS='warn'>Invalid Ticket ID: {$the_ticket_id}</FONT>";
 
-		if ($_GET['ticket_id'] == '' OR $_GET['ticket_id'] <= 0 OR !check_for_rows("SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE id='$_GET[ticket_id]'"))
-			print "<FONT CLASS='warn'>Invalid Ticket ID: '$_GET[ticket_id]'</FONT>";
 		elseif ($_POST['frm_description'] == '')
 			print '<FONT CLASS="warn">Please enter Description.</FONT><BR />';
 		else {
@@ -183,10 +192,10 @@ if ($get_action == 'add') {
 			$frm_meridiem_asof = array_key_exists('frm_meridiem_asof', ($_POST))? $_POST['frm_meridiem_asof'] : "" ;
 
 			$frm_asof = "$_POST[frm_year_asof]-$_POST[frm_month_asof]-$_POST[frm_day_asof] $_POST[frm_hour_asof]:$_POST[frm_minute_asof]:00$frm_meridiem_asof";
-																				// 8/15/10
+																				// 4/22/11
      		$query 	= "SELECT * FROM `$GLOBALS[mysql_prefix]action` WHERE
-     			`description` = '{$_POST['frm_description']}' AND
-     			`ticket_id` = '{$_GET['ticket_id']}' AND
+     			`description` = '" . addslashes($_POST['frm_description']) . "' AND
+     			`ticket_id` = {$the_ticket_id} AND
      			`user` = '{$_SESSION['user_id']}' AND
      			`action_type` = '{$GLOBALS['ACTION_COMMENT']}' AND
      			`updated` = '{$frm_asof}' AND
@@ -197,24 +206,28 @@ if ($get_action == 'add') {
 				
 	     		$query 	= "INSERT INTO `$GLOBALS[mysql_prefix]action` 
 	     			(`description`,`ticket_id`,`date`,`user`,`action_type`, `updated`, `responder`) VALUES
-	     			('{$_POST['frm_description']}', '{$_GET['ticket_id']}', '{$now}', {$_SESSION['user_id']}, {$GLOBALS['ACTION_COMMENT']}, '{$frm_asof}', '{$responder}')";		// 8/24/08
+	     			('" . addslashes($_POST['frm_description']) . "', $the_ticket_id, '{$now}', {$_SESSION['user_id']}, {$GLOBALS['ACTION_COMMENT']}, '{$frm_asof}', '{$responder}')";		// 8/24/08
 				$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename(__FILE__), __LINE__);
 	
 				$ticket_id = mysql_insert_id();								// just inserted action id
 	//			($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, $rec_facility_id=0, $mileage=0) 		// generic log table writer - 5/31/08, 10/6/09
-				do_log($GLOBALS['LOG_ACTION_ADD'], $_GET['ticket_id'], 0,  mysql_insert_id());		// 3/18/10
-				$query = "UPDATE `$GLOBALS[mysql_prefix]ticket` SET `updated` = '$frm_asof' WHERE `id`='" . $_GET['ticket_id'] . "' LIMIT 1";
+				do_log($GLOBALS['LOG_ACTION_ADD'], $the_ticket_id, 0,  mysql_insert_id());		// 3/18/10
+				$query = "UPDATE `$GLOBALS[mysql_prefix]ticket` SET `updated` = '$frm_asof' WHERE `id`=" . $the_ticket_id . " LIMIT 1";
 				$result = mysql_query($query) or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
 				}		// end insert process
-				
+//		dump(__LINE__);
+//		dump($the_ticket_id);
+
 			add_header($_GET['ticket_id']);
+//		dump(__LINE__);
 			print '<br /><FONT CLASS="header">Action record has been added.</FONT><BR /><BR />';
 
+//			print "<A HREF='main.php?id=" . $_GET['ticket_id'] . "'><U>Continue</U></A>";
 			show_ticket($_GET['ticket_id']);
 //________________________________________________________________
 			print "</BODY>";				// 10/19/08
 			
-			$addrs = notify_user($_GET['ticket_id'],$GLOBALS['NOTIFY_ACTION_CHG']);		// returns array or FALSE
+			$addrs = notify_user($the_ticket_id,$GLOBALS['NOTIFY_ACTION_CHG']);		// returns array or FALSE
 
 			if ($addrs) {
 ?>			
@@ -423,6 +436,28 @@ if ($get_action == 'add') {
 		<TR CLASS='even'><TD CLASS='td_label'>Description: <font color='red' size='-1'>*</font></TD>
 			<TD colspan=2><TEXTAREA ROWS="2" COLS="90" NAME="frm_description"></TEXTAREA>
 			</TD></TR>
+<SCRIPT>
+	function set_signal(inval) {				// 12/17/10
+		var lh_sep = (document.add_frm.frm_description.value.trim().length>0)? " " : "";
+		var temp_ary = inval.split("|", 2);		// inserted separator
+		document.add_frm.frm_description.value+= lh_sep + temp_ary[1] + ' ';		
+		document.add_frm.frm_description.focus();		
+		}		// end function set_signal()
+</SCRIPT>
+		<TR VALIGN = 'TOP' CLASS='even'>		<!-- 11/15/10 -->
+			<TD ALIGN='right' CLASS="td_label"></TD><TD>Signal &raquo;
+				<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
+				<OPTION VALUE=0 SELECTED>Select</OPTION>
+<?php
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
+				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+				while ($row_sig = stripslashes_deep(mysql_fetch_assoc($result))) {
+					print "\t<OPTION VALUE='{$row_sig['code']}'>{$row_sig['code']}|{$row_sig['text']}</OPTION>\n";		// pipe separator
+					}
+?>
+			</SELECT>
+			</TD></TR>
+
 <?php
 //						generate dropdown menu of responders
 

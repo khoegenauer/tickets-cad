@@ -9,6 +9,8 @@
 7/16/10 detailmap.setCenter correction
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 8/13/10 map.setUIToDefault();
+11/23/10 - mi vs km per locale
+3/15/11	Added reference to revisable stylesheet for configurable colors.
 
 */
 
@@ -29,6 +31,7 @@ if($istest) {
 	}
 	
 $api_key = get_variable('gmaps_api_key');
+$conversion = get_dist_factor();				// KM vs mi - 11/23/10
 $_GET = stripslashes_deep($_GET);
 $eol = "< br />\n";
 
@@ -50,7 +53,7 @@ function get_icon_legend (){
 	$print = "";											// output string
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 		$type_data = $u_types[$row['type']];
-		$print .= "\t\t" .$type_data[0] . " &raquo; <IMG SRC = './icons/" . $sm_icons[$type_data[1]] . "' BORDER=0>&nbsp;&nbsp;&nbsp;\n";
+		$print .= "\t\t" .$type_data[0] . " &raquo; <IMG SRC = './our_icons/" . $sm_icons[$type_data[1]] . "' BORDER=0>&nbsp;&nbsp;&nbsp;\n";
 		}
 	return $print;
 	}			// end function get_icon_legend ()
@@ -94,7 +97,7 @@ function do_fac($theFac, $theWidth, $search=FALSE, $dist=TRUE) {
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">		<!-- 3/15/11 -->
     <style type="text/css">
       body 					{font-family: Verdana, Arial, sans serif;font-size: 11px;margin: 2px;}
       table.directions th 	{background-color:#EEEEEE;}	  
@@ -490,7 +493,7 @@ require_once('./incs/links.inc.php');
 	}			// end if/else !empty($_POST)
 
 function do_list($unit_id ="") {
-	global $row_fac, $dispatches, $from_top, $from_left, $eol;
+	global $row_fac, $dispatches, $from_top, $from_left, $eol, $conversion;
 	
 ?>
 <SCRIPT>
@@ -510,9 +513,9 @@ function do_list($unit_id ="") {
 	    	last_from = fromAddress;
 	    	last_to = toAddress;
 		f_unit = unit_id;
-		   	G_START_ICON.image = "./icons/sm_white.png";
+		   	G_START_ICON.image = "./our_icons/sm_white.png";
 		   	G_START_ICON.iconSize = new GSize(12,20); 
-		   	G_END_ICON.image = "./icons/sm_white.png";
+		   	G_END_ICON.image = "./our_icons/sm_white.png";
 		   	G_END_ICON.iconSize = new GSize(12,20);         	
 
 	    	var Direcs = gdir.load("from: " + fromAddress + " to: " + toAddress, { "locale": locale, preserveViewport : true  });
@@ -582,9 +585,9 @@ function do_list($unit_id ="") {
 			var icon = new GIcon(listIcon);
 			var uid = unit_id;
 			var letter = ""+ id;	
-			var icon_url = "./icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + letter;
+			var icon_url = "./our_icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + letter;
 	
-			icon.image = icon_url;		// ./icons/gen_icon.php?blank=4&text=zz"
+			icon.image = icon_url;		// ./our_icons/gen_icon.php?blank=4&text=zz"
 			var marker = new GMarker(point, icon);
 			marker.id = color;				// for hide/unhide - unused
 		
@@ -820,7 +823,7 @@ function do_list($unit_id ="") {
 
 		var nr_units = 	0;
 		var email= false;
-	    var km2mi = 0.6214;				// 
+	  	var km2mi = <?php print $conversion ;?>;				// 
 		
 <?php
 		$eols = array ("\r\n", "\n", "\r");		// all flavors of eol
@@ -942,7 +945,7 @@ function do_list($unit_id ="") {
 						lats[i] = <?php print $unit_row['lat'];?>; // 819 now compute distance - in km
 						lngs[i] = <?php print $unit_row['lng'];?>;
 						distances[i] = distCosineLaw(parseFloat(lats[i]), parseFloat(lngs[i]), parseFloat(<?php print $row_fac['lat'];?>), parseFloat(<?php print $row_fac['lng'];?>));	// note: km
-					    var km2mi = 0.6214;				// 
+					    var km2mi = <?php print $conversion ;?>;				// 
 						var dist_mi = ((distances[i] * km2mi).toFixed(1)).toString();				// to feet
 <?php
 						}		// end if ($has_coords)

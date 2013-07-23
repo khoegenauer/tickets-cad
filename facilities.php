@@ -1,4 +1,5 @@
 <?php
+
 error_reporting(E_ALL);
 $iw_width = "300px";		// map infowindow with
 /*
@@ -20,17 +21,25 @@ $iw_width = "300px";		// map infowindow with
 7/28/10 Added default icon for tickets entered in no-maps operation
 8/13/10 map.setUIToDefault();
 8/25/10 light top-frame button
+11/29/10 locale 2 handling added
+12/6/10 internet test relocated
+2/17/11 Changed wrong log events from log_unit_status to LOG_FACILITY_ADD or LOG_FACILITY_CHANGE as appropriate
+3/15/11 Added reference to stylesheet.php for revisable day night colors.
+3/19/11 changed index length to 6 chars
+4/27/11 icon logic added, top/bottom nav added
+5/4/11 get_new_colors() added
+5/22/11 corrected reverse geolocation
 */
-
 
 @session_start();	
 
-if (!($_SESSION['internet'])) {				// 8/22/10
+if (!($_SESSION['internet'])) {				// 12/6/10
 	header("Location: facilities_nm.php");
 	}
 
 require_once($_SESSION['fip']);		//7/28/10
 do_login(basename(__FILE__));
+
 $key_field_size = 30;
 
 extract($_GET);
@@ -38,6 +47,7 @@ extract($_POST);
 
 if((($istest)) && (!empty($_GET))) {dump ($_GET);}
 if((($istest)) && (!empty($_POST))) {dump ($_POST);}
+$usng = get_text('USNG');
 
 $u_types = array();
 $query = "SELECT * FROM `$GLOBALS[mysql_prefix]fac_types` ORDER BY `id`";		// types in use
@@ -49,7 +59,7 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 unset($result);
 
 $icons = $GLOBALS['fac_icons'];
-$sm_icons = $GLOBALS['fac_icons'];
+$sm_icons = $GLOBALS['sm_fac_icons'];	//	3/15/11
 
 function get_icon_legend (){			// returns legend string
 	global $u_types, $sm_icons;
@@ -58,7 +68,7 @@ function get_icon_legend (){			// returns legend string
 	$print = "";											// output string
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 		$temp = $u_types[$row['type']];
-		$print .= "\t\t" .$temp[0] . " &raquo; <IMG SRC = './icons/" . $sm_icons[$temp[1]] . "' BORDER=0>&nbsp;&nbsp;&nbsp;\n";
+		$print .= "\t\t<DIV class='legend' style='height: 3em; text-align: center; vertical-align: middle; float: left;'> ". $temp[0] . " &raquo; <IMG SRC = './our_icons/" . $sm_icons[$temp[1]] . "' STYLE = 'vertical-align: middle' BORDER=0 PADDING='10'>&nbsp;&nbsp;&nbsp;</DIV>\n";
 		}
 	return $print;
 	}			// end function get_icon_legend ()
@@ -66,14 +76,14 @@ function get_icon_legend (){			// returns legend string
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Configuration Module</TITLE>
-	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-	<META HTTP-EQUIV="Expires" CONTENT="0">
-	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
+	<HEAD><TITLE>Tickets - Facilities Module</TITLE>
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+	<META HTTP-EQUIV="Expires" CONTENT="0" />
+	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
+	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
+	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />  <!-- 3/15/11 -->
 	<SCRIPT  SRC="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo get_variable('gmaps_api_key'); ?>"></SCRIPT>
 	<SCRIPT  SRC="./js/usng.js" TYPE="text/javascript"></SCRIPT>
 	<SCRIPT  SRC='./js/graticule.js' type='text/javascript'></SCRIPT>
@@ -109,6 +119,10 @@ function get_icon_legend (){			// returns legend string
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
+
+	function get_new_colors() {								// 5/4/11
+		window.location.href = '<?php print basename(__FILE__);?>';
+		}
 
 	function ck_frames() {
 		if(self.location.href==parent.location.href) {
@@ -326,6 +340,8 @@ function get_icon_legend (){			// returns legend string
 
 		var errmsg="";
 		if (theForm.frm_name.value.trim()=="")											{errmsg+="Facility NAME is required.\n";}
+		if (theForm.frm_handle.value.trim()=="")										{errmsg+="Facility HANDLE is required.\n";}
+		if (theForm.frm_icon_str.value.trim()=="")										{errmsg+="Facility ICON is required.\n";}
 		if (theForm.frm_type.options[theForm.frm_type.selectedIndex].value==0)			{errmsg+="Facility TYPE is required.\n";}
 		if (theForm.frm_status_id.options[theForm.frm_status_id.selectedIndex].value==0)	{errmsg+="Facility STATUS is required.\n";}
 		if (theForm.frm_descr.value.trim()=="")											{errmsg+="Facility DESCRIPTION is required.\n";}
@@ -431,7 +447,7 @@ function get_icon_legend (){			// returns legend string
 					} else { 
 						place = response.Placemark[0];    
 						point = new GLatLng(place.Point.coordinates[1],place.Point.coordinates[0]);
- 						locality = response.Placemark[0].AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality;   
+// 						locality = response.Placemark[0].AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality;    5/22/11
 						marker = new GMarker(point);
 						map.addOverlay(marker);
 
@@ -524,7 +540,15 @@ function get_icon_legend (){			// returns legend string
 		the_form.reset();
 		do_ngs();
 		}
-	
+
+	function to_top() {
+		location.href = '#top';
+		}
+		
+	function to_bottom() {
+		location.href = '#bottom';
+		}
+		
 	</SCRIPT>
 
 
@@ -610,7 +634,7 @@ var color=0;
 		var fac_id = fac_id;	
 		
 		var icon = new GIcon(listIcon);
-		var icon_url = "./icons/gen_fac_icon.php?blank=" + escape(icons[color]) + "&text=" + fac_id;
+		var icon_url = "./our_icons/gen_fac_icon.php?blank=" + escape(icons[color]) + "&text=" + fac_id;
 
 		icon.image = icon_url;		// 
 
@@ -653,7 +677,7 @@ var color=0;
 		var fac_id = fac_id;	
 		
 		var icon = new GIcon(listIcon);
-		var icon_url = "./icons/question1.png";
+		var icon_url = "./our_icons/question1.png";
 
 		icon.image = icon_url;		// 
 
@@ -691,19 +715,16 @@ var color=0;
 		}				// end function createdummyMarker()		
 
 	function do_sidebar (sidebar, id, the_class, fac_id) {
-//		var letter = to_str(id)
 		var fac_id = fac_id;
-
-		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"' onClick = myclick(" + id + ");>";
-		side_bar_html += "<TD CLASS='" + the_class + "'>" + fac_id + sidebar +"</TD></TR>\n";	//10/29/09 removed period
+		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"'>";
+		side_bar_html += "<TD CLASS='" + the_class + "' onClick = myclick(" + id + "); >" + fac_id + sidebar +"</TD></TR>\n";		// 3/15/11
 		}
 
-	function do_sidebar_nm (sidebar, line_no, id, fac_id) {							// no map - view responder // view_Form, 11/11/09
-		var letter = to_str(line_no);
-		var fac_id = fac_id;
-		
-		side_bar_html += "<TR CLASS='" + colors[(line_no)%2] +"' onClick = myclick_nm(" + id + ");>";
-		side_bar_html += "<TD CLASS='td_label'>" + fac_id + sidebar +"</TD></TR>\n";	//10/29/09 removed period, 11/11/09 fixed display when no map postion
+	function do_sidebar_nm (sidebar, line_no, id, fac_id) {	
+		var fac_id = fac_id;	
+		var letter = to_str(line_no);	
+		side_bar_html += "<TR CLASS='" + colors[(line_no)%2] +"'>";
+		side_bar_html += "<TD onClick = myclick_nm(" + id + "); >" + fac_id + sidebar +"</TD></TR>\n";		// 1/23/09, 10/29/09 removed period, 11/11/09, 3/15/11
 		}
 
 	function myclick_nm(v_id) {				// Responds to sidebar click - view responder data
@@ -729,6 +750,26 @@ var color=0;
 		document.forms[0].frm_ngs.disabled=true;
 		}
 
+	function do_sel_update_fac (in_unit, in_val) {							// 3/15/11
+		to_server_fac(in_unit, in_val);
+		}
+
+	function to_server_fac(the_unit, the_status) {									// 3/15/11
+		var querystr = "frm_responder_id=" + the_unit;
+		querystr += "&frm_status_id=" + the_status;
+	
+		var url = "as_up_fac_status.php?" + querystr;			// 3/15/11
+		var payload = syncAjax(url);						// 
+		if (payload.substring(0,1)=="-") {	
+			alert ("<?php print __LINE__;?>: msg failed ");
+			return false;
+			}
+		else {
+			parent.frames['upper'].show_msg ('Facility status update applied!')
+			return true;
+			}				// end if/else (payload.substring(... )
+		}		// end function to_server()
+
 	var icons=new Array;							// maps type to icon blank
 
 <?php
@@ -752,7 +793,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 	var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_facilities'>";
 	side_bar_html += "<TR class='even'>	<TD colspan='99' ALIGN='center'><B><?php print get_text("Facilities"); ?> (<?php print $facilities; ?>)</B></TD></TR>";
 	side_bar_html += "<TR class='odd'>	<TD colspan='99' ALIGN='center'>Click line or icon for details</TD></TR>";
-	side_bar_html += "<TR class='even'>	<TD></TD><TD ALIGN='center'><B><?php print get_text("Facility"); ?></B></TD><TD ALIGN='center'><B><?php print get_text("Type"); ?></B></TD><TD ALIGN='center'><B><?php print get_text("Status"); ?></B></TD><TD ALIGN='center'><B><?php print get_text("As of"); ?></B></TD></TR>";
+	side_bar_html += "<TR class='even'>	<TD><B>Icon</B></TD><TD><B>&nbsp;Handle</B></TD><TD ALIGN='left'><B>&nbsp;Name</B></TD><TD ALIGN='left'><B>&nbsp;<?php print get_text("Type"); ?></B></TD><TD ALIGN='left'><B>&nbsp;<?php print get_text("Status"); ?></B></TD><TD ALIGN='left'><B>&nbsp;<?php print get_text("As of"); ?></B></TD></TR>";
 	var gmarkers = [];
 	var infoTabs = [];
 	var which;
@@ -838,8 +879,8 @@ $maptype = get_variable('maptype');
 		$type_vals[$temp] = $row_ty['name'];
 		}
 	unset($result_ty);
-
-	$query = "SELECT *,UNIX_TIMESTAMP(updated) AS updated, `$GLOBALS[mysql_prefix]facilities`.id AS id, 
+	//	3/15/11
+	$query = "SELECT *,UNIX_TIMESTAMP(updated) AS updated, `$GLOBALS[mysql_prefix]facilities`.id AS id, `$GLOBALS[mysql_prefix]facilities`.status_id AS status_id,
 		`$GLOBALS[mysql_prefix]facilities`.description AS facility_description,
 		`$GLOBALS[mysql_prefix]fac_types`.name AS fac_type_name, `$GLOBALS[mysql_prefix]facilities`.name AS name, `$GLOBALS[mysql_prefix]facilities`.street AS street,
 		`$GLOBALS[mysql_prefix]facilities`.city AS city, `$GLOBALS[mysql_prefix]facilities`.state AS state 
@@ -850,23 +891,24 @@ $maptype = get_variable('maptype');
 
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$i=0;				// counter
-// =============================================================================
+
 	$utc = gmdate ("U");
-	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {		// ==========  major while() for Facility ==========
+// ==================================  major while() for Facility ============================
+	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {		//
 		$the_bg_color = 	$GLOBALS['FACY_TYPES_BG'][$row['icon']];		// 2/8/10
 		$the_text_color = 	$GLOBALS['FACY_TYPES_TEXT'][$row['icon']];		// 2/8/10	
+		$the_on_click = (my_is_float($row['lat']))? " onClick = myclick({$i}); " : " onClick = myclick_nm({$row['unit_id']}); ";	//	3/15/11
 		$got_point = FALSE;
 		print "\n\t\tvar i=$i;\n";
 
-	if(is_guest()) {
-		$toedit = $tomail = $toroute = "";
-		}
-	else {
-		$toedit = "&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='{$_SESSION['facilitiesfile']}?func=responder&edit=true&id=" . $row['id'] . "'><U>Edit</U></A>" ;
-		$tomail = "&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = 'do_mail_in_win({$row['id']})'><U><B>Email</B></U></SPAN>" ;
-		$toroute = "&nbsp;<A HREF='{$_SESSION['facroutesfile']}?fac_id=" . $row['id'] . "'><U>Route To Facility</U></A>";	
-		}
-		
+		if(is_guest()) {
+			$toedit = $tomail = $toroute = "";
+			}
+		else {
+			$toedit = "&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='{$_SESSION['facilitiesfile']}?func=responder&edit=true&id=" . $row['id'] . "'><U>Edit</U></A>" ;
+			$tomail = "&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = 'do_mail_in_win({$row['id']})'><U><B>Email</B></U></SPAN>" ;
+			$toroute = "&nbsp;<A HREF='{$_SESSION['facroutesfile']}?fac_id=" . $row['id'] . "'><U>Route To Facility</U></A>";	
+			}		
 
 		$temp = $row['status_id'] ;	
 		$the_status = (array_key_exists($temp, $status_vals))? $status_vals[$temp] : "??";	
@@ -884,19 +926,14 @@ $maptype = get_variable('maptype');
 			}
 
 		$update_error = strtotime('now - 6 hours');							// set the time for silent setting
+		$index = $row['icon_str'];
 // name
 
-		$name = $row['name'];		//	10/8/09
-		$temp = explode("/", $name );
-		$display_name = $temp[0];
+		$name = $display_name = $row['name'];		//	10/8/09
 
-//		$sidebar_line = "<TD CLASS='td_data' TITLE = '" . addslashes($display_name) . "'><U>" . addslashes(shorten($display_name, 48)) ."</U></TD>";	//	10/8/09
-
-//		$sidebar_line .= "<TD CLASS='td_data' TITLE = '" . addslashes ($the_type) . "'> " . shorten($the_type, 18) .
-//				"&nbsp;&nbsp;</TD>";
-//		$sidebar_line .= "<TD CLASS='td_data' TITLE = '" . addslashes ($the_status) . "'> " . shorten($the_status, 18) .
-//				"&nbsp;&nbsp;</TD>";	
-		$sidebar_line = "<TD TITLE = '" . addslashes($display_name) . "'><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($display_name, 40)) ."</SPAN></U>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD>{$the_type}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD>{$the_status}</TD>";			// 10/8/09
+		$sidebar_line = "<TD TITLE = '{$row['handle']}' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>{$row['handle']}</SPAN></U></TD>";
+		$sidebar_line .= "<TD TITLE = '" . addslashes($display_name) . "' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($display_name, 28)) ."</SPAN></U>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD>{$the_type}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>";
+		$sidebar_line .= "<TD CLASS='td_data' TITLE = '" . addslashes ($the_status) . "'> " . get_status_sel($row['id'], $row['status_id'], 'f') . "</TD>";	//	3/15/11
 
 // as of
 		$strike = $strike_end = "";
@@ -918,11 +955,11 @@ $maptype = get_variable('maptype');
 			$tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>Status:&nbsp;</TD><TD ALIGN='left'>" . $the_status . " </TD></TR>";
 			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Contact:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['contact_name']). " Via: " . addslashes($row['contact_email']) . "</TD></TR>";
 			$tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>As of:&nbsp;</TD><TD ALIGN='left'>" . format_date($row['updated']) . "</TD></TR>";
-			$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . $toroute . $toedit . $tomail ."&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='{$_SESSION['facilitiesfile']}?func=responder&view=true&id=" . $row['id'] . "'><U>View</U></A></TD></TR>";
+			$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . $toedit . $tomail . "&nbsp;&nbsp;<A HREF='{$_SESSION['facilitiesfile']}?func=responder&view=true&id=" . $row['id'] . "'><U>View</U></A></TD></TR>";	// 08/8/02
 			$tab_1 .= "</TABLE>";
 
-			$tab_2 = "<TABLE CLASS='infowin' width='{$iw_width}'>";
-			$tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>Security contact:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['security_contact']) . " </TD></TR>";
+			$tab_2 = "<TABLE CLASS='infowin' width='{$iw_width}' ALIGN = 'center' >";
+			$tab_2 .= "<TR CLASS='odd'><TD ALIGN='right' STYLE= 'width:50%'>Security contact:&nbsp;</TD><TD ALIGN='left' STYLE= 'width:50%'>" . addslashes($row['security_contact']) . " </TD></TR>";
 			$tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>Security email:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['security_email']) . " </TD></TR>";
 			$tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>Security phone:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['security_phone']) . " </TD></TR>";
 			$tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>" . get_text("Access rules") . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row['access_rules'])) . "</TD></TR>";
@@ -947,9 +984,7 @@ $maptype = get_variable('maptype');
 <?php
 			}		// end if/else
 
-		$name = $row['name'];	// 10/8/09		
-		$temp = explode("/", $name );
-		$index =  (strlen($temp[count($temp) -1])<3)? substr($temp[count($temp) -1] ,0,strlen($temp[count($temp) -1])): substr($temp[count($temp) -1] ,-3 ,strlen($temp[count($temp) -1]));
+		$name = $row['name'];	// 10/8/09		 4/28/11
 		if(($row['lat']==0.999999) && ($row['lng']==0.999999)) {	// check for facilities added in no mpas mode 7/28/10
 			
 ?>
@@ -974,7 +1009,8 @@ $maptype = get_variable('maptype');
 
 			$name = $row['name'];	// 11/11/09		
 			$temp = explode("/", $name );
-			$index =  (strlen($temp[count($temp) -1])<3)? substr($temp[count($temp) -1] ,0,strlen($temp[count($temp) -1])): substr($temp[count($temp) -1] ,-3 ,strlen($temp[count($temp) -1]));
+			$index = substr($temp[count($temp) -1], -6, strlen($temp[count($temp) -1]));		// 3/19/11
+
 ?>
 			var fac_id = "<?php print $index;?>";	//	11/11/09
 <?php		
@@ -997,6 +1033,7 @@ $maptype = get_variable('maptype');
 		}
 
 	side_bar_html+= "<TR CLASS='" + colors[i%2] +"'></TR>";
+	side_bar_html +="<TR><TD><?php print get_facilities_legend();?></TD></TR>\n";	//	3/15/11
 <?php
 
 	if(!empty($addon)) {
@@ -1087,7 +1124,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 <?php
 	if(($the_lat==0.999999) && ($the_lng==0.999999)) {	// check of Tickets entered in "no maps" mode 7/28/10	
 ?>
-		myIcon.image = "./icons/question1.png";	// 7/28/10
+		myIcon.image = "./our_icons/question1.png";	// 7/28/10
 		myIcon.iconSize = new GSize(16, 28);		
 		myIcon.iconAnchor = new GPoint(8, 28);
 		myIcon.infoWindowAnchor = new GPoint(5, 1);			
@@ -1257,10 +1294,11 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 	function finished ($caption) {
 		print "</HEAD><BODY>";
 		require_once('./incs/links.inc.php');	// 10/6/09
+		print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:20px; height: 12px; width: 10px;' onclick = 'to_bottom()'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
 		print "<FORM NAME='fin_form' METHOD='get' ACTION='" . basename(__FILE__) . "'>";
 		print "<INPUT TYPE='hidden' NAME='caption' VALUE='" . $caption . "'>";
 		print "<INPUT TYPE='hidden' NAME='func' VALUE='responder'>";
-		print "</FORM></BODY></HTML>";
+		print "</FORM>\n<A NAME='bottom' />\n</BODY></HTML>";
 		}
 
 	function do_calls($id = 0) {				// generates js callsigns array
@@ -1303,9 +1341,10 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				`city`= " . 		quote_smart(trim($_POST['frm_city'])) . ",
 				`state`= " . 		quote_smart(trim($_POST['frm_state'])) . ",
 				`handle`= " . 		quote_smart(trim($_POST['frm_handle'])) . ",
+				`icon_str`= " . 	quote_smart(trim($_POST['frm_icon_str'])) . ",
 				`description`= " . 	quote_smart(trim($_POST['frm_descr'])) . ",
 				`capab`= " . 		quote_smart(trim($_POST['frm_capab'])) . ",
-				`status_id`= " . quote_smart(trim($_POST['frm_status_id'])) . ",
+				`status_id`= " .	quote_smart(trim($_POST['frm_status_id'])) . ",
 				`lat`= " . 			$the_lat . ",
 				`lng`= " . 			$the_lng . ",
 				`contact_name`= " . quote_smart(trim($_POST['frm_contact_name'])) . ",
@@ -1317,15 +1356,15 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				`opening_hours`= " . 	quote_smart(trim($_POST['frm_opening_hours'])) . ",
 				`access_rules`= " . 	quote_smart(trim($_POST['frm_access_rules'])) . ",
 				`security_reqs`= " . 	quote_smart(trim($_POST['frm_security_reqs'])) . ",
-				`pager_p`= " . 	quote_smart(trim($_POST['frm_pager_p'])) . ",
-				`pager_s`= " . 	quote_smart(trim($_POST['frm_pager_s'])) . ",
+				`pager_p`= " . 		quote_smart(trim($_POST['frm_pager_p'])) . ",
+				`pager_s`= " . 		quote_smart(trim($_POST['frm_pager_s'])) . ",
 				`type`= " . 		quote_smart(trim($_POST['frm_type'])) . ",
 				`user_id`= " . 		quote_smart(trim($_SESSION['user_id'])) . ",
 				`updated`= " . 		quote_smart(trim($now)) . "
 				WHERE `id`= " . 	quote_smart(trim($_POST['frm_id'])) . ";";
 
 			$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
-			if (!empty($_POST['frm_log_it'])) { do_log($GLOBALS['LOG_UNIT_STATUS'], 0, $_POST['frm_id'], $_POST['frm_status_id']);}
+			if (!empty($_POST['frm_log_it'])) { do_log($GLOBALS['LOG_FACILITY_CHANGE'], 0, $_POST['frm_id'], $_POST['frm_status_id']);}	//2/17/11
 			$caption = "<i>" . stripslashes_deep($_POST['frm_name']) . "</i><B>' data has been updated.</B><BR /><BR />";
 			}
 		}				// end else {}
@@ -1336,13 +1375,14 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		$frm_lng = (empty($_POST['frm_lng']))? 'NULL': quote_smart(trim($_POST['frm_lng']));		// 7/15/10
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));
 		$query = "INSERT INTO `$GLOBALS[mysql_prefix]facilities` (
-			`name`, `street`, `city`, `state`, `handle`, `description`, `capab`, `status_id`, `contact_name`, `contact_email`, `contact_phone`, `security_contact`, `security_email`, `security_phone`, `opening_hours`, `access_rules`, `security_reqs`, `pager_p`, `pager_s`, `lat`, `lng`, `type`, `user_id`, `updated` )
+			`name`, `street`, `city`, `state`, `handle`, `icon_str`, `description`, `capab`, `status_id`, `contact_name`, `contact_email`, `contact_phone`, `security_contact`, `security_email`, `security_phone`, `opening_hours`, `access_rules`, `security_reqs`, `pager_p`, `pager_s`, `lat`, `lng`, `type`, `user_id`, `updated` )
 			VALUES (" .
 				quote_smart(trim($_POST['frm_name'])) . "," .
 				quote_smart(trim($_POST['frm_street'])) . "," .
 				quote_smart(trim($_POST['frm_city'])) . "," .
 				quote_smart(trim($_POST['frm_state'])) . "," .
 				quote_smart(trim($_POST['frm_handle'])) . "," .
+				quote_smart(trim($_POST['frm_icon_str'])) . "," .
 				quote_smart(trim($_POST['frm_descr'])) . "," .
 				quote_smart(trim($_POST['frm_capab'])) . "," .
 				quote_smart(trim($_POST['frm_status_id'])) . "," .
@@ -1364,7 +1404,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				quote_smart(trim($now)) . ");";
 
 		$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
-		do_log($GLOBALS['LOG_UNIT_STATUS'], 0, mysql_insert_id(), $_POST['frm_status_id']);
+		do_log($GLOBALS['LOG_FACILITY_ADD'], 0, mysql_insert_id(), $_POST['frm_status_id']);	//	2/17/11
 
 		$caption = "<B>Facility  <i>" . stripslashes_deep($_POST['frm_name']) . "</i> data has been updated.</B><BR /><BR />";
 
@@ -1379,20 +1419,27 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		print do_calls();		// call signs to JS array for validation
 ?>
 		</HEAD>
-		<BODY  onLoad = "ck_frames();" onUnload="GUnload()">
-		<?php
+		<BODY onLoad = "ck_frames();" onUnload="GUnload()">
+		<A NAME='top'>		<!-- 11/11/09 -->
+<?php
 		require_once('./incs/links.inc.php');
-		?>
+		print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:20px; height: 12px; width: 10px;' onclick = 'to_bottom()'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
+?>
+
 		<TABLE BORDER=0 ID='outer' BORDER=><TR><TD>
 		<TABLE BORDER="0" ID='addform'>
 		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'><?php print get_text("Add Facility"); ?></FONT></FONT><BR /><BR />
 		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>		
 		<FORM NAME= "res_add_Form" METHOD="POST" ACTION="<?php print basename(__FILE__);?>?func=responder&goadd=true">
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility Name - fill in with Name/index where index is the label in the list and on the marker"><?php print get_text("Name"); ?></A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
-			<TD COLSPAN=3 ><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Handle - local rules, local abbreviated name for the facility"><?php print get_text("Handle"); ?></A>:&nbsp;</TD>
-			<TD COLSPAN=3 ><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_handle" VALUE="" /></TD></TR>
-		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A HREF="#" TITLE="Facility Type - Select from pulldown menu"><?php print get_text("Type"); ?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Name "><?php print get_text("Name"); ?></A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
+			<TD COLSPAN=3 ><INPUT MAXLENGTH="64" SIZE="64" TYPE="text" NAME="frm_name" VALUE="" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Handle - local rules, local abbreviated name for the facility"><?php print get_text("Handle"); ?></A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;
+		</TD>
+			<TD COLSPAN=3 ><INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_handle" VALUE="" />
+				<SPAN STYLE = "margin-left:40px;" CLASS="td_label" TITLE="A 3-letter value to be used in the map icon">Icon:</SPAN>&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;
+					<INPUT TYPE="text" SIZE = 3 MAXLENGTH=3 NAME="frm_icon_str" VALUE="" />			
+			</TD></TR>
+		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Type - Select from pulldown menu"><?php print get_text("Type"); ?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>
 			<TD ALIGN='left'><SELECT NAME='frm_type'><OPTION VALUE=0>Select one</OPTION>
 <?php
 	foreach ($u_types as $key => $value) {
@@ -1404,7 +1451,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			<A HREF="#" TITLE="Calculate directions on dispatch? - required if you wish to use email directions to unit facility">Directions</A> &raquo;<INPUT TYPE="checkbox" NAME="frm_direcs_disp" checked /></TD>
 			</TR>
 
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility Status - Select from pulldown menu"><?php print get_text("Status"); ?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Status - Select from pulldown menu"><?php print get_text("Status"); ?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>
 			<TD ALIGN ='left'><SELECT NAME="frm_status_id" onChange = "document.res_add_Form.frm_log_it.value='1'">
 				<OPTION VALUE=0 SELECTED>Select one</OPTION>
 <?php
@@ -1426,24 +1473,24 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 ?>
 			</SELECT>
 			</TD></TR>
-		<TR CLASS='odd'><TD CLASS="td_label"><A HREF="#" TITLE="Location - type in location in fields or click location on map "><?php print get_text("Location"); ?></A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="" MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS='even'><TD CLASS="td_label"><A HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_add_Form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
+		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Location - type in location in fields or click location on map "><?php print get_text("Location"); ?></A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="" MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_add_Form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print get_variable('def_city'); ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="2" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="2"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=40 ROWS=2></TEXTAREA></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_capab" COLS=40 ROWS=2></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Facility main contact name"><?php print get_text("Contact name"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="" /></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility contact email - main contact email address"><?php print get_text("Contact email"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_email" VALUE="" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Facility contact phone number - main contact phone number"><?php print get_text("Contact phone"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_phone" VALUE="" /></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility security contact"><?php print get_text("Security contact"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_contact" VALUE="" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Facility security contact email"><?php print get_text("Security email"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_email" VALUE="" /></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility security contact phone number"><?php print get_text("Security phone"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_phone" VALUE="" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Facility opening hours - e.g. 24x7x365, 8 - 5 mon to sat etc."><?php print get_text("Opening hours"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_opening_hours" COLS=40 ROWS=2></TEXTAREA></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility access rules - e.g enter by main entrance, enter by ER entrance, call first etc"><?php print get_text("Access rules"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_access_rules" COLS=40 ROWS=5></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Facility securtiy requirements - e.g. phone security first, visitors must be security cleared etc."><?php print get_text("Security reqs"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_security_reqs" COLS=40 ROWS=5></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Facility contact primary pager number"><?php print get_text("Primary pager"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_p" VALUE="" /></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility contact secondary pager number"><?php print get_text("Secondary pager"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_s" VALUE="" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Latitude and Longitude - set from map click">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="2" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="2"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=40 ROWS=2></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_capab" COLS=40 ROWS=2></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility main contact name"><?php print get_text("Contact name"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact email - main contact email address"><?php print get_text("Contact email"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_email" VALUE="" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact phone number - main contact phone number"><?php print get_text("Contact phone"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_phone" VALUE="" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact"><?php print get_text("Security contact"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_contact" VALUE="" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact email"><?php print get_text("Security email"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_email" VALUE="" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact phone number"><?php print get_text("Security phone"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_phone" VALUE="" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility opening hours - e.g. 24x7x365, 8 - 5 mon to sat etc."><?php print get_text("Opening hours"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_opening_hours" COLS=40 ROWS=2></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility access rules - e.g enter by main entrance, enter by ER entrance, call first etc"><?php print get_text("Access rules"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_access_rules" COLS=40 ROWS=5></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility securtiy requirements - e.g. phone security first, visitors must be security cleared etc."><?php print get_text("Security reqs"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_security_reqs" COLS=40 ROWS=5></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact primary pager number"><?php print get_text("Primary pager"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_p" VALUE="" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact secondary pager number"><?php print get_text("Secondary pager"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_s" VALUE="" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Latitude and Longitude - set from map click">
 			<SPAN onClick = 'javascript: do_coords(document.res_add_Form.frm_lat.value ,document.res_add_Form.frm_lng.value)'>
 				<?php print get_text("Lat/Lng"); ?></A></SPAN>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<IMG ID='lock_p' BORDER=0 SRC='./markers/unlock2.png' STYLE='vertical-align: middle'
@@ -1454,7 +1501,6 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 	$locale = get_variable('locale');
 	switch($locale) { 
 		case "0":
-		case "2":
 ?>
 		<SPAN ID = 'usng_link' onClick = "do_usng_conv(res_add_Form)">USNG:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled /></TD></TR>
 <?php
@@ -1462,21 +1508,24 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 
 		case "1":
 ?>
-		<SPAN ID = 'usng_link' onClick = "do_usng_conv(res_add_Form)"></SPAN><INPUT TYPE="hidden" SIZE=19 NAME="frm_ngs" VALUE="" disabled /></TD></TR>
+		<SPAN ID = 'osgb_link'>OSGB:</SPAN><INPUT TYPE="hidden" SIZE=19 NAME="frm_osgb" VALUE="" disabled /></TD></TR>
 <?php
 		break;
 	
 		default:
-		print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";				
+?>
+		<SPAN ID = 'utm_link'>UTM:</SPAN><INPUT TYPE="hidden" SIZE=19 NAME="frm_utm" VALUE="" disabled /></TD></TR>
+<?php
 
 	}
 ?>
 
 		<TR><TD COLSPAN=4 ALIGN='center'><font color='red' size='-1'>*</FONT> Required</TD></TR>
 		<TR CLASS = "even"><TD COLSPAN=4 ALIGN='center'>
-			<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick = "do_add_reset(this.form);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>"  onClick="validate(document.res_add_Form);" ></TD></TR>
+			<IMG SRC='markers/up.png' BORDER=0 onclick = 'to_top();' />
+			<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();" STYLE = 'margin-left: 50px' >
+			<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick = "do_add_reset(this.form);" STYLE = 'margin-left: 20px' />
+			<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>"  onClick="validate(document.res_add_Form);"  STYLE = 'margin-left: 20px' /></TD></TR>
 		<INPUT TYPE='hidden' NAME = 'frm_lat' VALUE=''/>
 		<INPUT TYPE='hidden' NAME = 'frm_lng' VALUE=''/>
 		<INPUT TYPE='hidden' NAME = 'frm_log_it' VALUE=''/>
@@ -1487,7 +1536,9 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		<BR /><BR /><B>Drag/Click to unit location</B>
 		<BR /><A HREF='#' onClick='doGrid()'><u>Grid</U></A>
 
-		<BR /><BR /><B>Facilities:</B>&nbsp;&nbsp;&nbsp;&nbsp;
+		<BR /><BR />
+		<SPAN CLASS="legend" STYLE="text-align: center; vertical-align: middle;">Facility Legend:</SPAN><BR /><BR /><DIV CLASS="legend" ALIGN='center' VALIGN='middle' style='padding: 20px; text-align: center; vertical-align: middle; width: <?php print get_variable('map_width');?>px;'>  <!-- 3/15/11 -->
+
 <?php
 		print get_icon_legend ();
 ?>
@@ -1499,6 +1550,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 ?>
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
 		<!-- 1100 -->
+		<A NAME="bottom" /> 
 		</BODY>
 		</HTML>
 <?php
@@ -1528,18 +1580,25 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 ?>
 		</HEAD>
 		<BODY onLoad = "ck_frames(); " onUnload="GUnload()">
-		<?php
+		<A NAME='top'>		<!-- 11/11/09 -->
+<?php
 		require_once('./incs/links.inc.php');
-		?>
+		print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:20px; height: 12px; width: 10px;' onclick = 'to_bottom()'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
+?>
 		<TABLE BORDER=0 ID='outer'><TR><TD>
 		<TABLE BORDER=0 ID='editform'>
 		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'>&nbsp;Edit Facility '<?php print $row['name'];?>' data</FONT>&nbsp;&nbsp;(#<?php print $id; ?>)</FONT></FONT><BR /><BR />
 		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>
 		<FORM METHOD="POST" NAME= "res_edit_Form" ACTION="<?php print  basename(__FILE__);?>?func=responder&goedit=true">
 
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility Name - fill in with Name/index where index is the label in the list and on the marker">Name</A>:&nbsp;<font color='red' size='-1'>*</font></TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="<?php print $row['name'] ;?>" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Handle - local rules, local abbreviated name for the facility">Handle</A>:&nbsp;</TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_handle" VALUE="<?php print $row['handle'] ;?>" /></TD></TR>
-		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A HREF="#" TITLE="Facility Type - Select from pulldown menu">Type</A>:&nbsp;<font color='red' size='-1'>*</font></TD>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Name ">Name</A>:&nbsp;<font color='red' size='-1'>*</font></TD>
+			<TD COLSPAN=3><INPUT MAXLENGTH="64" SIZE="64" TYPE="text" NAME="frm_name" VALUE="<?php print $row['name'] ;?>" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Handle - local rules, local abbreviated name for the facility">Handle</A>:&nbsp;<font color='red' size='-1'>*</font></TD>			
+			<TD COLSPAN=3><INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_handle" VALUE="<?php print $row['handle'] ;?>" />
+				<SPAN STYLE = "margin-left:40px;" CLASS="td_label"  TITLE="A 3-letter value to be used in the map icon">Icon:</SPAN>&nbsp;<font color='red' size='-1'>*</font>
+				<INPUT TYPE="text" SIZE = 3 MAXLENGTH=3 NAME="frm_icon_str" VALUE="<?php print $row['icon_str'];?>" />			
+			</TD></TR>
+		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Type - Select from pulldown menu">Type</A>:&nbsp;<font color='red' size='-1'>*</font></TD>
 		<TD ALIGN='left'><FONT SIZE='-2'>
 			<SELECT NAME='frm_type'>
 <?php
@@ -1554,7 +1613,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				
 		</TD>
 		</TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility Status - Select from pulldown menu">Status</A>:&nbsp;</TD>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Status - Select from pulldown menu">Status</A>:&nbsp;</TD>
 			<TD ALIGN='left'><SELECT NAME="frm_status_id" onChange = "document.res_edit_Form.frm_log_it.value='1'">
 <?php
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]fac_status` ORDER BY `status_val` ASC, `group` ASC, `sort` ASC";
@@ -1578,28 +1637,28 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 	$dis_rmv = " ENABLED";
 ?>
 			</TD></TR>
-		<TR CLASS='odd'><TD CLASS="td_label"><A HREF="#" TITLE="Location - type in location in fields or click location on map ">Location</A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="<?php print $row['street'] ;?>"  MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS='even'><TD CLASS="td_label"><A HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_edit_Form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
+		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Location - type in location in fields or click location on map ">Location</A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="<?php print $row['street'] ;?>"  MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_edit_Form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="2" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="2"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=40 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_capab" COLS=40 ROWS=2><?php print $row['capab'];?></TEXTAREA></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility main contact name">Contact name</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="<?php print $row['contact_name'] ;?>" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Facility contact email - main contact email address"><?php print get_text("Contact email"); ?></A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_email" VALUE="<?php print $row['contact_email'] ;?>" /></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility contact phone number - main contact phone number">Contact phone</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_phone" VALUE="<?php print $row['contact_phone'] ;?>" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Facility security contact">Security contact</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_contact" VALUE="<?php print $row['security_contact'] ;?>" /></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility security contact email">Security email</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_email" VALUE="<?php print $row['security_email'] ;?>" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Facility security contact phone number">Security phone</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_phone" VALUE="<?php print $row['security_phone'] ;?>" /></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility opening hours - e.g. 24x7x365, 8 - 5 mon to sat etc.">Opening hours</A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_opening_hours" COLS=40 ROWS=2><?php print $row['opening_hours'];?></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Facility access rules - e.g enter by main entrance, enter by ER entrance, call first etc"><?php print get_text("Access rules"); ?></A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_access_rules" COLS=40 ROWS=5><?php print $row['access_rules'];?></TEXTAREA></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility securtiy requirements - e.g. phone security first, visitors must be security cleared etc.">Security reqs</A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_security_reqs" COLS=40 ROWS=5><?php print $row['security_reqs'];?></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Facility contact primary pager number">Pager Primary</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_p" VALUE="<?php print $row['pager_p'] ;?>" /></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility contact secondary pager number">Pager Secondary</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_s" VALUE="<?php print $row['pager_s'] ;?>" /></TD></TR>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="2" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="2"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=40 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_capab" COLS=40 ROWS=2><?php print $row['capab'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility main contact name">Contact name</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="<?php print $row['contact_name'] ;?>" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact email - main contact email address"><?php print get_text("Contact email"); ?></A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_email" VALUE="<?php print $row['contact_email'] ;?>" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact phone number - main contact phone number">Contact phone</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_phone" VALUE="<?php print $row['contact_phone'] ;?>" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact">Security contact</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_contact" VALUE="<?php print $row['security_contact'] ;?>" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact email">Security email</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_email" VALUE="<?php print $row['security_email'] ;?>" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility security contact phone number">Security phone</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_security_phone" VALUE="<?php print $row['security_phone'] ;?>" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility opening hours - e.g. 24x7x365, 8 - 5 mon to sat etc.">Opening hours</A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_opening_hours" COLS=40 ROWS=2><?php print $row['opening_hours'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility access rules - e.g enter by main entrance, enter by ER entrance, call first etc"><?php print get_text("Access rules"); ?></A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_access_rules" COLS=40 ROWS=5><?php print $row['access_rules'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility securtiy requirements - e.g. phone security first, visitors must be security cleared etc.">Security reqs</A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_security_reqs" COLS=40 ROWS=5><?php print $row['security_reqs'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact primary pager number">Pager Primary</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_p" VALUE="<?php print $row['pager_p'] ;?>" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact secondary pager number">Pager Secondary</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_s" VALUE="<?php print $row['pager_s'] ;?>" /></TD></TR>
 
 <?php
-		$map_capt = (!$is_mobile)? 	"<BR /><BR /><CENTER><B>Click to revise facility location</B>" : "";
+		$map_capt = (!$is_mobile)? 	"<BR /><BR /><CENTER><B><FONT CLASS = 'normal_text'>Click Map to revise facility location</FONT></B>" : "";
 		$lock_butt = (!$is_mobile)? "<IMG ID='lock_p' BORDER=0 SRC='./markers/unlock2.png' STYLE='vertical-align: middle' onClick = 'do_unlock_pos(document.res_edit_Form);'>" : "" ;
-		$usng_link = (!$is_mobile)? "<SPAN ID = 'usng_link' onClick = 'do_usng_conv(res_edit_Form)'>USNG:</SPAN>": "USNG:";
+		$usng_link = (!$is_mobile)? "<SPAN ID = 'usng_link' onClick = 'do_usng_conv(res_edit_Form)'>{$usng}:</SPAN>": "{$usng}:";
 ?>
 		<TR CLASS = "odd">
 			<TD CLASS="td_label">
@@ -1611,30 +1670,40 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				<INPUT TYPE="text" NAME="show_lng" VALUE="<?php print get_lng($lng);?>" SIZE=11 disabled />&nbsp;
 
 <?php
+
+	$usng_val = LLtoUSNG($row['lat'], $row['lng']);
+	$osgb_val = LLtoOSGB($row['lat'], $row['lng']) ;
+	$utm_val = toUTM("{$row['lat']}, {$row['lng']}");
+
 	$locale = get_variable('locale');
 	switch($locale) { 
 		case "0":
-		print $usng_link;?> <INPUT TYPE="text" NAME="frm_ngs" VALUE="<?php print LLtoUSNG($row['lat'], $row['lng']) ;?>" SIZE=19 disabled /></TD></TR>	<!-- 9/13/08 -->
+		?>&nbsp;USNG:<INPUT TYPE="text" NAME="frm_ngs" VALUE='<?php print $usng_val;?>' SIZE=19 disabled /></TD></TR>	<!-- 9/13/08, 2/10/11 -->
 <?php 	break;
 
 		case "1":
 ?> 
-		&nbsp;OSGB:<INPUT TYPE="text" NAME="frm_ngs" VALUE="<?php print LLtoOSGB($row['lat'], $row['lng']) ;?>" SIZE=19 disabled /></TD></TR>	<!-- 9/13/08 -->
+		&nbsp;OSGB:<INPUT TYPE="text" NAME="frm_ngs" VALUE='<?php print $osgb_val;?>' SIZE=19 disabled /></TD></TR>	<!-- 9/13/08, 2/10/11 -->
 <?php 
 		break;
 
 		default:
-			print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";				
-		
+?> 
+		&nbsp;UTM:<INPUT TYPE="text" NAME="frm_ngs" VALUE='<?php print $utm_val;?>' SIZE=19 disabled /></TD></TR>	<!-- 9/13/08, 2/10/11 -->
+<?php 		
 		}
 ?>
 		<TR><TD>&nbsp;</TD></TR>
-		<TR CLASS="even" VALIGN='baseline'><TD CLASS="td_label"><A HREF="#" TITLE="Delete Facility from system">Remove Facility</A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>>
+		<TR CLASS="even" VALIGN='baseline'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Delete Facility from system">Remove Facility</A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>>
 		</TD></TR>
 		<TR CLASS = "odd">
-			<TD COLSPAN=4 ALIGN='center'><BR><INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="history.back();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- 11/27/09 -->
-				<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick="map_reset()";>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>" onClick="validate(document.res_edit_Form);"></TD></TR>
+			<TD COLSPAN=4 ALIGN='center'><BR>
+				<IMG SRC='markers/up.png' BORDER=0  onclick = 'to_top();'/>
+				<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();" STYLE = "margin-left:24px;" /><!-- 11/27/09 -->
+				<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick="map_reset()"; STYLE = "margin-left:24px;" />
+				<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>" onClick="validate(document.res_edit_Form);"  STYLE = "margin-left:24px;" />
+				</TD></TR>
+
 		<INPUT TYPE="hidden" NAME="frm_id" VALUE="<?php print $row['id'] ;?>" />
 		<INPUT TYPE="hidden" NAME = "frm_lat" VALUE="<?php print $row['lat'] ;?>"/>
 		<INPUT TYPE="hidden" NAME = "frm_lng" VALUE="<?php print $row['lng'] ;?>"/>
@@ -1655,6 +1724,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
 		<!-- 1231 -->
+		<A NAME="bottom" /> 
 		</BODY>
 		</HTML>
 <?php
@@ -1710,10 +1780,11 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		</SCRIPT>
 		</HEAD>
 <?php
-		print "\t<BODY onLoad = 'ck_frames()' onUnload='GUnload()'>\n";
+		print "\t<BODY onLoad = 'ck_frames()' onUnload='GUnload()'>\n<A NAME='top'>\n";
+
 		print "<A NAME='top'>\n";			// 11/11/09
 		require_once('./incs/links.inc.php');
-
+		print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:20px; height: 12px; width: 10px;' onclick = 'to_bottom()'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
 		$temp = $u_types[$row['type']];
 		$the_type = $temp[0];			// name of type
 
@@ -1725,7 +1796,10 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Name"); ?>: </TD>			<TD><?php print $row['name'];?></TD></TR>
 			<TR CLASS = 'odd'><TD CLASS="td_label"><?php print get_text("Location"); ?>: </TD><TD><?php print $row['street'] ;?></TD></TR> <!-- 7/5/10 -->
 			<TR CLASS = 'even'><TD CLASS="td_label"><?php print get_text("City"); ?>: &nbsp;&nbsp;&nbsp;&nbsp;</TD><TD><?php print $row['city'] ;?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php print $row['state'] ;?></TD></TR> <!-- 7/5/10 -->
-			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Handle"); ?>: </TD>			<TD><?php print $row['handle'];?></TD></TR>
+			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Handle"); ?>: </TD>
+				<TD><?php print $row['handle'];?>
+				<SPAN STYLE = "margin-left:40px;" CLASS="td_label">Icon:</SPAN>&nbsp;<?php print $row['icon_str'];?>
+				</TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Type"); ?>: </TD>
 				<TD><?php print $the_type;?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				</TD></TR>
@@ -1753,20 +1827,27 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				<INPUT TYPE="text" NAME="show_lng" VALUE="<?php print get_lng($lng);?>" SIZE=11 disabled />&nbsp;
 
 <?php
+
+	$usng_val = LLtoUSNG($row['lat'], $row['lng']);
+	$osgb_val = LLtoOSGB($row['lat'], $row['lng']) ;
+	$utm_val = toUTM("{$row['lat']}, {$row['lng']}");
+
 	$locale = get_variable('locale');
 		switch($locale) { 
 			case "0":?>
-			&nbsp;USNG:<INPUT TYPE="text" NAME="frm_ngs" VALUE="<?php print LLtoUSNG($row['lat'], $row['lng']) ;?>" SIZE=19 disabled /></TD></TR>	<!-- 9/13/08 -->
+			&nbsp;USNG:<INPUT TYPE="text" NAME="frm_ngs" VALUE='{$usng_val}' SIZE=19 disabled /></TD></TR>	<!-- 9/13/08 -->
 <?php 		break;
 
-			case "1":?>
-			&nbsp;OSGB:<INPUT TYPE="text" NAME="frm_ngs" VALUE="<?php print LLtoOSGB($row['lat'], $row['lng']) ;?>" SIZE=19 disabled /></TD></TR>	<!-- 9/13/08 -->
+			case "1":
+?>
+			&nbsp;OSGB:<INPUT TYPE="text" NAME="frm_ngs" VALUE='{$osgb_val}' SIZE=19 disabled /></TD></TR>	<!-- 9/13/08 -->
 <?php
 			break;
 			default:
-			print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";				
-
-			}
+?>
+			&nbsp;UTM:<INPUT TYPE="text" NAME="frm_ngs" VALUE='{$utm_val}' SIZE=19 disabled /></TD></TR>	<!-- 9/13/08 -->
+<?php
+			}		// end switch()
 
 			}		// end if (my_is_float($lat))
 
@@ -1818,6 +1899,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 
 ?>
 			<!-- 1408 -->
+			<A NAME="bottom" /> 
 			</BODY>
 			</HTML>
 <?php
@@ -1829,26 +1911,32 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 
 		if($do_list_and_map) {
 			if (!isset($mapmode)) {$mapmode="a";}
-			print $caption;
+			print "<SPAN STYLE = 'margin-left:100px;'>{$caption}</SPAN>";
+			$caption = "";
 ?>
 		</HEAD><!-- 1387 -->
 		<BODY onLoad = "ck_frames()" onUnload="GUnload()">
-		<?php
+		<A NAME='top'>		<!-- 11/11/09 -->
+
+<?php
 		require_once('./incs/links.inc.php');
-		?>
+		print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:20px; height: 12px; width: 10px;' onclick = 'to_bottom()'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
+?>
 		<TABLE ID='outer'><TR><TD>
 			<DIV ID='side_bar'></DIV>
 			</TD><TD ALIGN='center'>
-			<DIV ID='map' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
-			<BR />
-			<SPAN onClick='doGrid()'><u>Grid</U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<SPAN onClick='doTraffic()'><U>Traffic</U></SPAN><BR /><BR /><BR />
-			<BR /><BR />
-			Facility Legend:
+			<TABLE style='width: <?php print get_variable('map_width');?>px;'><TR class='even'><TD ALIGN='center'>  <!-- 3/15/11 -->
+			<DIV ID='map' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV></TD></TR>  <!-- 3/15/11 -->
+			<TR class='even'><TD ALIGN='center' class='td_label'>  <!-- 3/15/11 -->
+			<SPAN onClick='doGrid()'><u>Grid</U></SPAN>  <!-- 3/15/11 -->
+			<SPAN onClick='doTraffic()'STYLE = 'margin-left:80px;'><U>Traffic</U></SPAN></TD></TR>		<!-- 4/10/09, 3/15/11 -->
+			<TR><TD>&nbsp:</TD></TR><TR class = 'odd'><TD ALIGN='center' class='td_label'>  <!-- 3/15/11 -->
+			<SPAN CLASS="legend" STYLE="font-size: 14px; text-align: center; vertical-align: middle; width: <?php print get_variable('map_width');?>-25px;"><B>Facility Legend:</B></SPAN></TD></TR>  <!-- 3/15/11 -->
+			<TR class = 'even'><TD ALIGN='center'><DIV CLASS="legend" ALIGN='center' VALIGN='middle' style='padding: 20px; text-align: center; vertical-align: middle; width: <?php print get_variable('map_width');?>-25px;'>  <!-- 3/15/11 -->
 <?php
 		print get_icon_legend ();
 ?>
-			</TD></TR></TABLE><!-- end outer -->
+			</DIV></TD></TR></TABLE></TD></TR></TABLE><!-- end outer, 3/15/11 -->
 
 			<FORM NAME='view_form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
 			<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
@@ -1863,13 +1951,14 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 
 			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print  basename(__FILE__);?>?func=responder"></FORM>
 			<!-- 1452 -->
+			<A NAME="bottom" /> 
 			</BODY>				<!-- END RESPONDER LIST and ADD -->
 <?php
 		print do_calls();		// generate JS calls array
 
-		$buttons = "<TR><TD COLSPAN=99 ALIGN='center'><BR />";
+		$buttons = "<TR><TD COLSPAN=99 ALIGN='center'><BR /><IMG SRC='markers/up.png' BORDER=0  onclick = 'to_top();'>";
 		if ((!(is_guest())) && (!(is_unit()))) {		// 7/27/10
-			$buttons .="<INPUT TYPE='button' value= 'Add a Facility'  onClick ='document.add_Form.submit();'>";
+			$buttons .="<INPUT TYPE='button' value= 'Add a Facility'  onClick ='document.add_Form.submit();'  STYLE = 'margin-left: 60px;'>";
 			}
 		if (may_email()) {
 			$buttons .= "<INPUT TYPE = 'button' onClick = 'do_mail_win()' VALUE='Email facilities'  style = 'margin-left:20px'>";	// 6/13/09
@@ -1883,4 +1972,3 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
     break;
 	
 ?>
-

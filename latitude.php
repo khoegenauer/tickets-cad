@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 /*
 8/13/10 handle non-curl configurations
 8/25/10 revised to handle failures gracefully
+3/15/11 changed stylesheet.php to stylesheet.php
 */
  
 @session_start();
@@ -21,7 +22,7 @@ require_once($_SESSION['fip']);
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <META HTTP-EQUIV="Script-date" 			CONTENT="6/22/09">
-<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
 <?php
 if (empty($_POST)) {
 ?>

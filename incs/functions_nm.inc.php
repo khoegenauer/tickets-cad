@@ -1,21 +1,151 @@
 <?php
 /*
-7/16/10 Initial Release for no internet operation - created from FIP
-8/17/10 gettext => captions
-8/21/10 function do_login moved to login.inc.php
-8/25/10 logout() and login() relocated to LIP
-*/
+5/23/08 added function do_kml() - generates JS for kml files - 
+5/31/08 added function do_log() default values
+6/4/08  added $GLOBALS['LOG_INCIDENT_DELETE']	
+6/9/08  added $GLOBALS['LEVEL_SUPER']
+6/16/08 added reference $GLOBALS['LEVEL_SUPER']
+6/26/08 added DELETE abandoned SESSION records
+6/26/08 added log entries to  show_log()
+6/28/08 added $my_session refresh at login
+7/16/08 limited USER_AGENT string lgth to  100
+7/18/07 dispatch disallowed for guest-level
+8/6/08  fix to show_actions() when persons empty
+8/7/08  added log actions for ACTION, PATIENT
+8/15/08 mysql_fetch_array to mysql_fetch_assoc - performance
+8/22/08 added function usng()
+8/26/08 added speed check to distance check
+9/7/08  added coords display per CG format
+9/12/08 added USNG PHP functions
+9/14/08 empty check to lat/lng functions
+10/4/08 corrections to initial array setup to detect zero speed
+10/6/08 added function mail_it ()
+10/8/08 added window.focus()
+10/8/08 added function is_email
+10/8/08 'User' revised to 'Operator'
+10/15/08 changed 'Comments' to 'Disposition'
+10/15/08 relocated host id in mail msg
+10/15/08 addr array to string
+10/16/08 added tic's
+10/17/08 addr string is now pipe-delim'd
+10/17/08 sleep time added per settings value
+10/18/08 added snap()
+10/19/08 added istest-based timeout limit
+10/21/08 added chunk no. to subject line
+10/21/08 added new_notify_user() 
+10/22/08 added priorities as selection criteria
+10/22/08 set globals for notifies
+10/22/08 added cell_addrs.inc.php as include
+10/24/08 added status RESERVED
+11/21/08 added user agent string to session id hash - for testing
+1/11/09 suppress mail error report, return TBD incident type
+1/20/09 added callboard log entries
+1/21/09 show/hide top frame buttons
+1/23/09 added isFloat function, aprs position checks, error snaps, aprs conditionals
+1/26/09 mysql2timestamp() made public
+1/28/09 relocated function quote_smart() fm istest.php, global types removed
+1/30/09 handle MD5 passwds
+2/3/09  removed delta fm date/time evaluation
+2/4/09  added db functions - unused at this writing
+2/13/09 disallow 'member' logins
+2/15/09 added function format_date_time()
+2/16/09 added text parameter to caption string
+2/18/09 function mail_it() broken into msg() and send() functions
+2/19/09 added get_mysession ()
+3/3/09  MEMBER text addition, disallow MEMBER login
+3/5/09  renamed table _test to z_snapper
+3/7/09  removed function do_mail()
+3/8/09  test user/pword
+3/12/09 unset() added
+3/16/09 added function get_current()
+3/18/09 'aprs_poll' to 'auto_poll', dist chk rev'd for testing
+3/19/09 tracks_hh update added, single track record only
+3/22/09 fixed 'action' entries, instam/aprs hskpg
+3/25/09 added $GLOBALS['TOLERANCE']  for remote time validity determination, function my_is_float(), my_is_int()
+3/26/09 dropped use of last position
+5/4/09  revised My_is_float for 0 handling
+7/7/09  upgrade do_send to handle smtp, LOG_CALL_RESET added, force 'waiting' message after logout
+7/7/09  force non-zero str match, script META's addad
+7/8/09  $GLOBALS['LEVEL_UNIT'] added
+7/8/09  extract smtp name
+7/8/09  $GLOBALS['TRACK_APRS'], etc, added
+7/25/09 instam corrections, apply 1-minute poll limit, removed fm APRS
+7/29/09 added functions do_grack, do_locatea and do_glat to get data from these datasources. Modified function get_current to include them.
+8/2/09  explode() -> split()
+8/3/09  explode() -> split() for gtrack and locateA functions
+8/7/09	Revised function generate_date_dropdown to change display based on locale setting
+8/9/09	revise glat() to handle non-Curl configurations
+8/10/09	removed 'mobile = 1' from tracking select criteria, removed locale case "2"
+8/20/09	added close_incident link
+9/29/09 Added additional $Globals for new log events and Status Special
+10/20/09 Added function remove_nls to strip new lines from database entries for use in JS tooltips.
+11/7/09 E_DEPRECATED, is_email() redo for deprecated
+11/20/09 revised show_log () for shortened field display and title
+11/21/09 $_SESSION destroy added to logout
+11/27/09 added no-edit option to function add_header()
+12/13/09 force GLat badge hyphen
+12/26/09 send 'logged in' flag
+1/6/10 revised get_sess_key() to use userid in hash
+1/7/10 added function my_date_diff()
+1/8/10 NULL to user sid on logout
+1/23/10 browser detect added
+2/1/10 disallow guest email
+2/6/10 moved get_status_sel() from FMP
+2/7/10 correction for empty values - source TBD
+2/8/10 added units and facilities color-coding and legend
+2/18/10 'reply-to' correction
+2/19/10 Set/Get_Cookie() added
+3/8/10 added session vbls to show/hide facilities and  unavailable units
+3/13/10 added function is_phone ()
+3/21/10 added function get_unit_status_legend() 
+3/25/10 added function get_un_div_height (), log_codes.inc
+3/30/10 relocated 'dispatch' link
+4/4/10 session_start added 2 places
+4/27/10 added show/hide unavailable units - per AF mail
+4/29/10 session_destroy() to force CB frame reload on timeout, reload top frame
+4/30/10 added addr string with ticket descr
+5/2/10  added get_start(), get_end(), misc date functions
+5/4/10 $_SESSION['internet'] added
+5/13/10 re-do my_date_diff()
+6/17/10 applied intval() to delta_mins 
+6/24/10 round instam speed
+6/25/10 'member' login supported as guest
+6/26/10 911 contact information added
+7/2/10 functions is_member(), may_email() added, allow upper case email addr elements
+7/5/10 smtp revised to accomodate security protocol- per Kurt Jack
+7/6/10 function show_assigns() per AH
+7/10/10 added function get_cb_height () 
+7/12/10 added level 'unit'
+7/15/10 'NULL' corrections
+7/21/10 remove dead 'reserved' tickets
+7/26/10 unit login to term page
+7/27/10 handle undefined session key
+7/28/10 deletion error suppress
+7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
+8/5/10 auto-detect new install - moved to index.php
+8/10/10 logout user sql corrections applied, try/catch applied to cb/frame
+8/13/10 glat hyphen drop
+8/25/10 session housekeeping corrected, expires format changed to integer, logout() relocated to LIP
+8/27/10 UK date format per AH, operator ticket edit test added
+8/29/10 added get_disp_status()
+9/22/10 has_admin()added 
+9/29/10 mysql2timestamp typecast and drop ldg zeros, added do_diff(), require_once => require
+10/2/10 added function short_ts() - timestamp trimmer
+10/5/10 added function set_u_updated ()
+10/19/10 u2fenr reference correction
+11/29/10 case "2"
+11/30/10 get_text Patient added
 
+*/
 error_reporting(E_ALL);
 
-
 //	{						-- dummy
-@session_start();
+//
 require_once('istest.inc.php');
 require_once('mysql.inc.php');
 require_once("phpcoord.php");				// UTM converter	
 require_once("usng.inc.php");				// USNG converter 9/12/08
-//require_once($_SESSION['fmp']);			// added 12/19/07
+//require_once($fmp);	// 7/28/10
 require_once("browser.inc.php");			// added 1/23/10
 
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/7/09 
@@ -32,7 +162,8 @@ $GLOBALS['STATUS_RESERVED'] 		= 0;		// 10/24/08
 $GLOBALS['STATUS_CLOSED'] 			= 1;
 $GLOBALS['STATUS_OPEN']   			= 2;
 $GLOBALS['STATUS_SCHEDULED']   		= 3;
-$GLOBALS['NOTIFY_ACTION'] 			= 'Added Action/Patient';
+$temp =  get_text("Patient");
+$GLOBALS['NOTIFY_ACTION'] 			= "Added Action/{$temp}";
 $GLOBALS['NOTIFY_TICKET'] 			= 'Ticket Update';
 $GLOBALS['ACTION_DESCRIPTION']		= 1;
 $GLOBALS['ACTION_OPEN'] 			= 2;
@@ -237,7 +368,7 @@ function show_assigns($which, $id) {				// 08/8/5, 4/30/10
 	LEFT JOIN `$GLOBALS[mysql_prefix]user` 		ON `$GLOBALS[mysql_prefix]assigns`.`user_id`=`$GLOBALS[mysql_prefix]user`.`id`	
 	WHERE `$GLOBALS[mysql_prefix]assigns`.`{$which_ar[$which]}` = $id
 	ORDER BY `as_of` DESC";		//	07/05/10 Made responder table explicit.
-
+	
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 	$i = 0;	
 	$print = "";
@@ -338,7 +469,7 @@ function show_actions ($the_id, $theSort="date", $links, $display) {			/* list a
 																	/* list patients */
 	$query = "SELECT *,UNIX_TIMESTAMP(date) AS `date`,UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]patient` WHERE `ticket_id`='$the_id' ORDER BY `date`";
 	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-	$caption = "Patient: &nbsp;&nbsp;";
+	$caption = get_text("Patient") .": &nbsp;&nbsp;";
 	$actr=0;
 	while ($act_row = stripslashes_deep(mysql_fetch_assoc($result))){
 		$print .= "<TR CLASS='" . $evenodd[$actr%2] . "' WIDTH='100%'><TD VALIGN='top' NOWRAP CLASS='td_label'>" . $caption . "</TD>";
@@ -393,7 +524,7 @@ function show_actions ($the_id, $theSort="date", $links, $display) {			/* list a
 
 function show_log ($theid, $show_cfs=FALSE) {								// 11/20/09
 	global $evenodd ;	// class names for alternating table row colors
-	require_once('./incs/log_codes.inc.php'); 								// 3/25/10
+	require('./incs/log_codes.inc.php'); 									// 9/29/10
 		
 	$query = "
 		SELECT *, UNIX_TIMESTAMP(`when`) AS `when`,
@@ -442,12 +573,16 @@ function set_ticket_status($status,$id){				/* alter ticket status */
 	$result = mysql_query($query) or do_error("set_ticket_status(s:$status, id:$id)::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	}
 
-function format_date($date){							/* format date to defined type */ 
+function format_date($date){							/* format date to defined type 8/27/10 */ 
 	if (good_date($date)) {	
-		return date(get_variable("date_format"),$date);}	//return date(get_variable("date_format"),strtotime($date));
-	else {return "TBD";}
+		if (get_variable('locale')==1) {
+			return date("j/n/y H:i",$date);		// 08/27/10 - Revised to show UK format for locale = 1	
+		} else {
+			return date(get_variable("date_format"),$date);	//return date(get_variable("date_format"),strtotime($date));
+		}
+	} else {return "TBD";}
 	}				// end function format_date($date)
-	
+
 function good_date($date) {		// 
 	return (is_string ($date) && ((strlen($date)==10)));
 	}
@@ -535,6 +670,7 @@ function get_variable($which){								/* get variable from db settings table, re
 //	return $variables[$which];
 	}
 	
+
 function do_error($err_function,$err,$custom_err='',$file='',$line=''){/* raise an error event */
 	print "<FONT CLASS=\"warn\">An error occured in function '<B>$err_function</B>': '<B>$err</B>'<BR />";
 	if ($file OR $line) print "Error occured in '$file' at line '$line'<BR />";
@@ -543,31 +679,35 @@ function do_error($err_function,$err,$custom_err='',$file='',$line=''){/* raise 
 	die('<B>Execution stopped.</B></FONT>');
 	}
 
-function add_header($ticket_id, $no_edit = FALSE) {		// 11/27/09, 3/30/10
+function add_header($ticket_id, $no_edit = FALSE) {		// 11/27/09, 3/30/10, 8/27/10
+//	global {$_SESSION['fip']}, $fmp, {$_SESSION['editfile']}, {$_SESSION['addfile']}, {$_SESSION['unitsfile']}, {$_SESSION['facilitiesfile']}, {$_SESSION['routesfile']}, {$_SESSION['facroutesfile']};
+//	print "<A HREF='{$_SESSION['editfile']}?id=$ticket_id&delete=1'>" . get_text("Delete") . " </A> | ";
 	$win_height =  get_variable('map_height') + 240;
 	$win_width = get_variable('map_width') + 80;
-	print "<BR /><SPAN STYLE = 'margin-left:40px'><NOBR><FONT SIZE='2'>This Call: ";	
-	print "<A HREF='#' onClick = \"var popWindow = window.open('incident_popup.php?id=$ticket_id', 'PopWindow', 'resizable=1, scrollbars, height={$win_height}, width={$win_width}, left=50,top=50,screenX=50,screenY=50'); popWindow.focus();\">Popup</A> |"; // 7/3/10
 
-	if (is_administrator() || is_super()){
-		if (!($no_edit)) {
-			print "<A HREF='edit_nm.php?id=$ticket_id'>Edit </A> | ";
-			}
-//		print "<A HREF='edit_nm.php?id=$ticket_id&delete=1'>Delete </A> | ";
+//	$oper_can_edit = ((is_user()) && (get_variable('oper_can_edit') == 1));		// 8/27/10
+	print "<BR /><SPAN STYLE = 'margin-left:40px'><NOBR><FONT SIZE='2'>This Call: ";	
+	print "<A HREF='#' onClick = \"var popWindow = window.open('incident_popup.php?id=$ticket_id', 'PopWindow', 'resizable=1, scrollbars, height={$win_height}, width={$win_width}, left=50,top=50,screenX=50,screenY=50'); popWindow.focus();\">" . get_text("Popup") . "</A> |"; // 7/3/10
+
+	if (can_edit()){
+		print "<A HREF='{$_SESSION['editfile']}?id=$ticket_id'>" . get_text("Edit") . " </A> | ";
+
 		if (!is_closed($ticket_id)) {
-			print "<A HREF='action.php?ticket_id=$ticket_id'>Add Action</A> | ";
-			print "<A HREF='patient.php?ticket_id=$ticket_id'>Add Patient</A> | ";
+			print "<A HREF='action.php?ticket_id=$ticket_id'>" . get_text("Add Action") . "</A> | ";
+			print "<A HREF='patient.php?ticket_id=$ticket_id'>" . get_text("Add Patient") . "</A> | ";
 			}
-		print "<A HREF='config.php?func=notify&id=$ticket_id'>Notify</A> | ";
+		print "<A HREF='config.php?func=notify&id=$ticket_id'>" . get_text("Notify") . " </A> | ";
 		}
-	print "<A HREF='main.php?print=true&id=$ticket_id'>Print </A> | ";
+	print "<A HREF='main.php?print=true&id=$ticket_id'>" . get_text("Print") . " </A> | ";
 	if (!is_guest()) {				// 2/1/10
-		print "<A HREF='#' onClick = \"var mailWindow = window.open('mail.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=300, width=600, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\">E-mail </A> |"; // 2/1/10
-		print "<A HREF='#' onClick = \"var mailWindow = window.open('add_note.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=240, width=600, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\"> Add note </A>"; // 10/8/08
-		if (!is_closed($ticket_id)) {		// 10/5/09
-			print "  | <A HREF='#' onClick = \"var mailWindow = window.open('close_in.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=240, width=600, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\"> Close incident </A> ";  // 8/20/09
+		print "<A HREF='#' onClick = \"var mailWindow = window.open('mail.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=300, width=600, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\">" . get_text("E-mail") . " </A> |"; // 2/1/10
+		print "<A HREF='#' onClick = \"var mailWindow = window.open('add_note.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=240, width=600, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\"> " . get_text("Add note") . " </A>"; // 10/8/08
+		if ((!(is_closed($ticket_id))) && (!is_unit()))  {		// 7/27/10
+			print "  | <A HREF='#' onClick = \"var mailWindow = window.open('close_in.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=240, width=600, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\"> " . get_text("Close incident") . " </A> ";  // 8/20/09
 			}
-		print " | <A HREF='routes_nm.php?ticket_id=$ticket_id'> Dispatch Unit</A>";		// 3/30/10
+		if (!is_unit()) {				// 7/27/10
+			print " | <A HREF='{$_SESSION['routesfile']}?ticket_id=$ticket_id'> " . get_text("Dispatch Unit") . "</A>";		// 3/30/10
+			}
 		}
 	print "</FONT></NOBR></SPAN><BR />";
 	}				// function add_header()
@@ -579,36 +719,35 @@ function is_closed($id){/* is ticket closed? */
 function is_super(){				// added 6/9/08
 	return ($_SESSION['level'] == $GLOBALS['LEVEL_SUPER']);		// 5/11/10
 	}
-function is_administrator(){/* is user admin or super? */
+function is_administrator(){		/* is user admin or super? */
 	return (($_SESSION['level'] == $GLOBALS['LEVEL_ADMINISTRATOR']) || ($_SESSION['level'] == $GLOBALS['LEVEL_SUPER']));		// 5/11/10
 	}
-
-function is_guest(){/* is user guest? */
+function is_guest(){				/* is user guest? */
 	return (($_SESSION['level'] == $GLOBALS['LEVEL_GUEST']) || ($_SESSION['level'] == $GLOBALS['LEVEL_MEMBER']));				// 6/25/10
 	}
-
 function is_member(){				/* is user member? */
 	return (($_SESSION['level'] == $GLOBALS['LEVEL_MEMBER']));				// 7/2/10
 	}
-
 function is_user(){					/* is user operator/dispatcher? */
 	return ($_SESSION['level'] == $GLOBALS['LEVEL_USER']);		// 5/11/10
 	}
-
 function is_unit(){					/* is user unit? */			
 	return ($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']);						// 7/12/10
 	}
-
 function may_email() {
 	return (!(is_guest()) || (is_member() || is_unit())) ;						// members, units  allowed
 	}
 																	/* print date and time in dropdown menus */ 
+function has_admin() {
+	return ((is_super()) || (is_administrator())) ;								// 9/22/10
+	}
 function generate_date_dropdown($date_suffix,$default_date=0, $disabled=FALSE) {			// 'extra allows 'disabled'
+
 	$dis_str = ($disabled)? " disabled" : "" ;
 	$td = array ("E" => "5", "C" => "6", "M" => "7", "W" => "8");							// hours west of GMT
 	$deltam = intval(get_variable('delta_mins'));													// align server clock minutes
 	$local = (time() - (intval(get_variable('delta_mins'))*60));
-	
+
 	if ($default_date)	{	//default to current date/time if no values are given
 		$year  		= date('Y',$default_date);
 		$month 		= date('m',$default_date);
@@ -627,7 +766,7 @@ function generate_date_dropdown($date_suffix,$default_date=0, $disabled=FALSE) {
 		if (get_variable('military_time')==1) 	$hour = date('H', $local);
 		else 									$hour = date('h', $local);
 		}
-		
+
 	$locale = get_variable('locale');				// Added use of Locale switch for Date entry pulldown to change display for locale 08/07/09
 	switch($locale) { 
 		case "0":
@@ -655,6 +794,7 @@ function generate_date_dropdown($date_suffix,$default_date=0, $disabled=FALSE) {
 			break;
 	
 		case "1":
+		case "2":				// 11/29/10
 			print "<SELECT name='frm_day_$date_suffix' $dis_str>";
 			for($i = 1; $i < 32; $i++){
 				print "<OPTION VALUE=\"$i\"";
@@ -702,8 +842,8 @@ function report_action($action_type,$ticket_id,$value1='',$value2=''){/* insert 
 	switch($action_type)	{
 		case $GLOBALS[ACTION_OPEN]: 	$description = "Ticket Opened"; break;
 		case $GLOBALS[ACTION_CLOSED]: 	$description = "Ticket Closed"; break;
-		case $GLOBALS[PATIENT_OPEN]: 	$description = "Patient Item Opened"; break;
-		case $GLOBALS[PATIENT_CLOSED]: 	$description = "Patient Item Closed"; break;
+		case $GLOBALS[PATIENT_OPEN]: 	$description = get_text("Patient") . " Item Opened"; break;
+		case $GLOBALS[PATIENT_CLOSED]: 	$description = get_text("Patient") . " Item Closed"; break;
 		default: 						$description = "[unknown report value: $action_type]";
 		}
 	$now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
@@ -717,7 +857,6 @@ function dumpp($variable) {
 	var_dump($variable) ;
 	echo "</PRE>\n";
 	}
-	
 function dump($variable) {
 	echo "\n//<PRE>";				// pretty it a bit
 	var_dump($variable) ;
@@ -777,6 +916,10 @@ function get_level_text ($level) {
 		}
 	}		//end function
 	
+function got_gmaps() {								// valid GMaps API key ?
+	return (strlen(get_variable('gmaps_api_key'))==86);
+	}
+
 function mysql_format_date($indate="") {			// returns MySQL-format date given argument timestamp or default now
 	if (empty($indate)) {$indate = time();}
 	return @date("Y-m-d H:i:s", $indate);
@@ -789,16 +932,16 @@ function is_date($DateEntry) {						// returns true for valid non-zero date
 	else {return TRUE;}	
 	}		// end function Is_Date()
 
-// function toUTM($coordsIn, $from = "") {							// UTM converter - assume comma separator
-	// $temp = explode(",", $coordsIn);
-	// $coords = new LatLng(trim($temp[0]), trim($temp[1]));	
-	// $utm = $coords->toUTMRef();
-	// $temp = $utm->toString();
-	// $temp1 = explode (" ", $temp);					// parse by space
-	// $temp2 = explode (".", $temp1[1]);				// parse by period
-	// $temp3 = explode (".", $temp1[2]);
-	// return $temp1[0] . " " . $temp2[0] . " " . $temp3[0];
-	// }				// end function toUTM ()
+function toUTM($coordsIn, $from = "") {							// UTM converter - assume comma separator
+	$temp = explode(",", $coordsIn);
+	$coords = new LatLng(trim($temp[0]), trim($temp[1]));	
+	$utm = $coords->toUTMRef();
+	$temp = $utm->toString();
+	$temp1 = explode (" ", $temp);					// parse by space
+	$temp2 = explode (".", $temp1[1]);				// parse by period
+	$temp3 = explode (".", $temp1[2]);
+	return $temp1[0] . " " . $temp2[0] . " " . $temp3[0];
+	}				// end function toUTM ()
 	
 function get_type($id) {				// returns incident type given its id
 	if ($id == 0) {return "TBD";}		// 1/11/09
@@ -828,13 +971,23 @@ function output_csv($data, $filename = false){
 //	exit;
 	}
 
-function mysql2timestamp($m) {				// 1/26/09
-	return mktime(substr($m,11,2),substr($m,14,2),substr($m,17,2),substr($m,5,2),substr($m,8,2),substr($m,0,4));
+
+function mysql2timestamp($m) {				// 9/29/10
+//	return mktime(substr($m,11,2),substr($m,14,2),substr($m,17,2),substr($m,5,2),substr($m,8,2),substr($m,0,4));
+	return mktime(	(int) ltrim(substr((string)$m,11,2), "0"),
+					(int) ltrim(substr((string)$m,14,2), "0"),
+					(int) ltrim(substr((string)$m,17,2), "0"),
+					(int) ltrim(substr((string)$m,5,2), "0"),
+					(int) ltrim(substr((string)$m,8,2), "0"),
+					(int) ltrim(substr((string)$m,0,4), "0")
+					);
 	}
+
+require_once('remotes.inc.php');	// 8/21/10
 
 function do_log($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, $rec_facility_id=0, $mileage=0) {		// generic log table writer - 5/31/08, 10/6/09
 	@session_start();							// 4/4/10
-	$who = (array_key_exists ('user_id', $_SESSION ))? $_SESSION['user_id']: 0;
+	$who = (!empty($_SESSION))? $_SESSION['user_id']: 0;
 	$from = $_SERVER['REMOTE_ADDR'];
 	$now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
 	$query = sprintf("INSERT INTO `$GLOBALS[mysql_prefix]log` (`who`,`from`,`when`,`code`,`ticket_id`,`responder_id`,`info`, `facility`, `rec_facility`, `mileage`)  
@@ -868,9 +1021,10 @@ function do_log($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, 
 
 	function set_sess_exp() {						// updates session-expires time in user record
 		@session_start();							// 4/4/10
-
 		global $expiry;
-		$query = "UPDATE `$GLOBALS[mysql_prefix]user` SET `expires` = '{$expiry}' WHERE `id`='{$_SESSION['user_id']}' LIMIT 1";		// note no 'delta'
+		$the_date = mysql_format_date($expiry) ;
+		
+		$query = "UPDATE `$GLOBALS[mysql_prefix]user` SET `expires` = '{$the_date}' WHERE `id`='{$_SESSION['user_id']}' LIMIT 1";		// note no 'delta'
 		$result = mysql_query($query) or do_error($query, "", mysql_error(), basename( __FILE__), __LINE__);
 		}
 
@@ -964,8 +1118,97 @@ function ezDate($d) {
 	if(!($val==1)) $val .= 's';
 	$val .= " ago";
 	return $val;
+	} 
+	
+function do_kml() {									// emits JS for kml-type files in noted directory - added 5/23/08
+	$dir = "./kml_files";							// required as directory
+	if (is_dir($dir)){										
+		$dh  = opendir($dir);
+		$temp = explode ("/", $_SERVER['REQUEST_URI']);
+		$temp[count($temp)-1] = substr($dir, 2);				// home subdir
+		$server_str = "http://" . $_SERVER['SERVER_NAME'] .":" .  $_SERVER['SERVER_PORT'] .  implode("/", $temp) . "/";
+		while (false !== ($filename = readdir($dh))) {
+			switch (get_ext($filename)) {						// drop all other types, incl directories
+				case "kml":
+				case "kmz":
+				case "xml":
+					$url = $server_str . $filename;
+					echo "\tmap.addOverlay(new GGeoXml(\"" . $url . "\"));\n";
+				}		// end switch ()
+			}		// end while ()
+		}		// end is_dir()
+	}		// end function do_kml()
+		
+
+
+function lat2dms($inlat) {				// 9/9/08 both to degr, min, sec
+	$nors = ($inlat<0.0)? "S.":"N.";
+	$d = floor(abs($inlat));	// degrees
+	$mu = (abs($inlat)-$d)*60;	// min's unrounded
+	$m = floor($mu);			// min's
+	$su = ($mu - $m)*60;		// sec's unrounded
+	$s = (round($su, 1));		// seconds
+	return $d . '&deg; ' . abs($m) . "&#39; " . abs($s) . "&#34;" . $nors;
 	}
 
+function lng2dms($inlng) {				// 9/9/08 both to degr, min, sec
+	$wore = ($inlng<0.0)? "W.":"E.";
+	$d = floor(abs($inlng));	// degrees
+	$mu = (abs($inlng)-$d)*60;	// min's unrounded
+	$m = floor($mu);			// min's
+	$su = ($mu - $m)*60;		// sec's unrounded
+	$s = (round($su, 1));		// seconds
+	return $d . '&deg; ' . abs($m) . "&#39; " . abs($s) . "&#34;" . $wore;
+	}
+
+
+function lat2ddm($inlat) {				// to degr, dec mins 9/7/08
+	$nors = ($inlat<0.0)? "S.":"N.";
+	$deg = floor(abs($inlat));
+	return $deg . '&deg; ' . round(abs($inlat-$deg)*60, 1) . "' " . $nors;
+	}
+function lng2ddm($inlng) {				// to degr, dec mins 9/7/08
+	$wore = ($inlng<0.0)? "W.":"E.";
+	$deg = floor(abs($inlng));
+	return $deg . '&deg; ' . round((abs($inlng)-$deg)*60, 1) . "' " . $wore;
+	}
+
+function get_lat($in_lat) {					// 9/7/08
+	if (empty($in_lat)) {return"";}			// 9/14/08
+	$format = get_variable('lat_lng');
+
+	switch ($format) {
+		case 0:						// decimal
+		    return $in_lat;
+		    break;
+		case 1:
+//			return ll2dms($in_lat);	// dms
+			return lat2dms($in_lat);	// dms
+			break;
+		case 2:						// cg format
+		    return lat2ddm($in_lat);
+		    break;
+		}
+	}				// end function get_lat()
+	
+function get_lng($in_lng) {					// 9/7/08
+	if (empty($in_lng)) {return"";}			// 9/14/08
+	$format = get_variable('lat_lng');
+
+	switch ($format) {
+		case 0:						// decimal
+		    return $in_lng;
+		    break;
+		case 1:	
+//			return ll2dms($in_lng);		// dms
+			return lng2dms($in_lng);	// dms
+			break;
+		case 2:						// cg format
+		    return lng2ddm($in_lng);
+		    break;
+		}
+	}				// end function get_lng()
+	
 function mail_it ($to_str, $text, $ticket_id, $text_sel=1, $txt_only = FALSE) {				// 10/6/08, 10/15/08,  2/18/09, 3/7/09
 	global $istest;
 
@@ -1001,7 +1244,7 @@ Host		Q
 		   	$match_str = strtoupper(get_variable("msg_text_3"));
 		   	break;
 		}
-    if (empty($match_str)) {$match_str = implode ("", range("A", "R"));}        // empty get all	
+	if (empty($match_str)) {$match_str = implode ("", range("A", "R"));}		// empty get all
 
 	require_once("cell_addrs.inc.php");			// 10/22/08
 	$cell_addrs = array( "vtext.com", "messaging.sprintpcs.com", "txt.att.net", "vmobl.com", "myboostmobile.com");		// 10/5/08
@@ -1010,6 +1253,7 @@ Host		Q
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id`='$ticket_id' LIMIT 1";
 	$ticket_result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$t_row = stripslashes_deep(mysql_fetch_array($ticket_result));
+//	dump($t_row);
 	$eol = "\n";
 
 	$message="";
@@ -1093,7 +1337,7 @@ Host		Q
 				case "Q":
 					$message .= "Tickets host: ".get_variable('host').$eol;
 				    break;
-					
+
 				case "R":							// 6/26/10
 					$message .= (empty($t_row['nine_one_one']))?  "": "911: ". wordwrap($t_row['nine_one_one']).$eol;
 				    break;
@@ -1106,7 +1350,7 @@ Host		Q
 		}		// end for ($i...)
 
 	$message = str_replace("\n.", "\n..", $message);					// see manual re mail win platform peculiarities
-	
+
 	$subject = (strpos ($match_str, "A" ))? $subject = $text . $t_row['scope'] . " (#" .$t_row['id'] . ")": "";
 
 	if ($txt_only) {
@@ -1118,75 +1362,23 @@ Host		Q
 	}				// end function mail_it ()
 // ________________________________________________________
 
-function smtp ($my_to, $my_subject, $my_message, $my_params, $my_from) { // 7/5/10 - per Kurt Jack
-	require_once 'lib/swift_required.php';
-	
-	// $params = "outgoing.verizon.net/587/none/ashore4/********/ashore4@verizon.net";
-	//                       0         1    2      3      4           5
-	
-	$conn_ary = explode ("/",  $my_params);   
-	// dump($conn_ary) ;
-	$transport = Swift_SmtpTransport::newInstance($conn_ary[0] , $conn_ary[1] , $conn_ary[2])
-	  ->setUsername($conn_ary[3])
-	  ->setPassword($conn_ary[4])
-	  ;
-	
-	$mailer = Swift_Mailer::newInstance($transport); // instantiate using  created Transport
-	$temp_ar = explode("@", $my_to); // extract name portion - 7/8/09
-	$the_from = (isset($conn_ary[5]))? $conn_ary[5]: $my_from;
-	$the_from_ar = explode("@", $my_from);	// to extract user portion
-											// Create a message
-	$message = Swift_Message::newInstance($my_subject)
-	  ->setFrom(array($the_from => $the_from_ar[0]))
-	  ->setTo(array($my_to , $my_to => trim($temp_ar[0])))
-	  ->setBody($my_message)
-	  ;
-	//    ->setTo(array('receiver@domain.org', 'other@domain.org' => 'Names'))
-	$result = $mailer->send($message); //Send the message
-	
-	} // end function smtp
-
-
-function old_smtp ($my_to, $my_subject, $my_message, $my_params, $my_from) {				// 7/7/09
-	require_once 'lib/swift_required.php';
-
-// $params = "outgoing.verizon.net/587/ashore4/********/ashore4@verizon.net";
-//				   0				1	   2	  3			4	
-
-	$conn_ary = explode ("/",  $my_params);
-//	dump($conn_ary) ;
-	$transport = Swift_SmtpTransport::newInstance($conn_ary[0] , $conn_ary[1])
-	  ->setUsername($conn_ary[2])
-	  ->setPassword($conn_ary[3])
-	  ;
-	
-	$mailer = Swift_Mailer::newInstance($transport);		// instantiate using  created Transport	
-	$temp_ar = explode("@", $my_to);						// extract name portion - 7/8/09
-	$the_from = (isset($conn_ary[4]))? $conn_ary[4]: $my_from;
-	$the_from_ar = explode("@", $my_from);					// to extract user portion
-															// Create a message
-	$message = Swift_Message::newInstance($my_subject)
-	  ->setFrom(array($the_from => $the_from_ar[0]))
-	  ->setTo(array($my_to , $my_to => trim($temp_ar[0])))
-	  ->setBody($my_message)
-	  ;
-	//    ->setTo(array('receiver@domain.org', 'other@domain.org' => 'Names'))
-	$result = $mailer->send($message);						//Send the message
-	
-	}		// end function smtp
+function smtp ($my_to, $my_subject, $my_message, $my_params, $my_from) { 
+    require_once('smtp.inc.php');                                        // defer load until required - 8/2/10
+    real_smtp ($my_to, $my_subject, $my_message, $my_params, $my_from);
+    }                         // end function smtp
 
 function do_send ($to_str, $subject_str, $text_str ) {						// 7/7/09
 	global $istest;
 	$sleep = 4;																// seconds delay between text messages
-	
+
 	function stripLabels($sText){
-		$labels = array("Incident:", "Priority:", "Nature:", "Addr:", "Descr:", "Reported by:", "Phone:", "Written:", "Updated:", "Status:", "Disp:", "Run Start:", "Map:", "Patient:", "Actions:", "Tickets host:"); // 5/9/10
+		$labels = array("Incident:", "Priority:", "Nature:", "Addr:", "Descr:", "Reported by:", "Phone:", "Written:", "Updated:", "Status:", "Disp:", "Run Start:", "Map:", get_text("Patient") .":", "Actions:", "Tickets host:"); // 5/9/10
 		for ($x = 0; $x < count($labels); $x++) {
 			$sText = str_replace($labels[$x] , '', $sText);
 			}
 		return $sText;
 		}
-
+	
 	$to_array = explode ("|",$to_str );										// pipe-delimited string  - 10/17/08
 	require_once("cell_addrs.inc.php");										// 10/22/08
 	$cell_addrs = array("vtext.com", "messaging.sprintpcs.com", "txt.att.net", "vmobl.com", "myboostmobile.com");		// 10/5/08
@@ -1263,7 +1455,7 @@ function do_send ($to_str, $subject_str, $text_str ) {						// 7/7/09
 		}
 	return $caption;
 	}					// end function do send ()
-	
+
 function is_email($email){		   //  validate email, code courtesy of Jerrett Taylor - 10/8/08, 7/2/10
 	if(!preg_match( "/^" .
 	"[a-zA-Z0-9]+([_\\.-][a-zA-Z0-9]+)*" .		//user
@@ -1277,7 +1469,7 @@ function is_email($email){		   //  validate email, code courtesy of Jerrett Tayl
 			return TRUE;
 			}
 		}							  // end function is_email()
-				
+		
 
 function notify_user($ticket_id,$action_id) {								// 10/20/08
 	if (get_variable('allow_notify') != '1') return FALSE;						//should we notify?
@@ -1300,7 +1492,7 @@ function notify_user($ticket_id,$action_id) {								// 10/20/08
 	}
 
 
-function snap($source, $stuff = "") {																// 10/18/08 , 3/5/09 - debug tool
+function snap($source, $stuff = "") {									// 10/18/08 , 3/5/09 - debug tool
 	global $snap_table;				// defined in istest.inc.php
 	if (mysql_table_exists($snap_table)) {
 		$query	= "DELETE FROM `$snap_table` WHERE `when`< (NOW() - INTERVAL 1 DAY)"; 		// first remove old
@@ -1310,7 +1502,7 @@ function snap($source, $stuff = "") {																// 10/18/08 , 3/5/09 - debu
 			VALUES(%s,%s)",
 				quote_smart_deep(trim($source)),
 				quote_smart_deep(trim($stuff)));
-	
+
 		$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
 		unset($result);
 		}
@@ -1358,8 +1550,19 @@ function my_is_int($n){										// 3/25/09
     return ( $n == strval(intval($n)) )? true : false;
 	}
 
+function LLtoOSGB($lat, $lng) {
+
+	$ll2w = new LatLng($lat, $lng);
+	$ll2w->WGS84ToOSGB36();
+	$os2w = $ll2w->toOSRef($lat, $lng);
+	$osgrid = $os2w->toSixFigureString();
+
+	return $osgrid;
+	}	//end function LLtoOSGB
+
 function my_date_diff($d1, $d2){		// end, start timestamp integers in, returns string - 5/13/10
-	if ($d1 < $d2){	//check higher timestamp and switch if neccessary
+
+	if ($d1 < $d2){						// check higher timestamp and switch if neccessary
 		$temp = $d2;
 		$d2 = $d1;
 		$d1 = $temp;
@@ -1367,8 +1570,9 @@ function my_date_diff($d1, $d2){		// end, start timestamp integers in, returns s
 	else {
 		$temp = $d1; //temp can be used for day count if required
 		}
-	$d1 = date_parse(date("Y-m-d H:i:s",$d1));
-	$d2 = date_parse(date("Y-m-d H:i:s",$d2));
+
+	$d1 = date_parse(date("Y-m-d H:i:s", (integer)$d1));
+	$d2 = date_parse(date("Y-m-d H:i:s", (integer)$d2));
 	if ($d1['second'] >= $d2['second']){	//seconds
 		$diff['second'] = $d1['second'] - $d2['second'];
 		}
@@ -1427,7 +1631,8 @@ function my_date_diff($d1, $d2){		// end, start timestamp integers in, returns s
 
 function expires() {
 	$now = time() - (intval(intval(get_variable('delta_mins')))*60); 				// 6/17/10
-	return mysql_format_date($now + $GLOBALS['SESSION_TIME_LIMIT']);
+//	return mysql_format_date($now + $GLOBALS['SESSION_TIME_LIMIT']);
+	return $now + $GLOBALS['SESSION_TIME_LIMIT'];				// 8/25/10
 	}
 
 function get_status_sel($unit_in, $status_val_in, $tbl_in) {					// returns select list as click-able string - 2/6/10
@@ -1451,6 +1656,7 @@ function get_status_sel($unit_in, $status_val_in, $tbl_in) {					// returns sele
 
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]{$tablename}`, `$GLOBALS[mysql_prefix]{$status_table}` WHERE `$GLOBALS[mysql_prefix]{$tablename}`.`id` = $unit_in 
 		AND `$GLOBALS[mysql_prefix]{$status_table}`.`id` = `$GLOBALS[mysql_prefix]{$tablename}`.`{$link_field}` LIMIT 1" ;	
+
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	if (mysql_affected_rows()==0) {				// 2/7/10
 		$init_bg_color = "transparent";
@@ -1502,12 +1708,11 @@ function get_facilities_legend() {		// returns string as centered row - 2/8/10
 		LEFT JOIN `$GLOBALS[mysql_prefix]fac_types` ON `$GLOBALS[mysql_prefix]fac_types`.`id` = `$GLOBALS[mysql_prefix]facilities`.`type` ORDER BY `mytype`";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
-	$out_str = "<TR><TD COLSPAN='99' ALIGN='center'><SPAN CLASS='even'><SPAN CLASS='odd' ALIGN = 'right'>----------</SPAN>";
-
+	$out_str = "<TR><TD COLSPAN=99 ALIGN='center'><SPAN CLASS='even'><SPAN CLASS='odd' ALIGN = 'right'> Facilities: </SPAN>";
 	while ($row = stripslashes_deep(mysql_fetch_array($result))) {
 		$the_bg_color = 	$GLOBALS['FACY_TYPES_BG'][$row['icon']];	
 		$the_text_color = 	$GLOBALS['FACY_TYPES_TEXT'][$row['icon']];		
-		$out_str .= "<SPAN>&nbsp;</SPAN>";
+		$out_str .= "<SPAN STYLE='background-color:{$the_bg_color}; opacity: .7; color:{$the_text_color}'> {$row['mytype']} </SPAN><SPAN>&nbsp;</SPAN>";
 		}
 	return $out_str .= "</SPAN></TD></TR>";	
 	}										// end function get_facilities_legend()
@@ -1536,8 +1741,9 @@ function get_un_div_height ($in_max) {				//	compute pixels min 260, max .5 x sc
 	$query = "SELECT `id` FROM `$GLOBALS[mysql_prefix]responder`";
 	$result_unit = mysql_query($query) or do_error($query_unit, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 	unset ($result_unit);
+	$required = 96 + (mysql_affected_rows()*22);		// 7/9/10
 
-	$required = mysql_affected_rows() * 23;		// pixels per line		
+//	$required = mysql_affected_rows() * 23;		// pixels per line		
 	if ($required < $min)	{return $min;}
 	else					{return ($required > $max)?   $max:  $required;}
 	}		// end function un_div_height ()	
@@ -1637,21 +1843,6 @@ function get_end($local_func){
 			}
 		}		// end function get_end
 
-$text_array = array();			// 8/17/10
-function get_text($which){		/* get replacement text from db captions table, returns FALSE if absent  */
-	global $text_array;
-	if (empty($text_array)) {	// populate it to avoid hammering db
-		$result = mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]captions`") or do_error("get_text({$which})::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-		while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
-			$capt = $row['capt']; 
-			$repl=$row['repl'] ;
-			$text_array[$capt] = $repl;
-			}
-		}
-	return (array_key_exists($which, $text_array))? $text_array[$which] : FALSE ;
-	}
-
-
 function get_cb_height () {		// returns pixel count for cb frame	height based on no. of lines - 7/10/10
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00'";		// 2/12/09   
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
@@ -1670,5 +1861,87 @@ function get_cb_height () {		// returns pixel count for cb frame	height based on
 	return (integer) $height;
 	}		// function get_cb_height ()
 
+
+$text_array = array();
+function get_text($which){		/* get replacement text from db captions table, returns FALSE if absent  */
+	global $text_array;
+	if (empty($text_array)) {	// populate it to avoid hammering db
+		$result = mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]captions`") or do_error("get_text({$which})::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
+			$capt = $row['capt']; 
+			$repl=$row['repl'] ;
+			$text_array[$capt] = $repl;
+			}
+		}
+	return (array_key_exists($which, $text_array))? $text_array[$which] : $which ;
+	}
+
+function can_edit() {										// 8/27/10
+	$oper_can_edit = ((is_user()) && (get_variable('oper_can_edit') == 1));	
+	return (is_administrator() || is_super() || ($oper_can_edit));
+	} 	// end function can_edit()
+
+
+function do_diff($indx, $row){		// returns diff in seconds from problemstart- 9/29/10
+	switch ($indx) {
+		case 0:
+			$temp = mysql2timestamp($row['dispatched']);
+		    break;
+		case 1:
+			$temp = mysql2timestamp($row['responding']);
+		    break;
+		case 2:
+			$temp = mysql2timestamp($row['on_scene']);
+		    break;
+		case 3:
+			$temp = mysql2timestamp($row['u2fenr']);		// 10/19/10
+		    break;
+		case 4:
+			$temp = mysql2timestamp($row['u2farr']);
+		    break;
+		case 5:
+			$temp = mysql2timestamp($row['clear']);
+		    break;
+		case 6:
+			$temp = mysql2timestamp($row['problemend']);
+		    break;
+		default:
+			dump($indx);				// error  error  error  error  error 
+		}
+	return $temp - mysql2timestamp($row['problemstart']); 
+	}
+
+function get_disp_status ($row_in) {			// 8/29/10
+	$tags_arr = explode("/", get_variable('disp_stat'));
+	if (is_date($row_in['u2farr'])) 	{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[4]}&nbsp;</SPAN>";}
+	if (is_date($row_in['u2fenr'])) 	{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[3]}&nbsp;</SPAN>";}
+	if (is_date($row_in['on_scene'])) 	{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[2]}&nbsp;</SPAN>";}
+	if (is_date($row_in['responding'])) { return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[1]}&nbsp;</SPAN>";}
+	if (is_date($row_in['dispatched'])) { return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[0]}&nbsp;</SPAN>";}
+	}
+														
+function set_u_updated ($in_assign) {			// given a disaptch record id, updates unit data - 9/1/10									
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` =  {$in_assign} LIMIT 1";
+	$result = mysql_query($query) or do_error($query, "", mysql_error(), basename( __FILE__), __LINE__);
+	
+	$row_temp = mysql_fetch_assoc($result);					// 
+	$now = quote_smart(mysql_format_date(time() - (intval(get_variable('delta_mins'))*60)));														// 9/1/10
+	$user = quote_smart(trim($_SESSION['user_id']));
+	$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET
+		`updated`= 			{$now},
+		`_on`= 				{$now},
+		`user_id`=  		{$user},
+		`_by`=   			{$user},
+		`_from`= " . 		quote_smart(trim($_SERVER['REMOTE_ADDR'])) . "
+		WHERE `id`=			{$row_temp['responder_id']}";
+	
+	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
+	unset($result);
+	return TRUE;
+	}		// end function set_u_updated (
+
+function short_ts($in_str){		// ex:10/29/10 12:22 - 10/2/10
+	return substr($in_str, -5);
+	}
 
 ?>

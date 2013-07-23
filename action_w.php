@@ -15,15 +15,18 @@
 8/8/10  corrected div height calculation, scroll => auto
 8/15/10 dupe prvention added
 8/27/10 missing fmp call
+3/15/11 changed default.css to stylesheet.php
+5/26/11 added intrusion detection
 */
 error_reporting(E_ALL);
 
 session_start();
 require_once('./incs/functions.inc.php');
 do_login(basename(__FILE__));
+if ((isset($_REQUEST['ticket_id'])) && 	(strlen(trim($_REQUEST['ticket_id']))>6)) {	shut_down();}			// 5/26/11
 require_once($_SESSION['fmp']);		// 8/27/10
 
-$istest = TRUE;
+$istest = FALSE;
 if((($istest)) && (!empty($_GET))) {dump ($_GET);}
 if((($istest)) && (!empty($_POST))) {dump ($_POST);}
 
@@ -38,7 +41,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="8/24/08" />
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css" />
+	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css" />	<!-- 3/15/11 -->
 <SCRIPT src="./js/multiSelect.js"></SCRIPT>
 <SCRIPT>
 	function ck_window() {		//  onLoad = "ck_window()"

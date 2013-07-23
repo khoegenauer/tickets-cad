@@ -1,6 +1,8 @@
 <?php
 /*
 10/2/10 initial release
+12/1/10 get_text disposition added
+3/15/11 changed stylesheet.php to stylesheet.php
 */
 error_reporting(E_ALL);	
 require_once('./incs/functions.inc.php');
@@ -14,7 +16,7 @@ require_once('./incs/functions.inc.php');
 		<META HTTP-EQUIV="Pragma" 				CONTENT="NO-CACHE"/>
 		<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript"/>
 		<META HTTP-EQUIV="Script-date" 			CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
-		<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+		<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
 	<STYLE>
 		tr.even { background-color: #DEE3E7;}
 		tr.odd 	{ background-color: #EFEFEF;}
@@ -129,7 +131,7 @@ require_once('./incs/functions.inc.php');
 			<TD><B>Elapsed</B></TD>
 			<TD><B>Severity</B></TD>
 			<TD><B>Call type</B></TD>
-			<TD><B>Comments/Disposition</B></TD>
+			<TD><B>Comments/<?php print $disposition;?></B></TD>
 			<TD><B>Facility</B></TD>
 			<TD><B>Address</B></TD>
 			<TD><B>Unit responding</B></TD>

@@ -132,6 +132,24 @@
 9/29/10 mysql2timestamp typecast and drop ldg zeros, added do_diff(), require_once => require
 10/2/10 added function short_ts() - timestamp trimmer
 10/5/10 added function set_u_updated ()
+10/19/10 u2fenr reference correction
+11/14/10 fix occasional 'Undefined index: user_id'
+11/16/10 added check for locale for UK/OZ phone number format.
+11/24/10 added function get_dist_factor()
+11/26/10 functions get_speed(),  get_remote() added
+11/29/10 locale == 2 handling added
+11/26/10 added function get_remote()
+11/30/10 added function get_hints()
+12/03/10 added require status_cats.inc.php.
+12/4/10 added GLOBALS['CLOUD_SQL_STR']
+3/15/11 added function replace quotes to replace double quotes with single in html strings to fix js complaint
+3/15/11 revised text color on facility types yellow background to black from white. 
+3/15/11 Add function get_css to get css colors from table for revisable screen colors and day/night setting. 
+3/19/11 added function get_unit()
+4/23/11 added JSON optional get_remote() param
+5/22/11 added notify severity filter
+5/25/11 log intrusion detection, shut_down() added
+5/29/11 added nl2sp ()
 */
 error_reporting(E_ALL);
 
@@ -158,7 +176,9 @@ $GLOBALS['STATUS_RESERVED'] 		= 0;		// 10/24/08
 $GLOBALS['STATUS_CLOSED'] 			= 1;
 $GLOBALS['STATUS_OPEN']   			= 2;
 $GLOBALS['STATUS_SCHEDULED']   		= 3;
-$GLOBALS['NOTIFY_ACTION'] 			= 'Added Action/Patient';
+//$temp = get_text("Patient");
+//$GLOBALS['NOTIFY_ACTION'] 		= "Added Action/{$temp}";
+$GLOBALS['NOTIFY_ACTION'] 			= "Added Action/Patient";
 $GLOBALS['NOTIFY_TICKET'] 			= 'Ticket Update';
 $GLOBALS['ACTION_DESCRIPTION']		= 1;
 $GLOBALS['ACTION_OPEN'] 			= 2;
@@ -231,13 +251,20 @@ $GLOBALS['LOG_FACILITY_ONSCN']		=49;		// 9/22/09
 $GLOBALS['LOG_FACILITY_CLR']		=50;		// 9/22/09
 $GLOBALS['LOG_FACILITY_RESET']		=51;		// 9/22/09
 
+$GLOBALS['LOG_ERROR']				=90;		// 1/10/11
+$GLOBALS['LOG_INTRUSION']			=91;		// 5/25/11
+$GLOBALS['LOG_ERRONEOUS']			=0;			// 1/10/11
+
 $GLOBALS['icons'] = array("black.png", "blue.png", "green.png", "red.png", "white.png", "yellow.png", "gray.png", "lt_blue.png", "orange.png");
 $GLOBALS['sm_icons']	= array("sm_black.png", "sm_blue.png", "sm_green.png", "sm_red.png", "sm_white.png", "sm_yellow.png", "sm_gray.png", "sm_lt_blue.png", "sm_orange.png");
 $GLOBALS['fac_icons'] = array("square_red.png", "square_black.png", "square_white.png", "square_yellow.png", "square_blue.png", "square_green.png", "shield_red.png", "shield_grey.png", "shield_green.png", "shield_blue.png", "shield_orange.png");
+$GLOBALS['sm_fac_icons'] = array("sm_square_red.png", "sm_square_black.png", "sm_square_white.png", "sm_square_yellow.png", "sm_square_blue.png", "sm_square_green.png", "sm_shield_red.png", "sm_shield_grey.png", "sm_shield_green.png", "sm_shield_blue.png", "sm_shield_orange.png");
+
 
 $GLOBALS['SESSION_TIME_LIMIT']		= 60*480;		// minutes of inactivity before logout is forced - 1/18/10
 $GLOBALS['TOLERANCE']				= 180*60;		// seconds of deviation from UTC before remotes sources considered 	erroneous - 3/25/09
 
+$GLOBALS['TRACK_NONE']			=0;     	// 12/3/10
 $GLOBALS['TRACK_APRS']			=1;     	// 7/8/09
 $GLOBALS['TRACK_INSTAM']		=2;       
 $GLOBALS['TRACK_GTRACK']		=3;   
@@ -248,8 +275,9 @@ $GLOBALS['UNIT_TYPES_BG']	= array("#000000", "#5A59FF", "#63DB63", "#FF3C4A", "#
 $GLOBALS['UNIT_TYPES_TEXT']	= array("#FFFFFF", "#FFFFFF", "#000000", "#000000", "#000000", "#000000", "#000000", "#000000");	// 2/8/10
 
 $GLOBALS['FACY_TYPES_BG']	= array("#E72429", "#000000", "#E7E3E7", "#E7E321", "#5269BD", "#52BE52", "#C60000", "#7B7D7B", "#005D00", "#1000EF");	// keyed to fac_types - 2/8/10
-$GLOBALS['FACY_TYPES_TEXT']	= array("#000000", "#FFFFFF", "#000000", "#FFFFFF", "#FFFFFF", "#000000", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF");	// 2/8/10
+$GLOBALS['FACY_TYPES_TEXT']	= array("#000000", "#FFFFFF", "#000000", "#000000", "#FFFFFF", "#000000", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF");	// 2/8/10, 02/05/11 - revised text color on yellow background to black.
 
+$GLOBALS['CLOUD_SQL_STR'] = "`passwd` = '55606758fdb765ed015f0612112a6ca7'";		// 12/4/10
 
 $evenodd = array ("even", "odd", "heading");	// class names for alternating table row css colors
 
@@ -275,6 +303,7 @@ if ($failed) {
 $expiry = expires();		// note global
 
 require_once ('login.inc.php');				// 8/21/10
+require_once('status_cats.inc.php');				// 12/03/10
 
 function remove_nls($instr) {                // 10/20/09
 	$nls = array("\r\n", "\n", "\r");        // note order
@@ -464,7 +493,7 @@ function show_actions ($the_id, $theSort="date", $links, $display) {			/* list a
 																	/* list patients */
 	$query = "SELECT *,UNIX_TIMESTAMP(date) AS `date`,UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]patient` WHERE `ticket_id`='$the_id' ORDER BY `date`";
 	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-	$caption = "Patient: &nbsp;&nbsp;";
+	$caption = get_text("Patient") . ": &nbsp;&nbsp;";
 	$actr=0;
 	while ($act_row = stripslashes_deep(mysql_fetch_assoc($result))){
 		$print .= "<TR CLASS='" . $evenodd[$actr%2] . "' WIDTH='100%'><TD VALIGN='top' NOWRAP CLASS='td_label'>" . $caption . "</TD>";
@@ -499,10 +528,10 @@ function show_actions ($the_id, $theSort="date", $links, $display) {			/* list a
 					}
 				}
 			
-			$print .= "<TD NOWRAP>" . $respstring . "</TD><TD NOWRAP>".format_date($act_row['updated']) ."</TD>";
-			$print .= "<TD NOWRAP>by <B>".get_owner($act_row['user'])."</B> ";
+			$print .= "<TD CLASS='normal_text' NOWRAP>" . $respstring . "</TD><TD CLASS='normal_text' NOWRAP>".format_date($act_row['updated']) ."</TD>";	//	3/15/11
+			$print .= "<TD CLASS='normal_text' NOWRAP>by <B>".get_owner($act_row['user'])."</B> ";	//	3/15/11
 			$print .= ($act_row['action_type']!=$GLOBALS['ACTION_COMMENT'])? '*' : '-';
-			$print .= "</TD><TD WIDTH='100%'>" . nl2br($act_row['description']) . "</TD>";
+			$print .= "</TD><TD CLASS='normal_text' WIDTH='100%'>" . nl2br($act_row['description']) . "</TD>";	//	3/15/11
 			if ($links) {
 				$print .= "<TD><NOBR>&nbsp;[<A HREF='action.php?ticket_id=$the_id&id=" . $act_row['id'] . "&action=edit'>edit</A>|
 					<A HREF='action.php?id=" . $act_row['id'] . "&ticket_id=$the_id&action=delete'>delete</A>]</NOBR></TD></TR>\n";	
@@ -564,7 +593,7 @@ function show_log ($theid, $show_cfs=FALSE) {								// 11/20/09
 	}		// end function get_log ()
 //	} -- dummy
 function set_ticket_status($status,$id){				/* alter ticket status */
-	$query = "UPDATE `$GLOBALS[mysql_prefix]ticket` SET status='$status' WHERE ID='$id'LIMIT 1";
+	$query = "UPDATE `$GLOBALS[mysql_prefix]ticket` SET status='$status' WHERE ID='$id' LIMIT 1";
 	$result = mysql_query($query) or do_error("set_ticket_status(s:$status, id:$id)::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	}
 
@@ -664,7 +693,30 @@ function get_variable($which){								/* get variable from db settings table, re
 	return (array_key_exists($which, $variables))? $variables[$which] : FALSE ;
 //	return $variables[$which];
 	}
-	
+
+$css = array();			//	3/15/11
+function get_css($element, $day_night){								/* get hex color string from db css colors table, returns FALSE if absent 3/15/11 */
+	global $css;
+	if($day_night=="Day") {
+		if (empty($css)) {
+			$result = mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]css_day`") or do_error("get_css(n:$name)::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+			while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
+				$name = $row['name']; $value=$row['value'] ;
+				$css[$name] = $value;
+				}
+			}
+	}
+	if($day_night=="Night") {
+		if (empty($css)) {
+			$result = mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]css_night`") or do_error("get_css(n:$name)::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+			while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
+				$name = $row['name']; $value=$row['value'] ;
+				$css[$name] = $value;
+				}
+			}
+	}	
+	return (array_key_exists($element, $css))? "#" . $css[$element] : FALSE ;
+	}	
 
 function do_error($err_function,$err,$custom_err='',$file='',$line=''){/* raise an error event */
 	print "<FONT CLASS=\"warn\">An error occured in function '<B>$err_function</B>': '<B>$err</B>'<BR />";
@@ -698,7 +750,7 @@ function add_header($ticket_id, $no_edit = FALSE) {		// 11/27/09, 3/30/10, 8/27/
 		print "<A HREF='#' onClick = \"var mailWindow = window.open('mail.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=300, width=600, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\">" . get_text("E-mail") . " </A> |"; // 2/1/10
 		print "<A HREF='#' onClick = \"var mailWindow = window.open('add_note.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=240, width=600, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\"> " . get_text("Add note") . " </A>"; // 10/8/08
 		if ((!(is_closed($ticket_id))) && (!is_unit()))  {		// 7/27/10
-			print "  | <A HREF='#' onClick = \"var mailWindow = window.open('close_in.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=240, width=600, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\"> " . get_text("Close incident") . " </A> ";  // 8/20/09
+			print "  | <A HREF='#' onClick = \"var mailWindow = window.open('close_in.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=300, width=700, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\"> " . get_text("Close incident") . " </A> ";  // 8/20/09
 			}
 		if (!is_unit()) {				// 7/27/10
 			print " | <A HREF='{$_SESSION['routesfile']}?ticket_id=$ticket_id'> " . get_text("Dispatch Unit") . "</A>";		// 3/30/10
@@ -789,6 +841,7 @@ function generate_date_dropdown($date_suffix,$default_date=0, $disabled=FALSE) {
 			break;
 	
 		case "1":
+		case "2":				// 11/29/10
 			print "<SELECT name='frm_day_$date_suffix' $dis_str>";
 			for($i = 1; $i < 32; $i++){
 				print "<OPTION VALUE=\"$i\"";
@@ -834,10 +887,10 @@ function report_action($action_type,$ticket_id,$value1='',$value2=''){/* insert 
 	if (!get_variable('reporting')) return;
 	
 	switch($action_type)	{
-		case $GLOBALS[ACTION_OPEN]: 	$description = "Ticket Opened"; break;
-		case $GLOBALS[ACTION_CLOSED]: 	$description = "Ticket Closed"; break;
-		case $GLOBALS[PATIENT_OPEN]: 	$description = "Patient Item Opened"; break;
-		case $GLOBALS[PATIENT_CLOSED]: 	$description = "Patient Item Closed"; break;
+		case $GLOBALS[ACTION_OPEN]: 	$description = "Action Opened"; break;
+		case $GLOBALS[ACTION_CLOSED]: 	$description = "Action Closed"; break;
+		case $GLOBALS[PATIENT_OPEN]: 	$description = get_text("Patient") . " Item Opened"; break;
+		case $GLOBALS[PATIENT_CLOSED]: 	$description = get_text("Patient") . " Item Closed"; break;
 		default: 						$description = "[unknown report value: $action_type]";
 		}
 	$now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
@@ -861,9 +914,22 @@ function shorten($instring, $limit) {
 	return (strlen($instring) > $limit)? substr($instring, 0, $limit-4) . ".." : $instring ;	// &#133
 	}
 
-function format_phone ($instr) {
+function format_phone ($instr) { // 11/16/10 added check for locale for UK phone number format.
+	$locale = get_variable('locale');
 	$temp = trim($instr);
-	return  (!empty($temp))? "(" . substr ($instr, 0,3) . ") " . substr ($instr,3, 3) . "-" . substr ($instr,6, 4): "";
+	switch($locale) {	
+	case "0":
+		return  (!empty($temp))? "(" . substr ($instr, 0,3) . ") " . substr ($instr,3, 3) . "-" . substr ($instr,6, 4): "";
+		break;
+	case "1":
+		return  (!empty($temp))? substr ($instr, 0,5) . " " . substr ($instr,5, 6): "";
+		break;
+	case "2":				// 11/29/10
+		return  (!empty($temp))? substr ($instr, 0,5) . " " . substr ($instr,5, 6): "";
+		break;
+	default:
+		print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";
+		}			// end switch()
 	}
 	
 function highlight($term, $string) {		// highlights search term
@@ -876,24 +942,31 @@ function highlight($term, $string) {		// highlights search term
 		}
 	}
 
+function replace_quotes($instring) {		//	3/15/11
+    	$search = array(chr(34)); 
+    	$value = str_replace($search, " ", $instring); 
+    	return $value;
+       }    
+
 function stripslashes_deep($value) {
-    $value = is_array($value) ?
-                array_map('stripslashes_deep', $value) :
-                stripslashes($value);
-    return $value;
+    	$value = is_array($value) ? array_map('stripslashes_deep', $value) :	stripslashes($value);
+    	return $value;
 	}
+
 function trim_deep($value) {	
-    $value = is_array($value) ?
+    	$value = is_array($value) ?
                 array_map('trim_deep', $value) :
                 trim($value);
-    return $value;
+    	return $value;
 	}
+
 function mysql_real_escape_string_deep($value) {
     $value = is_array($value) ?
                 array_map('mysql_real_escape_string_deep', $value) :
                 mysql_real_escape_string($value);
     return $value;
 	}
+
 function nl2brr($text) {
     return preg_replace("/\r\n|\n|\r/", "<BR />", $text);
 	}
@@ -981,7 +1054,8 @@ require_once('remotes.inc.php');	// 8/21/10
 
 function do_log($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, $rec_facility_id=0, $mileage=0) {		// generic log table writer - 5/31/08, 10/6/09
 	@session_start();							// 4/4/10
-	$who = (!empty($_SESSION))? $_SESSION['user_id']: 0;
+//	$who = (array_key_exists($_SESSION, 'user_id'))? $_SESSION['user_id']: 0;		// 11/14/10
+	$who = (array_key_exists('user_id', $_SESSION))? $_SESSION['user_id']: 0;		// 11/14/10
 	$from = $_SERVER['REMOTE_ADDR'];
 	$now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
 	$query = sprintf("INSERT INTO `$GLOBALS[mysql_prefix]log` (`who`,`from`,`when`,`code`,`ticket_id`,`responder_id`,`info`, `facility`, `rec_facility`, `mileage`)  
@@ -1238,11 +1312,12 @@ Host		Q
 		   	$match_str = strtoupper(get_variable("msg_text_3"));
 		   	break;
 		}
-	if (empty($match_str)) {$match_str = implode ("", range("A", "R"));}		// empty get all
+	if (empty($match_str)) {$match_str = " " . implode ("", range("A", "R"));}		// empty get all - force non-zero hit
 
-	require_once("cell_addrs.inc.php");			// 10/22/08
-	$cell_addrs = array( "vtext.com", "messaging.sprintpcs.com", "txt.att.net", "vmobl.com", "myboostmobile.com");		// 10/5/08
-	if ($istest) {array_push($cell_addrs, "gmail.com");};
+//	require_once("cell_addrs.inc.php");			// 10/22/08
+//	snap (__LINE__, count($cell_addrs));
+//	$cell_addrs = array( "vtext.com", "messaging.sprintpcs.com", "txt.att.net", "vmobl.com", "myboostmobile.com");		// 10/5/08
+//	if ($istest) {array_push($cell_addrs, "gmail.com");};
 	
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id`='$ticket_id' LIMIT 1";
 	$ticket_result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -1296,7 +1371,7 @@ Host		Q
 					$message .= (empty($t_row['comments']))? "": "Disp: ".wordwrap($t_row['comments']).$eol;
 				    break;
 				case "M":
-					$message .= "Run Start: " . format_date_time($t_row['problemstart']). $_end .$eol;
+					$message .= get_text("Run Start") . ": " . format_date_time($t_row['problemstart']). $_end .$eol;
 				    break;
 				case "N":
 					$usng = LLtoUSNG($t_row['lat'], $t_row['lng']);
@@ -1345,7 +1420,7 @@ Host		Q
 
 	$message = str_replace("\n.", "\n..", $message);					// see manual re mail win platform peculiarities
 
-	$subject = (strpos ($match_str, "A" ))? $subject = $text . $t_row['scope'] . " (#" .$t_row['id'] . ")": "";
+	$subject = (strpos ($match_str, "A" ))? $text . $t_row['scope'] . " (#" .$t_row['id'] . ")": "";
 
 	if ($txt_only) {
 		return $subject . "\n" . $message;		// 2/16/09
@@ -1361,9 +1436,31 @@ function smtp ($my_to, $my_subject, $my_message, $my_params, $my_from) {
     real_smtp ($my_to, $my_subject, $my_message, $my_params, $my_from);
     }                         // end function smtp
 
-function do_send ($to_str, $subject_str, $text_str ) {						// 7/7/09
+function do_send ($to_str, $subject_str, $text_str ) {					// 7/7/09
+
 	global $istest;
-	$sleep = 4;																// seconds delay between text messages
+    require_once('smtp.inc.php');     									// defer load until required - 8/2/10
+	$sleep = 4;															// seconds delay between text messages
+
+	$my_smtp_ary = explode ("/",  trim(get_variable('smtp_acct')));   
+
+//	if ((count($my_smtp_ary)>1) && (count($my_smtp_ary)!=6)) {
+	if ((count($my_smtp_ary)>1) && (count($my_smtp_ary)<5)) {					// 4/19/11
+		 do_log($GLOBALS['LOG_ERROR'], 0, 0, "Invalid smtp account information: " . trim(get_variable('smtp_acct')));
+		 return ;
+		}
+
+	if ((count($my_smtp_ary)>3) && (!(is_email(trim($my_smtp_ary[3]))))) {		// email format test
+		 do_log($GLOBALS['LOG_ERROR'], 0, 0, "Invalid smtp account address: " . trim($my_smtp_ary[5]));
+		 return ;
+		}
+
+	$temp = explode("/", trim(get_variable('email_reply_to'))); 
+	if (!(is_email(trim($temp[0])))) {								// accommodate possible /B
+		do_log($GLOBALS['LOG_ERROR'], 0, 0, "Invalid email reply-to: " . trim(get_variable('email_reply_to')));
+		return ;		
+		}
+
 
 	function stripLabels($sText){
 		$labels = array("Incident:", "Priority:", "Nature:", "Addr:", "Descr:", "Reported by:", "Phone:", "Written:", "Updated:", "Status:", "Disp:", "Run Start:", "Map:", "Patient:", "Actions:", "Tickets host:"); // 5/9/10
@@ -1372,82 +1469,59 @@ function do_send ($to_str, $subject_str, $text_str ) {						// 7/7/09
 			}
 		return $sText;
 		}
-	
-	$to_array = explode ("|",$to_str );										// pipe-delimited string  - 10/17/08
+
+	$to_array = array_values(array_unique(explode ("|", ($to_str))));		// input is pipe-delimited string  - 10/17/08
+
 	require_once("cell_addrs.inc.php");										// 10/22/08
-	$cell_addrs = array("vtext.com", "messaging.sprintpcs.com", "txt.att.net", "vmobl.com", "myboostmobile.com");		// 10/5/08
-	if ($istest) {array_push($cell_addrs, "gmail.com");};
-
-	$host = get_variable('host');
-	$temp = get_variable('email_reply_to');	
-//	$reply_to = (empty($temp))? "": "'Reply-To: '". $temp ."\r\n" ; 
-	$reply_to = (empty($temp))? "": "'Reply-To: ". $temp ."'\r\n" ;		// 2/18/10
 	
-	$temp = get_variable('email_from');												// 6/24/09
-	if (empty($temp)) {
-		$from_str = "Tickets_CAD" .'@' .$host ;
-		}
-	else {	
-		$temp_ar = explode("@", $temp);
-		if (count($temp_ar)==2) {
-			$from_str = $temp;		// OK
-			}
-		else {
-			$from_str = $temp_ar[0] . "@" . $host ;
-			}
-		}
-		
-//	$from = (empty($temp))?  "Tickets_CAD" : $temp;
-	
-	$headers = 'From:' .$from_str  . "\r\n" .
-	    $reply_to .
-	    'X-Mailer: PHP/' . phpversion();
-
-	$to_sep = $cell_sep = "";
-	$tostr = $tocellstr = "";
-	for ($i = 0; $i< count($to_array); $i++) {
+	$ary_cell_addrs = $ary_ll_addrs = array();
+	for ($i = 0; $i< count($to_array); $i++) {								// walk down the input address string/array
 		$temp =  explode ( "@", $to_array[$i]);
 		if (in_array(trim(strtolower($temp[1])), $cell_addrs))  {				// cell addr?
-			$tocellstr .= $cell_sep . stripslashes($to_array[$i]);				// yes
-			$cell_sep = ",";
+			array_push ($ary_cell_addrs, $to_array[$i]);						// yes
 			}
-		else {																	// no
-			$tostr .= $to_sep . stripslashes($to_array[$i]);
-			$to_sep = ",";														// comma separated addr string
+		else {																	// no, land line addr
+			array_push ($ary_ll_addrs, $to_array[$i]);	
 			}
 		}				// end for ($i = ...)
 
 	$caption="";
-	$smtp = trim(get_variable('smtp_acct'));									// 7/7/09
-	if (strlen($tostr)>0) {	
-		if (strlen($smtp)==0) {
-			@mail($tostr, $subject_str, $text_str, $headers);
+	$my_from_ary = explode("/", trim(get_variable('email_from')));				// note /B option
+	$my_replyto_str = trim(get_variable('email_reply_to'));
+	$count_cells = $count_ll = 0; 				// counters
+
+	if (count($ary_ll_addrs)>0) {												// got landline addee's?
+//								  ($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_str, $my_from_ary, $my_replyto_str)	
+		if (count($my_smtp_ary)>1) {
+			$count_ll = do_swift_mail ($my_smtp_ary, $ary_ll_addrs, $subject_str, $text_str, $my_from_ary, $my_replyto_str );		
 			}
 		else {
-			smtp ($tostr, $subject_str, $text_str, $smtp, $from_str);						// ($my_to, $my_subject, $my_message, $my_params)
-			}
-		$caption = "Email sent";
+//									   ($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_str, $my_from_ary, $my_replyto_str)
+			$count_ll = do_native_mail ($my_smtp_ary, $ary_ll_addrs, $subject_str, $text_str, $my_from_ary, $my_replyto_str );		
+			}		
 		}
-	if (strlen($tocellstr)>0) {
+
+	if (count($ary_cell_addrs)>0) {		// got cell addee's?
 		$lgth = 140;
 		$ix = 0;
 		$i = 1;
 		$cell_text_str = stripLabels($text_str);								// strip labels 5/10/10
-		while (substr($cell_text_str, $ix , $lgth )) {								// chunk to $lgth-length strings
+		while (substr($cell_text_str, $ix , $lgth )) {							// chunk to $lgth-length strings
 			$subject_ex = $subject_str . "/part " . $i . "/";					// 10/21/08
-			if (strlen($smtp)==0) {			
-				mail($tocellstr, $subject_ex, substr ($cell_text_str, $ix , $lgth ), $headers);
-				}
-			else {
-				smtp ($tocellstr, $subject_ex, substr ($cell_text_str, $ix , $lgth ), $smtp, $from_str);	// ($my_to, $my_subject, $my_message, $my_params, $my_from)
-				}
+//										 ($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_str, $my_from_ary, $my_replyto_str)	
+		if (count($my_smtp_ary)>1) {
+			$count_cells = do_swift_mail ($my_smtp_ary, $ary_cell_addrs, $subject_ex, substr ($cell_text_str, $ix , $lgth ), $my_from_ary, $my_replyto_str);	
+			}
+		else {
+//										  ($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_str, $my_from_ary, $my_replyto_str)
+			$count_cells = do_native_mail ($my_smtp_ary, $ary_cell_addrs, $subject_ex, substr ($cell_text_str, $ix , $lgth ), $my_from_ary, $my_replyto_str);	
+			}
 			if($i>1) {sleep ($sleep);}								// 10/17/08
 			$ix+=$lgth;
 			$i++;
-			}
-		$caption .= " - Cell mail sent";
-		}
-	return $caption;
+			}				// end while (substr($cell_text_...))
+		}									// end if (count($ary_cell_addrs)>0)
+	return (string) ($count_ll + $count_cells);
 	}					// end function do send ()
 
 function is_email($email){		   //  validate email, code courtesy of Jerrett Taylor - 10/8/08, 7/2/10
@@ -1465,32 +1539,47 @@ function is_email($email){		   //  validate email, code courtesy of Jerrett Tayl
 		}							  // end function is_email()
 		
 
-function notify_user($ticket_id,$action_id) {								// 10/20/08
+function notify_user($ticket_id,$action_id) {								// 10/20/08, 5/22/11
 	if (get_variable('allow_notify') != '1') return FALSE;						//should we notify?
 	
+	$query = "SELECT `severity` FROM `$GLOBALS[mysql_prefix]ticket` WHERE (`id`=$ticket_id)";
+	$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
+	$row = stripslashes_deep(mysql_fetch_assoc($result));
+
 	$fields = array();
 	$fields[$GLOBALS['NOTIFY_TICKET_CHG']] = "on_ticket";
 	$fields[$GLOBALS['NOTIFY_ACTION_CHG']] = "on_action";
 	$fields[$GLOBALS['NOTIFY_PERSON_CHG']] = "on_patient";
 	
 	$addrs = array();															// 
-	
-	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]notify` WHERE (`ticket_id`='$ticket_id' OR `ticket_id`=0)  AND `" .$fields[$action_id] ."` = '1'";	// all notifies for given ticket - or any ticket 10/22/08
+
+	$severity_filter = (intval($row['severity']) == $GLOBALS['SEVERITY_NORMAL'])? "(`severities` = 1 )" : "(`severities`= 3) OR (`severities`= 1)";		// 5/22/11	
+
+//	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]notify` WHERE (`ticket_id`='$ticket_id' OR `ticket_id`=0)  AND `" .$fields[$action_id] ."` = '1'";	// all notifies for given ticket - or any ticket 10/22/08
+																			// 5/28/11
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]notify` WHERE (
+		{$severity_filter} AND
+		(((`ticket_id`={$ticket_id}) OR (`ticket_id`=0)))  AND
+		`{$fields[$action_id]}` = '1')";			// all notifies for given ticket - or any ticket 10/22/08
+
 	$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 	while($row = stripslashes_deep(mysql_fetch_assoc($result))) {		//is it the right action?
 		if (is_email($row['email_address'])) {
 			array_push($addrs, $row['email_address']); // save for emailing
 			}		
 		}
-	return (empty($addrs))? FALSE: $addrs;
-	}
+	$temp = array_values(array_unique($addrs));		// 5/22/10	
+	return (empty($temp))? FALSE: $temp;
 
+	}
 
 function snap($source, $stuff = "") {									// 10/18/08 , 3/5/09 - debug tool
 	global $snap_table;				// defined in istest.inc.php
 	if (mysql_table_exists($snap_table)) {
 		$query	= "DELETE FROM `$snap_table` WHERE `when`< (NOW() - INTERVAL 1 DAY)"; 		// first remove old
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
+
+		if (is_array ( $source )) {$source = "array (" . count($source) . ")";}
 	
 		$query = sprintf("INSERT INTO `$snap_table` (`source`,`stuff`)  
 			VALUES(%s,%s)",
@@ -1504,6 +1593,7 @@ function snap($source, $stuff = "") {									// 10/18/08 , 3/5/09 - debug tool
 //		dump(__LINE__);	
 		}
 	}		// end function snap()
+	
 	
 function isFloat($n){														// 1/23/09
     return ( $n == strval(floatval($n)) )? true : false;
@@ -1630,7 +1720,6 @@ function expires() {
 	}
 
 function get_status_sel($unit_in, $status_val_in, $tbl_in) {					// returns select list as click-able string - 2/6/10
-
 	switch ($tbl_in) {
 		case ("u") :
 			$tablename = "responder";
@@ -1668,7 +1757,8 @@ function get_status_sel($unit_in, $status_val_in, $tbl_in) {					// returns sele
 	$dis = ($guest)? " DISABLED": "";								// 9/17/08
 	$the_grp = strval(rand());			//  force initial OPTGROUP value
 	$i = 0;
-	$outstr = "\t\t<SELECT CLASS='sit' name='frm_status_id' {$dis} STYLE='background-color:{$init_bg_color}; color:{$init_txt_color};' ONCHANGE = 'this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color; do_sel_update({$unit_in}, this.value)' >";	// 12/19/09, 1/1/10
+	$outstr = ($tbl_in == "u") ? "\t\t<SELECT CLASS='sit' name='frm_status_id' {$dis} STYLE='background-color:{$init_bg_color}; color:{$init_txt_color};' ONCHANGE = 'this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color; do_sel_update({$unit_in}, this.value)' >" :
+	"\t\t<SELECT CLASS='sit' name='frm_status_id' {$dis} STYLE='background-color:{$init_bg_color}; color:{$init_txt_color};' ONCHANGE = 'this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color; do_sel_update_fac({$unit_in}, this.value)' >";	// 12/19/09, 1/1/10. 3/15/11
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result_st))) {
 		if ($the_grp != $row['group']) {
 			$outstr .= ($i == 0)? "": "\t</OPTGROUP>";
@@ -1702,7 +1792,7 @@ function get_facilities_legend() {		// returns string as centered row - 2/8/10
 		LEFT JOIN `$GLOBALS[mysql_prefix]fac_types` ON `$GLOBALS[mysql_prefix]fac_types`.`id` = `$GLOBALS[mysql_prefix]facilities`.`type` ORDER BY `mytype`";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
-	$out_str = "<TR><TD COLSPAN=99 ALIGN='center'><SPAN CLASS='even'><SPAN CLASS='odd' ALIGN = 'right'> Facilities: </SPAN>";
+	$out_str = "<TR class='even'><TD COLSPAN=99 ALIGN='center'><SPAN CLASS='even'>";	//	3/15/11
 	while ($row = stripslashes_deep(mysql_fetch_array($result))) {
 		$the_bg_color = 	$GLOBALS['FACY_TYPES_BG'][$row['icon']];	
 		$the_text_color = 	$GLOBALS['FACY_TYPES_TEXT'][$row['icon']];		
@@ -1799,7 +1889,7 @@ function get_start($local_func){						// 5/2/10
 			break;
 			
 		case 9 :		// Last year
-			return mysql_format_date(mktime(0,0,0,1, 1, (year()-1)));		// m, d, y -- date ('D, M j',
+			return mysql_format_date(mktime(0,0,0, 1, 1, (year()-1)));		// m, d, y -- date ('D, M j',
 			break;
 			
 		default:
@@ -1859,6 +1949,7 @@ function get_cb_height () {		// returns pixel count for cb frame	height based on
 $text_array = array();
 function get_text($which){		/* get replacement text from db captions table, returns FALSE if absent  */
 	global $text_array;
+//	snap(__LINE__, $which);
 	if (empty($text_array)) {	// populate it to avoid hammering db
 		$result = mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]captions`") or do_error("get_text({$which})::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
@@ -1888,7 +1979,7 @@ function do_diff($indx, $row){		// returns diff in seconds from problemstart- 9/
 			$temp = mysql2timestamp($row['on_scene']);
 		    break;
 		case 3:
-			$temp = mysql2timestamp($$row['u2fenr']);
+			$temp = mysql2timestamp($row['u2fenr']);		// 10/19/10
 		    break;
 		case 4:
 			$temp = mysql2timestamp($row['u2farr']);
@@ -1905,13 +1996,20 @@ function do_diff($indx, $row){		// returns diff in seconds from problemstart- 9/
 	return $temp - mysql2timestamp($row['problemstart']); 
 	}
 
-function get_disp_status ($row_in) {			// 8/29/10
+function elapsed ($in_time) {			// 4/26/11
+	$mins = (integer) (round ((now() - mysql2timestamp($in_time)) / 60.0));
+	return ($mins> 99)? 99: $mins;
+	}				// end function elapsed
+
+function get_disp_status ($row_in) {			// 4/26/11
+	extract ($row_in);
 	$tags_arr = explode("/", get_variable('disp_stat'));
-	if (is_date($row_in['u2farr'])) 	{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[4]}&nbsp;</SPAN>";}
-	if (is_date($row_in['u2fenr'])) 	{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[3]}&nbsp;</SPAN>";}
-	if (is_date($row_in['on_scene'])) 	{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[2]}&nbsp;</SPAN>";}
-	if (is_date($row_in['responding'])) { return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[1]}&nbsp;</SPAN>";}
-	if (is_date($row_in['dispatched'])) { return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[0]}&nbsp;</SPAN>";}
+	
+	if (is_date($u2farr)) 		{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[4]}&nbsp;" . elapsed ($u2farr) . "</SPAN>";}
+	if (is_date($u2fenr)) 		{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[3]}&nbsp;" . elapsed ($u2fenr) . "</SPAN>";}
+	if (is_date($on_scene)) 	{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[2]}&nbsp;" . elapsed ($on_scene) . "</SPAN>";}
+	if (is_date($responding))	{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[1]}&nbsp;" . elapsed ($responding) . "</SPAN>";}
+	if (is_date($dispatched))	{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[0]}&nbsp;" . elapsed ($dispatched) . "</SPAN>";}
 	}
 														
 function set_u_updated ($in_assign) {			// given a disaptch record id, updates unit data - 9/1/10									
@@ -1937,5 +2035,130 @@ function set_u_updated ($in_assign) {			// given a disaptch record id, updates u
 function short_ts($in_str){		// ex:10/29/10 12:22 - 10/2/10
 	return substr($in_str, -5);
 	}
+
+function get_dist_factor() {							// returns distance conversion factor - 11/24/10
+	$factors = array("0.6214", "0.6214", "1.0");		// factors as strings
+	return $factors[get_variable("locale")];			// US, UK, ROW
+	}
+
+function get_speed ($instr, $inspeed) {					// 11/26/10
+	if (!(is_int($inspeed)))	{$the_class='unk';}
+	elseif ($inspeed >= 50) 		{$the_class='fast'; }
+	elseif ($inspeed == 0)  		{$the_class='stopped'; }
+	else							{$the_class='moving'; }
+	return "<SPAN CLASS='TD {$the_class}'>&nbsp;{$instr}&nbsp;</SPAN>";
+	}
+
+function get_remote($url, $json=TRUE) {				// 11/26/10	, 4/23/11
+	$data="";
+	if (function_exists("curl_init")) {
+		$ch = curl_init();
+		$timeout = 5;
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+		$data = curl_exec($ch);
+		curl_close($ch);
+		if ($json) {				// 4/23/11
+			return ($data)?  json_decode($data): FALSE;			// FALSE if fails
+			}
+		else {
+			return ($data)?  $data: FALSE;						// FALSE if fails
+			}
+		}
+	else {				// no CURL
+		if ($fp = @fopen($url, "r")) {
+			while (!feof($fp) && (strlen($data)<9000)) $data .= fgets($fp, 128);
+			fclose($fp);
+			}		
+		else {
+			return FALSE;		// @fopen fails
+			}
+		}
+	return $data;
+	}	// end function get remote()
+
+
+function get_hints($instr) {		// returns associative array - 11/30/10 
+	$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]hints` WHERE `form` = '{$instr}' "; 
+	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
+	$hints = array();
+	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+		$hints[$row['ident']] = $row['title'];
+		}
+	return($hints);
+	}						// end function
+
+function get_remote_type ($inrow) { 							// returns type of remote - 12/3/10
+	if ($inrow['aprs'] == 1) 				{ return $GLOBALS['TRACK_APRS']; }
+	elseif ((int)$inrow['instam'] == 1) 	{ return $GLOBALS['TRACK_INSTAM']; }
+	elseif ((int)$inrow['locatea'] == 1)	{ return $GLOBALS['TRACK_LOCATEA']; }
+	elseif ((int)$inrow['gtrack'] == 1)		{ return $GLOBALS['TRACK_GTRACK']; }
+	elseif ((int)$inrow['glat'] == 1)		{ return $GLOBALS['TRACK_GLAT']; }
+	else 									{ return $GLOBALS['TRACK_NONE']; }
+	}  				// end function
+
+function is_cloud() {						// 12/4/10
+	return (!(get_variable('_cloud')==0));
+	}
+
+function get_unit(){									//			returns unit index string - 3/19/11
+	if  (!(array_key_exists('user_unit_id', $_SESSION)) && 
+		(!@intval($_SESSION['user_unit_id'])> 0)) {return FALSE;}
+	else {
+		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `id` = {$_SESSION['user_unit_id']} LIMIT 1";
+		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+			if ((mysql_num_rows($result))==0)  {unset($result); return FALSE;}
+			else {
+				$row = stripslashes_deep(mysql_fetch_array($result));
+				$temp = explode("/", $row['name'] );
+				$index = substr($temp[count($temp) -1], -6,strlen($temp[count($temp) -1]));	
+				unset($result);
+				return $index;
+				}
+			}		// end if/else
+		}		// end function get_unit()
+		
+
+function nl2sp ($instr) {				// 5/29/11
+	return str_replace("\n", " ", $instr);
+	}
+
+function shut_down(){				// 5/25/11
+	do_log($GLOBALS['LOG_INTRUSION'],0);	
+?>
+<html>
+ <body onload="setTimeout('parent.frames['upper'].do_logout();', 2000);" > 
+ <BR /><BR /><CENTER><H2>Intrusion attempt prevented!</H2></CENTER>
+ </body>
+</html>
+<?php
+	}		 // end function shut_down()		
+
+function win_shut_down() {				// for use in window vs. frame
+	do_log($GLOBALS['LOG_INTRUSION'],0);	
+?>
+<html>
+ <body onload="setTimeout('window.close()', 2000);" > 
+ <BR /><BR /><CENTER><H2>Intrusion attempt prevented!</H2></CENTER>
+ </body>
+</html>
+<?php
+	}		 // end function win_shut_down()
+	
+
+/*			unused as of 3/22/11
+function get_icon_str ($in_str) {		// return the rightmot three of the terminal element
+	$my_array = explode("/", $in_str);
+	return  substr($my_array[count($my_array) -1], -, strlen($my_array[count($my_array) -1]))
+	}
+
+function get_index_str ($in_str) {
+	$my_array = explode("/", $in_str);								// if it's three elements return the center one
+	$the_index = (count($my_array)==3)? 1: count($my_array)-1;		// otherwise the one
+	return  substr($my_array[count($my_array) -1], -6, strlen($my_array[count($my_array) -1]))
+	}
+
+*/
 
 ?>

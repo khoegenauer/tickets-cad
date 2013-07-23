@@ -12,6 +12,7 @@ original, converted from tracks.php
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 8/13/10 map.setUIToDefault();
 8/19/10 alternative source of lookup argument
+3/15/11 changed stylesheet.php to stylesheet.php
 */
 
 @session_start();
@@ -362,7 +363,7 @@ $name = ($row_callsign['name']);				// 7/29/09
 
 <?php print $refresh; ?>	<!-- 10/4/08 -->
 	
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
 	<SCRIPT src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
 
 <?php

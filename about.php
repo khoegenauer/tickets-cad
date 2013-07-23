@@ -1,12 +1,12 @@
 <?php
+error_reporting(E_ALL);    
 /*
 6/1/10 initial release
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 8/30/10 session_start()
+@session_start();                    // 8/30/10
+require_once('./incs/functions.inc.php');		//7/28/10
 */
-error_reporting(E_ALL);	
-@session_start();					// 8/30/10
-require_once($_SESSION['fip']);		// 7/28/10
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
@@ -19,10 +19,10 @@ require_once($_SESSION['fip']);		// 7/28/10
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
+<META HTTP-EQUIV="Content-Script-Type"    CONTENT="text/javascript">
+
 </HEAD>
-<BODY onLoad = "location.href = '#bottom';">
-<DIV style='width:1320px;height:720px; overflow-y: scroll; overflow-x: scroll;'>
+<BODY  style='overflow: scroll;' onLoad = "location.href = '#bottom';">
 <PRE>
 Notes re Tickets CAD V2.7 Beta:
 
@@ -67,7 +67,7 @@ Odds and ends:
 30: Tickets DOES use popups for certain functions.  These will need to be unblocked.
 31. On a Win32 platform, whether IIS or Apache, the mail function is problematic; it may or may not work correctly.
 32. The map height and width are user-settable, via item 16 above.
-33. In the 'incident types' and 'unit status' drop-down lists, you can set background colors by suitable css settings for the option 'group'.  See the ones already set in default.css .
+33. In the 'incident types' and 'unit status' drop-down lists, you can set background colors by suitable css settings for the option 'group'.  See the ones already set in stylesheet.php .
 34. We make extensive use of mouseover hints in a number of places, esp where we need to truncate the data shown.
 35. Lots more corrections and improvements to the Units and Call Board  operations.
 36. Some performance improvements made.
@@ -136,7 +136,7 @@ Changes for Tickets V 2.10 C
 
 Changes for Tickets V 2.10 D and E
 81.  Instamapper interface has been added to support GPS position data from a number of handhelds, notably the blackberry.
-		(Which means there no Tickets 'page' for the bb;  We take position data from the Instamapper server as required.)
+        (Which means there no Tickets 'page' for the bb;  We take position data from the Instamapper server as required.)
 82.  Support for this interface appears in unit information display.
 83.  Units for which driving directions to an incident wd be inappropriate may now be identified, and directions will not be generated.
 84.  Editing of generated email is now supported, for both email selected off the incident mini-menu and also upon dispatch.
@@ -145,28 +145,28 @@ Changes for Tickets V 2.10 D and E
     (These are 'msg_text_1' for notify, 'msg_text_2' for incident mini-menu email, and 'msg_text_3' for dispatch notification.) 
     The defaults are set as character strings using the following.  (I cdn't find a more mnemonic scheme.)
 
-			Subject		A
-			Incident	B
-			Priority	C
-			Nature		D
-			Written		E
-			Updated		F
-			Reporter	G
-			Phone: 		H
-			Status:		I
-			Address		J
-			Description	K
-			Disposition	L
-			Start/end	M
-			Map coords	N
-			Actions		O
-			Patients	P
-			Host		Q
-			911 contact R
-			
-	Thus a setting of 'C J D H' wd generate Priority, Address, Nature and Phone no, - in that order - in the to-be-edited message. 
-	NB: An empty value is the default; it will generate all of the above, and in that order.
-	
+            Subject        A
+            Incident    B
+            Priority    C
+            Nature        D
+            Written        E
+            Updated        F
+            Reporter    G
+            Phone:         H
+            Status:        I
+            Address        J
+            Description    K
+            Disposition    L
+            Start/end    M
+            Map coords    N
+            Actions        O
+            Patients    P
+            Host        Q
+            911 contact R
+            
+    Thus a setting of 'C J D H' wd generate Priority, Address, Nature and Phone no, - in that order - in the to-be-edited message. 
+    NB: An empty value is the default; it will generate all of the above, and in that order.
+    
 87.  A new settings entry - def zoom fixed - allows you to maintain a fixed map and zoom.  Value 0 applies dynamic zoom (original), 
     value 1 fixes only the situation screen, value 2 fixes only the units screen, and value 3 fixes both these screens.
 
@@ -190,7 +190,7 @@ Changes for Tickets V 2.10 F
          fwd-slash delimited string consisting of the smtp account, the port number, the user account (on that server), and the 
          password.  Your ISP may or may not require a fifth item, a 'from' string. (The following example does NOT show this latter item.)
          
-	         outgoing.verizon.net/123/ashore999/whatever
+             outgoing.verizon.net/123/ashore999/whatever
 
 
 92.  For those of you implementing the Instamapper interface, the Configuration page does have a test function available.
@@ -283,41 +283,41 @@ Changes for Tickets V 2.11 A and B
      the closed incidents button only appears if there are any closed incidents on the database. 
 
 113. The call board has been upgraded to include the times for Facilities en-route and Facilities arrive events.  A List option has been added
-	 which shows elapsed time from incident start to each call event.  In addition, the report shows color-coded values for those times 
-	 exceeding certain threshold values, the latter set-able by users to meet local standards, and set by incident priority.. While displayed 
-	 values are shown in compact form, cursor 'mouse-over' displays the full value.
+     which shows elapsed time from incident start to each call event.  In addition, the report shows color-coded values for those times 
+     exceeding certain threshold values, the latter set-able by users to meet local standards, and set by incident priority.. While displayed 
+     values are shown in compact form, cursor 'mouse-over' displays the full value.
 
 Changes for Tickets V 2.11 D
 
 114. A significantly improved multi-user capability:  Buttons in the top panel are 'lit' when an event occurs that 
-	 merits user attention.  Specifically, a new incident written by another user will light up the situation button 
-	 in red; A unit movement will light up that button in blue; a chat invitation will light up the chat button in red.
-	 
-	 Lit buttons remain so until clicked, with a red situation button taking precedence over the blue color used to
-	 signify Unit movement.
-	 
-	 Given such notification, the screen refresh is no longer needed, and this function - which can be disruptive - has 
-	 been removed.	
+     merits user attention.  Specifically, a new incident written by another user will light up the situation button 
+     in red; A unit movement will light up that button in blue; a chat invitation will light up the chat button in red.
+     
+     Lit buttons remain so until clicked, with a red situation button taking precedence over the blue color used to
+     signify Unit movement.
+     
+     Given such notification, the screen refresh is no longer needed, and this function - which can be disruptive - has 
+     been removed.    
 
 115. The situation screen is more informative, and has improved handling for sites with a larger number of units. 
-	 The list is now fitted to the screen, with a scrollbar available to navigate the list.  In addition, email 
-	 to all or selected units is supported on the situation screen, thus saving a number of steps.
-	 
-	 Mouseover assigned units displays target incident information, and Mouseover incidents displays incident 
-	 address data.
-	 
+     The list is now fitted to the screen, with a scrollbar available to navigate the list.  In addition, email 
+     to all or selected units is supported on the situation screen, thus saving a number of steps.
+     
+     Mouseover assigned units displays target incident information, and Mouseover incidents displays incident 
+     address data.
+     
 116. The full-screen operation has a revised layout, with an expanded map portion and more intuitive yet reduced 
-	 overhead space.
+     overhead space.
 
 117. This version now accommodates IPV6, the upcoming Internet addressing standard
 
 118. The Chat function is much improved, supporting chat invites and with the above-noted button light-up as 
-	 notification of an invitation you've received. You may send invitations to all or to a selected user.
-	 
+     notification of an invitation you've received. You may send invitations to all or to a selected user.
+     
 119. The Configuration screen adds information re users, including identification of those currently logged-in.
 
 120. We've revised the 'new Unit' form to help ensure that for tracked units - APRS, Instamapper, etc. - the 
-	 correct identification key is entered.
+     correct identification key is entered.
 
 Changes for Tickets V 2.11 E
 
@@ -335,7 +335,7 @@ Changes for Tickets V 2.11 E
 126. Units shown in the Routes module appear in order of their straight-line proximity to the incident.
 
 127. Hide/Show of various system elements is now 'remembered' for the duration of your session, instead of 
-	 being lost when you navigate away.
+     being lost when you navigate away.
 
 128. A 'constituents' table has been added, in which you may load known user locations and associated 
      information, such as apartment number, key location, etc.  Phone no. lookup order is first past tickets, then
@@ -343,18 +343,18 @@ Changes for Tickets V 2.11 E
      re-name it for this capability to work.)
 
 129. A 'settings' value for reports pie chart diameter was added, allowing user-specified values when the defaults 
-	 require revision in order to meet operational needs. 
-	 
+     require revision in order to meet operational needs. 
+     
 130. The Reports module has been expanded to include a new Incident Log' report, which show all of the activities
-	 associated with the selected incident.  In addition, the selection form was revised for ease of use.
+     associated with the selected incident.  In addition, the selection form was revised for ease of use.
 
 Changes for Tickets V 2.11 F
 
 131.  Chat works, along with more reliable multi-user operation, notification of new incidents, unit status change, 
-	  and unit movement via 'lit-up' buttons.
+      and unit movement via 'lit-up' buttons.
       
 132.  Unavailable units sort to the bottom of the units dispatch list; these may be identified to allow or 
-	  disallow dispatch.
+      disallow dispatch.
 
 133.  Dispatching a unit no longer needs the 'multi' workaround.
 
@@ -379,11 +379,8 @@ Changes for Tickets V 2.11 F
 
 142.  This file is now available via link on the Config screen. 
 
-</pre>
 
-<A NAME="bottom" />
 
-<pre>
 (Scroll up for additional information re earlier versions; note that much of the information remains pertinent.)
 
 Changes for Tickets V 2.11 G
@@ -470,15 +467,89 @@ Changes for Tickets V 2.12 A
       as functions related to operation by users with mobile terminals.
       
 160.  Search capability has been enhance;  the generic table processor now has a Search button, and 
-      the ticket search function is searching through actions and persions records correctly.      
+      the ticket search function is searching through actions and persions records correctly.  
+
+Changes for Tickets V 2.12b
+
+161.  The situation screen has been given a significant re-do, with much flexibility added to hide/show
+      the several tables and classes of incidents, units, and facilities. A setting for "group_or_dispatch"
+      allows the use of standard "Available" and "Unavailable" show and hide (determined by the hide setting
+      in the unit_status table) or to use the unit status groupings as the hide and show categories. the 
+      settings for standard are 0 (default) or 1 for status groupings.
+
+162.  We've added the capability to maintain your own table of codes/signals, which may quickly be inserted 
+      into several of the information fields used working an incident.  Use the 'Signals' link on the 
+      Config page on this.  You'll have the ability in the New and Edit forms and others.
+
+163.  If you prefer that all outgoing mail go as blind copies:  On Config/Edit settings, append /B to 
+      the 'email from' setting;  e.g., 'yrname@gmail.com/B'.   In addition, mail operations now allow using 
+      GMail smtp account.  N.B., that outgoing mail requires valid email addresses for both 'email from' 
+      and 'email reply to'  settings.
+
+164.  You may now dispatch units by capability. On the dispatch menu, entered terms are used to identify 
+      units with matching capabilities for dispatching, with 'any' and 'all' options for term matching.
+
+165.  We've added automatic incident numbering, a widely-requested capability and which supports a number 
+      of styles, including a fixed string (useful in identifying events) and the current year.  
+      Set it on Config/Incident Numbers.
+      
+166.  There is an added entry in the configuration screen - Add Tickets Module. This is for future use.      
+
+
+Changes for Tickets V 2.13  (Most of it by Andy Harvey)
+
+167.  A new capability to use either "Day" - standard light version or "Night" - dark colors. This enables use
+      in reduced light situations to avoid eye strain.  All colors can also be customised within the configuration
+      module.
+
+      PLEASE NOTE. Tickets now uses a different stylesheet than previously - default.css is only used for
+      the installation stage. Once installed tickets uses "stylesheet.php" to handle the different color capabilities.
+      This will mean however that any users that have customised their colors and styles should review the 
+      differences between stylesheet.php and default.css. In stylesheet.php you will notice that some of the
+      colors are set from a table entry. These are changed through the configuration screen (edit Day CSS colors and
+      edit Night CSS colors.
+
+168.  The situation screen has had another extensive makeover with the ability to hide each of the individual
+      sidebars for Incidents, Responders, Facilities and the show/hide controls for markers and the sidebars.
+
+169.  The full screen display has been reworked to incorporate the same kind of show/hide capability for
+      Incidents, Responders and Facilities as the Situation Screen, as well as to incorporate the day/night
+      capability.  It also displays undispatched incidents at screen top and current runs underneath the map, 
+      making for a more management-oriented, or 'day-room' type of display. Hiding of these boxes is by 
+      standard "x" close button, showing of them is by hovering over the tabs at the side of the screen.
+      The showing and hiding of markers is also done in a box of this type (these controls are hidden as
+      default) which is shown by hovering over the "Markers" tab at the side of the screen. Scheduled runs
+      display is got to from the "Change Display" select menu in the bar at the bottom of the map.
+
+170.  We've changed our data source for APRS information to aprs.fi, and we expect more reliable APRS 
+      operation than in the past.  You WILL need to obtain a key from them - it's free: Go to www.aprs.fi 
+      to obtain, and enter that value in 'Config/Edit settings/aprs fi key' field.  A test page is available at 
+      Config/Test: APRS.
+      
+171.  We've added Google-style hints for the New incident form's city field.  Populate your own city list at
+      Config/Places.
+      
+172.  We've added the capability to revise the operator mouseover hints on the New Incident form to meet 
+      your standards and terminology.  Revise the default values at Config/Hints.
+      
+173.  We've expanded the Unit ID information on the sit screen and Units list to accommodate 6-character
+      values.  The icon string remains at three character, and is taken from the low-order portion of unit
+      name.
+
+173.  While not inherent to this release, Tickets now has a User's Manual - thanks to Alan Jump;  consult 
+      that for information on Tickets setup and usage - rather than these cursory notes.
+
+
+And, as always, we've applied a goodly number of corrections.  Please ensure that you're running the latest 
+available release before reporting a problem.      
 
 Let us know if the above is too terse and where further expansion wd be useful.
+<A NAME = 'bottom'></A>
 
-Sept '10
+Apr '11
 Arnie Shore
 Andy Harvey, UK
 
 </PRE>
-</DIV>
 </BODY>
 </HTML>

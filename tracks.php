@@ -17,6 +17,7 @@
 1/23/10 refresh meat removed
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 8/13/10 map.setUIToDefault();
+3/15/11 changed stylesheet.php to stylesheet.php
 
 */
 
@@ -53,7 +54,7 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 	$print = "";											// output string
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 		$temp = $u_types[$row['type']];
-		$print .= "\t\t" .$temp[0] . " &raquo; <IMG SRC = './icons/" . $sm_icons[$temp[1]] . "' BORDER=0>&nbsp;&nbsp;&nbsp;\n";
+		$print .= "\t\t" .$temp[0] . " &raquo; <IMG SRC = './our_icons/" . $sm_icons[$temp[1]] . "' BORDER=0>&nbsp;&nbsp;&nbsp;\n";
 		}
 	return $print;
 	}			// end function get_icon_legend ()
@@ -182,8 +183,8 @@ global $u_types;
 		var letter = String.fromCharCode("A".charCodeAt(0) + id);		// start with A - 1/5/09
 
 		var icon = new GIcon(listIcon);
-		var icon_url = "./icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + letter;				// 1/5/09
-		icon.image = icon_url;		// ./icons/gen_icon.php?blank=4&text=zz"
+		var icon_url = "./our_icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + letter;				// 1/5/09
+		icon.image = icon_url;		// ./our_icons/gen_icon.php?blank=4&text=zz"
 
 		var marker = new GMarker(point, icon);
 		marker.id = color;				// for hide/unhide - unused
@@ -552,7 +553,7 @@ unset($result);
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<HEAD><TITLE>Tickets - Tracks Module</TITLE>
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
 	<SCRIPT src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
 
 <?php

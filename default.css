@@ -54,3 +54,13 @@ checkbox {border-width: 0px;}
 *.selected {font: bold 13px arial;background-color:#DEE3E7;border-style: outset;border: 3px solid #CCCCCC; }
 
 select.sit { font: 9px Verdana, Geneva, Arial, Helvetica, sans-serif; background-color: transparent; color: #102132; border: none;}
+
+.unk 		{font-size:smaller;background-color:gray;color:white;font-weight:bold;}
+.fast 		{font-size:smaller;background-color:white;color:black;font-weight:bold;}
+.stopped 	{font-size:smaller;background-color:red;color:black;font-weight:bold;}
+.moving 	{font-size:smaller;background-color:blue;color:black;font-weight:bold;}
+
+.cat_button {float:left; padding:2px; vertical-align:middle;}
+.pri_button {float:left; padding:2px; vertical-align:middle; }
+.conf_next_button {font-size: 10px; color: green; float:left;padding:2px; vertical-align:middle; }
+.conf_can_button {font-size: 10px; color: red; float:left; padding:2px; vertical-align:middle; }

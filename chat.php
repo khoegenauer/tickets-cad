@@ -9,12 +9,11 @@ $list_length = 99;		// chat list length maximum
 1/23/10 PHP sessions replaces custom session handler
 5/29/10 revised chat read for asynch ajax
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
+3/15/11 changed stylesheet.php to stylesheet.php
+5/4/11 get_new_colors() added
 */
 @session_start();	
-
-require_once($_SESSION['fip']);		//7/28/10
-
-if(empty($_SESSION)) {session_start();}		// 
+require_once('./incs/functions.inc.php');		//7/28/10
 do_login(basename(__FILE__));
 extract ($_GET);
 
@@ -24,18 +23,37 @@ $old = mysql_format_date(time() - (get_variable('delta_mins')*60) - ($hours*60*6
 
 $query  = "DELETE FROM `$GLOBALS[mysql_prefix]chat_messages` WHERE `when`< '" . $old . "'";
 $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
+				// 11/15/11
+$sig_script = "<SCRIPT>
+		function set_signal(inval) {
+			var temp_ary = inval.split('|', 2);		// inserted separator
+			document.chat_form.frm_message.value+=temp_ary[1] + ' ';
+			}		// end function set_signal()
+		</SCRIPT>
+		";
 
+$signals_list = $sig_script ."<SELECT NAME='signals' onFocus = 'clear_to()'; onBlur = 'set_to()'; onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>";
+$signals_list .= "<OPTION VALUE='0' SELECTED>Select signal/code</OPTION>";
+
+$query  = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY 'text' ASC";
+$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
+while ($row = stripslashes_deep(mysql_fetch_array($result))) {
+//	$signals_list .= "\t<OPTION VALUE='{$row['code']}'>{$row['text']} ({$row['code']})</OPTION>\n";
+	$signals_list .=  "\t<OPTION VALUE='{$row['code']}'>{$row['code']}|{$row['text']}</OPTION>\n";		// pipe separator
+
+	}				
+$signals_list .= "</SELECT>\n";
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<HEAD><TITLE>Tickets - Chat Module</TITLE>
-	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-	<META HTTP-EQUIV="Expires" CONTENT="0">
-	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-	<META HTTP-EQUIV="Script-date" CONTENT="8/24/08">
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+	<META HTTP-EQUIV="Expires" CONTENT="0" />
+	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
+	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
+	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
+	<META HTTP-EQUIV="Script-date" CONTENT="8/24/08" />
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
 <SCRIPT>
 
 	try {
@@ -68,6 +86,9 @@ $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_er
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
+	function get_new_colors() {								// 5/4/11
+		window.location.href = '<?php print basename(__FILE__);?>';
+		}
 
 	function URLEncode(plaintext ) {					// The Javascript escape and unescape functions do
 														// NOT correspond with what browsers actually do...
@@ -153,9 +174,11 @@ $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_er
 	var last_msg_id=0;									// initial value at page load
 
 	function rd_chat_msg() {							// read chat messages via ajax xfer - 5/29/10
+
 		var our_max = (first)? 5 : <?php print $list_length ;?>;		// startup limiter
 		var params = "last_id=" + last_msg_id + "&max_ct=" + our_max ;
 		first = false;													// standard limiter
+//		alert("211 " + params);
 		sendRequest ('chat_rd.php',handleResult, params);	// 
 		}
 
@@ -166,7 +189,7 @@ $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_er
 			return false;
 			}
 		else {
-//			alert("158 " + payload);
+//			alert("220 " + payload);
 			var person = document.getElementById("person");
 			var lines = payload.split(0xFF, 99) 											// lines FF-delimited
 			for (i=0;i<lines.length; i++) {
@@ -308,7 +331,7 @@ $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_er
 		}
 
 	function set_to() {										// set timeout
-		if (!the_to) {the_to=setTimeout('getMessages()', <?php print $cycle; ?>)}
+		if (!the_to) {the_to=setTimeout('getMessages(false)', <?php print $cycle; ?>)}
 		}
 		
 	function clear_to() {
@@ -316,7 +339,7 @@ $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_er
 		the_to = false;
 		}
 		
-	function getMessages(){
+	function getMessages(ignore){
 //		alert(<?php print __LINE__;?>)
 		clear_to();
 		rd_chat_msg();
@@ -347,14 +370,13 @@ $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_er
 
 	</SCRIPT>
 </HEAD>
-<BODY onLoad = "if (!(window.opener)) {window.close();};announce();getMessages(); set_to(); do_focus();" onUnload="wr_chat_msg(document.chat_form_2); clearTimeout(the_to);"> 
-<TABLE ID="person" border="0" width='60%'>
+<BODY onLoad = "if (!(window.opener)) {window.close();};announce();getMessages(true); set_to(); do_focus();" onUnload="wr_chat_msg(document.chat_form_2); clearTimeout(the_to);"> 
+<TABLE ID="person" border="0" width='60%' STYLE = 'margin-left:100px;'>
 </TABLE>
 <?php
 					// who's logged-in?
 	$now = mysql_format_date(time() - (get_variable('delta_mins')*60));		// 1/23/10
 					
-//	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]session`  WHERE `user_id` <> {$_SESSION['user_id']} ORDER BY `user_name`";	// 6/15/08 
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user`  WHERE `id` <> {$_SESSION['user_id']} AND `expires` >'{$now}' ORDER BY `user`";	// 1/23/10 
 
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -366,15 +388,16 @@ $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_er
 		}
 	if (mysql_affected_rows()==0) { $who = "no others";};
 ?>
+		<DIV  STYLE = 'margin-left:100px;'>
 		<FONT CLASS="header">Chat</FONT> <I>(logged-in: <?php print $who; ?>)</I><BR /><BR />
 		<FORM METHOD="post" NAME='chat_form' onSubmit="return false;">
 		<NOBR>
-<!--	<INPUT TYPE="text" NAME="frm_message" SIZE=80 onchange="return do_enter(event)" VALUE=' has joined this chat.'> -->
-		<INPUT TYPE="text" NAME="frm_message" SIZE=80 onkeypress="return do_enter(event)" VALUE=' has joined this chat.'>
-<!--	<INPUT TYPE="text" NAME="frm_message" SIZE=80 > -->
+		<INPUT TYPE="text" NAME="frm_message" SIZE=80 value = "" onFocus = "clear_to()"; onBlur = 'set_to()'; >
 
-		<INPUT TYPE="button" VALUE = "Send" onClick="wr_chat_msg(document.forms[0]);"  style='margin-left:20px;' >
+		<INPUT TYPE="button" VALUE = "Send" onClick="wr_chat_msg(document.forms[0]);set_to()"  style='margin-left:20px;' >
+		<INPUT TYPE="Reset" VALUE = "Reset" style='margin-left:20px;'  onClick="this.form.reset(); document.chat_form.frm_message.value='';" />
 		<BR /><NOBR>
+<?php print  $signals_list; ?><br />
 
 		<INPUT TYPE='hidden' NAME = 'frm_room' VALUE='0'>
 		<INPUT TYPE='hidden' NAME = 'frm_user' VALUE='<?php print $_SESSION['user_id'];?>'>
@@ -410,5 +433,6 @@ $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_er
 		<INPUT TYPE='hidden' NAME = 'frm_from' VALUE='<?php print $_SERVER['REMOTE_ADDR']; ?>'>
 		</FORM>
 		<A NAME="bottom"></A>
+		</DIV>
 </BODY>
 </HTML>

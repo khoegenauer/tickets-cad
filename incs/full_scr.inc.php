@@ -8,7 +8,11 @@
 3/27/10 added 'elapsed time' to IW
 4/21/10 added closed incidents selection by time period, call history incident display replacing infowin
 8/13/10 map.setUIToDefault();										// 
-
+11/6/10 map size calculations for 2-screen operation
+11/29/10 locale == 2 handling added
+12/1/10 get_text disposition added
+3/29/11 Added Incident List, Assignment List and moved marker show / hide controls to hide-able div. Added side menu controls.
+4/5/11 Set shorten length by client screen width.
 */
 error_reporting(E_ALL);
 
@@ -31,16 +35,39 @@ error_reporting(E_ALL);
 				}
 			}
 		$monday =  $temp_monday;
+		
+		
+function fs_get_disp_status ($row_in) {			// 3/25/11
+	$tags_arr = explode("/", get_variable('disp_stat'));
+	if (is_date($row_in['u2farr'])) 	{ return $tags_arr[4];}
+	if (is_date($row_in['u2fenr'])) 	{ return $tags_arr[3];}
+	if (is_date($row_in['on_scene'])) 	{ return $tags_arr[2];}
+	if (is_date($row_in['responding'])) { return $tags_arr[1];}
+	if (is_date($row_in['dispatched'])) { return $tags_arr[0];}
+	}		
 
 	function full_scr($sort_by_field='',$sort_value='') {	// list tickets ===================================================
-		global $now_num, $now_day, $now_mon, $now_year, $monday;
+		global $now_num, $now_day, $now_mon, $now_year, $monday, $disposition;
+		
+		if(($_SESSION['scr_width'] < 1300) && ($_SESSION['scr_width'] > 1050)) {		//	4/5/11	sets shorten length depending on client screen width
+			$shorten_length = 11;
+		} elseif ($_SESSION['scr_width'] < 1050) {
+			$shorten_length = 10;
+		} elseif ($_SESSION['scr_width'] > 1300) {
+			$shorten_length = 15;
+		} else {
+			$shorten_length = 10;
+		}
+				
 		extract ($_GET);
 		$func = (isset($func))? $func : 0; 
 		global $istest;
 	//	$dzf = get_variable('def_zoom_fixed');			// 4/2/09
 		$cwi = get_variable('closed_interval');			// closed window interval in hours
 		$captions = array("Current situation", "Incidents closed today", "Incidents closed yesterday+", "Incidents closed this week", "Incidents closed last week", "Incidents closed last week+", "Incidents closed this month", "Incidents closed last month", "Incidents closed this year", "Incidents closed last year");
-	
+		$pri_buttons_width = (integer) get_variable('map_width') * .2; 	
+		$fac_buttons_width = (integer) get_variable('map_width') * .4; 	
+		$units_buttons_width = (integer) get_variable('map_width') * .4; 			
 		$heading = $captions[$func];
 		$eols = array ("\r\n", "\n", "\r");		// all flavors of eol
 	
@@ -56,73 +83,67 @@ error_reporting(E_ALL);
 			unset($result_scheduled);
 	
 ?>
-	<TABLE BORDER=0 STYLE= "margin-top:0;">
-		<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header'><?php print get_variable('map_caption') . " - " .  $heading;?> <SPAN ID='sev_counts' STYLE = 'margin-left: 40px'></SPAN></FONT></TD></TR>	<!-- 1/17/09 -->
-		<TR>
-			<TD COLSPAN='99' CLASS='td_label' width="100%">
-<?php
-	@session_start();							// 
-	
-	$map_width = round($_SESSION['scr_width'] * 0.98);
-	$map_height = round($_SESSION['scr_height'] *0.72);
+<!-- 3/29/11 DIVS Incident List & Assignments List -->
 
-//	$captions = array("error - 0", "error - 1", "Closed - Today", "Open", "Closed - Yesterday+", "Closed - This week", "Closed - Last week", "Closed - Last week+", "Closed - This month", "Closed - Last month", "Closed - This year", "Closed - Last year");
-	$by_severity = array(0, 0, 0);				// counters
-?>
-			<DIV ID='map' STYLE='WIDTH:<?php print $map_width;?>PX; HEIGHT: <?php print $map_height;?>PX'></DIV>
-			</TD></TR>
-			<TR>
-			<TD ALIGN='center' ><BR />
-				<SPAN STYLE =  'margin-left: 100px'><B>Units</B>:<IMG SRC = './icons/sm_white.png' BORDER=0><IMG SRC = './icons/sm_black.png' BORDER=0></SPAN>
-	
-				<SPAN ID="show_it" STYLE="display: none" onClick = "do_show_Units();"><U>Show</U></SPAN>
-				<SPAN ID="hide_it" STYLE="display: ''" onClick = "do_hide_Units();"><U>Hide</U></SPAN>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<SPAN ID="hide_unavail" STYLE="display: ''" onClick = "hide_unit_stat_unavail();"><U>Hide unavailable</U></SPAN>	<!-- 10/26/09 -->
-				<SPAN ID="show_unavail" STYLE="display: ''" onClick = "show_unit_stat_unavail();"><U>Show unavailable</U></SPAN>	<!-- 10/26/09 -->
-				<BR /><BR /></TD>
-			<TD STYLE="WIDTH:4PX; background-color:#DEE3E7;"></TD>
-				
-			<TD ALIGN='center'><BR />
-				<B>Facilities</B>:<IMG SRC = './icons/sm_shield_green.png' BORDER=0><IMG SRC = './icons/sm_square_red.png' BORDER=0>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 10/26/09 -->
-	
-				<SPAN ID="hide_fac" STYLE="display: ''" onClick = "hide_Facilities();"><U>Hide</U></SPAN>
-				<SPAN ID="show_fac" STYLE="display: none" onClick = "show_Facilities();"><U>Show</U></SPAN>
-	
-				<BR /><BR /></TD>
-			<TD STYLE="WIDTH:4PX; background-color:#DEE3E7;"></TD>
-			<TD ALIGN='left'><BR />
-	
-			<SPAN ID="incidents" STYLE="display: inline-block; margin-left: 100px">
-				<B>Incident Priority</B>:<IMG SRC = './icons/sm_blue.png' BORDER=0><IMG SRC = './icons/sm_green.png' BORDER=0><IMG SRC = './icons/sm_red.png' BORDER=0>&nbsp;&nbsp;	<!-- 10/26/09 -->
-				<A HREF="#" onClick = "hideGroup(1)">Typical: 	<IMG SRC = './icons/sm_blue.png' BORDER=0></A>&nbsp;&nbsp;&nbsp;&nbsp; <!-- 1/9/09 -->
-				<A HREF="#" onClick = "hideGroup(2)">	High: 	<IMG SRC = './icons/sm_green.png' BORDER=0></A>&nbsp;&nbsp;&nbsp;&nbsp;
-				<A HREF="#" onClick = "hideGroup(3)">Highest: 	<IMG SRC = './icons/sm_red.png' BORDER=0></A>
-				</SPAN>
-			<SPAN ID="show_all_icon" STYLE="display: none; margin-left: '40px'" onClick = "show_All()">Show all: <IMG SRC = './markers/sm_white.png' BORDER=0></SPAN>
-			</NOBR></CENTER>
-			<BR /><BR />
-	
-			</TD>
-		</TR>
-<SCRIPT>
-	function show_btns_closed() {
-		$('btn_go').style.display = 'inline';
-		$('btn_can').style.display = 'inline';
-		}
-	function hide_btns_closed() {
-		$('btn_go').style.display = 'none';
-		$('btn_can').style.display = 'none';
-		document.dummy.frm_interval.selectedIndex=99;
-		}
-</SCRIPT>
-	<FORM name='dummy' STYLE='block-inline'>
-	<TR CLASS='even'><TD COLSPAN=99 ALIGN = 'center' ID = 'misc'><BR /><B><NOBR>
-		<SPAN onClick='doGrid()'><U>Grid</U></SPAN>
-		<SPAN onClick='doTraffic()' STYLE = 'margin-left: 60px'><U>Traffic</U></SPAN>
+	<DIV ID = 'inc_list' style='width: 46%; position: fixed; top: 5%; left: 3%; z-index:3; display: block; border: 2px outset #CECECE;'>
+	<DIV class='heading' style='text-align: center; height: 20px; '><?php print get_text('Incidents');?><DIV style='float: right'>
+	<SPAN id='collapse_ticks' onClick="hideDiv('inc_list', 'collapse_ticks', 'expand_ticks'); CngMenuClass('incs_but', 'right_menu');" style = "display: 'none';"><IMG SRC = './buttons/close.png' BORDER=0 STYLE = 'vertical-align: middle'></SPAN></DIV></DIV>
+	<DIV ID = 'incidents' style='background: #CECECE; width: 100%; max-height: 200px; overflow-y: scroll; overflow-x: hidden; position: relative; z-index:2; display: block;'></DIV>		<!-- 3/24/11 List of current open incidents -->
+	</DIV>
+
+	<DIV ID = 'assigns_list' style='width: 46%; position: fixed; top: 5%; right: 3%; z-index:3; display: block; border: 2px outset #CECECE;'>
+	<DIV class='heading' style='text-align: center; height: 20px;'><?php print get_text('Assignments');?><DIV style='float: right'>
+	<SPAN id='collapse_ass' onClick="hideDiv('assigns_list', 'collapse_ass', 'expand_ass'); CngMenuClass('assign_but', 'right_menu');" style = "display: 'none';"><IMG SRC = './buttons/close.png' BORDER=0 STYLE = 'vertical-align: middle'></SPAN></DIV></DIV>
+	<DIV ID = 'assignments' style='background: #CECECE; width: 100%; max-height: 200px; overflow-y: scroll; overflow-x: hidden; position: relative; z-index:2; display: block;'></DIV>		<!-- 3/24/11 List of current assignments -->
+	</DIV>
+
+<!-- 3/29/11 DIVS for show hide side menu for lists and marker controls -->
+	<DIV ID='side_menu_cont' class='right_menu_container' style='position: fixed; top: 10%; right: 0px;'>
+	<BR />
+
+<script>
+	var text_size = window.screen.width > 1000 ? "16" : "12";
+
+	var div_button1 = "<DIV ID='marker_but' CLASS='right_menu' style='font-size:" + text_size + "px' onMouseover=\"showDiv('buttons_sh', 'collapse_buttons', 'expand_buttons'); CngMenuClass('marker_but', 'right_menu_lit');\">M<BR />A<BR />R<BR />K<BR />E<BR />R<BR />S</DIV><BR />";
+	var div_button2 = "<DIV ID='incs_but' CLASS='right_menu' style='font-size:" + text_size + "px' onMouseover=\"showDiv('inc_list', 'collapse_ticks', 'expand_ticks'); CngMenuClass('incs_but', 'right_menu_lit');\">I<BR />N<BR />C<BR />I<BR />D<BR />E<BR />N<BR />T<BR />S</DIV><BR />";
+	var div_button3 = "<DIV ID='assign_but' CLASS='right_menu' style='font-size:" + text_size + "px' onMouseover=\"showDiv('assigns_list', 'collapse_ass', 'expand_ass'); CngMenuClass('assign_but', 'right_menu_lit');\">A<BR />S<BR />S<BR />I<BR />G<BR />N<BR />M<BR />E<BR />N<BR />T<BR />S</DIV><BR />";
+	document.write (div_button1);
+	document.write (div_button2);
+	document.write (div_button3);
+</script>
+	</DIV>
+
+<!-- 3/29/11 Marker controls -->	
+	<DIV ID = 'buttons_sh' class='fs_buttons' style='display: none; background: #CECECE; width: 300px; overflow-y: hidden; overflow-x: hidden; position: fixed; right: 10%; top: 20%; z-index:4; border: 3px outset #505050;'>
+	<DIV class='heading' style='text-align: center; height: 20px;' style='z-index:4; padding: 3px;'>Show / Hide Markers<DIV style='float: right'><SPAN id='collapse_buttons' STYLE = 'text-align: right' onClick="hideDiv('buttons_sh', 'collapse_buttons', 'expand_buttons'); CngMenuClass('marker_but', 'right_menu');"><IMG SRC = './buttons/close.png' BORDER=0 STYLE = 'vertical-align: middle'></SPAN></DIV></DIV>
+	<DIV ID = 'incidents_sh' style='display: block; position: relative; padding: 10px; overflow-y: scroll; overflow-x: scroll;'>
+	<DIV class='heading' style='text-align: center; height: 20px; ' style='z-index:4; padding: 3px;'><?php print get_text('Incidents');?></DIV>
+	<DIV class='pri_button_fs' onClick="set_pri_chkbox('normal'); hideGroup(1, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' STYLE = 'vertical-align: middle'BORDER=0>&nbsp;&nbsp;Normal: <input type=checkbox id='normal'  onClick="set_pri_chkbox('normal')"/>&nbsp;&nbsp;</DIV>
+	<DIV class='pri_button_fs' onClick="set_pri_chkbox('medium'); hideGroup(2, 'Incident');"><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;Medium: <input type=checkbox id='medium'  onClick="set_pri_chkbox('medium')"/>&nbsp;&nbsp;</DIV>
+	<DIV class='pri_button_fs' onClick="set_pri_chkbox('high'); hideGroup(3, 'Incident');"><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;High: <input type=checkbox id='high'  onClick="set_pri_chkbox('high')"/>&nbsp;&nbsp;</DIV>
+	<DIV class='pri_button_fs' ID = 'pri_all' class='pri_button' STYLE = 'display: none;' onClick="set_pri_chkbox('all'); hideGroup(4, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' BORDER=0 STYLE = 'vertical-align: middle'><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle'><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle'>All <input type=checkbox id='all'  STYLE = 'display:none;' onClick="set_pri_chkbox('all')"/>&nbsp;&nbsp;</DIV>
+	<DIV class='pri_button_fs' ID = 'pri_none' class='pri_button' onClick="set_pri_chkbox('none'); hideGroup(5, 'Incident');"><IMG SRC = './our_icons/sm_white.png' BORDER=0 STYLE = 'vertical-align: middle'> None <input type=checkbox id='none' STYLE = 'display:none;' onClick="set_pri_chkbox('none')"/></DIV></b>
+	</DIV><BR />
+	<DIV ID = 'units_sh' style='display: block; position: relative; padding: 10px; overflow-y: scroll; overflow-x: scroll;'>
+	<DIV class='heading' style='text-align: center; height: 20px;' style='z-index:4; padding: 3px;'><?php print get_text('Units');?></DIV>
+	<DIV ID = 'boxes' style='position: relative; padding: 3px;'></DIV>		<!-- 2/16/11 Units show and hide -->
+	</DIV><BR />
+	<DIV ID = 'facs_sh' style='display: block; position: relative; padding: 10px; overflow-y: scroll; overflow-x: scroll;'>
+	<DIV class='heading' style='text-align: center; height: 20px;' style='z-index:4; padding: 3px;'><?php print get_text('Facilities');?></DIV>	
+	<DIV ID = 'fac_boxes' style='position: relative; padding: 3px;'></DIV>		<!-- 2/16/11 Facilities show and hide -->
+	</DIV><BR />
+	</DIV>
+	</DIV>
+
+	<DIV ID = 'bottom_bar' class='td_fs_buttons' style='display: table-cell; position: fixed; bottom: 0%; left: 0%; width: 100%; z-index: 3; height: 5%; text-align: center; vertical-align: middle; padding-top: 5px; border-top: 4px outset #CECECE;'>
+	<B><NOBR>	<!-- 2/16/11 Change CSS classes -->
+	<FORM>		
+		<SPAN class='fs_buttons' onClick='maxWindow();'><U>Full screen</U></SPAN>
+		<SPAN class='fs_buttons' onClick='doGrid()' STYLE = 'margin-left: 60px'><U>Grid</U></SPAN>
+		<SPAN class='fs_buttons' onClick='doTraffic()' STYLE = 'margin-left: 60px'><U>Traffic</U></SPAN>
 <?php
-		if((empty($closed)) && ($num_closed > 0)) {					// 10/26/09  added button, 10/21/09 added check for closed incidents on the database
-			echo "<SPAN STYLE =  'margin-left: 60px'><U>Change display</U>&nbsp;&raquo;&nbsp;</SPAN>";
+		if(((empty($closed)) && ($num_closed > 0)) || ($num_scheduled != 0)) {					// 10/26/09  added button, 10/21/09 added check for closed incidents on the database, 3/29/11 added scheduled runs option
+			echo "<SPAN class='fs_buttons' STYLE =  'margin-left: 60px'><U>Change display</U>&nbsp;&raquo;&nbsp;</SPAN>";
 			echo "\n\t\t <SELECT NAME = 'frm_interval' onChange = 'document.to_all.func.value=this.value; show_btns_closed();'>
 				<OPTION VALUE='99' SELECTED>Select</OPTION>
 				<OPTION VALUE='0'>Current situation</OPTION>
@@ -135,27 +156,60 @@ error_reporting(E_ALL);
 				<OPTION VALUE='7'>Incidents closed last month</OPTION>
 				<OPTION VALUE='8'>Incidents closed this year</OPTION>
 				<OPTION VALUE='9'>Incidents closed last year</OPTION>
+				<OPTION VALUE='10'>Scheduled Runs</OPTION>				
 				</SELECT>\n";
-			echo "<SPAN ID = 'btn_go' onClick='document.to_all.submit()' STYLE = 'margin-left: 10px; display:none'><U>Go</U></SPAN>";
-			echo "<SPAN ID = 'btn_can'  onClick='hide_btns_closed()' STYLE = 'margin-left: 10px; display:none'><U>Cancel</U></SPAN>";
+			echo "<SPAN ID = 'btn_go' class='fs_buttons' onClick='document.to_all.submit()' STYLE = 'margin-left: 10px; display:none; color: #006600;'><U>Go</U></SPAN>";
+			echo "<SPAN ID = 'btn_can' class='fs_buttons' onClick='hide_btns_closed()' STYLE = 'margin-left: 10px; display:none; color: #FF0000;'><U>Cancel</U></SPAN>";
 
 			}
 ?>
-			
-	
-		<SPAN onClick = "opener.focus()" STYLE =  'margin-left: 60px'><U>Back</U></SPAN>
+		<SPAN class='fs_buttons' onClick = "opener.focus()" STYLE =  'margin-left: 60px'><U>Back</U></SPAN>
 		<A HREF="mailto:shoreas@Gmail.com?subject=Comment%20on%20Tickets%20Dispatch%20System"><SPAN STYLE = 'margin-left: 20px; font-size:10px; '><U>Contact us</U> <IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom; margin-left: 10px;"></SPAN></A>
-		<SPAN onClick = "window.close();" STYLE =  'margin-left: 60px'><U>Close</U></SPAN></NOBR>
-		</B><BR /><BR />
-		</TD></TR>
+		<SPAN class='fs_buttons' onClick = "window.close();" STYLE =  'margin-left: 60px'><U>Close</U></SPAN>
+		</NOBR>
+		</B>
 		</FORM>
-		</TABLE>
+		</DIV>
+		
 			
 		<FORM NAME='view_form' METHOD='get' ACTION='units.php'>
 		<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
 		<INPUT TYPE='hidden' NAME='view' VALUE='true'>
 		<INPUT TYPE='hidden' NAME='id' VALUE=''>
 		</FORM>
+	
+	<DIV style='position: fixed; top: 0px; left: 0px, z-index: 1'>
+	<TABLE BORDER=1 STYLE= "margin-top:0;">
+		<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header'><?php print get_variable('map_caption') . " - " .  $heading;?> <SPAN ID='sev_counts' STYLE = 'margin-left: 40px'></SPAN></FONT></TD></TR>	<!-- 1/17/09 -->
+
+		<TR ID='map_row'>
+			<TD COLSPAN='99' CLASS='td_label' width="100%" height="82%">
+
+<?php
+	@session_start();							// 
+	$by_severity = array(0, 0, 0);				// counters
+?>
+<script>
+			var map_width = window.screen.width -16;		// 11/6/10
+			var map_height = window.screen.height *.82;		// browser-dependent
+			var div_style_str = "<DIV ID='map' STYLE='WIDTH:" + map_width + "px; height:" + map_height + "px';></DIV>"
+			document.write (div_style_str);
+</script>
+		</TD></TR>
+		</TABLE></DIV>
+<SCRIPT>
+	function show_btns_closed() {
+		$('btn_go').style.display = 'inline';
+		$('btn_can').style.display = 'inline';
+		}
+	function hide_btns_closed() {
+		$('btn_go').style.display = 'none';
+		$('btn_can').style.display = 'none';
+		document.dummy.frm_interval.selectedIndex=99;
+		}
+		
+</SCRIPT>
+
 	
 	<SCRIPT>
 		function isNull(val) {								// checks var stuff = null;
@@ -248,131 +302,590 @@ error_reporting(E_ALL);
 			var polygon = new GPolygon(Cpoints, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity);
 			map.addOverlay(polygon);
 			}
-	
-		function hideGroup(color) {							// 8/7/09 Revised function to correct incorrect display
-			for (var i = 0; i < gmarkers.length; i++) {
-				if (gmarkers[i]) {
-					if (gmarkers[i].id == color) {
-						gmarkers[i].show();
-						}
-					else {
-						gmarkers[i].hide();			// 1/11/09
-						}
-					}		// end if (gmarkers[i])
-				} 	// end for ()
-			$("show_all_icon").style.display = "inline-block";
-			$("incidents").style.display = "inline-block";
-	
-			}			// end function
-	
-	
-		function show_All() {						// 8/7/09 Revised function to correct incorrect display
-			for (var i = 0; i < gmarkers.length; i++) {
-				if (gmarkers[i]) {
-					gmarkers[i].show();
-					}
-				} 	// end for ()
-			$("show_all_icon").style.display = "none";
-			$("incidents").style.display = "inline-block";
-			}			// end function
-	
-	
-		function show_Units() {						// 8/7/09 Revised function to correct incorrect display
-			for (var i = 0; i < gmarkers.length; i++) {			// traverse gmarkers array for icon type==0 - 2/12/09
-				if (gmarkers[i]) {
-					if ((gmarkers[i].id == 0) || (gmarkers[i].id == 4)) {
-						gmarkers[i].show();
-						}
-					else {
-	//					gmarkers[i].hide();						// hide incidents - 1/8/09
-						}
-					}		// end if (gmarkers[i])
-				} 	// end for ()
-			$("incidents").style.display = "inline-block";
-			$("show_all_icon").style.display =	"inline-block";
-			$('show_it').style.display='none';
-			$('hide_it').style.display='inline';
-			}
-	
-		function hide_Units () {								// 10/17/08
-			for (var i = 0; i < gmarkers.length; i++) {			// traverse gmarkers array for icon type==0
-				if (gmarkers[i]) {
-					if ((gmarkers[i].id == 0) || (gmarkers[i].id == 4)) {			// 8/7/09 Revised function to correct incorrect display
-						gmarkers[i].hide();
-						}
-					else {
-						gmarkers[i].show();
-						}
-					}		// end if (gmarkers[i])
-				} 	// end for ()
-			$("incidents").style.display = "inline-block";
-			$("show_all_icon").style.display =	"inline-block";
-			$("show_it").style.display=			"inline";				// 12/02/09
-			$("hide_it").style.display=			"none";
-			}				// end function hide_units ()
-	
-		function hide_unit_stat_unavail() {								// 10/26/09
-			for (var i = 0; i < gmarkers.length; i++) {			// traverse gmarkers array for icon type==0
-				if (gmarkers[i]) {
-					if (gmarkers[i].stat == 1) {
-						gmarkers[i].hide();
-						}
-					else {
-						gmarkers[i].show();
-						}
-					}		// end if (gmarkers[i])
-				} 	// end for ()
-			$("incidents").style.display = "inline-block";
-			$("show_all_icon").style.display =	"inline-block";
-			$("show_unavail").style.display=			"inline";
-			$("hide_unavail").style.display=			"none";
-			}				// end function hide_unit_stat_unavail ()		
 			
-		function show_unit_stat_unavail() {								// 10/26/09
-			for (var i = 0; i < gmarkers.length; i++) {			// traverse gmarkers array for icon type==0
-				if (gmarkers[i]) {
-					gmarkers[i].show();
+		function URLEncode(plaintext ) {					// The Javascript escape and unescape functions do
+															// NOT correspond with what browsers actually do...
+			var SAFECHARS = "0123456789" +					// Numeric
+							"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +	// Alphabetic
+							"abcdefghijklmnopqrstuvwxyz" +	// guess
+							"-_.!*'()";					// RFC2396 Mark characters
+			var HEX = "0123456789ABCDEF";
+		
+			var encoded = "";
+			for (var i = 0; i < plaintext.length; i++ ) {
+				var ch = plaintext.charAt(i);
+				if (ch == " ") {
+					encoded += "+";				// x-www-urlencoded, rather than %20
+				} else if (SAFECHARS.indexOf(ch) != -1) {
+					encoded += ch;
+				} else {
+					var charCode = ch.charCodeAt(0);
+					if (charCode > 255) {
+						alert( "Unicode Character '"
+								+ ch
+								+ "' cannot be encoded using standard URL encoding.\n" +
+								  "(URL encoding only supports 8-bit characters.)\n" +
+								  "A space (+) will be substituted." );
+						encoded += "+";
+					} else {
+						encoded += "%";
+						encoded += HEX.charAt((charCode >> 4) & 0xF);
+						encoded += HEX.charAt(charCode & 0xF);
+						}
 					}
-				} 	// end for ()
-			$("incidents").style.display = "inline-block";
-			$("show_all_icon").style.display =	"inline-block";
-			$("show_unavail").style.display=			"none";
-			$("hide_unavail").style.display=			"inline";
-			}				// end function hide_unit_stat_unavail ()			
-	
-		function do_hide_Units() {						// 2/14/09
-			var params = "f_n=show_hide_unit&v_n=h&sess_id=<?php print get_sess_key(basename(__FILE__) . __LINE__); ?>";					// flag 1, value h
-	//		var url = "persist.php";
-			var url = "do_session_get.php";
-			sendRequest (url, h_handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
-			}			// end function do_hide_Units()
-	
-		function hide_Facilities() {								// 8/1/09
-			for (var i = 0; i < fmarkers.length; i++) {			// traverse gmarkers array for icon type==0
-				if (fmarkers[i]) {
-						fmarkers[i].hide();
+				} 			// end for(...)
+			return encoded;
+			};			// end function					
+
+//	Tickets show / hide by Priority functions
+
+	function set_initial_pri_disp() {
+		$('normal').checked = true;
+		$('medium').checked = true;
+		$('high').checked = true;
+		$('all').checked = true;
+		$('none').checked = false;
+		$('buttons_sh').style.display = 'none';
+		$('incidents').style.display = '';
+		$('assignments').style.display = '';		
+	}
+
+	function hideGroup(color, category) {			// 8/7/09 Revised function to correct incorrect display, revised 12/03/10 completely revised
+		var priority = color;
+		var priority_name="";
+		if(priority == 1) {
+			priority_name="normal";
+		}
+		if(priority == 2) {
+			priority_name="medium";
+		}
+		if(priority == 3) {
+			priority_name="high";
+		}
+		if(priority == 4) {
+			priority_name="all";
+		}
+
+		if(priority == 5) {
+			priority_name="none";
+		}
+
+		if(priority == 1) {
+			for (var i = 0; i < gmarkers.length; i++) {
+				if (gmarkers[i]) {
+					if ((gmarkers[i].id == priority) && (gmarkers[i].category == category)) {
+						gmarkers[i].show();
 						}
-				} 	// end for ()
-			$("hide_fac").style.display = "none";
-			$("show_fac").style.display = "inline-block";
-			}				// end function hide_Facilities ()
-	
-		function show_Facilities () {								// 8/1/09
-			for (var i = 0; i < fmarkers.length; i++) {			// traverse gmarkers array for icon type==0
-				if (fmarkers[i]) {
-						fmarkers[i].show();
+					if ((gmarkers[i].id != priority) && (gmarkers[i].category == category)) {
+						gmarkers[i].hide();
 						}
+
+					}		// end if (gmarkers[i])
 				} 	// end for ()
-			$("hide_fac").style.display = "inline-block";
-			$("show_fac").style.display = "none";
-			}				// end function show_Facilities ()
-	
-	
-		function h_handleResult(req) {					// the 'called-back' persist function - hide
-			hide_Units();
+			$('normal').checked = true;
+			$('medium').checked = false;
+			$('high').checked = false;
+			$('all').checked = false;
+			$('none').checked = false;
+			$('pri_all').style.display = '';
+			$('pri_none').style.display = '';
+			}	//	end if priority == 1
+		if(priority == 2) {
+			for (var i = 0; i < gmarkers.length; i++) {
+				if (gmarkers[i]) {
+					if ((gmarkers[i].id == priority) && (gmarkers[i].category == category)) {
+						gmarkers[i].show();
+						}
+					if ((gmarkers[i].id != priority) && (gmarkers[i].category == category)) {
+						gmarkers[i].hide();
+						}
+
+					}		// end if (gmarkers[i])
+				} 	// end for ()
+			$('normal').checked = false;
+			$('medium').checked = true;
+			$('high').checked = false;
+			$('all').checked = false;
+			$('none').checked = false;
+			$('pri_all').style.display = '';
+			$('pri_none').style.display = '';
+			}	//	end if priority == 2
+		if(priority == 3) {
+			for (var i = 0; i < gmarkers.length; i++) {
+				if (gmarkers[i]) {
+					if ((gmarkers[i].id == priority) && (gmarkers[i].category == category)) {
+						gmarkers[i].show();
+						}
+					if ((gmarkers[i].id != priority) && (gmarkers[i].category == category)) {
+						gmarkers[i].hide();
+						}
+
+					}		// end if (gmarkers[i])
+				} 	// end for ()
+			$('normal').checked = false;
+			$('medium').checked = false;
+			$('high').checked = true;
+			$('all').checked = false;
+			$('none').checked = false;
+			$('pri_all').style.display = '';
+			$('pri_none').style.display = '';
+			}	//	end if priority == 3
+		if(priority == 4) {		//	show All
+			for (var i = 0; i < gmarkers.length; i++) {
+				if (gmarkers[i]) {
+					if (gmarkers[i].category == category) {
+						gmarkers[i].show();
+						}
+					}		// end if (gmarkers[i])
+				} 	// end for ()
+			$('normal').checked = true;
+			$('medium').checked = true;
+			$('high').checked = true;
+			$('all').checked = true;
+			$('none').checked = false;
+			$('pri_all').style.display = 'none';
+			$('pri_none').style.display = '';
+			}	//	end if priority == 4
+		if(priority == 5) {		// hide all
+			for (var i = 0; i < gmarkers.length; i++) {
+				if (gmarkers[i]) {
+					if (gmarkers[i].category == category) {
+						gmarkers[i].hide();
+						}
+					}		// end if (gmarkers[i])
+				} 	// end for ()
+			$('normal').checked = false;
+			$('medium').checked = false;
+			$('high').checked = false;
+			$('all').checked = false;
+			$('none').checked = true;
+			$('pri_all').style.display = '';
+			$('pri_none').style.display = 'none';
+			}	//	end if priority == 5
+		}			// end function hideGroup(color, category)
+
+	function set_pri_chkbox(control) {
+		var pri_control = control;
+		if($(pri_control).checked == true) {
+			$(pri_control).checked = false;
+			} else {
+			$(pri_control).checked = true;
 			}
-	
+		}
+
+//	End of Tickets show / hide by Priority functions		
+
+// 	Units show / hide functions				
+		
+	function set_categories() {			//	12/03/10 - checks current session values and sets checkboxes and view states for hide and show.
+		var curr_cats = <?php echo json_encode(get_category_butts()); ?>;
+		var cat_sess_stat = <?php echo json_encode(get_session_status()); ?>;
+		var hidden = <?php print find_hidden(); ?>;
+		var shown = <?php print find_showing(); ?>;
+		var number_of_units = <?php print get_no_units(); ?>;		
+		if(hidden!=0) {
+			$('ALL').style.display = '';
+			$('ALL_BUTTON').style.display = '';
+			$('ALL').checked = false;	
+		} else {			
+			$('ALL').style.display = 'none';
+			$('ALL_BUTTON').style.display = 'none';
+			$('ALL').checked = false;
+		}
+		if(shown!=0) {
+			$('NONE').style.display = '';
+			$('NONE_BUTTON').style.display = '';
+			$('NONE').checked = false;	
+
+		} else {
+			$('NONE').style.display = 'none';
+			$('NONE_BUTTON').style.display = 'none';
+			$('NONE').checked = false;
+		}
+		if(number_of_units==0) {
+			$('ALL').style.display = 'none';
+			$('ALL_BUTTON').style.display = 'none';
+			$('ALL').checked = false;
+			$('NONE').style.display = 'none';
+			$('NONE_BUTTON').style.display = 'none';
+			$('NONE').checked = false;				
+		}
+		for (var i = 0; i < curr_cats.length; i++) {
+			var catname = curr_cats[i];
+			if(cat_sess_stat[i]=="s") {
+				for (var j = 0; j < gmarkers.length; j++) {
+					if ((gmarkers[j]) && (gmarkers[j].category) && (gmarkers[j].category == catname)) {
+						gmarkers[j].show();
+						}
+					}
+				$(catname).checked = true;
+			} else {
+				for (var j = 0; j < gmarkers.length; j++) {
+					if ((gmarkers[j]) && (gmarkers[j].category) && (gmarkers[j].category == catname)) {
+						gmarkers[j].hide();
+						}
+					}
+				$(catname).checked = false;
+				}				
+			}
+		}
+		
+
+	function do_view_cats() {							// 12/03/10	Show Hide categories, Showing and setting onClick attribute for Next button for category show / hide.
+		$('go_can').style.display = 'inline';
+		$('can_button').style.display = 'inline';
+		$('go_button').style.display = 'inline';
+		}
+
+	function cancel_buttons() {							// 12/03/10	Show Hide categories, Showing and setting onClick attribute for Next button for category show / hide.
+		$('go_can').style.display = 'none';
+		$('can_button').style.display = 'none';
+		$('go_button').style.display = 'none';
+		$('ALL').checked = false;
+		$('NONE').checked = false;
+		}
+
+	function set_chkbox(control) {
+		var units_control = control;
+		if($(units_control).checked == true) {
+			$(units_control).checked = false;
+			} else {
+			$(units_control).checked = true;
+			}
+		do_view_cats();
+		}
+
+	function do_go_button() {							// 12/03/10	Show Hide categories
+		var curr_cats = <?php echo json_encode(get_category_butts()); ?>;
+		if ($('ALL').checked == true) {
+			for (var i = 0; i < curr_cats.length; i++) {
+				var category = curr_cats[i];
+				var params = "f_n=show_hide_" +URLEncode(category)+ "&v_n=s&sess_id=<?php print get_sess_key(__LINE__); ?>";
+				var url = "persist2.php";
+				sendRequest (url, gb_handleResult, params);
+				$(category).checked = true;				
+				for (var j = 0; j < gmarkers.length; j++) {
+					if((gmarkers[j]) && (gmarkers[j].category!="Incident")) {				
+					gmarkers[j].show();
+					}
+					}
+				}
+				$('ALL').checked = false;
+				$('ALL').style.display = 'none';
+				$('ALL_BUTTON').style.display = 'none';				
+				$('NONE').style.display = '';
+				$('NONE_BUTTON').style.display = '';				
+				$('go_button').style.display = 'none';
+				$('can_button').style.display = 'none';				
+
+		} else if ($('NONE').checked == true) {
+			for (var i = 0; i < curr_cats.length; i++) {
+				var category = curr_cats[i];
+				var params = "f_n=show_hide_" +URLEncode(category)+ "&v_n=h&sess_id=<?php print get_sess_key(__LINE__); ?>";
+				var url = "persist2.php";
+				sendRequest (url, gb_handleResult, params);	
+				$(category).checked = false;				
+				for (var j = 0; j < gmarkers.length; j++) {
+					if((gmarkers[j]) && (gmarkers[j].category!="Incident")) {
+						gmarkers[j].hide();
+					}
+					}
+				}
+				$('NONE').checked = false;
+				$('ALL').style.display = '';
+				$('ALL_BUTTON').style.display = '';				
+				$('NONE').style.display = 'none';
+				$('NONE_BUTTON').style.display = 'none';					
+				$('go_button').style.display = 'none';
+				$('can_button').style.display = 'none';
+		} else {
+			var x = 0;
+			var y = 0;
+			for (var i = 0; i < curr_cats.length; i++) {
+				var category = curr_cats[i];
+				if (category!="Incident") {
+					if ($(category).checked == true) {
+						x++;
+						var params = "f_n=show_hide_" +URLEncode(category)+ "&v_n=s&sess_id=<?php print get_sess_key(__LINE__); ?>";
+						var url = "persist2.php";
+						sendRequest (url, gb_handleResult, params);
+						$(category).checked = true;			
+						for (var j = 0; j < gmarkers.length; j++) {
+							if ((gmarkers[j]) && (gmarkers[j].category) && (gmarkers[j].category == category)) {	
+//								alert("Showing gmarker " + j + " in Category " + category);
+								gmarkers[j].show();
+								}
+							}
+						}
+					}
+				}
+			for (var i = 0; i < curr_cats.length; i++) {
+				var category = curr_cats[i];
+				if (category!="Incident") {				
+					if ($(category).checked == false) {
+						y++;
+						var params = "f_n=show_hide_" +URLEncode(category)+ "&v_n=h&sess_id=<?php print get_sess_key(__LINE__); ?>";
+						var url = "persist2.php";
+						sendRequest (url, gb_handleResult, params);
+						$(category).checked = false;
+						var y=0;
+						for (var j = 0; j < gmarkers.length; j++) {
+							if ((gmarkers[j]) && (gmarkers[j].category) && (gmarkers[j].category == category)) {
+//								alert("Hiding gmarker " + j + " in Category " + category);							
+								gmarkers[j].hide();
+								}
+							}
+						}	
+					}
+				}
+			}
+
+		$('go_button').style.display = 'none';
+		$('can_button').style.display = 'none';
+
+		if((x > 0) && (x < curr_cats.length)) {
+			$('ALL').style.display = '';
+			$('ALL_BUTTON').style.display = '';
+			$('NONE').style.display = '';
+			$('NONE_BUTTON').style.display = '';
+		}
+		if(x == 0) {
+			$('ALL').style.display = '';
+			$('ALL_BUTTON').style.display = '';
+			$('NONE').style.display = 'none';
+			$('NONE_BUTTON').style.display = 'none';
+		}
+		if(x == curr_cats.length) {
+			$('ALL').style.display = 'none';
+			$('ALL_BUTTON').style.display = 'none';
+			$('NONE').style.display = '';
+			$('NONE_BUTTON').style.display = '';
+		}
+
+
+	}	// end function do_go_button()
+
+	function gb_handleResult(req) {							// 12/03/10	The persist callback function
+		}
+
+// Facilities show / hide functions		
+
+	function set_fac_categories() {			//	12/03/10 - checks current session values and sets checkboxes and view states for hide and show.
+		var fac_curr_cats = <?php echo json_encode(get_fac_category_butts()); ?>;
+		var fac_cat_sess_stat = <?php echo json_encode(get_fac_session_status()); ?>;
+		var fac_hidden = <?php print find_fac_hidden(); ?>;
+		var fac_shown = <?php print find_fac_showing(); ?>;
+		if(fac_hidden!=0) {
+			$('fac_ALL').style.display = '';
+			$('fac_ALL_BUTTON').style.display = '';
+			$('fac_ALL').checked = false;	
+		} else {			
+			$('fac_ALL').style.display = 'none';
+			$('fac_ALL_BUTTON').style.display = 'none';
+			$('fac_ALL').checked = false;
+		}
+		if(fac_shown!=0) {
+			$('fac_NONE').style.display = '';
+			$('fac_NONE_BUTTON').style.display = '';
+			$('fac_NONE').checked = false;
+		} else {
+			$('fac_NONE').style.display = 'none';
+			$('fac_NONE_BUTTON').style.display = 'none';
+			$('fac_NONE').checked = false;
+		}
+		for (var i = 0; i < fac_curr_cats.length; i++) {
+			var fac_catname = fac_curr_cats[i];
+			if(fac_cat_sess_stat[i]=="s") {
+				for (var j = 0; j < fmarkers.length; j++) {
+					if (fmarkers[j].category == fac_catname) {
+						fmarkers[j].show();
+						}
+					}
+				$(fac_catname).checked = true;
+			} else {
+				for (var j = 0; j < fmarkers.length; j++) {
+					if (fmarkers[j].category == fac_catname) {
+						fmarkers[j].hide();
+						}
+					}
+				$(fac_catname).checked = false;
+				}				
+			}
+		}
+
+	function do_view_fac_cats() {							// 12/03/10	Show Hide categories, Showing and setting onClick attribute for Next button for category show / hide.
+		$('fac_go_can').style.display = 'inline';
+		$('fac_can_button').style.display = 'inline';
+		$('fac_go_button').style.display = 'inline';
+		}
+
+	function fac_cancel_buttons() {							// 12/03/10	Show Hide categories, Showing and setting onClick attribute for Next button for category show / hide.
+		$('fac_go_can').style.display = 'none';
+		$('fac_can_button').style.display = 'none';
+		$('fac_go_button').style.display = 'none';
+		$('fac_ALL').checked = false;
+		$('fac_NONE').checked = false;
+		}
+
+	function set_fac_chkbox(control) {
+		var fac_control = control;
+		if($(fac_control).checked == true) {
+			$(fac_control).checked = false;
+			} else {
+			$(fac_control).checked = true;
+			}
+		do_view_fac_cats();
+		}
+
+	function do_go_facilities_button() {							// 12/03/10	Show Hide categories
+		var fac_curr_cats = <?php echo json_encode(get_fac_category_butts()); ?>;
+		if ($('fac_ALL').checked == true) {
+			for (var i = 0; i < fac_curr_cats.length; i++) {
+				var fac_category = fac_curr_cats[i];
+				var params = "f_n=show_hide_fac_" +URLEncode(fac_category)+ "&v_n=s&sess_id=<?php print get_sess_key(__LINE__); ?>";
+				var url = "persist2.php";
+				sendRequest (url, gb_handleResult, params);
+				$(fac_category).checked = true;				
+				for (var j = 0; j < fmarkers.length; j++) {
+					if(fmarkers[j].category != "Incident") {				
+					fmarkers[j].show();
+					}
+					}
+				}
+				$('fac_ALL').checked = false;
+				$('fac_ALL').style.display = 'none';
+				$('fac_ALL_BUTTON').style.display = 'none';				
+				$('fac_NONE').style.display = '';
+				$('fac_NONE_BUTTON').style.display = '';				
+				$('fac_go_button').style.display = 'none';
+				$('fac_can_button').style.display = 'none';
+
+		} else if ($('fac_NONE').checked == true) {
+			for (var i = 0; i < fac_curr_cats.length; i++) {
+				var fac_category = fac_curr_cats[i];
+				var params = "f_n=show_hide_fac_" +URLEncode(fac_category)+ "&v_n=h&sess_id=<?php print get_sess_key(__LINE__); ?>";
+				var url = "persist2.php";
+				sendRequest (url, gb_handleResult, params);	
+				$(fac_category).checked = false;				
+				for (var j = 0; j < fmarkers.length; j++) {
+					if(fmarkers[j].category != "Incident") {
+						fmarkers[j].hide();
+					}
+					}
+				}
+				$('fac_NONE').checked = false;
+				$('fac_ALL').style.display = '';
+				$('fac_ALL_BUTTON').style.display = '';				
+				$('fac_NONE').style.display = 'none';
+				$('fac_NONE_BUTTON').style.display = 'none';					
+				$('fac_go_button').style.display = 'none';
+				$('fac_can_button').style.display = 'none';
+		} else {
+			var x = 0;
+			var y = 0;
+			for (var i = 0; i < fac_curr_cats.length; i++) {
+
+				var fac_category = fac_curr_cats[i];
+				if ($(fac_category).checked == true) {
+					x++;
+					var params = "f_n=show_hide_fac_" +URLEncode(fac_category)+ "&v_n=s&sess_id=<?php print get_sess_key(__LINE__); ?>";
+					var url = "persist2.php";
+					sendRequest (url, gb_handleResult, params);
+					$(fac_category).checked = true;			
+					for (var j = 0; j < fmarkers.length; j++) {
+						if(fmarkers[j].category == fac_category) {			
+							fmarkers[j].show();
+							}
+						}
+					}
+				}
+			for (var i = 0; i < fac_curr_cats.length; i++) {
+				var fac_category = fac_curr_cats[i];				
+				if ($(fac_category).checked == false) {
+					y++;
+					var params = "f_n=show_hide_fac_" +URLEncode(fac_category)+ "&v_n=h&sess_id=<?php print get_sess_key(__LINE__); ?>";
+					var url = "persist2.php";
+					sendRequest (url, gb_handleResult, params);
+					$(fac_category).checked = false;
+					var y=0;
+					for (var j = 0; j < fmarkers.length; j++) {
+						if(fmarkers[j].category == fac_category) {			
+							fmarkers[j].hide();
+							}
+						}
+					}	
+				}
+			}
+
+		var hidden = <?php print find_hidden(); ?>;
+		var shown = <?php print find_showing(); ?>;
+
+		$('fac_go_button').style.display = 'none';
+		$('fac_can_button').style.display = 'none';
+
+		if((x > 0) && (x < fac_curr_cats.length)) {
+			$('fac_ALL').style.display = '';
+			$('fac_ALL_BUTTON').style.display = '';
+			$('fac_NONE').style.display = '';
+			$('fac_NONE_BUTTON').style.display = '';
+		}
+		if(x == 0) {
+			$('fac_ALL').style.display = '';
+			$('fac_ALL_BUTTON').style.display = '';
+			$('fac_NONE').style.display = 'none';
+			$('fac_NONE_BUTTON').style.display = 'none';
+		}
+		if(x == fac_curr_cats.length) {
+			$('fac_ALL').style.display = 'none';
+			$('fac_ALL_BUTTON').style.display = 'none';
+			$('fac_NONE').style.display = '';
+			$('fac_NONE_BUTTON').style.display = '';
+		}
+
+
+	}	// end function do_go_button()
+
+	function gfb_handleResult(req) {							// 12/03/10	The persist callback function
+		}
+
+// end of facilities show / hide function
+
+		function hideDiv(div_area, hide_cont, show_cont) {	//	3/29/11, function forhiding DIVS for control areas
+			var divarea = div_area 
+			var hide_cont = hide_cont 
+			var show_cont = show_cont 
+			if($(divarea)) {
+				$(divarea).style.display = 'none';
+				} 
+			} 
+
+		function showDiv(div_area, hide_cont, show_cont) {	//	3/29/11, function for showing DIVS for control areas
+			var divarea = div_area
+			var hide_cont = hide_cont 
+			var show_cont = show_cont 
+			if($(divarea)) {
+				$(divarea).style.display = '';
+				} 
+			} 
+			
 		var starting = false;
+
+		function check_sidemenu() {
+			if($('inc_list').style.display=="block") {
+				$('incs_but').className="right_menu_lit";
+				}
+			if($('buttons_sh').style.display=="block") {
+				$('marker_but').className="right_menu_lit";
+				}
+			if($('assigns_list').style.display=="block") {
+				$('assign_but').className="right_menu_lit";
+				}
+			}
+		
+		function myclick(id) {					// 3/29/11	For incident list clicks to launch infoWindow
+			GEvent.trigger(gmarkers[id], "click");
+			location.href = "#top";
+			}		
 	
 		function do_mail_fac_win(id) {			// Facility email 9/22/09
 			if(starting) {return;}					
@@ -397,24 +910,22 @@ error_reporting(E_ALL);
 			show_Units();
 			}
 	
-		function createMarker(point, tabs, color, stat, id, sym) {					// Creates marker and sets up click event infowindow
+		function createMarker(point, tabs, color, stat, id, sym, category) {					// Creates marker and sets up click event infowindow
 			points = true;
 			var icon = new GIcon(baseIcon);
-			var icon_url = "./icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + sym;				// 1/6/09
+			var icon_url = "./our_icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + sym;				// 1/6/09
 			icon.image = icon_url;
 	
 			var marker = new GMarker(point, icon);
 			marker.id = color;				// for hide/unhide
+			marker.category = category;		// 12/03/10 for show / hide by status	
 			marker.stat = stat;				// 10/21/09
 	
 			GEvent.addListener(marker, "click", function() {					// here for icon click
-	//			alert("389 " + (id) );
-				if (ticket_ids[(id-1)]) {
-					open_tick_window (ticket_ids[(id-1)]);
-					}
-				else {
-	//				alert("389 " + id);
-	//				alert(ticket_ids[(id-1)]);
+//				if (ticket_ids[(id-1)]) {
+//					open_tick_window (ticket_ids[(id-1)]);
+//					}
+//				else {
 					map.closeInfoWindow();
 					which = id;
 					gmarkers[which].hide();
@@ -429,11 +940,9 @@ error_reporting(E_ALL);
 							detailmap.addOverlay(marker);
 							}
 						else {
-		//					alert(62);
-		//					alert($("detailmap"));
 							}
 						},3000);				// end setTimeout(...)
-					}});				// end function(marker, point)
+					});				// end function(marker, point)
 			gmarkers[id] = marker;							// marker to array for side_bar click function
 			infoTabs[id] = tabs;							// tabs to array
 			if (!(map_is_fixed)){
@@ -441,6 +950,43 @@ error_reporting(E_ALL);
 				}
 			return marker;
 			}				// end function create Marker()
+			
+		function createdummyMarker(point, tabs, id) {					// Creates dummymarker and sets up click event infowindow for "no maps" added tickets and units. 7/28/10 
+			points = true;
+			var icon = new GIcon(baseIcon);
+			var icon_url = "./our_icons/question1.png";				// 7/28/10
+			icon.image = icon_url;
+
+			var dummymarker = new GMarker(point, icon);
+
+			GEvent.addListener(dummymarker, "click", function() {
+
+				map.closeInfoWindow();
+				which = id;
+				gmarkers[which].hide();
+				dummymarker.openInfoWindowTabsHtml(infoTabs[id]);
+
+				setTimeout(function() {
+					if ($("detailmap")) {
+						var dMapDiv = $("detailmap");
+						var detailmap = new GMap2(dMapDiv);
+						detailmap.addControl(new GSmallMapControl());
+						detailmap.setCenter(point, 17);
+						detailmap.addOverlay(dummymarker);
+						}
+					else {
+	//					alert($("detailmap"));
+						}
+					},3000);				// end setTimeout(...)
+
+				});
+			gmarkers[id] = dummymarker;							// marker to array for side_bar click function
+			infoTabs[id] = tabs;							// tabs to array
+			if (!(map_is_fixed)){
+				bounds.extend(point);
+				}
+			return dummymarker;
+			}				// end function create dummyMarker()			
 	
 		var the_grid;
 		var grid = false;
@@ -573,9 +1119,6 @@ error_reporting(E_ALL);
 		var which;
 		var i = 0;			// sidebar/icon index
 	
-		$("show_unavail").style.display=			"none";				// 10/21/09
-		$("hide_unavail").style.display=			"inline";
-	
 		map = new GMap2($("map"));		// create the map
 <?php
 	$maptype = get_variable('maptype');	// 08/02/09
@@ -644,12 +1187,11 @@ error_reporting(E_ALL);
 			}
 		$restrict_ticket = ((get_variable('restrict_user_tickets')==1) && !(is_administrator()))? " AND owner=$_SESSION[user_id]" : "";
 		$time_back = mysql_format_date(time() - (get_variable('delta_mins')*60) - ($cwi*3600));
-
+		
 		switch($func) {				//9/29/09 Added capability for Special Incidents 10/27/09 changed to bring scheduled incidents to front when due.
 				case 0: 
-					$where = "WHERE `status`='{$GLOBALS['STATUS_OPEN']}' OR 
-						(`status`='{$GLOBALS['STATUS_SCHEDULED']}') OR 
-						(`status`='{$GLOBALS['STATUS_CLOSED']}'  AND `problemend` >= '{$time_back}')";
+					$where = "WHERE (`status`='{$GLOBALS['STATUS_OPEN']}' OR (`status`='{$GLOBALS['STATUS_SCHEDULED']}' AND `booked_date` <= (NOW() + INTERVAL 2 DAY)) OR 
+					(`status`='{$GLOBALS['STATUS_CLOSED']}'  AND `problemend` >= '{$time_back}'))";	//	11/29/10, 4/11/11					
 					break;
 				case 1:
 				case 2:
@@ -662,20 +1204,28 @@ error_reporting(E_ALL);
 				case 9:
 					$the_start = get_start($func);		// mysql timestamp format 
 					$the_end = get_end($func);
-					$where = " WHERE `status`='{$GLOBALS['STATUS_CLOSED']}' AND `problemstart` BETWEEN '{$the_start}' AND '{$the_end}' ";
+					$where = " WHERE (`status`='{$GLOBALS['STATUS_CLOSED']}' AND `problemend` BETWEEN '{$the_start}' AND '{$the_end}') ";		//	4/11/11
+					break;	
+				case 10:
+					$where = "WHERE (`status`='{$GLOBALS['STATUS_SCHEDULED']}' AND `booked_date` >= (NOW() + INTERVAL 2 DAY))";	//	11/29/10, 4/11/11
 					break;				
 				default: print "error - error - error - error " . __LINE__;
 //				default: $where = "WHERE `status`='{$GLOBALS['STATUS_OPEN']}' OR (`status`='3'  AND `booked_date` <= (NOW() - INTERVAL 6 HOUR))"; break;
 				}				// end switch($func) 
 	
+
 		$query = "SELECT *, UNIX_TIMESTAMP(problemstart) AS `problemstart`, 
 			UNIX_TIMESTAMP(problemend) AS `problemend`,
 			UNIX_TIMESTAMP(booked_date) AS booked_date,UNIX_TIMESTAMP(date) AS `date`,
 			UNIX_TIMESTAMP(`$GLOBALS[mysql_prefix]ticket`.updated) AS `updated`, 
 			`$GLOBALS[mysql_prefix]ticket`.`id` AS `ticket_id`, 
+			`$GLOBALS[mysql_prefix]ticket`.`severity` AS `severity`, 			
 			`$GLOBALS[mysql_prefix]in_types`.type AS `type`,
 			`$GLOBALS[mysql_prefix]in_types`.`id` AS `t_id`,
 			`$GLOBALS[mysql_prefix]ticket`.`description` AS `tick_descr`,
+			`$GLOBALS[mysql_prefix]ticket`.street AS `tick_street`,
+			`$GLOBALS[mysql_prefix]ticket`.city AS `tick_city`,
+			`$GLOBALS[mysql_prefix]ticket`.state AS `tick_state`,			
 			`$GLOBALS[mysql_prefix]ticket`.lat AS `lat`,
 			`$GLOBALS[mysql_prefix]ticket`.lng AS `lng`,
 			`$GLOBALS[mysql_prefix]facilities`.lat AS `fac_lat`,
@@ -686,14 +1236,34 @@ error_reporting(E_ALL);
 			LEFT JOIN `$GLOBALS[mysql_prefix]facilities` ON `$GLOBALS[mysql_prefix]ticket`.rec_facility=`$GLOBALS[mysql_prefix]facilities`.`id` 
 			$where $restrict_ticket 
 			ORDER BY `status` DESC, `severity` DESC, `$GLOBALS[mysql_prefix]ticket`.`id` ASC";		// 2/2/09, 10/28/09
-	
+
 
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-//		dump ($query);
+		$curr_incs =  mysql_num_rows($result);		
+		$sb_indx = 0;				// note zero base!			
 								// major while ... starts here
-	
-		while ($row = stripslashes_deep(mysql_fetch_array($result))) 	{
+?>
+//	3/29/11 Incident List sidebar header
+			var sidebar_line = "<DIV style='width: 100%;'>";
+			sidebar_line += "<DIV CLASS= 'in_space odd'><DIV CLASS = 'incs'>&nbsp;</DIV></DIV>";	
+			sidebar_line += "<DIV CLASS= 'in_space odd'><DIV CLASS = 'incs'>&nbsp;</DIV></DIV>";			
+			sidebar_line += "<DIV CLASS= 'in_1 odd'><DIV CLASS = 'incs'><B>Incident</B></DIV></DIV>";
+			sidebar_line += "<DIV CLASS= 'in_type odd'><DIV CLASS = 'incs'><B>Type</B></DIV></DIV>";			
+			sidebar_line += "<DIV CLASS= 'in_1 odd'><DIV CLASS = 'incs'><B>Addr</B></DIV></DIV>";
+			sidebar_line += "<DIV CLASS= 'in_date odd'><DIV CLASS = 'incs'><B>Start</B></DIV></DIV>";
+			sidebar_line += "<DIV CLASS= 'in_dur odd'><DIV CLASS = 'incs'><B>Duration</B></DIV></DIV></DIV><BR />";			
+								
+<?php
+
+		$evenodd = array ("even", "odd");	// CLASS names for alternating table row colors
+
+		if($curr_incs > 0) {
+		$z=0;		
+		while ($row = stripslashes_deep(mysql_fetch_array($result))) {
 			$by_severity[$row['severity']] ++;
+
+			$z==0 ? $background_col = "even" : $background_col = "odd";
+
 			print "\t\t ticket_ids.push({$row['ticket_id']});\n";
 		
 			switch($row['status']) {				//10/27/09 to Add star to scheduled incidents on current situation screen
@@ -706,7 +1276,7 @@ error_reporting(E_ALL);
 				print "\t\tvar scheduled = '$sp';\n";
 ?>
 		//		var sym = i.toString();						// for sidebar and icon
-				var sym = scheduled + (i+1).toString();					// for sidebar and icon
+				var sym = scheduled + (<?php print $sb_indx; ?>+1).toString();					// for sidebar and icon
 		
 <?php
 				$the_id = $row[0];
@@ -728,29 +1298,44 @@ error_reporting(E_ALL);
 					default: 				$severityclass='severity_normal'; break;
 					}
 		
-				$street = empty($row['street'])? "" : $row['street'] . "<BR/>" . $row['city'] . " " . $row['state'] ;
+				$street = empty($row['tick_street'])? "" : $row['tick_street'] . "<BR/>" . $row['tick_city'] . " " . $row['state'] ;
 				$todisp = (is_guest())? "": "&nbsp;<A HREF='routes.php?ticket_id=" . $the_id . "'><U>Dispatch</U></A>";	// 8/2/08
-		
+				$now = now(); 					
+
 				if ($row['status']== $GLOBALS['STATUS_CLOSED']) {
 					$strike = "<strike>"; $strikend = "</strike>";
 					}
-				else { $strike = $strikend = "";}
+				else { $strike = $strikend = "";}	
+
+				$index_no = $sb_indx +1;
+
+				?>
+				//	3/29/11 Incident List sidebar				
+				sidebar_line += "<DIV CLASS='in_space <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('* means the incident is a scheduled one')\"><?php print $strike;?>&nbsp;<?php print $index_no;?><?php print $strikend;?></DIV></DIV>";
+				sidebar_line += "<DIV CLASS='in_space <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('* means the incident is a scheduled one')\"><?php print $strike;?>&nbsp;<?php print $sp;?><?php print $strikend;?></DIV></DIV>";
+				sidebar_line += "<DIV CLASS='in_1 <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('<?php print replace_quotes($row['scope']);?>')\"><?php print $strike;?>&nbsp;<?php print shorten($row['scope'],$shorten_length);?><?php print $strikend;?></DIV></DIV>";
+				sidebar_line += "<DIV CLASS='in_type <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('<?php print $row['type'];?>')\"><?php print $strike;?>&nbsp;<?php print shorten($row['type'], $shorten_length);?><?php print $strikend;?></DIV></DIV>";
+				sidebar_line += "<DIV CLASS='in_1 <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('<?php print replace_quotes($row['tick_street'])  . " " . replace_quotes($row['tick_city']) . " " . replace_quotes($row['tick_state']);?>')\"><?php print $strike;?>&nbsp;<?php print shorten(($row['tick_street'] . ' ' . $row['tick_city'] . " " . $row['tick_state']), $shorten_length);?>&nbsp;<?php print $strikend;?></DIV></DIV>";
+				sidebar_line += "<DIV CLASS='in_date <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('<?php print format_date($row['problemstart']);?>')\"><?php print $strike;?>&nbsp;<?php print shorten(format_date($row['problemstart']), $shorten_length);?><?php print $strikend;?></DIV></DIV>";
+				sidebar_line += "<DIV CLASS='in_dur <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('<?php print my_date_diff($row['problemstart'], $now);?>')\"><?php print $strike;?>&nbsp;<?php print shorten(my_date_diff($row['problemstart'], $now), $shorten_length);?><?php print $strikend;?></DIV></DIV></BR>";
+
+<?php
 				$rand = ($istest)? "&rand=" . chr(rand(65,90)) : "";													// 10/21/08
 		
 				$tab_1 = "<TABLE CLASS='infowin' width='" . $_SESSION['scr_width']/4 . "'>";
-				$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>$strike" . shorten($row['scope'], 48)  . "$strikend</B></TD></TR>";
+				$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>$strike" . replace_quotes(shorten($row['scope'], 48))  . "$strikend</B></TD></TR>";
 				$tab_1 .= "<TR CLASS='odd'><TD>As of:</TD><TD>" . format_date($row['updated']) . "</TD></TR>";
 				if (good_date($row['booked_date'])) {	//4/13/10
 					$tab_1 .= "<TR CLASS='odd'><TD>Booked Date:</TD><TD>" . format_date($row['booked_date']) . "</TD></TR>";
 					}			
 				$tab_1 .= "<TR CLASS='even'><TD>Reported by:</TD><TD>" . shorten($row['contact'], 32) . "</TD></TR>";
 				$tab_1 .= "<TR CLASS='odd'><TD>Phone:</TD><TD>" . format_phone ($row['phone']) . "</TD></TR>";
-				$tab_1 .= "<TR CLASS='even'><TD>Addr:</TD><TD>$street</TD></TR>";
+				$tab_1 .= "<TR CLASS='even'><TD>Addr:</TD><TD>" . replace_quotes($row['tick_street']) . ' ' . replace_quotes($row['tick_city']) . "</TD></TR>";
 				$end_date = (intval($row['problemend'])> 1)? $row['problemend']:  (time() - (get_variable('delta_mins')*60));				
 				$elapsed = my_date_diff($row['problemstart'], $end_date);		// 5/13/10
 				$tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>Status:</TD><TD ALIGN='left'>" . get_status($row['status']) . "&nbsp;&nbsp;&nbsp;($elapsed)</TD></TR>";	// 3/27/10
 				if (!(empty($row['fac_name']))) {		
-					$tab_1 .= "<TR CLASS='even'><TD>Receiving Facility:</TD><TD>" . shorten($row['fac_name'], 30)  . "</TD></TR>";	//10/28/09
+					$tab_1 .= "<TR CLASS='even'><TD>Receiving Facility:</TD><TD>" . replace_quotes(shorten($row['fac_name'], 30))  . "</TD></TR>";	//10/28/09
 					}
 		
 				$utm = get_variable('UTM');
@@ -760,10 +1345,10 @@ error_reporting(E_ALL);
 					}
 				$tab_1 .= 	"</TABLE>";			// 11/6/08
 		
-		
-				$tab_2 = "<TABLE CLASS='infowin' width='" . $_SESSION['scr_width']/4 . "'>";	// 8/12/09
-				$tab_2 .= "<TR CLASS='even'>	<TD>Description:</TD><TD>" . shorten(str_replace($eols, " ", $row['tick_descr']), 48) . "</TD></TR>";	// str_replace("\r\n", " ", $my_string)
-				$tab_2 .= "<TR CLASS='odd'>		<TD>Disposition:</TD><TD>" . shorten($row['comments'], 48) . "</TD></TR>";		// 8/13/09
+				$tab_2 = "<TABLE CLASS='infowin'  width='" . $_SESSION['scr_width']/4 . "'>";	// 8/12/09
+				$tab_2 .= "<TR CLASS='even'>	<TD ALIGN='left'>Description:</TD><TD ALIGN='left'>" . replace_quotes(shorten(str_replace($eols, " ", $row['tick_descr']), 48)) . "</TD></TR>";	// str_replace("\r\n", " ", $my_string)
+				$tab_2 .= "<TR CLASS='odd'>		<TD ALIGN='left'>" . get_text('Disposition') . ":</TD><TD ALIGN='left'>" . replace_quotes(shorten($row['comments'], 48)) . "</TD></TR>";		// 8/13/09, 3/15/11
+				$tab_2 .= "<TR CLASS='even'>	<TD ALIGN='left'>911 contact:</TD><TD ALIGN='left'>" . replace_quotes(shorten($row['nine_one_one'], 48)) . "</TD></TR>";	// 6/26/10
 		
 				$locale = get_variable('locale');	// 08/03/09
 				switch($locale) { 
@@ -805,11 +1390,13 @@ error_reporting(E_ALL);
 				if (!(map_is_fixed)){																// 4/3/09
 					bounds.extend(point);
 					}
-				i++;																				// step the index
-				var marker = createMarker(point, myinfoTabs,<?php print $row['severity']+1;?>, 0, i, sym);	// (point,tabs, color, id, sym) - 1/6/09
+				var category = "Incident";
+
+				var marker = createMarker(point, myinfoTabs,<?php print $row['severity']+1;?>, 0, i, sym, category);	// (point,tabs, color, id, sym) - 1/6/09
 				var the_class = ((map_is_fixed) && (!(mapBounds.containsLatLng(point))))? "emph" : "td_label";
 		
 				map.addOverlay(marker);
+					i++;				// step the index				
 <?php
 				if (intval($row['radius']) > 0) {
 					$color= (substr($row['color'], 0, 1)=="#")? $row['color']: "#000000";		// black default
@@ -818,11 +1405,179 @@ error_reporting(E_ALL);
 				drawCircle(	<?php print $row['lat']?>, <?php print $row['lng']?>, <?php print $row['radius']?>, "<?php print $color?>", 1, 0.75, "<?php print $color?>", .<?php print $row['opacity']?>);
 <?php
 					}			// end if (intval($row['radius']) 
-		//		dump($row);
+				$sb_indx++;
+				$z==0 ? $z=1 : $z=0;
 				}				// end tickets while ($row = ...)
+			} else {
+?>
+				sidebar_line += "<DIV CLASS='even' style='width: 100%;'><DIV style='text-align: center; color: #FF0000; font-size: 12px; font-weight: bold;'>No Current Incidents for selected time period</DIV></DIV><BR />";
+<?php
+			}
 			$sev_string = "Severities: normal ({$by_severity[$GLOBALS['SEVERITY_NORMAL']]}), Medium ({$by_severity[$GLOBALS['SEVERITY_MEDIUM']]}), High ({$by_severity[$GLOBALS['SEVERITY_HIGH']]})";
 ?>
 			$('sev_counts').innerHTML = "<?php print $sev_string; ?>";
+			$('incidents').innerHTML = sidebar_line;	//	incident list to sidebar
+
+
+var sidebar_line = "";
+<?php
+	// ========================================== 3/29/11 ASSIGNMENTS start    ================================================
+
+	$query = "SELECT *,UNIX_TIMESTAMP(as_of) AS as_of,
+		`$GLOBALS[mysql_prefix]assigns`.`id` AS `assign_id` ,
+		`$GLOBALS[mysql_prefix]assigns`.`comments` AS `assign_comments`,
+		`u`.`user` AS `theuser`, `t`.`scope` AS `tick_scope`,
+		`t`.`description` AS `tick_descr`,
+		UNIX_TIMESTAMP(`t`.`problemstart`) AS `tick_pstart`,
+		`t`.`problemstart` AS `problemstart`,		
+		`t`.`status` AS `tick_status`,
+		`t`.`street` AS `tick_street`,
+		`t`.`city` AS `tick_city`,
+		`t`.`state` AS `tick_state`,			
+		`r`.`id` AS `unit_id`,
+		`r`.`name` AS `unit_name` ,
+		`r`.`type` AS `unit_type` ,
+		`$GLOBALS[mysql_prefix]assigns`.`as_of` AS `assign_as_of`,
+		`$GLOBALS[mysql_prefix]assigns`.`clear` AS `clear`		
+		FROM `$GLOBALS[mysql_prefix]assigns` 
+		LEFT JOIN `$GLOBALS[mysql_prefix]ticket`	 `t` ON (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`)
+		LEFT JOIN `$GLOBALS[mysql_prefix]user`		 `u` ON (`$GLOBALS[mysql_prefix]assigns`.`user_id` = `u`.`id`)
+		LEFT JOIN `$GLOBALS[mysql_prefix]responder`	 `r` ON (`$GLOBALS[mysql_prefix]assigns`.`responder_id` = `r`.`id`)
+			WHERE (`clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00')   
+		ORDER BY `severity` DESC, `tick_pstart` ASC";		
+//			dump($query);
+		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		$curr_calls =  mysql_num_rows($result);
+
+		$guest = is_guest();
+		$user = is_user();
+		$doUnit = (($guest)||($user))? "viewU" : "editU";		// 5/11/10
+		$doTick = ($guest)? "viewT" : "editT";				// 06/26/08
+		$now = time() - (get_variable('delta_mins')*60);
+		$items = mysql_affected_rows();
+		$tags_arr = explode("/", get_variable('disp_stat'));		// 8/29/10 
+
+		$TBL_INC_PERC = 50;		// incident group - four columns  -  50 percent as default
+		$TBL_UNIT_PERC = 35;	// unit group, 
+		$COLS_INCID = 18;		// incident name -  18 characters as default
+		$COLS_OPENED = 16;		// date/time opened -  0 characters as default
+		$COLS_DESCR = 32;		// incident description -  32 characters as default
+		$COLS_ADDR = 32;		// address -  32 characters as default
+		
+		$COLS_UNIT = 15;			// unit name
+		
+		$COLS_ASOF = 9;			// call as-of date/time -  9 characters as default
+		
+		$priorities = array("","severity_medium","severity_high" );
+		
+		if($curr_calls > 0) {
+		
+?>
+//	3/29/11 Assignments List sidebar header
+			sidebar_line += "<DIV style='font-size: 12px; color: #000000; background: #FFFFFF;'>";
+			sidebar_line += "<DIV CLASS= 'c1 odd'><DIV class='incs'><B>Incident</B></DIV></DIV>";
+			sidebar_line += "<DIV CLASS= 'cdate odd'><DIV class='incs'><B>Inc Start</B></DIV></DIV>";			
+			sidebar_line += "<DIV CLASS= 'c1 odd'><DIV class='incs'><B>Synopsis</B></DIV></DIV>";
+			sidebar_line += "<DIV CLASS= 'c1 odd'><DIV class='incs'><B>Addr</B></DIV></DIV>";
+			sidebar_line += "<DIV CLASS= 'cspace odd'><DIV class='incs'>&nbsp;</DIV></DIV>";			
+			sidebar_line += "<DIV CLASS= 'unit_n odd'><DIV class='incs'><B>Unit</B></DIV></DIV>";
+			sidebar_line += "<DIV CLASS= 'unit_d odd'><DIV class='incs'><B>&nbsp</B></DIV></DIV>";
+			sidebar_line += "<DIV CLASS= 'unit_s odd'><DIV class='incs'><B>Unit St</B></DIV></DIV>";			
+			sidebar_line += "</DIV><BR />";
+<?php		
+			$w=0;		
+			$unit_ids = array();
+			$i = 1;	
+			$evenodd = array ("even", "odd");	// CLASS names for alternating table row colors
+			
+			while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {		//	While for Assignments
+
+				$w==0 ? $bg_color_class = "even" : $bg_color_class = "odd";
+
+				$in_strike = 	((!(empty($row['scope']))) && ($row['tick_status']== $GLOBALS['STATUS_CLOSED']))? "<STRIKE>": "";					// 11/7/08
+				$in_strikend = 	((!(empty($row['scope']))) && ($row['tick_status']== $GLOBALS['STATUS_CLOSED']))? "</STRIKE>": "";
+				if (!(empty($row['scope']))) {			
+
+					$the_name = replace_quotes(addslashes($row['tick_scope']));															// 9/12/09
+					$the_short_name = shorten($row['tick_scope'], $shorten_length);
+
+					$the_descr = (empty($row['tick_descr'])) ? "&nbsp;" : addslashes(str_replace($eols, " ", $row['tick_descr']));
+					$the_short_one = (empty($row['tick_descr'])) ? "&nbsp; " : shorten(addslashes(str_replace($eols, " ", $row['tick_descr'])), $shorten_length);
+						
+					$address = (empty($row['tick_street']))? "&nbsp;" : $row['tick_street'] . ", ";		// 8/10/10
+					$address = replace_quotes(addslashes($address . $row['tick_city']. "&nbsp;". $row['tick_state']));
+					$short_addr = shorten($address, $shorten_length);
+					
+?>
+//	3/29/11 Assignments List sidebar					
+					sidebar_line += "<DIV CLASS='c1 <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('[#<?php print $row['ticket_id'];?>] <?php print $the_name;?>')\" onmouseout=\"UnTip()\"><?php print $in_strike;?><?php print $the_short_name;?><?php print $in_strikend;?></DIV></DIV>";
+					sidebar_line += "<DIV CLASS='cdate <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('Opened: <?php print format_date($row['tick_pstart']);?>')\" onmouseout=\"UnTip()\"><?php print substr($row['problemstart'], 0, $shorten_length);?></DIV></DIV>";
+					sidebar_line += "<DIV CLASS='c1 <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('<?php print $the_descr;?>')\" onmouseout=\"UnTip()\"><?php print $in_strike;?><?php print $the_short_one;?><?php print $in_strikend;?></DIV></DIV>";
+					sidebar_line += "<DIV CLASS='c1 <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('<?php print $address;?>')\" ALIGN='left' onmouseout=\"UnTip()\"><?php print $in_strike;?><?php print $short_addr;?><?php print $in_strikend;?></DIV></DIV>";
+<?php
+							} else {
+?>							
+					sidebar_line += "<DIV CLASS='c0 <?php print $bg_color_class;?>'><DIV class='incs'>135[#<?php print $row['ticket_id'];?>]</DIV></DIV>";
+<?php					
+					}
+?>
+					sidebar_line += "<DIV CLASS='cspace <?php print $bg_color_class;?>'><DIV class='incs'>&nbsp;</DIV></DIV>";	
+<?php						
+//  UNITS			3 col's	- 9/12/09
+	
+					if (is_date($row['clear'])) {							// 6/26/08
+						$strike = "<STRIKE>"; $strikend = "</STRIKE>";		// strikethrough on closed assigns
+						}
+					else {
+						$strike = $strikend = "";
+						}			 
+					if (!($row['unit_id'] == 0)) {																	// 5/11/09
+						$query = "SELECT * FROM `$GLOBALS[mysql_prefix]unit_types`	WHERE `id`= '{$row['unit_type']}' LIMIT 1";
+						$result_type = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
+						$row_type = (mysql_affected_rows() > 0) ? stripslashes_deep(mysql_fetch_assoc($result_type)) : "";
+						$the_bg_color = empty($row_type)?	"transparent" : $GLOBALS['UNIT_TYPES_BG'][$row_type['icon']];		// 3/15/10
+						$the_text_color = empty($row_type)? "black" :		$GLOBALS['UNIT_TYPES_TEXT'][$row_type['icon']];		// 
+						unset ($row_type);
+
+						$unit_name = empty($row['unit_id']) ? "[#{$row['unit_id']}]" : addslashes($row['unit_name']) ;			// id only if absent
+						$short_name = shorten($unit_name, 10);
+?>							
+						sidebar_line += "<DIV CLASS='unit_n <?php print $bg_color_class;?>' STYLE='background-color:<?php print $the_bg_color;?>;  opacity: .7; color:<?php print $the_text_color;?>;'><DIV class='incs' onmouseover=\"Tip('#<?php print $row['unit_id'];?> <?php print $unit_name;?>')\" onmouseout=\"UnTip()\"><B><?php print $short_name;?></B></DIV></DIV>";								
+<?php
+						$the_disp_str =  fs_get_disp_status ($row);		// 3/25/11
+?>						
+						sidebar_line += "<DIV CLASS='unit_d disp_stat'><DIV class='incs'<b>&nbsp;<?php print $the_disp_str;?>&nbsp;</b></DIV></DIV>";
+<?php
+							$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated`,
+								`t`.`id` AS `type_id`, 
+								`r`.`id` AS `unit_id`, 
+								`r`.`name` AS `name`,
+								`s`.`description` AS `stat_descr`,  
+								`r`.`name` AS `unit_name`
+								FROM `$GLOBALS[mysql_prefix]responder` `r` 
+								LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` `t` ON ( `r`.`type` = t.id )	
+								LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON ( `r`.`un_status_id` = s.id ) 
+								WHERE `r`.`id` = '{$row['unit_id']}' LIMIT 1";
+
+							$result_unit = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+							$row_unit = stripslashes_deep(mysql_fetch_assoc($result_unit));
+?>
+							sidebar_line += "<DIV CLASS='unit_s' <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('<?php print substr($row_unit['stat_descr'], 0, 12);?>')\" onmouseout=\"UnTip()\">&nbsp;<?php print substr($row_unit['stat_descr'], 0, 12);?></DIV></DIV>";
+							sidebar_line += "</DIV><BR />";	
+<?php
+							}
+						$i++;
+				$w==0 ? $w=1 : $w=0;
+				}
+		} else {						
+
+?>
+			sidebar_line += "<DIV CLASS='even' style='width: 100%;'><DIV style='text-align: center; color: #FF0000; font-size: 12px; font-weight: bold;'>No Current Unit Assignments</DIV></DIV><BR />";
+<?php
+		}
+?>
+		$('assignments').innerHTML = sidebar_line;	//	assignment list to DIV		
+			
 	// ==========================================      RESPONDER start    ================================================
 			points = false;
 			i++;
@@ -836,6 +1591,9 @@ error_reporting(E_ALL);
 			}
 		//dump($u_types);
 		unset($result);
+		
+		$categories = array();													// 12/03/10
+		$categories = get_category_butts();											// 12/03/10		
 	
 		$assigns = array();					// 08/8/3
 		$tickets = array();					// ticket id's
@@ -865,10 +1623,17 @@ error_reporting(E_ALL);
 	
 			}
 		unset($result_st);
-	
+		
 	//	$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `handle`";	//
-		$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `name`";	//
-		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+	//	$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `name`";	//
+		
+	$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated`, `r`.`name` AS `unit_name`, `r`.`id` AS `unit_id`, `t`.`name` AS `type_name`
+		FROM `$GLOBALS[mysql_prefix]responder` `r` 
+		LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` `t` ON ( `r`.`type` = t.id )	
+		LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON ( `r`.`un_status_id` = s.id )";	//	4/11/11
+		
+		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		
+		$units_ct = mysql_affected_rows();			// 1/4/10	
 	
 		$aprs = FALSE;
 		$instam = FALSE;
@@ -882,8 +1647,9 @@ error_reporting(E_ALL);
 	
 		while ($row = stripslashes_deep(mysql_fetch_array($result))) {		// ==========  major while() for RESPONDER ==========
 			$got_point = FALSE;
-	
-		$name = $row['name'];			//	10/8/09
+		$latitude = $row['lat'];		// 7/18/10		
+		$longitude = $row['lng'];		// 7/18/10	
+		$name = $row['unit_name'];			//	10/8/09
 		$temp = explode("/", $name );
 		$index =  (strlen($temp[count($temp) -1])<3)? substr($temp[count($temp) -1] ,0,strlen($temp[count($temp) -1])): substr($temp[count($temp) -1] ,-3 ,strlen($temp[count($temp) -1]));		
 		
@@ -1118,7 +1884,7 @@ error_reporting(E_ALL);
 				$the_type = $temptype[0];																	// 1/1/09
 	
 				$tab_1 = "<TABLE CLASS='infowin' width='" . $_SESSION['scr_width']/4 . "'>";
-				$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . shorten($row['name'], 48) . "</B> - " . $the_type . "</TD></TR>";
+				$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . shorten($row['unit_name'], 48) . "</B> - " . $the_type . "</TD></TR>";
 				$tab_1 .= "<TR CLASS='odd'><TD>Description:</TD><TD>" . shorten(str_replace($eols, " ", $row['description']), 32) . "</TD></TR>";
 				$tab_1 .= "<TR CLASS='even'><TD>Status:</TD><TD>" . $the_status . " </TD></TR>";
 				$tab_1 .= "<TR CLASS='odd'><TD>Contact:</TD><TD>" . $row['contact_name']. " Via: " . $row['contact_via'] . "</TD></TR>";
@@ -1144,7 +1910,7 @@ error_reporting(E_ALL);
 	
 ?>
 				var myinfoTabs = [
-					new GInfoWindowTab("<?php print nl2brr(shorten($row['name'], 10));?>", "<?php print $tab_1;?>"),
+					new GInfoWindowTab("<?php print nl2brr(shorten($row['unit_name'], 10));?>", "<?php print $tab_1;?>"),
 					new GInfoWindowTab("APRS <?php print addslashes(substr($row_aprs['source'], -3)); ?>", "<?php print $tab_2;?>"),
 					new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>")
 					];
@@ -1161,7 +1927,7 @@ error_reporting(E_ALL);
 	//			print __LINE__;
 ?>
 				var myinfoTabs = [
-					new GInfoWindowTab("<?php print nl2brr(shorten($row['name'], 10));?>", "<?php print $tab_1;?>"),
+					new GInfoWindowTab("<?php print nl2brr(shorten($row['unit_name'], 10));?>", "<?php print $tab_1;?>"),
 					new GInfoWindowTab("Instam <?php print addslashes(substr($row_instam['source'], -3)); ?>", "<?php print $tab_2;?>"),
 					new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>") // 830
 					];
@@ -1178,7 +1944,7 @@ error_reporting(E_ALL);
 	//			print __LINE__;
 	?>
 				var myinfoTabs = [
-					new GInfoWindowTab("<?php print nl2brr(shorten($row['name'], 10));?>", "<?php print $tab_1;?>"),
+					new GInfoWindowTab("<?php print nl2brr(shorten($row['unit_name'], 10));?>", "<?php print $tab_1;?>"),
 					new GInfoWindowTab("LocateA <?php print addslashes(substr($row_locatea['source'], -3)); ?>", "<?php print $tab_2;?>"),
 					new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>") // 830
 					];
@@ -1195,7 +1961,7 @@ error_reporting(E_ALL);
 	//			print __LINE__;
 	?>
 				var myinfoTabs = [
-					new GInfoWindowTab("<?php print nl2brr(shorten($row['name'], 10));?>", "<?php print $tab_1;?>"),
+					new GInfoWindowTab("<?php print nl2brr(shorten($row['unit_name'], 10));?>", "<?php print $tab_1;?>"),
 					new GInfoWindowTab("Gtrack <?php print addslashes(substr($row_gtrack['source'], -3)); ?>", "<?php print $tab_2;?>"),
 					new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>") // 830
 					];
@@ -1211,7 +1977,7 @@ error_reporting(E_ALL);
 	//			print __LINE__;
 ?>
 				var myinfoTabs = [
-					new GInfoWindowTab("<?php print nl2brr(shorten($row['name'], 10));?>", "<?php print $tab_1;?>"),
+					new GInfoWindowTab("<?php print nl2brr(shorten($row['unit_name'], 10));?>", "<?php print $tab_1;?>"),
 					new GInfoWindowTab("G Lat <?php print addslashes(substr($row_glat['source'], -3)); ?>", "<?php print $tab_2;?>"),
 					new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>") // 830
 					];
@@ -1221,7 +1987,7 @@ error_reporting(E_ALL);
 			if (!($tabs_done)) {	// else two tabs
 ?>
 				var myinfoTabs = [
-					new GInfoWindowTab("<?php print nl2brr(shorten($row['name'], 10));?>", "<?php print $tab_1;?>"),
+					new GInfoWindowTab("<?php print nl2brr(shorten($row['unit_name'], 10));?>", "<?php print $tab_1;?>"),
 					new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>")
 					];
 <?php
@@ -1230,13 +1996,24 @@ error_reporting(E_ALL);
 			$temp = $u_types[$row['type']];		// array ($row['name'], $row['icon'])
 	//		dump($temp);
 			$the_color = ($row['mobile']=="1")? 0 : 4;		// icon color black, white		-- 4/18/09
-	?>
-			var the_class = ((map_is_fixed) && (!(mapBounds.containsLatLng(point))))? "emph" : "td_label";
-	
-			var marker = createMarker(point, myinfoTabs, <?php print $the_color;?>, <?php print $hide_unit;?>, i, sym);	// 859  - 4/18/09
-			map.addOverlay(marker);
+			$the_group = get_category($row['unit_id']);			
+			if (($latitude == "0.999999") && ($longitude == "0.999999")) {	// check for no maps added points 7/28/10
+				$dummylat = get_variable('def_lat');
+				$dummylng = get_variable('def_lng');			
+				echo "\t\tvar point = new GLatLng(" . $dummylat . ", " . $dummylng ."); // 677\n";
+?>
+				var dummymarker = createdummyMarker(point, myinfoTabs, <?php print $sb_indx; ?>);	// Plots dummy icon in default position for units added in no maps operation
+				map.addOverlay(dummymarker);
 <?php
-			}		// end position data available
+			} else {
+?>
+				var the_group = '<?php print $the_group;?>';
+				
+				var marker = createMarker(point, myinfoTabs, <?php print $the_color;?>, <?php print $hide_unit;?>,  <?php print $sb_indx; ?>, sym, the_group); // 7/28/10
+				map.addOverlay(marker);
+<?php
+			} // end check for no maps added points
+		}		// end position data available
 	
 		else {					// (sidebar, line_no, rcd_id, letter)
 	//		dump(__LINE__);
@@ -1244,14 +2021,54 @@ error_reporting(E_ALL);
 	
 		$i++;				// zero-based
 		print "\t\ti++;\n"; 	// 3/20/09
-	
+		$sb_indx++;				// zero-based	
 		}				// end  ==========  while() for RESPONDER ==========
 	
 		$source_legend = (($aprs)||($instam)||($gtrack)||($locatea)||($glat))? "<TD CLASS='emph' ALIGN='center'>Source time</TD>": "<TD></TD>";		// if any remote data/time 3/24/09
-	
-	// }-------- END NEW -----------------------------------------------------------------------------------------
-	// ====================================Add Facilities to Map 8/1/09================================================
+
 ?>
+		side_bar_html= "<form action='#'>";		//	12/03/10
+<?php
+	if($units_ct > 0) {	//	3/15/11
+		foreach($categories as $key => $value) {		//	12/03/10
+?>
+			side_bar_html += "<DIV class='cat_button' onClick='set_chkbox(\"<?php print $value;?>\")'><?php print $value;?>: <input type=checkbox id='<?php print $value;?>' onClick='set_chkbox(\"<?php print $value;?>\")'/>&nbsp;&nbsp;&nbsp;</DIV>";			<!-- 12/03/10 -->
+<?php
+			}
+			$all="ALL";		//	12/03/10
+			$none="NONE";				//	12/03/10
+?>
+			side_bar_html += "<DIV ID = 'ALL_BUTTON' class='cat_button' onClick='set_chkbox(\"<?php print $all;?>\")'><FONT COLOR = 'red'>ALL</FONT><input type=checkbox id='<?php print $all;?>' onClick='set_chkbox(\"<?php print $all;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
+			side_bar_html += "<DIV ID = 'NONE_BUTTON' class='cat_button'  onClick='set_chkbox(\"<?php print $none;?>\")'><FONT COLOR = 'red'>NONE</FONT><input type=checkbox id='<?php print $none;?>' onClick='set_chkbox(\"<?php print $none;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
+			side_bar_html += "<DIV ID = 'go_can' style='float:right; padding:2px;'><SPAN ID = 'go_button' onClick='do_go_button()' class='conf_next_button' STYLE = 'display:none;'><U>Next</U></SPAN>";
+			side_bar_html += "<SPAN ID = 'can_button'  onClick='cancel_buttons()' class='conf_can_button' STYLE = 'display:none;'><U>Cancel</U></SPAN></DIV>";
+			side_bar_html+="</form></TD></TR></TABLE>";			<!-- 12/03/10 -->
+<?php
+	} else {
+		foreach($categories as $key => $value) {		//	12/03/10
+?>
+			side_bar_html += "<DIV class='cat_button' STYLE='display: none;' onClick='set_chkbox(\"<?php print $value;?>\")'><?php print $value;?>: <input type=checkbox id='<?php print $value;?>' onClick='set_chkbox(\"<?php print $value;?>\")'/>&nbsp;&nbsp;&nbsp;</DIV>";			<!-- 12/03/10 -->
+<?php
+			}
+			$all="ALL";		//	12/03/10
+			$none="NONE";				//	12/03/10
+?>
+			side_bar_html += "<DIV class='cat_button' style='color: red;'>None Defined ! </DIV>";			<!-- 12/03/10 -->
+			side_bar_html += "<DIV ID = 'ALL_BUTTON' class='cat_button' STYLE='display: none;' onClick='set_chkbox(\"<?php print $all;?>\")'><input type=checkbox id='ALL' style='display: none'></DIV>";			<!-- 12/03/10 -->
+			side_bar_html += "<DIV ID = 'NONE_BUTTON' class='cat_button' STYLE='display: none;' onClick='set_chkbox(\"<?php print $none;?>\")'><input type=checkbox id='NONE' style='display: none'></DIV>";			<!-- 12/03/10 -->
+			side_bar_html +="</form></TD></TR></TABLE></DIV>";			<!-- 12/03/10 -->
+	
+			<?php
+	}
+?>
+		$("boxes").innerHTML = side_bar_html;										// 12/03/10 side_bar_html to responders div			
+
+	// ====================================Add Facilities to Map 8/1/09================================================
+
+<?php
+		$fac_categories = array();													// 12/03/10
+		$fac_categories = get_fac_category_butts();											// 12/03/10
+?>	
 		var icons=[];	
 		var g=0;
 	
@@ -1267,13 +2084,11 @@ error_reporting(E_ALL);
 		var fac_icon = new GIcon(baseIcon);
 		fac_icon.image = icons[1];
 	
-		$("hide_fac").style.display = "none";
-		$("show_fac").style.display = "inline-block";
-	
-	function createfacMarker(fac_point, fac_name, id, fac_icon) {
+	function createfacMarker(fac_point, fac_name, id, fac_icon, type) {
 		var fac_marker = new GMarker(fac_point, fac_icon);
 		// Show this markers index in the info window when it is clicked
 		var fac_html = fac_name;
+		fac_marker.category = type;		
 		fmarkers[id] = fac_marker;
 		GEvent.addListener(fac_marker, "click", function() {fac_marker.openInfoWindowHtml(fac_html);});
 		return fac_marker;
@@ -1281,14 +2096,21 @@ error_reporting(E_ALL);
 	
 <?php
 	
-	
-		$query_fac = "SELECT *,UNIX_TIMESTAMP(updated) AS updated, `$GLOBALS[mysql_prefix]facilities`.id AS fac_id, `$GLOBALS[mysql_prefix]facilities`.description AS facility_description, `$GLOBALS[mysql_prefix]fac_types`.name AS fac_type_name, `$GLOBALS[mysql_prefix]facilities`.name AS facility_name FROM `$GLOBALS[mysql_prefix]facilities` LEFT JOIN `$GLOBALS[mysql_prefix]fac_types` ON `$GLOBALS[mysql_prefix]facilities`.type = `$GLOBALS[mysql_prefix]fac_types`.id LEFT JOIN `$GLOBALS[mysql_prefix]fac_status` ON `$GLOBALS[mysql_prefix]facilities`.status_id = `$GLOBALS[mysql_prefix]fac_status`.id ORDER BY `$GLOBALS[mysql_prefix]facilities`.type ASC";
+		$query_fac = "SELECT *,UNIX_TIMESTAMP(updated) AS updated, `$GLOBALS[mysql_prefix]facilities`.id AS fac_id,
+		`$GLOBALS[mysql_prefix]facilities`.description AS facility_description, 
+		`$GLOBALS[mysql_prefix]fac_types`.name AS fac_type_name, 
+		`$GLOBALS[mysql_prefix]facilities`.name AS facility_name 
+		FROM `$GLOBALS[mysql_prefix]facilities` 
+		LEFT JOIN `$GLOBALS[mysql_prefix]fac_types` ON `$GLOBALS[mysql_prefix]facilities`.type = `$GLOBALS[mysql_prefix]fac_types`.id 
+		LEFT JOIN `$GLOBALS[mysql_prefix]fac_status` ON `$GLOBALS[mysql_prefix]facilities`.status_id = `$GLOBALS[mysql_prefix]fac_status`.id 
+		ORDER BY `$GLOBALS[mysql_prefix]facilities`.type ASC";
 		$result_fac = mysql_query($query_fac) or do_error($query_fac, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 	//	dump($query_fac);
 		
 		while($row_fac = mysql_fetch_array($result_fac)){
 		$fac_id=($row_fac['fac_id']);
 		$fac_type=($row_fac['icon']);
+		$fac_type_name = ($row_fac['fac_type_name']);		
 	
 		$fac_name = $row_fac['facility_name'];			//	10/8/09
 	//	$fac_name = $row_fac['name'];					//	10/8/09
@@ -1344,15 +2166,31 @@ error_reporting(E_ALL);
 					new GInfoWindowTab("More ...", "<?php print str_replace($eols, " ", $fac_tab_2);?>")
 					];
 				<?php
+
+
+			if(($row_fac['lat']==0.999999) && ($row_fac['lng']==0.999999)) {	// check for facilities entered in no maps mode 7/28/10
 	
 				echo "var fac_icon = new GIcon(baseIcon);\n";
 				echo "var fac_type = $fac_type;\n";
-				echo "var fac_icon_url = \"./icons/gen_fac_icon.php?blank=$fac_type&text=\" + (fac_sym) + \"\";\n";
+				echo "var fac_type_name = \"$fac_type_name\";\n";
+				echo "var fac_icon_url = \"./our_icons/question1.png\";\n";
 				echo "fac_icon.image = fac_icon_url;\n";
-				echo "var fac_point = new GLatLng(" . $row_fac['lat'] . "," . $row_fac['lng'] . ");\n";
-				echo "var fac_marker = createfacMarker(fac_point, myfacinfoTabs, g, fac_icon);\n";
+				echo "var fac_point = new GLatLng(" . get_variable('def_lat') . "," . get_variable('def_lng') . ");\n";
+				echo "var fac_marker = createfacMarker(fac_point, myfacinfoTabs, g, fac_icon, fac_type_name);\n";
 				echo "map.addOverlay(fac_marker);\n";
 				echo "\n";
+			} else {
+				echo "var fac_icon = new GIcon(baseIcon);\n";
+				echo "var fac_type = $fac_type;\n";
+				echo "var fac_type_name = \"$fac_type_name\";\n";				
+				echo "var fac_icon_url = \"./our_icons/gen_fac_icon.php?blank=$fac_type&text=\" + (fac_sym) + \"\";\n";
+				echo "fac_icon.image = fac_icon_url;\n";
+				echo "var fac_point = new GLatLng(" . $row_fac['lat'] . "," . $row_fac['lng'] . ");\n";
+				echo "var fac_marker = createfacMarker(fac_point, myfacinfoTabs, g, fac_icon, fac_type_name);\n";
+				echo "map.addOverlay(fac_marker);\n";
+				echo "\n";
+				}
+
 ?>
 				if (fac_marker.isHidden()) {
 					fac_marker.show();
@@ -1385,23 +2223,64 @@ error_reporting(E_ALL);
 				}			// end if/else (!points)
 		}				// end if (!(map_is_fixed))
 	
-<?php
-	
-		switch ($_SESSION['show_hide_unit']) {		// persistence flags 2/14/09
-			case NULL:						// default 3/23/09
-			case " ":						//
-			case "s":
-				print "\tshow_Units();\n";
-			    break;
-			case "h":
-				print "\thide_Units();\n";
-			    break;
-			default:
-			    echo "error" . __LINE__ . "\n";
+		side_bar_html = "";
+	<?php
+	if(!empty($fac_categories)) {
+	?>		
+		side_bar_html= "<form action='#'>";		//	12/03/10
+
+	<?php
+		function get_fac_icon($fac_cat){			// returns legend string
+			$icons = $GLOBALS['fac_icons'];
+			$sm_fac_icons = $GLOBALS['sm_fac_icons'];
+			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]fac_types` WHERE `name` = \"$fac_cat\"";		// types in use
+			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+			$print = "";
+			while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+				$fac_icon = $row['icon'];
+				$print .= "<IMG SRC = './our_icons/" . $sm_fac_icons[$fac_icon] . "' STYLE = 'vertical-align: middle'>";
+				}
+			unset($result);
+			return $print;
+		}
+
+		foreach($fac_categories as $key => $value) {		//	12/03/10
+		$curr_icon = get_fac_icon($value);
+	?>
+				side_bar_html += "<DIV class='cat_button_fs' onClick='set_fac_chkbox(\"<?php print $value;?>\")'><?php print get_fac_icon($value);?>&nbsp;&nbsp;<?php print $value;?>: <input type=checkbox id='<?php print $value;?>'  onClick='set_fac_chkbox(\"<?php print $value;?>\")'/></DIV>";			<!-- 12/03/10 -->
+	<?php
 			}
-?>
-	
-	
+
+
+
+		$all="fac_ALL";		//	12/03/10
+		$none="fac_NONE";				//	12/03/10
+	?>
+		side_bar_html += "<DIV ID = 'fac_ALL_BUTTON'  class='cat_button_fs' onClick='set_fac_chkbox(\"<?php print $all;?>\")'><FONT COLOR = 'red'>ALL</FONT><input type=checkbox id='<?php print $all;?>' onClick='set_fac_chkbox(\"<?php print $all;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
+		side_bar_html += "<DIV ID = 'fac_NONE_BUTTON'  class='cat_button_fs' onClick='set_fac_chkbox(\"<?php print $none;?>\")'><FONT COLOR = 'red'>NONE</FONT><input type=checkbox id='<?php print $none;?>' onClick='set_fac_chkbox(\"<?php print $none;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
+		side_bar_html += "<DIV ID = 'fac_go_can' style='float:middle; padding:2px;'><SPAN ID = 'fac_go_button' onClick='do_go_facilities_button()' class='conf_next_button' STYLE = 'display:none;'><U>Next</U></SPAN>";
+		side_bar_html += "<SPAN ID = 'fac_can_button'  onClick='fac_cancel_buttons()' class='conf_can_button' STYLE = 'display:none;'><U>Cancel</U></SPAN></DIV>";
+		side_bar_html+="</form>";			<!-- 12/03/10 -->
+		$("fac_boxes").innerHTML = side_bar_html;										// 12/03/10 side_bar_html to responders div			
+
+	<?php
+	} else {
+	?>	
+		side_bar_html= "";		//	12/03/10
+		side_bar_html += "<DIV class='cat_button' style='color: red;'>None Defined ! </DIV>";			<!-- 12/03/10 -->
+	<?php
+		$all="fac_ALL";		//	12/03/10
+		$none="fac_NONE";				//	12/03/10
+	?>
+		side_bar_html += "<DIV ID = 'fac_ALL_BUTTON' class='cat_button' style='display: none;'><input type=checkbox id='<?php print $all;?>'/><input type=checkbox id='fac_ALL' style='display: none'></DIV>";			<!-- 12/03/10 -->
+		side_bar_html += "<DIV ID = 'fac_NONE_BUTTON' class='cat_button' style='display: none;'><input type=checkbox id='<?php print $none;?>'/><input type=checkbox id='fac_NONE' style='display: none'></DIV>";			<!-- 12/03/10 -->
+		side_bar_html += "<DIV ID = 'fac_go_can' style='float:right; padding:2px; display: none'><SPAN ID = 'fac_go_button' class='conf_next_button' STYLE = 'display:none;'><U>Next</U></SPAN>";
+		side_bar_html += "<SPAN ID = 'fac_can_button' class='conf_can_button' STYLE = 'display:none;'><U>Cancel</U></SPAN></DIV>";
+		side_bar_html+="</form>";			<!-- 12/03/10 -->
+		$("fac_boxes").innerHTML = side_bar_html;										// 12/03/10 side_bar_html to responders div			
+<?php
+	}
+?>	
 	// =============================================================================================================
 		}		// end if (GBrowserIsCompatible())
 	else {

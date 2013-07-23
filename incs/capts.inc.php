@@ -3,7 +3,13 @@
 8/21/10 initial version
 8/24/10 "written" added
 8/29/10 convert to array
+12/3/10 get_text functions added
 */
+$nature = get_text("Nature");			// 12/03/10
+$disposition = get_text("Disposition");
+$patient = get_text("Patient");
+$incident = get_text("Incident");
+$incidents = get_text("Incidents");
 
 $capts = array(
 "911 Contacted",
@@ -12,7 +18,7 @@ $capts = array(
 "Add Action",
 "Add Facility",
 "Add note",
-"Add Patient",
+"Add {$patient}",
 "Add Unit",
 "Add user",
 "Add/Edit Notifies",
@@ -40,7 +46,7 @@ $capts = array(
 "Description",
 "Dispatch Unit",
 "Dispatched",
-"Disposition",
+"{$disposition}",
 "Dump DB to screen",
 "E-mail",
 "Edit My Profile",
@@ -57,10 +63,10 @@ $capts = array(
 "Help",
 "High",
 "ID",
-"Incident Lat/Lng",
-"Incident name",
-"Incident types",
-"Incident",
+"{$incident} Lat/Lng",
+"{$incident} name",
+"{$incident} types",
+"{$incident}",
 "Lat/Lng",
 "Links",
 "Location",
@@ -73,7 +79,7 @@ $capts = array(
 "Module",
 "mouseover caption for help informati",
 "Name",
-"Nature",
+"{$nature}",
 "New",
 "Next",
 "Normal",

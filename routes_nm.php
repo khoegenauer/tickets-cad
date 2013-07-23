@@ -8,7 +8,7 @@ $from_top = 20;				// buttons alignment, user-reviseable as needed
 $sidebar_width = 400;		// pixels
 //$from_left = $sidebar_width + get_variable('map_width') + 72;
 //$from_left =  get_left_margin ($sidebar_width);
-$from_left = round (0.7 * $_SESSION['scr_width']);
+$from_left = round (0.75 * $_SESSION['scr_width']);
 
 $show_tick_left = FALSE;	// controls left-side vs. right-side appearance of incident details - 11/27/09
 $unit_ht_max = 	0.3;		// unit sidebar height maximum as a portion of screen height, a decimal fraction; default 0.3 ( = 30%)
@@ -18,10 +18,13 @@ $units_side_bar_height = 0.9;		// height of units sidebar as decimal fraction - 
 /*
 7/16/10 Initial Release for no internet operation - created from routes.php
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
+11/18/10 Added filter by capabilities and fixed individual unit dispatch.
+3/15/11 changed stylesheet.php to stylesheet.php
+5/28/11 sql inject prevention added
 */
 
 do_login(basename(__FILE__));		// 
-//snap(__LINE__, basename(__FILE__));
+if ((isset($_REQUEST['ticket_id'])) && (!(strval(intval($_REQUEST['ticket_id']))===$_REQUEST['ticket_id']))) {	shut_down();}	// 5/28/11
 
 //$istest = TRUE;
 if($istest) {
@@ -63,7 +66,7 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css" />
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
     <STYLE TYPE="text/css">
 		body 				{font-family: Verdana, Arial, sans serif;font-size: 11px;margin: 2px;}
 		table 				{border-collapse: collapse; }
@@ -393,7 +396,6 @@ if (!empty($_POST)) {				// 77-200
 <?php	
 		}
 ?>		
-	<INPUT TYPE='hidden' NAME='frm_mode' VALUE='<?php print $frm_mode;?>' />
 	</FORM></BODY></HTML>
 <?php		
 	}		// end if (!empty($_POST))
@@ -524,6 +526,9 @@ function doReset() {
 		 `$GLOBALS[mysql_prefix]ticket`.`lat` AS `lat`,
 		 `$GLOBALS[mysql_prefix]ticket`.`lng` AS `lng`,
 		 `$GLOBALS[mysql_prefix]ticket`.`_by` AS `call_taker`,
+		`$GLOBALS[mysql_prefix]ticket`.`street` AS `tick_street`,
+		`$GLOBALS[mysql_prefix]ticket`.`city` AS `tick_city`,
+		`$GLOBALS[mysql_prefix]ticket`.`state` AS `tick_state`,		 
 		 `$GLOBALS[mysql_prefix]facilities`.`name` AS `fac_name`,
 		 `rf`.`name` AS `rec_fac_name`,
 		 `rf`.`lat` AS `rf_lat`,
@@ -533,7 +538,7 @@ function doReset() {
 		LEFT JOIN `$GLOBALS[mysql_prefix]in_types` `ty` ON (`$GLOBALS[mysql_prefix]ticket`.`in_types_id` = `ty`.`id`)		
 		LEFT JOIN `$GLOBALS[mysql_prefix]facilities` ON (`$GLOBALS[mysql_prefix]facilities`.`id` = `$GLOBALS[mysql_prefix]ticket`.`facility`)
 		LEFT JOIN `$GLOBALS[mysql_prefix]facilities` `rf` ON (`rf`.`id` = `$GLOBALS[mysql_prefix]ticket`.`rec_facility`) 
-		WHERE `$GLOBALS[mysql_prefix]ticket`.`id`=" . $_GET['ticket_id'] . " LIMIT 1";			// 7/24/09 10/16/08 Incident location 10/06/09 Multi point routing
+		WHERE `$GLOBALS[mysql_prefix]ticket`.`id`=" . quote_smart($_GET['ticket_id']) . " LIMIT 1";			// 7/24/09 10/16/08 Incident location 10/06/09 Multi point routing
 
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$row_ticket = stripslashes_deep(mysql_fetch_array($result));
@@ -570,9 +575,20 @@ function doReset() {
 
 $the_width = 480;
 ?>
+function filterSubmit() {		//	11/18/10
+	document.filter_Form.submit();
+	}
+
+function filterReset() {		//	11/18/10
+	document.filter_Form.capabilities.value="";
+	document.filter_Form.submit();
+	}
 </SCRIPT>
 <?php
 $ck_frames_str = (((array_key_exists ( "frm_mode", $_GET)) && ($_GET['frm_mode']) ==1))? "": "ck_frames();" ;		// 10/9/10
+$unit_id = (array_key_exists('unit_id', $_GET))? $_GET['unit_id'] : "" ;
+$capabilities = (array_key_exists('capabilities', $_GET))? stripslashes(trim(str_replace('/', '|', $_GET['capabilities']))) : "" ;	// 11/18/10
+$disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 ?>
 
 <BODY onLoad = "do_notify(); <?php print $ck_frames_str;?>" >
@@ -581,7 +597,23 @@ $ck_frames_str = (((array_key_exists ( "frm_mode", $_GET)) && ($_GET['frm_mode']
 <TABLE ID = 'outer' BORDER=0>
 <TR><TD COLSPAN=2></TD></TR>
 <TR>
-	<TD><DIV ID='side_bar' style="height: <?php print $the_height;?>px; overflow-y: auto; overflow-x: auto;"></DIV></TD>
+	<TD><DIV ID='side_bar' style="height: <?php print $the_height;?>px; overflow-y: auto; overflow-x: auto;"></DIV>
+<?php
+	$unit_id = (array_key_exists('unit_id', $_GET))? $_GET['unit_id'] : "" ;
+	if($unit_id=="") { 	// 11/18/10
+		?>
+		<DIV ID='theform' style='position: relative; top: 10px; background-color: transparent; border-color: #000000;'><!-- 11/18/10 -->	
+		<TABLE ALIGN='center' BORDER='0'>
+		<TR><TH>FILTER BY CAPABILITIES</TH></TR>
+		<FORM NAME='filter_Form' METHOD="GET" ACTION="routes_nm.php"><!-- 8/30/10 -->
+		<TR><TD ALIGN='center'>Filter Type: <b>OR </b><INPUT TYPE='radio' NAME='searchtype' VALUE='OR' checked><b>AND </b><INPUT TYPE='radio' NAME='searchtype' VALUE='AND'></TD></TR>
+		<TR><TD><INPUT SIZE='48' TYPE='text' NAME='capabilities' VALUE='<?php print $capabilities;?>' MAXLENGTH='64'></TD></TR>
+		<INPUT TYPE='hidden' NAME='ticket_id' 	VALUE='<?php print $_GET['ticket_id']; ?>' />
+		<INPUT TYPE='hidden' NAME='unit_id' 	VALUE='<?php print $unit_id; ?>' />
+		<TR><TD align="center"><input type="button" OnClick="filterSubmit();" VALUE="Filter"/>&nbsp;&nbsp;<input type="button" OnClick="filterReset();" VALUE="Reset Filter" <?php print $disabled;?>/></TD></TR>	
+		</FORM></TABLE></DIV></TD>
+	<?php }
+	?>
 	<TD><DIV ID='the_ticket' STYLE='width: " .  get_variable('map_width') . "'>
 <?php	print do_ticket($row_ticket, $the_width, FALSE, FALSE); ?>	
 		</DIV></TD>
@@ -605,7 +637,6 @@ $ck_frames_str = (((array_key_exists ( "frm_mode", $_GET)) && ($_GET['frm_mode']
 	<INPUT TYPE='hidden' NAME='frm_rec_facility_id' VALUE= "<?php print $rec_fac;?>" /> <!-- 10/6/09 -->
 	<INPUT TYPE='hidden' NAME='frm_comments' 	VALUE= "New" />
 	<INPUT TYPE='hidden' NAME='frm_allow_dirs' 	VALUE = <?php print $_SESSION['allow_dirs']; ?> />	<!-- 11/21/09 -->
-	<INPUT TYPE='hidden' NAME='frm_mode' 		VALUE='<?php print $_REQUEST['frm_mode'];?>' />
 	</FORM>
 	<FORM NAME='reLoad_Form' METHOD = 'get' ACTION="<?php print basename( __FILE__); ?>">
 	<INPUT TYPE='hidden' NAME='ticket_id' 	VALUE='<?php print $_GET['ticket_id']; ?>' />	<!-- 10/25/08 -->
@@ -615,7 +646,7 @@ $ck_frames_str = (((array_key_exists ( "frm_mode", $_GET)) && ($_GET['frm_mode']
 		
 <?php
 			function get_addr(){				// returns incident address 11/27/09
-				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id`={$_GET['ticket_id']} LIMIT 1";
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id`=" . quote_smart($_GET['ticket_id']) . " LIMIT 1";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(FILE__), __LINE__);
 				$row = stripslashes_deep(mysql_fetch_array($result));
 				return "{$row['street']}<br />{$row['city']}<br /> {$row['state']}"; 
@@ -730,12 +761,15 @@ $ck_frames_str = (((array_key_exists ( "frm_mode", $_GET)) && ($_GET['frm_mode']
 //	print __LINE__;
 			}
 	$unit_id = (array_key_exists('unit_id', $_GET))? $_GET['unit_id'] : "" ;
-	print do_list($unit_id);
+	$capabilities = (array_key_exists('capabilities', $_GET))? stripslashes(trim(str_replace('/', '|', $_GET['capabilities']))) : "" ;	// 11/18/10
+	$searchtype = (array_key_exists('searchtype', $_GET))? $_GET['searchtype'] : "OR" ;	// 11/18/10
+	$disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
+	print do_list($unit_id, $capabilities, $searchtype);
 	print "</HTML> \n";
 
 	}			// end if/else !empty($_POST)
 
-function do_list($unit_id ="") {
+function do_list($unit_id ="", $capabilities ="", $searchtype) {
 	global $row_ticket, $dispatches_disp, $dispatches_act, $from_top, $from_left, $eol, $sidebar_width;
 	
 	switch($row_ticket['severity'])		{		//color tickets by severity
@@ -747,7 +781,7 @@ function do_list($unit_id ="") {
 	$query = "SELECT *,UNIX_TIMESTAMP(problemstart) AS problemstart,UNIX_TIMESTAMP(problemend) AS problemend,UNIX_TIMESTAMP(booked_date) AS booked_date,
 		UNIX_TIMESTAMP(date) AS date,UNIX_TIMESTAMP(`$GLOBALS[mysql_prefix]ticket`.`updated`) AS updated, `$GLOBALS[mysql_prefix]ticket`.`description` AS `tick_descr` FROM `$GLOBALS[mysql_prefix]ticket`  
 		LEFT JOIN `$GLOBALS[mysql_prefix]in_types` `ty` ON (`$GLOBALS[mysql_prefix]ticket`.`in_types_id` = `ty`.`id`)		
-		WHERE `$GLOBALS[mysql_prefix]ticket`.`id`=" . $_GET['ticket_id'] . " LIMIT 1";			// 7/24/09 10/16/08 Incident location 09/25/09 Pre Booking
+		WHERE `$GLOBALS[mysql_prefix]ticket`.`id`= " . quote_smart($_GET['ticket_id']) . " LIMIT 1";			// 7/24/09 10/16/08 Incident location 09/25/09 Pre Booking
 
 //	print __LINE__;
 //	dump($query);
@@ -920,13 +954,15 @@ function do_list($unit_id ="") {
 <?php
 
 			function get_cd_str($in_row) {			// unit row in, 
+				global $unit_id;	// 11/18/10
 	//																			// first, already on this run?		
-				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE  `ticket_id` = {$_GET['ticket_id']}
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE  `ticket_id` = " . quote_smart($_GET['ticket_id']) . "
 					 AND (`responder_id`={$in_row['unit_id']}) 
 					 AND ((`clear` IS NULL) OR (DATE_FORMAT(`clear`,'%y') = '00')) LIMIT 1;";	// 6/25/10
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 				if(mysql_affected_rows()==1) 			{return " CHECKED DISABLED ";}	
 	
+				if (($unit_id != "") && ((mysql_affected_rows()!=1) || ((mysql_affected_rows()==1) && (intval($in_row['multi'])==1))))		{print "checked";return " CHECKED ";}				// 12/18/10 - Checkbox checked here individual unit seleted.
 				if (intval($in_row['dispatch'])==2) 	{return " DISABLED ";}				// 2nd, disallowed  - 5/30/10
 				if (intval($in_row['multi'])==1) 		{return "";}						// 3rd, allowed
 																				// 3rd, on another run?
@@ -942,7 +978,7 @@ function do_list($unit_id ="") {
 
 		$eols = array ("\r\n", "\n", "\r");		// all flavors of eol
 												// build js array of responders to this ticket - possibly none
-		$query = "SELECT `ticket_id`, `responder_id` FROM `$GLOBALS[mysql_prefix]assigns` WHERE `ticket_id` = " . $_GET['ticket_id'];
+		$query = "SELECT `ticket_id`, `responder_id` FROM `$GLOBALS[mysql_prefix]assigns` WHERE `ticket_id` = " . quote_smart($_GET['ticket_id']);
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
 		
 		while ($assigns_row = stripslashes_deep(mysql_fetch_array($result))) {
@@ -950,7 +986,7 @@ function do_list($unit_id ="") {
 			}
 		print "\n";
 
-		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id`={$_GET['ticket_id']} LIMIT 1;";	// 4/5/10
+		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id`=" . quote_smart($_GET['ticket_id']) . " LIMIT 1;";	// 4/5/10
 		$result_pos = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		if(mysql_affected_rows()==1) {
 			$row_position = stripslashes_deep(mysql_fetch_array($result_pos));
@@ -963,6 +999,21 @@ function do_list($unit_id ="") {
 			}
 
 		$where = (empty($unit_id))? "" : " WHERE `$GLOBALS[mysql_prefix]responder`.`id` = $unit_id ";		// revised 5/23/08 per AD7PE 
+		if(empty($unit_id)) {	// 11/18/10
+			$where2 = (empty($capabilities))? "" : " WHERE (";	// 11/18/10
+			$searchitems = (empty($capabilities))? "" : explode(" ", $capabilities);
+			if($searchitems) {
+				for($j = 0; $j < count($searchitems); $j++){
+					if  ($j+1 != count($searchitems)) {
+						$where2 .= "`$GLOBALS[mysql_prefix]responder`.`capab` LIKE '%{$searchitems[$j]}%' $searchtype ";
+					} else {
+						$where2 .= "`$GLOBALS[mysql_prefix]responder`.`capab` LIKE '%{$searchitems[$j]}%')";
+					}
+				}
+			}
+		} else {
+			$where2="";
+		}
 																			// 4/5/10
 		$query = "SELECT *, UNIX_TIMESTAMP(`updated`) AS `updated`,
 			`$GLOBALS[mysql_prefix]responder`.`id` AS `unit_id`, 
@@ -970,7 +1021,7 @@ function do_list($unit_id ="") {
 			(POW(ABS({$latitude} - `$GLOBALS[mysql_prefix]responder`.`lat`), 2.0) +  POW(ABS({$longitude} - `$GLOBALS[mysql_prefix]responder`.`lng`), 2.0)) AS `distance`			
 			FROM `$GLOBALS[mysql_prefix]responder`
 			LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON (`$GLOBALS[mysql_prefix]responder`.`un_status_id` = `s`.`id`)
-			$where
+			$where $where2
 			ORDER BY `distance` ASC, `handle` ASC, `name` ASC, `unit_id` ASC";		// 12/09/09
 
 //		dump($query);
@@ -1005,6 +1056,14 @@ function do_list($unit_id ="") {
 				
 				unit_names[i] = "<?php print addslashes($unit_row['name']);?>";	// unit name 8/25/08, 4/27/09
 				unit_sets[i] = false;								// pre-set checkbox settings				
+				unit_preselected = "<?php print $unit_id;?>";
+				if (unit_preselected != "") {
+					unit_sets[i] = true;								// pre-set checkbox settings	
+					} else {
+					unit_sets[i] = false;
+					}
+
+				
 				unit_ids[i] = <?php print $unit_row['unit_id'];?>;
 				new_element = document.createElement("input");								// please don't ask!
 				new_element.setAttribute("type", 	"checkbox");

@@ -1,16 +1,117 @@
 <?php
-$iw_width = 	"100%";		// map infowindow with
 /*
 7/16/10  Initial Release for no internet operation - created from FMP
+11/16/10 fixes to print, do_ticket etc. to conform to SQL from current FMP
+11/29/10 locale case 2		
+12/1/10 get_text disposition added
+12/03/10 Completely revised show hide units. Added show hide by category and revised hide and show incidents to remove units from these functions - not used in No Maps version.
+1/30/11 revised to  show booked date in sidebar for scheduled runs
+3/19/11 revised units, facilities index length to 6 chars 
+4/1/11 lift restriction re operators and non-owned incidents - pending incident-owner corrections
+5/7/11 added $the_disp_stat string to units TD line
 */
+
+@session_start();
+
+$nature = get_text("Nature");			// 12/03/10
+$disposition = get_text("Disposition");
+$patient = get_text("Patient");
+$incident = get_text("Incident");
+$incidents = get_text("Incidents");
+
+function get_can_edit() {				// 5/1/11
+	if (empty($_SESSION)) {return FALSE;}
+	else	{
+		switch ($_SESSION['level']) {
+			case $GLOBALS['LEVEL_SUPER']:
+			case $GLOBALS['LEVEL_ADMINISTRATOR']:
+				return TRUE;
+				break;
+			case $GLOBALS['LEVEL_USER'] :
+				return (trim(get_variable('oper_can_edit'))==1);
+				break;
+			case $GLOBALS['LEVEL_GUEST']:
+			case $GLOBALS['LEVEL_MEMBER']:
+			case $GLOBALS['LEVEL_UNIT']:
+				return FALSE;	
+			}		// end switch 
+		}		// end if/else
+	}		// end function 
+
+if (!(function_exists ('get_lat'))) {
+	function get_lat($in_lat) {					// 9/7/08
+		if (empty($in_lat)) {return"";}			// 9/14/08
+		$format = get_variable('lat_lng');
+	
+		switch ($format) {
+			case 0:						// decimal
+			    return $in_lat;
+			    break;
+			case 1:
+	//			return ll2dms($in_lat);	// dms
+				return lat2dms($in_lat);	// dms
+				break;
+			case 2:						// cg format
+			    return lat2ddm($in_lat);
+			    break;
+			}
+		}				// end function get_lat()
+	}
+	
+if (!(function_exists ('get_lng'))) {
+	
+	function get_lng($in_lng) {					// 9/7/08
+		if (empty($in_lng)) {return"";}			// 9/14/08
+		$format = get_variable('lat_lng');
+	
+		switch ($format) {
+			case 0:						// decimal
+			    return $in_lng;
+			    break;
+			case 1:	
+	//			return ll2dms($in_lng);		// dms
+				return lng2dms($in_lng);	// dms
+				break;
+			case 2:						// cg format
+			    return lng2ddm($in_lng);
+			    break;
+			}
+		}				// end function get_lng()
+	}
 
 //	{ -- dummy
 function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list tickets ===================================================
+
 	$time = microtime(true); // Gets microseconds
-	global $istest, $iw_width, $units_side_bar_height, $do_blink;			// 2/8/10
+	global $istest, $units_side_bar_height, $do_blink, $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
+	$can_edit = get_can_edit();
+
+	$query = "SELECT `id` FROM `$GLOBALS[mysql_prefix]responder` LIMIT 1";		// 1/28/11
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+	$any_units = (mysql_affected_rows()==1);
+	
+	$query_sched = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE (
+		`status`='{$GLOBALS['STATUS_OPEN']}' OR
+		`status`='{$GLOBALS['STATUS_SCHEDULED']})' 
+		 LIMIT 1";
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+	$any_open_tickets = (mysql_affected_rows()==1);
+		
+	$query_sched = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE (
+		`status`='{$GLOBALS['STATUS_CLOSED']}')
+		 LIMIT 1";
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+	$any_closed_tickets = (mysql_affected_rows()==1);
+		
+	$query = "SELECT `id` FROM `$GLOBALS[mysql_prefix]facilities` LIMIT 1";	
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+	$any_facilities = (mysql_affected_rows()==1);
+
+	unset ($result);	
+	
 
 	@session_start();		// 
-	$captions = array("Current situation", "Incidents closed today", "Incidents closed yesterday+", "Incidents closed this week", "Incidents closed last week", "Incidents closed last week+", "Incidents closed this month", "Incidents closed last month", "Incidents closed this year", "Incidents closed last year");
+	$captions = array("Current situation", "{$incidents} closed today", "{$incidents} closed yesterday+", "{$incidents} closed this week", "{$incidents} closed last week", "{$incidents} closed last week+", "{$incidents} closed this month", "{$incidents} closed last month", "{$incidents} closed this year", "{$incidents} closed last year", "Scheduled {$incidents}");
 	$by_severity = array(0, 0, 0);				// counters // 5/2/10
 	
 	if (!(array_key_exists('func', $_GET))) {$func = 0;}
@@ -32,30 +133,32 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 	$heading = $captions[($func)] . " - " . get_variable('map_caption');
 	$eols = array ("\r\n", "\n", "\r");		// all flavors of eol
 
-
 	$query = "SELECT `id` FROM `$GLOBALS[mysql_prefix]responder`";		// 5/12/10
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 	unset($result);		
 	$required = 48 + (mysql_affected_rows()*22);		// derived by trial and error - emphasis the latter = 7/18/10
 	$the_height = (integer)  min (round($units_side_bar_height * $_SESSION['scr_height']), $required );		// see main for $units_side_bar_height value
+//	$col_width = (int) floor($_SESSION['scr_width'] * .48);
+
 ?>
-<TABLE BORDER=0>
+<TABLE BORDER=0 ALIGN='center'>
 	<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header'><?php print $heading; ?> </FONT><SPAN ID='sev_counts' STYLE = 'margin-left: 40px'></SPAN></TD></TR>	<!-- 5/2/10 -->
 	<TR CLASS='odd'><TD COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR>
-	<TR><TD VALIGN='TOP' width='90%' >
-		<DIV ID = 'side_bar' style="position:fixed; top:40px; left:10px; width: 650px;"></DIV>
+	<TR><TD VALIGN='TOP' width='auto' >
+<!--<DIV ID = 'side_bar' style="position:fixed; top:50px; left:10px; width: <?php print $col_width;?>px;"></DIV> -->
+		<DIV ID = 'side_bar' ></DIV>
 		</TD>
 		<TD></TD>
 		<TD VALIGN='TOP' width='90%' >
-		<DIV ID = 'side_bar_r' style="position: relative; right: 50px; width: 650px;"></DIV>
-		<DIV ID = 'units_legend' style="position:relative; top:10px;"></DIV>	
-		<DIV ID = 'side_bar_f' style="position: relative; right: 50px; width: 650px;"></DIV></TD>
+		<DIV ID = 'side_bar_r'></DIV>
+		<DIV ID = 'units_legend'></DIV>	
+		<DIV ID = 'side_bar_f'></DIV></TD>
 	</TR>
 
 	<TR><TD COLSPAN='99'> </TD></TR>
 	<TR><TD><IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#top';" STYLE = 'margin-left: 20px'></TD></TR>
 	<TR><TD CLASS='td_label' COLSPAN='99' ALIGN='center'>
-		<A HREF="mailto:shoreas@Gmail.com?subject=Question/Comment on Tickets Dispatch System"><u>Contact us</u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom"></A>
+		<A HREF="mailto:info@TicketsCAD.org?subject=Question/Comment on Tickets Dispatch System"><u>Contact us</u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom"></A>
 		
 
 		</TD></TR></TABLE>
@@ -67,7 +170,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 	<INPUT TYPE='hidden' NAME='id' VALUE=''>
 	</FORM>
 
-	<FORM NAME='tick_form' METHOD='get' ACTION='<?php echo $_SESSION['editfile'];?>'>				<!-- 11/27/09 -->
+	<FORM NAME='tick_form' METHOD='get' ACTION='edit.php'>				<!-- 11/27/09 -->
 	<INPUT TYPE='hidden' NAME='id' VALUE=''>
 	</FORM>
 
@@ -254,6 +357,30 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 		return xmlhttp;
 		}
 
+	function get_chg_disp_tr() {								// 5/5/11
+		var chg_disp_tr ="<TR><TD COLSPAN=99 ALIGN='center'>\n";
+		chg_disp_tr +="\t\t<FORM NAME = 'frm_interval_sel' STYLE = 'display:inline' >\n";
+		chg_disp_tr +="\t\t<SELECT NAME = 'frm_interval' onChange = 'do_listtype(this.value);'>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='99' SELECTED><?php print get_text("Change display"); ?></OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='0'><?php print get_text("Current situation"); ?></OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='1'><?php print $incidents;?> closed today</OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='2'><?php print $incidents;?> closed yesterday+</OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='3'><?php print $incidents;?> closed this week</OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='4'><?php print $incidents;?> closed last week</OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='5'><?php print $incidents;?> closed last week+</OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='6'><?php print $incidents;?> closed this month</OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='7'><?php print $incidents;?> closed last month</OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='8'><?php print $incidents;?> closed this year</OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='9'><?php print $incidents;?> closed last year</OPTION>\n";
+		chg_disp_tr +="\t\t</SELECT>\n</FORM>\n";
+		chg_disp_tr +="\t\t<SPAN ID = 'btn_go' onClick='document.to_listtype.submit()' CLASS='conf_button' STYLE = 'margin-left: 10px; display:none'><U>Next</U></SPAN>";
+		chg_disp_tr +="\t\t<SPAN ID = 'btn_can'  onClick='hide_btns_closed(); hide_btns_scheduled(); ' CLASS='conf_button' STYLE = 'margin-left: 10px; display:none'><U>Cancel</U></SPAN>";
+		chg_disp_tr +="<br /><br /></TD></TR>\n";
+
+		return chg_disp_tr;
+		} 					// end function get chg_disp_tr()
+
+
 <?php
 	$quick = (!(is_guest()) && (intval(get_variable('quick')==1)));				// 11/27/09
 	print ($quick)?  "var quick = true;\n": "var quick = false;\n";
@@ -261,6 +388,16 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 var tr_id_fixed_part = "tr_id_";		// 3/2/10
 
 	var colors = new Array ('odd', 'even');
+
+	function set_initial_pri_disp() {
+		}
+
+	function set_categories() {			//	12/03/10 - checks current session values and sets checkboxes and view states for hide and show.
+		}
+
+	function set_fac_categories() {			//	12/03/10 - checks current session values and sets checkboxes and view states for hide and show.
+		}
+
 
 	function show_hide_rows(instr) {				// instr is '' or 'none' - 3/8/10
 		for (i = 0; i< rowIds.length; i++) {
@@ -299,16 +436,15 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
 	function do_sidebar_unit (instr, id, sym, myclass, tip_str) {		// sidebar_string, sidebar_index, row_class, icon_info, mouseover_str - 1/7/09
 		var tr_id = tr_id_fixed_part + id;
 		if (isNull(tip_str)) {
-			side_bar_html += "<TR ID = '" + tr_id + "' CLASS='" + colors[(id+1)%2] +"'><TD CLASS='" + myclass + "' onClick = myclick(" + id + "); ALIGN = 'left'>" + (sym) + "</TD>"+ instr +"</TR>\n";		// 2/6/10 moved onclick to TD
+			side_bar_html += "<TR ID = '" + tr_id + "' CLASS='" + colors[(id)%2] +"'><TD CLASS='" + myclass + "' onClick = myclick(" + id + "); ALIGN = 'left'>" + (sym) + "</TD>"+ instr +"</TR>\n";		// 2/6/10 moved onclick to TD
 			}
 		else {
 			side_bar_html += "<TR ID =  '" + tr_id + "' onMouseover=\"Tip('" + tip_str + "');\" onmouseout=\"UnTip();\" CLASS='" + colors[(id+1)%2] +"'><TD CLASS='" + myclass + "' onClick = myclick(" + id + "); ALIGN = 'left'>" + (sym) + "</TD>"+ instr +"</TR>\n";		// 1/3/10 added tip param		
 			}
 		}		// end function do sidebar_unit ()
 
-<?php		// 5/17/10
-		if (($quick)|| !(is_guest()))			{$js_func = "myclick_ed_tick";}
-		else 								{$js_func = "open_tick_window";}
+<?php	
+		$js_func = ($can_edit)? "myclick_ed_tick" : "open_tick_window" ;		// 4/28/11
 		
 ?>	
 	function open_tick_window (id) {				// 5/2/10
@@ -324,12 +460,12 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
 
 	function do_sidebar (instr, id, sym, myclass, tip_str) {		// sidebar_string, sidebar_index, row_class, icon_info, mouseover_str - 1/7/09
 		var tr_id = tr_id_fixed_part + id;
-		side_bar_html += "<TR onClick = 'myclick_nm(" + id + ");' ID =  '" + tr_id + "' onMouseover=\"Tip('" + tip_str + "');\" onmouseout=\"UnTip();\" CLASS='" + colors[id%2] +"'>";
+		side_bar_html += "<TR onClick = 'onclick_do_unit(" + id + ");' ID =  '" + tr_id + "' onMouseover=\"Tip('" + tip_str + "');\" onmouseout=\"UnTip();\" CLASS='" + colors[id%2] +"'>";
 		side_bar_html += "<TD CLASS='" + myclass + "' ALIGN = 'left'>" + (sym) + "</TD>"+ instr +"</TR>\n";		// 1/3/10 added tip param		
 		}		// end function do sidebar ()
 
 	function do_sidebar_t_ed (instr, line_no, rcd_id, letter, tip_str) {		// ticket edit, tip str added 1/3/10
-		side_bar_html += "<TR onClick = '<?php print $js_func;?>(" + rcd_id + ")'; onMouseover=\"Tip('" + tip_str.replace("'", "") + "');\" onmouseout=\"UnTip();\" CLASS='" + colors[(line_no)%2] +"'>";		
+		side_bar_html += "<TR onClick = '<?php print $js_func;?>(" + rcd_id + ")'; onMouseover=\"Tip('" + tip_str.replace("'", "") + "');\" onmouseout=\"UnTip();\" CLASS='" + colors[(line_no+1)%2] +"'>";		
 		side_bar_html += "<TD CLASS='td_data'>" + letter + "</TD>" + instr +"</TR>\n";		// 2/13/09, 10/29/09 removed period
 		}
 	function do_sidebar_u_iw (instr, id, sym, myclass) {						// constructs unit incident sidebar row - 1/7/09
@@ -341,7 +477,7 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
 	function myclick_ed_tick(id) {				// Responds to sidebar click - edit ticket data
 
 <?php 
-	$the_action = (is_guest()) ? "main.php" : $_SESSION['editfile'];				2/27/10
+	$the_action = (is_guest()) ? "main.php" : "edit.php";				2/27/10
 ?>	
 		document.tick_form.id.value=id;			// 11/27/09
 		document.tick_form.action='<?php print $the_action; ?>';			// 11/27/09
@@ -350,31 +486,29 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
 		
 	function do_sidebar_u_ed (sidebar, line_no, on_click, letter) {					// unit edit 
 		var tr_id = tr_id_fixed_part + line_no;
-		side_bar_html += "<TR ID = '" + tr_id + "'  CLASS='" + colors[(line_no)%2] +"'>";
+		side_bar_html += "<TR ID = '" + tr_id + "'  CLASS='" + colors[(line_no+1)%2] +"'>";
 		side_bar_html += "<TD onClick = '" + on_click+ "' CLASS='td_data'>" + letter + "</TD>" + sidebar +"</TR>\n";		// 2/13/09, 10/29/09 removed period
 		}
 
-	function myclick_nm(id) {				// Responds to sidebar click - view responder data
-		document.unit_form.id.value=id;	// 11/27/09
-		if (quick) {
-			document.unit_form.edit.value="true";
-			}
-		else {
-			document.unit_form.view.value="true";
-			}
+	function onclick_do_unit(id) {				// Responds to sidebar click - view/edit responder data
+		document.unit_form.id.value=id;			// 11/27/09
+<?php
+			$the_func = ($can_edit)? "edit": "view";		// 4/30/11
+?>
+		document.unit_form.<?php print $the_func;?>.value="true";
 		document.unit_form.submit();
 		}
 
-	function do_sidebar_fac_ed (fac_instr, fac_id, fac_sym, myclass) {					// constructs facilities sidebar row 9/22/09
-		side_bar_html += "<TR CLASS='" + colors[fac_id%2] +"'>";
-		side_bar_html += "<TD CLASS='" + myclass + "' onClick = fac_click_ed(" + fac_id + ");><B>" + (fac_sym) + "</B></TD>";
+	function do_sidebar_fac_ed (fac_instr, fac_id, fac_sym, myclass, line_no) {					// constructs facilities sidebar row 9/22/09
+		side_bar_html += "<TR CLASS='" + colors[line_no%2] +"'>";
+		side_bar_html += "<TD  onClick = fac_click_ed(" + fac_id + ");>" + (fac_sym) + "</TD>";
 		side_bar_html += fac_instr +"</TR>\n";		// 10/30/09 removed period
 		location.href = "#top";
 		}		// end function do sidebar_fac_iw ()
 
 	function do_sidebar_fac_iw (fac_instr, fac_id, fac_sym, myclass) {					// constructs facilities sidebar row 9/22/09
 		side_bar_html += "<TR CLASS='" + colors[fac_id%2] +"' WIDTH = '100%';>"
-		side_bar_html += "<TD CLASS='" + myclass + "'><B>" + (fac_sym) + "</B></TD>";
+		side_bar_html += "<TD CLASS='" + myclass + "'>" + (fac_sym) + "</TD>";
 		side_bar_html += fac_instr +"</TR>\n";		// 10/30/09 removed period
 		location.href = "#top";
 		}		// end function do sidebar_fac ()
@@ -402,26 +536,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
 		}
 
 	var points = false;
-<?php
-
-// $dzf = get_variable('def_zoom_fixed');
-// print "\tvar map_is_fixed = ";
-// print (($dzf==1) || ($dzf==3))? "true;\n":"false;\n";
-// $kml_olays = array();
-// $dir = "./kml_files";
-// $dh  = opendir($dir);
-// $i = 1;
-// $temp = explode ("/", $_SERVER['REQUEST_URI']);
-// $temp[count($temp)-1] = "kml_files";				//
-// $server_str = "http://" . $_SERVER['SERVER_NAME'] .":" .  $_SERVER['SERVER_PORT'] .  implode("/", $temp) . "/";
-// while (false !== ($filename = readdir($dh))) {
-	// if (!is_dir($filename)) {
-	    // echo "\tvar kml_" . $i . " = new GGeoXml(\"" . $server_str . $filename . "\");\n";
-	    // $kml_olays[] = "map.addOverlay(kml_". $i . ");";
-	    // $i++;
-	    // }
-	// }
-?>
 
 function do_add_note (id) {				// 8/12/09
 	var url = "add_note.php?ticket_id="+ id;
@@ -434,15 +548,74 @@ function do_sort_sub(sort_by){				// 6/11/10
 	document.sort_form.submit();
 	}
 
+function do_sched_jobs(choice) {		// 11/29/10 - added Scheduled tickets to menu. 12/02/10 Added persistance for the list view
+	var params = "f_n=list_type&v_n=" + choice + "&sess_id=<?php print get_sess_key(__LINE__); ?>";					// flag 1, value h
+	var url = "persist.php";
+	sendRequest (url, cs_handleResult, params);	// ($to_str, $text, $ticket_id)
+	document.to_listtype.func.value=choice;
+	}				// end function do_listtype()
+
+function do_curr_jobs(choice) {		// 11/29/10 - added Scheduled tickets to menu. 12/02/10 Added persistance for the list view
+	var params = "f_n=list_type&v_n=" + choice + "&sess_id=<?php print get_sess_key(__LINE__); ?>";					// flag 1, value h
+	var url = "persist.php";
+	sendRequest (url, cs_handleResult, params);	// ($to_str, $text, $ticket_id)
+	document.to_listtype.func.value=choice;
+	}				// end function do_listtype()
+
+function do_listtype(choice) {		// 11/29/10 - added Scheduled tickets to menu. 12/02/10 Added persistance for the list view
+	var params = "f_n=list_type&v_n=" + choice + "&sess_id=<?php print get_sess_key(__LINE__); ?>";					// flag 1, value h
+	var url = "persist.php";
+	sendRequest (url, l_handleResult, params);	// ($to_str, $text, $ticket_id)
+	document.to_listtype.func.value=choice;
+	show_btns_closed()
+	}				// end function do_listtype()
+	
+function l_handleResult(req) {					// the 'called-back' persist function - nill content for the tickets list type persistance
+	}
+
+function cs_handleResult(req) {					// the 'called-back' function for show current or scheduled
+	document.to_listtype.submit();	
+	}	
  
-	var side_bar_html = "<TABLE border=0 CLASS='sidebar' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> >";
-	side_bar_html += "<TR class='even'><TH colspan=99 align='center'>Click/Mouse-over for information </TH></TR>";
-	side_bar_html += "<TR class='odd'><TD></TD><TD align='left' COLSPAN=2><B>Incident</B></TD><TD align='left'><B>Nature</B></TD><TD align='left'><B>&nbsp;Addr</B></TD><TD align='left'><B>P</B></TD><TD align='left'><B>A</B></TD><TD align='left'><B>U</B></TD><TD align='left'><B>&nbsp;&nbsp;As of</B></TD></TR>";
-//	var gmarkers = [];
-//	var fmarkers = [];
+	var side_bar_html = "<TABLE border=0 CLASS='sidebar' STYLE='margin-left:40px;'>";
+<?php
+	if ($any_open_tickets) {				// 1/18/11
+?>		
+	side_bar_html += "<TR class='even' STYLE = 'height:20px;' VALIGN='baseline'><TD colspan=99 align='center'<I>Click/Mouse-over for information</I> ";	
+	
+<?php
+		}		// end if ($any_open_tickets)
+	
+	$query_sched = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `status`='{$GLOBALS['STATUS_SCHEDULED']}'";	//	11/29/10
+	$result_sched = mysql_query($query_sched) or do_error($query_sched, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	11/29/10
+	$num_sched = mysql_num_rows($result_sched);	//	11/29/10
+	
+	if (($num_sched != 0) && ($func != 10)) {	//	11/29/10
+		$scheduled_link = ($num_sched >= 2) ? "&nbsp;&nbsp;&nbsp;&raquo;&nbsp;<U>Scheduled: ({$num_sched}) </U>  " : "&nbsp;&nbsp;&nbsp;&nbsp;Scheduled: ({$num_sched})";
+?>
+		side_bar_html +="\t\t<SPAN class='scheduled' onClick='do_sched_jobs(10);'><?php print $scheduled_link;?></SPAN>\n";
+		side_bar_html +="<br /><br /></TD></TR>\n";		
+<?php
+	}	//	11/29/10	
+	
+	if (($num_sched != 0) && ($func == 10)) {	//	11/29/10
+?>
+		side_bar_html +="\t\t<SPAN class='scheduled' onClick='do_curr_jobs(0);'>&raquo;&nbsp;View current situation</SPAN>\n";
+		side_bar_html +="<br /><br /></TD></TR>\n";	
+<?php
+	}	//	11/29/10		
+	
+?>
+	side_bar_html += "</TH></TR>";	
+
+<?php
+	if ($any_open_tickets) {
+?>	
+	side_bar_html += "<TR class='odd'><TD></TD><TD align='left' COLSPAN=2><B><?php print $incident; ?></B></TD><TD align='left'><B><?php print $nature;?></B></TD><TD align='left'><B>&nbsp;Addr</B></TD><TD align='left'><B>P</B></TD><TD align='left'><B>A</B></TD><TD align='left'><B>U</B></TD><TD align='left'><B>&nbsp;&nbsp;As of</B></TD></TR>";
+<?php
+		}
+?>		
 	var rowIds = [];		// 3/8/10
-//	var infoTabs = [];
-//	var facinfoTabs = [];
 	var which;
 	var i = 0;			// sidebar/icon index
 
@@ -458,7 +631,8 @@ function do_sort_sub(sort_by){				// 6/11/10
 			$limit = "LIMIT 0,$_SESSION[ticket_per_page]";
 			}
 		}
-	$restrict_ticket = (get_variable('restrict_user_tickets') && !(is_administrator()))? " AND owner=$_SESSION[user_id]" : "";
+	$restrict_ticket = "";
+//	$restrict_ticket = (get_variable('restrict_user_tickets') && !(is_administrator()))? " AND owner=$_SESSION[user_id]" : "";
 	$time_back = mysql_format_date(time() - (get_variable('delta_mins')*60) - ($cwi*3600));
 
 	switch($func) {		
@@ -479,7 +653,10 @@ function do_sort_sub(sort_by){				// 6/11/10
 			$the_start = get_start($func);		// mysql timestamp format 
 			$the_end = get_end($func);
 			$where = " WHERE `status`='{$GLOBALS['STATUS_CLOSED']}' AND `problemend` BETWEEN '{$the_start}' AND '{$the_end}' ";
-			break;				
+			break;
+		case 10:
+			$where = "WHERE `status`='{$GLOBALS['STATUS_SCHEDULED']}'";	//	11/29/10
+			break;						
 		default: print "error - error - error - error " . __LINE__;
 		}				// end switch($func) 
 	if ($sort_by_field && $sort_value) {					//sort by field?
@@ -489,9 +666,9 @@ function do_sort_sub(sort_by){				// 6/11/10
 			LEFT JOIN `$GLOBALS[mysql_prefix]in_types` ON `$GLOBALS[mysql_prefix]ticket`.`in_types_id`=in_types.id  
 			WHERE $sort_by_field='$sort_value' $restrict_ticket ORDER BY $order_by";
 		}
-	else {					// 2/2/09, 8/12/09
+	else {					// 2/2/09, 8/12/09, 1/30/11
 		$query = "SELECT *,UNIX_TIMESTAMP(problemstart) AS problemstart,UNIX_TIMESTAMP(problemend) AS problemend,
-			UNIX_TIMESTAMP(booked_date) AS booked_date,	UNIX_TIMESTAMP(date) AS date,
+			UNIX_TIMESTAMP(booked_date) AS booked_date,	UNIX_TIMESTAMP(date) AS date, (`$GLOBALS[mysql_prefix]ticket`.`street`) AS ticket_street, (`$GLOBALS[mysql_prefix]ticket`.`state`) AS ticket_city, (`$GLOBALS[mysql_prefix]ticket`.`city`) AS ticket_state,
 			UNIX_TIMESTAMP(`$GLOBALS[mysql_prefix]ticket`.updated) AS updated,
 			`$GLOBALS[mysql_prefix]ticket`.`id` AS `tick_id`,
 			`$GLOBALS[mysql_prefix]in_types`.type AS `type`, `$GLOBALS[mysql_prefix]in_types`.`id` AS `t_id`,
@@ -509,10 +686,10 @@ function do_sort_sub(sort_by){				// 6/11/10
 			LEFT JOIN `$GLOBALS[mysql_prefix]facilities` 
 				ON `$GLOBALS[mysql_prefix]ticket`.rec_facility=`$GLOBALS[mysql_prefix]facilities`.`id` 
 			$where $restrict_ticket 
-			ORDER BY `status` DESC, `severity` DESC, `$GLOBALS[mysql_prefix]ticket`.`id` ASC
+			ORDER BY `status` DESC, `booked_date` ASC, `severity` DESC,`$GLOBALS[mysql_prefix]ticket`.`id` ASC
 			LIMIT 1000 OFFSET {$my_offset}";		// 2/2/09, 10/28/09, 2/21/10
 		}
-		
+
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$the_offset = (isset($_GET['frm_offset'])) ? (integer) $_GET['frm_offset'] : 0 ;
 	$sb_indx = 0;				// note zero base!
@@ -529,6 +706,17 @@ function do_sort_sub(sort_by){				// 6/11/10
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result_temp))) 	{
 		$pats_ary[$row['ticket_id']] = $row['the_count'];
 		}	
+
+	$line_limit = 25;											// 5/5/11
+	if (mysql_num_rows($result)> $line_limit) {
+
+?>
+
+		side_bar_html += get_chg_disp_tr();		// adds the "Chg display' row at top of tickets list - 5/6/11
+
+<?php
+		}				// end if (mysql_num_rows ... )
+$col_width = (int) floor($_SESSION['scr_width'] * .015);
 	
 // ===========================  begin major while() for tickets==========
 
@@ -549,7 +737,7 @@ function do_sort_sub(sort_by){				// 6/11/10
 		else {$blinkst = $blinkend = "";
 			}		
 
-		$tip =  str_replace ( "'", "`", $row['contact'] . "/" .$row['street'] . "/" .$row['city'] . "/" .$row['state'] . "/" .$row['phone'] . "/" . $row['scope']);		// tooltip string - 1/3/10
+		$tip =  str_replace ( "'", "`", $row['contact'] . "/" .$row['ticket_street'] . "/" .$row['ticket_city'] . "/" .$row['ticket_state'] . "/" .$row['phone'] . "/" . $row['scope']);		// tooltip string - 1/3/10
 
 		$sp = ($row['status'] == $GLOBALS['STATUS_SCHEDULED']) ? "*" : "";		
 	
@@ -585,21 +773,21 @@ function do_sort_sub(sort_by){				// 6/11/10
 			}
 		else { $strike = $strikend = "";}
 		
-		$sidebar_line = "<TD CLASS='$severityclass'  COLSPAN=2><NOBR>$strike" . $sp . shorten($row['scope'],20) . " $strikend</NOBR></TD>";	//10/27/09
-		$sidebar_line .= "<TD CLASS='$severityclass'><NOBR>$strike" . shorten($row['type'], 20) . " $strikend</NOBR></TD>";
-		$sidebar_line .= "<TD CLASS='$severityclass'><NOBR>$strike" . shorten($row['street'] . ' ' . $row['city'], 20) . " $strikend</NOBR></TD>";
+		$address_street=$row['ticket_street'] . " " . $row['ticket_city'];
+		
+		$sidebar_line = "<TD CLASS='$severityclass'  COLSPAN=2><NOBR>$strike" . $sp . shorten($row['scope'],$col_width) . " $strikend</NOBR></TD>";	//10/27/09
+		$sidebar_line .= "<TD CLASS='$severityclass'><NOBR>$strike" . shorten($row['type'], $col_width) . " $strikend</NOBR></TD>";
+		$sidebar_line .= "<TD ALIGN='left' CLASS='$severityclass'><NOBR>$strike" . shorten(($row['ticket_street'] . ' ' . $row['ticket_city']), $col_width) . " $strikend</NOBR></TD>";	// 8/2/10
 		$sidebar_line .= "<TD CLASS='td_data'><NOBR> " . $P . " </TD><TD CLASS='td_data'> " . $A . " </NOBR></TD>";
 
 		$sidebar_line .= "<TD CLASS='td_data'>{$blinkst}{$row['units_assigned']}{$blinkend}</TD>";
-		$sidebar_line .= "<TD CLASS='td_data'><NOBR> " . format_sb_date($row['updated']) . "</NOBR></TD>";
-	
+		$_date = ($row['status']== $GLOBALS['STATUS_SCHEDULED'])? $row['booked_date']  : $row['updated'] ; 		// 1/30/11
+		$sidebar_line .= "<TD CLASS='td_data'><NOBR> " . format_sb_date($_date) . "</NOBR></TD>";	
 
-//		if (my_is_float($row['lat'])) {		// 6/21/10
-			$street = empty($row['street'])? "" : $row['street'] . "<BR/>" . $row['city'] . " " . $row['state'] ;
-			$todisp = (is_guest())? "": "&nbsp;<A HREF='routes.php?ticket_id={$the_id}'><U>Dispatch</U></A>";	// 8/2/08
-		$rand = ($istest)? "&rand=" . chr(rand(65,90)) : "";													// 10/21/08
-	
-	
+		$street = empty($row['ticket_street'])? "" : $row['ticket_street'] . "<BR/>" . $row['ticket_city'] . " " . $row['ticket_state'] ;
+
+		$todisp = (is_guest())? "": "&nbsp;<A HREF='routes.php?ticket_id={$the_id}'><U>Dispatch</U></A>";	// 8/2/08
+		$rand = ($istest)? "&rand=" . chr(rand(65,90)) : "";													// 10/21/08	
 ?>
 		var the_class = "emph";
 <?php
@@ -610,38 +798,19 @@ function do_sort_sub(sort_by){				// 6/11/10
 			print "\t\t	do_sidebar_t_ed (\"{$sidebar_line}\", ({$the_offset} + {$sb_indx}), {$row['tick_id']}, sym, \"{$tip}\");\n";
 			}
  
-
-
-
-
-
-
-
 			$sb_indx++;
 			}				// end tickets while ($row = ...)
+//		if ($any_closed_tickets) {				// 1/28/11
+		if (mysql_num_rows($result)<= $line_limit) {				// 5/6/11
+
 ?>
-		side_bar_html +="<TR><TD COLSPAN=99 ALIGN='center'>\n";
-//		side_bar_html +="\t\t<SPAN STYLE =  'margin-left: 60px'><U>Change display</U>&nbsp;&raquo;&nbsp;</SPAN>\n";
-		side_bar_html +="\t\t<FORM NAME = 'frm_interval_sel' STYLE = 'display:inline' >\n";
-		side_bar_html +="\t\t<SELECT NAME = 'frm_interval' onChange = 'document.to_closed.func.value=this.value; show_btns_closed();'>\n";
-		side_bar_html +="\t\t<OPTION VALUE='99' SELECTED>Change display</OPTION>\n";
-		side_bar_html +="\t\t<OPTION VALUE='0'>Current situation</OPTION>\n";
-		side_bar_html +="\t\t<OPTION VALUE='1'>Incidents closed today</OPTION>\n";
-		side_bar_html +="\t\t<OPTION VALUE='2'>Incidents closed yesterday+</OPTION>\n";
-		side_bar_html +="\t\t<OPTION VALUE='3'>Incidents closed this week</OPTION>\n";
-		side_bar_html +="\t\t<OPTION VALUE='4'>Incidents closed last week</OPTION>\n";
-		side_bar_html +="\t\t<OPTION VALUE='5'>Incidents closed last week+</OPTION>\n";
-		side_bar_html +="\t\t<OPTION VALUE='6'>Incidents closed this month</OPTION>\n";
-		side_bar_html +="\t\t<OPTION VALUE='7'>Incidents closed last month</OPTION>\n";
-		side_bar_html +="\t\t<OPTION VALUE='8'>Incidents closed this year</OPTION>\n";
-		side_bar_html +="\t\t<OPTION VALUE='9'>Incidents closed last year</OPTION>\n";
-		side_bar_html +="\t\t</SELECT>\n</FORM>\n";
-		side_bar_html +="\t\t<SPAN ID = 'btn_go' onClick='document.to_closed.submit()' STYLE = 'margin-left: 10px; display:none'><U>Next</U></SPAN>";
-		side_bar_html +="\t\t<SPAN ID = 'btn_can'  onClick='hide_btns_closed(); ' STYLE = 'margin-left: 10px; display:none'><U>Cancel</U></SPAN>";
-		side_bar_html +="<br /><br /></TD></TR>\n";
 
-<?php			
+		side_bar_html += get_chg_disp_tr();		// adds the "Chg display' row at bottom of list 
 
+<?php	
+			}		// 		end if (mysql_num_rows($result)<= $line_limit)
+			
+//			}		// end if ($any_closed_tickets)
 		if ($sb_indx == 0) {
 			$txt_str = ($func>0)? "closed tickets this period!": "current tickets!";
 			print "\n\t\tside_bar_html += \"<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'><I><B>No {$txt_str}</B></I></TD></TR>\";";
@@ -674,7 +843,7 @@ function do_sort_sub(sort_by){				// 6/11/10
 
 // ==========================================      RESPONDER start    ================================================
 
-	side_bar_html ="<TABLE border=0 CLASS='sidebar' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> >\n";		// initialize units sidebar string
+	side_bar_html ="<TABLE border=0 CLASS='sidebar' >\n";		// initialize units sidebar string
 	points = false;
 	i++;
 	var j=0;
@@ -722,7 +891,6 @@ function do_sort_sub(sort_by){				// 6/11/10
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 		$assigns_ary[$row['responder_id']] = TRUE;
 		}
-//	dump($assigns_ary);
 	$order_values = array(1 => "`nr_assigned` DESC,  `handle` ASC, `r`.`name` ASC", 2 => "`type_descr` ASC, `handle` ASC",  3 => "`stat_descr` ASC, `handle` ASC" , 4 => "`handle` ASC");	// 6/24/10
 
 	if (!(empty($_POST)))						{$_SESSION['unit_flag_2'] =  $_POST['order'];}		// 6/11/10
@@ -741,8 +909,6 @@ function do_sort_sub(sort_by){				// 6/11/10
 		LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON ( `r`.`un_status_id` = s.id ) 		
 		ORDER BY {$order_str}";											// 2/1/10, 3/8/10, 6/11/10
 
-//	dump($query);
-
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$units_ct = mysql_affected_rows();			// 1/4/10
 	if ($units_ct==0){
@@ -752,14 +918,14 @@ function do_sort_sub(sort_by){				// 6/11/10
 		$checked = array ("", "", "", "");
 		$checked[$_SESSION['unit_flag_2']] = " CHECKED";
 ?>	
-	side_bar_html += "<TR CLASS = 'even'><TD COLSPAN=99 ALIGN='center'>";
-	side_bar_html += "<I><B>Sort</B>:&nbsp;&nbsp;&nbsp;&nbsp;";
+	side_bar_html += "<TR CLASS = 'even' VALIGN='baseline'><TD COLSPAN=99 ALIGN='center' STYLE = 'height:20px;'>";
+	side_bar_html += "<I>Sort:&nbsp;&nbsp;&nbsp;&nbsp;";
 	side_bar_html += "Unit &raquo; 	<input type = radio name = 'frm_order' value = 1 <?php print $checked[1];?> onClick = 'do_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	side_bar_html += "Type &raquo; 	<input type = radio name = 'frm_order' value = 2 <?php print $checked[2];?> onClick = 'do_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	side_bar_html += "Status &raquo; <input type = radio name = 'frm_order' value = 3 <?php print $checked[3];?> onClick = 'do_sort_sub(this.value);' />";
 	side_bar_html += "</I></TD></TR>";
 <?php	
-		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD><B>Unit</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(null, null); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD>&nbsp; <B>Status</B></TD><TD COLSPAN=2><B>Incident</B></TD><TD><B>&nbsp;As of</B></TD></TR>\"\n" ;
+		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD>&nbsp;<B>Unit</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(null, null); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD>&nbsp; <B>Status</B></TD><TD COLSPAN=2><B>" . $incident . "</B></TD><TD><B>&nbsp;As of</B></TD></TR>\"\n" ;
 		}
 
 	$aprs = $instam = $locatea = $gtrack = $glat = FALSE;		//7/23/09
@@ -772,46 +938,34 @@ function do_sort_sub(sort_by){				// 6/11/10
 	$_SESSION['unit_flag_1'] = 0;							// one-time only - 4/11/10
 
 	while ($row = stripslashes_deep(mysql_fetch_array($result))) {	
-		$on_click =  ($quick)? " myclick_nm({$row['unit_id']}) ": "myclick_nm({$row['unit_id']})";		// 1/2/10
 		$got_point = FALSE;
 
-		$name = $row['name'];			//	10/8/09
-		$temp = explode("/", $name );
-		$index =  (strlen($temp[count($temp) -1])<3)? substr($temp[count($temp) -1] ,0,strlen($temp[count($temp) -1])): substr($temp[count($temp) -1] ,-3 ,strlen($temp[count($temp) -1]));		
+		$name = $row['handle'];			//	10/8/09
+		$index =  addslashes($row['icon_str']);	// 3/19/11
 		
 		print "\t\tvar sym = '$index';\n";				// for sidebar and icon 10/8/09		
 												// 2/13/09
 		$todisp = (is_guest())? "": "&nbsp;&nbsp;<A HREF='units_nm.php?func=responder&view=true&disp=true&id=" . $row['unit_id'] . "'><U>Dispatch</U></A>&nbsp;&nbsp;";		// 08/8/02
 		$toedit = (is_guest() || is_user())? "" :"&nbsp;&nbsp;<A HREF='units_nm.php?func=responder&edit=true&id=" . $row['unit_id'] . "'><U>Edit</U></A>&nbsp;&nbsp;" ;	// 5/11/10
-//		$totrack  = ((intval($row['mobile'])==0)||(empty($row['callsign'])))? "" : "&nbsp;&nbsp;<SPAN onClick = do_track('" .$row['callsign']  . "');><B><U>Tracks</B></U>&nbsp;&nbsp;</SPAN>" ;
-//		$tofac = (is_guest())? "": "<A HREF='units_nm.php?func=responder&view=true&dispfac=true&id=" . $row['unit_id'] . "'><U>To Facility</U></A>&nbsp;&nbsp;";	// 08/8/02
 
 		$hide_unit = ($row['hide']=="y")? "1" : "0" ;		// 3/8/10
-//		dump(__LINE__);
+
 		$update_error = strtotime('now - 6 hours');				// set the time for silent setting
 
 // NAME
 
-		$name = $row['name'];		//	10/8/09
-		$temp = explode("/", $name );
-		$display_name = $temp[0];
-
 		$the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$row['icon']];		// 2/1/10
 		$the_text_color = 	$GLOBALS['UNIT_TYPES_TEXT'][$row['icon']];
 		$arrow = ($chgd_unit == $row['unit_id'])? "<IMG SRC='rtarrow.gif' />" : "" ; 	// 4/8/10
-		$sidebar_line = "<TD onClick = '{$on_click}'>{$arrow}<SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>  " . shorten($display_name, 16) . "</B></U></SPAN></TD>";
+		$on_click =  " onclick_do_unit({$row['unit_id']}) ";		// 1/2/10
 
-//		$the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$row['icon']];		// 2/1/10
-//		$the_text_color = 	$GLOBALS['UNIT_TYPES_TEXT'][$row['icon']];
-//		$arrow = ($chgd_unit == $row['unit_id'])? "<IMG SRC='rtarrow.gif' />" : "" ; 	// 4/8/10
-
-		$sidebar_line = "<TD onClick = '{$on_click}'>{$arrow}<SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>  " . shorten($display_name, 16) . "</B></U></SPAN></TD>";
+		$sidebar_line = "<TD onClick = '{$on_click}'>{$arrow}<SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>  {$row['handle']}</B></U></SPAN></TD>";
 
 // MAIL						
 		if ((!is_guest()) && is_email($row['contact_via'])) {		// 2/1/10
 			$mail_link = "\t<TD  CLASS='mylink' ALIGN='center'>"
-				. "&nbsp;<IMG SRC='mail.png' BORDER=0 TITLE = 'click to email unit {$display_name}'"
-				. " onclick = 'do_mail_win(\\\"{$display_name},{$row['contact_via']}\\\");'> "
+				. "&nbsp; <IMG SRC='mail.png' BORDER=0 TITLE = 'click to email unit {$name}'"
+				. " onclick = 'do_mail_win(\\\"{$name},{$row['contact_via']}\\\");'> "
 				. "&nbsp;</TD>";		// 4/26/09
 				}
 		else {
@@ -844,9 +998,23 @@ function do_sort_sub(sort_by){				// 6/11/10
 			default: 							$severityclass='severity_normal'; break;
 			}
 
-		$tick_ct = (mysql_affected_rows()>1)? " (" . mysql_affected_rows() . ")": "";	// active dispatches
-		$ass_td =  (mysql_affected_rows()>0)? 
-			"<TD onMouseover=\\\"Tip('{$tip}')\\\" onmouseout=\\\"UnTip()\\\" onClick = '{$on_click}' COLSPAN=2 CLASS='$severityclass' >" .$tick_ct . shorten($row_assign['scope'], 24) . "</TD>":
+//		$tick_ct = (mysql_affected_rows()>1)? " (" . mysql_affected_rows() . ")": "";	// active dispatches
+
+		switch (mysql_affected_rows()) {		// 8/30/10
+			case 0:
+				$the_disp_stat="";
+				break;			
+			case 1:
+				$the_disp_stat =  get_disp_status ($row_assign) . "&nbsp;";
+				break;
+			default:							// multiples
+			    $the_disp_stat = "<SPAN CLASS='disp_stat'>&nbsp;" . mysql_affected_rows() . "&nbsp;</SPAN>&nbsp;";
+			    break;
+			}						// end switch()
+	
+
+		$ass_td =  (mysql_affected_rows()>0)? 							// 5/7/11
+			"<TD ALIGN='left' onMouseover=\\\"Tip('{$tip}')\\\" onmouseout=\\\"UnTip()\\\" onClick = '{$on_click}' COLSPAN=2 CLASS='$severityclass' >{$the_disp_stat}" . shorten($row_assign['scope'], 20) . "</TD>":	
 			"<TD onClick = '{$on_click}' > na </TD>";
 
 		$sidebar_line .= ($row_assign)? $ass_td : "<TD COLSPAN=2>na</TD>";
@@ -888,93 +1056,72 @@ function do_sort_sub(sort_by){				// 6/11/10
 	
 // ====================================  Add Facilities to Map 8/1/09 ================================================
 //	side_bar_html ="<TABLE border=0 CLASS='sidebar' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> >\n";
-	side_bar_html ="<TABLE border=0 CLASS='sidebar' WIDTH = '650px' >\n";
+	side_bar_html ="<TABLE border=0 CLASS='sidebar' >\n";
 
 	var icons=[];	
 	var g=0;
 
 <?php
 
-	$query_fac = "SELECT *,UNIX_TIMESTAMP(updated) AS updated, `$GLOBALS[mysql_prefix]facilities`.id AS fac_id, 
-		`$GLOBALS[mysql_prefix]facilities`.description AS facility_description,
-		`$GLOBALS[mysql_prefix]fac_types`.name AS fac_type_name, `$GLOBALS[mysql_prefix]facilities`.name AS facility_name
+	$query_fac = "SELECT *,UNIX_TIMESTAMP(updated) AS updated, 
+		`$GLOBALS[mysql_prefix]facilities`.id AS `fac_id`, 
+		`$GLOBALS[mysql_prefix]facilities`.description AS `facility_description`,
+		`$GLOBALS[mysql_prefix]fac_types`.name AS `fac_type_name`, 
+		`$GLOBALS[mysql_prefix]facilities`.name AS `facility_name`
 		FROM `$GLOBALS[mysql_prefix]facilities` 
 		LEFT JOIN `$GLOBALS[mysql_prefix]fac_types` ON `$GLOBALS[mysql_prefix]facilities`.type = `$GLOBALS[mysql_prefix]fac_types`.id 
 		LEFT JOIN `$GLOBALS[mysql_prefix]fac_status` ON `$GLOBALS[mysql_prefix]facilities`.status_id = `$GLOBALS[mysql_prefix]fac_status`.id 
-		ORDER BY `$GLOBALS[mysql_prefix]facilities`.type ASC";
+		ORDER BY `handle` ASC";
 
 	$result_fac = mysql_query($query_fac) or do_error($query_fac, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-	$temp = max(320, intval($_SESSION['scr_width']* 0.4));
-	print "\n\t\tside_bar_html += \"<TR CLASS='even' colspan='99'><TABLE ID='fac_table' STYLE='display: inline-block; width: 650px'><TR><TH ALIGN='center' COLSPAN='99'><BR>Facilities</TR>\"\n";
 	$mail_str = (may_email())? "do_fac_mail_win();": "";		// 7/2/10
+	$temp = max(320, intval($_SESSION['scr_width']* 0.4));
+	print "\n\t\tside_bar_html += \"<TR CLASS='even' colspan='99'><TABLE ID='fac_table' STYLE='display: inline-block; width: 650px'>\"";
+	print (mysql_affected_rows()==0)? "" : "\n\t\tside_bar_html += \"<TR><TH ALIGN='center' COLSPAN='99'><BR>Facilities</TR>\"\n";
 	print (mysql_affected_rows()==0)?
-		"\n\t\tside_bar_html += \"<TR CLASS='even'><TH></TH><TH ALIGN='center'><I><B>No Facilities!</I></B></TH></TR>\"\n" :
-		"\n\t\tside_bar_html += \"<TR CLASS='odd'><TD><b>ID</b></TD><TD ALIGN='center'><B>Facility</B></TD><TD ALIGN='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC='mail_red.png' BORDER=0 onClick = '{$mail_str}'/></TD><TD ALIGN='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>Type</B></TD><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>Status</B><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>As of</B></TD></TR>\"\n";	// 7/2/10
+		"\n\t\tside_bar_html += \"<TR CLASS='even'><TH ALIGN='left'><I><B><br />No Facilities!</I></B></TH></TR>\"\n" :
+		"\n\t\tside_bar_html += \"<TR CLASS='even'><TD></TD><TD ALIGN='left'>&nbsp;<B>Facility</B> (" . mysql_affected_rows() . ") </TD><TD ALIGN='right'><IMG SRC='mail_red.png' BORDER=0 onClick = '{$mail_str}'/></TD><TD ALIGN='center'><B>Type</B></TD><TD ALIGN='right'><B>Status</B><TD ALIGN='center'><B>As of</B></TD></TR>\"\n";	// 7/2/10
+
 
 //  ===========================  begin major while() for FACILITIES ==========
 	
 	while($row_fac = mysql_fetch_array($result_fac)){
 		$fac_id=($row_fac['fac_id']);
-		$fac_type=($row_fac['icon']);
-	
-		$fac_name = $row_fac['facility_name'];		//		10/8/09
-		$fac_temp = explode("/", $fac_name );
-		$fac_index =  (strlen($fac_temp[count($fac_temp) -1])<3)? substr($fac_temp[count($fac_temp) -1] ,0,strlen($fac_temp[count($fac_temp) -1])): substr($fac_temp[count($fac_temp) -1] ,-3 ,strlen($fac_temp[count($fac_temp) -1]));	//	 11/10/09
+		$fac_type=($row_fac['icon']);	
+		$fac_name = addslashes($row_fac['facility_name']);			//		10/8/09
+		$fac_handle = addslashes($row_fac['handle']);				//		10/8/09
+		$fac_index =  addslashes($row_fac['icon_str']);
 		
-//		$on_click =  (is_guest())? "myclick({$sb_indx})" : "fac_click_ed({$fac_id})";			// 6/30/10
-		$on_click =  (is_guest())? "fac_click_vw({$fac_id})" : "fac_click_ed({$fac_id})";		// 8/24/10
-		
+		$on_click =  ($can_edit)? "fac_click_ed({$fac_id})" : "fac_click_vw({$fac_id})";		// 8/24/10		
 
 		print "\t\tvar fac_sym = '$fac_index';\n";			//	 for sidebar and icon 10/8/09
-		
-//		$toroute = (is_guest())? "": "&nbsp;<A HREF='routes.php?ticket_id=" . $the_id . "'><U>Dispatch</U></A>";//	 8/2/08
-//		$toroute = (is_guest())? "": "&nbsp;<A HREF='routes_nm.php?ticket_id=" . $fac_id . "'><U>Dispatch</U></A>";//	 11/10/09
-	
-//		if(is_guest()) {
-//			$facedit = $toroute = $facmail = "";
-//			}
-//		else {
-//			$facedit = "&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='facilities_nm.php?func=responder&edit=true&id=" . $row_fac['fac_id'] . "'><U>Edit</U></A>" ;
-//			$facmail = "&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = do_mail_fac_win('" .$row_fac['fac_id']  . "');><U><B>Email</B></U></SPAN>" ;
-//			$toroute = "&nbsp;<A HREF='fac_routes_nm.php?fac_id=" . $fac_id . "'><U>Route To Facility</U></A>";//	 8/2/08
-//			}
-	
-			$f_disp_name = $row_fac['facility_name'];	//		10/8/09
-			$f_disp_temp = explode("/", $f_disp_name );
-			$facility_display_name = $f_disp_temp[0];
 
-			$the_bg_color = 	$GLOBALS['FACY_TYPES_BG'][$row_fac['icon']];		// 2/8/10
-			$the_text_color = 	$GLOBALS['FACY_TYPES_TEXT'][$row_fac['icon']];		// 2/8/10			
-			$sidebar_fac_line = "<TD TITLE = '" . addslashes($facility_display_name) . "' ALIGN='left'><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};' >" . addslashes(shorten($facility_display_name, 40)) ."</SPAN></TD>";
+		$the_bg_color = 	$GLOBALS['FACY_TYPES_BG'][$row_fac['icon']];		// 2/8/10
+		$the_text_color = 	$GLOBALS['FACY_TYPES_TEXT'][$row_fac['icon']];		// 2/8/10			
 
-			$sidebar_fac_line = "<TD onClick = '{$on_click}' TITLE = '" . addslashes($facility_display_name) . "' ALIGN='left'><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};' >" . addslashes(shorten($facility_display_name, 40)) ."</SPAN></TD>";
+		$sidebar_fac_line = "<TD onClick = '{$on_click}' TITLE = '{$fac_name}' ALIGN='left'><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};' >{$fac_handle}</SPAN></TD>";
 
-// MAIL						
-			if ((may_email()) && ((is_email($row_fac['contact_email'])) || (is_email($row_fac['security_email']))) ) {		// 7/2/10
+// MAIL					
+		if ((may_email()) && ((is_email($row_fac['contact_email'])) || (is_email($row_fac['security_email']))) ) {		// 7/2/10
 
-				$mail_link = "\t<TD CLASS='mylink' ALIGN='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-					. "<IMG SRC='mail.png' BORDER=0 TITLE = 'click to email facility {$f_disp_temp[0]}'"
-					. " onclick = 'do_mail_win(\\\"{$f_disp_temp[0]},{$row_fac['contact_email']}\\\");'> "
-					. "</TD>";		// 4/26/09
-					}
-			else {
-				$mail_link = "\t<TD ALIGN='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>na</b></TD>";
+			$mail_link = "\t<TD CLASS='mylink' ALIGN='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+				. "<IMG SRC='mail.png' BORDER=0 TITLE = 'click to email facility {$fac_handle}'"
+				. " onclick = 'do_mail_win(\\\"{$fac_handle},{$row_fac['contact_email']}\\\");'> "
+				. "</TD>";		// 4/26/09
 				}
-			$sidebar_fac_line .= $mail_link;
+		else {
+			$mail_link = "\t<TD ALIGN='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>na</b></TD>";
+			}
+		$sidebar_fac_line .= $mail_link;
 
-			$sidebar_fac_line .= "<TD ALIGN='left'  onClick = '{$on_click};' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . addslashes(shorten($row_fac['fac_type_name'],40)) .          "</TD>";
-			$sidebar_fac_line .= "<TD ALIGN='left'  onClick = '{$on_click};' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . addslashes($row_fac['status_val']) .          "</TD>";
-			$sidebar_fac_line .= "<TD onClick = '{$on_click};' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . format_sb_date($row_fac['updated']) . "</TD>";
+		$sidebar_fac_line .= "<TD ALIGN='left'  onClick = '{$on_click};' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . addslashes(shorten($row_fac['fac_type_name'],$col_width)) .          "</TD>";
+		$sidebar_fac_line .= "<TD ALIGN='left'  onClick = '{$on_click};' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . addslashes($row_fac['status_val']) .          "</TD>";
+		$sidebar_fac_line .= "<TD onClick = '{$on_click};' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . format_sb_date($row_fac['updated']) . "</TD>";
 
 ?>
-			var fac_icon = "td_label";
-			if(quick) {					//	 set up for facility edit - 11/27/09
-				do_sidebar_fac_ed ("<?php print $sidebar_fac_line;?>", <?php print $row_fac['fac_id'];?>, fac_sym, fac_icon);		
-				}
-			else {				//	 set up for facility infowindow
-				do_sidebar_fac_ed ("<?php print $sidebar_fac_line;?>", <?php print $row_fac['fac_id'];?>, fac_sym, fac_icon);		
-				}
-			g++;
+		var fac_icon = "td_label";
+		do_sidebar_fac_ed ("<?php print $sidebar_fac_line;?>", <?php print $row_fac['fac_id'];?>, fac_sym, fac_icon, g);		
+		g++;
 <?php
 	$sb_indx++;				// zero-based - 6/30/10
 	}	// end while
@@ -994,25 +1141,15 @@ function do_sort_sub(sort_by){				// 6/11/10
 		$result_scheduled = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		$num_scheduled = mysql_num_rows($result_scheduled); 
 		unset($result_scheduled);
-
-//	if(!empty($addon)) {
-//		print "\n\tside_bar_html +=\"" . $addon . "\"\n";
-//		}
-
-//	if(empty($open)) {									// 6/9/08  added button
-//		print "\n\tvar current_button = \"<INPUT TYPE='button' VALUE='Current situation' onClick = 'document.to_all.submit()'>\"\n";
-//		print "\n\tside_bar_html+= \"<TR><TD COLSPAN=99 ALIGN='center'><BR>\" + current_button + \"</TD></TR>\";\n";
-//		}
-
-//	if((empty($scheduled)) && ($num_scheduled > 0)) {								// 9/29/09  added button for scheduled incidents, 10/21/09 added check for scheduled incidents on the database
-//		print "\n\tvar scheduled_button = \"<INPUT TYPE='button' VALUE='Scheduled Incidents' onClick = 'document.to_scheduled.submit()'>\"\n";
-//		print "\n\tside_bar_html+= \"<TR><TD COLSPAN=99 ALIGN='center'><BR>\" + scheduled_button + \"</TD></TR>\";\n";
-//		}
-
 ?>
 	side_bar_html +="<TR><TD COLSPAN='99'></TD></TR><TR><TD COLSPAN=99><TABLE ALIGN='center'>";
-
+<?php
+	if ($any_facilities) {
+?>	
 	side_bar_html +="<?php print get_facilities_legend();?>";		// legend row
+<?php
+		}
+?>		
 	side_bar_html +="</TABLE></TD></TR></TABLE>\n";
 	$("side_bar_f").innerHTML = side_bar_html;	//side_bar_html to facilities div
 
@@ -1029,8 +1166,10 @@ function do_sort_sub(sort_by){				// 6/11/10
 //	} { -- dummy
 
 function show_ticket($id,$print='false', $search = FALSE) {								/* show specified ticket */
-	global $iw_width, $istest, $zoom_tight;																		// 3/27/10
-	$tickno = (get_variable('serial_no_ap')==0)?  "&nbsp;&nbsp;<I>(#" . $theRow['id'] . ")</I>" : "";			// 1/25/09
+	global $istest,  $nature, $disposition, $patient, $incident, $incidents;			// 12/3/10
+	
+	$can_edit = get_can_edit();
+	$tickno = (get_variable('serial_no_ap')==0)?  "&nbsp;&nbsp;<I>(#{$id})</I>" : "";			// 1/25/09
 
 	if($istest) {
 		print "GET<br />\n";
@@ -1056,6 +1195,9 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 		UNIX_TIMESTAMP(booked_date) AS booked_date,		
 		UNIX_TIMESTAMP(`$GLOBALS[mysql_prefix]ticket`.`updated`) AS updated,		
 		`$GLOBALS[mysql_prefix]ticket`.`description` AS `tick_descr`,
+		`$GLOBALS[mysql_prefix]ticket`.`street` AS `tick_street`,
+		`$GLOBALS[mysql_prefix]ticket`.`city` AS `tick_city`,
+		`$GLOBALS[mysql_prefix]ticket`.`state` AS `tick_state`,		
 		`$GLOBALS[mysql_prefix]ticket`.`lat` AS `lat`,		
 		`$GLOBALS[mysql_prefix]ticket`.`lng` AS `lng`,
 		`$GLOBALS[mysql_prefix]ticket`.`_by` AS `call_taker`,
@@ -1068,7 +1210,7 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 		LEFT JOIN `$GLOBALS[mysql_prefix]in_types` `ty` ON (`$GLOBALS[mysql_prefix]ticket`.`in_types_id` = `ty`.`id`)	
 		LEFT JOIN `$GLOBALS[mysql_prefix]facilities` ON `$GLOBALS[mysql_prefix]facilities`.id = `$GLOBALS[mysql_prefix]ticket`.facility 
 		LEFT JOIN `$GLOBALS[mysql_prefix]facilities` rf ON `rf`.id = `$GLOBALS[mysql_prefix]ticket`.rec_facility 
-		WHERE `$GLOBALS[mysql_prefix]ticket`.`ID`= $id $restrict_ticket";			// 7/16/09, 8/12/09
+		WHERE `$GLOBALS[mysql_prefix]ticket`.`id`= $id $restrict_ticket";			// 7/16/09, 8/12/09
 
 
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -1078,47 +1220,30 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 		}
 
 	$row = stripslashes_deep(mysql_fetch_array($result));
-//   $locale = get_variable('locale');    // 10/29/09
-//   switch($locale) {
-//       case "0":
-//       $grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;USNG&nbsp;&nbsp;" . LLtoUSNG($row['lat'], $row['lng']);
-//       break;
-//
-//       case "1":
-//        $grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;OSGB&nbsp;&nbsp;" . LLtoOSGB($row['lat'], $row['lng']);    // 8/23/08, 10/15/08, 8/3/09
-//        break;
-//   
-//        case "2":
-//        $coords =  $row['lat'] . "," . $row['lng'];                                    // 8/12/09
-//        $grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;UTM&nbsp;&nbsp;" . toUTM($coords);    // 8/23/08, 10/15/08, 8/3/09
-//        break;
-//
-//        default:
-//        print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";
-//        }
 
-	if ($print == 'true') {				// 1/7/10
+	if ($print == 'true') {				// 1/7/10 - 11/16/10
 
 		print "<TABLE BORDER='0'ID='left' width='800px'>\n";		//
-		print "<TR CLASS='print_TD'><TD ALIGN='left' CLASS='td_data' COLSPAN=2 ALIGN='center'><B>" . get_text("Incident") . ": <I>" . $row['scope'] . "</B>" . $tickno . "</TD></TR>\n";
+		print "<TR CLASS='print_TD'><TD ALIGN='left' CLASS='td_data' COLSPAN=2 ALIGN='center'><B>{$patient}: <I>" . $row['scope'] . "</B>" . $tickno . "</TD></TR>\n";
 		print "<TR CLASS='print_TD' ><TD ALIGN='left'>" . get_text("Priority") . ":</TD> 
 					<TD ALIGN='left'>" . get_severity($row['severity']);
-		print 		"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nature:&nbsp;&nbsp;" . get_type($row['in_types_id']);
+		print 		"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$nature}:&nbsp;&nbsp;" . get_type($row['in_types_id']);
 		print "</TD></TR>\n";
 	
 		print "<TR CLASS='print_TD' ><TD ALIGN='left'>" . get_text("Protocol") . ":</TD> <TD ALIGN='left'>{$row['protocol']}</TD></TR>\n";		// 7/16/09
 		print "<TR CLASS='print_TD' ><TD ALIGN='left'>" . get_text("Addr") . ":</TD>	
-				<TD ALIGN='left'>" .  $row['street'] . "</TD></TR>\n";
+				<TD ALIGN='left'>" .  $row['tick_street'] . "</TD></TR>\n";
 		print "<TR CLASS='print_TD' ><TD ALIGN='left'>" . get_text("City") . ":</TD>		
-				<TD ALIGN='left'>" .  $row['city'];
-		print 		"&nbsp;&nbsp;" .  $row['state'] . "</TD></TR>\n";
+				<TD ALIGN='left'>" .  $row['tick_city'];
+		print 		"&nbsp;&nbsp;" .  $row['tick_state'] . "</TD></TR>\n";
 		print "<TR CLASS='print_TD'  VALIGN='top'><TD ALIGN='left'>" . get_text("Synopsis") . ":</TD>
 				<TD ALIGN='left'>" .  nl2br($row['tick_descr']) . "</TD></TR>\n";	//	8/12/09
 
 		print "<TR CLASS='print_TD'  VALIGN='top'><TD ALIGN='left'>" . get_text("911 Contacted") . ":</TD>
 				<TD ALIGN='left'>" .  nl2br($row['nine_one_one']) . "</TD></TR>\n";	//	8/12/09
 
-		$end_date = (is_int($row['problemend']))? $row['problemend']:  (time() - (get_variable('delta_mins')*60));
+		$end_date = (intval($row['problemend'])> 1)? $row['problemend']:  (time() - (intval(get_variable('delta_mins'))*60));
+
 		$elapsed = my_date_diff($end_date, $end_date);
 		print "<TR CLASS='print_TD'><TD ALIGN='left'>" . get_text("Status") . ":</TD>	
 				<TD ALIGN='left'>" . get_status($row['status']) . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$elapsed}</TD></TR>\n";
@@ -1134,44 +1259,44 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 				<TD ALIGN='left'>" . format_date($row['booked_date']) . "</TD></TR>\n";	// 10/6/09	
 		print "<TR CLASS='print_TD' ><TD ALIGN='left' COLSPAN='2'>&nbsp;
 				<TD ALIGN='left'></TR>\n";			// separator
-		print empty($row['fac_name'])? "" : "<TR CLASS='print_TD' ><TD ALIGN='left'>Incident at Facility:</TD>	
+		print empty($row['fac_name'])? "" : "<TR CLASS='print_TD' ><TD ALIGN='left'>" . $incident . " at Facility:</TD>	
 				<TD ALIGN='left'>" .  $row['fac_name'] . "</TD></TR>\n";	// 8/1/09, 3/27/10
 		print empty($row['rec_fac_name'])? "" : "<TR CLASS='print_TD' ><TD ALIGN='left'>Receiving Facility:</TD>	
 				<TD ALIGN='left'>" .  $row['rec_fac_name'] . "</TD></TR>\n";	// 10/6/09	
-		print empty($row['comments']) ? "" : "<TR CLASS='print_TD'  VALIGN='top'><TD ALIGN='left'>Disposition:</TD>
+		print empty($row['comments'])? "" : "<TR CLASS='print_TD'  VALIGN='top'><TD ALIGN='left'>{$disposition}:</TD>
 				<TD ALIGN='left'>" .  nl2br($row['comments']) . "</TD></TR>\n";	
 		print "<TR CLASS='print_TD' ><TD ALIGN='left'>" . get_text("Run Start") . ":</TD>				
 				<TD ALIGN='left'>" . format_date($row['problemstart']);
 		$elapsed_str = (!(empty($closed)))? $elapsed : "" ;				
 		print	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End:&nbsp;&nbsp;" . format_date($row['problemend']) . "&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
 	
-		// $locale = get_variable('locale');	// 08/03/09
-		// switch($locale) { 
-			// case "0":
-				// $grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;USNG&nbsp;&nbsp;" . LLtoUSNG($row['lat'], $row['lng']);
-				// break;
+		$locale = get_variable('locale');	// 08/03/09
+		switch($locale) { 
+			case "0":
+				$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;USNG&nbsp;&nbsp;" . LLtoUSNG($row['lat'], $row['lng']);
+				break;
 	
-			// case "1":
-				// $grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;OSGB&nbsp;&nbsp;" . LLtoOSGB($row['lat'], $row['lng']);	// 8/23/08, 10/15/08, 8/3/09
-				// break;
+			case "1":
+				$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;OSGB&nbsp;&nbsp;" . LLtoOSGB($row['lat'], $row['lng']);	// 8/23/08, 10/15/08, 8/3/09
+				break;
 		
-			// case "2":
-				// $coords =  $row['lat'] . "," . $row['lng'];									// 8/12/09
-				// $grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;UTM&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
-				// break;
+			case "2":
+				$coords =  $row['lat'] . "," . $row['lng'];									// 8/12/09
+				$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;UTM&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
+				break;
 	
-			// default:
-			// print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";
-		// }
+			default:
+			print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";
+		}
 	
-		// print "<TR CLASS='print_TD'><TD ALIGN='left' >" . get_text("Position") . ": </TD>		
-				// <TD ALIGN='left'>" . get_lat($row['lat']) . "&nbsp;&nbsp;&nbsp;" . get_lng($row['lng']) . $grid_type . "</TD></TR>\n";		// 9/13/08
+		print "<TR CLASS='print_TD'><TD ALIGN='left' >" . get_text("Position") . ": </TD>		
+				<TD ALIGN='left'>" . get_lat($row['lat']) . "&nbsp;&nbsp;&nbsp;" . get_lng($row['lng']) . $grid_type . "</TD></TR>\n";		// 9/13/08
 	
 		print "<TR><TD colspan=2 ALIGN='left'>";
 		print show_log ($row[0]);				// log
 		print "</TD></TR>";
 	
-		// print "<TR STYLE = 'display:none;'><TD colspan=2><SPAN ID='oldlat'>" . $row['lat'] . "</SPAN><SPAN ID='oldlng'>" . $row['lng'] . "</SPAN></TD></TR>";
+		print "<TR STYLE = 'display:none;'><TD colspan=2><SPAN ID='oldlat'>" . $row['lat'] . "</SPAN><SPAN ID='oldlng'>" . $row['lng'] . "</SPAN></TD></TR>";
 		print "</TABLE>\n";
 
 		print show_actions($row['tick_id'], "date", FALSE, FALSE);		// lists actions and patient data, print - 10/30/09
@@ -1179,66 +1304,10 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 // =============== 10/30/09 
 
 		function my_to_date($in_date) {			// date_time format to user's spec
-			$temp = mktime(substr($in_date,11,2),substr($in_date,14,2),substr($in_date,17,2),substr($in_date,5,2),substr($in_date,8,2),substr($in_date,0,4));
+//			$temp = mktime(substr($in_date,11,2),substr($in_date,14,2),substr($in_date,17,2),substr($in_date,5,2),substr($in_date,8,2),substr($in_date,0,4));
+			$temp = mysql2timestamp($d1);		// 9/29/10
 			return (good_date_time($in_date)) ?  date(get_variable("date_format"), $temp): "";		// 
 			}
-		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `facility_id` IS NOT NULL LIMIT 1";
-		$result_temp = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-		$facilities = mysql_affected_rows()>0;		// set boolean in order to avoid waste space
-
-		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `start_miles` IS NOT NULL  LIMIT 1";
-		$result_temp = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-		$miles = mysql_affected_rows()>0;		// set boolean in order to avoid waste space
-		unset($result_temp);
-
-		$query = "SELECT *,
-		UNIX_TIMESTAMP(as_of) AS as_of,
-		`$GLOBALS[mysql_prefix]assigns`.`id` AS `assign_id` ,
-		`$GLOBALS[mysql_prefix]assigns`.`comments` AS `assign_comments`,
-		`u`.`user` AS `theuser`,
-		`t`.`scope` AS `theticket`,
-		`t`.`description` AS `thetickdescr`,
-		`t`.`status` AS `thestatus`,
-		`t`.`_by` AS `call_taker`,
-		`r`.`id` AS `theunitid`,
-		`r`.`name` AS `theunit` ,
-		`f`.`name` AS `thefacility`,
-		`g`.`name` AS `the_rec_facility`,
-		`$GLOBALS[mysql_prefix]assigns`.`as_of` AS `assign_as_of`
-		FROM `$GLOBALS[mysql_prefix]assigns` 
-		LEFT JOIN `$GLOBALS[mysql_prefix]ticket`	 `t` ON (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`)
-		LEFT JOIN `$GLOBALS[mysql_prefix]user`		 `u` ON (`$GLOBALS[mysql_prefix]assigns`.`user_id` = `u`.`id`)
-		LEFT JOIN `$GLOBALS[mysql_prefix]responder`	 `r` ON (`$GLOBALS[mysql_prefix]assigns`.`responder_id` = `r`.`id`)
-		LEFT JOIN `$GLOBALS[mysql_prefix]facilities` `f` ON (`$GLOBALS[mysql_prefix]assigns`.`facility_id` = `f`.`id`)
-		LEFT JOIN `$GLOBALS[mysql_prefix]facilities` `g` ON (`$GLOBALS[mysql_prefix]assigns`.`rec_facility_id` = `g`.`id`)
-		WHERE `$GLOBALS[mysql_prefix]assigns`.`ticket_id` = $id
-		ORDER BY `theunit` ASC ";																// 5/25/09, 1/16/08
-
-		$asgn_result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-		if (mysql_affected_rows()>0) {
-			print "<P><TABLE  CLASS='print_TD' BORDER = 1 CELLPADDING = 2 STYLE = 'border-collapse: collapse;'>\n";
-			print "<TR><TH>Unit</TH><TH>D</TH><TH>R</TH><TH>E</TH>";
-			print ($facilities)? "<TH>FE</TH><TH>FA</TH>": "";
-			print "<TH>C</TH>";
-			print ($miles)? "<TH>M/S</TH><TH>M/E</TH>": "";
-			print "</TR>";
-			
-			while ( $asgn_row = stripslashes_deep(mysql_fetch_array($asgn_result))){
-				print "<TR>";			
-				print "<TD>" . shorten($asgn_row['theunit'], 24) . "</TD>";
-				print "<TD>" . my_to_date($asgn_row['dispatched']) . "</TD>";
-				print "<TD>" . my_to_date($asgn_row['responding']) . "</TD>";
-				print "<TD>" . my_to_date($asgn_row['on_scene']) . "</TD>";
-				print ($facilities)? "<TD>" . my_to_date($asgn_row['u2fenr']) . "</TD>": "";
-				print ($facilities)? "<TD>" . my_to_date($asgn_row['u2farr']) . "</TD>": "";
-				print "<TD>" . my_to_date($asgn_row['clear']) . "</TD>";
-				print ($miles)? "<TD>" . my_to_date($asgn_row['start_miles']) . "</TD>": "";
-				print ($miles)? "<TD>" . my_to_date($asgn_row['end_miles']) . "</TD>": "";
-				print "</TR>\n";				
-				}		// end while () $asgn_row = ...
-			print "</TABLE>\n";
-			}				// end if (mysql_affected_rows()>0 
-		
 // ==============
 
 		print "\n</BODY>\n</HTML>";
@@ -1248,7 +1317,6 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 	<TABLE BORDER="0" ID = "outer" ALIGN="left">
 	<TR VALIGN="top"><TD CLASS="print_TD" ALIGN="left">
 <?php
-
 	print do_ticket($row, max(320, intval($_SESSION['scr_width']* 0.4)), $search) ;				// 2/25/09
 	print show_actions($row['id'], "date", FALSE, TRUE);		/* lists actions and patient data belonging to ticket */
 
@@ -1275,25 +1343,25 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 	}				// end function show_ticket() =======================================================
 //	} {		-- dummy
 
-function do_ticket($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// returns table - 6/26/10
-	global $iw_width;
-//	print __LINE__ .  " theRow['problemstart']";
-//	dumpp(date ("Y-m-d H:i:s", $theRow['problemstart']));
 
-	$tickno = (get_variable('serial_no_ap')==0)?  "&nbsp;&nbsp;<I>(#" . $theRow['id'] . ")</I>" : "";			// 1/25/09
+function do_ticket($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// returns table - 6/26/10 - 11/16/10
+//	global $disposition;
+	global $iw_width, $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
+
+	$tickno = (get_variable('serial_no_ap')==0)?  "&nbsp;&nbsp;<I>(#{$theRow['id']})</I>" : "";			// 1/25/09
 
 	switch($theRow['severity'])		{		//color tickets by severity
 	 	case $GLOBALS['SEVERITY_MEDIUM']: $severityclass='severity_medium'; break;
 		case $GLOBALS['SEVERITY_HIGH']: $severityclass='severity_high'; break;
 		default: $severityclass='severity_normal'; break;
 		}
-	$print = "<TABLE BORDER='0'ID='left' width='" . $theWidth . "'>\n";		//
-	$print .= "<TR CLASS='even'><TD ALIGN='left' CLASS='td_data' COLSPAN=2 ALIGN='center'><B>" . get_text("Incident") . ": <I>" . highlight($search,$theRow['scope']) . "</B>" . $tickno . "</TD></TR>\n";
-	$print .= "<TR CLASS='odd' ><TD ALIGN='left'>" . get_text("Addr") . ":</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['street']) . "</TD></TR>\n";
-	$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("City") . ":</TD>			<TD ALIGN='left'>" . highlight($search, $theRow['city']);
-	$print .=	"&nbsp;&nbsp;" . highlight($search, $theRow['state']) . "</TD></TR>\n";
+	$print = "<TABLE BORDER='0' ID='left' width='" . $theWidth . "'>\n";		//
+	$print .= "<TR CLASS='even'><TD ALIGN='left' CLASS='td_data' COLSPAN=2 ALIGN='center'><B>" . $incident . ": <I>" . highlight($search,$theRow['scope']) . "</B>" . $tickno . "</TD></TR>\n";
+	$print .= "<TR CLASS='odd' ><TD ALIGN='left'>" . get_text("Addr") . ":</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['tick_street']) . "</TD></TR>\n";
+	$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("City") . ":</TD>			<TD ALIGN='left'>" . highlight($search, $theRow['tick_city']);
+	$print .=	"&nbsp;&nbsp;" . highlight($search, $theRow['tick_state']) . "</TD></TR>\n";
 	$print .= "<TR CLASS='odd' ><TD ALIGN='left'>" . get_text("Priority") . ":</TD> <TD ALIGN='left' CLASS='" . $severityclass . "'>" . get_severity($theRow['severity']);
-	$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nature:&nbsp;&nbsp;" . get_type($theRow['in_types_id']);
+	$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$nature}:&nbsp;&nbsp;" . get_type($theRow['in_types_id']);
 	$print .= "</TD></TR>\n";
 
 	$print .= "<TR CLASS='even'  VALIGN='top'><TD ALIGN='left'>" . get_text("Synopsis") . ":</TD>	<TD ALIGN='left'>" . highlight($search, nl2br($theRow['tick_descr'])) . "</TD></TR>\n";	//	8/12/09
@@ -1311,16 +1379,35 @@ function do_ticket($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// retu
 	$print .=  empty($theRow['booked_date']) ? "" : "<TR CLASS='odd'><TD ALIGN='left'>Scheduled date:</TD>		<TD ALIGN='left'>" . format_date($theRow['booked_date']) . "</TD></TR>\n";	// 10/6/09
 
 	$print .= "<TR CLASS='even' ><TD ALIGN='left' COLSPAN='2'>&nbsp;	<TD ALIGN='left'></TR>\n";			// separator
-	$print .= empty($theRow['fac_name']) ? "" : "<TR CLASS='odd' ><TD ALIGN='left'>Incident at Facility:</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['fac_name']) . "</TD></TR>\n";	// 8/1/09
+	$print .= empty($theRow['fac_name']) ? "" : "<TR CLASS='odd' ><TD ALIGN='left'>" . $incident . " at Facility:</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['fac_name']) . "</TD></TR>\n";	// 8/1/09
 	$print .= empty($theRow['rec_fac_name']) ? "" : "<TR CLASS='even' ><TD ALIGN='left'>Receiving Facility:</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['rec_fac_name']) . "</TD></TR>\n";	// 10/6/09
 
-	$print .= empty($theRow['comments'])? "" : "<TR CLASS='odd'  VALIGN='top'><TD ALIGN='left'>Disposition:</TD>	<TD ALIGN='left'>" . highlight($search, nl2br($theRow['comments'])) . "</TD></TR>\n";
+	$print .= empty($theRow['comments'])? "" : "<TR CLASS='odd'  VALIGN='top'><TD ALIGN='left'>{$disposition}:</TD>	<TD ALIGN='left'>" . highlight($search, nl2br($theRow['comments'])) . "</TD></TR>\n";
 	$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("Run Start") . ":</TD>					<TD ALIGN='left'>" . format_date($theRow['problemstart']);
 	$elaped_str = (intval($theRow['problemend'])> 1)?  $elapsed : "";
 	$print .= 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End:&nbsp;&nbsp;" . format_date($theRow['problemend']) . "&nbsp;&nbsp;({$elaped_str})</TD></TR>\n";
 
+	$locale = get_variable('locale');	// 08/03/09
+	switch($locale) { 
+		case "0":
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;USNG&nbsp;&nbsp;" . LLtoUSNG($theRow['lat'], $theRow['lng']);
+		break;
 
+		case "1":
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;OSGB&nbsp;&nbsp;" . LLtoOSGB($theRow['lat'], $theRow['lng']);	// 8/23/08, 10/15/08, 8/3/09
+		break;
+	
+		case "2":
+		$coords =  $theRow['lat'] . "," . $theRow['lng'];									// 8/12/09
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;UTM&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
+		break;
 
+		default:
+		print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";
+	}
+
+	$print .= "<TR CLASS='odd'><TD ALIGN='left' onClick = 'javascript: do_coords(" .$theRow['lat'] . "," . $theRow['lng']. ")'><U>" . get_text("Position") . "</U>: </TD>
+		<TD ALIGN='left'>" . get_lat($theRow['lat']) . "&nbsp;&nbsp;&nbsp;" . get_lng($theRow['lng']) . $grid_type . "</TD></TR>\n";		// 9/13/08
 
 	$print .= "<TR><TD colspan=2 ALIGN='left'>";
 	$print .= show_log ($theRow[0]);				// log
@@ -1334,6 +1421,5 @@ function do_ticket($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// retu
 
 	return $print;
 	}		// end function do ticket(
-
 
 //	} -- dummy

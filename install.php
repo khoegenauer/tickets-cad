@@ -41,7 +41,10 @@
 4/10/09 responder schema update
 1/23/10 - removed table session
 8/5/10 version number base - to permit index.php to update schema, internet setting added
-8/8/10 accomodate absent mysql.inc.php - as install trigger
+8/8/10    accomodate absent mysql.inc.php - as install trigger
+10/29/10  'PASSWORD' => 'MD5' to accommodate old MySQL versions
+12/18/10   write permissions test corrected
+1/10/11 Added default setting for Group or dispatch
 */
 
 error_reporting(E_ALL);				// 2/3/09
@@ -68,7 +71,6 @@ switch(strtoupper($_SERVER["HTTP_HOST"])) {
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
@@ -967,13 +969,13 @@ switch(strtoupper($_SERVER["HTTP_HOST"])) {
 		}
 
 
-	function create_user() {	// create default super user (note: priv's level 'super') and guest // 6/9/08
+	function create_user() {	// create default super user (note: priv's level 'super') and guest // 6/9/08, 10/29/10
 		global $db_prefix;
 		$tablename = prefix("user");
 		print "<P>";
-		mysql_query("INSERT INTO `$tablename` (`user`,`passwd`,`info`,`level`,`ticket_per_page`,`sort_desc`,`sortorder`,`reporting`,`db_prefix`) VALUES('admin',PASSWORD('admin'),'Super-administrator',0,0,1,'date',0, '$db_prefix')") or die("INSERT INTO user failed, execution halted at line " . __LINE__);
+		mysql_query("INSERT INTO `$tablename` (`user`,`passwd`,`info`,`level`,`ticket_per_page`,`sort_desc`,`sortorder`,`reporting`,`db_prefix`) VALUES('admin',MD5('admin'),'Super-administrator',0,0,1,'date',0, '$db_prefix')") or die("INSERT INTO user failed, execution halted at line " . __LINE__);
 		print "<LI> Created user '<B>admin</B>'";
-		mysql_query("INSERT INTO `$tablename` (`user`,`passwd`,`info`,`level`,`ticket_per_page`,`sort_desc`,`sortorder`,`reporting`,`db_prefix`) VALUES('guest',PASSWORD('guest'),'Guest',3,0,1,'date',0,'$db_prefix')") or die("INSERT INTO user failed, execution halted at line " . __LINE__);
+		mysql_query("INSERT INTO `$tablename` (`user`,`passwd`,`info`,`level`,`ticket_per_page`,`sort_desc`,`sortorder`,`reporting`,`db_prefix`) VALUES('guest',MD5('guest'),'Guest',3,0,1,'date',0,'$db_prefix')") or die("INSERT INTO user failed, execution halted at line " . __LINE__);
 		print "<LI> Created user '<B>guest</B>'";
 		print "</P>";
 		}
@@ -1007,6 +1009,7 @@ switch(strtoupper($_SERVER["HTTP_HOST"])) {
 		do_insert_settings('frameborder','1');
 		do_insert_settings('framesize','50');
 		do_insert_settings('gmaps_api_key',$_POST['frm_api_key']);		//
+		do_insert_settings('group or dispatch','0');		//		1/10/11
 		do_insert_settings('guest_add_ticket','0');
 		do_insert_settings('host','www.yourdomain.com');
 		do_insert_settings('instam_key','');			// 4/10/09
@@ -1184,10 +1187,11 @@ switch(strtoupper($_SERVER["HTTP_HOST"])) {
 <?php
 		}
 	else {
+		$filename = './incs';							// 12/18/10
+		if (!is_writable($filename)) {					// 8/8/10 - 
+		    die ("ERROR! Directory '{$filename}' is not writable. 'Write' permissions must be corrected for installation.");
+			}
 		$filename = './incs/mysql.inc.php';				// 2/21/09
-//		if (!is_writable($filename)) {					// 8/8/10
-//		    die ("ERROR! File '{$filename}' is not writable.  This must be corrected for installation.");
-//			}
 
 		$dir = "./";
 		$dh  = opendir($dir);
@@ -1202,7 +1206,7 @@ switch(strtoupper($_SERVER["HTTP_HOST"])) {
 		if (!in_array("markers", $files)) 	{$dirsOK=FALSE;}
 
 		if (!$dirsOK) {
-			print "<br><br><br><center><h3>At least one of the Tickets subdirectories is missing, and this needs to be corrected.<br /><br />You might check into how the Tickets zip file was unzipped or otherwise installed.<br><br><br><br><A HREF='mailto:shoreas@Gmail.com?subject=Tickets Install Problem'><u>Or click here to contact the developer.</u></A></h3></center>";
+			print "<br><br><br><center><h3>At least one of the Tickets subdirectories is missing, and this needs to be corrected.<br /><br />You might check into how the Tickets zip file was unzipped or otherwise installed.<br><br><br><br><A HREF='mailto:info@TicketsCAD.org?subject=Tickets Install Problem'><u>Or click here to contact the developer.</u></A></h3></center>";
 			}
 		else {
 ?>

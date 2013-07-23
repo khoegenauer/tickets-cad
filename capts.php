@@ -5,11 +5,16 @@ $cols = 6;	// no. of columns in the list presentation
 
 /*
 8/21/10 initial release
+1/28/11 addslashes applied vice 'escape'
+3/15/11 changed stylesheet.php to stylesheet.php
+3/19/11 added edit allow test
+5/26/11 added SQL inject prevention 
+
 */
 error_reporting(E_ALL);				
 
 @session_start();
-require_once($_SESSION['fip']);		//7/28/10
+require_once('./incs/functions.inc.php');		//7/28/10
 //do_login(basename(__FILE__));
 
 if ($istest) {
@@ -38,11 +43,17 @@ $func = (empty($_POST))? "l":$_POST['func'];
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-<LINK REL=StyleSheet HREF="default.css" TYPE="text/css" />
+<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
 <SCRIPT>
 	function do_edit(in_id) {
+<?php								// 3/19/11
+		if ( (is_administrator()) || (is_super()) ) {
+?>
 		document.to_edit_form.frm_id.value=in_id;
 		document.to_edit_form.submit();	
+<?php
+	}
+?>
 		}
 </SCRIPT>
 </HEAD>
@@ -63,7 +74,7 @@ $func = (empty($_POST))? "l":$_POST['func'];
 	switch ($func) {
 		case "u" :			// update
 			$the_repl = quote_smart(trim($_POST['frm_repl'])) ;
-			$query = "UPDATE `$GLOBALS[mysql_prefix]captions` SET `repl` = {$the_repl} WHERE `id` = {$_POST['frm_id']} LIMIT 1;";
+			$query = "UPDATE `$GLOBALS[mysql_prefix]captions` SET `repl` = {$the_repl} WHERE `id` = " . quote_smart($_POST['frm_id']) . " LIMIT 1;";
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 
 			$outstr = urlencode("Update applied!");
@@ -91,10 +102,10 @@ $func = (empty($_POST))? "l":$_POST['func'];
 			while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 				$i++;
 				$capt_val = shorten($row['capt'], 16);
-				$repl_val = shorten($row['repl'], 16);
+				$repl_val = shorten($row['repl'], 16);												// 1/28/11
 				$out_str .=  "<TR CLASS = '{$colors[$i%2]}' onClick = 'do_edit({$row['id']});'>
-					<TD onMouseover=\"Tip(escape('{$row['capt']}'));\" onmouseout=\"UnTip();\" >{$capt_val}</TD>
-					<TD onMouseover=\"Tip('{$row['repl']}');\" onmouseout=\"UnTip();\" >{$repl_val}</TD>
+					<TD onMouseover=\"Tip('" . addslashes($row['capt']) . "');\" onmouseout=\"UnTip();\" >{$capt_val}</TD>
+					<TD onMouseover=\"Tip('" . addslashes($row['repl']) . "');\" onmouseout=\"UnTip();\" >{$repl_val}</TD>
 					</TR>\n";
 				if ($i == $perCol){
 					$i=0;
@@ -109,16 +120,19 @@ $func = (empty($_POST))? "l":$_POST['func'];
 			$out_str .=  "</TABLE>";
 			echo $out_str;
 			echo "</TD></TR>";
+			if (is_super() || is_administrator()) {										// 3/19/11
+			
 ?>
 			<TR CLASS='odd'><TD COLSPAN=99 ALIGN='center'><BR />
 				<INPUT TYPE = 'button' VALUE = 'Restore default captions' onClick = "if(confirm('Click OK to restore all original captions')){document.do_restore_form.submit();}"
 				</TD></TR>			
 			</TABLE><!-- outer table -->
-<?php			
+<?php
+				}
 			break;
 
 		case "e" :			// edit
-			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]captions` WHERE `id` = {$_POST['frm_id']} LIMIT 1";		
+			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]captions` WHERE `id` = " . quote_smart($_POST['frm_id']) . " LIMIT 1";		
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 			$row =  stripslashes_deep(mysql_fetch_array($result));
 ?>

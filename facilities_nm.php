@@ -7,6 +7,10 @@ $zoom_tight = FALSE;		// replace with a decimal number to over-ride the standard
 7/16/10 Initial Release for no internet operation - created from facilities.php
 8/25/10 - removed map-related script functions, lit top-frame button
 9/22/10 - corrected missing frm_handle in insert, location data and display class values
+2/17/11 Changed wrong log events from log_unit_status to LOG_FACILITY_ADD or LOG_FACILITY_CHANGE as appropriate
+3/15/11 Added reference to stylesheet.php for revisable day night colors
+3/19/11 revised index length to 6 chars
+5/4/11 get_new_colors() added
 */
 
 @session_start();
@@ -42,7 +46,7 @@ function get_icon_legend (){			// returns legend string
 	$print = "";											// output string
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 		$temp = $u_types[$row['type']];
-		$print .= "\t\t" .$temp[0] . " &raquo; <IMG SRC = './icons/" . $sm_icons[$temp[1]] . "' BORDER=0>&nbsp;&nbsp;&nbsp;\n";
+		$print .= "\t\t" .$temp[0] . " &raquo; <IMG SRC = './our_icons/" . $sm_icons[$temp[1]] . "' BORDER=0>&nbsp;&nbsp;&nbsp;\n";
 		}
 	return $print;
 	}			// end function get_icon_legend ()
@@ -58,7 +62,7 @@ function get_icon_legend (){			// returns legend string
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
 
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
 	<SCRIPT >
 
 	try {
@@ -85,6 +89,10 @@ function get_icon_legend (){			// returns legend string
 			elements.push(element);
 			}
 		return elements;
+		}
+
+	function get_new_colors() {								// 5/4/11
+		window.location.href = '<?php print basename(__FILE__);?>';
 		}
 
 	String.prototype.trim = function () {									// added 6/10/08
@@ -196,6 +204,8 @@ function get_icon_legend (){			// returns legend string
 
 		var errmsg="";
 		if (theForm.frm_name.value.trim()=="")											{errmsg+="Facility NAME is required.\n";}
+		if (theForm.frm_handle.value.trim()=="")										{errmsg+="Facility HANDLE is required.\n";}
+		if (theForm.frm_icon_str.value.trim()=="")										{errmsg+="Facility ICON is required.\n";}
 		if (theForm.frm_type.options[theForm.frm_type.selectedIndex].value==0)			{errmsg+="Facility TYPE is required.\n";}
 		if (theForm.frm_status_id.options[theForm.frm_status_id.selectedIndex].value==0)	{errmsg+="Facility STATUS is required.\n";}
 		if (theForm.frm_descr.value.trim()=="")											{errmsg+="Facility DESCRIPTION is required.\n";}
@@ -282,7 +292,8 @@ var color=0;
 	function do_sidebar (sidebar, id, the_class, fac_id, fac_index) {
 		var fac_id = fac_id;
 		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"' onClick = myclick(" + fac_index + ");>";
-		side_bar_html += "<TD CLASS='" + the_class + "'>" + fac_id + sidebar +"</TD></TR>\n";	//10/29/09 removed period
+//		side_bar_html += "<TD CLASS='" + the_class + "'>" + fac_id + sidebar +"</TD></TR>\n";	//10/29/09 removed period
+		side_bar_html += sidebar + "</TR>\n";	//10/29/09 removed period
 		}
 
 	function myclick(fac_index) {				// Responds to sidebar click - view facility data
@@ -310,7 +321,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 ?>
 	var side_bar_html = "<TABLE border=0 CLASS='sidebar' STYLE = 'margin-left:60px'>";
-	side_bar_html += "<TR class='even'>	<TD></TD><TD ALIGN='center'><B>Facility</B></TD><TD ALIGN='center'><B>Type</B></TD><TD ALIGN='center'><B>Status</B></TD><TD ALIGN='center'><B>As of</B></TD></TR>";
+	side_bar_html += "<TR class='even'>	<TD><B>&nbsp;Handle</B></TD><TD ALIGN='left'><B>&nbsp;Name</B></TD><TD ALIGN='left'><B>&nbsp;&nbsp;Type</B></TD><TD ALIGN='left'><B>&nbsp;Status</B></TD><TD ALIGN='left'><B>&nbsp;&nbsp;As of</B></TD></TR>";
 	var which;
 	var i = <?php print $start; ?>;					// sidebar/icon index
 	var points = false;								// none
@@ -386,8 +397,9 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$fac_index = $row['id'];		//	10/8/09
 		$temp = explode("/", $name );
 		$display_name = $temp[0];
+		$sidebar_line = "<TD TITLE = '{$row['handle']}'}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>{$row['handle']}</SPAN></U></TD>";
 
-		$sidebar_line = "<TD TITLE = '" . addslashes($display_name) . "' CLASS='td_data'><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($display_name, 40)) ."</SPAN></U>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD CLASS='td_data'>&nbsp;{$the_type}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD CLASS='td_data'>&nbsp;{$the_status}</TD>";			// 10/8/09
+		$sidebar_line .= "<TD TITLE = '" . addslashes($display_name) . "' CLASS='td_data'><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($display_name, 40)) ."</SPAN></U>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD CLASS='td_data'>&nbsp;{$the_type}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD CLASS='td_data'>&nbsp;{$the_status}</TD>";			// 10/8/09
 
 // as of
 		$strike = $strike_end = "";
@@ -399,8 +411,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$sidebar_line .= "<TD  CLASS='td_data'>&nbsp; $strike" . format_sb_date($the_time) . "$strike_end</TD>";
 		$name = $row['name'];	// 10/8/09		
 		$temp = explode("/", $name );
-		$index =  (strlen($temp[count($temp) -1])<3)? substr($temp[count($temp) -1] ,0,strlen($temp[count($temp) -1])): substr($temp[count($temp) -1] ,-3 ,strlen($temp[count($temp) -1]));
-			
+		$index = substr($temp[count($temp) -1], -6 , strlen($temp[count($temp) -1]));		// 3/19/11			
 ?>
 		var fac_id = "<?php print $index;?>";	//	10/8/09
 		var fac_index = "<?php print $fac_index;?>";	//	10/8/09		
@@ -477,6 +488,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				`city`= " . 		quote_smart(trim($_POST['frm_city'])) . ",
 				`state`= " . 		quote_smart(trim($_POST['frm_state'])) . ",
 				`handle`= " . 		quote_smart(trim($_POST['frm_handle'])) . ",
+				`icon_str`= " . 	quote_smart(trim($_POST['frm_icon_str'])) . ",
 				`description`= " . 	quote_smart(trim($_POST['frm_descr'])) . ",
 				`capab`= " . 		quote_smart(trim($_POST['frm_capab'])) . ",
 				`status_id`= " . quote_smart(trim($_POST['frm_status_id'])) . ",
@@ -499,7 +511,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				WHERE `id`= " . 	quote_smart(trim($_POST['frm_id'])) . ";";
 
 			$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
-			if (!empty($_POST['frm_log_it'])) { do_log($GLOBALS['LOG_UNIT_STATUS'], 0, $_POST['frm_id'], $_POST['frm_status_id']);}
+			if (!empty($_POST['frm_log_it'])) { do_log($GLOBALS['LOG_FACILITY_CHANGE'], 0, $_POST['frm_id'], $_POST['frm_status_id']);}	//	2/17/11
 			$caption = "<i>" . stripslashes_deep($_POST['frm_name']) . "</i><B>' data has been updated.</B><BR /><BR />";
 			}
 		}				// end else {}
@@ -510,13 +522,14 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$frm_lng = (empty($_POST['frm_lng']))? '0.999999': quote_smart(trim($_POST['frm_lng']));
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));
 		$query = "INSERT INTO `$GLOBALS[mysql_prefix]facilities` (
-			`name`,  `street`, `city`, `state`, `handle`, `description`, `capab`, `status_id`, `contact_name`, `contact_email`, `contact_phone`, `security_contact`, `security_email`, `security_phone`, `opening_hours`, `access_rules`, `security_reqs`, `pager_p`, `pager_s`, `lat`, `lng`, `type`, `user_id`, `updated` )
+			`name`,  `street`, `city`, `state`, `handle`, icon_str`, `description`, `capab`, `status_id`, `contact_name`, `contact_email`, `contact_phone`, `security_contact`, `security_email`, `security_phone`, `opening_hours`, `access_rules`, `security_reqs`, `pager_p`, `pager_s`, `lat`, `lng`, `type`, `user_id`, `updated` )
 			VALUES (" .
 				quote_smart(trim($_POST['frm_name'])) . "," .
 				quote_smart(trim($_POST['frm_street'])) . "," .
 				quote_smart(trim($_POST['frm_city'])) . "," .
 				quote_smart(trim($_POST['frm_state'])) . "," .
 				quote_smart(trim($_POST['frm_handle'])) . "," .
+				quote_smart(trim($_POST['frm_icon_str'])) . "," .
 				quote_smart(trim($_POST['frm_descr'])) . "," .
 				quote_smart(trim($_POST['frm_capab'])) . "," .
 				quote_smart(trim($_POST['frm_status_id'])) . "," .
@@ -538,7 +551,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				quote_smart(trim($now)) . ");";
 
 		$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
-		do_log($GLOBALS['LOG_UNIT_STATUS'], 0, mysql_insert_id(), $_POST['frm_status_id']);
+		do_log($GLOBALS['LOG_FACILITY_ADD'], 0, mysql_insert_id(), $_POST['frm_status_id']);	//	2/17/11
 
 		$caption = "<B>Facility  <i>" . stripslashes_deep($_POST['frm_name']) . "</i> data has been updated.</B><BR /><BR />";
 
@@ -562,10 +575,13 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'>Add Facility</FONT></FONT><BR /><BR />
 		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>		
 		<FORM NAME= "res_add_Form" METHOD="POST" ACTION="facilities_nm.php?func=responder&goadd=true">
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility Name - fill in with Name/index where index is the label in the list and on the marker">Name</A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
-			<TD COLSPAN=3 ><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Handle - local rules, local abbreviated name for the facility">Handle</A>:&nbsp;</TD>
-			<TD COLSPAN=3 ><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_handle" VALUE="" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility Name ">Name</A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
+			<TD COLSPAN=3 ><INPUT MAXLENGTH="64" SIZE="64" TYPE="text" NAME="frm_name" VALUE="" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Handle - local rules, local abbreviated name for the facility">Handle</A>:&nbsp;<font color='red' size='-1'>*</font></TD>
+			<TD COLSPAN=3 ><INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_handle" VALUE="" />
+				<SPAN STYLE = "margin-left:40px;" CLASS="td_label" TITLE="A 3-letter value to be used in the map icon">Icon:</SPAN>&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;
+					<INPUT TYPE="text" SIZE = 3 MAXLENGTH=3 NAME="frm_icon_str" VALUE="" />			
+			</TD></TR>
 		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A HREF="#" TITLE="Facility Type - Select from pulldown menu">Type</A>:&nbsp;<font color='red' size='-1'>*</font></TD>
 			<TD ALIGN='left'><SELECT NAME='frm_type'><OPTION VALUE=0>Select one</OPTION>
 <?php
@@ -668,8 +684,14 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>
 		<FORM METHOD="POST" NAME= "res_edit_Form" ACTION="facilities_nm.php?func=responder&goedit=true">
 
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility Name - fill in with Name/index where index is the label in the list and on the marker">Name</A>:&nbsp;<font color='red' size='-1'>*</font></TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="<?php print $row['name'] ;?>" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Handle - local rules, local abbreviated name for the facility">Handle</A>:&nbsp;</TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_handle" VALUE="<?php print $row['handle'] ;?>" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Facility Name ">Name</A>:&nbsp;<font color='red' size='-1'>*</font></TD>
+			<TD COLSPAN=3><INPUT MAXLENGTH="64" SIZE="64" TYPE="text" NAME="frm_name" VALUE="<?php print $row['name'] ;?>" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Handle - local rules, local abbreviated name for the facility">Handle</A>:&nbsp;<font color='red' size='-1'>*</font></TD>
+		<TD COLSPAN=3><INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_handle" VALUE="<?php print $row['handle'] ;?>" />
+				<SPAN STYLE = "margin-left:40px;" CLASS="td_label"  TITLE="A 3-letter value to be used in the map icon">Icon:</SPAN>&nbsp;<font color='red' size='-1'>*</font>
+				<INPUT TYPE="text" SIZE = 3 MAXLENGTH=3 NAME="frm_icon_str" VALUE="<?php print $row['icon_str'];?>" />			
+		
+		</TD></TR>
 		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A HREF="#" TITLE="Facility Type - Select from pulldown menu">Type</A>:&nbsp;<font color='red' size='-1'>*</font></TD>
 			<TD ALIGN='left'><FONT SIZE='-2'>
 				<SELECT NAME='frm_type'>

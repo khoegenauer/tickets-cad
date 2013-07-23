@@ -1,21 +1,13 @@
 <?php 
 error_reporting(E_ALL);		// 10/1/08
-/*
-8/21/10 - capts.inc.php added
-8/25/10 utf8 collation set on table capts
-8/27/10 setting added
-8/30/10 captions data now handled as array
-*/
-
 if(!(file_exists("./incs/mysql.inc.php"))) {
 	print "This appears to be a new Tickets installation; file 'mysql.inc.inc' absent. Please run <a href=\"install.php\">install.php</a> with valid database configuration information.";
 	exit();
 	}
 
-@session_start();
+require_once('./incs/functions.inc.php');	
 
-require_once('./incs/functions.inc.php');
-$version = "2.12 A beta - 10/8/10";	
+$version = "2.13 B beta - 5/30/11";	
 
 /*
 10/1/08 added error reporting
@@ -63,10 +55,33 @@ $version = "2.12 A beta - 10/8/10";
 8/8/10 install required if mysql.inc.php absent
 8/13/10 gettext table inserted
 8/17/10 gettext table renamed to 'captions'
+8/21/10 - capts.inc.php added
+8/25/10 utf8 collation set on table capts
+8/27/10 setting added
+8/30/10 captions data now handled as array
 10/8/10 version number date change
+10/31/10 facilities type description field size increased
+11/5/10 ticket street field size increased
+11/17/10 codes table added
+11/23/10 'state' schema expanded
+11/27/10 added codes, tweet tables, '_cloud' setting 
+11/30/10 hints table added, 'Patient' caption added
+12/4/10 function do_caption() added
+12/8/10 version number
+12/9/10 assigns schema field addition
+12/16/10 added group or dispatch setting
+3/1/11 Added table of places for suggestions.
+3/15/11 added css color tables
+3/22/11 prepare for release - places table installs empty now.
+3/30/11 Revisions to creaton of capts table and default value insertion.
+3/30/11 corrections to _inc_num handling - AS
+4/5/11 Added group table and group fields for future multi-region use.
+4/19/11 revised log schema for larger info field.
+4/22/11 field icon_str added to responder and facilities schema
 */
 
 //snap(basename(__FILE__) . " " . __LINE__  , count($_SESSION));
+
 
 $cb_per_line = 22;				// 6/5/09
 $cb_fixed_part = 60;
@@ -88,6 +103,105 @@ if ($istest) {											// 12/13/09
 SET @@global.sql_mode= '';
 sql-mode="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
 */
+
+function table_exists($name) {			//	3/15/11
+	$tablename = "$GLOBALS[mysql_prefix]" . "$name";
+	$query 	= "SELECT COUNT(*) FROM $tablename";
+      	$result 	= mysql_query($query);
+	$num_rows 	= @mysql_num_rows($result);
+	return $num_rows;
+	}
+
+function do_insert_day_colors($name,$value) {			//	3/15/11
+	$query = "INSERT INTO `$GLOBALS[mysql_prefix]css_day` (name,value) VALUES('$name','$value')";
+	$result = mysql_query($query) or die("DO_INSERT_DAY_COLORS($name,$value) failed, execution halted");
+	}
+
+function do_insert_night_colors($name,$value) {			//	3/15/11
+	$query = "INSERT INTO `$GLOBALS[mysql_prefix]css_night` (name,value) VALUES('$name','$value')";
+	$result = mysql_query($query) or die("DO_INSERT_NIGHT_COLORS($name,$value) failed, execution halted");
+	}
+
+if (table_exists("css_day") == 0) {			//	3/15/11
+	$query = "CREATE TABLE `$GLOBALS[mysql_prefix]css_day` (
+			`id` bigint(8) NOT NULL auto_increment,
+			`name` tinytext,
+			`value` tinytext,
+				PRIMARY KEY  (`id`),
+				UNIQUE KEY `ID` (`id`)
+				) ENGINE=MyISAM AUTO_INCREMENT=178 DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
+	$result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+
+	do_insert_day_colors('page_background', 'EFEFEF');			//	3/15/11
+	do_insert_day_colors('normal_text', '000000');			//	3/15/11
+	do_insert_day_colors('header_text', '000000');			//	3/15/11
+	do_insert_day_colors('header_background', 'EFEFEF');			//	3/15/11
+	do_insert_day_colors('titlebar_text', '000000');			//	3/15/11
+	do_insert_day_colors('links', '000099');			//	3/15/11
+	do_insert_day_colors('other_text', '000000');			//	3/15/11
+	do_insert_day_colors('legend', '000000');			//	3/15/11
+	do_insert_day_colors('row_light', 'DEE3E7');			//	3/15/11
+	do_insert_day_colors('row_light_text', '000000');			//	3/15/11
+	do_insert_day_colors('row_dark', 'EFEFEF');			//	3/15/11
+	do_insert_day_colors('row_dark_text', '000000');			//	3/15/11
+	do_insert_day_colors('row_plain', 'FFFFFF');			//	3/15/11
+	do_insert_day_colors('row_plain_text', '000000');			//	3/15/11
+	do_insert_day_colors('row_heading_background', '707070');			//	3/15/11
+	do_insert_day_colors('row_heading_text', 'FFFFFF');			//	3/15/11
+	do_insert_day_colors('row_spacer', 'FFFFFF');			//	3/15/11
+	do_insert_day_colors('form_input_background', 'FFFFFF');			//	3/15/11
+	do_insert_day_colors('form_input_text', '000000');			//	3/15/11
+	do_insert_day_colors('select_menu_background', 'FFFFFF');			//	3/15/11
+	do_insert_day_colors('select_menu_text', '000000');			//	3/15/11
+	do_insert_day_colors('label_text', '000000');			//	3/15/11
+	} // end if !table_exists css_day
+
+
+if (table_exists("css_night") == 0) {			//	3/15/11
+	$query = "CREATE TABLE `$GLOBALS[mysql_prefix]css_night` (
+			`id` bigint(8) NOT NULL auto_increment,
+			`name` tinytext,
+			`value` tinytext,
+				PRIMARY KEY  (`id`),
+				UNIQUE KEY `ID` (`id`)
+				) ENGINE=MyISAM AUTO_INCREMENT=178 DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+
+	do_insert_night_colors('page_background', '121212');			//	3/15/11
+	do_insert_night_colors('normal_text', 'DAEDE2');			//	3/15/11
+	do_insert_night_colors('header_text', 'DAEDE2');			//	3/15/11
+	do_insert_night_colors('header_background', '2B2B2B');			//	3/15/11
+	do_insert_night_colors('titlebar_text', 'FFFFFF');			//	3/15/11
+	do_insert_night_colors('links', '3F23F7');			//	3/15/11
+	do_insert_night_colors('other_text', 'FFFFFF');			//	3/15/11
+	do_insert_night_colors('legend', 'ECFC05');			//	3/15/11
+	do_insert_night_colors('row_light', 'BEC3C7');			//	3/15/11
+	do_insert_night_colors('row_light_text', '04043D');			//	3/15/11
+	do_insert_night_colors('row_dark', '9E9E9E');			//	3/15/11
+	do_insert_night_colors('row_dark_text', '000000');			//	3/15/11
+	do_insert_night_colors('row_plain', 'A3A3A3');			//	3/15/11
+	do_insert_night_colors('row_plain_text', '000000');			//	3/15/11
+	do_insert_night_colors('row_heading_background', '262626');			//	3/15/11
+	do_insert_night_colors('row_heading_text', 'F0F0F0');			//	3/15/11
+	do_insert_night_colors('row_spacer', 'F2E3F2');			//	3/15/11
+	do_insert_night_colors('form_input_background', 'B5B5B5');			//	3/15/11
+	do_insert_night_colors('form_input_text', '212422');			//	3/15/11
+	do_insert_night_colors('select_menu_background', 'B5B5B5');			//	3/15/11
+	do_insert_night_colors('select_menu_text', '151716');			//	3/15/11
+	do_insert_night_colors('label_text', '000000');			//	3/15/11
+	} // end if !table_exists css_night
+
+function do_caption ($temp) { 				// adds a 'captions' table entry - 12/4/10
+	$caption = quote_smart($temp);
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]captions` WHERE `capt` = $caption LIMIT 1;";	// 11/30/10
+	$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 
+	if (mysql_affected_rows()==0) {	
+		$query = "INSERT INTO `$GLOBALS[mysql_prefix]captions` ( `capt`, `repl`) VALUES ( $caption, $caption);";
+		$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 
+		}
+	return;
+	}
+	
 function do_setting ($which, $what) {				// 7/7/09
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]settings` WHERE `name`= '$which' LIMIT 1";		// 5/25/09
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -98,6 +212,17 @@ function do_setting ($which, $what) {				// 7/7/09
 	unset ($result);
 	return TRUE;
 	}				// end function do_setting ()
+
+function update_setting ($which, $what) {		//	3/15/11
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]settings` WHERE `name`= '$which' LIMIT 1";
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+	if (mysql_affected_rows()!=0) {
+		$query = "UPDATE `$GLOBALS[mysql_prefix]settings` SET `value`= '$what' WHERE `name` = '$which'";
+		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		}
+	unset ($result);
+	return TRUE;
+	}				// end function update_setting ()
 	
 function microtime_float() {
     list($usec, $sec) = explode(" ", microtime());
@@ -106,313 +231,640 @@ function microtime_float() {
 
 $old_version = get_variable('_version');
 
-if (!($version == $old_version)) {		// current? - 5/19/10
-
-	do_setting ('smtp_acct','');			// 7/7/09  
-	do_setting ('email_from','');			// 7/7/09
-	do_setting ('gtrack_url','');			// 7/7/09
-	do_setting ('maptype','1');				// 8/2/09
-	do_setting ('locale','0');				// 8/3/09
-	do_setting ('func_key1','http://openises.sourceforge.net/,Open ISES');				// 8/5/09
-	do_setting ('func_key2','');				// 8/5/09
-	do_setting ('func_key3','');				// 8/5/09
-	do_setting ('reverse_geo','0');				// 11/1/09
-	do_setting ('logo','t.png');				// 11/1/09
-	do_setting ('pie_charts','300/450/300');	// 3/21/10
-//	do_setting ('unit_status_chg','0');			// 7/21/10
+if (!($version == $old_version)) {		// current? - 5/19/10 ==================================================
 	
-	$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]facilities` (`id` bigint(8) NOT NULL auto_increment, `name` text, `direcs` tinyint(2) NOT NULL default '1' COMMENT '0=>no directions, 1=> yes', `description` text NOT NULL, `capab` varchar(255) default NULL COMMENT 'Capability', `status_id` int(4) NOT NULL default '0', `other` varchar(96) default NULL, `handle` varchar(24) default NULL, `contact_name` varchar(64) default NULL, `contact_email` varchar(64) default NULL, `contact_phone` varchar(15) default NULL, `security_contact` varchar(64) default NULL, `security_email` varchar(64) default NULL, `security_phone` varchar(15) default NULL, `opening_hours` mediumtext, `access_rules` mediumtext, `security_reqs` mediumtext, `pager_p` varchar(64) default NULL, `pager_s` varchar(64) default NULL, `send_no` varchar(64) default NULL, `lat` double default NULL, `lng` double default NULL, `type` tinyint(1) default NULL, `updated` datetime default NULL, `user_id` int(4) default NULL, `callsign` varchar(24) default NULL, `_by` int(7) NOT NULL, `_from` varchar(16) NOT NULL, `_on` datetime NOT NULL, PRIMARY KEY  (`id`), UNIQUE KEY `ID` (`id`)) ENGINE=MyISAM AUTO_INCREMENT=43 DEFAULT CHARSET=latin1 AUTO_INCREMENT=43;";
-	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);			// 7/7/09
-	
-	$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]fac_types` (`id` int(11) NOT NULL auto_increment, `name` varchar(16) NOT NULL, `description` varchar(48) NOT NULL, `icon` int(3) NOT NULL default '0', `_by` int(7) NOT NULL, `_from` varchar(16) NOT NULL COMMENT 'ip', `_on` datetime NOT NULL, PRIMARY KEY  (`id`)
-	) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1 COMMENT='Allows for variable facility types' AUTO_INCREMENT=19;";
-	$result = mysql_query($query);		// 7/7/09
-	
-	$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]fac_status` (`id` bigint(4) NOT NULL auto_increment, `status_val` varchar(20) NOT NULL, `description` varchar(60) NOT NULL, `group` varchar(20) default NULL, `sort` int(11) NOT NULL default '0', `_by` int(7) NOT NULL, `_from` varchar(16) NOT NULL, `_on` datetime NOT NULL,  PRIMARY KEY  (`id`), UNIQUE KEY `ID` (`id`)) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 AUTO_INCREMENT=4;";
-	$result = mysql_query($query);			// 7/7/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` ADD `facility` INT( 4 ) NULL DEFAULT NULL AFTER `phone`;";
-	$result = mysql_query($query);		// 8/1/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` ADD `rec_facility` INT( 4 ) NULL DEFAULT NULL AFTER `facility`;";
-	$result = mysql_query($query);		// 10/6/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` ADD `booked_date` DATETIME NULL DEFAULT NULL AFTER `updated`;";
-	$result = mysql_query($query);			// 10/6/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]log` ADD `facility` INT(7) NULL DEFAULT NULL AFTER `info`;";
-	$result = mysql_query($query);		// 10/6/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]log` ADD `rec_facility` INT(7) NULL DEFAULT NULL AFTER `facility`;";
-	$result = mysql_query($query);			// 10/6/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]log` ADD `mileage` INT(8) NULL DEFAULT NULL AFTER `rec_facility`;";
-	$result = mysql_query($query);			// 10/6/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `facility_id` INT(8) NULL DEFAULT NULL AFTER `on_scene`;";
-	$result = mysql_query($query);		// 10/6/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `rec_facility_id` INT(8) NULL DEFAULT NULL AFTER `facility_id`;";
-	$result = mysql_query($query);			// 10/6/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` CHANGE `comments` TEXT;";
-	$result = mysql_query($query);		// 10/6/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `u2fenr` DATETIME NULL DEFAULT NULL AFTER `rec_facility_id`;";
-	$result = mysql_query($query);		// 10/6/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `u2farr` DATETIME NULL DEFAULT NULL AFTER `u2fenr`;";
-	$result = mysql_query($query);		// 10/6/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `start_miles` INT(8) NULL DEFAULT NULL AFTER `comments`;";
-	$result = mysql_query($query);		// 10/6/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `end_miles` INT(8) NULL DEFAULT NULL AFTER `start_miles`;";
-	$result = mysql_query($query);		// 10/6/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `multi` INT( 1 ) NOT NULL DEFAULT 0 COMMENT 'if 1, allow multiple call assigns' AFTER `direcs`;";
-	$result = mysql_query($query);			// 7/7/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]in_types` ADD `protocol` VARCHAR( 255 ) NULL AFTER `description` ;";
-	$result = mysql_query($query);			// 7/7/09
-	
-	$query	= "ALTER TABLE `$GLOBALS[mysql_prefix]tracks_hh` ADD `utc_stamp` BIGINT( 12 ) NOT NULL DEFAULT 0 COMMENT 'Position timestamp in UTC' AFTER `altitude` ;";
-	$result = mysql_query($query);
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `locatea` TINYINT( 2 ) NOT NULL DEFAULT 0 COMMENT 'if 1 unit uses LocateA tracking - required to set callsign' AFTER `instam`;";
-	$result = mysql_query($query);		// 7/29/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `gtrack` TINYINT( 2 ) NOT NULL DEFAULT 0 COMMENT 'if 1 unit uses Gtrack tracking - required to set callsign' AFTER `locatea`;";
-	$result = mysql_query($query);		// 7/29/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `glat` TINYINT( 2 ) NOT NULL DEFAULT 0 COMMENT 'if 1 unit uses Google Latitude tracking - required to set callsign' AFTER `gtrack`;";
-	$result = mysql_query($query);			// 7/29/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `handle` VARCHAR( 24 ) NULL DEFAULT NULL COMMENT 'Unit Handle' AFTER `callsign`;";
-	$result = mysql_query($query);		// 7/29/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]in_types` ADD `radius` INT( 4 ) NOT NULL DEFAULT 0 COMMENT 'enclosing circle',
-				ADD `color` VARCHAR( 8 ) NULL DEFAULT NULL ,
-				ADD `opacity` INT( 3 ) NOT NULL DEFAULT '0';";
-	$result = mysql_query($query);			// 8/19/09
-	
-	$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]chat_invites` ( `id` int(7) NOT NULL AUTO_INCREMENT, `to` varchar(64) NOT NULL COMMENT 'comma sep''d, 0 = all', `_by` int(7) NOT NULL, `_from` varchar(16) NOT NULL, `_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`) ) ENGINE=MyISAM DEFAULT CHARSET=latin1;"; // 12/23/09
-	$result = mysql_query($query);		// 10/21/09
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]un_status` ADD `hide` ENUM( 'n', 'y' ) NOT NULL DEFAULT 'n' AFTER `description` ;";
-	$result = mysql_query($query);		// 10/21/09
-				
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` ADD `_by` INT( 7 ) NOT  NULL DEFAULT '0' COMMENT 'Call taker id' ";
-	$result = mysql_query($query);		//1/3/10
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user` ADD `expires` TIMESTAMP NULL  DEFAULT NULL COMMENT 'session start time';";
-	$result = mysql_query($query);		// 1/8/10
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user` ADD `sid` VARCHAR( 40 ) NULL DEFAULT NULL COMMENT 'php session id';";
-	$result = mysql_query($query);		// 1/8/10
+		do_setting ('smtp_acct','');			// 7/7/09  
+		do_setting ('email_from','');			// 7/7/09
+		do_setting ('gtrack_url','');			// 7/7/09
+		do_setting ('maptype','1');				// 8/2/09
+		do_setting ('locale','0');				// 8/3/09
+		do_setting ('func_key1','http://openises.sourceforge.net/,Open ISES');				// 8/5/09
+		do_setting ('func_key2','');				// 8/5/09
+		do_setting ('func_key3','');				// 8/5/09
+		do_setting ('reverse_geo','0');				// 11/1/09
+		do_setting ('logo','t.png');				// 11/1/09
+		do_setting ('pie_charts','300/450/300');	// 3/21/10
+	//	do_setting ('unit_status_chg','0');			// 7/21/10
+		do_setting ('group_or_dispatch','0');			// 12/16/10
 		
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user` ADD `login` TIMESTAMP NULL COMMENT 'last login';";
-	$result = mysql_query($query);		// 1/23/10
+		$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]facilities` (`id` bigint(8) NOT NULL auto_increment, `name` text, `direcs` tinyint(2) NOT NULL default '1' COMMENT '0=>no directions, 1=> yes', `description` text NOT NULL, `capab` varchar(255) default NULL COMMENT 'Capability', `status_id` int(4) NOT NULL default '0', `other` varchar(96) default NULL, `handle` varchar(24) default NULL, `contact_name` varchar(64) default NULL, `contact_email` varchar(64) default NULL, `contact_phone` varchar(15) default NULL, `security_contact` varchar(64) default NULL, `security_email` varchar(64) default NULL, `security_phone` varchar(15) default NULL, `opening_hours` mediumtext, `access_rules` mediumtext, `security_reqs` mediumtext, `pager_p` varchar(64) default NULL, `pager_s` varchar(64) default NULL, `send_no` varchar(64) default NULL, `lat` double default NULL, `lng` double default NULL, `type` tinyint(1) default NULL, `updated` datetime default NULL, `user_id` int(4) default NULL, `callsign` varchar(24) default NULL, `_by` int(7) NOT NULL, `_from` varchar(16) NOT NULL, `_on` datetime NOT NULL, PRIMARY KEY  (`id`), UNIQUE KEY `ID` (`id`)) ENGINE=MyISAM AUTO_INCREMENT=43 DEFAULT CHARSET=latin1 AUTO_INCREMENT=43;";
+		$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);			// 7/7/09
 		
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user` ADD `_from` VARCHAR( 24 ) NULL COMMENT 'IP addr';";
-	$result = mysql_query($query);		// 1/23/10
+		$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]fac_types` (`id` int(11) NOT NULL auto_increment, `name` varchar(16) NOT NULL, `description` varchar(48) NOT NULL, `icon` int(3) NOT NULL default '0', `_by` int(7) NOT NULL, `_from` varchar(16) NOT NULL COMMENT 'ip', `_on` datetime NOT NULL, PRIMARY KEY  (`id`)
+		) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1 COMMENT='Allows for variable facility types' AUTO_INCREMENT=19;";
+		$result = mysql_query($query);		// 7/7/09
 		
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user`  ADD `browser` VARCHAR( 40 ) NULL COMMENT 'used at last login';";
-	$result = mysql_query($query);		// 1/23/10
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]un_status` ADD `bg_color` VARCHAR( 16 ) NOT NULL DEFAULT 'transparent' COMMENT 'background color',
-		ADD `text_color` VARCHAR( 16 ) NOT NULL DEFAULT '#000000' COMMENT 'text color'";
-	$result = mysql_query($query);		// 2/4/10
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]fac_status` ADD `bg_color` VARCHAR( 16 ) NOT NULL DEFAULT 'transparent' AFTER `sort` ,
-		ADD `text_color` VARCHAR( 16 ) NOT NULL DEFAULT '#000000' AFTER `bg_color`";
-	$result = mysql_query($query);		// 2/4/10
-	
-	$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]constituents` (
-		`id` bigint(8) NOT NULL AUTO_INCREMENT,
-		`contact` varchar(48) NOT NULL,
-		`street` varchar(48) DEFAULT NULL,
-		`apartment` varchar(48) DEFAULT NULL,
-		`city` varchar(48) DEFAULT NULL,
-		`state` char(2) DEFAULT NULL,
-		`miscellaneous` varchar(80) DEFAULT NULL,
-		`phone` varchar(16) NOT NULL,
-		`email` varchar(48) DEFAULT NULL,
-		`lat` double DEFAULT NULL,
-		`lng` double DEFAULT NULL,
-		`updated` varchar(16) DEFAULT NULL,
-		`_by` int(7) NOT NULL DEFAULT '0',
-		PRIMARY KEY (`id`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=latin1 ;";
-	$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/12/10
-	
-	//			// 3/24/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]in_types` 
-		CHANGE `type` `type` VARCHAR( 20 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
-		CHANGE `description` `description` VARCHAR( 60 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
-		CHANGE `sort` `sort` INT( 11 ) NULL DEFAULT NULL ,
-		CHANGE `radius` `radius` INT( 4 ) NULL DEFAULT NULL ,
-		CHANGE `opacity` `opacity` INT( 3 ) NULL DEFAULT NULL";	
-	$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/12/10
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]un_status` CHANGE `description` `description` VARCHAR( 60 ) 
-		CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
-		CHANGE `sort` `sort` INT( 11 ) NOT NULL DEFAULT '0'";
-	$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/24/10
-	
-	$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]pin_ctrl` (
-		  `id` int(7) NOT NULL AUTO_INCREMENT,
-		  `responder_id` int(7) NOT NULL DEFAULT '0' COMMENT 'link to responder record',
-		  `pin` varchar(4) NOT NULL COMMENT 'login authentication ',
-		  `_by` int(7) NOT NULL COMMENT 'user creating/updating this entry',
-		  `_from` varchar(30) DEFAULT NULL COMMENT 'IP address',
-		  `_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'when',
-		  PRIMARY KEY (`id`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=latin1;";
-	$result = mysql_query($query);		// 4/11/10
-											// 4/30/10
-	/* query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `phone_2` VARCHAR( 16 ) NULL DEFAULT NULL AFTER `phone` ,
-		ADD `phone_3` VARCHAR( 16 ) NULL DEFAULT NULL AFTER `phone_2` ,
-		ADD `phone_4` VARCHAR( 16 ) NULL DEFAULT NULL AFTER `phone_3` ,
-		ADD INDEX ( `phone_2` , `phone_3` , `phone_4` ) ";
-	$result = mysql_query($query);
-	*/
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` CHANGE `id` `id` BIGINT( 7 ) NOT NULL AUTO_INCREMENT ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `contact` 		VARCHAR(48) NULL DEFAULT NULL AFTER `id` ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `street` 		VARCHAR(48) NULL DEFAULT NULL AFTER `contact` ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `apartment` 		VARCHAR(48) NULL DEFAULT NULL AFTER `street` ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `city` 			VARCHAR(48) NULL DEFAULT NULL AFTER `apartment` ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `state` 			char(2) 	NULL DEFAULT NULL AFTER `city` ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `miscellaneous` 	VARCHAR(80) NULL DEFAULT NULL AFTER `state` ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `phone` 			VARCHAR(16) NULL DEFAULT NULL AFTER `miscellaneous` ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `phone_2` 		VARCHAR(16) NULL DEFAULT NULL AFTER `phone` ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `phone_3` 		VARCHAR(16) NULL DEFAULT NULL AFTER `phone_2` ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `phone_4` 		VARCHAR(16) NULL DEFAULT NULL AFTER `phone_3` ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `email` 			VARCHAR(48) NULL DEFAULT NULL AFTER `phone_4` ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `lat` 			double 		NULL DEFAULT NULL AFTER `email` ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `lng` 			double 		NULL DEFAULT NULL AFTER `lat` ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `updated` 		VARCHAR(16) NULL DEFAULT NULL AFTER `lng` ";
-	$result = mysql_query($query);		// 5/11/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `_by` 			int(7) 		NULL DEFAULT NULL AFTER `updated` ";
-	$result = mysql_query($query);		// 5/11/10
-	
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user` ADD `responder_id` INT( 7 ) NOT NULL DEFAULT '0' COMMENT 'For level = unit' AFTER `level` ";		// 5/4/10
-	$result = mysql_query($query);			// 10/6/09
-//snap (__LINE__ , microtime_float());
-
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]chat_messages` CHANGE `message` `message` VARCHAR( 2048 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ";
-	$result = mysql_query($query);		// 5/29/10
-
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]un_status` ADD `dispatch` INT( 1 ) NOT NULL DEFAULT '0' COMMENT '0 - can dispatch, 1- no - inform, 2 - enforce' AFTER `description`";
-	$result = mysql_query($query);		// 5/30/10
-
-	do_setting ('sound_wav','aooga.wav');			// 6/12/10
-	do_setting ('sound_mp3','phonesring.mp3');		// 6/12/10
-
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` 
-		CHANGE `facility` `facility` INT( 4 ) NULL DEFAULT '0',
-		CHANGE `rec_facility` `rec_facility` INT( 4 ) NULL DEFAULT '0'";
-	$result = mysql_query($query);		// 6/20/10
-
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` CHANGE `_by` `_by` INT( 7 ) NULL DEFAULT NULL";
-	$result = mysql_query($query);				// 6/20/10
-
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]facilities` 
-		CHANGE `_by` `_by` INT( 7 ) NULL DEFAULT NULL ,
-		CHANGE `_from` `_from` VARCHAR( 16 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
-		CHANGE `_on` `_on` DATETIME NULL DEFAULT NULL" ;		// 6/20/10
-	$result = mysql_query($query);		// 2/4/10
-
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user` CHANGE `dob` `dob` TEXT NULL DEFAULT NULL ";		// 6/25/10
-	$result = mysql_query($query);	
-															// 6/26/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]in_types` ADD `set_severity` INT( 1 ) NOT NULL DEFAULT '0' COMMENT 'sets incident severity' AFTER `protocol`";
-	$result = mysql_query($query);	
-															// 6/27/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` ADD `nine_one_one` VARCHAR( 96 ) NULL DEFAULT NULL COMMENT 'comments re 911' AFTER `comments` ";
-	$result = mysql_query($query);	
-
-// AH 7/6/10
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `street` VARCHAR( 28 ) NULL DEFAULT NULL AFTER `name` ";
-	$result = mysql_query($query);
-
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `city` VARCHAR( 28 ) NULL DEFAULT NULL AFTER `street`;";
-	$result = mysql_query($query);		// 7/5/10
-
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `state` CHAR( 2 ) NULL DEFAULT NULL AFTER `city`;";
-	$result = mysql_query($query);		// 7/5/10
-
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `phone` VARCHAR( 16 ) NULL DEFAULT NULL AFTER `state`;";
-	$result = mysql_query($query);		// 7/5/10
-
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]facilities` ADD `street` VARCHAR( 28 ) NULL DEFAULT NULL AFTER `name`;";
-	$result = mysql_query($query);		// 7/5/10
-
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]facilities` ADD `city` VARCHAR( 28 ) NULL DEFAULT NULL AFTER `street`;";
-	$result = mysql_query($query);		// 7/5/10
-
-	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]facilities` ADD `state` CHAR( 2 ) NULL DEFAULT NULL AFTER `city`;";
-	$result = mysql_query($query);		// 7/5/10
-
-// AH
-
-	$query = "DELETE FROM `$GLOBALS[mysql_prefix]settings` WHERE `settings`.`name` = 'unit_status_chg' LIMIT 1;";
-	$result = mysql_query($query);		// 7/21/10
-
-	$query = "UPDATE `$GLOBALS[mysql_prefix]settings` SET `value`=". quote_smart($version)." WHERE `name`='_version' LIMIT 1";	// 5/28/08
-	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
-
-	$the_table = "$GLOBALS[mysql_prefix]captions";
-
-	if (!(mysql_table_exists($the_table))) {					// 8/13/10, 8/25/10
-						
-		$query = "CREATE TABLE IF NOT EXISTS `{$the_table}` (
+		$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]fac_status` (`id` bigint(4) NOT NULL auto_increment, `status_val` varchar(20) NOT NULL, `description` varchar(60) NOT NULL, `group` varchar(20) default NULL, `sort` int(11) NOT NULL default '0', `_by` int(7) NOT NULL, `_from` varchar(16) NOT NULL, `_on` datetime NOT NULL,  PRIMARY KEY  (`id`), UNIQUE KEY `ID` (`id`)) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 AUTO_INCREMENT=4;";
+		$result = mysql_query($query);			// 7/7/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` ADD `facility` INT( 4 ) NULL DEFAULT NULL AFTER `phone`;";
+		$result = mysql_query($query);		// 8/1/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` ADD `rec_facility` INT( 4 ) NULL DEFAULT NULL AFTER `facility`;";
+		$result = mysql_query($query);		// 10/6/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` ADD `booked_date` DATETIME NULL DEFAULT NULL AFTER `updated`;";
+		$result = mysql_query($query);			// 10/6/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]log` ADD `facility` INT(7) NULL DEFAULT NULL AFTER `info`;";
+		$result = mysql_query($query);		// 10/6/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]log` ADD `rec_facility` INT(7) NULL DEFAULT NULL AFTER `facility`;";
+		$result = mysql_query($query);			// 10/6/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]log` ADD `mileage` INT(8) NULL DEFAULT NULL AFTER `rec_facility`;";
+		$result = mysql_query($query);			// 10/6/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `facility_id` INT(8) NULL DEFAULT NULL AFTER `on_scene`;";
+		$result = mysql_query($query);		// 10/6/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `rec_facility_id` INT(8) NULL DEFAULT NULL AFTER `facility_id`;";
+		$result = mysql_query($query);			// 10/6/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` CHANGE `comments` TEXT;";
+		$result = mysql_query($query);		// 10/6/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `u2fenr` DATETIME NULL DEFAULT NULL AFTER `rec_facility_id`;";
+		$result = mysql_query($query);		// 10/6/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `u2farr` DATETIME NULL DEFAULT NULL AFTER `u2fenr`;";
+		$result = mysql_query($query);		// 10/6/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `start_miles` INT(8) NULL DEFAULT NULL AFTER `comments`;";
+		$result = mysql_query($query);		// 10/6/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `end_miles` INT(8) NULL DEFAULT NULL AFTER `start_miles`;";
+		$result = mysql_query($query);		// 10/6/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `multi` INT( 1 ) NOT NULL DEFAULT 0 COMMENT 'if 1, allow multiple call assigns' AFTER `direcs`;";
+		$result = mysql_query($query);			// 7/7/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]in_types` ADD `protocol` VARCHAR( 255 ) NULL AFTER `description` ;";
+		$result = mysql_query($query);			// 7/7/09
+		
+		$query	= "ALTER TABLE `$GLOBALS[mysql_prefix]tracks_hh` ADD `utc_stamp` BIGINT( 12 ) NOT NULL DEFAULT 0 COMMENT 'Position timestamp in UTC' AFTER `altitude` ;";
+		$result = mysql_query($query);
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `locatea` TINYINT( 2 ) NOT NULL DEFAULT 0 COMMENT 'if 1 unit uses LocateA tracking - required to set callsign' AFTER `instam`;";
+		$result = mysql_query($query);		// 7/29/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `gtrack` TINYINT( 2 ) NOT NULL DEFAULT 0 COMMENT 'if 1 unit uses Gtrack tracking - required to set callsign' AFTER `locatea`;";
+		$result = mysql_query($query);		// 7/29/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `glat` TINYINT( 2 ) NOT NULL DEFAULT 0 COMMENT 'if 1 unit uses Google Latitude tracking - required to set callsign' AFTER `gtrack`;";
+		$result = mysql_query($query);			// 7/29/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `handle` VARCHAR( 24 ) NULL DEFAULT NULL COMMENT 'Unit Handle' AFTER `callsign`;";
+		$result = mysql_query($query);		// 7/29/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]in_types` ADD `radius` INT( 4 ) NOT NULL DEFAULT 0 COMMENT 'enclosing circle',
+					ADD `color` VARCHAR( 8 ) NULL DEFAULT NULL ,
+					ADD `opacity` INT( 3 ) NOT NULL DEFAULT '0';";
+		$result = mysql_query($query);			// 8/19/09
+		
+		$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]chat_invites` ( `id` int(7) NOT NULL AUTO_INCREMENT, `to` varchar(64) NOT NULL COMMENT 'comma sep''d, 0 = all', `_by` int(7) NOT NULL, `_from` varchar(16) NOT NULL, `_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`) ) ENGINE=MyISAM DEFAULT CHARSET=latin1;"; // 12/23/09
+		$result = mysql_query($query);		// 10/21/09
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]un_status` ADD `hide` ENUM( 'n', 'y' ) NOT NULL DEFAULT 'n' AFTER `description` ;";
+		$result = mysql_query($query);		// 10/21/09
+					
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` ADD `_by` INT( 7 ) NOT  NULL DEFAULT '0' COMMENT 'Call taker id' ";
+		$result = mysql_query($query);		//1/3/10
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user` ADD `expires` TIMESTAMP NULL  DEFAULT NULL COMMENT 'session start time';";
+		$result = mysql_query($query);		// 1/8/10
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user` ADD `sid` VARCHAR( 40 ) NULL DEFAULT NULL COMMENT 'php session id';";
+		$result = mysql_query($query);		// 1/8/10
+			
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user` ADD `login` TIMESTAMP NULL COMMENT 'last login';";
+		$result = mysql_query($query);		// 1/23/10
+			
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user` ADD `_from` VARCHAR( 24 ) NULL COMMENT 'IP addr';";
+		$result = mysql_query($query);		// 1/23/10
+			
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user`  ADD `browser` VARCHAR( 40 ) NULL COMMENT 'used at last login';";
+		$result = mysql_query($query);		// 1/23/10
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]un_status` ADD `bg_color` VARCHAR( 16 ) NOT NULL DEFAULT 'transparent' COMMENT 'background color',
+			ADD `text_color` VARCHAR( 16 ) NOT NULL DEFAULT '#000000' COMMENT 'text color'";
+		$result = mysql_query($query);		// 2/4/10
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]fac_status` ADD `bg_color` VARCHAR( 16 ) NOT NULL DEFAULT 'transparent' AFTER `sort` ,
+			ADD `text_color` VARCHAR( 16 ) NOT NULL DEFAULT '#000000' AFTER `bg_color`";
+		$result = mysql_query($query);		// 2/4/10
+		
+		$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]constituents` (
+			`id` bigint(8) NOT NULL AUTO_INCREMENT,
+			`contact` varchar(48) NOT NULL,
+			`street` varchar(48) DEFAULT NULL,
+			`apartment` varchar(48) DEFAULT NULL,
+			`city` varchar(48) DEFAULT NULL,
+			`state` char(2) DEFAULT NULL,
+			`miscellaneous` varchar(80) DEFAULT NULL,
+			`phone` varchar(16) NOT NULL,
+			`email` varchar(48) DEFAULT NULL,
+			`lat` double DEFAULT NULL,
+			`lng` double DEFAULT NULL,
+			`updated` varchar(16) DEFAULT NULL,
+			`_by` int(7) NOT NULL DEFAULT '0',
+			PRIMARY KEY (`id`)
+			) ENGINE=MyISAM  DEFAULT CHARSET=latin1 ;";
+		$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/12/10
+		
+		//			// 3/24/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]in_types` 
+			CHANGE `type` `type` VARCHAR( 20 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
+			CHANGE `description` `description` VARCHAR( 60 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
+			CHANGE `sort` `sort` INT( 11 ) NULL DEFAULT NULL ,
+			CHANGE `radius` `radius` INT( 4 ) NULL DEFAULT NULL ,
+			CHANGE `opacity` `opacity` INT( 3 ) NULL DEFAULT NULL";	
+		$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/12/10
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]un_status` CHANGE `description` `description` VARCHAR( 60 ) 
+			CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ,
+			CHANGE `sort` `sort` INT( 11 ) NOT NULL DEFAULT '0'";
+		$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/24/10
+		
+		$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]pin_ctrl` (
 			  `id` int(7) NOT NULL AUTO_INCREMENT,
-			  `capt` varchar(36) NOT NULL,
-			  `repl` varchar(36) NOT NULL,
-			  `_by` int(7) NOT NULL DEFAULT '0',
-			  `_from` varchar(16) NOT NULL DEFAULT '''''',
+			  `responder_id` int(7) NOT NULL DEFAULT '0' COMMENT 'link to responder record',
+			  `pin` varchar(4) NOT NULL COMMENT 'login authentication ',
+			  `_by` int(7) NOT NULL COMMENT 'user creating/updating this entry',
+			  `_from` varchar(30) DEFAULT NULL COMMENT 'IP address',
+			  `_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'when',
+			  PRIMARY KEY (`id`)
+			) ENGINE=MyISAM  DEFAULT CHARSET=latin1;";
+		$result = mysql_query($query);		// 4/11/10
+												// 4/30/10
+		/* query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `phone_2` VARCHAR( 16 ) NULL DEFAULT NULL AFTER `phone` ,
+			ADD `phone_3` VARCHAR( 16 ) NULL DEFAULT NULL AFTER `phone_2` ,
+			ADD `phone_4` VARCHAR( 16 ) NULL DEFAULT NULL AFTER `phone_3` ,
+			ADD INDEX ( `phone_2` , `phone_3` , `phone_4` ) ";
+		$result = mysql_query($query);
+		*/
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` CHANGE `id` `id` BIGINT( 7 ) NOT NULL AUTO_INCREMENT ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `contact` 		VARCHAR(48) NULL DEFAULT NULL AFTER `id` ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `street` 		VARCHAR(48) NULL DEFAULT NULL AFTER `contact` ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `apartment` 		VARCHAR(48) NULL DEFAULT NULL AFTER `street` ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `city` 			VARCHAR(48) NULL DEFAULT NULL AFTER `apartment` ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `state` 			char(2) 	NULL DEFAULT NULL AFTER `city` ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `miscellaneous` 	VARCHAR(80) NULL DEFAULT NULL AFTER `state` ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `phone` 			VARCHAR(16) NULL DEFAULT NULL AFTER `miscellaneous` ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `phone_2` 		VARCHAR(16) NULL DEFAULT NULL AFTER `phone` ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `phone_3` 		VARCHAR(16) NULL DEFAULT NULL AFTER `phone_2` ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `phone_4` 		VARCHAR(16) NULL DEFAULT NULL AFTER `phone_3` ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `email` 			VARCHAR(48) NULL DEFAULT NULL AFTER `phone_4` ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `lat` 			double 		NULL DEFAULT NULL AFTER `email` ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `lng` 			double 		NULL DEFAULT NULL AFTER `lat` ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `updated` 		VARCHAR(16) NULL DEFAULT NULL AFTER `lng` ";
+		$result = mysql_query($query);		// 5/11/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]constituents` ADD `_by` 			int(7) 		NULL DEFAULT NULL AFTER `updated` ";
+		$result = mysql_query($query);		// 5/11/10
+		
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user` ADD `responder_id` INT( 7 ) NOT NULL DEFAULT '0' COMMENT 'For level = unit' AFTER `level` ";		// 5/4/10
+		$result = mysql_query($query);			// 10/6/09
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]chat_messages` CHANGE `message` `message` VARCHAR( 2048 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ";
+		$result = mysql_query($query);		// 5/29/10
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]un_status` ADD `dispatch` INT( 1 ) NOT NULL DEFAULT '0' COMMENT '0 - can dispatch, 1- no - inform, 2 - enforce' AFTER `description`";
+		$result = mysql_query($query);		// 5/30/10
+	
+		do_setting ('sound_wav','aooga.wav');			// 6/12/10
+		do_setting ('sound_mp3','phonesring.mp3');		// 6/12/10
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` 
+			CHANGE `facility` `facility` INT( 4 ) NULL DEFAULT '0',
+			CHANGE `rec_facility` `rec_facility` INT( 4 ) NULL DEFAULT '0'";
+		$result = mysql_query($query);		// 6/20/10
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` CHANGE `_by` `_by` INT( 7 ) NULL DEFAULT NULL";
+		$result = mysql_query($query);				// 6/20/10
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]facilities` 
+			CHANGE `_by` `_by` INT( 7 ) NULL DEFAULT NULL ,
+			CHANGE `_from` `_from` VARCHAR( 16 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ,
+			CHANGE `_on` `_on` DATETIME NULL DEFAULT NULL" ;		// 6/20/10
+		$result = mysql_query($query);		// 2/4/10
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user` CHANGE `dob` `dob` TEXT NULL DEFAULT NULL ";		// 6/25/10
+		$result = mysql_query($query);	
+																// 6/26/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]in_types` ADD `set_severity` INT( 1 ) NOT NULL DEFAULT '0' COMMENT 'sets incident severity' AFTER `protocol`";
+		$result = mysql_query($query);	
+																// 6/27/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` ADD `nine_one_one` VARCHAR( 96 ) NULL DEFAULT NULL COMMENT 'comments re 911' AFTER `comments` ";
+		$result = mysql_query($query);	
+	
+	// AH 7/6/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `street` VARCHAR( 28 ) NULL DEFAULT NULL AFTER `name` ";
+		$result = mysql_query($query);
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `city` VARCHAR( 28 ) NULL DEFAULT NULL AFTER `street`;";
+		$result = mysql_query($query);		// 7/5/10
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `state` CHAR( 2 ) NULL DEFAULT NULL AFTER `city`;";
+		$result = mysql_query($query);		// 7/5/10
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `phone` VARCHAR( 16 ) NULL DEFAULT NULL AFTER `state`;";
+		$result = mysql_query($query);		// 7/5/10
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]facilities` ADD `street` VARCHAR( 28 ) NULL DEFAULT NULL AFTER `name`;";
+		$result = mysql_query($query);		// 7/5/10
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]facilities` ADD `city` VARCHAR( 28 ) NULL DEFAULT NULL AFTER `street`;";
+		$result = mysql_query($query);		// 7/5/10
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]facilities` ADD `state` CHAR( 2 ) NULL DEFAULT NULL AFTER `city`;";
+		$result = mysql_query($query);		// 7/5/10
+	
+	// AH
+	
+		$query = "DELETE FROM `$GLOBALS[mysql_prefix]settings` WHERE `settings`.`name` = 'unit_status_chg' LIMIT 1;";
+		$result = mysql_query($query);		// 7/21/10
+	
+		$the_table = "$GLOBALS[mysql_prefix]captions";
+	
+		if (!(mysql_table_exists($the_table))) {					// 8/13/10, 8/25/10
+							
+			$query = "CREATE TABLE IF NOT EXISTS `{$the_table}` (
+				  `id` int(7) NOT NULL AUTO_INCREMENT,
+				  `capt` varchar(36) NOT NULL,
+				  `repl` varchar(36) NOT NULL,
+				  `_by` int(7) NOT NULL DEFAULT '0',
+				  `_from` varchar(16) NOT NULL DEFAULT '''''',
+				  `_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				  PRIMARY KEY (`id`)
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;";
+			$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/12/10	
+	
+			require_once ("./incs/capts.inc.php");		// get_text captions as an array 8/17/10
+														//
+			for ($i=0; $i< count($capts); $i++) {		// 8/29/10
+				$temp = quote_smart($capts[$i]);
+		
+				$query = "INSERT INTO `{$the_table}` (`capt`, `repl`) VALUES ($temp, $temp);";
+				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+				}
+			
+			unset ($result);
+	
+			}	// end if (!(mysql_table_exists($the_table))
+									// 10/19/10
+	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]log` CHANGE `info` `info` VARCHAR( 256 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ";
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+	
+	do_setting ('internet','1');						// 8/5/10 - just in case
+	do_setting ('disp_stat','D/R/O/FE/FA/Clear');		// 8/29/10 - dispatch status tags
+	do_setting ('oper_can_edit','0');					// 8/27/10  
+	
+	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]fac_types` CHANGE `name` `name` VARCHAR(48) NOT NULL ";
+	$result = mysql_query($query);		// 10/31/10
+		
+	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]fac_types` CHANGE `description` `description` VARCHAR(96) NOT NULL ";
+	$result = mysql_query($query);		// 10/31/10
+	
+	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` CHANGE `street` `street` VARCHAR( 96 )  NULL DEFAULT NULL";
+	$result = mysql_query($query);		// 11/5/10
+	
+	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` CHANGE `state` `state` CHAR( 4 )  NULL DEFAULT NULL";	// 11/23/10
+	$result = mysql_query($query);		// 11/5/10
+														// 3/30/11 dummy "}"
+	$left_br = "{";										
+	$the_year = date("y");								// 2-digit year - restart numbers at yr rollover
+	$the_inc_num = trim(get_variable('_inc_num'));		// possibly empty
+	
+	if (!(strlen($the_inc_num)>0)) {
+		do_setting ('_inc_num',base64_encode(serialize(array("0", "", "", "", "0", $the_year))));		// insert if absent
+		update_setting ('_inc_num', base64_encode(serialize(array("0", "", "", "", "0", $the_year))));	// it's there now, update it
+		}
+	else {									// exists, not-empty
+		if(strpos($the_inc_num, $left_br)) {		// if unencoded - else ignore
+//			snap(__LINE__, $the_inc_num);
+			$instr = unserialize(get_variable('_inc_num'));
+			$outstr = base64_encode(serialize($the_inc_num));
+			update_setting ('_inc_num',$outstr);
+			}	
+		}
+	
+		$the_table = "$GLOBALS[mysql_prefix]codes";				// 12/15/10
+		if (!(mysql_table_exists($the_table))) {	
+	
+			$query = "CREATE TABLE `{$the_table}` (
+			  `id` int(7) NOT NULL AUTO_INCREMENT,
+			  `code` varchar(20) NOT NULL,
+			  `text` varchar(64) NOT NULL,
+			  `sort` int(3) NOT NULL DEFAULT '999',
+			  `_by` int(7) NOT NULL DEFAULT 0,
+			  `_from` varchar(16) NOT NULL DEFAULT '',
 			  `_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			  PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;";
-		$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/12/10	
-
-		require_once ("./incs/capts.inc.php");		// get_text captions as an array 8/17/10
-													//
-		for ($i=0; $i< count($capts); $i++) {		// 8/29/10
-			$temp = quote_smart($capts[$i]);
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;";
+				
+			$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/12/10	
 	
-			$query = "INSERT INTO `{$the_table}` (`capt`, `repl`) VALUES ($temp, $temp);";
-//			dump($query);
-			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-			}
+			$query = "INSERT INTO `{$the_table}` (`code`, `text`, `sort`) VALUES
+				('ex-1', 'Instructed to return to station ASAP', 999),
+				('ex-2', 'Requested to contact Dispatch Central by voice', 999);";
 		
-		unset ($result);
-
-		}	// end if (!(mysql_table_exists($the_table))
-	}		// end (!($version ==...)
-
-do_setting ('internet','1');						// 8/5/10 - just in case
-do_setting ('disp_stat','D/R/O/FE/FA/Clear');		// 8/29/10 - dispatch status tags
-do_setting ('oper_can_edit','0');					// 8/27/10  
+			$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/12/10	
+			}
 	
-$temp = explode(" ", get_variable('_version'));	
-$disp_version = $temp[0];	
+		$the_table = "$GLOBALS[mysql_prefix]hints";			// 11/30/10
+		if (!(mysql_table_exists($the_table))) {		
+		
+			$query = "CREATE TABLE IF NOT EXISTS `{$the_table}` (
+				`id` int(7) NOT NULL AUTO_INCREMENT,
+				`tag` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
+				`hint` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+				`_by` int(7) NOT NULL DEFAULT '0',
+				`_from` varchar(16) CHARACTER SET latin1 DEFAULT NULL,
+				`_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				PRIMARY KEY (`id`)
+			) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;";
+				
+			$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
+		
+			$query = "INSERT INTO `$GLOBALS[mysql_prefix]hints` (`tag`, `hint`) VALUES
+				('_loca', 'Location - type in location in fields, click location on map or use *Located at Facility* menu below '),
+				('_city', 'City - defaults to default city set in configuration. Enter City if required'),
+				('_state', 'State - US State or non-US Country code - e.g. UK for United Kingdom'),
+				('_phone', 'Phone number - for US only, you can use the lookup button to get the callers name and location using the White Pages'),
+				('_nature', 'Incident  nature or Type - Available types are set in in_types table in the configuration'),
+				('_prio', 'Incident priority - Normal, Medium or High. Affects order and coloring of incidents on Situation display'),
+				('_proto', 'Incident Protocol - this will show automatically if a protocol is set for the Incident Enter the configuration'),
+				('_synop', 'Synopsis - Details about the incident, ensure as much detail as possible is completed'),
+				('_911', '911 contact information'),
+				('_caller', 'Caller reporting the incident'),
+				('_name', 'Incident Name - Partially completed and prepend or append incident ID depending on setting. Enter an easily identifiable name.'),
+				('_booked', 'Scheduled Date. Must be set if incident Status is *Scheduled*. Sets date and time for a future booked Incident, mainly used for non immediate patient transport. Click on Radio button to show date field'),
+				('_facy', 'Use the first dropdown menu to select the Facility where the incident is located at, use the second dropdown menu to select the facility where persons from the Incident will be received'),
+				('_start', 'Run-start, Incident start time. Defaults to current date and time or edit by clicking padlock icon to enable date & time fields'),
+				('_status', 'Incident  Status - Open or Closed or set to Scheduled for future booked calls'),
+				('_end', 'Run-end - incident  end time. When incident is closed, click on radio button which will enable date & time fields'),
+				('_disp', 'Disposition - additional comments about incident, particularly closing it'),
+				('_coords', 'Incident Lat/Lng - set by clicking on the map for the location or by selecting location with the address fields.'),
+				('_asof', 'Date/time of most recent incident data update');";
+		
+			$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
+			}				// end if (!(mysql_table_exists()))
+	
+																						// 11/30/10
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]captions` 
+			CHANGE `_by` `_by` INT( 7 ) NOT NULL DEFAULT '0',
+			CHANGE `_from` `_from` VARCHAR( 16 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL; ";
+		$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/12/10
+		
+		$nature = get_text("Nature");			// 3/30/11
+		$disposition = get_text("Disposition");
+		$patient = get_text("Patient");
+		$incident = get_text("Incident");
+		$incidents = get_text("Incidents");	
+	
+		do_caption("911 Contacted");
+		do_caption("A");
+		do_caption("About this version ...");
+		do_caption("Add Action");
+		do_caption("Add Facility");
+		do_caption("Add note");
+		do_caption("Add {$patient}");
+		do_caption("Add Unit");
+		do_caption("Add user");
+		do_caption("Add/Edit Notifies");
+		do_caption("Addr");
+		do_caption("admin");
+		do_caption("Alarm audio test");
+		do_caption("All-Tickets Notify");
+		do_caption("As of");
+		do_caption("Board");
+		do_caption("Cancel");
+		do_caption("Capability");
+		do_caption("Change display");
+		do_caption("Chat");
+		do_caption("City");
+		do_caption("Clear");
+		do_caption("Close incident");
+		do_caption("Config");
+		do_caption("Constituents");
+		do_caption("Contact email");
+		do_caption("Contact name");
+		do_caption("Contact phone");
+		do_caption("Contacts");
+		do_caption("Current situation");
+		do_caption("Delete Closed Tickets");
+		do_caption("Description");
+		do_caption("Dispatch Unit");
+		do_caption("Dispatched");
+		do_caption("{$disposition}");
+		do_caption("Dump DB to screen");
+		do_caption("E-mail");
+		do_caption("Edit My Profile");
+		do_caption("Edit Settings");
+		do_caption("Email users");
+		do_caption("Facs");
+		do_caption("Facility arrive time");
+		do_caption("Facility clear time");
+		do_caption("Facility en-route time");
+		do_caption("Facility Status");
+		do_caption("Facility Types");
+		do_caption("Facility");
+		do_caption("Handle");
+		do_caption("Help");
+		do_caption("High");
+		do_caption("ID");
+		do_caption("{$incident} Lat/Lng");
+		do_caption("{$incident} name");
+		do_caption("{$incident} types");
+		do_caption("{$incident}");
+		do_caption("Lat/Lng");
+		do_caption("Links");
+		do_caption("Location");
+		do_caption("Log In");
+		do_caption("Log");
+		do_caption("Logged in");
+		do_caption("Logout");
+		do_caption("Medium");
+		do_caption("Mobile");
+		do_caption("Module");
+		do_caption("mouseover caption for help informati");
+		do_caption("Name");
+		do_caption("{$nature}");
+		do_caption("New");
+		do_caption("Next");
+		do_caption("Normal");
+		do_caption("Notify");
+		do_caption("On-scene");
+		do_caption("Opening hours");
+		do_caption("Optimize Database");
+		do_caption("P");
+		do_caption("Password");
+		do_caption("Perm's");
+		do_caption("Phone");
+		do_caption("Popup");
+		do_caption("Position");
+		do_caption("Primary pager");
+		do_caption("Print");
+		do_caption("Priority");
+		do_caption("Protocol");
+		do_caption("Reported by");
+		do_caption("Reports");
+		do_caption("Reset Database");
+		do_caption("Responding");
+		do_caption("Run End");
+		do_caption("Run Start");
+		do_caption("Scheduled Date");
+		do_caption("Search");
+		do_caption("Security contact");
+		do_caption("Security email");
+		do_caption("Security phone");
+		do_caption("Security reqs");
+		do_caption("Severities");
+		do_caption("Situation");
+		do_caption("SOP's");
+		do_caption("Sort");
+		do_caption("St");
+		do_caption("Status");
+		do_caption("Synopsis");
+		do_caption("This Call");
+		do_caption("Time");
+		do_caption("Type");
+		do_caption("U");
+		do_caption("Unit status types");
+		do_caption("Unit types");
+		do_caption("Unit");
+		do_caption("Units");
+		do_caption("Updated");
+		do_caption("User");
+		do_caption("Written");
+		do_caption("USNG");				
+	
+		do_setting ('_cloud', 0);						// 11/27/10
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `on_scene_miles` INT( 8 ) NULL DEFAULT NULL AFTER `start_miles`;";		// 12/9/10
+		$result = mysql_query($query);		// 8/1/09
+		
+		$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]places` (
+			  `id` int(7) NOT NULL AUTO_INCREMENT,
+			  `name` varchar(64) DEFAULT NULL,
+			  `lat` float DEFAULT '0',
+			  `lon` float DEFAULT '0',
+			  `zoom` int(2) DEFAULT '7',
+			  PRIMARY KEY (`id`)
+			) ENGINE=MyISAM  DEFAULT CHARSET=latin1;";		//	03/01/11
+			
+		$result = mysql_query($query);		//	03/01/11
+	
+																						// 4/27/11
+		$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]group_test` (
+			`id` bigint(8) NOT NULL auto_increment,
+			`group_name` varchar(60) NOT NULL,
+			`category` ENUM('General','Police','Medical','Fire','Voluntary') NOT NULL default 'General',  
+			`description` varchar(60) default NULL,
+			`owner` int(2) NOT NULL default '1',  
+			`def_area_code` varchar(4) default NULL,
+			`def_city` varchar(20) default NULL,
+			`def_lat` double default NULL,
+			`def_lng` double default NULL,
+			`def_st` varchar(20) default NULL,
+			`def_zoom` int(2) NOT NULL default '10',
+			`boundary` varchar(244) default NULL,  
+			PRIMARY KEY  (`id`)
+		) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1 AUTO_INCREMENT=16;";
+		$result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	4/5/11	
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]user` ADD `group` INT( 3 ) NOT NULL DEFAULT 0 AFTER `id` ;";
+		$result = mysql_query($query);		// 4/5/11	
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]facilities` ADD `group` INT( 3 ) NOT NULL DEFAULT 0 AFTER `id` ;";
+		$result = mysql_query($query);		// 4/5/11
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `group` INT( 3 ) NOT NULL DEFAULT 0 AFTER `id` ;";
+		$result = mysql_query($query);		// 4/5/11
+	
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` ADD `group` INT( 3 ) NOT NULL DEFAULT 0 AFTER `id` ;";
+		$result = mysql_query($query);		// 4/5/11	
+	
+		do_setting ('aprs_fi_key','');			// 4/15/11
+												// 4/19/11
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]log` CHANGE `info` `info` VARCHAR( 2048 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL";
+		$result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	4/5/11	
+	
+		
+		$query_rename = "RENAME TABLE `$GLOBALS[mysql_prefix]group` TO `group_test` ;";
+		$result = @mysql_query($query_rename);		// 4/5/11	
+											// 4/22/11	
+		$query_alter = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `icon_str` CHAR( 3 ) NULL DEFAULT NULL COMMENT 'map icon value' AFTER `handle` ";
+		$result = @mysql_query($query_alter);		
+		$query_alter = "ALTER TABLE `$GLOBALS[mysql_prefix]facilities` ADD `icon_str` CHAR( 3 ) NULL DEFAULT NULL COMMENT 'map icon value' AFTER `handle` ";
+		$result = @mysql_query($query_alter);			
+	
+		$query_update = "UPDATE `$GLOBALS[mysql_prefix]responder` SET `handle`= SUBSTR(`description`,1,24) WHERE ((`handle` = '') OR (`handle` IS NULL));";
+		$result = mysql_query($query_update) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	4/5/11	
+	
+		$query_update = "UPDATE `$GLOBALS[mysql_prefix]facilities` SET `handle`= SUBSTR(`description`,1,24) WHERE ((`handle` = '') OR (`handle` IS NULL));";
+		$result = mysql_query($query_update) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	4/5/11	
+	
+		$tables = array("$GLOBALS[mysql_prefix]responder", "$GLOBALS[mysql_prefix]facilities");		// 4/27/11	
+		for ($i=0; $i< count($tables); $i++) {
+			$query = "SELECT * FROM `{$tables[$i]}`";
+			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+			while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {			// 7/7/10
+				if ( ($row['icon_str'] == "") || is_null($row['icon_str']) ) {
+					$temp = explode("/", $row['name']);
+					$icon_val = trim(substr($temp[count($temp) -1], -3, strlen($temp[count($temp) -1])));	
+					
+					$query2 = "UPDATE `{$tables[$i]}` SET `icon_str` = '$icon_val' WHERE `id` = {$row['id']} LIMIT 1";
+					$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+					}
+				}		// end inner while()
+			}		// end outer while()
+/*
+		$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET `description` = REPLACE(`description`, '\r', ' '),
+			`description` = REPLACE(`description`, '\n', ' '),
+			`description` = REPLACE(`description`, '  ', ' ')";
+		$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+*/
+				// 5/30/11
+		$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET `handle` = REPLACE(`handle`, '\r', ' '),
+			`handle` = REPLACE(`handle`, '\n', ' '),
+			`handle` = REPLACE(`handle`, '  ', ' ')";
+		$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/12/10
+
+/*		
+		$query = "UPDATE `$GLOBALS[mysql_prefix]facilities` SET `description` = REPLACE(`description`, '\r', ' '),
+			`description` = REPLACE(`description`, '\n', ' '),
+			`description` = REPLACE(`description`, '  ', ' ')";
+		$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/12/10
+*/		
+		$query = "UPDATE `$GLOBALS[mysql_prefix]facilities` SET `handle` = REPLACE(`handle`, '\r', ' '),
+			`handle` = REPLACE(`handle`, '\n', ' '),
+			`handle` = REPLACE(`handle`, '  ', ' ')";
+		$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__); 		// 3/12/10
+
+		$query = "UPDATE `$GLOBALS[mysql_prefix]settings` SET `value`=". quote_smart($version)." WHERE `name`='_version' LIMIT 1";	// 5/28/08
+		$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
+	
+		}		// end (!($version ==...) ==================================================			
+	
+	$temp = explode(" ", get_variable('_version'));	
+	$disp_version = $temp[0];
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -426,7 +878,7 @@ $disp_version = $temp[0];
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" /> <!-- 7/7/09 -->
 	<TITLE>Tickets <?php print $disp_version;?></TITLE>
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css" />
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
 	<link rel="shortcut icon" href="favicon.ico" />
 </HEAD>
 

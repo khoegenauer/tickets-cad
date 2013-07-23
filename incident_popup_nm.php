@@ -1,13 +1,16 @@
 <?php
 /*
 7/28/10 Initial Release - no maps version of incident popup.
+3/15/11 changed stylesheet.php to stylesheet.php
+5/28/11 intrusion attempt detection added
 */
 
 error_reporting(E_ALL);
  
 @session_start();
-@session_start();
-require_once($_SESSION['fip']); 
+require_once('./incs/functions.inc.php');
+if ((isset($_REQUEST['id'])) && (!(strval(intval($_REQUEST['id']))===$_REQUEST['id']))) {	win_shut_down();}	// 5/28/11
+
 $api_key = get_variable('gmaps_api_key');		// empty($_GET)
 
 if ((!empty($_GET))&& ((isset($_GET['logout'])) && ($_GET['logout'] == 'true'))) {
@@ -49,7 +52,7 @@ $ticket_addr = "{$row['street']}, {$row['city']} {$row['state']} ";
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<HEAD><TITLE>Incident Popup - Incident <?php print $title;?> <?php print $ticket_updated;?></TITLE>
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
 	<SCRIPT src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
 
 <?php

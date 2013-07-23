@@ -47,7 +47,7 @@ $misc = 		(is_null($cons_row))? "" : $cons_row['miscellaneous'];
 $query  = "SELECT  * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `phone`= '{$phone}' ORDER BY `updated` DESC";			// 9/29/09
 $result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 $ret = mysql_affected_rows() . ";";						// common to each  return
-
+//dump(mysql_affected_rows());
 if (mysql_affected_rows()> 0) {							// build return string from newest incident data
 	$row = stripslashes_deep(mysql_fetch_array($result));
 	$ret .= do_the_row($row);
@@ -58,7 +58,8 @@ if (mysql_affected_rows()> 0) {							// build return string from newest inciden
 	}
 
 else {													// no priors or constituents - do WP
-	if ((get_variable("locale") ==0) && ( $_SESSION['internet'])) {				// 9/30/10 - USA only and if internet available - 7/6/10, 9/2/10
+//	dump(__LINE__);
+//	if ((get_variable("locale") ==0) && ( $_SESSION['internet'])) {				// 9/30/10 - USA only and if internet available - 7/6/10, 9/2/10
 		$wp_key = get_variable("wp_key");				// 1/26/09
 		$url = "http://api.whitepages.com/reverse_phone/1.0/?phone=" . urlencode($phone) . ";api_key=". $wp_key;
 		if(isset($phone)) {								// wp phone lookup
@@ -94,6 +95,7 @@ else {													// no priors or constituents - do WP
 			$aryk[6] = "<wp:zip>";
 			$aryk[7] = "<wp:latitude>";
 			$aryk[8] = "<wp:longitude>";
+//			dump($aryk);
 			$aryv = array(9);				// values
 		//	First Last;(123) 456-7890;1234 Name Ct,  Where, NY 12345"
 			$arys[0] = " ";		// firstname
@@ -117,6 +119,7 @@ else {													// no priors or constituents - do WP
 				$rhe = strpos ( $data, "<", $lhe);
 				$aryv[$i] = substr ( $data, $lhe , $rhe-$lhe );		// substr ( string, start , length )
 				}		// end for ($i...)
+//			dump($aryv);
 	
 			if (!(empty($arys))) {									// 11/11/09
 				for ($i=0; $i< count($aryk); $i++) {				// append return string to match count
@@ -125,7 +128,7 @@ else {													// no priors or constituents - do WP
 				unset($result);
 				}
 			}
-		}					// end USA only
+//		}					// end USA only
 	}					// end no priors
 
 //dump($ret);

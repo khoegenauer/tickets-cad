@@ -1,20 +1,15 @@
 <?php
-ob_start();							// 6/26/10
+
 error_reporting(E_ALL);				// 9/13/08
 $units_side_bar_height = .6;		// max height of units sidebar as decimal fraction of screen height - default is 0.6 (60%)
 $do_blink = TRUE;					// or FALSE , only - 4/11/10
 
+session_start();						// 
 
-@session_start();							// 
-if ((array_key_exists('internet', ($_SESSION))) && ($_SESSION['internet'])) {
-	require_once('./incs/functions.inc.php');
-	require_once('./incs/functions_major.inc.php');
-	}
-else {
-	require_once('./incs/functions_nm.inc.php');
-	require_once('./incs/functions_major_nm.inc.php');
-	}
+require_once('./incs/functions.inc.php');
 
+$the_inc = ((array_key_exists('internet', ($_SESSION))) && ($_SESSION['internet']))? './incs/functions_major.inc.php' : './incs/functions_major_nm.inc.php';
+require_once($the_inc);
 /*
 10/14/08 moved js includes here fm function_major
 1/11/09  handle callboard frame
@@ -41,19 +36,19 @@ else {
 8/13/10 links incl relocated
 8/25/10 hide top buttons if ..., $_POST logout test
 8/29/10 dispatch status style added
+11/29/10 added to_listtype form when adding scheduled list type select dropdown
+3/15/11	Added reference to stylesheet.php for revisable day night colors
+3/19/11 added top term button value
+4/22/11 gunload correction
 */
-//snap(__LINE__);
 
 if (isset($_GET['logout'])) {
-//	snap(__LINE__);
 	do_logout();
-//	snap(__LINE__);
 	exit();
 	}
 else {		// 
-	ob_end_clean();
 	do_login(basename(__FILE__));	
-	$do_mu_init = (array_key_exists('log_in', $_GET))? "parent.frames['upper'].mu_init();" : "";
+	$do_mu_init = (array_key_exists('log_in', $_GET))? "parent.frames['upper'].mu_init();" : "";	// start multi-user function
 	}
 
 if ($istest) {
@@ -65,11 +60,16 @@ if ($istest) {
 	if (!empty($_POST)) {
 		dump ($_POST);
 		}
+	print "SESSION<BR/>\n";	//	3/15/11
+	if (!empty($_SESSION)) {
+		dump ($_SESSION);
+		}
 	}
-
 														// set auto-refresh if any mobile units														
 $temp = get_variable('auto_poll');				// 1/28/09
 $poll_val = ($temp==0)? "none" : $temp ;
+$day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_night']))? $_SESSION['day_night'] : 'Day';	//	3/15/11
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -90,6 +90,7 @@ if ($_SESSION['internet']) {				// 8/22/10
 	$api_key = get_variable('gmaps_api_key');	
 ?>
 <SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
+
 <?php } ?>
 	
 	<SCRIPT>
@@ -116,6 +117,7 @@ parent.document.getElementById('the_frames').setAttribute('rows', frame_rows);
 parent.calls.location.href = 'board.php';							// 7/21/10
 
 
+
 <?php
 	}		// end if ( get_variable('call_board') == 2) 
 	
@@ -129,8 +131,15 @@ if (is_guest()) {													// 8/25/10
 	parent.frames["upper"].$("add").style.display  = "none";		// hide 'new' button
 <?php
 	}
-?>	
-	
+?>
+
+	var NOT_STR = '<?php echo NOT_STR;?>';			// value if not logged-in, defined in functions.inc.php
+
+	function logged_in() {								// returns boolean
+		var temp = parent.frames["upper"].$("whom").innerHTML==NOT_STR;
+		return !temp;
+		}
+
 	function $() {									// 1/21/09, 7/18/10
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -152,6 +161,9 @@ if (is_guest()) {													// 8/25/10
 		}
 <?php
 		}
+$temp = get_unit();															// 3/19/11
+$term_str = ($temp )? $temp : "Mobile" ;
+
 ?>
 /*
 //	parent.frames["upper"].location.reload( true );
@@ -162,22 +174,44 @@ if (is_guest()) {													// 8/25/10
 		}		
 */		
 	try {
-		parent.frames["upper"].document.getElementById("gout").style.display  = "inline";								// logout button
-		parent.frames["upper"].$("user_id").innerHTML  = "<?php print $_SESSION['user_id'];?>";	// logout button
+		parent.frames["upper"].$("manual").style.display  = "inline";								// manual link - 5/27/11
+		parent.frames["upper"].$("gout").style.display  = "inline";									// logout button
+		parent.frames["upper"].$("user_id").innerHTML  = "<?php print $_SESSION['user_id'];?>";	
 		parent.frames["upper"].$("whom").innerHTML  = "<?php print $_SESSION['user'];?>";			// user name
 		parent.frames["upper"].$("level").innerHTML = "<?php print get_level_text($_SESSION['level']);?>";
 		parent.frames["upper"].$("script").innerHTML  = "<?php print LessExtension(basename(__FILE__));?>";				// module name
 //		parent.frames["upper"].$("poll_id").innerHTML  = "<?php print $poll_val;?>";
+		parent.frames["upper"].$("main_body").style.backgroundColor  = "<?php print get_css('page_background', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("main_body").style.color  = "<?php print get_css('normal_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("tagline").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("user_id").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("unit_id").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("script").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("time_of_day").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("whom").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("level").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("logged_in_txt").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("perms_txt").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("modules_txt").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+		parent.frames["upper"].$("time_txt").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
+
+		parent.frames["upper"].$("term").innerHTML  = "<?php print $term_str;?>";				// responder or 'Mobile' name - 3/19/11
+
 		}
 	catch(e) {
 		}
 		
+	function get_new_colors() {													// 5/3/11
+		window.location.href = '<?php print basename(__FILE__);?>';
+		}
+
 	function ck_frames() {		//  onLoad = "ck_frames()"
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
 			}
 		else {
 			parent.upper.show_butts();										// 1/21/09
+			parent.upper.do_day_night("<?php print $_SESSION['day_night'];?>")
 			}
 		}		// end function ck_frames()
 <?php																	// 4/10/10
@@ -246,6 +280,15 @@ if (is_guest()) {													// 8/25/10
 		$('btn_can').style.display = 'none';
 		document.frm_interval_sel.frm_interval.selectedIndex=0;
 		}
+	function show_btns_scheduled() {						// 4/30/10
+		$('btn_scheduled').style.display = 'inline';
+		$('btn_can').style.display = 'inline';
+		}
+	function hide_btns_scheduled() {
+		$('btn_scheduled').style.display = 'none';
+		$('btn_can').style.display = 'none';
+		document.frm_interval_sel.frm_sched.selectedIndex=0;
+		}
 	</SCRIPT>
 
 <?php if ($_SESSION['internet']) {	?>
@@ -254,16 +297,19 @@ if (is_guest()) {													// 8/25/10
 <?php } ?>
 	
 	
-<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
 </HEAD>
 <?php
-	$gunload = ($_SESSION['internet'])? "'GUnload();'" : "" ;
+	$gunload = ($_SESSION['internet'])? " onUnload='GUnload();'" : "" ;				// 4/22/11
+	$set_showhide = ((array_key_exists('print', ($_GET)) || (array_key_exists('id', ($_GET)))))? "" : "set_initial_pri_disp(); set_categories(); set_fac_categories();";	//	3/15/11
+//	dump($_SESSION);	
 ?>
-<BODY onLoad = "parent.frames['upper'].document.getElementById('gout').style.display  = 'inline'; ck_frames(); <?php print $do_mu_init;?>" <?php print $gunload;?>>
+
+<BODY onLoad = "<?php print $set_showhide;?>; ck_frames(); location.href = '#top'; <?php print $do_mu_init;?>" <?php print $gunload;?>>	<!-- 3/15/11 -->
 <?php
 include("./incs/links.inc.php");		// 8/13/10
 ?>
-<DIV ID='to_bottom' style="position:fixed; top:20px; left:20px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png" BORDER=0 /></div>
+<DIV ID='to_bottom' style="position: fixed; top: 20px; left: 20px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png" BORDER=0 /></div>
 
 <SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT><!-- 1/3/10 -->
 
@@ -290,8 +336,12 @@ include("./incs/links.inc.php");		// 8/13/10
 		list_tickets();
 		}
 ?>
-<FORM NAME='to_closed' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'>
-<INPUT TYPE='hidden' NAME='status' VALUE='<?php print $GLOBALS['STATUS_CLOSED'];?>' />
+<FORM NAME='to_closed' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'> <!-- 11/28/10 not now used - replaced with form to_listtype -->
+<INPUT TYPE='hidden' NAME='status' VALUE='<?php print $GLOBALS['STATUS_CLOSED'];?>' /> <!-- 11/28/10 not now used - replaced with form to_listtype -->
+<INPUT TYPE='hidden' NAME='func' VALUE='' /> <!-- 11/28/10 not now used - replaced with form to_listtype -->
+</FORM> <!-- 11/28/10 not now used - replaced with form to_listtype -->
+<FORM NAME='to_listtype' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'> <!-- 11/29/10 not now used - replaced with form to_listtype -->
+
 <INPUT TYPE='hidden' NAME='func' VALUE='' />
 </FORM>
 <FORM NAME='to_all' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'> <!-- 1/23/09 -->
@@ -299,6 +349,7 @@ include("./incs/links.inc.php");		// 8/13/10
 </FORM>
 <FORM NAME='to_scheduled' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'> <!-- 1/23/09 -->
 <INPUT TYPE='hidden' NAME='status' VALUE='<?php print $GLOBALS['STATUS_SCHEDULED'];?>' />
+<INPUT TYPE='hidden' NAME='func' VALUE='1' />
 </FORM>
 <!--
 <span onclick = "parent.top.calls.location.reload(true)">Test1</span>

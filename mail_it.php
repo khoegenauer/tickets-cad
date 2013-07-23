@@ -8,10 +8,8 @@
 */
 
 @session_start();
-require_once($_SESSION['fip']);		//7/28/10
-
-//		 mail_it ($to_str, $text, $ticket_id, $text_sel=1, $txt_only = FALSE)
-
+require_once('incs/functions.inc.php');		//7/28/10 - functions_mail.php
+// snap(__LINE__);
+//  ($to_str, $text, $ticket_id) - 10/15/08
 $caption =  mail_it ($_POST['frm_to'], $_POST['frm_text'], $_POST['frm_ticket_id'], $_POST['text_sel'] );	//  ($to_str, $text, $ticket_id) - 10/15/08
-//snap(basename( __FILE__) . __LINE__, $_POST['frm_ticket_id']);
 ?>	

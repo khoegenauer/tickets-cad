@@ -9,11 +9,20 @@ $zoom_tight = FALSE;		// replace with a decimal number to over-ride the standard
 8/24/10 access to tracks removed
 8/25/10 light top-frame button
 9/11/10 status update added
+10/28/10 Added include and function calls for addon modules. 
+3/15/11 added reference to stylesheet.php for revisable day night colors.
+3/19/11 revised unit  index to 6 chars length
+4/5/11 get_new_colors added
+5/9/11 name, handle display revised
+
 */
 
 session_start();
 
 require_once('./incs/functions.inc.php');
+if(file_exists("./incs/modules.inc.php")) {	//	10/28/10
+	require_once('./incs/modules.inc.php');
+	}
 do_login(basename(__FILE__));
 require_once($_SESSION['fmp']);		// 8/27/10
 
@@ -46,7 +55,7 @@ unset($result);
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" />
 
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css" />
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
 	<STYLE>
 		.disp_stat	{ FONT-WEIGHT: bold; FONT-SIZE: 9px; COLOR: #FFFFFF; BACKGROUND-COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;}
 	</STYLE>
@@ -77,6 +86,10 @@ unset($result);
 			elements.push(element);
 			}
 		return elements;
+		}
+
+	function get_new_colors() {
+		window.location.href = '<?php print basename(__FILE__);?>';
 		}
 
 	String.prototype.trim = function () {									// added 6/10/08
@@ -192,6 +205,9 @@ unset($result);
 		var errmsg="";
 								// 2/24/09, 3/24/10
 		if (theForm.frm_name.value.trim()=="")													{errmsg+="Unit NAME is required.\n";}
+		if (theForm.frm_handle.value.trim()=="")												{errmsg+="Unit HANDLE is required.\n";}
+		if (theForm.frm_icon_str.value.trim()=="")												{errmsg+="Unit ICON is required.\n";}
+		
 		if (theForm.frm_type.options[theForm.frm_type.selectedIndex].value==0)					{errmsg+="Unit TYPE is required.\n";}	// 1/1/09
 		if (theForm.frm_un_status_id.options[theForm.frm_un_status_id.selectedIndex].value==0)	{errmsg+="Unit STATUS is required.\n";}
 		if (theForm.frm_descr.value.trim()=="")													{errmsg+="Unit DESCRIPTION is required.\n";}
@@ -323,7 +339,8 @@ var color=0;
 	function do_sidebar (sidebar, id, the_class, unit_id, index) {
 		var unit_id = unit_id;
 		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"' onClick = myclick(" + unit_id + "); >";
-		side_bar_html += "<TD CLASS='" + the_class + "'>" + index + sidebar +"</TD></TR>\n";		// 1/5/09, 3/4/09, 10/29/09 removed period
+//		side_bar_html += "<TD CLASS='" + the_class + "'>" + index + sidebar +"</TD></TR>\n";		// 1/5/09, 3/4/09, 10/29/09 removed period
+		side_bar_html += sidebar +"</TR>\n";		// 1/5/09, 3/4/09, 10/29/09 removed period
 		}
 
 	function myclick(unit_id) {				// Responds to sidebar click - view responder data
@@ -340,8 +357,8 @@ print "\tvar map_is_fixed = ";
 print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "true;\n":"false;\n";
 
 ?>
-	var side_bar_html = "<TABLE border=0 CLASS='sidebar' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> >";
-	side_bar_html += "<TR class='even'><TD ALIGN='left'><B>ID</B></TD><TD ALIGN='left'><B>Unit</B></TD><TD ALIGN='left'><B>Dispatch</B></TD><TD ALIGN='left'><B>Status</B></TD><B>M</B><TD ALIGN='left'><B>As of</B></TD></TR>";
+	var side_bar_html = "<TABLE border=0 CLASS='sidebar' >";
+	side_bar_html += "<TR class='even'><TD ALIGN='left'>&nbsp;<B>Handle</B></TD><TD ALIGN='left'>&nbsp;&nbsp;<B>Name</B></TD><TD ALIGN='left'>&nbsp;&nbsp;<B>Dispatch</B></TD><TD ALIGN='left'>&nbsp;&nbsp;<B>Status</B></TD><B>M</B><TD ALIGN='left'>&nbsp;&nbsp;<B>As of</B></TD></TR>";
 	var which;
 	var i = <?php print $start; ?>;					// sidebar/icon index
 	var points = false;								// none
@@ -401,17 +418,13 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 //									 ==========  major while() for RESPONDER ==========
 
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {		
-//		dump($row);
 		$the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$row['icon']];		// 2/1/10
 		$the_text_color = 	$GLOBALS['UNIT_TYPES_TEXT'][$row['icon']];		// 2/1/10
+		$index = $row['icon_str'] ;											// 4/28/11
 
 		$do_dispatch = can_do_dispatch($row);				// 11/17/09
 		$got_point = FALSE;
 		print "\n\t\tvar i=$i;\n";
-//	if(is_guest()) {
-//		$toedit = $todisp = "";
-//		}
-//	else {
 		$todisp = ((is_guest()) || (!(can_do_dispatch($row))))? "" : "&nbsp;&nbsp;<A HREF='units_nm.php?func=responder&view=true&disp=true&id=" . $row['unit_id'] . "'><U>Dispatch</U></A>&nbsp;&nbsp;&nbsp;";	// 08/8/02, 9/19/09
 		$toedit = (is_guest())? "" :"&nbsp;&nbsp;<A HREF='units_nm.php?func=responder&edit=true&id=" . $row['unit_id'] . "'><U>Edit</U></A>&nbsp;&nbsp;&nbsp;&nbsp;" ;	// 10/8/08
 
@@ -421,13 +434,11 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$the_bull = "";											// define the bullet
 		$update_error = strtotime('now - 6 hours');							// set the time for silent setting
 
-// name
+// handle, name	- 5/9/11
 
-		$name = $row['name'];		//	10/8/09
-		$temp = explode("/", $name );
-		$display_name = $temp[0];
-
-		$sidebar_line = "<TD TITLE = '" . addslashes($display_name) . "'><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($display_name, 24)) ."</SPAN></U></TD>";			// 10/8/09
+		$handle = addslashes($row['handle']);		//	5/30/10
+		$sidebar_line = "<TD TITLE = '{$handle}'>{$handle}</TD>";			// 10/8/09, 5/9/11
+		$sidebar_line .= "<TD TITLE = '" . addslashes($row['name']) . "'><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($row['name'], 40)) ."</SPAN></U></TD>";			// 10/8/09
 
 // assignments 3/16/09, 3/15/10
 
@@ -460,7 +471,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 		$tick_ct = (mysql_affected_rows()>1)? "(" . mysql_num_rows($result_as) . ") ": "";
 		$ass_td =  (mysql_affected_rows()>0)? 
-			"<TD CLASS='$severityclass' TITLE = '{$row_assign['scope']}'>{$the_disp_stat}" . shorten($row_assign['scope'], 24) . "</TD>":
+			"<TD CLASS='$severityclass' TITLE = '{$row_assign['scope']}' STYLE = 'white-space:nowrap;' >{$the_disp_stat}" . shorten($row_assign['scope'], 24) . "</TD>":
 			"<TD>na</TD>";
 
 		$sidebar_line .= ($row_assign)? $ass_td : "<TD>na</TD>";
@@ -486,23 +497,13 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 		$sidebar_line .= "<TD CLASS='$the_class'> $strike" . format_sb_date($the_time) . "$strike_end</TD>";	// 6/17/08
 
-		$name = $row['name'];	// 10/8/09		
-		$temp = explode("/", $name );
-		$index =  (strlen($temp[count($temp) -1])<3)? substr($temp[count($temp) -1] ,0,strlen($temp[count($temp) -1])): substr($temp[count($temp) -1] ,-3 ,strlen($temp[count($temp) -1]));
 ?>
 		var unit_id = "<?php print $index;?>";	//	10/8/09
 	
 		var the_class = "td_label";		// 4/3/09
 		var handle = "<?php print substr(($row['handle']),1);?>";
 		var longhandle = "<?php print $row['handle'];?>";
-<?php
-		$name = $row['name'];	// 11/11/09		
-		$temp = explode("/", $name );
-		$index =  (strlen($temp[count($temp) -1])<3)? substr($temp[count($temp) -1] ,0,strlen($temp[count($temp) -1])): substr($temp[count($temp) -1] ,-3 ,strlen($temp[count($temp) -1]));
-		
-?>
 
-		var unit_id = "<?php print $index;?>";	//	11/11/09
 <?php		
 		print "\tdo_sidebar(\" {$sidebar_line} \" , i, {$row['id']}, {$row['unit_id']}, unit_id);\n";	// sidebar only - no map, 11/11/09
 
@@ -582,6 +583,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				`state`= " . 		quote_smart(trim($_POST['frm_state'])) . ",
 				`phone`= " . 		quote_smart(trim($_POST['frm_phone'])) . ",
 				`handle`= " . 		quote_smart(trim($_POST['frm_handle'])) . ",
+				`icon_str`= " . 	quote_smart(trim($_POST['frm_icon_str'])) . ",
 				`description`= " . 	quote_smart(trim($_POST['frm_descr'])) . ",
 				`capab`= " . 		quote_smart(trim($_POST['frm_capab'])) . ",
 				`un_status_id`= " . quote_smart(trim($_POST['frm_un_status_id'])) . ",
@@ -616,7 +618,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$frm_lng = (empty($_POST['frm_lng']))? '0.999999': quote_smart(trim($_POST['frm_lng']));						// 9/3/08
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));							// 1/27/09
 		$query = "INSERT INTO `$GLOBALS[mysql_prefix]responder` (
-			`name`, `street`, `city`, `state`, `phone`, `handle`, `description`, `capab`, `un_status_id`, `callsign`, `mobile`, `multi`, `aprs`, `instam`, `locatea`, `gtrack`, `glat`, `direcs`, `contact_name`, `contact_via`, `lat`, `lng`, `type`, `user_id`, `updated` )
+			`name`, `street`, `city`, `state`, `phone`, `handle`,  `icon_str`, `description`, `capab`, `un_status_id`, `callsign`, `mobile`, `multi`, `aprs`, `instam`, `locatea`, `gtrack`, `glat`, `direcs`, `contact_name`, `contact_via`, `lat`, `lng`, `type`, `user_id`, `updated` )
 			VALUES (" .
 				quote_smart(trim($_POST['frm_name'])) . "," .
 				quote_smart(trim($_POST['frm_street'])) . "," .
@@ -624,6 +626,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				quote_smart(trim($_POST['frm_state'])) . "," .
 				quote_smart(trim($_POST['frm_phone'])) . "," .
 				quote_smart(trim($_POST['frm_handle'])) . "," .
+				quote_smart(trim($_POST['frm_icon_str'])) . "," .
 				quote_smart(trim($_POST['frm_descr'])) . "," .
 				quote_smart(trim($_POST['frm_capab'])) . "," .
 				quote_smart(trim($_POST['frm_un_status_id'])) . "," .
@@ -670,10 +673,12 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'>Add Unit</FONT></FONT><BR /><BR />
 		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>
 		<FORM NAME= "res_add_Form" METHOD="POST" ACTION="units_nm.php?func=responder&goadd=true"> <!-- 7/9/09 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Name - fill in with Name/index where index is the label in the list and on the marker">Name</A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
-			<TD COLSPAN=3 ><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Handle - local rules, could be callsign or badge number, generally for radio comms use">Handle</A>:&nbsp;</TD>
-			<TD COLSPAN=3 ><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_handle" VALUE="" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Name ">Name</A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
+			<TD COLSPAN=3 ><INPUT MAXLENGTH="64" SIZE="64" TYPE="text" NAME="frm_name" VALUE="" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Handle - local rules, could be callsign or badge number, generally for radio comms use">Handle</A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
+			<TD COLSPAN=3 ><INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_handle" VALUE="" />
+			<SPAN STYLE = 'margin-left:30px'  CLASS="td_label"> Icon: </SPAN>&nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp;<INPUT TYPE = "text" NAME = "frm_icon_str" SIZE = 3 MAXLENGTH=3 VALUE="" />
+			</TD></TR>
 
 		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A HREF="#" TITLE="Unit Type - Select from pulldown menu">Type</A>: <font color='red' size='-1'>*</font></TD>
 			<TD ALIGN='left'><SELECT NAME='frm_type'><OPTION VALUE=0>Select one</OPTION>		<!-- 1/8/09 -->
@@ -743,11 +748,6 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		<TR CLASS='even'><TD CLASS="td_label"><A HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required">City</A></TD> <!-- 7/5/10 -->
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print get_variable('def_city'); ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="2" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="2"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS='odd'><TD CLASS="td_label"><A HREF="#" TITLE="Location - type in location in fields or click location on map ">Location</A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE=""  MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS='even'><TD CLASS="td_label"><A HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required">City</A></TD> <!-- 7/5/10 -->
-		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print get_variable('def_city'); ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="2" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="2"></TD></TR> <!-- 7/5/10 -->
-
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Phone Number">Phone</A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="12" MAXLENGTH="48" TYPE="text" NAME="frm_phone" VALUE="" /></TD></TR> <!-- 7/5/10 -->
 
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=56 ROWS=2></TEXTAREA></TD></TR>
@@ -782,6 +782,9 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		</SCRIPT>
 		</HTML>
 <?php
+		if(file_exists("./incs/modules.inc.php")) {	//	10/28/10 Added for add on modules
+			get_modules('res_add_Form');
+			}			
 		exit();
 		}		// end if ($_GET['add'])
 
@@ -832,14 +835,18 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		<?php
 		require_once('./incs/links.inc.php');
 		?>
-		<TABLE BORDER=0 ID='outer'><TR><TD>
+		<TABLE BORDER=0 ID='outer' STYLE = 'margin-left:100px'><TR><TD>
 		<TABLE BORDER=0 ID='editform'>
 		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'>&nbsp;Edit unit '<?php print $row['name'];?>' data</FONT>&nbsp;&nbsp;(#<?php print $id; ?>)</FONT></FONT><BR /><BR />
 		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>
 		<FORM METHOD="POST" NAME= "res_edit_Form" ACTION="units_nm.php?func=responder&goedit=true"> <!-- 7/9/09 -->
 
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Name - fill in with Name/index where index is the label in the list and on the marker">Name</A>: <font color='red' size='-1'>*</font></TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="<?php print $row['name'] ;?>" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Handle - local rules, could be callsign or badge number, generally for radio comms use">Handle</A>: </TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_handle" VALUE="<?php print $row['handle'] ;?>" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Name ">Name</A>: <font color='red' size='-1'>*</font></TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="<?php print $row['name'] ;?>" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label">
+			<A HREF="#" TITLE="Handle - local rules, could be callsign or badge number, generally for radio comms use">Handle</A>:&nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp; </TD>
+			<TD COLSPAN=3><INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_handle" VALUE="<?php print $row['handle'] ;?>" />
+				<SPAN STYLE = 'margin-left:30px'  CLASS="td_label"> Icon: </SPAN>&nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp;<INPUT TYPE = 'text' NAME = 'frm_icon_str' SIZE = 3 MAXLENGTH=3 VALUE='<?php print $row['icon_str'] ;?>'>
+			</TD></TR>
 		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A HREF="#" TITLE="Unit Type - Select from pulldown menu">Type</A>: <font color='red' size='-1'>*</font></TD>
 		<TD ALIGN='left'><FONT SIZE='-2'>
 			<SELECT NAME='frm_type'>
@@ -954,6 +961,10 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		</BODY>
 		</HTML>
 <?php
+		if(file_exists("./incs/modules.inc.php")) {	//	10/28/10 Added for add on modules
+			$handle=$row['handle'];
+			get_modules('res_edit_Form');
+			}
 		exit();
 		}		// end if ($_GET['edit'])
 // =================================================================================================================
@@ -1024,12 +1035,14 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		if ($glat_sel == " SELECTED") { $tracking_set="Google Lat";}		
 
 ?>
-			<FONT CLASS="header">&nbsp;'<?php print $row['name'] ;?>' Data</FONT> (#<?php print $row['id'];?>) <BR /><BR />
-			<TABLE BORDER=0 ID='outer'><TR><TD>
+			<SPAN STYLE = 'margin-left:100px'><FONT CLASS="header">&nbsp;'<?php print $row['name'] ;?>' Data</FONT> (#<?php print $row['id'];?>) </SPAN><BR /><BR />
+			<TABLE BORDER=0 ID='outer' STYLE = 'margin-left:100px'><TR><TD>
 			<TABLE BORDER=0 ID='view_unit' STYLE='display: block' cellpadding=2>
 			<FORM METHOD="POST" NAME= "res_view_Form" ACTION="units_nm.php?func=responder">
 			<TR CLASS = "even"><TD CLASS="td_label">Name: </TD>			<TD><?php print $row['name'];?></TD></TR>
-			<TR CLASS = "odd"><TD CLASS="td_label">Handle: </TD>			<TD><?php print $row['handle'];?></TD></TR>
+			<TR CLASS = "odd"><TD CLASS="td_label">Handle: </TD>		<TD><?php print $row['handle'];?>
+				<SPAN STYLE = 'margin-left:30px'  CLASS="td_label"> Icon: </SPAN>&nbsp;<?php print $row['icon_str'];?>
+			</TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label">Type: </TD>
 				<TD><?php print $the_type;?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<SPAN CLASS="td_label">
@@ -1165,16 +1178,24 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			</BODY>
 			</HTML>
 <?php
+			if((is_super()) || (is_administrator()) || (is_user())) {	//	10/28/10 Added for add on modules
+				if(file_exists("./incs/modules.inc.php")) {
+					$handle=$row['handle'];
+					get_modules('view_form');
+					}
+				}	
 			exit();
 			}		// end if ($_GET['view'])
 // ============================================= initial display =======================
 
 			if (!isset($mapmode)) {$mapmode="a";}
-			print $caption;
+			print "<SPAN STYLE='margin-left:120px;'>{$caption}</SPAN>";
 ?>
 		</HEAD><!-- 1387 -->
 		<BODY onLoad = "ck_frames()">
 		<A NAME='top'>		<!-- 11/11/09 -->
+			<DIV ID='to_bottom' style="position:fixed; top:2px; left:70px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0></div>
+		
 <?php
 		require_once('./incs/links.inc.php');
 
@@ -1183,9 +1204,9 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 		unset($result);		
 ?>
-		<DIV ID='resp_table' style="position:relative; left: 0%; top: 20px">	
-			<TABLE BORDER=0 ID='outer'><TR><TD>
-				<TABLE ID = 'sidebar' BORDER = 0 >
+		<DIV ID='resp_table' style="position:relative; left: 100px; top: 20px">	
+			<TABLE BORDER=0 ID='outer' STYLE = 'width:auto;'><TR><TD>
+				<TABLE ID = 'sidebar' BORDER = 0  STYLE = 'width:auto;' >
 				<TR class='even'>	<TD colspan=99 ALIGN='center'><B>Units (<?php print mysql_affected_rows(); ?>)</B></TD></TR>
 				<TR class='odd'>	<TD colspan=99 ALIGN='center'>Click line for details - or to dispatch</TD></TR>
 			
@@ -1198,9 +1219,11 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		print "<TR CLASS='odd'><TD COLSPAN=6 ALIGN='center'>" . get_units_legend() . "</TD></TR>";
 
 		$buttons = "<TR><TD COLSPAN=99 ALIGN='left'><BR />
-			<IMG SRC='markers/up.png' BORDER=0  onclick = \"location.href = '#top';\" STYLE = 'margin-left: 20px'>";
-		if (!(is_guest())) {
+			<IMG SRC='markers/up.png' BORDER=0  onclick = \"location.href = '#top';\" STYLE = 'margin-left: 2px'>";
+		if ((is_super()) || (is_admin())) {
 			$buttons .="<INPUT TYPE='button' value= 'Add a Unit'  onClick ='document.add_Form.submit();' style = 'margin-left:120px'>";	// 10/8/08
+			}
+		if (!(is_guest())) {
 			$buttons .= "<INPUT TYPE = 'button' onClick = 'do_mail_win()' VALUE='Email Units'  style = 'margin-left:40px'>";	// 6/13/09
 			}
 		$buttons .= "</TD></TR>";
@@ -1228,6 +1251,11 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 		print list_responders("", 0);				// ($addon = '', $start)
 		print "\n</HTML> \n";
+		if((is_super()) || (is_administrator())) {	//	10/28/10 Added for add on modules
+			if(file_exists("./incs/modules.inc.php")) {
+				get_modules('list_form');
+				}
+			}					
 		exit();
     break;
 ?>

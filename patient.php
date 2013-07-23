@@ -11,12 +11,19 @@
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 8/15/10	added dupe prevention, per JG email
 8/27/10 fmp call added
+11/30/10 get_text('patient') added
+12/15/10 Patient ID added as patient identifier
+3/15/11 changed stylesheet.php to stylesheet.php
+4/22/11 addslashes() added for embedded apostrophes
+5/26/11 added intrusion detection
 */
 error_reporting(E_ALL);			// 10/1/08
 
 @session_start();
-require_once($_SESSION['fip']);		//7/28/10
+require_once('./incs/functions.inc.php');		//7/28/10
 do_login(basename(__FILE__));
+if ((isset($_REQUEST['ticket_id'])) && (!(strval(intval($_REQUEST['ticket_id']))===$_REQUEST['ticket_id']))) {	shut_down();}			// 5/28/11
+
 require_once($_SESSION['fmp']);		// 8/27/10
 
 if($istest) {
@@ -27,29 +34,29 @@ if($istest) {
 	}
 	
 $get_action = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['action'])))) ) ? "new" : $_GET['action'] ;
+$api_key = get_variable('gmaps_api_key');
+$gmaps = $_SESSION['internet'];
 //dump($get_action);
 	
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Patient Module</TITLE>
+	<HEAD><TITLE>Tickets - <?php print get_text("Patient");?> Module</TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="Expires" CONTENT="0">
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<META HTTP-EQUIV="Script-date" CONTENT="8/16/08">
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
 <?php
-if ($get_action == 'add') {		
-	$api_key = get_variable('gmaps_api_key');		// empty($_GET) 
-?>
-<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
-<SCRIPT src="./js/graticule.js" type="text/javascript"></SCRIPT>
+	if ($gmaps) {
+?>	
+<SCRIPT SRC="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
+<SCRIPT SRC="./js/graticule.js" type="text/javascript"></SCRIPT>
 <?php
-	}	
+		}
 ?>
-
 <SCRIPT>
 function ck_frames() {		//  onLoad = "ck_frames()"
 	if(self.location.href==parent.location.href) {
@@ -128,20 +135,26 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			}
 		}				// end function validate(theForm)
 
+	function set_signal(inval) {
+		var temp_ary = inval.split("|", 2);		// inserted separator
+		if (document.patientAdd) {
+			var lh_sep = (document.patientAdd.frm_description.value.trim().length>0)? " " : "";
+			document.patientAdd.frm_description.value+=lh_sep + temp_ary[1] + ' ';		
+			document.patientAdd.frm_description.focus();		
+			}
+		else {
+		var lh_sep = (document.patientEd.frm_description.value.trim().length>0)? " " : "";
+			document.patientEd.frm_description.value+= lh_sep + temp_ary[1] + ' ';		
+			document.patientEd.frm_description.focus();		
+			}
+		}		// end function set_signal()
+
 	function do_asof(theForm, theBool) {							// 8/10/08
 		theForm.frm_year_asof.disabled = theBool;
 		theForm.frm_month_asof.disabled = theBool;
 		theForm.frm_day_asof.disabled = theBool;
 		theForm.frm_hour_asof.disabled = theBool;
 		theForm.frm_minute_asof.disabled = theBool;
-<?php
-	if (get_variable('gmaps_api_key')==0) {					// 2/12/09
-?>	
-		theForm.frm_meridiem_asof.disabled = theBool;		// 
-<?php
-		}
-?>		
-
 
 		}
 
@@ -173,19 +186,19 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			$frm_asof = "$_POST[frm_year_asof]-$_POST[frm_month_asof]-$_POST[frm_day_asof] $_POST[frm_hour_asof]:$_POST[frm_minute_asof]:00$post_frm_meridiem_asof";
 															//  8/15/10	
      		$query 	= "SELECT * FROM  `$GLOBALS[mysql_prefix]patient` WHERE 
-     			`description` =	'{$_POST['frm_description']}' AND
+     			`description` =	'" . addslashes($_POST['frm_description']) . "' AND
      			`ticket_id` =	'{$_GET['ticket_id']}' AND
      			`user` =		'{$_SESSION['user_id']}' AND
      			`action_type` =	'{$GLOBALS['ACTION_COMMENT']}' AND 
-     			`name` = 		'{$_POST['frm_name']}' AND 
+     			`name` = 		'" . addslashes($_POST['frm_name']) . "' AND 
      			`updated` =		'{$frm_asof}' ";
      			
 			$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 			if (mysql_affected_rows()==0) {		// not a duplicate - 8/15/10	
-	
+																				// 4/22/11
 	     		$query 	= "INSERT INTO `$GLOBALS[mysql_prefix]patient` 
 	     			(`description`,`ticket_id`,`date`,`user`,`action_type`, `name`, `updated`) VALUES
-	     			('{$_POST['frm_description']}','{$_GET['ticket_id']}','{$now}',{$_SESSION['user_id']},$GLOBALS[ACTION_COMMENT], '{$_POST['frm_name']}', '{$frm_asof}') ";
+	     			('" . addslashes($_POST['frm_description']) . "','{$_GET['ticket_id']}','{$now}',{$_SESSION['user_id']},$GLOBALS[ACTION_COMMENT], '" . addslashes($_POST['frm_name']) . "', '{$frm_asof}') ";
 	     			
 				$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 				do_log($GLOBALS['LOG_PATIENT_ADD'], $_GET['ticket_id'], 0, mysql_insert_id());		// 3/18/10
@@ -193,7 +206,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 	
 				$result = mysql_query("UPDATE `$GLOBALS[mysql_prefix]ticket` SET `updated` = '$frm_asof' WHERE id='$_GET[ticket_id]'  LIMIT 1") or do_error($query,mysql_error(), basename( __FILE__), __LINE__);
 				}
-			print '<br><br><FONT CLASS="header">Patient record has been added</FONT><BR /><BR />';
+			print "<br><br><FONT CLASS='header'>" . get_text("Patient") ." record has been added</FONT><BR /><BR />";
 			add_header($_GET['ticket_id']);
 			show_ticket($_GET['ticket_id']);
 //			notify_user($_GET['ticket_id'],$NOTIFY_ACTION);
@@ -287,7 +300,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 //			($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, $rec_facility_id=0, $mileage=0) {		// generic log table writer - 5/31/08, 10/6/09
 			$query = "DELETE FROM `$GLOBALS[mysql_prefix]patient` WHERE `id`='$_GET[id]' LIMIT 1";
 			$result = mysql_query($query) or do_error('',$query,mysql_error(), basename( __FILE__), __LINE__);
-			print '<FONT CLASS="header">Patient record deleted</FONT><BR /><BR />';
+			print '<FONT CLASS="header">' . get_text("Patient") . ' record deleted</FONT><BR /><BR />';
 			add_header($_GET['ticket_id']);				// 8/16/08
 			show_ticket($_GET['ticket_id']);
 			}
@@ -295,7 +308,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]patient` WHERE `id`='$_GET[id]' LIMIT 1";
 			$result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
 			$row = stripslashes_deep(mysql_fetch_assoc($result));
-			print "<FONT CLASS='header'>Really delete Patient record ' " .shorten($row['description'], 24) . "' ?</FONT><BR /><BR />";
+			print "<FONT CLASS='header'>Really delete " . get_text("Patient") . " record ' " .shorten($row['description'], 24) . "' ?</FONT><BR /><BR />";
 			print "<FORM METHOD='post' ACTION='patient.php?action=delete&id=$_GET[id]&ticket_id=$_GET[ticket_id]&confirm=1'><INPUT TYPE='Submit' VALUE='Yes'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 			print "<INPUT TYPE='button' VALUE='Cancel'  onClick='history.back();'></FORM>";
 			}
@@ -312,7 +325,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		$result = mysql_query("SELECT ticket_id FROM `$GLOBALS[mysql_prefix]patient` WHERE id='$_GET[id]'") or do_error('patient.php::update patient record','mysql_query',mysql_error(), basename( __FILE__), __LINE__);
 		$row = stripslashes_deep(mysql_fetch_assoc($result));
 		
-		print '<br><br><FONT CLASS="header">Patient record updated</FONT><BR /><BR />';
+		print '<br><br><FONT CLASS="header">' . get_text("Patient") . ' record updated</FONT><BR /><BR />';
 		add_header($_GET['ticket_id']);				// 8/16/08
 		show_ticket($row['ticket_id']);
 		}
@@ -323,10 +336,25 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 //		dump($row);
 //		dump(stripslashes($row['description']));
 ?>
-		<FONT CLASS="header">Edit Patient Record</FONT><BR /><BR />
+		<FONT CLASS="header">Edit <?php print get_text("Patient");?> Record</FONT><BR /><BR />
 		<FORM METHOD='post' NAME='patientEd' onSubmit='return validate(document.patientEd);' ACTION="patient.php?id=<?php print $_GET['id'];?>&ticket_id=<?php print $_GET['ticket_id'];?>&action=update"><TABLE BORDER="0">
-		<TR CLASS='even' ><TD><B>Name: <font color='red' size='-1'>*</font></B></TD><TD><INPUT TYPE="text" NAME="frm_name" value="<?php print $row['name'];?>" size="32"></TD></TR>
+
+		<TR CLASS='even' ><TD><B><?php print get_text("Patient ID");?>: <font color='red' size='-1'>*</font></B></TD><TD><INPUT TYPE="text" NAME="frm_name" value="<?php print $row['name'];?>" size="32"></TD></TR>
 		<TR CLASS='odd'  VALIGN='top'><TD><B>Description:</B> <font color='red' size='-1'>*</font></TD><TD><TEXTAREA ROWS="8" COLS="45" NAME="frm_description" WRAP="virtual"><?php print $row['description'];?></TEXTAREA></TD></TR>
+		<TR VALIGN = 'TOP' CLASS='odd'>		<!-- 11/15/10 -->
+			<TD ALIGN='right' CLASS="td_label">Signal: </TD><TD>
+
+				<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
+				<OPTION VALUE=0 SELECTED>Select</OPTION>
+<?php
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
+				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+				while ($row_sig = stripslashes_deep(mysql_fetch_assoc($result))) {
+					print "\t<OPTION VALUE='{$row_sig['code']}'>{$row_sig['code']}|{$row_sig['text']}</OPTION>\n";		// pipe separator
+					}
+?>
+			</SELECT>
+			</TD></TR>
 <?php
 			print "\n<TR CLASS='even'><TD CLASS='td_label'>As of:</TD><TD>";
 			print  generate_date_dropdown("asof",$row['date'], TRUE);
@@ -342,9 +370,24 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		}
 	else {
 ?>
-		<BR /><BR /><FONT CLASS="header">Add Patient Record</FONT><BR /><BR />
+		<BR /><BR /><FONT CLASS="header">Add <?php print get_text("Patient");?> Record</FONT><BR /><BR />
 		<FORM METHOD="post" NAME='patientAdd' onSubmit='return validate(document.patientAdd);'  ACTION="patient.php?ticket_id=<?php print $_GET['ticket_id'];?>&action=add"><TABLE BORDER="0">
-		<TR CLASS='even' ><TD><B>Name:</B> <font color='red' size='-1'>*</font></TD><TD><INPUT TYPE="text" NAME="frm_name" value="" size="32"></TD></TR>
+		<TR CLASS='even' ><TD><B><?php print get_text("Patient ID");?>:</B> <font color='red' size='-1'>*</font></TD><TD><INPUT TYPE="text" NAME="frm_name" value="" size="32"></TD></TR>
+		<TR VALIGN = 'TOP' CLASS='even'>		<!-- 11/15/10 -->
+			<TD ALIGN='right' CLASS="td_label">Signal: </TD><TD>
+
+				<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
+				<OPTION VALUE=0 SELECTED>Select</OPTION>
+<?php
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
+				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+				while ($row_sig = stripslashes_deep(mysql_fetch_assoc($result))) {
+					print "\t<OPTION VALUE='{$row_sig['code']}'>{$row_sig['code']}|{$row_sig['text']}</OPTION>\n";		// pipe separator
+					}
+?>
+			</SELECT>
+			</TD></TR>
+
 		<TR CLASS='odd' ><TD><B>Description: </B><font color='red' size='-1'>*</font></TD><TD><TEXTAREA ROWS="8" COLS="45" NAME="frm_description" WRAP="virtual"></TEXTAREA></TD></TR> <!-- 10/19/08 -->
 
 		<TR CLASS='odd' VALIGN='bottom'><TD CLASS="td_label">As of: &nbsp;&nbsp;</TD><TD><?php print generate_date_dropdown('asof',0,TRUE);?>&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.patientAdd);'></TD></TR>

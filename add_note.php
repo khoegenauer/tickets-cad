@@ -5,11 +5,14 @@
 3/16/10 ceck for empty note
 7/12/10 <br. -> '\n'
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
+12/1/10 added get_text(disposition)
+3/15/11 changed stylesheet.php to stylesheet.php
+5/26/11 added intrusion detection
 */
 error_reporting(E_ALL);
 
 @session_start();
-require_once($_SESSION['fip']);		//7/28/10
+require_once('./incs/functions.inc.php');		//7/28/10
 if($istest) {
 //	dump(basename(__FILE__));
 	print "GET<br />\n";
@@ -17,6 +20,7 @@ if($istest) {
 	print "POST<br />\n";
 	dump($_POST);
 	}
+$disposition = get_text("Disposition");				// 12/1/10
 	
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
@@ -32,7 +36,7 @@ if($istest) {
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
-<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
 <SCRIPT>
 	String.prototype.trim = function () {				// 3/16/10
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
@@ -57,9 +61,29 @@ if (empty($_POST)) {
 <FORM NAME='frm_note' METHOD='post' ACTION = '<?php print basename(__FILE__);?>'>
 <TEXTAREA NAME='frm_text' COLS=60 ROWS = 3></TEXTAREA>
 <BR />
+<SCRIPT>
+	function set_signal(inval) {
+		var temp_ary = inval.split("|", 2);		// inserted separator
+		document.frm_note.frm_text.value+=" " + temp_ary[1] + ' ';		
+		document.frm_note.frm_text.focus();		
+		}		// end function set_signal()
+</SCRIPT>
+
+Signal &raquo; 
+<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
+<OPTION VALUE=0 SELECTED>Select</OPTION>
+<?php
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
+				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+				while ($row_sig = stripslashes_deep(mysql_fetch_assoc($result))) {
+					print "\t<OPTION VALUE='{$row_sig['code']}'>{$row_sig['code']}|{$row_sig['text']}</OPTION>\n";		// pipe separator
+					}
+?>
+			</SELECT><BR /><BR />
+
 <B>Apply to</B>&nbsp;:&nbsp;&nbsp;
 Description &raquo; <INPUT TYPE = 'radio' NAME='frm_add_to' value='0' CHECKED />&nbsp;&nbsp;&nbsp;&nbsp;
-Disposition &raquo; <INPUT TYPE = 'radio' NAME='frm_add_to' value='1' /><BR /><BR />
+<?php print $disposition;?> &raquo; <INPUT TYPE = 'radio' NAME='frm_add_to' value='1' /><BR /><BR />
 <INPUT TYPE = 'button' VALUE = 'Cancel' onClick = 'window.close()' />&nbsp;&nbsp;&nbsp;&nbsp;
 <INPUT TYPE = 'button' VALUE = 'Reset' onClick = 'this.form.reset()' />&nbsp;&nbsp;&nbsp;&nbsp;
 <INPUT TYPE = 'button' VALUE = 'Next' onClick = 'validate()' />
@@ -69,7 +93,10 @@ Disposition &raquo; <INPUT TYPE = 'radio' NAME='frm_add_to' value='1' /><BR /><B
 </FORM>
 <?php
 		}		// end if (empty($_POST))
+
 	else {
+		if ((isset($_REQUEST['frm_ticket_id'])) && 	(strlen(trim($_REQUEST['frm_ticket_id']))>6)) {	win_shut_down();}			// 5/26/11
+	
 		$field_name = array('description', 'comments');
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id` = {$_POST['frm_ticket_id']} LIMIT 1";
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);

@@ -1,30 +1,4 @@
 <?php
-// Database  is information_schema
-// SELECT `COLUMN_COMMENT` AS `comment`, `COLUMN_NAME` AS `name` FROM `COLUMNS` WHERE `TABLE_SCHEMA`= 'af' AND `TABLE_NAME` = 'in_types' 
-/*
-$sql = "CREATE TABLE `rlarkin`.`test` (
-	`id` INT(7) NOT NULL AUTO_INCREMENT COMMENT \'std\',
-	`_by` INT(7) NOT NULL COMMENT \'std\',
-	`_from` VARCHAR(16) NOT NULL COMMENT \'std ipaddr\', 
-	`_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT \'std\', 
-	PRIMARY KEY (`id`)) ENGINE = MyISAM;";
-
-
-$sql = "CREATE TABLE IF NOT EXISTS `dd_test` (
-	`id` int(7) NOT NULL AUTO_INCREMENT COMMENT 'std',
-	`_by` int(7) NOT NULL COMMENT 'std',
-	`_from` varchar(16) NOT NULL COMMENT 'std ipaddr',
-	`_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'std',
-	`option` varchar(24) NOT NULL COMMENT 'std',
-	`group` varchar(24) DEFAULT NULL COMMENT 'std',
-	`sort` int(7) NOT NULL DEFAULT '0' COMMENT 'std',
-	`bg_color` varchar(16) NOT NULL DEFAULT 'white' COMMENT 'std',
-	`text_color` varchar(16) DEFAULT 'black' COMMENT 'std',
-	PRIMARY KEY (`id`)
-	) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
-
-*/
-
 // Made available under the terms of GNU General Public License (GPL) http://www.gnu.org/copyleft/gpl.html
 /*
 Released Jul 23, 2006
@@ -55,7 +29,13 @@ improvements to datatype 'time' handling
 9/15/10 added to test for dd list type, td onClick call added
 9/16/10 get_comments() added
 9/19/10 do_onload() added
-
+10/26/10 _by => _userid - to pick up table 'user', correction to option list build
+10/31/10 revised sql in get_comments(), handle un-set search_str, added check/un-check all
+11/9/10 function is_in_use() added
+11/20/10 corrected 'push' sgl-quote handling
+12/15/10 accommodate comments problem
+3/15/11 changed stylesheet.php to stylesheet.php
+3/18/11 revised to correct error if $_POST['srch_str'] does not exist
 */
 $gmap=TRUE;
 
@@ -66,10 +46,9 @@ $result = mysql_query($query) ;
 
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
 error_reporting (E_ALL  ^ E_DEPRECATED);
-//$istest=TRUE;
+$istest=FALSE;
 if ($istest) {
 	dump($_POST);
-//	dump($_GET);				// 9/18/08
 	}
 do_login(basename(__FILE__));	// 9/18/08
 
@@ -106,49 +85,73 @@ if (($mysql_db=="")||($mysql_user=="")) {print "<br><br><br><br>" ; die(" - - - 
 $FK_id = strtolower($key_str);			// set for case independence
 $id_lg = strlen($FK_id);				// lgth of foreign key id string
 $custom	= FALSE;						// custom processor in use
-
+$can_edit = ((is_super()) || (is_administrator()));										// 3/19/11
 
 if (!array_key_exists('func', $_POST)) {
 	$func = "l";					// Select table, of C R U D or Select
 	$tablename = "";				// set per user selection
 	$indexname = "";				// set per schema 
-//	$sortby="id";						// controls direction of sort
 	}
-// dump (empty($sortby));
-//if (!empty($_GET)) extract($_GET);				// 9/18/08 get disabled
 
-if (!empty($_POST)) extract($_POST);
+extract($_POST);
 
 $sortby = (!(isset($sortby)) || empty($sortby))?		 "id" : $sortby; 
 $sortdir = (!(isset($sortdir)) || empty($sortdir))?		 0 : $sortdir; 
 $sortby = (!(isset($index)) || empty($index))?			 "id" : $index; 
 
-//if (!array_key_exists('func', $_POST)) {
-//	$func = "l";					// Select table, of C R U D or Select
-//	$func = "r";					// Select table, of C R U D or Select
-//	$sortby="";						// controls sort direction
-//	}
-
-function get_comments($the_table) {  				// returns array key=> name, value=> comment - 9/16/10
-	if (!mysql_select_db('information_schema')) {
-		print "Connection attempt to information_schema database failed at line " . __LINE__;
-		exit();
-		}
-	
-	$query = "SELECT `COLUMN_COMMENT` AS `comment`, `COLUMN_NAME` AS `name` FROM `COLUMNS` 
-		WHERE `TABLE_SCHEMA`= '{$GLOBALS['mysql_db']}' AND `TABLE_NAME` = '{$the_table}';";
-	$result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);			// use $result for meta-information reference
-	$_array = array();
+function get_comments($the_table) {  				// returns array key=> name, value=> comment - 10/31/10
+//	global $mysql_prefix;
+	$_array = array();								// 12/15/10
+	$query = "SHOW FULL COLUMNS FROM `$GLOBALS[mysql_prefix]{$the_table}`;";
+//	$result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);		
+	$result = mysql_query($query) ;			// use $result for meta-information reference
+	if (!($result)) {return $_array;}		// 12/15/10
 	while($row = stripslashes_deep(mysql_fetch_assoc($result))) {		// 
-		$_array[$row['name']] = $row['comment'];
-		}
-	if (!mysql_select_db($GLOBALS['mysql_db'])) {		// restore connection
-		print "Connection attempt to database failed at line " . __LINE__;
-		exit();
+		$_array[$row['Field']] = $row['Comment'];
 		}
 	return $_array;
 	}				// end function
 
+function is_in_use($index_val) {	// 11/9/10 - return boolean based on whether the identified entry is in use
+	global $tablename, $mysql_prefix;
+	switch ($tablename) {		
+		case "unit_types":	
+			$the_table = $mysql_prefix . "responder";
+			$query ="SELECT * FROM `$the_table` WHERE `type` = {$index_val} LIMIT 1";						// get in_row count only
+			$res_test = mysql_query($query) or myerror(get_file(__FILE__), __LINE__, 'mysql_error', $query);
+			$in_use = (mysql_num_rows($res_test)>0);
+		    break;
+		case "un_status":	
+			$the_table = $mysql_prefix . "responder";
+			$query ="SELECT * FROM `$the_table` WHERE `un_status_id` = {$index_val} LIMIT 1";						// get in_row count only
+			$res_test = mysql_query($query) or myerror(get_file(__FILE__), __LINE__, 'mysql_error', $query);
+			$in_use = ((mysql_num_rows($res_test)>0) || (intval ($index_val)==1));	// 11/2/09
+		    break;
+		case "fac_status":	
+			$the_table = $mysql_prefix . "facilities";
+			$query ="SELECT * FROM `$the_table` WHERE `status_id` = {$index_val} LIMIT 1";						// get in_row count only
+			$res_test = mysql_query($query) or myerror(get_file(__FILE__), __LINE__, 'mysql_error', $query);
+			$in_use = (mysql_num_rows($res_test)>0);
+		    break;
+		case "fac_types":			
+			$the_table = $mysql_prefix . "facilities";
+			$query ="SELECT * FROM `$the_table` WHERE `type` = {$index_val} LIMIT 1";						// get in_row count only
+			$res_test = mysql_query($query) or myerror(get_file(__FILE__), __LINE__, 'mysql_error', $query);
+			$in_use = (mysql_num_rows($res_test)>0);
+		    break;
+		case "in_types":						// 
+			$the_table = $mysql_prefix . "ticket";
+			$query ="SELECT * FROM `$the_table` WHERE `in_types_id` = {$index_val} LIMIT 1";						// get in_row count only
+			$res_test = mysql_query($query) or myerror(get_file(__FILE__), __LINE__, 'mysql_error', $query);
+			$in_use = (mysql_num_rows($res_test)>0);
+		    break;						    
+		default:
+			$in_use = FALSE;
+		}				// end switch
+//	dump($in_use);
+	return $in_use;
+	}				// end function  is_in_use()
+	
 $evenodd = array ("even", "odd");	// for table row colors
 $hints = array("int"=>"numeric", "blob"=>"blob", "string"=>"text", "datetime"=>"date/time", "time"=>"time", "timestamp"=>"date/time", "date"=>"date", "real"=>"float'g pt.");
 $primaries = array();				// table names
@@ -178,17 +181,6 @@ function fnQuote_Smart($value) {    // Stripslashes
 	    }
     return $value;
 	}
-
-/*
-function parseInt($string) {		// return intval($string) - 2/8/10
-	if(preg_match('/(\d+)/', $string, $array)) {
-		return $array[1];
-		} 
-	else {
-		return 0;
-		}
-	}
-*/
 
 function get_digs($str_in) {		// returns extracted digits
 	$allowed = "/[^\d]/";
@@ -279,11 +271,11 @@ unset ($result2);
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <HEAD><TITLE>Single - A Generic MySQL Table Processor</TITLE>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"/>
+<META HTTP-EQUIV="Expires" CONTENT="0"/>
+<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE"/>
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE"/>
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript"/>
 <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
 </HEAD>
 <!--  onFocus="LL_showinfo(1)" onBlur="LL_hideallinfo()" -->
@@ -341,23 +333,23 @@ if (($func == "c")||($func == "u")) {			// not required for all functions
 	var sm_icons = new Array();
 	var icons = new Array();
 	var type_names = new Array();
-	var icons_dir = "./icons/";
+	var icons_dir = "./our_icons/";
 
 <?php
 	$icons = $GLOBALS['icons'];
 	for ($i=0; $i<count($icons); $i++) {										// onto JS array
-		print "\ticons.push('" .$icons[$i] . "');\n";
+		print "\ticons.push(\"{$icons[$i]}\");\n";								// 11/20/10
 		}
 	
 	$sm_icons = $GLOBALS['sm_icons'];
 	for ($i=0; $i<count($sm_icons); $i++) {
-		print "\tsm_icons.push('" .$sm_icons[$i] . "');\n";
+		print "\tsm_icons.push(\"{$sm_icons[$i]}\");\n";								// 11/20/10
 		}
 	if (($func =="c") || ($func =="r")) {										// build array of existing names
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]unit_types`";
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		while ($row_un = stripslashes_deep(mysql_fetch_assoc($result))) {
-			print "\n\ttype_names.push('" . $row_un['name'] . "');\n";		// onto JS array
+			print "\n\ttype_names.push(\"{$row_un['name']}\");\n";		// onto JS array - 11/20/10
 			}				// end while ()
 		}				// end if()
 ?>	
@@ -411,25 +403,25 @@ if (($func == "c")||($func == "u")) {			// not required for all functions
 	var sm_icons = new Array();
 	var icons = new Array();
 	var type_names = new Array();
-	var icons_dir = "./icons/";
+	var icons_dir = "./our_icons/";
 
 <?php
 // Adds capabilities for Facilities Icons 10/6/09-----------------------------------------------
 
 	$icons = $GLOBALS['fac_icons'];
 	for ($i=0; $i<count($icons); $i++) {										// onto JS array
-		print "\ticons.push('" .$icons[$i] . "');\n";
+		print "\ticons.push(\"{$icons[$i]}\");\n";								// 11/20/10
 		}
 	
 	$sm_icons = $GLOBALS['fac_icons'];
 	for ($i=0; $i<count($sm_icons); $i++) {
-		print "\tsm_icons.push('" .$sm_icons[$i] . "');\n";
+		print "\tsm_icons.push(\"{$sm_icons[$i]}\");\n";						// 11/20/10
 		}
 	if (($func =="c") || ($func =="r")) {										// build array of existing names
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]fac_types`";
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		while ($row_fac = stripslashes_deep(mysql_fetch_assoc($result))) {
-			print "\n\ttype_names.push('" . $row_fac['name'] . "');\n";		// onto JS array
+			print "\n\ttype_names.push(\"{$row_fac['name']}\");\n";		// onto JS array - 11/20/10
 			}				// end while ()
 		}				// end if()
 ?>	
@@ -726,9 +718,14 @@ function do_focus(in_form) {
 	}
 
 </SCRIPT>
-
-
-<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+<?php
+if(array_key_exists('srch_str', $_POST)) {		//	3/18/11
+	$search_str = $_POST['srch_str'];
+	} else {
+	$search_str = "";
+	}
+?>
+<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
 
 <BODY onLoad = "do_onload()">	<!-- 9/21/08 -->
 <?php $the_table = (strlen($tablename)>0)? $tablename : "tbd"; ?>
@@ -740,7 +737,7 @@ function do_focus(in_form) {
 <INPUT TYPE="hidden" NAME="sortby" 		VALUE="<?php print $sortby; ?>"/>
 <INPUT TYPE="hidden" NAME="sortdir"		VALUE=0 />
 <INPUT TYPE="hidden" NAME="func"  		VALUE=""/>  <!-- retrieve details -->
-<INPUT TYPE="hidden" NAME="srch_str"  	VALUE="<?php print $_POST['srch_str'];?>"/> <!-- 9/12/10 -->
+<INPUT TYPE="hidden" NAME="srch_str"  	VALUE="<?php print $search_str;?>"/> <!-- 9/12/10 -->
 
 </FORM>
 <?php
@@ -807,6 +804,7 @@ switch ($func) {		// ================================== case "c" ===============
 			if (substr(mysql_field_name($result, $i), 0, 1 ) =="_") {				// 12/20/08
 				switch (mysql_field_name($result, $i)) {
 					case "_by":
+					case "_userid":													// 10/26/10
 						$value = $_SESSION['user_id'];
 						print "\t\t<INPUT ID=\"fd$i\" type=\"hidden\" NAME=\"frm__by\" VALUE=\"$value\" />\n";
 						break;
@@ -865,8 +863,7 @@ switch ($func) {		// ================================== case "c" ===============
 									$temp_result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);
 									print "\t\t<TD><SELECT NAME='frm_" . mysql_field_name($result, $i) . "'>\n\t\t<OPTION VALUE='0' selected>Select one</OPTION>\n";
 									while ($temp_row = mysql_fetch_array($temp_result))  {							// each row
-										$temp = (isset($temp_row[2]))? " - " . substr(trim($temp_row[2]), 0, 6) : ""; 
-										print "\t\t<OPTION VALUE='" . trim($temp_row[0]) . "'>" . trim($temp_row[1]) . $temp . "</OPTION>\n";	
+										print "\t\t<OPTION VALUE='" . trim($temp_row[0]) . "'>" . trim($temp_row[1]) . "</OPTION>\n";	
 										}
 									print "\t\t</SELECT>";
 //									print ($do_hints)? "<SPAN class='$mand_opt' >(" . mysql_affected_rows() . ")</SPAN>": "";
@@ -947,7 +944,7 @@ switch ($func) {		// ================================== case "c" ===============
 	
 	case "r":																			// Retrieve/List =================
 	function fnLinkTDm ( $theclass, $theid, $thestring, $the_in_use) {		// returns <td ... /td>
-		global $tablename, $mysql_prefix, $disallow;				// 2/25/10
+		global $tablename, $mysql_prefix, $disallow, $can_edit;				// 2/25/10, 3/19/11
 //		$disallow = (($tablename == $mysql_prefix . "un_status") && ($theid==1));
 
 		$the_js_func = ($disallow)? "JSfnDisallow" : "JSfnToFunc" ;		// 10/20/09
@@ -966,9 +963,11 @@ switch ($func) {		// ================================== case "c" ===============
 			$return .= substr($thestring, $breakat) . "</SPAN><SPAN id=\"c" . $theid . "\" style=\"visibility: hidden\">\n";
 			$return .= ". . . <IMG SRC='markers/view.png' BORDER=0 TITLE = 'click to view this' onclick = \"JSfnToFunc('v', '" . $theid . "');\">";
 			$return .= " | ";
-			$return .= " <IMG SRC='markers/edit.png' BORDER=0 TITLE = 'click to edit this' onclick = \"{$the_js_func}('u', '" . $theid . "');\">";
+			if($can_edit) {										// 3/19/11
+				$return .= " <IMG SRC='markers/edit.png' BORDER=0 TITLE = 'click to edit this' onclick = \"{$the_js_func}('u', '" . $theid . "');\">";
+				}
 			$return .= " | ";
-			if (!($the_in_use)) {																	// 11/2/09			
+			if ((!($the_in_use)) &&($can_edit)) {																	// 11/2/09
 				$return .= "<IMG SRC='markers/del.png' BORDER=0 TITLE = 'click to delete this' $on_click> | ";
 				}
 			$return .= "</SPAN>\n";
@@ -978,9 +977,11 @@ switch ($func) {		// ================================== case "c" ===============
 			$return .= "<SPAN id=\"c" . $theid . "\" style=\"visibility: hidden\">\n";
 			$return .= " <IMG SRC='markers/view.png' BORDER=0 TITLE = 'click to view this' onclick = \"JSfnToFunc('v', '" . $theid . "');\">";
 			$return .= " | ";
-			$return .= "<IMG SRC='markers/edit.png' BORDER=0 TITLE = 'click to edit this' onclick = \"{$the_js_func}('u', '" . $theid . "');\">";
+			if($can_edit) {										// 3/19/11			
+				$return .= "<IMG SRC='markers/edit.png' BORDER=0 TITLE = 'click to edit this' onclick = \"{$the_js_func}('u', '" . $theid . "');\">";
+				}
 			$return .= " | ";
-			if (!($the_in_use)) {																	// 11/2/09
+			if ((!($the_in_use)) && ($can_edit)) {																	// 11/2/09
 				$return .= "<IMG SRC='markers/del.png' BORDER=0 TITLE = 'click to delete this' $on_click> | ";
 				}
 			$return .= "</SPAN>\n";
@@ -1067,10 +1068,7 @@ switch ($func) {		// ================================== case "c" ===============
 		$head2 .= "</TR>\n";										// end table heading
 		print $head1 . "<U>" . str_replace( "_", " ", ucfirst($thecolumn)) . "</U> data for functions)</FONT></TH></TR>\n" . $head2;
 		$lineno = 0;
-//		dump(__LINE__);	
 		$srch_term = isset($ary_srch) ? array_shift ($ary_srch): "";
-//		dump($srch_term);	
-//		dump($ary_srch);	
 
 		while ($row = mysql_fetch_array($result))  {			// write each data row - highlight($term, $string)
 			$lineno++;
@@ -1079,46 +1077,11 @@ switch ($func) {		// ================================== case "c" ===============
 			print "<TR valign=\"top\" CLASS=\"" . $evenodd [$lineno % 2] . "\">";			// alternate line bg colors
 			for($i = 0; $i < $cols; $i++){													// each column
 						
-//				dump (mysql_field_name($result, $i) . ":" . $row[$i]);				
-
 				$in_use = FALSE;				// test for index value in use - 10/13/09
 				if ($i==0) {					// index column only
-					switch ($tablename) {		
-						case "unit_types":						// 
-							$the_table = $mysql_prefix . "responder";
-							$query ="SELECT * FROM `$the_table` WHERE `type` = {$row[$i]}  LIMIT 1";						// get row count only
-							$res_test = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);
-							$in_use = (mysql_affected_rows()>0);
-						    break;
-						case "un_status":						// default, show
-//							dump($row[$i]);
-							$the_table = $mysql_prefix . "responder";
-							$query ="SELECT * FROM `$the_table` WHERE `un_status_id` = {$row[$i]}  LIMIT 1";						// get row count only
-							$res_test = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);
-							$in_use = ((mysql_affected_rows()>0) || (intval ($row[$i])==1));	// 11/2/09
-						    break;
-						case "fac_status":						// default, show
-							$the_table = $mysql_prefix . "facilities";
-							$query ="SELECT * FROM `$the_table` WHERE `status_id` = {$row[$i]}  LIMIT 1";						// get row count only
-							$res_test = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);
-							$in_use = (mysql_affected_rows()>0);
-						    break;
-						case "fac_types":						// 
-							$the_table = $mysql_prefix . "facilities";
-							$query ="SELECT * FROM `$the_table` WHERE `type` = {$row[$i]}  LIMIT 1";						// get row count only
-			//				dump($query);
-							$res_test = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);
-							$in_use = (mysql_affected_rows()>0);
-						    break;
-						case "in_types":						// 
-							$the_table = $mysql_prefix . "ticket";
-							$query ="SELECT * FROM `$the_table` WHERE `in_types_id` = {$row[$i]}  LIMIT 1";						// get row count only
-							$res_test = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);
-							$in_use = (mysql_affected_rows()>0);
-						    break;						    
-						}
+					$in_use = is_in_use($row[$i]);								// 11/9/10
 					}
-			
+				
 				$lgth = strlen(mysql_field_name($result, $i));								// shortened column name
 				if (isset($row[$i])) {														// not empty
 
@@ -1142,23 +1105,16 @@ switch ($func) {		// ================================== case "c" ===============
 							else { 									// not substitution or date
 								$thedata = (strlen($row[$i])>$text_list_max)? substr($row[$i], 0,$text_list_max) . "&hellip;" : $row[$i];
 								}
-//							if(($tablename="unit_types") && (mysql_field_name($result, $i)=="icon")) {					// 12/29/08
 							if(($tablename=="unit_types") && (mysql_field_name($result, $i)=="icon")) {					// 1/29/09
-								$thedata = "<IMG SRC='./icons/" . $sm_icons[$row[$i]] . "'>";				// display icon image
+								$thedata = "<IMG SRC='./our_icons/" . $sm_icons[$row[$i]] . "'>";				// display icon image
 								}
 							if(($tablename=="fac_types") && (mysql_field_name($result, $i)=="icon")) {					// 1/29/09
-								$thedata = "<IMG SRC='./icons/" . $sm_icons[$row[$i]] . "'>";				// display icon image
+								$thedata = "<IMG SRC='./our_icons/" . $sm_icons[$row[$i]] . "'>";				// display icon image
 								}
-//							if (!(empty($srch_term )) && (in_array ( mysql_field_name($result, $i),$ary_srch ))
-							// highlight($term, $string)- str_replace ( mixed search, mixed replace, mixed subject  - in_array ( mysql_field_name($result, $i)		
-//							$out_str = (in_array ( mysql_field_name($result, $i),$ary_srch ))?
-							$out_str = ((isset($ary_srch)) && (in_array ( mysql_field_name($result, $i),$ary_srch )))?
 
+							$out_str = ((isset($ary_srch)) && (in_array ( mysql_field_name($result, $i),$ary_srch )))?
 								highlight($srch_term, $thedata): $thedata;
 								
-//							if (in_array ( mysql_field_name($result, $i),$ary_srch )) {
-//								dump (highlight($srch_term, $thedata));
-//								}
 							print "<TD CLASS='mylink'{$on_click} >" . $out_str . "</TD>\n";			// type not "datetime" and name not "descript"
 							}		// end else ...
 						}	// end not "datetime"
@@ -1213,7 +1169,14 @@ if (($row_count > 0) || (array_key_exists('srch_str', $_POST))) {
 ?>	
 
 	<INPUT TYPE="button" VALUE="<?php print ucfirst($tablename); ?> Properties" 							onClick = "Javascript: document.retform.func.value='p'; document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+<?php				// 3/19/11
+		if ($can_edit) {
+?>		
 	<INPUT TYPE="button" VALUE="Add new <?php print str_replace( "_", " ", ucfirst($tablename)); ?> entry" 	onclick= "this.form.func.value='c'; this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<?php				// 3/19/11
+		}
+?>	
+	
 <!--	<INPUT TYPE="button"	VALUE="Cancel" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/> 1/28/09 -->
 	</FORM>
 	</TD></TR></TABLE>
@@ -1268,6 +1231,7 @@ case "u":	// =======================================  Update 	==================
 		if (substr(mysql_field_name($result, $i), 0, 1 ) =="_") {				// 12/20/08
 			switch (mysql_field_name($result, $i)) {
 				case "_by":
+				case "_userid":													// 10/26/10
 					$value = $_SESSION['user_id'];
 					print "\t\t<INPUT ID=\"fd$i\" type=\"hidden\" NAME=\"frm__by\" VALUE=\"$value\" />\n";
 					break;
@@ -1407,6 +1371,7 @@ case "u":	// =======================================  Update 	==================
 	}				// end else 
 
 	break;		// end Update ==========================
+	
 	case "pc":													// Process 'Create record' data =================
 	$query = "DESCRIBE `$mysql_prefix$tablename` ";				// 6/21/10
 	$result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);			// use $result for meta-information reference
@@ -1455,10 +1420,9 @@ case "u":	// =======================================  Update 	==================
 	case "v":		// View detail	========================
 
 	$query ="SELECT * FROM `$mysql_prefix$tablename` WHERE `$indexname` = \"$id\" LIMIT 1";
-//	dump(__LINE__);
-//	dump($query);
 	$result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);
 	$row = mysql_fetch_array($result);
+	if (!(isset($srch_str))) {$srch_str="";}	// 10/31/10
 	$ary_srch = explode ("|", $srch_str);		// 9/13/10
 	$srch_term = isset($ary_srch) ? array_shift ($ary_srch): "";
 
@@ -1542,16 +1506,20 @@ case "u":	// =======================================  Update 	==================
 
 	<TR><TD COLSPAN="2" ALIGN="center">
 	<BR />
-	<INPUT TYPE="button" 	VALUE="Continue" onClick = "Javascript: document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE="button" VALUE="Continue" onClick = "Javascript: document.retform.submit();"/>
 <?php
-//	$disallow = (($tablename == $mysql_prefix . "un_status") && ($id==1));		// 10/20/09	- 2/25/10
-	if (!($disallow)) {
+	$disallow = is_in_use($row['id']);				// 10/20/09	- 2/25/10 - 11/9/10
+	if ((!($disallow) && ($can_edit))) {			// 3/19/11
 ?>	
-	<INPUT TYPE="button" 	NAME="del_but" VALUE="Delete this entry" onclick="JSfnToFunc ('d', '<?php print $id ?>');"/>&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE="button" 	NAME="edl_but" VALUE="Edit this entry" onclick="JSfnToFunc('u', '<?php print $id ?>');"/></TD>
+	<INPUT TYPE="button" STYLE = 'margin-left:10px' NAME="el_but" VALUE="Delete this entry" onclick="JSfnToFunc ('d', '<?php print $id ?>');"/>
 <?php
-	}
+		}
+	if ($can_edit) {							// 3/19/11
 ?>	
+	<INPUT TYPE="button" STYLE = 'margin-left:10px' NAME="edl_but" VALUE="Edit this entry" onclick="JSfnToFunc('u', '<?php print $id ?>');"/></TD>
+<?php
+		}
+?>		
 	</TR>
 	</FORM>
 	</TD></TR></TABLE>
@@ -1696,7 +1664,14 @@ case "u":	// =======================================  Update 	==================
 	<INPUT TYPE="hidden" NAME="srch_str"  	VALUE=""/> <!-- 9/12/10 -->
 	
 	<CENTER><BR><INPUT TYPE="button" 	VALUE="Continue" onClick = "Javascript: document.retform.func.value='r'; document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+<?php				// 3/19/11
+		if ($can_edit) {
+?>	
 	<INPUT TYPE="button" VALUE="Add new <?php print str_replace( "_", " ", ucfirst($tablename)); ?> entry" onclick= "this.form.func.value='c'; this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<?php			
+		}
+?>	
+	
 	</FORM>
 	<?php
 
@@ -1735,7 +1710,7 @@ case "u":	// =======================================  Update 	==================
 	</SCRIPT>
 
 <?php
-	print "<BR /><BR /><BR />";
+	print "<BR /><BR />";
 
 	$query = "DESCRIBE `$mysql_prefix$tablename`";
 	$result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);			// use $result for meta-information reference
@@ -1767,9 +1742,9 @@ case "u":	// =======================================  Update 	==================
 		</TD></TR>
 <?php
 	echo "<TR CLASS='odd'><TD COLSPAN=99 ALIGN='left'><H3>In:</H3></TD></TR>\n";
-	echo "<TR VALIGN='top'><TD>";
+	echo "<TR VALIGN='top'><TD COLSPAN=2>";
 	
-	$out_str = "<TABLE ALIGN='center' CELLSPACING = 0  border=0>\n";
+	$out_str = "<TABLE ALIGN='left' CELLSPACING = 0  border=0 width=100%>\n";
 	
 	$i = 0;
 	$j = 1;
@@ -1777,7 +1752,7 @@ case "u":	// =======================================  Update 	==================
 
 		$i++;
 		$out_str .= "<TR CLASS='{$evenodd[($i+1) % 2]}'><TD CLASS= 'td_label'>
-			<INPUT TYPE='checkbox' NAME = '{$name[$n]}' VALUE='{$name[$n]}' STYLE = 'display:inline;'> {$name[$n]}</TD></TR>\n";
+			<INPUT TYPE='checkbox' NAME = '{$name[$n]}' VALUE='{$name[$n]}' STYLE = 'display:inline; margin-left:20px'> {$name[$n]}</TD></TR>\n";
 		if ($i == $perCol){		// start new column?
 			$i=0;
 			$out_str .=  "</TABLE>\n";
@@ -1790,9 +1765,21 @@ case "u":	// =======================================  Update 	==================
 	$out_str .=  "</TABLE>";
 	echo $out_str;
 	echo "</TD></TR>";
+?>
 
-
-	print "<TR CLASS='{$evenodd[($i+1) % 2]}'><TD COLSPAN=99 ALIGN='center'><BR />
+<SCRIPT>
+function do_check(the_bool) {
+	for(i=0;i<document.s.elements.length;i++) {
+		if (document.s.elements[i].type =='checkbox') {document.s.elements[i].checked=the_bool;}
+		}
+	}
+</SCRIPT>
+	<TR CLASS= "<?php print $evenodd[($i+1) % 2];?>"><TD COLSPAN=99 ALIGN='center'><B>
+	<SPAN ID="check_on"		STYLE = 'display:inline;text-decoration:underline;'	onclick = "$('check_on').style.display='none'; 	 $('check_off').style.display='inline'; do_check(true)">Check all</SPAN>
+	<SPAN ID="check_off"  	STYLE = 'display:none;text-decoration:underline;'	onclick = "$('check_on').style.display='inline'; $('check_off').style.display='none'; 	do_check(false)">Un-check all</SPAN>
+	</B><BR /><BR /></TD></TR>
+<?php
+	print "<TR CLASS='{$evenodd[($i) % 2]}'><TD COLSPAN=99 ALIGN='center'><BR />
 			<INPUT TYPE='button' VALUE='Reset' 	onClick = 'this.form.reset()' >
 			<INPUT TYPE='button' VALUE='Next' 	onClick = 'validate_s(this.form)' STYLE='margin-left:40PX;'>
 			<INPUT TYPE='button' VALUE='Cancel' onClick = \"Javascript: document.retform.func.value='r'; document.retform.submit();\" STYLE='margin-left:40PX;'>	

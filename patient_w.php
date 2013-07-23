@@ -11,12 +11,16 @@
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 8/15/10	added dupe prevention, per JG email
 8/27/10 fmp call added
+12/1/10 $patient get_text added, FIP change
+3/15/11 changed stylesheet.php to stylesheet.php
+5/26/11 added intrusion detection
 */
 error_reporting(E_ALL);			// 10/1/08
 
 @session_start();
-require_once($_SESSION['fip']);		//7/28/10
+require_once('incs/functions.inc.php');	
 do_login(basename(__FILE__));
+if ((isset($_REQUEST['ticket_id'])) && 	(strlen(trim($_REQUEST['ticket_id']))>6)) {	shut_down();}			// 5/26/11
 require_once($_SESSION['fmp']);		// 8/27/10
 
 if($istest) {
@@ -28,18 +32,19 @@ if($istest) {
 	
 $get_action = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['action'])))) ) ? "new" : $_GET['action'] ;
 //dump($get_action);
+$patient = get_text("Patient"); 		// 12/1/10
 	
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Person Module</TITLE>
+	<HEAD><TITLE>Tickets - <?php print $patient; ?> Module</TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="Expires" CONTENT="0">
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<META HTTP-EQUIV="Script-date" CONTENT="8/16/08">
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
 <?php
 if ($get_action == 'add') {		
 	$api_key = get_variable('gmaps_api_key');		// empty($_GET) 
@@ -136,8 +141,6 @@ if ($get_action == 'add') {
 <?php
 		}
 ?>		
-
-
 		}
 
 	function do_unlock(theForm) {									// 8/10/08
@@ -188,7 +191,7 @@ if ($get_action == 'add') {
 	
 				$result = mysql_query("UPDATE `$GLOBALS[mysql_prefix]ticket` SET `updated` = '$frm_asof' WHERE id='$_GET[ticket_id]'  LIMIT 1") or do_error($query,mysql_error(), basename( __FILE__), __LINE__);
 				}
-			print "<BR /><BR /><BR /><BR /><FONT CLASS='header'  STYLE = 'margin-left:180px;'>Person record has been added</FONT><BR /><BR />";
+			print "<BR /><BR /><BR /><BR /><FONT CLASS='header'  STYLE = 'margin-left:180px;'>{$patient} record has been added</FONT><BR /><BR />";
 			print "<BR /><BR /><INPUT TYPE='button' VALUE='Finished' onClick = 'window.close();' STYLE = 'margin-left:280px' /><BR /><BR /><BR />\n";
 
 			print "</BODY>";				// 10/19/08
@@ -281,7 +284,7 @@ if ($get_action == 'add') {
 //			($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, $rec_facility_id=0, $mileage=0) {		// generic log table writer - 5/31/08, 10/6/09
 			$query = "DELETE FROM `$GLOBALS[mysql_prefix]patient` WHERE `id`='$_GET[id]' LIMIT 1";
 			$result = mysql_query($query) or do_error('',$query,mysql_error(), basename( __FILE__), __LINE__);
-			print '<FONT CLASS="header">Person record deleted</FONT><BR /><BR />';
+			print "<FONT CLASS='header'>{$patient} record deleted</FONT><BR /><BR />";
 			add_header($_GET['ticket_id']);				// 8/16/08
 			show_ticket($_GET['ticket_id']);
 			}
@@ -289,7 +292,7 @@ if ($get_action == 'add') {
 			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]patient` WHERE `id`='$_GET[id]' LIMIT 1";
 			$result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
 			$row = stripslashes_deep(mysql_fetch_assoc($result));
-			print "<FONT CLASS='header'>Really delete Person record ' " .shorten($row['description'], 24) . "' ?</FONT><BR /><BR />";
+			print "<FONT CLASS='header'>Really delete {$patient} record ' " .shorten($row['description'], 24) . "' ?</FONT><BR /><BR />";
 			print "<FORM METHOD='post' ACTION='patient_w.php?action=delete&id=$_GET[id]&ticket_id=$_GET[ticket_id]&confirm=1'>
 				<INPUT TYPE='Submit' VALUE='Yes'>";
 			print "<INPUT TYPE = 'button' VALUE = 'Cancel' onClick = 'window.close();' STYLE = 'margin-left:40px' /></FORM>";
@@ -307,7 +310,7 @@ if ($get_action == 'add') {
 		$result = mysql_query("SELECT ticket_id FROM `$GLOBALS[mysql_prefix]patient` WHERE id='$_GET[id]'") or do_error('patient_w.php::update patient record','mysql_query',mysql_error(), basename( __FILE__), __LINE__);
 		$row = stripslashes_deep(mysql_fetch_assoc($result));
 		
-		print '<br><br><FONT CLASS="header">Person record updated</FONT><BR /><BR />';
+		print "<br><br><FONT CLASS='header'>{$patient} record updated</FONT><BR /><BR />";
 		add_header($_GET['ticket_id']);				// 8/16/08
 		show_ticket($row['ticket_id']);
 		}
@@ -318,9 +321,9 @@ if ($get_action == 'add') {
 //		dump($row);
 //		dump(stripslashes($row['description']));
 ?>
-		<FONT CLASS="header">Edit Person Record</FONT><BR /><BR />
+		<FONT CLASS="header">Edit <?php print $patient; ?> Record</FONT><BR /><BR />
 		<FORM METHOD='post' NAME='patientEd' onSubmit='return validate(document.patientEd);' ACTION="patient_w.php?id=<?php print $_GET['id'];?>&ticket_id=<?php print $_GET['ticket_id'];?>&action=update"><TABLE BORDER="0">
-		<TR CLASS='even' ><TD><B>Name: <font color='red' size='-1'>*</font></B></TD><TD><INPUT TYPE="text" NAME="frm_name" value="<?php print $row['name'];?>" size="32"></TD></TR>
+		<TR CLASS='even' ><TD><B><?php print get_text("Patient ID");?>: <font color='red' size='-1'>*</font></B></TD><TD><INPUT TYPE="text" NAME="frm_name" value="<?php print $row['name'];?>" size="32"></TD></TR>
 		<TR CLASS='odd'  VALIGN='top'><TD><B>Description:</B> <font color='red' size='-1'>*</font></TD><TD><TEXTAREA ROWS="8" COLS="45" NAME="frm_description" WRAP="virtual"><?php print $row['description'];?></TEXTAREA></TD></TR>
 <?php
 			print "\n<TR CLASS='even'><TD CLASS='td_label'>As of:</TD><TD>";
@@ -338,10 +341,10 @@ if ($get_action == 'add') {
 		}
 	else {
 ?>
-		<BR /><BR /><FONT CLASS="header" STYLE = 'margin-left:60px'>Add Person Record</FONT><BR /><BR />
+		<BR /><BR /><FONT CLASS="header" STYLE = 'margin-left:60px'>Add <?php print $patient; ?> Record</FONT><BR /><BR />
 		<FORM METHOD="post" NAME='patientAdd' onSubmit='return validate(document.patientAdd);'  ACTION="patient_w.php?ticket_id=<?php print $_GET['ticket_id'];?>&action=add">
 		<TABLE BORDER="0" STYLE = 'margin-left:60px'>
-		<TR CLASS='even' ><TD><B>Name:</B> <font color='red' size='-1'>*</font></TD><TD><INPUT TYPE="text" NAME="frm_name" value="" size="32"></TD></TR>
+		<TR CLASS='even' ><TD><B><?php print get_text("Patient ID");?>:</B> <font color='red' size='-1'>*</font></TD><TD><INPUT TYPE="text" NAME="frm_name" value="" size="32"></TD></TR>
 		<TR CLASS='odd' ><TD><B>Description: </B><font color='red' size='-1'>*</font></TD><TD><TEXTAREA ROWS="8" COLS="45" NAME="frm_description" WRAP="virtual"></TEXTAREA><BR /><BR /></TD></TR> <!-- 10/19/08 -->
 
 		<TR CLASS='even' VALIGN='bottom'><TD CLASS="td_label">As of: &nbsp;&nbsp;</TD><TD><?php print generate_date_dropdown('asof',0,TRUE);?>&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.patientAdd);'></TD></TR>

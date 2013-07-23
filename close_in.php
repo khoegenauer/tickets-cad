@@ -5,10 +5,15 @@
 4/5/10 opener.href steps added
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 8/10/10 added clearing calls assigned this incident
+12/1/10 get_text disposition added
+12/18/10 set signals added
+3/15/11 changed stylesheet.php to stylesheet.php
+4/20/11 corrections re military time false
 */
 error_reporting(E_ALL);
 @session_start();
-require_once($_SESSION['fip']);		//7/28/10
+require_once('incs/functions.inc.php');		//7/28/10
+
 if($istest) {
 //	dump(basename(__FILE__));
 	print "GET<br />\n";
@@ -16,6 +21,7 @@ if($istest) {
 	print "POST<br />\n";
 	dump($_POST);
 	}
+$disposition = get_text("Disposition");				// 12/1/10
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
@@ -31,9 +37,10 @@ if($istest) {
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" /> <!-- 7/7/09 -->
-<LINK REL=StyleSheet HREF="default.css" TYPE="text/css" />
+<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
 </HEAD>
 <?php
+
 if (empty($_POST)) { 		// pass # 1
 ?>
 <BODY onLoad = "if(document.frm_text) {document.frm_note.frm_text.focus() ;}"><CENTER>
@@ -87,6 +94,7 @@ function do_is_closed() {
 	}				// end function do_is_closed()
 	
 function do_is_start($in_row) {				// 3/22/10
+	global $disposition;
 ?>
 <SCRIPT>
 	String.prototype.trim = function () {
@@ -95,7 +103,7 @@ function do_is_start($in_row) {				// 3/22/10
 
 	function validate() {
 		if(document.frm_note.frm_disp.value.trim().length == 0) {
-			alert("Disposition is required"); 
+			alert("<?php print $disposition;?> is required"); 
 			return false;
 			}
 		else{document.frm_note.submit();}
@@ -126,11 +134,57 @@ function do_is_start($in_row) {				// 3/22/10
 	else {$capt = "Synopsis";}
 ?>		
 	<TR CLASS='odd'><TD ALIGN='right' CLASS='td_label' ><?php print $capt;?>:&nbsp;</TD>
+<SCRIPT>
+	function set_signal(inval) {				// 12/18/10
+		var temp_ary = inval.split("|", 2);		// inserted separator
+		document.frm_note.frm_synopsis.value+=" " + temp_ary[1] + ' ';		
+		document.frm_note.frm_synopsis.focus();		
+		}		// end function set_signal()
+
+	function set_signal2(inval) {
+		var temp_ary = inval.split("|", 2);		// inserted separator
+		document.frm_note.frm_disp.value+=" " + temp_ary[1] + ' ';		
+		document.frm_note.frm_disp.focus();		
+		}		// end function set_signal()
+</SCRIPT>
+
 		<TD><TEXTAREA NAME='frm_synopsis' COLS=56 ROWS = 2></TEXTAREA>
 			</TD></TR>
-	<TR CLASS='even'><TD ALIGN='right' CLASS='td_label' >Disposition:&nbsp;</TD>
+		<TR VALIGN = 'TOP' CLASS='odd'>		<!-- 11/15/10 -->
+			<TD></TD><TD CLASS="td_label">Signal &raquo; 
+
+				<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
+				<OPTION VALUE=0 SELECTED>Select</OPTION>
+<?php
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
+				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+				while ($row_sig = stripslashes_deep(mysql_fetch_assoc($result))) {
+					print "\t<OPTION VALUE='{$row_sig['code']}'>{$row_sig['code']}|{$row_sig['text']}</OPTION>\n";		// pipe separator
+					}
+?>
+			</SELECT>
+			</TD></TR>
+			
+			
+	<TR CLASS='even'><TD ALIGN='right' CLASS='td_label' ><?php print $disposition;?>:&nbsp;</TD>
 		<TD><TEXTAREA NAME='frm_disp' COLS=56 ROWS = 2><?php print $in_row['comments'];?></TEXTAREA>
 			</TD></TR>
+		<TR VALIGN = 'TOP' CLASS='odd'>		<!-- 11/15/10 -->
+			<TD></TD><TD CLASS="td_label">Signal &raquo; 
+
+				<SELECT NAME='signals2' onChange = 'set_signal2(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
+				<OPTION VALUE=0 SELECTED>Select</OPTION>
+<?php
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
+				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+				while ($row_sig = stripslashes_deep(mysql_fetch_assoc($result))) {
+					print "\t<OPTION VALUE='{$row_sig['code']}'>{$row_sig['code']}|{$row_sig['text']}</OPTION>\n";		// pipe separator
+					}
+?>
+			</SELECT>
+			</TD></TR>
+			
+			
 <?php										// 8/10/10
 		$query = "SELECT *,
 		UNIX_TIMESTAMP(as_of) AS as_of,
@@ -190,7 +244,7 @@ function do_is_start($in_row) {				// 3/22/10
 
 	function do_is_finished(){
 		if (!get_variable('military_time'))	{			//put together date from the dropdown box and textbox values
-			if ($post_frm_meridiem_problemstart == 'pm'){
+			if ((array_key_exists('frm_meridiem_problemstart', $_POST)) && ($_POST['frm_meridiem_problemstart'] == 'pm')){		// 4/20/11
 				$_POST['frm_hour_problemstart'] = ($_POST['frm_hour_problemstart'] + 12) % 24;
 				}
 			if (isset($_POST['frm_meridiem_problemend'])) {
@@ -198,7 +252,8 @@ function do_is_start($in_row) {				// 3/22/10
 					$_POST['frm_hour_problemend'] = ($_POST['frm_hour_problemend'] + 12) % 24;
 					}
 				}
-			}
+			}		// end if (!get_variable('military_time'))
+			
 		$frm_problemend  = (isset($_POST['frm_year_problemend'])) ? "{$_POST['frm_year_problemend']}-{$_POST['frm_month_problemend']}-{$_POST['frm_day_problemend']} {$_POST['frm_hour_problemend']}:{$_POST['frm_minute_problemend']}:00" : "NULL";
 		$the_problemend  = quote_smart(trim($frm_problemend));
 		$comments = 	quote_smart(trim($_POST['frm_disp']));

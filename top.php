@@ -23,11 +23,17 @@
 8/24/10 emd card handling cleanup
 8/25/10 server variables handling cleaned up
 8/27/10 chat error detection
+1/7/11  JSON re-introduced with length validation and parseInt()
+3/15/11 added reference to stylesheet.php for revisable day night colors.
+5/4/11 day/night color changes added
+5/10/11 log window width increased
 */
 
 error_reporting(E_ALL);
 require_once('./incs/functions.inc.php');		//7/28/10
 require_once('./incs/browser.inc.php');			// 6/12/10
+@session_start();
+
 $temp = intval(get_variable('auto_poll'));
 $poll_cycle_time = ($temp > 0)? ($temp * 1000) : 15000;	// seconds to ms - 8/20/10
 
@@ -46,9 +52,9 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
+<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
 
 <STYLE type="text/css">
-	BODY			{background-color: #EFEFEF; margin: 0; padding: 0; font: normal 12px Arial, Helvetica, sans-serif; color:#000000;}
 	table			{border-collapse:collapse;}
 	table, td, th	{border:0px solid black;}
 	.signal_r { margin-left: 4px;  font: normal 12px Arial, Helvetica, sans-serif; color:#FFFFFF; border-width: 1px; border-STYLE: inset; border-color: #FF3366;
@@ -65,10 +71,12 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 
 	.hover_lo 	{ margin-left: 4px;  font: normal 12px Arial, Helvetica, sans-serif; color:#FF0000; border-width: 1px; border-STYLE: outset; border-color: #FFFFFF;
   				  padding: 1px 0.5em;text-decoration: none; color: black;background-color: #DEE3E7;font-weight: bolder;}
-	.plain_lo 	{  margin-left: 4px; font: normal 12px Arial, Helvetica, sans-serif; color:#000000;  border-width: 3px; border-STYLE: hidden; border-color: #FFFFFF;
-
+	.plain_lo 	{  margin-left: 4px; font: normal 12px Arial, Helvetica, sans-serif; color:#000000;  border-width: 3px; border-STYLE: hidden; border-color: #FFFFFF;}
+	input		{background-color:transparent;}		/* Benefit IE radio buttons */
   	</STYLE>
 <link rel="stylesheet" type="text/css" href="/fvlogger/logger.css" /> 
+<SCRIPT SRC="./js/misc_function.js"></SCRIPT>	<!-- 1/6/11 JSON call-->
+<SCRIPT SRC='./js/md5.js'></SCRIPT>				<!-- 11/30/08 -->
 <SCRIPT>
 	var current_butt_id = "main";
 
@@ -88,7 +96,7 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 			}
 		return elements;
 		}
-	
+
 	function isNull(val) {								// checks var stuff = null;
 		return val === null;
 		}
@@ -113,32 +121,32 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 	var ticket_id = 0;				// new ticket
 	var unit_id;					// 'moved' unit
 	var updated;					// 'moved' unit date/time
-
+	var dispatch;					// latest dispatch status change - date-time
 
 	function do_loop() {								// monitor for changes - 4/10/10	
 		sendRequest ('get_latest_id.php',get_latest_id_cb, "");	
 		}			// end function do_loop()		
 
 	function get_latest_id_cb(req) {					// get_latest_id callback() - 8/16/10
-		var the_id_str=req.responseText;				// object to string	
-		var the_id_arr=the_id_str.split("/");			// parse slash-separated string		
 
-		if ((the_id_str.toLowerCase().indexOf("notice", 0) < 0) && (the_id_str.toLowerCase().indexOf("error", 0) < 0)){		// 8/27/10
-			var temp = the_id_arr[0].trim();				// new chat invite?
-			if (temp > chat_id) {
-				chat_id = temp;
-				chat_signal();								// light the chat button
-				}
+		var the_id_arr=JSON.decode(req.responseText);	// 1/7/11
+		if (the_id_arr.length != 6)  {
+			alert("server error at <?php print basename(__FILE__) . " " . __LINE__;?> ");
+			}
+
+		var temp = parseInt(the_id_arr[0]);				// new chat invite?
+		if (temp > chat_id) {
+			chat_id = temp;
+			chat_signal();								// light the chat button
 			}
 	
-		var temp =  the_id_arr[1].trim();				// ticket?
+		var temp =  parseInt(the_id_arr[1]);			// ticket?
 		if (temp > ticket_id) {
-//			alert("136 " + temp + " : " + ticket_id);
 			ticket_id = temp;
 			tick_signal();								// light the ticket button
 			}
 	
-		var temp =  the_id_arr[2].trim();				// unit?
+		var temp =  parseInt(the_id_arr[2]);			// unit?
 		var temp1 =  the_id_arr[3].trim();				// unit timestamp?
 		
 		if ((temp != unit_id) || (temp1 != updated)) {
@@ -147,6 +155,13 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 			$('unit_id').innerHTML = unit_id;			// unit id
 			unit_signal();								// light the unit button
 			}
+
+		if (the_id_arr[4].trim() != dispatch)  {		// 1/21/11
+
+			dispatch = the_id_arr[4].trim();
+			unit_signal();								// light the unit button
+			}
+
 		}			// end function get_latest_id_cb()		
 
 	function toHex(x) {
@@ -158,28 +173,40 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 		return r;
 		};
 
+	function mu_get() {								// set cycle
+		if (mu_interval!=null) {return;}			// ????
+		mu_interval = window.setInterval('do_loop()', <?php print $poll_cycle_time;?>);		// 4/7/10 
+		}			// end function mu get()
+
+
 	function mu_init() {								// get initial values from server -  4/7/10
-
-		function mu_get() {								// set cycle
-
-			if (mu_interval!=null) {return;}			// ????
-			mu_interval = window.setInterval('do_loop()', <?php print $poll_cycle_time;?>);		// 4/7/10
-			}			// end function mu get()
 
 		if (is_initialized) { return; }
 		is_initialized = true;
 
-		the_id_str = syncAjax("get_latest_id.php");			// note synch call
-		the_id_arr = the_id_str.split("/");					// into array
+		sendRequest ('get_latest_id.php',init_cb, "");			
+			function init_cb(req) {
+		
+//				the_id_str = syncAjax("get_latest_id.php");			// note synch call
+				var the_id_arr=JSON.decode(req.responseText);				// 1/7/11
+				
+				if (the_id_arr.length != 6)  {
+					alert("server error at <?php print basename(__FILE__) . " " . __LINE__;?> ");
+					}
+				else {
+					chat_id =  parseInt(the_id_arr[0]);	
+					ticket_id = parseInt(the_id_arr[1]);		
+					unit_id =  parseInt(the_id_arr[2]);		
+					updated =  the_id_arr[3].trim();					// timestamp this unit
+					dispatch = the_id_arr[4].trim();					// 1/21/11
+					}
 
-		chat_id =  the_id_arr[0].trim();	
-		ticket_id = the_id_arr[1].trim();		
-		unit_id =  the_id_arr[2].trim();		
-		updated =  the_id_arr[3].trim();					// timestamp this unit
+				mu_get();				// start loop
+				
+				}				// end function init_cb()
+		}				// end function mu_init()
 
-		mu_get();				// start loop
-		}
-	
+
 	function do_set_sess_exp() {			// set session expiration  - 1/11/10
 		sendRequest ('set_cook_exp.php',set_cook_exp_handleResult, "");	
 		}
@@ -237,7 +264,6 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 		if (AJAX) {
 			AJAX.open("GET", strURL, false);														 
 			AJAX.send(null);							// form name
-//			alert ("103 " + AJAX.responseText);
 			return AJAX.responseText;																				 
 			} 
 		else {
@@ -391,12 +417,34 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 		document.gout_form.submit();			// send logout 
 		}
 	
-	function hide_butts() {						// 10/27/08
+	function hide_butts() {						// 10/27/08, 3/15/11
 		setTimeout(" $('buttons').style.visibility = 'hidden';" , 1000);
+		
+		$("daynight").style.display = "none";				// 5/2/11
+		$("main_body").style.backgroundColor  = "<?php print get_css('page_background', 'Day');?>";
+		$("main_body").style.color  = "<?php print get_css('titlebar_text', 'Day');?>";
+		$("tagline").style.color  = "<?php print get_css('titlebar_text', 'Day');?>";
+		$("user_id").style.color  = "<?php print get_css('titlebar_text', 'Day');?>";
+		$("unit_id").style.color  = "<?php print get_css('titlebar_text', 'Day');?>";
+		$("script").style.color  = "<?php print get_css('titlebar_text', 'Day');?>";
+		$("time_of_day").style.color  = "<?php print get_css('titlebar_text', 'Day');?>";
+		$("whom").style.color  = "<?php print get_css('titlebar_text', 'Day');?>";
+		$("level").style.color  = "<?php print get_css('titlebar_text', 'Day');?>";
+		$("logged_in_txt").style.color  = "<?php print get_css('titlebar_text', 'Day');?>";
+		$("perms_txt").style.color  = "<?php print get_css('titlebar_text', 'Day');?>";
+		$("modules_txt").style.color  = "<?php print get_css('titlebar_text', 'Day');?>";
+		$("time_txt").style.color  = "<?php print get_css('titlebar_text', 'Day');?>";
+		try {
+			$('manual').style.display = 'none';		// hide the manual link	- possibly absent
+			}
+		catch(e) {
+			}
+
 		}
 
 	function show_butts() {						// 10/27/08
 		$("buttons").style.visibility = "visible";
+		$("daynight").style.display = "inline";
 		}
 
 //	============== module window openers ===========================================
@@ -411,7 +459,7 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 			if(starting) {return;}						// 6/6/08
 			starting=true;	
 			do_set_sess_exp();		// session expiration update
-			newwindow_sl=window.open("log.php", "sta_log",  "titlebar, location=0, resizable=1, scrollbars, height=240,width=600,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
+			newwindow_sl=window.open("log.php", "sta_log",  "titlebar, location=0, resizable=1, scrollbars, height=240,width=960,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 			if (isNull(newwindow_sl)) {
 				alert ("Station log operation requires popups to be enabled. Please adjust your browser options.");
 				return;
@@ -524,41 +572,125 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 		}
 
 <?php
-@session_start();
-$start_up_str = (empty($_SESSION))? "": " mu_init(); mu_get()"; 
+$start_up_str = (empty($_SESSION))? "": " mu_init();"; 
 $the_whom = (empty($_SESSION))? NOT_STR: $_SESSION['user']; 
 $the_level = (empty($_SESSION))? "na": get_level_text($_SESSION['level']); 
+$day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_night'])) ? $_SESSION['day_night'] : 'Day';
 print "\n\t var the_whom = '{$the_whom}'\n";
 print "\t var the_level ='{$the_level}'\n"; 
+
+function get_daynight() {
+	$day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_night'])) ? $_SESSION['day_night'] : 'Day';
+	return $day_night;
+	}
 ?>
+
+	function do_day_night(which){
+		for (i=0;i<document.day_night_form.elements.length;i++) {
+			if ((document.day_night_form.elements[i].type=='radio') && (document.day_night_form.elements[i].name=='frm_daynight')) {
+				if (document.day_night_form.elements[i].value == which) {
+					document.day_night_form.elements[i].checked = true;
+					document.day_night_form.elements[i].disabled = true;
+					}
+				else {
+					document.day_night_form.elements[i].checked = false;
+					document.day_night_form.elements[i].disabled = false;
+					}
+				}				// end if (type=='radio')
+			}
+		}		// end function do_day_night()
+	
+
+
 	function top_init() {					// initialize display
 		CngClass('main', 'signal_w');		// light up 'sit' button - 8/21/10
 		$("whom").innerHTML  =	the_whom;
 		$("level").innerHTML =	the_level;
 		do_time();
+<?php												// 5/4/11
+		if (empty($_SESSION)) {						// pending login
+			$day_checked = $night_checked = "";
+			$day_disabled = $night_disabled= "DISABLED";
+			}
+		else {				// logged-in
+			if (($_SESSION['day_night']) == 'Day') {	
+				$day_checked = "CHECKED";			// allow only 'night'
+				$day_disabled = "DISABLED";
+				$night_checked = "";
+				$night_disabled = "";
+				}
+			else {
+				$day_checked = "";					//  allow only 'day'
+				$day_disabled = "";
+				$night_checked = "CHECKED";
+				$night_disabled = "DISABLED";
+				}	
+?>
+			show_butts();														// navigation buttons
+			$("gout").style.display  = "inline";								// logout button
+			$("user_id").innerHTML  = "<?php print $_SESSION['user_id'];?>";	
+			$("whom").innerHTML  = "<?php print $_SESSION['user'];?>";			// user name
+			$("level").innerHTML = "<?php print get_level_text($_SESSION['level']);?>";
+			mu_init();															// start polling
+			
+<?php
+			}				// end if/else (empty($_SESSION))
+?>		
 		}		// end function top_init() 
+
 
 	function do_log (instr) {
 		$('log_div').innerHTML += instr + "<br />";
 		}
 
+	function get_new_colors() {										// 5/4/11 - a simple refresh
+		window.location.href = '<?php print basename(__FILE__);?>';
+		}
+
+	function set_day_night(which) {			// 5/2/11
+		sendRequest ('./ajax/do_day_night_swap.php', day_night_callback, "");			
+			function day_night_callback(req) {
+				var the_ret_val = req.responseText;	
+				try {
+					parent.frames["main"].get_new_colors();			// reloads main frame
+					}
+				catch (e) {
+					}
+				window.clearInterval(mu_interval);
+				get_new_colors();								// reloads top				
+				}									// end function day_night_callback()				
+		}
+
+	function do_manual(filename){							// launches Tickets manual page -  5/27/11
+		try {
+			newwindow_em=window.open(filename, "Manual",  "titlebar, resizable=1, scrollbars, height=640,width=800,status=0,toolbar=0,menubar=0,location=0, left=20,top=20,screenX=20,screenY=20");
+			}
+		catch (e) {
+			}
+		try {
+			newwindow_em.focus();;
+			}
+		catch (e) {
+			}
+		}		// end do_manual()
+		
 	</SCRIPT>
 </HEAD>
 
-<!--<BODY> -->
-<BODY onLoad = "top_init();">
+<BODY ID="main_body" onLoad = "top_init();">	<!-- 3/15/11 -->
 	<TABLE ALIGN='left'>
 		<TR VALIGN='top'>
 			<TD ROWSPAN=2><IMG SRC="<?php print get_variable('logo');?>" BORDER=0 /></TD>
 			<TD>
 <?php
+
 	$temp = get_variable('_version');				// 8/8/10
 	$version_ary = explode ( "-", $temp, 2);
 ?>
-				<SPAN><FONT SIZE="3">ickets <?php print trim($version_ary[0]) . " on <B>". get_variable('host')."</B></FONT>"; ?></SPAN>
-						<SPAN STYLE = 'margin-left: 8px'><?php print get_text("Logged in"); ?>: </SPAN>
-						<SPAN ID="whom" STYLE = 'margin-left: 4px'><?php print NOT_STR ; ?></SPAN>&nbsp;&nbsp;&nbsp;&nbsp; 
-						<?php print get_text("Perm's"); ?>: <SPAN ID="level">na</SPAN>&nbsp;&nbsp;&nbsp;
+				<SPAN ID="tagline" CLASS="titlebar_text"><FONT SIZE="3">ickets <?php print trim($version_ary[0]) . " on <B>". get_variable('host')."</B></FONT>"; ?></SPAN>	<!-- 3/15/11 -->
+				<SPAN ID="logged_in_txt" STYLE = 'margin-left: 8px;' CLASS="titlebar_text"><?php print get_text("Logged in"); ?>:</SPAN>	<!-- 3/15/11 -->
+				<SPAN ID="whom" CLASS="titlebar_text"><?php print NOT_STR ; ?></SPAN>
+				<SPAN ID="perms_txt" CLASS="titlebar_text">:<SPAN ID="level" CLASS="titlebar_text">na</SPAN>&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->
 						
 <?php
 	$temp = get_variable('auto_poll');
@@ -575,14 +707,43 @@ print "\t var the_level ='{$the_level}'\n";
 			}
 	
 		$card_addr=(!empty($card_file))? $dir . "/" . $filename  : "";
-		}
-	
+		}	
+		
 ?>
-				<SPAN ID='user_id' STYLE="display:none">0</SPAN><!-- default value - 5/29/10 -->
-				<SPAN ID='unit_id' STYLE="display:none"></SPAN>	<!-- unit that has just moved - 4/7/10 -->
-				<?php print get_text("Module"); ?>: <SPAN ID="script">login</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;
-				<?php print get_text("Time"); ?>: <b><SPAN ID="time_of_day" ></SPAN></b>&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN ID='user_id' STYLE="display:none" CLASS="titlebar_text">0</SPAN><!-- default value - 5/29/10, 3/15/11 -->
+				<SPAN ID='unit_id' STYLE="display:none" CLASS="titlebar_text"></SPAN><!-- unit that has just moved - 4/7/10, 3/15/11 -->
+				<SPAN ID='modules_txt' CLASS="titlebar_text"><?php print get_text("Module"); ?>: </SPAN><SPAN ID="script" CLASS="titlebar_text">login</FONT></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->
+				<SPAN ID='daynight' CLASS="titlebar_text"  STYLE = 'display:none'>
+					<FORM NAME = 'day_night_form' STYLE = 'display: inline-block'>
+											<!-- set in  above -->
+					<INPUT TYPE="radio" NAME="frm_daynight" VALUE="Day" <?php print "{$day_disabled} {$day_checked}" ;?> 		onclick = ' set_day_night(this.value);'>Day&nbsp;&nbsp;&nbsp;&nbsp;
+					<INPUT TYPE="radio" NAME="frm_daynight" value="Night" <?php print "{$night_disabled}  {$night_checked}" ;?> onclick = 'set_day_night(this.value);' >Night&nbsp;&nbsp;&nbsp;&nbsp;
+					
+					</FORM>
+				</SPAN>
+				<SPAN ID='time_txt' CLASS="titlebar_text"><?php print get_text("Time"); ?>: </SPAN><b><SPAN ID="time_of_day" CLASS="titlebar_text"></SPAN></b></FONT>&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->
+<?php				// 5/26/11
+	$dir = "./manual";
+	
+	if (file_exists ($dir)) {
+		$dh  = opendir($dir);
+		while (false !== ($filename = readdir($dh))) {
+			if ((strlen($filename)>2) && (get_ext($filename)=="pdf"))  {
+			    $manual_file = $filename;						// at least one pdf, use first encountered
+			    break;
+			    }
+			}
+	
+		$manual_addr=(!empty($manual_file))? $dir . "/" . $filename  : "";
+		}	
+		
+	if (!(empty($manual_addr))) {
+?>
 
+				<SPAN ID='manual' CLASS="titlebar_text" onClick = "do_manual('<?php echo $manual_addr;?>');" STYLE="display:none;"  ><U>Manual</U></SPAN>
+<?php
+			}
+?>
 				<SPAN ID = 'gout' CLASS = 'hover_lo' onClick = "do_logout()" STYLE="display:none;" ><?php print get_text("Logout"); ?></SPAN> <!-- 7/28/10 -->
 				
 <?php

@@ -7,6 +7,9 @@ routes to incident from selected unit
 1/7/10 added 'call taker' alias
 7/16/10 detailmap.setCenter correction
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
+11/23/10 - mi vs km per locale
+3/15/11 changed stylesheet.php to stylesheet.php
+
 */
 error_reporting(E_ALL);
 
@@ -20,6 +23,7 @@ if($istest) {
 	print "POST<br />\n";
 	dump($_POST);
 	}
+$conversion = get_dist_factor();				// KM vs mi - 11/23/10
 	
 $api_key = get_variable('gmaps_api_key');
 $_GET = stripslashes_deep($_GET);
@@ -32,7 +36,7 @@ $_GET = stripslashes_deep($_GET);
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
     <style type="text/css">
       body 					{font-family: Verdana, Arial, sans serif;font-size: 11px;margin: 2px;}
       table.directions th 	{background-color:#EEEEEE;}	  
@@ -527,7 +531,7 @@ function do_list($unit_id ="") {
 						lats[i] = <?php print $track_row['latitude'];?>;									// now compute distance - in km
 						lngs[i] = <?php print $track_row['longitude'];?>;
 						distances[i] = distCosineLaw(parseFloat(lats[i]), parseFloat(lngs[i]), parseFloat(<?php print $row_unit['lat'];?>), parseFloat(<?php print $row_unit['lng'];?>));
-					    var km2mi = 0.6214;				// 
+					    var km2mi = <?php print $conversion ;?>;				// 
 						var dist_mi = ((distances[i] * km2mi).toFixed(1)).toString();				// to miles
 <?php
 						$thespeed = ($track_row['speed'] == 0)?"<FONT COLOR='red'><B>&bull;</B></FONT>"  : "<FONT COLOR='green'><B>&bull;</B></FONT>" ;
@@ -565,7 +569,7 @@ function do_list($unit_id ="") {
 						lats[i] = <?php print $unit_row['lat'];?>;									// now compute distance - in km
 						lngs[i] = <?php print $unit_row['lng'];?>;
 						distances[i] = distCosineLaw(parseFloat(lats[i]), parseFloat(lngs[i]), parseFloat(<?php print $row_unit['lat'];?>), parseFloat(<?php print $row_unit['lng'];?>));	// note: km
-					    var km2mi = 0.6214;				// 
+					    var km2mi = <?php print $conversion ;?>;				// 
 						var dist_mi = ((distances[i] * km2mi).toFixed(1)).toString();				// to feet
 			
 						sidebar_line = "<TD><?php print shorten($unit_row['name'], 16);?></TD><TD>"+ dist_mi+"</TD>";

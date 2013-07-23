@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 3/12/10 session started
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 9/30/10 require_once FMP added, address information added
+3/15/11 changed stylesheet.php to stylesheet.php
 */
 /*
 NAME
@@ -33,7 +34,7 @@ $the_width = 600;
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
-	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
    <STYLE TYPE="text/css">
 		body 	{font-family: Verdana, Arial, sans serif;font-size: 11px;margin: 2px;}
 		table 	{border-collapse: collapse; }

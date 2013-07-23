@@ -5,6 +5,7 @@
 6/1/10 added functions_major.inc.php
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 8/10/10 address data disambiguated
+3/15/11 changed stylesheet.php to stylesheet.php
 */
 error_reporting(E_ALL);	
 		// 7/28/10
@@ -51,7 +52,7 @@ require_once($_SESSION['fmp']);		// 7/28/10, 8/10/10
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" /> <!-- 7/7/09 -->
-<LINK REL=StyleSheet HREF="default.css" TYPE="text/css" />
+<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
 <BODY>
 <?php
 	$the_width = 600;

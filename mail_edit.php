@@ -5,6 +5,7 @@
 7/19/10 title handling corrected
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 8/30/10 finished addr correction
+3/15/11 changed stylesheet.php to stylesheet.php
 */
 error_reporting(E_ALL);
 
@@ -32,7 +33,7 @@ $title = (isset($row)) ? substr(stripslashes($row['scope']), 0, 60): $_POST['frm
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
 <SCRIPT>
 
 String.prototype.trim = function () {

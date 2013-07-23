@@ -158,6 +158,7 @@ $iw_width = 	"300px";		// map infowindow with
 5/30/13 Implement catch for when there are no allocated regions for current user. 
 5/31/2013 tracking speed display corrections made
 6/1/2013 revised 'contact us' addr to user setting value
+7/2/2013 revised to take responder as-of timestamp per server time
 */
 
 $nature = get_text("Nature");			// 12/03/10
@@ -3085,17 +3086,18 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 	$tip_str = "onMouseover=\\\"Tip('{$cstip}')\\\" onmouseout=\\\"UnTip();\\\" "; 
 	$sidebar_line .= "<TD {$tip_str} onClick = '{$on_click}'>{$the_bull}</TD>";
 
-// as of
-		$the_time = $row['updated'];
-		$the_time_test = strtotime($row['updated']);
+// as of - 7/2/2013
 		$the_class = "";
-		$strike = $strike_end = "";
 		$the_flag = $name . "_flag";
-		if (($track_type > 0) && ((abs($utc - $the_time_test)) > $GLOBALS['TOLERANCE'])) {			// attempt to identify  non-current values
-			$strike = "<STRIKE>"; $strike_end = "</STRIKE>";
-			}
 
-		$sidebar_line .= "<TD CLASS='$the_class'> {$strike} <SPAN id = '" . $name . "'>" . format_sb_date_2($the_time) . "</SPAN>{$strike_end}&nbsp;&nbsp;<SPAN ID = '" . $the_flag . "'></SPAN></TD>";	// 6/17/08
+
+		$strike_ary = ( abs ( ( now() - strtotime ($row['updated'] ) ) ) <  $GLOBALS['TOLERANCE'] ) ? 
+			array ( "", "") : 
+			array ( "<strike>", "<strike>") ;
+		$sidebar_line .= "<TD CLASS='$the_class'> {$strike_ary[0]} <SPAN id = '{$name}'>" . 
+			format_sb_date_2 ( $row['updated'] ) . 
+			"</SPAN>{$strike_ary[1]}&nbsp;&nbsp;<SPAN ID = '{$the_flag}'></SPAN></TD>";	// 7/2/2013
+
 
 		if (my_is_float($row['lat'])) {						// 5/4/09
 
@@ -3122,8 +3124,8 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 				$tab_2 .="<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . $row_track['source'] . "</B></TD></TR>";
 				$tab_2 .= "<TR CLASS='odd'><TD ALIGN='left'>Course: </TD><TD ALIGN='left'>" . $row_track['course'] . ", Speed:  " . $row_track['speed'] . ", Alt: " . $row_track['altitude'] . "</TD></TR>";
 				$tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>Closest city: </TD><TD ALIGN='left'>" . $row_track['closest_city'] . "</TD></TR>";
-				$tab_2 .= "<TR CLASS='odd'><TD ALIGN='left'>{$gt_status}: </TD><TD ALIGN='left'>" . $row_track['status'] . "</TD></TR>";
-				$tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>As of: </TD><TD ALIGN='left'> $strike " . format_date_2(strtotime($row_track['packet_date'])) . " $strike_end (UTC)</TD></TR></TABLE></DIV";
+				$tab_2 .= "<TR CLASS='odd'><TD ALIGN='left'>{$gt_status}: </TD><TD ALIGN='left'>" . $row_track['status'] . "</TD></TR>";				// 7/2/2013
+				$tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>As of: </TD><TD ALIGN='left'> {$strike_ary[0]} " . format_date_2(strtotime($row_track['packet_date'])) . "{$strike_ary[1]}</TD></TR></TABLE></DIV";
 ?>
 /*
 			var myinfoTabs = [
@@ -3192,8 +3194,8 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 	$sb_indx++;				// zero-based
 	}				// end  ==========  while() for RESPONDER ==========
 //	$temp  = (string) ( round((microtime(true) - $time), 3));
-	$source_legend = (isset($do_legend))? "<TD CLASS='emph' ALIGN='left'>Source time</TD>": "<TD></TD>";		// if any remote data/time 3/24/09
-	print "\n\tside_bar_html+= \"<TR CLASS='\" + colors[i%2] +\"'><TD COLSPAN='7' ALIGN='right'>{$source_legend}</TD></TR>\";\n";
+//	$source_legend = (isset($do_legend))? "<TD CLASS='emph' ALIGN='left'>Source time</TD>": "<TD></TD>";		// if any remote data/time 3/24/09
+//	print "\n\tside_bar_html+= \"<TR CLASS='\" + colors[i%2] +\"'><TD COLSPAN='7' ALIGN='right'>{$source_legend}</TD></TR>\";\n";
 ?>
 	var legends = "<TR class='even'><TD ALIGN='center' COLSPAN='99'><TABLE ALIGN='center' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> >";	//	3/15/11
 	legends += "<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR><TR class='even'><TD ALIGN='center' COLSPAN='99'><B><?php print get_text("Units");?> Legend</B></TD></TR>";	//	3/15/11
@@ -4217,7 +4219,8 @@ else {
 	var unit_icon = new GIcon(baseIcon);				// 4179
 */	
 	unit_icon = icons[1];
-
+	var bounds = new google.maps.LatLngBounds();		// Initialize 
+	
 function createMarker(unit_point, number) {		// unit marker
 	bounds.extend(unit_point);	
 	var unit_marker = new google.maps.Marker({position: unit_point, map: map, icon: unit_icon});			
@@ -4795,6 +4798,7 @@ function popup_ticket($id,$print='false', $search = FALSE) {								/* 7/9/09 - 
 	icons[1] = "./our_icons/white.png";		// normal
 	icons[2] = "./our_icons/black.png";	// green
 	unit_icon = icons[1];
+	
 function createMarker(unit_point, number) {		// unit marker
 	bounds.extend(unit_point);	
 	var unit_marker = new google.maps.Marker({position: unit_point, map: map, icon: unit_icon});			

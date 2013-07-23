@@ -38,6 +38,8 @@
 5/29/2013 - revised message handling/notification, do_logout() calls commented out in try/catch error handling
 5/30/2013 - set 5-second poll cycle.
 6/3/2013 - made HAS button appearance conditional on setting
+7/2/2013 include setting internet in HAS include 
+7/16/13 Revisions to strings for top bars which fail on intial load after install and stop buttons from showing.
 */
 
 error_reporting(E_ALL);
@@ -826,6 +828,7 @@ if(file_exists("./incs/modules.inc.php")) {
 
 <?php
 $start_up_str = 	(array_key_exists('user', $_SESSION))? "": " mu_init();"; 
+$the_userid = 		(array_key_exists('user_id', $_SESSION))? $_SESSION['user_id'] : "na"; 	//	7/16/13
 $the_whom = 		(array_key_exists('user', $_SESSION))? $_SESSION['user']: NOT_STR; 
 $the_level = 		(array_key_exists('level', $_SESSION))? get_level_text($_SESSION['level']):"na"; 
 
@@ -866,7 +869,7 @@ function get_daynight() {
 			$day_disabled = $night_disabled= "DISABLED";
 			}
 		else {				// logged-in
-			if (($_SESSION['day_night']) == 'Day') {	
+			if ($start_up_str == 'Day') {	//	7/16/13	Revised to fix error on initial startup
 				$day_checked = "CHECKED";			// allow only 'night'
 				$day_disabled = "DISABLED";
 				$night_checked = "";
@@ -879,15 +882,15 @@ function get_daynight() {
 				$night_disabled = "DISABLED";
 				}	
 ?>
+		var current_user_id = "<?php print $_SESSION['user_id'];?>";
 			show_butts();														// navigation buttons
 			$("gout").style.display  = "inline";								// logout button
-			$("user_id").innerHTML  = "<?php print $_SESSION['user_id'];?>";	
-			$("whom").innerHTML  = "<?php print $_SESSION['user'];?>";			// user name
-			$("level").innerHTML = "<?php print get_level_text($_SESSION['level']);?>";
+			$("user_id").innerHTML  = "<?php print $the_userid;?>";		//	7/16/13
+			$("whom").innerHTML  = "<?php print $the_whom;?>";			// user name, 7/1613
+			$("level").innerHTML = "<?php print $the_level;?>";		//	7/16/13
 			var is_messaging = <?php print get_variable('use_messaging');?>;
 			if(((is_messaging == 1) || (is_messaging == 2) || (is_messaging == 3)) && (internet == true)) {
 				nm_init();
-				
 				}
 			mu_init();			// start polling
 //			get_msgs();		//	Get messages from SMS Gateway and Email;
@@ -947,6 +950,9 @@ function get_daynight() {
 				}, 1000);			// end setTimeout()
 			}					// end function
 
+<?php				// 7/2/2013
+		if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 		// 
+?>
 		function do_broadcast () {
 			hide_butts();								// hide buttons
 			$("has_form_row").style.display = "inline-block";
@@ -985,10 +991,15 @@ function get_daynight() {
 			$("has_message_row").style.display = "inline-block";	// include button
 			}
 
+<?php
+		}			// end if (broadcast && internet )
+?>		
 
 	</SCRIPT>
-<?php
-	require_once('./incs/socket2me.inc.php');		// 5/24/2013
+<?php							// 7/2/2013
+	if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 	
+		require_once('./incs/socket2me.inc.php');		// 5/24/2013
+		}
 ?>
 	
 </HEAD>
@@ -1144,12 +1155,12 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 <?php
 			}		// end if (ics_top)
 
-		if (intval(get_variable('broadcast')==1)) { 		// 6/3/2013
+		if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 		// 6/3/2013 -7/2/2013 
 ?>
 			<SPAN ID = 'has_button' CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick = "do_broadcast();"><?php echo get_text("HAS"); ?></SPAN> <!-- 5/24/2013 -->
 <?php
-	}			// end if (broadcast)
+	}			// end if (broadcast && internet )
 ?>				
 			</TD>
 			</TR>

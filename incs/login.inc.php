@@ -139,7 +139,7 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 	$warn = ((array_key_exists ('expires', $_SESSION)) && ($now > $_SESSION['expires']))? "Log-in has expired due to inactivity.  Please log in again." : "";
 	
 	$internet = get_variable("internet");				// 8/22/10
-	$temp = implode(";",  $_SESSION);
+//	$temp = implode(";",  $_SESSION);
 	
 	if ((array_key_exists ('user_id', $_SESSION)) && (is_expired($_SESSION['user_id']))) {
 
@@ -254,7 +254,7 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 					$fac_sess_flag = "show_hide_fac_" . $value;
 					$_SESSION[$fac_sess_flag] = "h";
 					}
-				$temp = implode(";",  $_SESSION);
+//				$temp = implode(";",  $_SESSION);
 
 				set_filenames($internet);			// 8/31/10
 	

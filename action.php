@@ -21,6 +21,7 @@
 4/22/11 addslashes() added for embedded apostrophes
 6/10/11 Added regional capability - restrictions to shown responders by groups allocated
 6/11/12 Moved javascript functions do_unlock, do_lock and do_asof from main JS section to line 742, spurious do notify() removed
+7/3/2013 - socket2me conditioned on internet and broadcast settings
 */
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
 error_reporting (E_ALL  ^ E_DEPRECATED);
@@ -201,7 +202,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			}
 		else {
 <?php
-		if (intval(get_variable('broadcast')==1)) { 
+		if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 		// 7/2/2013
 ?>
 								/*	5/22/2013 */
 			var theMessage = "New  <?php print get_text('Action');?> record by <?php echo $_SESSION['user'];?>";
@@ -303,8 +304,10 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		return true;
 		}			
 	</SCRIPT>
-<?php
-require_once('./incs/socket2me.inc.php');		// 5/22/2013
+<?php				// 7/3/2013
+	if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 	
+		require_once('./incs/socket2me.inc.php');		// 5/22/2013
+		}
 ?>
 	</HEAD>
 <?php 
@@ -654,26 +657,35 @@ require_once('./incs/socket2me.inc.php');		// 5/22/2013
 //						generate dropdown menu of responders
 
 	if(!isset($curr_viewed)) {	
-		$x=0;	//	6/10/11
-		$where = "WHERE (";	//	6/10/11
-		foreach($al_groups as $grp) {	//	6/10/11
-			$where2 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-			$where .= "`a`.`group` = '{$grp}'";
-			$where .= $where2;
-			$x++;
+		if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+			$where = "WHERE `a`.`type` = 2";
+			} else {
+			$x=0;	//	6/10/11
+			$where = "WHERE (";	//	6/10/11
+			foreach($al_groups as $grp) {	//	6/10/11
+				$where2 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where .= "`a`.`group` = '{$grp}'";
+				$where .= $where2;
+				$x++;
+				}
+			$where .= "AND `a`.`type` = 2";	//	6/10/11					
 			}
-	} else {
-		$x=0;	//	6/10/11
-		$where = "WHERE (";	//	6/10/11
-		foreach($curr_viewed as $grp) {	//	6/10/11
-			$where2 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-			$where .= "`a`.`group` = '{$grp}'";
-			$where .= $where2;
-			$x++;
+		} else {
+		if(count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+			$where = "WHERE `a`.`type` = 2";
+			} else {				
+			$x=0;	//	6/10/11
+			$where = "WHERE (";	//	6/10/11
+			foreach($curr_viewed as $grp) {	//	6/10/11
+				$where2 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+				$where .= "`a`.`group` = '{$grp}'";
+				$where .= $where2;
+				$x++;
+				}
+			$where .= "AND `a`.`type` = 2";	//	6/10/11						
 			}
-	}
-	$where .= "AND `a`.`type` = 2";	//	6/10/11		
-
+		}	
+	
 
 		$query = "SELECT *, 
 			`updated` AS `updated`,

@@ -170,7 +170,7 @@ else {
 //	snap(basename(__FILE__) . __LINE__, $_POST['frm_subj'] );
 //	snap(basename(__FILE__) . __LINE__, $_POST['frm_text']);
 
-	do_send ($_POST['frm_to_str'], $_POST['frm_subj'], $_POST['frm_text'], $_POST['frm_ticket_id'], 0) ;		// ($to, $subject, $text) ;
+	do_send ($_POST['frm_to_str'], "", $_POST['frm_subj'], $_POST['frm_text'], $_POST['frm_ticket_id'], 0) ;		// ($to, $subject, $text) ;
 ?>
 <SCRIPT>
 /*

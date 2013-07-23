@@ -18,6 +18,8 @@
 6/10/11 added intrusion detection, accommodate window operation
 7/27/11 fixed, per kb email
 8/4/11 added call to google maps script
+7/3/2013 - socket2me conditioned on internet and broadcast settings
+7/12/13 - revised to catch 0 value in gender and insurance.
 */
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
 error_reporting (E_ALL  ^ E_DEPRECATED);
@@ -152,7 +154,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			}
 		else {
 <?php
-		if (intval(get_variable('broadcast')==1)) { 		// 6/3/2013
+		if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 		// 7/2/2013
 ?>
 			var theMessage = "New  <?php print get_text('Patient');?> record by <?php echo $_SESSION['user'];?>";
 			broadcast(theMessage ) ;
@@ -204,8 +206,10 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		}
 
 	</SCRIPT>
-<?php
-require_once('./incs/socket2me.inc.php');		// 5/22/2013
+<?php				// 7/3/2013
+	if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 	
+		require_once('./incs/socket2me.inc.php');		// 5/22/2013
+		}
 ?>
 	</HEAD>
 <?php 
@@ -423,7 +427,8 @@ require_once('./incs/socket2me.inc.php');		// 5/22/2013
 		<TR CLASS='even' ><TD><B><?php print get_text("Patient ID");?>: <font color='red' size='-1'>*</font></B></TD><TD><INPUT TYPE="text" NAME="frm_name" value="<?php print $row['name'];?>" size="32"></TD></TR>
 <?php
 	$checks = array("", "", "", "", "");		// gender checks
-	$checks[intval($row['gender'])] = "CHECKED";
+	$row_gender = ($row['gender'] != 0) ? $row['gender'] : 4;	//	7/12/13
+	$checks[intval($row_gender)] = "CHECKED";	//	7/12/13
 
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]insurance` ORDER BY `sort_order` ASC, `ins_value` ASC";
 	$result = mysql_query($query);
@@ -431,7 +436,7 @@ require_once('./incs/socket2me.inc.php');		// 5/22/2013
 		$ins_sel_str = "<SELECT CLASS='sit' name='frm_insurance' onChange = 'this.form.frm_ins_id.value = this.options[this.selectedIndex].value;'>\n";
 		
 		while ($row_ins = stripslashes_deep(mysql_fetch_assoc($result))) {
-			$sel = (intval($row['insurance_id']) == intval($row_ins['id']))? "SELECTED": "";
+			$sel = (($row['insurance_id'] != 0) && (intval($row['insurance_id']) == intval($row_ins['id'])))? "SELECTED": "";	//	7/12/13
 			$ins_sel_str .= "\t\t\t<OPTION VALUE={$row_ins['id']} {$sel}>{$row_ins['ins_value']}</OPTION>\n";		
 			}		// end while()
 		$ins_sel_str .= "</SELECT>\n";
@@ -527,26 +532,35 @@ require_once('./incs/socket2me.inc.php');		// 5/22/2013
 		$regs_string = "<FONT SIZE='-1'>Showing " . get_text("Regions") . ":&nbsp;&nbsp;" . $curr_names . "</FONT>";	//	5/4/11	
 		
 		if(!isset($curr_viewed)) {	
-			$x=0;	//	6/10/11
-			$where2 = "WHERE (";	//	6/10/11
-			foreach($al_groups as $grp) {	//	6/10/11
-				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-				$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-				$where2 .= $where3;
-				$x++;
+			if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+				$where2 = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 3";
+				} else {
+				$x=0;	//	6/10/11
+				$where2 = "WHERE (";	//	6/10/11
+				foreach($al_groups as $grp) {	//	6/10/11
+					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
+				$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	6/10/11					
 				}
-		} else {
-			$x=0;	//	6/10/11
-			$where2 = "WHERE (";	//	6/10/11
-			foreach($curr_viewed as $grp) {	//	6/10/11
-				$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-				$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-				$where2 .= $where3;
-				$x++;
+			} else {
+			if(count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+				$where2 = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 3";
+				} else {				
+				$x=0;	//	6/10/11
+				$where2 = "WHERE (";	//	6/10/11
+				foreach($curr_viewed as $grp) {	//	6/10/11
+					$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
+				$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	6/10/11						
 				}
-		}
-		$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	6/10/11			
-
+			}
+		
 		$query_fc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities`
 			LEFT JOIN `$GLOBALS[mysql_prefix]allocates` ON ( `$GLOBALS[mysql_prefix]facilities`.`id` = `$GLOBALS[mysql_prefix]allocates`.`resource_id` )		
 			$where2 GROUP BY `$GLOBALS[mysql_prefix]facilities`.`id` ORDER BY `name` ASC";		

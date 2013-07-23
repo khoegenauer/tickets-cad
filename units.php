@@ -138,6 +138,8 @@ $groupname = isset($_SESSION['group_name']) ? $_SESSION['group_name'] : "";	//	4
 5/31/2013 track speed display correction applied - for consistency with sit-screen
 6/13/13 revised to remove id conflict on despatch from unit.
 6/21/13 Added "Status_updated" field. Used for Auto status functionality
+7/2/2013 revised to use updated as server timestamp vs packet timestamp
+7/2/13 Revised SQL in query that builds Ticket list to dispatch
 */
 
 @session_start();	
@@ -2165,16 +2167,19 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$tip_str = "onMouseover=\\\"Tip('{$tip}')\\\" onmouseout=\\\"UnTip();\\\" "; 
 		$sidebar_line .= "<TD WIDTH='2%' {$tip_str}>{$the_bull}</TD>";					// 4/14/10
 
-// as of
+// as of	- 7/2/2013
 		$the_time = $row['r_updated'];
 		$the_class = "";
-		$strike = $strike_end = "";
 		$the_flag = $name . "_flag";		
-		if (($track_type > 0) && ((abs($utc - $the_time)) > $GLOBALS['TOLERANCE'])) {								// attempt to identify  non-current values
-			$strike = "<STRIKE>"; $strike_end = "</STRIKE>";
-			}
 		$temp = (string) mysql2timestamp($the_time);		// 
-		$sidebar_line .= "<TD WIDTH='18%' CLASS='$the_class'> {$strike}<SPAN id = '{$name}'><NOBR>" . format_sb_date($temp) . "</NOBR></SPAN>{$strike_end}&nbsp;&nbsp;<SPAN ID = '" . $the_flag . "'></SPAN></TD>";	// 6/17/08
+
+		$strike_ary = ( abs ( ( now() - strtotime ($row['r_updated'] ) ) ) <  $GLOBALS['TOLERANCE'] ) ? 
+			array ( "", "") : 
+			array ( "<strike>", "<strike>") ;
+
+		$sidebar_line .= "<TD WIDTH='18%' CLASS='{$the_class}'> {$strike_ary[0]}<SPAN id = '{$name}'><NOBR>" . format_sb_date($temp) . "</NOBR></SPAN>{$strike_ary[1]}&nbsp;&nbsp;<SPAN ID = '{$the_flag}'></SPAN></TD>";	// 6/17/08
+
+
 // tab 1
 		if (my_is_float($row['lat'])) {										// position data? 4/29/09
 			$temptype = $u_types[$row['type_id']];
@@ -2202,8 +2207,11 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			$tab_2 .= "<TR CLASS='odd'><TD>Course: </TD><TD>" . $row_track['course'] . ", Speed:  " . $row_track['speed'] . ", Alt: " . $row_track['altitude'] . "</TD></TR>";
 			$tab_2 .= "<TR CLASS='even'><TD>Closest city: </TD><TD>" . $row_track['closest_city'] . "</TD></TR>";
 			$tab_2 .= "<TR CLASS='odd'><TD>Status: </TD><TD>" . $row_track['status'] . "</TD></TR>";
-			if (array_key_exists ('packet_date',$row_track )) {
-				$tab_2 .= "<TR CLASS='even'><TD>As of: </TD><TD> $strike" . format_date($row_track['packet_date']) . "$strike_end (UTC)</TD></TR></TABLE>";
+			if (array_key_exists ('packet_date',$row_track ) ) {				// 7/2/2013
+				$strike_ary = ( abs ( ( now() - strtotime ($row_track['packet_date'] ) ) ) <  $GLOBALS['TOLERANCE'] ) ? 
+				array ( "", "") : 
+				array ( "<strike>", "<strike>") ;		
+				$tab_2 .= "<TR CLASS='even'><TD>As of: </TD><TD> {$strike_ary[0]}" . format_date($row_track['packet_date']) . "{$strike_ary[1]} </TD></TR></TABLE>";
 				}
 ?>
 //			var myinfoTabs = [
@@ -2817,11 +2825,11 @@ function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 
 		}
 	else {
 		if ($_getgoedit == 'true') {
-			$now = mysql_format_date(time() - (get_variable('delta_mins')*60));
+			$now = mysql_format_date(time() - (get_variable('delta_mins')*60));		
 			$station = TRUE;			//
 			$the_lat = empty($_POST['frm_lat'])? "NULL" : quote_smart(trim($_POST['frm_lat'])) ; // 2/24/09
 			$the_lng = empty($_POST['frm_lng'])? "NULL" : quote_smart(trim($_POST['frm_lng'])) ;
-			$status_updated = ($_POST['frm_status_update'] == 1) ? $now : $_POST['frm_status_updated'];	//	6/21/13
+			$status_updated = (($_POST['frm_status_update'] == 1) || ($_POST['frm_status_updated'] == "")) ? $now : $_POST['frm_status_updated'];	//	6/21/13
 			$curr_groups = $_POST['frm_exist_groups']; 	//	4/14/11
 			$groups = isset($_POST['frm_group']) ? ", " . implode(',', $_POST['frm_group']) . "," : $_POST['frm_exist_groups'];	//	3/28/12 - fixes error when accessed from view ticket screen..	
 			$resp_id = $_POST['frm_id'];
@@ -2875,7 +2883,7 @@ function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 
 				`type`= " . 		quote_smart(trim($_POST['frm_type'])) . ",
 				`user_id`= " . 		quote_smart(trim($_SESSION['user_id'])) . ",
 				`updated`= " . 		quote_smart(trim($now)) . ",
-				`status_updated`= " . quote_smart(trim($status_updated)) . " 
+				`status_updated`= '" . $status_updated . "'
 				WHERE `id`= " . 	quote_smart(trim($_POST['frm_id'])) . ";";	//	5/11/11 added internal Tickets tracker, 6/21/13 added field status_updated for auto status function.
 
 			$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -3901,12 +3909,12 @@ fence_init();
 			$al_groups[] = $row_al['group'];
 			}	
 			
-		if(!isset($curr_viewed)) {	
+		if(!isset($curr_viewed)) {		//	7/2/13	revised WHERE to AND - Where clause was repeated
 			if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
-				$where2 = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
+				$where2 = "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
 				} else {			
 				$x=0;	//	6/10/11
-				$where2 = "WHERE (";	//	6/10/11
+				$where2 = "AND (";	//	6/10/11
 				foreach($al_groups as $grp) {	//	6/10/11
 					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
 					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
@@ -3917,10 +3925,10 @@ fence_init();
 				}
 			} else {
 			if(count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
-				$where2 = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
+				$where2 = "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
 				} else {					
 				$x=0;	//	6/10/11
-				$where2 = "WHERE (";	//	6/10/11
+				$where2 = "AND (";	//	6/10/11
 				foreach($curr_viewed as $grp) {	//	6/10/11
 					$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
 					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";

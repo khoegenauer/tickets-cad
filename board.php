@@ -118,6 +118,8 @@ Sequence numbering: SELECT a.id, @num := @num + 1 seqno from ticket a, (SELECT @
 10/20/12 button label correction, generate log entry for each changed assigns event
 1/8/2013 function get_disp_cell() added, reload() set true
 1/10/2013 function my_gregoriantojd added, gregoriantojd being absent from some config's
+7/12/2013 revised for zero frame height in case of frames and no assigns
+7/16/2013 corrections applied to do_assgn_reset()
 */
 
 @session_start();
@@ -460,7 +462,7 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 			if (!(window.opener==null)){window.opener.focus();}		
 			}
 	
-		function do_assgn_reset(id, the_form) {						// 4/26/09
+		function do_assgn_reset(id, the_form) {						// 4/26/09 - 7/16/2013
 	
 			function our_reset(id, the_form) {									// reset dispatch checks 
 				var dis = <?php print ($guest)? "true": "false"; ?>;			// disallow guest actions
@@ -470,31 +472,41 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 //				the_form.frm_dispatched.checked = false;
 //				the_form.frm_dispatched.disabled = dis;
 				
-				the_form.frm_responding.disabled = false;
-				the_form.frm_responding.checked = false;
-				the_form.frm_responding.disabled = dis;
-				
-				the_form.frm_on_scene.disabled = false;
-				the_form.frm_on_scene.checked = false;
-				the_form.frm_on_scene.disabled = dis;	
-
-				the_form.frm_u2fenr.disabled = false;		//10/6/09 Unit to Facility
-				the_form.frm_u2fenr.checked = false;
-				the_form.frm_u2fenr.disabled = dis;	
-
-				the_form.frm_u2farr.disabled = false;		//10/6/09 Unit to Facility
-				the_form.frm_u2farr.checked = false;
-				the_form.frm_u2farr.disabled = dis;				
+				if ( the_form.frm_responding ) {
+					the_form.frm_responding.disabled = false;
+					the_form.frm_responding.checked = false;
+					the_form.frm_responding.disabled = dis;
+					}
+				if ( the_form.frm_on_scene ) {
+					the_form.frm_on_scene.disabled = false;
+					the_form.frm_on_scene.checked = false;
+					the_form.frm_on_scene.disabled = dis;	
+					}
 	
-				the_form.frm_clear.disabled = false;
-				the_form.frm_clear.checked = false;
-				the_form.frm_clear.disabled = dis;
+				if ( the_form.frm_u2fenr ) {
+					the_form.frm_u2fenr.disabled = false;		//10/6/09 Unit to Facility
+					the_form.frm_u2fenr.checked = false;
+					the_form.frm_u2fenr.disabled = dis;	
+					}
+	
+				if (the_form.frm_u2farr ) {
+					the_form.frm_u2farr.disabled = false;		//10/6/09 Unit to Facility
+					the_form.frm_u2farr.checked = false;
+					the_form.frm_u2farr.disabled = dis;				
+					}
+		
+				if (the_form.frm_clear ) {
+					the_form.frm_clear.disabled = false;
+					the_form.frm_clear.checked = false;
+					the_form.frm_clear.disabled = dis;
+					}
 				
 				var url = "assign_res.php";
 				var postData = "frm_id=" + id;				// the post string
 				sendRequest(url,handleResult,postData) ;
+				do_refresh();
 	
-				}		// end function our_reset()
+				}		// end function do_assgn_reset()
 	
 	
 			function our_delete(id, the_form) {				// delete this dispatch record
@@ -524,7 +536,9 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 							break;
 	
 						case "d":
-							our_delete(id, the_form)
+							if ( confirm ( "Delete this dispatch record?" ) ) {		// 7/16/2013
+								our_delete(id, the_form);
+								}
 							break;
 	
 						default:			// user cancelled
@@ -1176,6 +1190,8 @@ setTimeout('do_post()', 1000);
 			}		// end function to_server()
 	
 		
+
+
 	function do_res() {									//  reset all forms
 		for (i = 0; i< document.forms.length; i++) {
 			if (document.forms[i].name.substr(0,1) == "F") {	
@@ -1184,17 +1200,30 @@ setTimeout('do_post()', 1000);
 			}
 		}
 		
-	</SCRIPT>	
-	</HEAD>
-<?php
+<?php			// 7/12/2013
+
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00'";		// 2/12/09   
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 	$lines = mysql_affected_rows();
 	unset($result);
 
-	$onload_str = (get_variable('call_board')==1)? "onLoad = '\t\treSizeScr({$lines})'": "";
-//	$onload_str = "";
+	if ( intval (get_variable('call_board')==1)) { $onload_str = "onLoad = '\t\treSizeScr({$lines})'"; }
+	else { 
+		$onload_str = "";
+?>	
+	var nr_lines = <?php echo mysql_affected_rows();?>				
+																// 7/12/2013
+	frame_rows = parent.document.getElementById('the_frames').getAttribute('rows');	// get current configuration
+	var rows = frame_rows.split(",", 4);
+	rows[1] = (nr_lines == 0) ?  0:  rows[1];				// new cb frame height if no assigns; re-use top
+	frame_rows = rows.join(",");
+	parent.document.getElementById('the_frames').setAttribute('rows', frame_rows);		// this does the work
+	
+<?php	
+		}		// end get_variable('call_board') != 1
 ?>
+	</SCRIPT>	
+	</HEAD>
 	<BODY <?php print $onload_str;?> ><!-- <?php echo __LINE__; ?> -->
 	<SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT>
 	

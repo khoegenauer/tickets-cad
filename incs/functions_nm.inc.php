@@ -135,6 +135,7 @@
 10/19/10 u2fenr reference correction
 11/29/10 case "2"
 11/30/10 get_text Patient added
+7/10/13 Revisions to function show_actions( to correct failure to show patients if no actions.
 
 */
 error_reporting(E_ALL);
@@ -462,8 +463,8 @@ function show_actions ($the_id, $theSort="date", $links, $display) {			/* list a
 	$result = mysql_query($query) or do_error($query, $query, mysql_error(), basename( __FILE__), __LINE__);
 	$responderlist = array();
 	$responderlist[0] = "NA";	
-	while ($act_row = stripslashes_deep(mysql_fetch_assoc($result))){
-		$responderlist[$act_row['id']] = $act_row['name'];
+	while ($resp_row = stripslashes_deep(mysql_fetch_assoc($result))){
+		$responderlist[$resp_row['id']] = $resp_row['name'];
 		}
 	$print = "<TABLE BORDER='0' ID='patients' width=" . max(320, intval($_SESSION['scr_width']* 0.4)) . ">";
 																	/* list patients */
@@ -471,15 +472,15 @@ function show_actions ($the_id, $theSort="date", $links, $display) {			/* list a
 	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$caption = get_text("Patient") .": &nbsp;&nbsp;";
 	$actr=0;
-	while ($act_row = stripslashes_deep(mysql_fetch_assoc($result))){
+	while ($pat_row = stripslashes_deep(mysql_fetch_assoc($result))){
 		$print .= "<TR CLASS='" . $evenodd[$actr%2] . "' WIDTH='100%'><TD VALIGN='top' NOWRAP CLASS='td_label'>" . $caption . "</TD>";
-		$print .= "<TD NOWRAP>" . $act_row['name'] . "</TD><TD NOWRAP>". format_date($act_row['updated']) . "</TD>";
-		$print .= "<TD NOWRAP> by <B>".get_owner($act_row['user'])."</B>";
+		$print .= "<TD NOWRAP>" . $pat_row['name'] . "</TD><TD NOWRAP>". format_date($pat_row['updated']) . "</TD>";
+		$print .= "<TD NOWRAP> by <B>".get_owner($pat_row['user'])."</B>";
 		
-		$print .= ($act_row['action_type']!=$GLOBALS['ACTION_COMMENT'] ? "*" : "-")."</TD><TD>" . nl2br($act_row['description']) . "</TD>";
+		$print .= ($pat_row['action_type']!=$GLOBALS['ACTION_COMMENT'] ? "*" : "-")."</TD><TD>" . nl2br($pat_row['description']) . "</TD>";
 		if ($links) {
-			$print .= "<TD>&nbsp;[<A HREF='patient.php?ticket_id=$the_id&id=" . $act_row['id'] . "&action=edit'>edit</A>|
-				<A HREF='patient.php?id=" . $act_row['id'] . "&ticket_id=$the_id&action=delete'>delete</A>]</TD></TR>\n";	
+			$print .= "<TD>&nbsp;[<A HREF='patient.php?ticket_id=$the_id&id=" . $pat_row['id'] . "&action=edit'>edit</A>|
+				<A HREF='patient.php?id=" . $pat_row['id'] . "&ticket_id=$the_id&action=delete'>delete</A>]</TD></TR>\n";	
 				}
 		$caption = "";				// once only
 		$actr++;
@@ -488,7 +489,7 @@ function show_actions ($the_id, $theSort="date", $links, $display) {			/* list a
 	$query = "SELECT *,UNIX_TIMESTAMP(date) AS `date`,UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]action` WHERE `ticket_id`='$the_id' ORDER BY `date`";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	if ((mysql_affected_rows() + $actr)==0) { 				// 8/6/08
-		return "";
+//		return "";	// 7/10/13 removed as it causes failure to show Patients if no actions present	
 		}				
 	else {
 		$caption = "Actions: &nbsp;&nbsp;";
@@ -514,10 +515,10 @@ function show_actions ($the_id, $theSort="date", $links, $display) {			/* list a
 				}
 			$caption = "";
 			$pctr++;
-			}				// end if/else (...)
-		$print .= "</TABLE>\n";
-		return $print;
-		}				// end else
+			}				// end while (...)
+		}				// end else			
+	$print .= "</TABLE>\n";	// 7/10/13 moved out of actions if/else as it fails to close the table if there are no actions.
+	return $print;
 	}			// end function show_actions
 
 // } { -- dummy

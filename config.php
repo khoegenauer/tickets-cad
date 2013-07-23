@@ -81,6 +81,7 @@
 3/29/2013 added include for GMaps V3 setcenter
 5/24/2013 ics 213 link made conditional on setting
 6/18/2013 added link for insurance table maint.
+7/5/13 Added link to native mail test script
 */
 	$asterisk = FALSE;		// user: change to TRUE  in order to make the Pin Control table accessible.	
 	if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/7/09 
@@ -342,6 +343,15 @@
 
 	function do_smtp() {				// 8/2/08 -	11/5/09
 		var newwindow_t=window.open("smtp_test.php", "Test_SMTP",  "titlebar, resizable=1, scrollbars, height=600,width=900,status=0,toolbar=0,menubar=0,location=0, left=50,top=50,screenX=50,screenY=50"); newwindow_t.focus();
+		if (isNull(newwindow_t)) {
+			alert ("Test operation requires popups to be enabled. Please adjust your browser options.");
+			return;
+			}
+		newwindow_t.focus();
+		}
+		
+	function do_native() {				// 8/2/08 -	11/5/09
+		var newwindow_t=window.open("native.php", "Test_Native_Email",  "titlebar, resizable=1, scrollbars, height=600,width=900,status=0,toolbar=0,menubar=0,location=0, left=50,top=50,screenX=50,screenY=50"); newwindow_t.focus();
 		if (isNull(newwindow_t)) {
 			alert ("Test operation requires popups to be enabled. Please adjust your browser options.");
 			return;
@@ -2454,6 +2464,7 @@ ul {
 <?php 				// 7/5/10
 		if (is_super()) {
 			print "\t\t<TD><LI><A HREF=\"#\" onClick = \"do_smtp()\"><U>SMTP Mail</U></A></TD>\n";
+			print "\t\t<TD><LI><A HREF=\"#\" onClick = \"do_native()\"><U>Native PHP Mail</U></A></TD>\n";
 			}
 ?>		
 				<TD><LI><A HREF="#" onClick = "do_glat()"><U>Google Latitude</U></A></TD>	<!-- 7/28/09 -->

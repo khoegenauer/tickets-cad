@@ -312,7 +312,7 @@ function edit_ticket($id) {							/* post changes */
 //			theForm.frm_ngs.disabled=false;													// 9/13/08
 			theForm.frm_phone.value=theForm.frm_phone.value.replace(/\D/g, "" ); // strip all non-digits
 <?php		/* 6/4/2013  */
-		if (intval(get_variable('broadcast')==1)) { 
+		if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 		// 7/2/2013
 ?>
 			var theMessage = "Updated  <?php print get_text('Incident');?> (" + theForm.frm_scope.value + ") by <?php echo $_SESSION['user'];?>";
 			broadcast(theMessage ) ;

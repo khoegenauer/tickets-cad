@@ -109,6 +109,7 @@ if($istest) {print "_POST"; dump($_POST);}
 12/1/2012 show 'nearby' only if internet/maps
 5/22/2013 added broadcast call
 6/2/2013 - reverse geocode added
+7/3/2013 - socket2me conditioned on internet and broadcast settings, enforce reverse-geo values size limits
 */
 
 if (empty($_GET)) {
@@ -440,8 +441,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 ?>
 
 		</SCRIPT>
-<?php
-require_once('./incs/socket2me.inc.php');		// 5/22/2013
+<?php				// 7/3/2013
+	if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 	
+		require_once('./incs/socket2me.inc.php');		// 5/22/2013
+		}
 ?>
 		
 		</HEAD>
@@ -753,13 +756,20 @@ require_once('./incs/socket2me.inc.php');		// 5/22/2013
 ?>	
 
 	function call_back (in_obj){				// callback function - from gmaps_v3_init()
+//		alert(756);
 		do_lat(in_obj.lat);			// set form values
 		do_lng(in_obj.lng);
 		do_ngs();	
 <?php								// 6/2/2013
 	if (intval(get_variable('reverse_geo'))==1) {
 ?>
-		codeLatLng (in_obj.lat, in_obj.lng);				// 6/2/2013
+		if (do_rev_geo) {
+			codeLatLng (in_obj.lat, in_obj.lng);				// 6/2/2013
+			}
+		else {
+			do_rev_geo = true;		
+			}
+		
 
 <?php
 		}	// end 'reverse_geo'?
@@ -773,9 +783,12 @@ require_once('./incs/socket2me.inc.php');		// 5/22/2013
 			icon_file, 
 			<?php echo get_variable('maptype');?>, 
 			false);		
+
 <?php
 //			do_kml();
 ?>		
+		var do_rev_geo = true;
+
 		}			// end function load()
 
 	function URLEncode(plaintext ) {					// The Javascript escape and unescape functions do
@@ -1133,11 +1146,11 @@ require_once('./incs/socket2me.inc.php');		// 5/22/2013
 					marker = new GMarker(point);
 					map.addOverlay(marker);
 					results = pars_goog_addr(place.address);
-					
-					document.add.frm_street.value = results[0];		// 7/22/10
-					document.add.frm_city.value = results[1] ;
+//																7/3/2013 - enforce size limits
+					document.add.frm_street.value = results[0].substring(0, 95);		// 7/22/10 
+					document.add.frm_city.value = results[1].substring(0, 31) ;
 
-					document.add.frm_state.value = results[2];
+					document.add.frm_state.value = results[2].substring(0, 3);
 					document.add.frm_street.focus();		// 7/22/10
 					
 					}
@@ -1548,7 +1561,9 @@ require_once('./incs/socket2me.inc.php');		// 5/22/2013
 </STYLE>
 <SCRIPT SRC="./js/misc_function.js" type="text/javascript"></SCRIPT></head>
 <?php
-	require_once('./incs/socket2me.inc.php');		// 5/22/2013
+	if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 	
+		require_once('./incs/socket2me.inc.php');		// 5/22/2013
+		}
 ?>
 </HEAD>
 <?php

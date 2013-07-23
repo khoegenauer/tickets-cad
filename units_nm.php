@@ -21,6 +21,7 @@ $zoom_tight = FALSE;		// replace with a decimal number to over-ride the standard
 12/1/2012 - unix time revisions
 5/30/13 Implement catch for when there are no allocated regions for current user. 
 6/21/13 Added "Status_updated" field. Used for Auto status functionality
+7/2/13 Revised SQL in query that builds Ticket list to dispatch
 */
 
 session_start();
@@ -1508,12 +1509,12 @@ if(get_num_groups() > 1) {
 			$curr_viewed= explode(",",$_SESSION['viewed_groups']);
 			}
 
-		if(!isset($curr_viewed)) {	
+		if(!isset($curr_viewed)) {	//	7/2/13	revised WHERE to AND - Where clause was repeated
 			if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
-				$where2 = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
+				$where2 = "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
 				} else {			
 				$x=0;	//	6/10/11
-				$where2 = "WHERE (";	//	6/10/11
+				$where2 = "AND (";	//	6/10/11
 				foreach($al_groups as $grp) {	//	6/10/11
 					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
 					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
@@ -1524,10 +1525,10 @@ if(get_num_groups() > 1) {
 				}
 			} else {
 			if(count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
-				$where2 = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
+				$where2 = "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
 				} else {					
 				$x=0;	//	6/10/11
-				$where2 = "WHERE (";	//	6/10/11
+				$where2 = "AND (";	//	6/10/11
 				foreach($curr_viewed as $grp) {	//	6/10/11
 					$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
 					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";

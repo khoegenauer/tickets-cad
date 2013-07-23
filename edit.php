@@ -88,6 +88,7 @@ $zoom_tight = FALSE;		// default is FALSE (no tight zoom); replace with a decima
 1/17/2013 GMaps V3 conversions made 
 5/22/2013 added broadcast call
 6/2/2013 reverse_geo operation added.
+7/3/2013 - socket2me conditioned on internet and broadcast settings, reverse geo field size limits corrected
 */
 	$addrs = FALSE;										// notifies address array doesn't exist
 
@@ -490,7 +491,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			theForm.frm_phone.value=theForm.frm_phone.value.replace(/\D/g, "" ); // strip all non-digits
 								
 <?php				/* 5/22/2013 */
-		if (intval(get_variable('broadcast')==1)) { 
+		if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 		// 7/2/2013
 ?>
 			var theMessage = "Updated  <?php print get_text('Incident');?> (" + theForm.frm_scope.value + ") by <?php echo $_SESSION['user'];?>";
 			broadcast(theMessage ) ;
@@ -601,8 +602,10 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		return false;
 	}	
 </SCRIPT>
-<?php
-require_once('./incs/socket2me.inc.php');		// 5/22/2013
+<?php				// 7/3/2013
+	if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 	
+		require_once('./incs/socket2me.inc.php');		// 5/22/2013
+		}
 ?>
 </HEAD>
 
@@ -1497,38 +1500,38 @@ if (!$disallow) {
 			if (status == google.maps.GeocoderStatus.OK) {
 				if (results[1]) {
 				var addr_pieces = results[0].formatted_address.split(",");				
-				switch (addr_pieces.length) {
+				switch (addr_pieces.length) {									// 7/3/2013
 					case 1:
-						document.edit.frm_street.value = document.edit.frm_city.value = "";				// state or country
-						document.edit.frm_state.value=addr_pieces[0].substring(0,5).trim() ;			// state or country
+						document.edit.frm_street.value = document.edit.frm_city.value = "";				// city
+						document.edit.frm_state.value=addr_pieces[0].substring(0,3).trim() ;			// state or country
 						break;
 				
 					case 2:
 						document.edit.frm_street.value = "";					
-						document.edit.frm_city.value=addr_pieces[0].substring(0,33).trim() ;			// city
+						document.edit.frm_city.value=addr_pieces[0].substring(0,31).trim() ;			// city
 						var temp = addr_pieces[1].substring(0,5).trim().split(" ");					// zipcode
-						document.edit.frm_state.value=temp[0].substring(0,5).trim() ;				// state or country	
+						document.edit.frm_state.value=temp[0].substring(0,3).trim() ;				// state or country	
 						break;
 				
 					case 3:
-						document.edit.frm_street.value=addr_pieces[0].substring(0,97).trim() ;		// street
-						document.edit.frm_city.value=addr_pieces[1].substring(0,33).trim() ;			// city
+						document.edit.frm_street.value=addr_pieces[0].substring(0,95).trim() ;		// street
+						document.edit.frm_city.value=addr_pieces[1].substring(0,31).trim() ;			// city
 						var temp = addr_pieces[2].substring(0,5).trim().split(" ");					// zipcode
-						document.edit.frm_state.value=temp[0].substring(0,5).trim() ;				// state or country
+						document.edit.frm_state.value=temp[0].substring(0,3).trim() ;				// state or country
 						break;
 				
 					default:
-						document.edit.frm_street.value=addr_pieces[0].substring(0,97).trim() ;							// street
-						document.edit.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,33).trim() ;		// city
+						document.edit.frm_street.value=addr_pieces[0].substring(0,95).trim() ;							// street
+						document.edit.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,31).trim() ;		// city
 						var temp = addr_pieces[(addr_pieces.length-2)].substring(0,5).trim().split(" ");				// zipcode
 						if (temp.length == 2) {
-							document.edit.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,33).trim() ;	// city						
-							document.edit.frm_state.value=temp[0].substring(0,5).trim() ;								// US state							
+							document.edit.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,31).trim() ;	// city						
+							document.edit.frm_state.value=temp[0].substring(0,3).trim() ;								// US state							
 							}
 						else {
 							var the_city = addr_pieces[(addr_pieces.length-3)] + ", " + addr_pieces[(addr_pieces.length-2)] ;
 							document.edit.frm_city.value=the_city.substring(0,33).trim() ;								// city						
-							document.edit.frm_state.value=addr_pieces[(addr_pieces.length-1)].substring(0,5).trim()		// country							
+							document.edit.frm_state.value=addr_pieces[(addr_pieces.length-1)].substring(0,3).trim()		// country							
 							}
 					}				// end switch
 				}

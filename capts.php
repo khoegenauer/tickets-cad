@@ -9,6 +9,7 @@ $cols = 6;	// no. of columns in the list presentation
 3/15/11 changed stylesheet.php to stylesheet.php
 3/19/11 added edit allow test
 5/26/11 added SQL inject prevention 
+6/26/11 rewrote restore function to copy 'capt' to 'repl' for all records
 
 */
 error_reporting(E_ALL);				
@@ -161,21 +162,10 @@ $func = (empty($_POST))? "l":$_POST['func'];
 
 		case "r" :			// restore defaults
 			$the_table = "$GLOBALS[mysql_prefix]captions";
+ 			$query = "UPDATE `{$the_table}` SET `repl` = `capt`;";			// 6/26/11
 
-			$query = "TRUNCATE TABLE `{$the_table}`;";
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-
-			require_once ("./incs/capts.inc.php");		// array string - 8/30/10
-
-			for ($i=0; $i< count($capts); $i++) {		// 8/30/10
-				$temp = quote_smart($capts[$i]);
-	
-				$query = "INSERT INTO `{$the_table}` (`capt`, `repl`) VALUES ($temp, $temp);";
-				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-				}				// end for ($i...)
-		
-			unset ($result);
-			$outstr = urlencode("Restored to original values!");
+			$outstr = urlencode( "Entries restored to original values");
 			header("Location:capts.php?caption={$outstr}");
 			break;
 

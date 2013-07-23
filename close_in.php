@@ -210,7 +210,7 @@ function do_is_start($in_row) {				// 3/22/10
 		LEFT JOIN `$GLOBALS[mysql_prefix]facilities` `f` ON (`$GLOBALS[mysql_prefix]assigns`.`facility_id` = `f`.`id`)
 		LEFT JOIN `$GLOBALS[mysql_prefix]facilities` `g` ON (`$GLOBALS[mysql_prefix]assigns`.`rec_facility_id` = `g`.`id`)
 		LEFT JOIN `$GLOBALS[mysql_prefix]un_status`  `s` ON ( `r`.`un_status_id` = s.id ) 
-		WHERE `$GLOBALS[mysql_prefix]assigns`.`ticket_id` = {$_GET['ticket_id']}";
+		WHERE `$GLOBALS[mysql_prefix]assigns`.`ticket_id` = {$_GET['ticket_id']} GROUP BY `r`.`id`";
 
 		$asgn_result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 		if (mysql_affected_rows()>0) {

@@ -10,10 +10,10 @@
 8/6/10  Added test for internet available
 9/2/10 corrected test for internet available
 9/30/10 fix per JB email
+5/11/11
 */
 
-@session_start();
-require_once($_SESSION['fip']);		//7/28/10
+require_once('incs/functions.inc.php');		//7/28/10
 
 $phone = (empty($_POST))? "4108498721": $_POST['phone'];
 

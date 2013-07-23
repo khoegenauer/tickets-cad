@@ -1,5 +1,6 @@
 <?php
 error_reporting(E_ALL);
+$units_side_bar_height = .5;		// max height of units sidebar as decimal fraction of screen height - default is 0.6 (60%)
 $iw_width= "300px";			// map infowindow with
 $side_bar_height = 0.5;		// height of units sidebar as decimal fraction - default is 0.9 (90%)
 $zoom_tight = FALSE;		// replace with a decimal number to over-ride the standard default zoom setting
@@ -13,13 +14,13 @@ $zoom_tight = FALSE;		// replace with a decimal number to over-ride the standard
 3/15/11 added reference to stylesheet.php for revisable day night colors.
 3/19/11 revised unit  index to 6 chars length
 4/5/11 get_new_colors added
-5/9/11 name, handle display revised
-
+6/10/11 changes for multi region capability
+8/1/11 state length increased to 4 chars
 */
 
 session_start();
 
-require_once('./incs/functions.inc.php');
+require_once($_SESSION['fip']);		//7/28/10
 if(file_exists("./incs/modules.inc.php")) {	//	10/28/10
 	require_once('./incs/modules.inc.php');
 	}
@@ -27,10 +28,9 @@ do_login(basename(__FILE__));
 require_once($_SESSION['fmp']);		// 8/27/10
 
 $key_field_size = 30;						// 7/23/09
+$st_size = (get_variable("locale") ==0)?  2: 4;		
 
 //$tolerance = 5 * 60;		// nr. seconds report time may differ from UTC
-//dump($_GET);
-//dump($_POST);
 extract($_GET);
 extract($_POST);
 if((($istest)) && (!empty($_GET))) {dump ($_GET);}
@@ -47,19 +47,22 @@ unset($result);
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Configuration Module</TITLE>
+	<HEAD><TITLE>Tickets - Units Module</TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 	<META HTTP-EQUIV="Expires" CONTENT="0" />
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" />
-
-	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
+	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">			<!-- 3/15/11 -->
 	<STYLE>
 		.disp_stat	{ FONT-WEIGHT: bold; FONT-SIZE: 9px; COLOR: #FFFFFF; BACKGROUND-COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;}
-	</STYLE>
-	
+		.box { background-color: #DEE3E7; border: 2px outset #606060; color: #000000; padding: 0px; position: absolute; z-index:1000; width: 180px; }
+		.bar { background-color: #FFFFFF; border-bottom: 2px solid #000000; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
+		.bar_header { height: 20px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}	
+		.content { padding: 1em; }
+	</STYLE>	
+	<SCRIPT  SRC='./js/misc_function.js' type='text/javascript'></SCRIPT>  <!-- 4/14/10 -->
 	<SCRIPT >
 
 	try {
@@ -102,6 +105,11 @@ unset($result);
 			}
 		}		// end function ck_frames()
 
+	function open_tick_window (id) {										// 4/29/10
+		var url = "single.php?ticket_id="+ id;
+		var tickWindow = window.open(url, 'mailWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100');
+		tickWindow.focus();
+		}
 
 	function to_str(instr) {			// 0-based conversion - 2/13/09
 		function ord( string ) {
@@ -140,9 +148,7 @@ unset($result);
 	function do_mail_win() {			// 6/13/09
 		if(starting) {return;}					
 		starting=true;	
-	
-		newwindow_um=window.open('do_unit_mail.php', 'E_mail_Window',  'titlebar, resizable=1, scrollbars, height=720,width=800,status=0,toolbar=0,menubar=0,location=0, left=50,top=150,screenX=100,screenY=300');
-
+		newwindow_um=window.open('do_unit_mail.php', 'E_mail_Window',  'titlebar, resizable=1, scrollbars, height=640,width=800,status=0,toolbar=0,menubar=0,location=0, left=50,top=150,screenX=100,screenY=300');
 		if (isNull(newwindow_um)) {
 			alert ("This requires popups to be enabled. Please adjust your browser options.");
 			return;
@@ -170,6 +176,11 @@ unset($result);
 		document.routes_Form.submit();
 		}
 
+	function to_fac_routes(id) {
+		document.fac_routes_Form.fac_id.value=id;			// 10/6/09
+		document.fac_routes_Form.submit();
+		}
+
 	function whatBrows() {									//Displays the generic browser type
 		window.alert("Browser is : " + type);
 		}
@@ -186,6 +197,10 @@ unset($result);
 
 	function showit (elid) {
 		ShowLayer(elid, "block");
+		}
+		
+	function any_track(theForm) {					// returns boolean 8/8/09, 5/11/11
+		return ((theForm.frm_aprs.value.trim()==1)||(theForm.frm_instam.value.trim()==1)||(theForm.frm_locatea.value.trim()==1)||(theForm.frm_gtrack.value.trim()==1)||(theForm.frm_glat.value.trim()==1)||(theForm.frm_t_tracker.value.trim()==1));
 		}
 
 	function validate(theForm) {						// Responder form contents validation	8/11/09
@@ -207,18 +222,17 @@ unset($result);
 		if (theForm.frm_name.value.trim()=="")													{errmsg+="Unit NAME is required.\n";}
 		if (theForm.frm_handle.value.trim()=="")												{errmsg+="Unit HANDLE is required.\n";}
 		if (theForm.frm_icon_str.value.trim()=="")												{errmsg+="Unit ICON is required.\n";}
+		if (theForm.frm_type.options[theForm.frm_type.selectedIndex].value==0)					{errmsg+="Unit TYPE selection is required.\n";}	// 1/1/09
+//		if (!(any_track(theForm)))																{errmsg+="Unit TRACKING selection is required.\n";}	// 1/1/09
 		
-		if (theForm.frm_type.options[theForm.frm_type.selectedIndex].value==0)					{errmsg+="Unit TYPE is required.\n";}	// 1/1/09
+		if (any_track(theForm)){
+			if (theForm.frm_callsign.value.trim()=="")											{errmsg+="License information is required with Tracking.\n";}
+			}
+		else {
+			if (!(theForm.frm_callsign.value.trim()==""))										{errmsg+="License information used ONLY with Tracking.\n";}
+			}
 		if (theForm.frm_un_status_id.options[theForm.frm_un_status_id.selectedIndex].value==0)	{errmsg+="Unit STATUS is required.\n";}
 		if (theForm.frm_descr.value.trim()=="")													{errmsg+="Unit DESCRIPTION is required.\n";}
-		
-		// if (any_track(theForm)){
-			// if (theForm.frm_callsign.value.trim()=="")											{errmsg+="License key is required.\n";}
-			// }
-		// else {
-			// if (!(theForm.frm_callsign.value.trim()==""))										{errmsg+="License key used only with Tracking.\n";}
-			// }
-
 		if (errmsg!="") {
 			alert ("Please correct the following and re-submit:\n\n" + errmsg);
 			return false;
@@ -229,7 +243,6 @@ unset($result);
 //			return true;
 			}
 		}				// end function va lidate(theForm)
-
 
 	function add_res () {		// turns on add responder form
 		showit('res_add_form');
@@ -273,36 +286,21 @@ unset($result);
 		the_form.reset();
 		}
 
+	var track_captions = ["", "Callsign", "Device key", "Userid ", "Userid ", "Badge", "Device", "Userid"];
 	function do_tracking(theForm, theVal) {							// 7/10/09, 7/24/09 added specific code to switch off unselected
-		$('track_capt').innerHTML =track_captions[theVal];
-	
-		theForm.frm_aprs.value=theForm.frm_instam.value=theForm.frm_locatea.value=theForm.frm_gtrack.value= theForm.frm_glat.value = 0;	
+		theForm.frm_aprs.value=theForm.frm_instam.value=theForm.frm_locatea.value=theForm.frm_gtrack.value= theForm.frm_glat.value= theForm.frm_ogts.value = theForm.frm_t_tracker.value = 0;	
 		switch(parseInt(theVal)) {
-			case 0:										// none, hskpg already done
-				break;
-			case <?php print $GLOBALS['TRACK_APRS'];?>:
-			  theForm.frm_aprs.value=1;
-			  break;
-			case <?php print $GLOBALS['TRACK_INSTAM'];?>:
-			  theForm.frm_instam.value=1;
-			  break;
-			case <?php print $GLOBALS['TRACK_LOCATEA'];?>:				// 7/23/09
-			  theForm.frm_locatea.value=1;
-			  break;
-			case <?php print $GLOBALS['TRACK_GTRACK'];?>:				// 7/23/09
-			  theForm.frm_gtrack.value=1;
-			  break;
-			case <?php print $GLOBALS['TRACK_GLAT'];?>:				// 7/23/09
-			  theForm.frm_glat.value=1;
-			  break;
-			default:
-			  alert("error 578");
+			case <?php print $GLOBALS['TRACK_NONE'];?>:		 break;
+			case <?php print $GLOBALS['TRACK_APRS'];?>:		 theForm.frm_aprs.value=1;	 break;
+			case <?php print $GLOBALS['TRACK_INSTAM'];?>:	 theForm.frm_instam.value=1;	 break;
+			case <?php print $GLOBALS['TRACK_LOCATEA'];?>:	 theForm.frm_locatea.value=1; break;
+			case <?php print $GLOBALS['TRACK_GTRACK'];?>:	 theForm.frm_gtrack.value=1;  break;
+			case <?php print $GLOBALS['TRACK_GLAT'];?>:		 theForm.frm_glat.value=1;	 break;
+			case <?php print $GLOBALS['TRACK_T_TRACKER'];?>:	theForm.frm_t_tracker.value=1;	break;
+			case <?php print $GLOBALS['TRACK_OGTS'];?>:		 theForm.frm_ogts.value=1;	 break;
+			default:  alert("error <?php print __LINE__;?>");
 			}		// end switch()
-		}				// end function do_tracking()
-		
-	
-	var track_captions = ["Callsign/License-key", "Callsign", "Device key", "Userid ", "Userid ", "Badge"];
-
+		}				// end function do tracking()	
 	</SCRIPT>
 
 
@@ -314,11 +312,11 @@ function list_responders($addon = '', $start) {
 
 	$assigns = array();					// 08/8/3
 	$tickets = array();					// ticket id's
-
 	$query = "SELECT `$GLOBALS[mysql_prefix]assigns`.`ticket_id`, `$GLOBALS[mysql_prefix]assigns`.`responder_id`,
 		`$GLOBALS[mysql_prefix]ticket`.`scope` AS `ticket` 
 		FROM `$GLOBALS[mysql_prefix]assigns` 
-		LEFT JOIN `$GLOBALS[mysql_prefix]ticket` ON `$GLOBALS[mysql_prefix]assigns`.`ticket_id`=`$GLOBALS[mysql_prefix]ticket`.`id`";
+		LEFT JOIN `$GLOBALS[mysql_prefix]ticket` ON `$GLOBALS[mysql_prefix]assigns`.`ticket_id`=`$GLOBALS[mysql_prefix]ticket`.`id`
+		WHERE ( `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00' )";
 
 	$result_as = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	while ($row_as = stripslashes_deep(mysql_fetch_array($result_as))) {
@@ -328,7 +326,6 @@ function list_responders($addon = '', $start) {
 	unset($result_as);
 	$calls = array();									// 6/17/08
 	$calls_nr = array();
-
 ?>
 
 <SCRIPT >
@@ -336,18 +333,116 @@ function list_responders($addon = '', $start) {
 var color=0;
 	var colors = new Array ('odd', 'even');
 
+	function hideDiv(div_area, hide_cont, show_cont) {	//	3/15/11
+		if (div_area == "buttons_sh") {
+			var controlarea = "hide_controls";
+			}
+		if (div_area == "resp_list_sh") {
+			var controlarea = "resp_list";
+			}
+		if (div_area == "facs_list_sh") {
+			var controlarea = "facs_list";
+			}
+		if (div_area == "incs_list_sh") {
+			var controlarea = "incs_list";
+			}
+		if (div_area == "region_boxes") {
+			var controlarea = "region_boxes";
+			}			
+		var divarea = div_area 
+		var hide_cont = hide_cont 
+		var show_cont = show_cont 
+		if($(divarea)) {
+			$(divarea).style.display = 'none';
+			$(hide_cont).style.display = 'none';
+			$(show_cont).style.display = '';
+			} 
+		var params = "f_n=" +controlarea+ "&v_n=h&sess_id=<?php print get_sess_key(__LINE__); ?>";
+		var url = "persist2.php";
+		sendRequest (url, gb_handleResult, params);			
+		} 
+
+	function showDiv(div_area, hide_cont, show_cont) {	//	3/15/11
+		if (div_area == "buttons_sh") {
+			var controlarea = "hide_controls";
+			}
+		if (div_area == "resp_list_sh") {
+			var controlarea = "resp_list";
+			}
+		if (div_area == "facs_list_sh") {
+			var controlarea = "facs_list";
+			}
+		if (div_area == "incs_list_sh") {
+			var controlarea = "incs_list";
+			}
+		if (div_area == "region_boxes") {
+			var controlarea = "region_boxes";
+			}				
+		var divarea = div_area
+		var hide_cont = hide_cont 
+		var show_cont = show_cont 
+		if($(divarea)) {
+			$(divarea).style.display = '';
+			$(hide_cont).style.display = '';
+			$(show_cont).style.display = 'none';
+			}
+		var params = "f_n=" +controlarea+ "&v_n=s&sess_id=<?php print get_sess_key(__LINE__); ?>";
+		var url = "persist2.php";
+		sendRequest (url, gb_handleResult, params);					
+		} 	
+
+	function checkArray(form, arrayName)	{	//	5/3/11
+		var retval = new Array();
+		for(var i=0; i < form.elements.length; i++) {
+			var el = form.elements[i];
+			if(el.type == "checkbox" && el.name == arrayName && el.checked) {
+				retval.push(el.value);
+			}
+		}
+	return retval;
+	}		
+		
+	function checkForm(form)	{	//	6/10/11
+		var errmsg="";
+		var itemsChecked = checkArray(form, "frm_group[]");
+		if(itemsChecked.length > 0) {
+			var params = "f_n=viewed_groups&v_n=" +itemsChecked+ "&sess_id=<?php print get_sess_key(__LINE__); ?>";	//	3/15/11
+			var url = "persist3.php";	//	3/15/11	
+			sendRequest (url, fvg_handleResult, params);				
+//			form.submit();
+		} else {
+			errmsg+= "\tYou cannot Hide all the regions\n";
+			if (errmsg!="") {
+				alert ("Please correct the following and re-submit:\n\n" + errmsg);
+				return false;
+			}
+		}
+	}
+	
+	function fvg_handleResult(req) {	// 6/10/11	The persist callback function for viewed groups.
+		document.region_form.submit();
+		}
+		
+	function form_validate(theForm) {	//	5/3/11
+//		alert("Validating");
+		checkForm(theForm);
+		}				// end function validate(theForm)			
+
 	function do_sidebar (sidebar, id, the_class, unit_id, index) {
 		var unit_id = unit_id;
-		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"' onClick = myclick(" + unit_id + "); >";
-//		side_bar_html += "<TD CLASS='" + the_class + "'>" + index + sidebar +"</TD></TR>\n";		// 1/5/09, 3/4/09, 10/29/09 removed period
-		side_bar_html += sidebar +"</TR>\n";		// 1/5/09, 3/4/09, 10/29/09 removed period
+		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"' >";		
+		side_bar_html += "<TD CLASS='" + the_class + "' onClick = 'myclick(" + unit_id + ");'>" + index + "</TD>" + sidebar +"</TD></TR>\n";	// 1/5/09, 3/4/09, 10/29/09 removed period
 		}
 
 	function myclick(unit_id) {				// Responds to sidebar click - view responder data
 		document.view_form.id.value=unit_id;
 		document.view_form.submit();
 		}
-
+		
+	function myclick_nm(v_id) {				// Responds to sidebar click - view responder data
+		document.view_form.id.value=v_id;
+		document.view_form.submit();
+		}
 
 <?php
 
@@ -357,8 +452,8 @@ print "\tvar map_is_fixed = ";
 print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "true;\n":"false;\n";
 
 ?>
-	var side_bar_html = "<TABLE border=0 CLASS='sidebar' >";
-	side_bar_html += "<TR class='even'><TD ALIGN='left'>&nbsp;<B>Handle</B></TD><TD ALIGN='left'>&nbsp;&nbsp;<B>Name</B></TD><TD ALIGN='left'>&nbsp;&nbsp;<B>Dispatch</B></TD><TD ALIGN='left'>&nbsp;&nbsp;<B>Status</B></TD><B>M</B><TD ALIGN='left'>&nbsp;&nbsp;<B>As of</B></TD></TR>";
+	var side_bar_html = "<TABLE border=0 CLASS='sidebar' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.6));?> >";
+	side_bar_html += "<TR class='even'>	<TD></TD><TD ALIGN='left'><B>Unit</B></TD><TD ALIGN='left'><B>Handle</B></TD><TD ALIGN='left'><B>Dispatch</B></TD><TD ALIGN='left'><B>Status</B></TD><TD ALIGN='left'><B>M</B></TD><TD ALIGN='left'><B>As of</B></TD></TR>";
 	var which;
 	var i = <?php print $start; ?>;					// sidebar/icon index
 	var points = false;								// none
@@ -394,63 +489,115 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		}
 	unset($result_st);
 
-	$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated`, `t`.`id` AS `type_id`, `r`.`id` AS `unit_id`, `r`.`name` AS `name`,
-		`s`.`description` AS `stat_descr`,  `r`.`description` AS `unit_descr`, 
-		(SELECT  COUNT(*) as numfound FROM `$GLOBALS[mysql_prefix]assigns` WHERE `$GLOBALS[mysql_prefix]assigns`.`responder_id` = unit_id  AND `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00' ) AS `nr_assigned` 
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]';";	//	6/10/11
+	$result = mysql_query($query);	// 4/13/11
+	$al_groups = array();
+	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	//	6/10/11
+		$al_groups[] = $row['group'];
+		}	
+
+	if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
+		$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+		}
+
+	if(!isset($curr_viewed)) {	
+		$x=0;	//	6/10/11
+		$where2 = "WHERE (";	//	6/10/11
+		foreach($al_groups as $grp) {	//	6/10/11
+			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+			$where2 .= "`a`.`group` = '{$grp}'";
+			$where2 .= $where3;
+			$x++;
+			}
+	} else {
+		$x=0;	//	6/10/11
+		$where2 = "WHERE (";	//	6/10/11
+		foreach($curr_viewed as $grp) {	//	6/10/11
+			$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+			$where2 .= "`a`.`group` = '{$grp}'";
+			$where2 .= $where3;
+			$x++;
+			}
+	}
+	$where2 .= "AND `a`.`type` = 2";	//	6/10/11		
+		
+	$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated`,
+		`t`.`id` AS `type_id`,
+		`r`.`id` AS `unit_id`,
+		`r`.`name` AS `name`,
+		`s`.`description` AS `stat_descr`,
+		`r`.`description` AS `unit_descr`, 
+		(SELECT  COUNT(*) as numfound FROM `$GLOBALS[mysql_prefix]assigns` 
+		WHERE `$GLOBALS[mysql_prefix]assigns`.`responder_id` = unit_id  AND `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00' ) AS `nr_assigned` 
 		FROM `$GLOBALS[mysql_prefix]responder` `r` 
+		LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `r`.`id` = a.resource_id )			
 		LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` `t` ON ( `r`.`type` = t.id )	
 		LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON ( `r`.`un_status_id` = s.id ) 		
-		ORDER BY `nr_assigned` DESC,  `handle` ASC, `r`.`name` ASC ";											// 2/1/10, 3/15/10
-
-
-//	dump($query);
+		{$where2}  GROUP BY unit_id ORDER BY `nr_assigned` DESC,  `handle` ASC, `r`.`name` ASC ";											// 2/1/10, 3/15/10, 6/10/11
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+	$num_units = mysql_affected_rows();	
 	$aprs = FALSE;
 	$instam = FALSE;
 	$locatea = FALSE;				// 7/23/09
 	$gtrack = FALSE;				// 7/23/09
 	$glat = FALSE;				// 7/23/09
 	$i=0;				// counter
-
+// =============================================================================
 	$bulls = array(0 =>"",1 =>"red",2 =>"green",3 =>"white",4 =>"black");
 
 	$utc = gmdate ("U");
 //									 ==========  major while() for RESPONDER ==========
-
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {		
+
+		$resp_gps = get_allocates(2, $row['unit_id']);	//	6/10/11
+		$grp_names = "Groups Assigned: ";	//	6/10/11
+		$y=0;	//	6/10/11
+		foreach($resp_gps as $value) {	//	6/10/11
+			$counter = (count($resp_gps) > ($y+1)) ? ", " : "";
+			$grp_names .= get_groupname($value);
+			$grp_names .= $counter;
+			$y++;
+			}
+		$grp_names .= " / ";
+	
+		$aprs = $instam = $locatea = $gtrack = $glat = $t_tracker = FALSE;			// all trackers off, 5/11/11 added internal Tickets Tracker
+		$temp = explode("/", $row['name'] );
+		$index = substr($temp[count($temp) -1], -6, strlen($temp[count($temp) -1]));	// 3/19/11
+
+		$the_on_click = (my_is_float($row['lat']))? " onClick = myclick({$row['unit_id']}); " : " onClick = myclick_nm({$row['unit_id']}); ";
 		$the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$row['icon']];		// 2/1/10
 		$the_text_color = 	$GLOBALS['UNIT_TYPES_TEXT'][$row['icon']];		// 2/1/10
 		$index = $row['icon_str'] ;											// 4/28/11
-
-		$do_dispatch = can_do_dispatch($row);				// 11/17/09
+		$track_type = get_remote_type ($row);								// 7/6/11
+		$do_dispatch = can_do_dispatch($row);								// 11/17/09
 		$got_point = FALSE;
 		print "\n\t\tvar i=$i;\n";
-		$todisp = ((is_guest()) || (!(can_do_dispatch($row))))? "" : "&nbsp;&nbsp;<A HREF='units_nm.php?func=responder&view=true&disp=true&id=" . $row['unit_id'] . "'><U>Dispatch</U></A>&nbsp;&nbsp;&nbsp;";	// 08/8/02, 9/19/09
-		$toedit = (is_guest())? "" :"&nbsp;&nbsp;<A HREF='units_nm.php?func=responder&edit=true&id=" . $row['unit_id'] . "'><U>Edit</U></A>&nbsp;&nbsp;&nbsp;&nbsp;" ;	// 10/8/08
+		$tofac = (is_guest())? "" : "&nbsp;&nbsp;<A HREF='{units_nm.php?func=responder&view=true&dispfac=true&id=" . $row['unit_id'] . "'><U>To Facility</U></A>&nbsp;&nbsp;";	// 10/6/09
+		$todisp = ((is_guest()) || (!(can_do_dispatch($row))))? "" : "&nbsp;&nbsp;<A HREF='" . basename(__FILE__) . "?func=responder&view=true&disp=true&id=" . $row['unit_id'] . "'><U>Dispatch</U></A>&nbsp;&nbsp;&nbsp;";	// 08/8/02, 9/19/09
+		$toedit = (is_guest())? "" :"&nbsp;&nbsp;<A HREF='" . basename(__FILE__) . "?func=responder&edit=true&id=" . $row['unit_id'] . "'><U>Edit</U></A>&nbsp;&nbsp;&nbsp;&nbsp;" ;	// 10/8/08
 
 		$temp = $row['un_status_id'] ;		// 2/24/09
 		$the_status = (array_key_exists($temp, $status_vals))? $status_vals[$temp] : "??";				// 2/2/09
 
 		$the_bull = "";											// define the bullet
 		$update_error = strtotime('now - 6 hours');							// set the time for silent setting
+		if ($track_type> 0) {				// get most recent position data
+			$do_legend = TRUE;	
+			}
 
-// handle, name	- 5/9/11
-
-		$handle = addslashes($row['handle']);		//	5/30/10
-		$sidebar_line = "<TD TITLE = '{$handle}'>{$handle}</TD>";			// 10/8/09, 5/9/11
-		$sidebar_line .= "<TD TITLE = '" . addslashes($row['name']) . "'><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($row['name'], 40)) ."</SPAN></U></TD>";			// 10/8/09
+// name, handle
+		$name =  addslashes(shorten($row['name'], 40));		//	10/8/09
+		$handle =  addslashes($row['handle']);
+		$sidebar_line = "<TD TITLE = '{$handle}' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>{$handle}</SPAN></U></TD>";			// 10/8/09
+		$sidebar_line .= "<TD TITLE = '" . addslashes($row['name']) . "' {$the_on_click}><U>{$name}</TD>";			// 10/8/09
 
 // assignments 3/16/09, 3/15/10
 
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` 
 			LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` ON (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`)
-			WHERE `responder_id` = '{$row['unit_id']}' AND `clear` IS NULL ";
-
-//		dump($query);
+			WHERE `responder_id` = '{$row['unit_id']}' AND (`clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00' )";
 		$result_as = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		$row_assign = (mysql_affected_rows()==0)?  FALSE : stripslashes_deep(mysql_fetch_assoc($result_as)) ;
-//		unset($result_as);		
-
 		switch($row_assign['severity'])		{		//color tickets by severity
 		 	case $GLOBALS['SEVERITY_MEDIUM']: 	$severityclass='severity_medium'; break;
 			case $GLOBALS['SEVERITY_HIGH']: 	$severityclass='severity_high'; break;
@@ -473,27 +620,20 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$ass_td =  (mysql_affected_rows()>0)? 
 			"<TD CLASS='$severityclass' TITLE = '{$row_assign['scope']}' STYLE = 'white-space:nowrap;' >{$the_disp_stat}" . shorten($row_assign['scope'], 24) . "</TD>":
 			"<TD>na</TD>";
-
 		$sidebar_line .= ($row_assign)? $ass_td : "<TD>na</TD>";
 
 // status, mobility  - 9/11/10
-		$sidebar_line .= "<TD CLASS='td_data' TITLE = '" . addslashes ($the_status) . "'> " . get_status_sel($row['unit_id'], $row['un_status_id'], "u") .
-				"</TD><TD CLASS='td_data'> " . $the_bull . "</TD>";					// 4/14/10
-
-
+		$sidebar_line .= "<TD TITLE = '" . addslashes ($the_status) . "'> " . get_status_sel($row['unit_id'], $row['un_status_id'], "u") . "</TD>";
+		$sidebar_line .= "<TD TITLE ='{$row['callsign']}'>&nbsp;{$GLOBALS['TRACK_2L'][$track_type]}&nbsp;{$the_bull}</TD>";					// 4/14/10
 
 // as of
 		$strike = $strike_end = "";
-
-		$the_time = $row['updated'];
-		$the_class = "td_data";
-
-		if (abs($utc - $the_time) > $GLOBALS['TOLERANCE']) {								// attempt to identify  non-current values
+		$the_time = $row['updated'];				// 7/6/11
+		$the_class = "";
+		if (($row['mobile']==1) && (abs($utc - $the_time) > $GLOBALS['TOLERANCE'])) {				// identify  non-current values
 			$strike = "<STRIKE>";
 			$strike_end = "</STRIKE>";
-		} else {
-		$strike = $strike_end = "";
-		}
+		} 
 
 		$sidebar_line .= "<TD CLASS='$the_class'> $strike" . format_sb_date($the_time) . "$strike_end</TD>";	// 6/17/08
 
@@ -503,16 +643,13 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		var the_class = "td_label";		// 4/3/09
 		var handle = "<?php print substr(($row['handle']),1);?>";
 		var longhandle = "<?php print $row['handle'];?>";
-
 <?php		
 		print "\tdo_sidebar(\" {$sidebar_line} \" , i, {$row['id']}, {$row['unit_id']}, unit_id);\n";	// sidebar only - no map, 11/11/09
-
-
 	$i++;				// zero-based
 	}				// end  ==========  while() for RESPONDER ==========
 
 
-	$source_legend = (($aprs)||($instam)||($locatea)||($gtrack)||($glat))? "<TD CLASS='emph' ALIGN='center'>Source time</TD>": "<TD></TD>";		// if any remote data/time 3/24/09
+	$source_legend = (isset($do_legend))? "<TD CLASS='emph' ALIGN='left'>Source time</TD>": "<TD></TD>";		// if any remote data/time 3/24/09
 ?>
 	side_bar_html+= "<TR CLASS='" + colors[i%2] +"'><TD COLSPAN=5>&nbsp;</TD><?php print $source_legend;?></TR>";
 <?php
@@ -523,6 +660,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 ?>
 	side_bar_html +="</TABLE>\n";
 	$("side_bar").innerHTML += side_bar_html;	// append the assembled side_bar_html contents to the side bar div
+	$("num_units").innerHTML = <?php print $num_units;?>;			
 
 </SCRIPT>
 
@@ -574,6 +712,11 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			$station = TRUE;			//
 			$the_lat = empty($_POST['frm_lat'])? "0.999999" : quote_smart(trim($_POST['frm_lat'])) ; // 2/24/09
 			$the_lng = empty($_POST['frm_lng'])? "0.999999" : quote_smart(trim($_POST['frm_lng'])) ;
+			$curr_groups = $_POST['frm_exist_groups']; 	//	4/14/11
+			$groups = "," . implode(',', $_POST['frm_group']) . ","; 	//	4/14/11
+			$resp_id = $_POST['frm_id'];
+			$resp_stat = $_POST['frm_un_status_id'];
+			$by = $_SESSION['user_id'];
 //			if (($_POST['frm_clr_pos'])=='on') {$the_lat = $the_lng = "NULL";}				// 11/15/09
 			if ($_postmap_clear=='on') {$the_lat = $the_lng = "NULL";}				// 11/19/09
 			$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET
@@ -595,6 +738,8 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				`locatea`= " . 		quote_smart(trim($_POST['frm_locatea'])) . ",
 				`gtrack`= " . 		quote_smart(trim($_POST['frm_gtrack'])) . ",
 				`glat`= " . 		quote_smart(trim($_POST['frm_glat'])) . ",
+				`t_tracker`= " . 		quote_smart(trim($_POST['frm_t_tracker'])) . ",				
+				`ogts`= " . 		quote_smart(trim($_POST['frm_ogts'])) . ",
 				`direcs`= " . 		quote_smart(trim($_POST['frm_direcs'])) . ",
 				`lat`= " . 			$the_lat . ",
 				`lng`= " . 			$the_lng . ",
@@ -607,18 +752,37 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 			$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
 			if (!empty($_POST['frm_log_it'])) { do_log($GLOBALS['LOG_UNIT_STATUS'], 0, $_POST['frm_id'], $_POST['frm_un_status_id']);}	// 6/2/08
+			$list = $_POST['frm_exist_groups']; 	//	4/14/11
+			$ex_grps = explode(',', $list); 	//	4/14/11 
+			
+			if($curr_groups != $groups) { 	//	4/14/11
+				foreach($_POST['frm_group'] as $posted_grp) { 	//	4/14/11
+					if(!in_array($posted_grp, $ex_grps)) {
+						$query  = "INSERT INTO `$GLOBALS[mysql_prefix]allocates` (`group` , `type`, `al_as_of` , `al_status` , `resource_id` , `sys_comments` , `user_id`) VALUES 
+								($posted_grp, 2, '$now', $resp_stat, $resp_id, 'Allocated to Group' , $by)";
+						$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);	
+						}
+					}
+				foreach($ex_grps as $existing_grps) { 	//	4/14/11
+					print $existing_grps;
+					if(!in_array($existing_grps, $_POST['frm_group'])) {
+						$query  = "DELETE FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type` = 2 AND `group` = $existing_grps AND `resource_id` = {$resp_id}";
+						$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);	
+						}
+					}
+				}			
 			$mobstr = (($frm_mobile) && ($frm_aprs)||($frm_instam))? "Mobile": "Unit ";
 			$caption = "<B>" . $mobstr . " '<i>" . stripslashes_deep($_POST['frm_name']) . "</i>' data has been updated.</B><BR /><BR />";
 			}
 		}				// end else {}
 
 	if ($_getgoadd == 'true') {
-
+		$by = $_SESSION['user_id'];
 		$frm_lat = (empty($_POST['frm_lat']))? '0.999999': quote_smart(trim($_POST['frm_lat']));						// 9/3/08
 		$frm_lng = (empty($_POST['frm_lng']))? '0.999999': quote_smart(trim($_POST['frm_lng']));						// 9/3/08
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));							// 1/27/09
 		$query = "INSERT INTO `$GLOBALS[mysql_prefix]responder` (
-			`name`, `street`, `city`, `state`, `phone`, `handle`,  `icon_str`, `description`, `capab`, `un_status_id`, `callsign`, `mobile`, `multi`, `aprs`, `instam`, `locatea`, `gtrack`, `glat`, `direcs`, `contact_name`, `contact_via`, `lat`, `lng`, `type`, `user_id`, `updated` )
+			`name`, `street`, `city`, `state`, `phone`, `handle`,  `icon_str`, `description`, `capab`, `un_status_id`, `callsign`, `mobile`, `multi`, `aprs`, `instam`, `locatea`, `gtrack`, `glat`, `t_tracker`, `ogts`, `direcs`, `contact_name`, `contact_via`, `lat`, `lng`, `type`, `user_id`, `updated` )
 			VALUES (" .
 				quote_smart(trim($_POST['frm_name'])) . "," .
 				quote_smart(trim($_POST['frm_street'])) . "," .
@@ -638,6 +802,8 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				quote_smart(trim($_POST['frm_locatea'])) . "," .
 				quote_smart(trim($_POST['frm_gtrack'])) . "," .
 				quote_smart(trim($_POST['frm_glat'])) . "," .
+				quote_smart(trim($_POST['frm_t_tracker'])) . "," .				
+				quote_smart(trim($_POST['frm_ogts'])) . "," .
 				quote_smart(trim($_POST['frm_direcs'])) . "," .
 				quote_smart(trim($_POST['frm_contact_name'])) . "," .
 				quote_smart(trim($_POST['frm_contact_via'])) . "," .
@@ -648,6 +814,14 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				quote_smart(trim($now)) . ");";								// 8/23/08
 
 		$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
+		$new_id=mysql_insert_id();
+
+		$status_id = $_POST['frm_un_status_id'];
+		foreach ($_POST['frm_group'] as $grp_val) {	// 4/13/11
+			$query_a  = "INSERT INTO `$GLOBALS[mysql_prefix]allocates` (`group` , `type`, `al_as_of` , `al_status` , `resource_id` , `sys_comments` , `user_id`) VALUES 
+					($grp_val, 2, '$now', $status_id, $new_id, 'Allocated to Group' , $by)";
+			$result_a = mysql_query($query_a) or do_error($query_a, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);				
+		}
 		do_log($GLOBALS['LOG_UNIT_STATUS'], 0, mysql_insert_id(), $_POST['frm_un_status_id']);	// 6/2/08
 
 		$mobstr = ($frm_mobile)? "Mobile Unit ": "Station ";
@@ -665,6 +839,8 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 ?>
 		</HEAD>
 		<BODY onLoad = "ck_frames();" > <!-- <?php print __LINE__;?> -->
+		<A NAME='top'>		<!-- 11/11/09 -->
+		<DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0></div>		
 		<?php
 		require_once('./incs/links.inc.php');
 		?>
@@ -672,14 +848,64 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		<TABLE BORDER="0" ID='addform'>
 		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'>Add Unit</FONT></FONT><BR /><BR />
 		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>
-		<FORM NAME= "res_add_Form" METHOD="POST" ACTION="units_nm.php?func=responder&goadd=true"> <!-- 7/9/09 -->
+		<FORM NAME= "res_add_Form" METHOD="POST" ACTION="<?php echo basename(__FILE__);?>?func=responder&goadd=true"> <!-- 7/9/09 -->
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Name ">Name</A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
 			<TD COLSPAN=3 ><INPUT MAXLENGTH="64" SIZE="64" TYPE="text" NAME="frm_name" VALUE="" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Handle - local rules, could be callsign or badge number, generally for radio comms use">Handle</A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
 			<TD COLSPAN=3 ><INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_handle" VALUE="" />
 			<SPAN STYLE = 'margin-left:30px'  CLASS="td_label"> Icon: </SPAN>&nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp;<INPUT TYPE = "text" NAME = "frm_icon_str" SIZE = 3 MAXLENGTH=3 VALUE="" />
-			</TD></TR>
 
+<?php
+if(get_num_groups() > 1) {
+		if((is_super()) && (get_num_groups() > 1) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
+?>		
+			<TR CLASS='even' VALIGN="top">	<!--  4/12/11 -->
+			<TD CLASS="td_label"><A HREF="#"  TITLE="Sets Regions that Responder is allocated to - click + to expand, - to collapse"><?php print get_text("Region");?></A>: 
+			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
+			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
+			<TD>
+			<?php
+			
+			$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	6/10/11
+			print get_user_group_butts(($_SESSION['user_id']));	//	6/10/11		
+			
+		} elseif((is_admin()) && (get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
+?>		
+			<TR CLASS='even' VALIGN="top">	<!--  4/12/11 -->
+			<TD CLASS="td_label"><A HREF="#"  TITLE="Sets Regions that Responder is allocated to - click + to expand, - to collapse"><?php print get_text("Region");?></A>: 
+			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
+			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
+			<TD>
+<?php
+
+			$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	6/10/11
+			print get_user_group_butts(($_SESSION['user_id']));	//	6/10/11		
+?>	
+			</TD></TR>
+<?php
+			} elseif((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
+?>
+			<TR CLASS='even' VALIGN="top">	<!--  4/12/11 -->
+			<TD CLASS="td_label"><A HREF="#"  TITLE="Sets Regions that Responder is allocated to - click + to expand, - to collapse"><?php print get_text("Region");?></A>: 
+			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
+			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
+			<TD>
+<?php
+			$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	6/10/11
+			print get_user_group_butts_readonly(get_allocates(4, $_SESSION['user_id']));	//	6/10/11		
+?>	
+			<SPAN STYLE = 'margin-left:30px'  CLASS="td_label"> Icon: </SPAN>&nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp;<INPUT TYPE = "text" NAME = "frm_icon_str" SIZE = 3 MAXLENGTH=3 VALUE="" />
+			</TD></TR>
+<?php
+			} else {
+			}
+		} else {
+?>
+		<INPUT TYPE="hidden" NAME="frm_group[]" VALUE="1">	 <!-- 6/10/11 -->
+<?php
+		}
+?>
+		<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>	
 		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A HREF="#" TITLE="Unit Type - Select from pulldown menu">Type</A>: <font color='red' size='-1'>*</font></TD>
 			<TD ALIGN='left'><SELECT NAME='frm_type'><OPTION VALUE=0>Select one</OPTION>		<!-- 1/8/09 -->
 <?php
@@ -697,35 +923,30 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		<TR CLASS = "odd" VALIGN='top'  TITLE = 'Select one'><TD CLASS="td_label" ><A HREF="#" TITLE="Tracking Type - select from the pulldown menu - you must also fill in the callsign or tracking id which is used by the tracking provider to identify the unit - each unit should have a unique id.">Tracking</A>:&nbsp;</TD>
 			<TD ALIGN='left'> <!-- 7/10/09 -->
 				<SELECT NAME='frm_track_disp' onChange = "do_tracking(this.form, this.options[this.selectedIndex].value);">	<!-- 7/10/09 -->
-					<OPTION VALUE='0' SELECTED>None</OPTION>
+					<OPTION VALUE='<?php print $GLOBALS['TRACK_NONE'];?>' SELECTED>None</OPTION>
 					<OPTION VALUE='<?php print $GLOBALS['TRACK_APRS'];?>'>APRS</OPTION>
 					<OPTION VALUE='<?php print $GLOBALS['TRACK_INSTAM'];?>'>Instamapper</OPTION>
 					<OPTION VALUE='<?php print $GLOBALS['TRACK_LOCATEA'];?>'>LocateA</OPTION>
-<?php
-	$gtrack_url = get_variable('gtrack_url');
-	$valid_url = htmlspecialchars($gtrack_url);
-
-	if (!preg_match("/^(https?:\/\/+[\w\-]+\.[\w\-]+)/i",$valid_url)) { $valid_url = ''; }
-
-	if (empty($valid_url)) {
-	} else {
-?>
 					<OPTION VALUE='<?php print $GLOBALS['TRACK_GTRACK'];?>'>Gtrack</OPTION>
-<?php
-	}
-?>
 					<OPTION VALUE='<?php print $GLOBALS['TRACK_GLAT'];?>'>Google Lat</OPTION>
+					<OPTION VALUE='<?php print $GLOBALS['TRACK_T_TRACKER'];?>'>Tickets Tracker</OPTION>
+					<OPTION VALUE='<?php print $GLOBALS['TRACK_OGTS'];?>'>OpenGTS</OPTION>
 					</SELECT>&nbsp;&nbsp;
-			<A HREF="#" TITLE="Callsign / License key - required for all tracking types - APRS will be unit radio callsign, others will be license key given by provider"><SPAN CLASS="td_label" ID = 'track_capt'>Callsign/License-key</SPAN></A>&nbsp;&raquo;&nbsp;&nbsp;<INPUT SIZE="<?php print $key_field_size;?>" MAXLENGTH="<?php print $key_field_size;?>" TYPE="text" NAME="frm_callsign" VALUE="" 
-				onmouseover = "$('instam_label').style.visibility = 'visible';" 
-				onmouseout= "$('instam_label').style.visibility = 'hidden';";/>&nbsp;
-				<SPAN ID = 'instam_label' STYLE = 'visibility: hidden; display:inline'></SPAN>							
+			<A HREF="#" TITLE="Callsign / License key - required for all tracking types - APRS will be unit radio callsign, others will be license key given by provider">
+				</A>
+<SCRIPT>				
+				var track_info = "APRS:   callsign\nInstamapper:   Device key\nLocateA:   Userid\nGtrack:   Userid\nLatitude:   Badge\nOpenGTS:   Device\n";
+</SCRIPT>
+				<INPUT TYPE = 'button' onClick = alert(track_info) value="?">&nbsp;&raquo;&nbsp;&nbsp;
+				
+				<INPUT ID = "track_key" SIZE="<?php print $key_field_size;?>" MAXLENGTH="<?php print $key_field_size;?>" TYPE="text" NAME="frm_callsign" VALUE="" />&nbsp;
 			</TD>
 			</TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Status - Select from pulldown menu">Status</A>:&nbsp;<font color='red' size='-1'>*</font></TD>
 			<TD ALIGN ='left'><SELECT NAME="frm_un_status_id" onChange = "document.res_add_Form.frm_log_it.value='1'">
 				<OPTION VALUE=0 SELECTED>Select one</OPTION>
-<?php
+<?php			
+
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]un_status` ORDER BY `group` ASC, `sort` ASC, `status_val` ASC";
 	$result_st = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$the_grp = strval(rand());			//  force initial optgroup value
@@ -744,20 +965,50 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 ?>
 			</SELECT>
 			</TD></TR>
-		<TR CLASS='odd'><TD CLASS="td_label"><A HREF="#" TITLE="Location - type in location in fields or click location on map ">Location</A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="" MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS='even'><TD CLASS="td_label"><A HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required">City</A></TD> <!-- 7/5/10 -->
+<?php
+		if(is_administrator()) {	//	6/10/11
+?>
+			<TR CLASS='odd' VALIGN="top">	<!--  6/10/11 -->
+			<TD CLASS='td_label'><A HREF="#"  TITLE="Sets Boundaries for Ring Fences and exclusion zones"><?php print get_text("Boundaries");?></A>:</TD>
+			<TD COLSPAN='3'><A HREF="#"  TITLE="Sets boundary used to ring-fence the area this unit is allowed in"><?php print get_text("Ringfence");?></A>:&nbsp;
+			<SELECT NAME="frm_ringfence" onChange = "this.value=JSfnTrim(this.value)">
+				<OPTION VALUE=0 SELECTED>Select</OPTION>
+<?php
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `use_with_u_rf` = 1 ORDER BY `line_name` ASC";
+				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+				while ($row_bound = stripslashes_deep(mysql_fetch_assoc($result))) {
+					print "\t<OPTION VALUE='{$row_bound['id']}'>{$row_bound['line_name']}</OPTION>\n";		// pipe separator
+					}
+?>
+			</SELECT>&nbsp;
+			<A HREF="#"  TITLE="Sets exclusion zone for this unit"><?php print get_text("Exclusion Zone");?></A>:&nbsp
+			<SELECT NAME="frm_excl_zone" onChange = "this.value=JSfnTrim(this.value)">
+				<OPTION VALUE=0 SELECTED>Select</OPTION>
+<?php
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `use_with_u_ex` = 1 ORDER BY `line_name` ASC";
+				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+				while ($row_bound = stripslashes_deep(mysql_fetch_assoc($result))) {
+					print "\t<OPTION VALUE='{$row_bound['id']}'>{$row_bound['line_name']}</OPTION>\n";		// pipe separator
+					}
+?>
+			</SELECT></TD></TR>
+<?php
+			}	
+?>			
+		<TR CLASS='even'><TD CLASS="td_label"><A HREF="#" TITLE="Location - type in location in fields or click location on map ">Location</A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="" MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS='odd'><TD CLASS="td_label"><A HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required">City</A></TD> <!-- 7/5/10 -->
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print get_variable('def_city'); ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="2" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="2"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Phone Number">Phone</A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="12" MAXLENGTH="48" TYPE="text" NAME="frm_phone" VALUE="" /></TD></TR> <!-- 7/5/10 -->
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Phone Number">Phone</A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="12" MAXLENGTH="48" TYPE="text" NAME="frm_phone" VALUE="" /></TD></TR> <!-- 7/5/10 -->
 
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=56 ROWS=2></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Capability - training, equipment on board etc">Capability</A>:&nbsp;</TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_capab" COLS=56 ROWS=2></TEXTAREA></TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Contact name">Contact Name</A>:&nbsp;</TD>	<TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Contact via - for email to unit this must be a valid email address or email to SMS address">Contact Via</A>:&nbsp;</TD>	<TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_via" VALUE="" /></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=56 ROWS=2></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Capability - training, equipment on board etc">Capability</A>:&nbsp;</TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_capab" COLS=56 ROWS=2></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Contact name">Contact Name</A>:&nbsp;</TD>	<TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Contact via - for email to unit this must be a valid email address or email to SMS address">Contact Via</A>:&nbsp;</TD>	<TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_via" VALUE="" /></TD></TR>
 		<TR CLASS = "odd"><TD COLSPAN=4 ALIGN='center'>
 			<INPUT TYPE="button" VALUE="Cancel" onClick="document.can_Form.submit();" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<INPUT TYPE="reset" VALUE="Reset" onClick = "do_add_reset(this.form);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- 1/22/09 -->
-			<INPUT TYPE="button" VALUE="Submit for Update"  onClick="validate(document.res_add_Form);" ></TD></TR>	<!-- 7/21/09 -->
+			<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>"  onClick="validate(document.res_add_Form);" ></TD></TR>	<!-- 7/21/09 -->
 		<INPUT TYPE='hidden' NAME = 'frm_lat' VALUE=''/>
 		<INPUT TYPE='hidden' NAME = 'frm_lng' VALUE=''/>
 		<INPUT TYPE='hidden' NAME = 'frm_log_it' VALUE=''/>
@@ -768,13 +1019,17 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		<INPUT TYPE='hidden' NAME = 'frm_locatea' VALUE=0 />
 		<INPUT TYPE='hidden' NAME = 'frm_gtrack' VALUE=0 />
 		<INPUT TYPE='hidden' NAME = 'frm_glat' VALUE=0 />
+		<INPUT TYPE='hidden' NAME = 'frm_t_tracker' VALUE=0 />	  <!-- 5/11/11 -->	
+		<INPUT TYPE='hidden' NAME = 'frm_ogts' VALUE=0 />
 		<INPUT TYPE='hidden' NAME = 'frm_direcs' VALUE=1 />  <!-- note default -->
 		</FORM></TABLE> <!-- end inner left -->
-		</TR></TABLE><!-- end outer -->
+		</TD></TR></TABLE><!-- end outer -->
 
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
 		<!-- 1100 -->
 		</BODY>
+		<A NAME="bottom" /> 
+		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>			
 		<SCRIPT>
 //		if (!(document.res_add_Form.frm_lat.value=="")){
 //			do_ngs();		// 1/24/09
@@ -806,47 +1061,77 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$type_checks[$row['type']] = " checked";
 		$mob_checked = (($row['mobile']==1))? " CHECKED" : "" ;				// 1/24/09
 		$multi_checked = (($row['multi']==1))? " CHECKED" : "" ;				// 1/24/09
-		$aprs_checked = (($row['aprs']==1))? " CHECKED" : "" ;
-		$instam_checked = (($row['instam']==1))? " CHECKED" : "" ;			// 3/11/09
-		$locatea_checked = (($row['locatea']==1))? " CHECKED" : "" ;		// 7/23/09
-		$gtrack_checked = (($row['gtrack']==1))? " CHECKED" : "" ;			// 7/23/09
-		$glat_checked = (($row['glat']==1))? " CHECKED" : "" ;			// 7/23/09
 		$direcs_checked = (($row['direcs']==1))? " CHECKED" : "" ;			// 3/11/09
-		$im_hint = ($instam_checked)? "&nbsp;&nbsp;<SPAN ID = 'instam_label' STYLE = 'visibility: visible'><I>(API key)</I></SPAN>": "";
-
-		$none_sel = (!(($row['aprs'] == 1) || ($row['instam'] == 1) || ($row['locatea'] == 1) || ($row['gtrack'] == 1) || ($row['glat'] == 1)))? 	" SELECTED" : "";		// 7/10/09
-		$aprs_sel = ($row['aprs'] == 1)? 								" SELECTED" : "";
-		$instam_sel = ($row['instam'] ==1)?								" SELECTED" : "";
-		$locatea_sel = ($row['locatea'] ==1)?							" SELECTED" : "";
-		$gtrack_sel = ($row['gtrack'] ==1)?								" SELECTED" : "";
-		$glat_sel = ($row['glat'] ==1)?								" SELECTED" : "";		
-		
 		print do_calls($id);								// generate JS calls array
-		$track_val = 0;
-		if (!(empty($row['aprs']))) 	$track_val = $GLOBALS['TRACK_APRS']	;
-		if (!(empty($row['instam']))) 	$track_val = $GLOBALS['TRACK_INSTAM']	;
-		if (!(empty($row['locatea']))) 	$track_val = $GLOBALS['TRACK_LOCATEA']	;
-		if (!(empty($row['gtrack']))) 	$track_val = $GLOBALS['TRACK_GTRACK']	;
-		if (!(empty($row['glat']))) 	$track_val = $GLOBALS['TRACK_GLAT']	;
-
+		$track_type = get_remote_type ($row); 
 ?>
+		<SCRIPT>		
+		function track_reset(the_Form) {		// reset to original as-loaded values
+			the_Form.frm_aprs.value = <?php echo $row['aprs'];?>;
+			the_Form.frm_instam.value = <?php echo $row['instam'];?>;
+			the_Form.frm_locatea.value = <?php echo $row['locatea'];?>;
+			the_Form.frm_gtrack.value = <?php echo $row['gtrack'];?>;
+			the_Form.frm_glat.value = <?php echo $row['glat'];?>;
+			the_Form.frm_ogts.value = <?php echo $row['ogts'];?>;
+			the_Form.frm_t_tracker.value = <?php echo $row['t_tracker'];?>;			
+			}		// end function track reset()
+			
+		var track_captions = ["", "Callsign&nbsp;&raquo;", "Device key&nbsp;&raquo;", "Userid&nbsp;&raquo;", "Userid&nbsp;&raquo;", "Badge&nbsp;&raquo;", "Device&nbsp;&raquo;", "Userid&nbsp;&raquo;"];
+		</SCRIPT>
 		</HEAD>
-		<BODY onLoad = "ck_frames()"; > <!-- <?php print __LINE__;?> -->
-		<?php
+		<BODY onLoad = "ck_frames(); do_tracking(document.res_edit_Form, <?php print $track_type;?>)"; > <!-- <?php print __LINE__;?> -->
+		<A NAME='top'>		<!-- 11/11/09 -->
+		<DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0></div>
+		<?php 
 		require_once('./incs/links.inc.php');
 		?>
-		<TABLE BORDER=0 ID='outer' STYLE = 'margin-left:100px'><TR><TD>
+		<TABLE BORDER=0 ID='outer'><TR><TD>
 		<TABLE BORDER=0 ID='editform'>
 		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'>&nbsp;Edit unit '<?php print $row['name'];?>' data</FONT>&nbsp;&nbsp;(#<?php print $id; ?>)</FONT></FONT><BR /><BR />
 		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>
-		<FORM METHOD="POST" NAME= "res_edit_Form" ACTION="units_nm.php?func=responder&goedit=true"> <!-- 7/9/09 -->
-
+		<FORM METHOD="POST" NAME= "res_edit_Form" ACTION="<?php echo basename(__FILE__);?>?func=responder&goedit=true"> <!-- 7/9/09 -->
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Name ">Name</A>: <font color='red' size='-1'>*</font></TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="<?php print $row['name'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label">
-			<A HREF="#" TITLE="Handle - local rules, could be callsign or badge number, generally for radio comms use">Handle</A>:&nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp; </TD>
-			<TD COLSPAN=3><INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_handle" VALUE="<?php print $row['handle'] ;?>" />
-				<SPAN STYLE = 'margin-left:30px'  CLASS="td_label"> Icon: </SPAN>&nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp;<INPUT TYPE = 'text' NAME = 'frm_icon_str' SIZE = 3 MAXLENGTH=3 VALUE='<?php print $row['icon_str'] ;?>'>
-			</TD></TR>
+		<A HREF="#" TITLE="Handle - local rules, could be callsign or badge number, generally for radio comms use">Handle</A>: &nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp;</TD>
+		<TD COLSPAN=3><INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_handle" VALUE="<?php print $row['handle'] ;?>" />
+		<SPAN STYLE = 'margin-left:30px'  CLASS="td_label"> Icon: </SPAN>&nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp;<INPUT TYPE = 'text' NAME = 'frm_icon_str' SIZE = 3 MAXLENGTH=3 VALUE='<?php print $row['icon_str'] ;?>'>
+		</TD></TR>
+<?php
+		if(get_num_groups() > 1) {
+			if((is_super()) && (get_num_groups() > 1) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
+?>			
+			<TR CLASS='even' VALIGN='top'>
+			<TD CLASS='td_label'><?php print get_text('Region');?></A>:
+			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
+			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
+			<TD>
+<?php			
+			$alloc_groups = implode(',', get_allocates(2, $id));	//	6/10/11
+			print get_sub_group_butts(($_SESSION['user_id']), 2, $id) ;	//	6/10/11	
+			print "</TD></TR>";		// 4/12/11
+			
+			} elseif((is_admin()) && (get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11	
+?>
+			<TR CLASS='even' VALIGN='top'>;
+			<TD CLASS='td_label'><?php print get_text('Region');?></A>:
+			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
+			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
+			<TD>
+<?php
+			$alloc_groups = implode(',', get_allocates(2, $id));	//	6/10/11
+			print get_sub_group_butts(($_SESSION['user_id']), 2, $id) ;	//	6/10/11	
+			print "</TD></TR>";		// 4/12/11		
+?>
+			</TD>
+<?php
+			} else {
+?>
+			<INPUT TYPE="hidden" NAME="frm_group[]" VALUE="1">	 <!-- 6/10/11 -->
+<?php
+			}
+		}
+?>
+		<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>
 		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A HREF="#" TITLE="Unit Type - Select from pulldown menu">Type</A>: <font color='red' size='-1'>*</font></TD>
 		<TD ALIGN='left'><FONT SIZE='-2'>
 			<SELECT NAME='frm_type'>
@@ -862,81 +1147,107 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				<A HREF="#" TITLE="Unit can be dispatched to multiple incidents?">Multiple</A>  &raquo;<INPUT TYPE="checkbox" NAME="frm_multi_disp" <?php print $multi_checked; ?> />&nbsp;&nbsp;&nbsp;
 				<A HREF="#" TITLE="Calculate directions on dispatch? - required if you wish to use email directions to unit facility">Directions</A> &raquo;<INPUT TYPE="checkbox" NAME="frm_direcs_disp" <?php print $direcs_checked; ?> /></TD>
 		</TR>
-		<TR CLASS = "odd" VALIGN='top'><TD CLASS="td_label"><A HREF="#" TITLE="Tracking Type - select from the pulldown menu - you must also fill in the callsign or tracking id which is used by the tracking provider to identify the unit - each unit should have a unique id.">Tracking</A>:&nbsp;</TD>
+		<TR CLASS = "odd" VALIGN='top'><TD CLASS="td_label"><A HREF="#" TITLE="Tracking Type - select from the pulldown menu - you must also fill in the callsign or tracking id which is used by the tracking provider to identify the unit - each unit should have a unique id.">
+			Tracking</A>:&nbsp;</TD>
 			<TD ALIGN='left'>
 
 				<SELECT NAME='frm_track_disp' onChange = "do_tracking(this.form, this.options[this.selectedIndex].value);"> <!-- 7/10/09 -->
-					<OPTION VALUE=0 <?php print $none_sel; ?>>None</OPTION>
-					<OPTION VALUE=<?php print $GLOBALS['TRACK_APRS'] . $aprs_sel;?>>APRS</OPTION>
-					<OPTION VALUE=<?php print $GLOBALS['TRACK_INSTAM'] . $instam_sel;?>>Instamapper</OPTION>
-					<OPTION VALUE=<?php print $GLOBALS['TRACK_LOCATEA'] . $locatea_sel;?>>LocateA</OPTION>
 <?php
-	$gtrack_url = get_variable('gtrack_url');
-	$valid_url = htmlspecialchars($gtrack_url);
-
-	if (!preg_match("/^(https?:\/\/+[\w\-]+\.[\w\-]+)/i",$valid_url)) { $valid_url = ''; }
-	if (empty($valid_url)) {
-	} else {
+	$selects = array("", "", "", "", "", "", "", "");
+	$selects[$track_type] = "SELECTED";
+	print "<OPTION VALUE={$GLOBALS['TRACK_NONE']} 		{$selects[$GLOBALS['TRACK_NONE']]} > 	None </OPTION>";
+	print "<OPTION VALUE={$GLOBALS['TRACK_APRS']} 		{$selects[$GLOBALS['TRACK_APRS']]} > 	{$GLOBALS['TRACK_NAMES'][$GLOBALS['TRACK_APRS']]} </OPTION>";
+	print "<OPTION VALUE={$GLOBALS['TRACK_INSTAM']} 	{$selects[$GLOBALS['TRACK_INSTAM']]} > 	{$GLOBALS['TRACK_NAMES'][$GLOBALS['TRACK_INSTAM']]} </OPTION>";
+	print "<OPTION VALUE={$GLOBALS['TRACK_GTRACK']} 	{$selects[$GLOBALS['TRACK_GTRACK']]} > 	{$GLOBALS['TRACK_NAMES'][$GLOBALS['TRACK_GTRACK']]} </OPTION>";
+	print "<OPTION VALUE={$GLOBALS['TRACK_LOCATEA']}	{$selects[$GLOBALS['TRACK_LOCATEA']]} > {$GLOBALS['TRACK_NAMES'][$GLOBALS['TRACK_LOCATEA']]} </OPTION>";
+	print "<OPTION VALUE={$GLOBALS['TRACK_GLAT']} 		{$selects[$GLOBALS['TRACK_GLAT']]} > 	{$GLOBALS['TRACK_NAMES'][$GLOBALS['TRACK_GLAT']]} </OPTION>";
+	print "<OPTION VALUE={$GLOBALS['TRACK_OGTS']} 		{$selects[$GLOBALS['TRACK_OGTS']]} > 	{$GLOBALS['TRACK_NAMES'][$GLOBALS['TRACK_OGTS']]} </OPTION>";
+	print "<OPTION VALUE={$GLOBALS['TRACK_T_TRACKER']} 		{$selects[$GLOBALS['TRACK_T_TRACKER']]} > 	{$GLOBALS['TRACK_NAMES'][$GLOBALS['TRACK_T_TRACKER']]} </OPTION>";	
 ?>
-					<OPTION VALUE=<?php print $GLOBALS['TRACK_GTRACK'] . $gtrack_sel;?>>Gtrack</OPTION>
-<?php
-	}
-?>
-					<OPTION VALUE=<?php print $GLOBALS['TRACK_GLAT'] . $glat_sel;?>>Google Lat</OPTION>
-					</SELECT>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN ID = 'track_capt' CLASS="td_label">
-				Callsign/License-key</SPAN>&nbsp;&raquo; <INPUT SIZE="<?php print $key_field_size;?>" MAXLENGTH="<?php print $key_field_size;?>" TYPE="text" NAME="frm_callsign" VALUE="<?php print $row['callsign'];?>" /><?php print $im_hint;?> <!== 7/23/09 -->
-								
+			</SELECT>&nbsp;&nbsp;&nbsp;&nbsp;
+<SCRIPT>				
+				var track_info = "APRS:   callsign\nInstamapper:   Device key\nLocateA:   Userid\nGtrack:   Userid\nLatitude:   Badge\nOpenGTS:   Device\n";
+</SCRIPT>
+				<INPUT TYPE = 'button' onClick = alert(track_info) value="?">
 			
+				&nbsp;&raquo; <INPUT ID = "track_key" SIZE="<?php print $key_field_size;?>" MAXLENGTH="<?php print $key_field_size;?>" TYPE="text" NAME="frm_callsign" VALUE="<?php print $row['callsign'];?>" /> <!-- 7/23/09 -->
 			</TD>
 			</TR>
-
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Status - Select from pulldown menu">Status</A>:&nbsp;</TD>
 			<TD ALIGN='left'><SELECT NAME="frm_un_status_id" onChange = "this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color; document.res_edit_Form.frm_log_it.value='1'">
 <?php
-	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]un_status` ORDER BY `status_val` ASC, `group` ASC, `sort` ASC";
-	$result_st = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]un_status` ORDER BY `status_val` ASC, `group` ASC, `sort` ASC";
+			$result_st = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
-	$the_grp = strval(rand());			//  force initial optgroup value
-	$i = 0;
-	while ($row_st = stripslashes_deep(mysql_fetch_array($result_st))) {
-		if ($the_grp != $row_st['group']) {
-			print ($i == 0)? "": "</OPTGROUP>\n";
-			$the_grp = $row_st['group'];
-			print "\t\t<OPTGROUP LABEL='$the_grp'>\n";
-			}
-		$sel = ($row['un_status_id']== $row_st['id'])? " SELECTED" : "";
-		print "\t\t<OPTION VALUE=" . $row_st['id'] . $sel ." STYLE='background-color:{$row_st['bg_color']}; color:{$row_st['text_color']};'  >" . $row_st['status_val']. "</OPTION>\n";	// 3/15/10
-		$i++;
+			$the_grp = strval(rand());			//  force initial optgroup value
+			$i = 0;
+			while ($row_st = stripslashes_deep(mysql_fetch_array($result_st))) {
+				if ($the_grp != $row_st['group']) {
+					print ($i == 0)? "": "</OPTGROUP>\n";
+					$the_grp = $row_st['group'];
+					print "\t\t<OPTGROUP LABEL='$the_grp'>\n";
+					}
+				$sel = ($row['un_status_id']== $row_st['id'])? " SELECTED" : "";
+				print "\t\t<OPTION VALUE=" . $row_st['id'] . $sel ." STYLE='background-color:{$row_st['bg_color']}; color:{$row_st['text_color']};'  >" . $row_st['status_val']. "</OPTION>\n";	// 3/15/10
+				$i++;
+				}
+			print "\n\t\t</SELECT>\n";
+			unset($result_st);
+
+		if(is_administrator()) {
+?>
+			<TR CLASS='odd' VALIGN="top">	<!--  6/10/11 -->
+			<TD CLASS="td_label"><A HREF="#" TITLE="Sets boundary used to ring-fence the area this unit is allowed in"><?php print get_text("Ringfence");?></A>:</TD>
+			<TD><SELECT NAME="frm_ringfence" onChange = "this.value=JSfnTrim(this.value)">	<!--  11/17/10 -->
+				<OPTION VALUE=0>Select</OPTION>
+<?php
+				$query_bound = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `use_with_u_rf` = 1 ORDER BY `line_name` ASC";		// 12/18/10
+				$result_bound = mysql_query($query_bound) or do_error($query_bound, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+				while ($row_bound = stripslashes_deep(mysql_fetch_assoc($result_bound))) {
+					$sel = ($row['ring_fence'] == $row_bound['id']) ? "SELECTED" : "";
+					print "\t<OPTION VALUE='{$row_bound['id']}' {$sel}>{$row_bound['line_name']}</OPTION>\n";		// pipe separator
+					}
+?>
+			</SELECT></TD></TR>
+			<TR CLASS='odd' VALIGN="top">	<!--  6/10/11 -->
+			<TD CLASS="td_label"><A HREF="#" TITLE="Sets exclusion zone for this unit"><?php print get_text("Exclusion Zone");?></A>:</TD>
+			<TD><SELECT NAME="frm_excl_zone" onChange = "this.value=JSfnTrim(this.value)">	<!--  11/17/10 -->
+				<OPTION VALUE=0>Select</OPTION>
+<?php
+				$query_bound = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `use_with_u_ex` = 1 ORDER BY `line_name` ASC";		// 12/18/10
+				$result_bound = mysql_query($query_bound) or do_error($query_bound, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+				while ($row_bound = stripslashes_deep(mysql_fetch_assoc($result_bound))) {
+					$sel = ($row['excl_zone'] == $row_bound['id']) ? "SELECTED" : "";
+					print "\t<OPTION VALUE='{$row_bound['id']}' {$sel}>{$row_bound['line_name']}</OPTION>\n";		// pipe separator
+					}
+?>
+			</SELECT></TD></TR>	
+<?php
 		}
-	print "\n\t\t</SELECT>\n";
-	unset($result_st);
-																							// check any assign records this unit - added 5/23/08
-	$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `responder_id`=$id AND `clear` IS NULL";		// 6/27/08
-	$result_as = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+																						// check any assign records this unit - added 5/23/08
+		$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `responder_id`=$id AND ( `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00') ";		// 6/27/08
+		$result_as = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
-	$cbcount = mysql_affected_rows();				// count of incomplete assigns
-	$dis_rmv = ($cbcount==0)? "": " DISABLED";		// allow/disallow removal
-	$cbtext = ($cbcount==0)? "": "&nbsp;&nbsp;<FONT size=-2>(NA - calls in progress: " .$cbcount . " )</FONT>";
+		$cbcount = mysql_affected_rows();				// count of incomplete assigns
+		$dis_rmv = ($cbcount==0)? "": " DISABLED";		// allow/disallow removal
+		$cbtext = ($cbcount==0)? "": "&nbsp;&nbsp;<FONT size=-2>(NA - calls in progress: " .$cbcount . " )</FONT>";
 ?>
 			</TD></TR>
 		<TR CLASS='odd'><TD CLASS="td_label"><A HREF="#" TITLE="Location - type in location in fields or click location on map ">Location</A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="<?php print $row['street'] ;?>"  MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS='even'><TD CLASS="td_label"><A HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required">City</A>:</TD> <!-- 7/5/10 -->
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="2" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="2"></TD></TR> <!-- 7/5/10 -->
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Phone number">Phone</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="12" MAXLENGTH="48" TYPE="text" NAME="frm_phone" VALUE="<?php print $row['phone'] ;?>" /></TD></TR> <!-- 7/5/10 -->
-
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=56 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Capability - training, equipment on board etc">Capability</A>:&nbsp; </TD>										<TD COLSPAN=3><TEXTAREA NAME="frm_capab" COLS=56 ROWS=2><?php print $row['capab'];?></TEXTAREA></TD></TR>
-
-
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Unit Contact name">Contact Name</A>:&nbsp;</TD>	<TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="<?php print $row['contact_name'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A HREF="#" TITLE="Contact via - for email to unit this must be a valid email address or email to SMS address">Contact Via</A>:&nbsp;</TD>	<TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_via" VALUE="<?php print $row['contact_via'] ;?>" /></TD></TR>
 		<TR CLASS="odd" VALIGN='baseline'><TD CLASS="td_label"><A HREF="#" TITLE="Delete unit from system - disallowed if unit is assigned to any calls.">Remove Unit</A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>>
 		<?php print $cbtext; ?></TD></TR>
 		<TR CLASS = "even">
-			<TD COLSPAN=4 ALIGN='center'><BR><INPUT TYPE="button" VALUE="Cancel" onClick="history.back();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<INPUT TYPE="reset" VALUE="Reset" onClick="map_reset()";>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<INPUT TYPE="button" VALUE="Submit for Update" onClick="validate(document.res_edit_Form);"></TD></TR>
+			<TD COLSPAN=4 ALIGN='center'><BR><INPUT TYPE="button" VALUE="Cancel" onClick="document.can_Form.submit();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<INPUT TYPE="reset" VALUE="Reset" onClick="track_reset(this.form) ; this.form.reset();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>" onClick="validate(document.res_edit_Form);"></TD></TR>
 		<INPUT TYPE="hidden" NAME="frm_id" VALUE="<?php print $row['id'] ;?>" />
 		<INPUT TYPE="hidden" NAME = "frm_lat" VALUE="<?php print $row['lat'] ;?>"/>
 		<INPUT TYPE="hidden" NAME = "frm_lng" VALUE="<?php print $row['lng'] ;?>"/>
@@ -948,7 +1259,10 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		<INPUT TYPE="hidden" NAME = "frm_locatea" VALUE=<?php print $row['locatea'] ;?> />
 		<INPUT TYPE="hidden" NAME = "frm_gtrack" VALUE=<?php print $row['gtrack'] ;?> />
 		<INPUT TYPE="hidden" NAME = "frm_glat" VALUE=<?php print $row['glat'] ;?> />
+		<INPUT TYPE="hidden" NAME = "frm_t_tracker" VALUE=<?php print $row['t_tracker'] ;?> />	 <!-- 5/11/11 -->	
+		<INPUT TYPE="hidden" NAME = "frm_ogts" VALUE=<?php print $row['ogts'] ;?> />
 		<INPUT TYPE="hidden" NAME = "frm_direcs" VALUE=<?php print $row['direcs'] ;?> />
+		<INPUT TYPE="hidden" NAME="frm_exist_groups" VALUE="<?php print $alloc_groups;?>">	 <!-- 6/10/11 -->
 		</FORM></TABLE>
 		</TD></TR></TABLE>
 <?php
@@ -958,6 +1272,8 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
 		<!-- 1231 -->
+		<A NAME="bottom" /> 
+		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>			
 		</BODY>
 		</HTML>
 <?php
@@ -971,10 +1287,23 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 // view =================================================================================================================
 
 		if ($_getview == 'true') {
+
+			$query_un = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 2 AND `resource_id` = '$_GET[id]' ORDER BY `id` ASC;";	// 6/10/11
+			$result_un = mysql_query($query_un);	// 6/10/11
+			$un_groups = array();
+			$un_names = "";	
+			while ($row_un = stripslashes_deep(mysql_fetch_assoc($result_un))) 	{	// 6/10/11
+				$un_groups[] = $row_un['group'];
+				$query_un2 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` WHERE `id`= '$row_un[group]';";	// 6/10/11
+				$result_un2 = mysql_query($query_un2);	// 6/10/11
+				while ($row_un2 = stripslashes_deep(mysql_fetch_assoc($result_un2))) 	{	// 6/10/11		
+					$un_names .= $row_un2['group_name'] . " ";
+					}
+				}		
+		
 			$id = $_GET['id'];
 			$query	= "SELECT *, UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]responder` `r` 
 				WHERE `r`.`id`={$id} LIMIT 1";
-//			dump($query);
 			$result	= mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 			$row	= stripslashes_deep(mysql_fetch_assoc($result));
 //			$is_mobile = (($row['mobile']==1) && ($row['callsign'] != ''));				// 1/27/09
@@ -1003,13 +1332,21 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			$locatea_checked = (!empty($row['locatea']))? " checked" : "" ;			// 7/23/09
 			$gtrack_checked = (!empty($row['gtrack']))? " checked" : "" ;			// 7/23/09
 			$glat_checked = (!empty($row['glat']))? " checked" : "" ;				// 7/23/09
+			$t_tracker_checked = (!empty($row['t_tracker']))? " checked" : "" ;		// 5/11/11			
+			$ogts_checked = (!empty($row['ogts']))? " checked" : "" ;		// 5/11/11			
 			$direcs_checked = (!empty($row['direcs']))? " checked" : "" ;			// 3/19/09
-
 ?>
-		</HEAD>
+		</HEAD><!-- 1387 -->
+		<BODY onLoad = "ck_frames()">
+		<A NAME='top'>		<!-- 11/11/09 -->
+		<DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0></div>
 <?php
 		if ($_dodisp == 'true') {				// dispatch
 			print "\t<BODY onLoad = 'ck_frames(); do_disp();' >\n";
+			require_once('./incs/links.inc.php');
+			}
+		if ($_dodispfac == 'true') {				// dispatch to facility
+			print "\t<BODY onLoad = 'ck_frames(); do_dispfac();' onUnload='GUnload()'>\n";
 			require_once('./incs/links.inc.php');
 			}
 		else {
@@ -1019,30 +1356,18 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 		$temp = $u_types[$row['type']];
 		$the_type = $temp[0];			// name of type
-
-		$none_sel = (!(($row['aprs'] == 1) || ($row['instam'] == 1) || ($row['locatea'] == 1) || ($row['gtrack'] == 1) || ($row['glat'] == 1)))? 	" SELECTED" : "";		// 7/10/09
-		$aprs_sel = ($row['aprs'] == 1)? 								" SELECTED" : "";
-		$instam_sel = ($row['instam'] ==1)?								" SELECTED" : "";
-		$locatea_sel = ($row['locatea'] ==1)?							" SELECTED" : "";
-		$gtrack_sel = ($row['gtrack'] ==1)?								" SELECTED" : "";
-		$glat_sel = ($row['glat'] ==1)?								" SELECTED" : "";
-
-		if ($none_sel == " SELECTED") { $tracking_set="None";}
-		if ($aprs_sel == " SELECTED") { $tracking_set="APRS";}
-		if ($instam_sel == " SELECTED") { $tracking_set="Instamapper";}
-		if ($locatea_sel == " SELECTED") { $tracking_set="LocateA";}
-		if ($gtrack_sel == " SELECTED") { $tracking_set="Gtrack";}
-		if ($glat_sel == " SELECTED") { $tracking_set="Google Lat";}		
-
 ?>
-			<SPAN STYLE = 'margin-left:100px'><FONT CLASS="header">&nbsp;'<?php print $row['name'] ;?>' Data</FONT> (#<?php print $row['id'];?>) </SPAN><BR /><BR />
-			<TABLE BORDER=0 ID='outer' STYLE = 'margin-left:100px'><TR><TD>
-			<TABLE BORDER=0 ID='view_unit' STYLE='display: block' cellpadding=2>
-			<FORM METHOD="POST" NAME= "res_view_Form" ACTION="units_nm.php?func=responder">
+			<FONT CLASS="header">Unit&nbsp;'<?php print $row['name'] ;?>'</FONT> (#<?php print $row['id'];?>) <BR /><BR />
+			<TABLE BORDER=0 ID='outer'><TR><TD>
+			<TABLE BORDER=0 ID='view_unit' STYLE='display: block'>
+			<FORM METHOD="POST" NAME= "res_view_Form" ACTION="<?php echo basename(__FILE__);?>?func=responder">
 			<TR CLASS = "even"><TD CLASS="td_label">Name: </TD>			<TD><?php print $row['name'];?></TD></TR>
 			<TR CLASS = "odd"><TD CLASS="td_label">Handle: </TD>		<TD><?php print $row['handle'];?>
-				<SPAN STYLE = 'margin-left:30px'  CLASS="td_label"> Icon: </SPAN>&nbsp;<?php print $row['icon_str'];?>
-			</TD></TR>
+			<SPAN STYLE = 'margin-left:30px'  CLASS="td_label"> Icon: </SPAN>&nbsp;<?php print $row['icon_str'];?></TD></TR>
+			<TR CLASS = 'even'><TD CLASS="td_label">Location: </TD><TD><?php print $row['street'] ;?></TD></TR> <!-- 7/5/10 -->
+			<TR CLASS = 'odd'><TD CLASS="td_label">City: &nbsp;&nbsp;&nbsp;&nbsp;</TD><TD><?php print $row['city'] ;?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php print $row['state'] ;?></TD></TR> <!-- 7/5/10 -->
+			<TR CLASS = "even"><TD CLASS="td_label">Phone: &nbsp;</TD><TD COLSPAN=3><?php print $row['phone'] ;?></TD></TR> <!-- 7/5/10 -->
+			<TR CLASS = "odd"><TD CLASS="td_label">Regions: </TD>			<TD><?php print $un_names;?></TD></TR><!-- 6/10/11 -->				
 			<TR CLASS = "even"><TD CLASS="td_label">Type: </TD>
 				<TD><?php print $the_type;?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<SPAN CLASS="td_label">
@@ -1051,13 +1376,12 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 					Directions &raquo;<INPUT TYPE="checkbox" NAME="frm_direcs_disp"<?php print $direcs_checked; ?> DISABLED />
 					</SPAN>
 				</TD></TR> <!-- // 1/8/09 -->
-			<TR CLASS = "odd" VALIGN='top'><TD CLASS="td_label" >Tracking:</TD>			<TD><?php print $tracking_set;?></TD></TR>&nbsp;&nbsp;&nbsp;&nbsp;<!-- 7/10/09 -->
+			<TR CLASS = "odd" VALIGN='top'><TD CLASS="td_label" >Tracking:</TD>
+				<TD><?php print $GLOBALS['TRACK_NAMES'][$track_type];?></TD></TR>&nbsp;&nbsp;&nbsp;&nbsp;<!-- 7/10/09 -->
 			<TR CLASS = "even" VALIGN='top'>
-					<TD CLASS="td_label">Callsign/License-key: </TD>	<TD><?php print $row['callsign'];?></TD></TR>
+					<TD CLASS="td_label">Callsign/License/Key: </TD>	<TD><?php print $row['callsign'];?></TD></TR>
 			<TR CLASS = "odd"><TD CLASS="td_label">Status:</TD>		<TD><SPAN STYLE='background-color:{$row['bg_color']}; color:{$row['text_color']};'><?php print $un_st_val;?>
 				</SPAN></TD></TR>
-
-
 		<TR CLASS='even'><TD CLASS="td_label"><A HREF="#" TITLE="Location - type in location in fields or click location on map ">Location</A>:</TD><TD><?php print $row['street'] ;?></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS='odd'><TD CLASS="td_label"><A HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required">City</A>:</TD> <!-- 7/5/10 -->
 		<TD><?php print $row['city'] ;?> <!-- 7/5/10 -->
@@ -1087,7 +1411,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 ?>
 			<BR /><BR /><BR />
 			<TABLE BORDER=0 ID = 'incidents' STYLE = 'display:none' >
-			<TR CLASS='even'><TH COLSPAN=99 CLASS='header'> Click incident to dispatch '<?php print $row['name'] ;?>'</TH></TR>
+			<TR CLASS='even'><TH COLSPAN=99 CLASS='header'> Click incident to dispatch '<?php print $row['handle'] ;?>'</TH></TR>
 			<TR><TD></TD></TR>
 
 <?php
@@ -1108,10 +1432,42 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			}					// end if (mysql_affected_rows()>0)
 
 		$instr = ($ctr == 0)? "" : " AND `id` NOT IN ({$work})";
+		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]';";	// 6/10/11
+		$result = mysql_query($query);	// 6/10/11
+		$al_groups = array();
+		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 6/10/11
+			$al_groups[] = $row['group'];
+			}	
+		
+		if(isset($_SESSION['viewed_groups'])) {		//	6/10/11
+			$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+			}
+
+		if(!isset($curr_viewed)) {			//	6/10/11
+			$x=0;	
+			$where2 = "AND (";
+			foreach($al_groups as $grp) {
+				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+			} else {
+			$x=0;	
+			$where2 = "AND (";	
+			foreach($curr_viewed as $grp) {
+				$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+			}
+		$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";	//	6/10/11				
 		
 		$query_t = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` 
-			WHERE `status` IN ({$GLOBALS['STATUS_OPEN']}, {$GLOBALS['STATUS_SCHEDULED']}) {$instr}";
-
+					LEFT JOIN `$GLOBALS[mysql_prefix]allocates` ON `$GLOBALS[mysql_prefix]ticket`.id=`$GLOBALS[mysql_prefix]allocates`.`resource_id`	
+			WHERE `status` IN ({$GLOBALS['STATUS_OPEN']}, {$GLOBALS['STATUS_SCHEDULED']}) {$instr} {$where2}
+			GROUP BY `$GLOBALS[mysql_prefix]ticket`.`id`";	//	6/10/11
 		$result_t = mysql_query($query_t) or do_error($query_t, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		$i=0;			
 		while ($row_t = stripslashes_deep(mysql_fetch_array($result_t))) 	{
@@ -1139,7 +1495,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 			<BR /><BR /><BR />
 			<TABLE BORDER=0 ID = 'facilities' STYLE = 'display:none' >
-			<TR CLASS='odd'><TH COLSPAN=99 CLASS='header'> Click Facility to route '<?php print $row['name'] ;?>'</TH></TR>
+			<TR CLASS='odd'><TH COLSPAN=99 CLASS='header'> Click Facility to route '<?php print $row['handle'] ;?>'</TH></TR>
 			<TR><TD></TD></TR>
 
 <?php																								// 6/1/08 - added
@@ -1163,7 +1519,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			</TABLE><BR><BR>
 			</TD></TR></TABLE>
 			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
-			<FORM NAME="to_edit_Form" METHOD="post" ACTION = "units_nm.php?func=responder&edit=true&id=<?php print $id; ?>"></FORM>
+			<FORM NAME="to_edit_Form" METHOD="post" ACTION = "<?php echo basename(__FILE__);?>?func=responder&edit=true&id=<?php print $id; ?>"></FORM>
 			<FORM NAME="routes_Form" METHOD="get" ACTION = "routes_nm.php">
 			<INPUT TYPE="hidden" NAME="ticket_id" 	VALUE="">						<!-- 10/16/08 -->
 			<INPUT TYPE="hidden" NAME="unit_id" 	VALUE="<?php print $id; ?>">
@@ -1175,6 +1531,8 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 							<!-- END UNIT VIEW -->
 			<!-- 1408 -->
+			<A NAME="bottom" /> <!-- 5/3/10 -->
+			<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>
 			</BODY>
 			</HTML>
 <?php
@@ -1194,57 +1552,162 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		</HEAD><!-- 1387 -->
 		<BODY onLoad = "ck_frames()">
 		<A NAME='top'>		<!-- 11/11/09 -->
-			<DIV ID='to_bottom' style="position:fixed; top:2px; left:70px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0></div>
+			<DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0></div>
 		
 <?php
 		require_once('./incs/links.inc.php');
-
-		$the_height = get_un_div_height (round($side_bar_height * $_SESSION['scr_height']));		// set the max
 		$query = "SELECT `id` FROM `$GLOBALS[mysql_prefix]responder`";		// 12/17/08
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 		unset($result);		
+		$required = 40 + (mysql_affected_rows()*22);
+		$the_height = (integer)  min (round($units_side_bar_height * $_SESSION['scr_height']), $required );		// set the max		
+		$user_level = is_super() ? 9999 : $_SESSION['user_id']; 		
+		$regions_inuse = get_regions_inuse($user_level);	//	6/10/11
+		$group = get_regions_inuse_numbers($user_level);	//	6/10/11		
+		
+		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]' ORDER BY `id` ASC;";	// 4/13/11
+		$result = mysql_query($query);	// 4/13/11
+		$al_groups = array();
+		$al_names = "";	
+		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 4/13/11
+			$al_groups[] = $row['group'];
+			if(!(is_super())) {
+				$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` WHERE `id`= '$row[group]';";	// 4/13/11
+				$result2 = mysql_query($query2);	// 4/13/11
+				while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	// 4/13/11		
+					$al_names .= $row2['group_name'] . ", ";
+					}
+				} else {
+					$al_names = "ALL. Superadmin Level";
+				}
+			}
+			
+		if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
+			$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+			} else {
+			$curr_viewed = $al_groups;
+			}
+
+		$curr_names="";	//	6/10/11
+		$z=0;	//	6/10/11
+		foreach($curr_viewed as $grp_id) {	//	6/10/11
+			$counter = (count($curr_viewed) > ($z+1)) ? ", " : "";
+			$curr_names .= get_groupname($grp_id);
+			$curr_names .= $counter;
+			$z++;
+			}			
+
+		$heading = "Units - " . get_variable('map_caption');
+		$regs_string = "<FONT SIZE='-1'>Allocated " . get_text("Regions") . ":&nbsp;&nbsp;" . $al_names . "&nbsp;&nbsp;|&nbsp;&nbsp;Currently Viewing " . get_text("Regions") . ":&nbsp;&nbsp;" . $curr_names . "</FONT>";	//	6/10/11		
 ?>
-		<DIV ID='resp_table' style="position:relative; left: 100px; top: 20px">	
+		<DIV style='z-index: 1;'>
+			<TABLE ID='outer' style='width: 100%;'>
+			<TR CLASS='header'><TD ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'><?php print $heading; ?> </FONT></TD></TR>	<!-- 4/11/11 -->
+			<TR CLASS='header'><TD ALIGN='center'><SPAN ID='region_flags' style='background: #00FFFF; font-weight: bold;'></SPAN></TD></TR>	<!-- 5/2/10, 3/15/11, 6/10/11 -->
+			<TR CLASS='spacer'><TD CLASS='spacer' ALIGN='center'>&nbsp;</TD></TR>				<!-- 4/11/11 -->			
+			<TR><TD ALIGN='left'>
+		<DIV ID='resp_table'>	
 			<TABLE BORDER=0 ID='outer' STYLE = 'width:auto;'><TR><TD>
-				<TABLE ID = 'sidebar' BORDER = 0  STYLE = 'width:auto;' >
-				<TR class='even'>	<TD colspan=99 ALIGN='center'><B>Units (<?php print mysql_affected_rows(); ?>)</B></TD></TR>
-				<TR class='odd'>	<TD colspan=99 ALIGN='center'>Click line for details - or to dispatch</TD></TR>
+				<TABLE ID = 'sidebar' BORDER = 0 style='text-align: left;'>
+				<TR class='even'>	<TD colspan=99 ALIGN='center'><B>Units (<DIV id="num_units" style="display: inline;"></DIV>)</B></TD></TR>
+				<TR class='odd'>	<TD colspan=99 ALIGN='center'>Click line or icon for details - or to dispatch</TD></TR>
 			
 				<TR><TD>
-				<DIV ID='side_bar'></DIV>
-				</TD></TR>
+				<DIV ID='side_bar' style="height: <?php print $the_height; ?>px;  overflow-y: scroll; overflow-x: hidden;"></DIV></TD></TR>
+				<TR class='spacer'><TD class='spacer'>&nbsp;</TD></TR>
 				<TR><TD COLSPAN=99 ALIGN='center'>
 <?php
-//		print "<TR CLASS='odd'><TD COLSPAN=6 ALIGN='center'><B>M</B>obility:&nbsp;&nbsp; stopped: <FONT COLOR='red'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;moving: <FONT COLOR='green'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;fast: <FONT COLOR='white'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;silent: <FONT COLOR='black'><B>&bull;</B></FONT></TD></TR>";
-		print "<TR CLASS='odd'><TD COLSPAN=6 ALIGN='center'>" . get_units_legend() . "</TD></TR>";
-
-		$buttons = "<TR><TD COLSPAN=99 ALIGN='left'><BR />
-			<IMG SRC='markers/up.png' BORDER=0  onclick = \"location.href = '#top';\" STYLE = 'margin-left: 2px'>";
-		if ((is_super()) || (is_admin())) {
-			$buttons .="<INPUT TYPE='button' value= 'Add a Unit'  onClick ='document.add_Form.submit();' style = 'margin-left:120px'>";	// 10/8/08
-			}
+		print "<TR CLASS='odd'><TD COLSPAN=99 ALIGN='center'><DIV style='width: 80%;'>" . get_units_legend() . "</DIV></TD></TR>";
+		print "<TR class='spacer'><TD class='spacer'>&nbsp;</TD></TR>";		
+		$buttons = "<TR><TD COLSPAN=99 ALIGN='center'><BR />
+			<INPUT TYPE = 'button' onClick = 'document.tracks_Form.submit();' VALUE='Unit Tracks' STYLE = 'margin-left: 60px'>";
 		if (!(is_guest())) {
-			$buttons .= "<INPUT TYPE = 'button' onClick = 'do_mail_win()' VALUE='Email Units'  style = 'margin-left:40px'>";	// 6/13/09
+			if ((!(is_user())) && (!(is_unit()))) {				// 7/27/10
+				$buttons .="<INPUT TYPE='button' value= 'Add a Unit'  onClick ='document.add_Form.submit();' style = 'margin-left:20px'>";	// 10/8/08
+				}			
+			$buttons .= "<INPUT TYPE = 'button' onClick = 'do_mail_win()' VALUE='Email Units'  style = 'margin-left:20px'>";	// 6/13/09
 			}
+
 		$buttons .= "</TD></TR>";
 		print $buttons;
+		$the_func = (can_edit())? "edit" : "view" ;
 ?>
-			</TABLE>
-			</TD></TR></TABLE></DIV>	<!-- end of outer -->
 
+			</TABLE></TABLE></DIV>
+<?php
+
+		$from_right = 20;	//	5/3/11
+		$from_top = 10;		//	5/3/11		
+?>
+			</TD></TABLE></DIV></TD></TR></TABLE>	<!-- end of outer -->
+<?php
+	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
+		$regs_col_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "s")) ? "" : "none";	//	6/10/11
+		$regs_exp_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "h")) ? "" : "none";	//	6/10/11	
+?>			
+			<DIV id = 'outer' style = "position:fixed; right:<?php print $from_right;?>%; top:<?php print $from_top;?>%; z-index: 1000; ">		<!-- 5/3/11 -->
+			<DIV id="boxB" class="box" style="z-index:1000;">
+			<div class="bar_header" class="heading_2" STYLE="z-index: 1000;">Viewed <?php print get_text("Regions");?>
+			<SPAN id="collapse_regs" style = "display: <?php print $regs_col_butt;?>; z-index:1001; cursor: pointer;" onclick="hideDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/collapse.png" ALIGN="right"></SPAN>
+			<SPAN id="expand_regs" style = "display: <?php print $regs_exp_butt;?>; z-index:1001; cursor: pointer;" onclick="showDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/expand.png" ALIGN="right"></SPAN></div>
+				<DIV class="bar" STYLE="color:red; z-index: 1000;"
+					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
+				<DIV id="region_boxes" class="content" style="z-index: 1000;"></DIV>
+			</DIV>
+			</DIV>			
+<?php	
+}		
+	function get_buttons($user_id) {		//	5/3/11
+		if(isset($_SESSION['viewed_groups'])) {
+			$regs_viewed= explode(",",$_SESSION['viewed_groups']);
+			}
+		
+		$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id' ORDER BY `group`";			//	5/3/11
+		$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+
+		$al_buttons="";	
+		while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	//	5/3/11
+			if(!empty($regs_viewed)) {
+				if(in_array($row2['group'], $regs_viewed)) {
+					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
+				} else {
+					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
+				}
+				} else {
+					$al_buttons.="<DIV style='display: block;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
+				}
+			}
+		return $al_buttons;
+		}
+	
+	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
+?>
+		<SCRIPT>
+			side_bar_html= "";
+			side_bar_html+="<TABLE><TR class='even'><TD CLASS='td_label'><form name='region_form' METHOD='post' action='<?php print basename(__FILE__);?>'><DIV>";
+			side_bar_html += "<?php print get_buttons($_SESSION['user_id']);?>";
+			side_bar_html+="</DIV></form></TD></TR><TR><TD COLSPAN=99>&nbsp;</TD></TR><TR><TD ALIGN='center' COLSPAN=99><INPUT TYPE='button' VALUE='Update' onClick='form_validate(document.region_form);'></TD></TR></TABLE>";
+			$("region_boxes").innerHTML = side_bar_html;	
+			$('region_flags').innerHTML = "<?php print $regs_string; ?>";			// 5/2/10			
+		</SCRIPT>
+<?php
+		} 			
+?>
 			<FORM NAME='view_form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
 			<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
-			<INPUT TYPE='hidden' NAME='view' VALUE='true'>
+			<INPUT TYPE='hidden' NAME='<?php echo $the_func;?>' VALUE='true'>
 			<INPUT TYPE='hidden' NAME='id' VALUE=''>
 			</FORM>
-
+			
 			<FORM NAME='add_Form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
 			<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
 			<INPUT TYPE='hidden' NAME='add' VALUE='true'>
 			</FORM>
 
-			<FORM NAME='can_Form' METHOD="post" ACTION = "units_nm.php?func=responder"></FORM>
+			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php echo basename(__FILE__);?>?func=responder"></FORM>
 			<!-- 1452 -->
+			<A NAME="bottom" /> <!-- 5/3/10 -->
+			<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>
 			</BODY>				<!-- END RESPONDER LIST and ADD -->
 <?php
 		print do_calls();		// generate JS calls array

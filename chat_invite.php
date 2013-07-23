@@ -13,7 +13,7 @@ $result	= mysql_query($query);	//
 
 $now = mysql_format_date(time() - (get_variable('delta_mins')*60));
 										// note: 'to' is a comma sep'd string of id's, with 0 = all
-$query  = "INSERT INTO `$GLOBALS[mysql_prefix]chat_invites` (`to`, `_by`, `_from`, _on) VALUES (" . quote_smart($_GET['frm_to']) . "', " . quote_smart($_GET['frm_user']) . ", " . quote_smart($_SERVER['REMOTE_ADDR']) . ", '{$now}');";
+$query  = "INSERT INTO `$GLOBALS[mysql_prefix]chat_invites` (`to`, `_by`, `_from`, _on) VALUES ('{$_GET['frm_to']}', {$_GET['frm_user']}, '{$_SERVER['REMOTE_ADDR']}', '{$now}');";
 $result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 print "";
 ?>

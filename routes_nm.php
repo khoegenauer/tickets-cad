@@ -19,12 +19,13 @@ $units_side_bar_height = 0.9;		// height of units sidebar as decimal fraction - 
 7/16/10 Initial Release for no internet operation - created from routes.php
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 11/18/10 Added filter by capabilities and fixed individual unit dispatch.
-3/15/11 changed stylesheet.php to stylesheet.php
+3/15/11 changed default.css to stylesheet.php
 5/28/11 sql inject prevention added
 */
 
 do_login(basename(__FILE__));		// 
 if ((isset($_REQUEST['ticket_id'])) && (!(strval(intval($_REQUEST['ticket_id']))===$_REQUEST['ticket_id']))) {	shut_down();}	// 5/28/11
+//snap(__LINE__, basename(__FILE__));
 
 //$istest = TRUE;
 if($istest) {
@@ -32,13 +33,25 @@ if($istest) {
 	print "GET<br />\n";
 	dump($_GET);
 	print "POST<br />\n";
-	dump($_POST);
+	dump($_REQUEST);
 	}
 	
 if (!(isset ($_SESSION['allow_dirs']))) {	
 	$_SESSION['allow_dirs'] = 'true';			// note js-style LC
 	}
 
+function get_ticket_id () {				// 5/4/11
+	if (array_key_exists('ticket_id', ($_REQUEST))) {
+		$_SESSION['active_ticket'] = $_REQUEST['ticket_id'];
+		return (integer) $_REQUEST['ticket_id'];
+		}
+	elseif (array_key_exists('active_ticket', $_SESSION)) {
+		return (integer) $_SESSION['active_ticket'];	
+		}
+	else {
+		echo "error at "	 . __LINE__;
+		}								// end if/else
+	}				// end function	
 
 function get_left_margin ($sb_width) {
 //	return min(($_SESSION['scr_width'] - 150), ($sb_width + get_variable('map_width') + 72));
@@ -66,7 +79,7 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
-	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
+	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">			<!-- 3/15/11 -->
     <STYLE TYPE="text/css">
 		body 				{font-family: Verdana, Arial, sans serif;font-size: 11px;margin: 2px;}
 		table 				{border-collapse: collapse; }
@@ -78,12 +91,17 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 		span.mylink			{margin-right: 32PX; text-decoration:underline; font-weight: bold; font-family: Verdana, Arial, sans serif;}
 		span.other_1		{margin-right: 32PX; text-decoration:none; font-weight: bold; font-family: Verdana, Arial, sans serif;}
 		span.other_2		{margin-right: 8PX;  text-decoration:none; font-weight: bold; font-family: Verdana, Arial, sans serif;}
+		.disp_stat	{ FONT-WEIGHT: bold; FONT-SIZE: 9px; COLOR: #FFFFFF; BACKGROUND-COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;}
 		.box {background-color: transparent;  border: none;  color: #000000;  padding: 0px;  position: absolute;  }
 		.bar {background-color: #DEE3E7;  color: transparent;  cursor: move;  font-weight: bold;  padding: 2px 1em 2px 1em;  }
+		.bar_header { height: 20px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}	
 		.content {
 			padding: 1em;
 			}
 
+		.box2 { background-color: #DEE3E7; border: 2px outset #606060; color: #000000; padding: 0px; position: absolute; z-index:10000; width: 180px; }
+		.bar2 { background-color: #FFFFFF; border-bottom: 2px solid #000000; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:10000; text-align: center;}
+		.content { padding: 1em; text-align: center; }		
     	</STYLE>
 
 <SCRIPT>
@@ -112,9 +130,14 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 			} 
 		else {
 			alert ("837: failed");
+			alert("failed at line <?php print __LINE__;?>");
 			return false;
 			}																						 
 		}		// end function sync Ajax(strURL)
+
+	function get_new_colors() {								// 5/4/11
+		window.location.href = '<?php print basename(__FILE__);?>';
+		}
 
 	function docheck(in_val){				// JS boolean  - true/false
 		document.routes_Form.frm_allow_dirs.value = in_val;	
@@ -253,9 +276,66 @@ function dragStop(event) {
 		document.removeEventListener("mouseup",	 dragStop, true);
 		}
 	}
+	
+function hideDiv(div_area, hide_cont, show_cont) {	//	3/15/11
+	if (div_area == "buttons_sh") {
+		var controlarea = "hide_controls";
+		}
+	if (div_area == "resp_list_sh") {
+		var controlarea = "resp_list";
+		}
+	if (div_area == "facs_list_sh") {
+		var controlarea = "facs_list";
+		}
+	if (div_area == "incs_list_sh") {
+		var controlarea = "incs_list";
+		}
+	if (div_area == "region_boxes") {
+		var controlarea = "region_boxes";
+		}			
+	var divarea = div_area 
+	var hide_cont = hide_cont 
+	var show_cont = show_cont 
+	if($(divarea)) {
+		$(divarea).style.display = 'none';
+		$(hide_cont).style.display = 'none';
+		$(show_cont).style.display = '';
+		} 
+	var params = "f_n=" +controlarea+ "&v_n=h&sess_id=<?php print get_sess_key(__LINE__); ?>";
+	var url = "persist2.php";
+	sendRequest (url, gb_handleResult, params);			
+	} 
+
+function showDiv(div_area, hide_cont, show_cont) {	//	3/15/11
+	if (div_area == "buttons_sh") {
+		var controlarea = "hide_controls";
+		}
+	if (div_area == "resp_list_sh") {
+		var controlarea = "resp_list";
+		}
+	if (div_area == "facs_list_sh") {
+		var controlarea = "facs_list";
+		}
+	if (div_area == "incs_list_sh") {
+		var controlarea = "incs_list";
+		}
+	if (div_area == "region_boxes") {
+		var controlarea = "region_boxes";
+		}				
+	var divarea = div_area
+	var hide_cont = hide_cont 
+	var show_cont = show_cont 
+	if($(divarea)) {
+		$(divarea).style.display = '';
+		$(hide_cont).style.display = '';
+		$(show_cont).style.display = 'none';
+		}
+	var params = "f_n=" +controlarea+ "&v_n=s&sess_id=<?php print get_sess_key(__LINE__); ?>";
+	var url = "persist2.php";
+	sendRequest (url, gb_handleResult, params);					
+	}
 //]]></script>
 <?php
-
 if (!empty($_POST)) {				// 77-200
 	extract($_POST);
 	$addrs = array();													// 10/7/08
@@ -489,11 +569,11 @@ function doReset() {
 	$dispatches_act = array();										// actuals
 	
 	$query = "SELECT *, `$GLOBALS[mysql_prefix]assigns`.`id` AS `assign_id` ,  `t`.`scope` AS `theticket`,
-		`r`.`id` AS `theunit_id` FROM `$GLOBALS[mysql_prefix]assigns` 
+		`r`.`id` AS `theunit_id`
+		FROM `$GLOBALS[mysql_prefix]assigns` 
 		LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` 	ON (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`)
 		LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON (`$GLOBALS[mysql_prefix]assigns`.`responder_id` = `r`.`id`)
-		AND `clear` IS NULL ";				// 8/17/09
-
+		AND ((`clear` IS NULL) OR (DATE_FORMAT(`clear`,'%y') = '00')) ";				// 6/25/10
 //	dump($query);
 	
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -504,13 +584,9 @@ function doReset() {
 
 			if ($row['multi']==1) {
 				$dispatches_disp[$row['theunit_id']] = "&nbsp;&nbsp;* ";					// identify as multiple - 5/22/09
-//				print __LINE__;
-//				dump($dispatches_disp);
 				}
 			else {
 				$dispatches_disp[$row['theunit_id']] = (empty($row['clear']))? $row['theticket']:"";	// blank = unit unassigned
-//				print __LINE__;
-//				dump($dispatches_disp);				
 				}		// end if/else(...)
 			}
 		}		// end while (...)
@@ -534,7 +610,8 @@ function doReset() {
 		 `rf`.`lat` AS `rf_lat`,
 		 `rf`.`lng` AS `rf_lng`,
 		 `$GLOBALS[mysql_prefix]facilities`.`lat` AS `fac_lat`,
-		 `$GLOBALS[mysql_prefix]facilities`.`lng` AS `fac_lng` FROM `$GLOBALS[mysql_prefix]ticket`  
+		 `$GLOBALS[mysql_prefix]facilities`.`lng` AS `fac_lng` 
+		 FROM `$GLOBALS[mysql_prefix]ticket`  
 		LEFT JOIN `$GLOBALS[mysql_prefix]in_types` `ty` ON (`$GLOBALS[mysql_prefix]ticket`.`in_types_id` = `ty`.`id`)		
 		LEFT JOIN `$GLOBALS[mysql_prefix]facilities` ON (`$GLOBALS[mysql_prefix]facilities`.`id` = `$GLOBALS[mysql_prefix]ticket`.`facility`)
 		LEFT JOIN `$GLOBALS[mysql_prefix]facilities` `rf` ON (`rf`.`id` = `$GLOBALS[mysql_prefix]ticket`.`rec_facility`) 
@@ -558,8 +635,6 @@ function doReset() {
 		$rf_lng = $row_rec_fac['lng'];
 		$rf_name = $row_rec_fac['name'];		
 		
-//		print "var thereclat = " . $rf_lat . ";\nvar thereclng = " . $rf_lng . ";\n";		// set js-accessible location data for receiving facility
-//		dump($row_rec_fac);
 		unset ($result_rfc);
 		} else {
 //		print "var thereclat;\nvar thereclng;\n";		// set js-accessible location data for receiving facility
@@ -583,6 +658,82 @@ function filterReset() {		//	11/18/10
 	document.filter_Form.capabilities.value="";
 	document.filter_Form.submit();
 	}
+function checkArray(form, arrayName)	{	//	6/10/11
+	var retval = new Array();
+	for(var i=0; i < form.elements.length; i++) {
+		var el = form.elements[i];
+		if(el.type == "checkbox" && el.name == arrayName && el.checked) {
+			retval.push(el.value);
+		}
+	}
+return retval;
+}	
+	
+function checkForm(form)	{	//	5/4/11
+	var errmsg="";
+	var itemsChecked = checkArray(form, "frm_group[]");
+	if(itemsChecked.length > 0) {
+		var params = "f_n=viewed_groups&v_n=" +itemsChecked+ "&sess_id=<?php print get_sess_key(__LINE__); ?>";	//	3/15/11
+		var url = "persist3.php";	//	3/15/11	
+		sendRequest (url, fvg_handleResult, params);				
+//			form.submit();
+	} else {
+		errmsg+= "\tYou cannot Hide all the regions\n";
+		if (errmsg!="") {
+			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			return false;
+		}
+	}
+}
+
+function fvg_handleResult(req) {	// 5/4/11	The persist callback function for viewed groups.
+	document.region_form.submit();
+	}
+	
+function form_validate(theForm) {	//	5/4/11
+//		alert("Validating");
+	checkForm(theForm);
+	}				// end function validate(theForm)
+
+function sendRequest(url,callback,postData) {	//	5/4/11
+	var req = createXMLHTTPObject();
+	if (!req) return;
+	var method = (postData) ? "POST" : "GET";
+	req.open(method,url,true);
+	req.setRequestHeader('User-Agent','XMLHTTP/1.0');
+	if (postData)
+		req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	req.onreadystatechange = function () {
+		if (req.readyState != 4) return;
+		if (req.status != 200 && req.status != 304) {
+			return;
+			}
+		callback(req);
+		}
+	if (req.readyState == 4) return;
+	req.send(postData);
+	}
+
+var XMLHttpFactories = [
+	function () {return new XMLHttpRequest()	},
+	function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
+	function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
+	function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+	];
+
+function createXMLHTTPObject() {	//	5/4/11
+	var xmlhttp = false;
+	for (var i=0;i<XMLHttpFactories.length;i++) {
+		try {
+			xmlhttp = XMLHttpFactories[i]();
+			}
+		catch (e) {
+			continue;
+			}
+		break;
+		}
+	return xmlhttp;
+	}	
 </SCRIPT>
 <?php
 $ck_frames_str = (((array_key_exists ( "frm_mode", $_GET)) && ($_GET['frm_mode']) ==1))? "": "ck_frames();" ;		// 10/9/10
@@ -604,13 +755,13 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 		?>
 		<DIV ID='theform' style='position: relative; top: 10px; background-color: transparent; border-color: #000000;'><!-- 11/18/10 -->	
 		<TABLE ALIGN='center' BORDER='0'>
-		<TR><TH>FILTER BY CAPABILITIES</TH></TR>
-		<FORM NAME='filter_Form' METHOD="GET" ACTION="routes_nm.php"><!-- 8/30/10 -->
-		<TR><TD ALIGN='center'>Filter Type: <b>OR </b><INPUT TYPE='radio' NAME='searchtype' VALUE='OR' checked><b>AND </b><INPUT TYPE='radio' NAME='searchtype' VALUE='AND'></TD></TR>
-		<TR><TD><INPUT SIZE='48' TYPE='text' NAME='capabilities' VALUE='<?php print $capabilities;?>' MAXLENGTH='64'></TD></TR>
+		<TR class='heading'><TH class='heading'>FILTER BY CAPABILITIES</TH></TR>	<!-- 3/15/11 -->
+		<FORM NAME='filter_Form' METHOD="GET" ACTION="routes_nm.php">
+		<TR class='odd'><TD ALIGN='center'>Filter Type: <b>OR </b><INPUT TYPE='radio' NAME='searchtype' VALUE='OR' checked><b>AND </b><INPUT TYPE='radio' NAME='searchtype' VALUE='AND'></TD></TR>	<!-- 3/15/11 -->
+		<TR class='even'><TD><INPUT SIZE='48' TYPE='text' NAME='capabilities' VALUE='<?php print $capabilities;?>' MAXLENGTH='64'></TD></TR>	<!-- 3/15/11 -->
 		<INPUT TYPE='hidden' NAME='ticket_id' 	VALUE='<?php print $_GET['ticket_id']; ?>' />
 		<INPUT TYPE='hidden' NAME='unit_id' 	VALUE='<?php print $unit_id; ?>' />
-		<TR><TD align="center"><input type="button" OnClick="filterSubmit();" VALUE="Filter"/>&nbsp;&nbsp;<input type="button" OnClick="filterReset();" VALUE="Reset Filter" <?php print $disabled;?>/></TD></TR>	
+		<TR class='odd'><TD align="center"><input type="button" OnClick="filterSubmit();" VALUE="Filter"/>&nbsp;&nbsp;<input type="button" OnClick="filterReset();" VALUE="Reset Filter" <?php print $disabled;?>/></TD></TR>	<!-- 3/15/11 -->	
 		</FORM></TABLE></DIV></TD>
 	<?php }
 	?>
@@ -626,7 +777,7 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 	<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['ticket_id'];?>"/>	
 	</FORM>	
 
-	<FORM NAME='routes_Form' METHOD='post' ACTION="<?php print basename( __FILE__); ?>">
+	<FORM NAME='routes_Form' METHOD='post' ACTION="<?php print basename( __FILE__); ?>"> <!-- 7/9/10 -->
 	<INPUT TYPE='hidden' NAME='func' 			VALUE='do_db' />
 	<INPUT TYPE='hidden' NAME='frm_ticket_id' 	VALUE='<?php print $_GET['ticket_id']; ?>' />
 	<INPUT TYPE='hidden' NAME='frm_by_id' 		VALUE= "<?php print $_SESSION['user_id'];?>" />
@@ -646,8 +797,8 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 		
 <?php
 			function get_addr(){				// returns incident address 11/27/09
-				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id`=" . quote_smart($_GET['ticket_id']) . " LIMIT 1";
-				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(FILE__), __LINE__);
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id`= " . $_GET['ticket_id'] . " LIMIT 1";
+				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 				$row = stripslashes_deep(mysql_fetch_array($result));
 				return "{$row['street']}<br />{$row['city']}<br /> {$row['state']}"; 
 				}		// end function get_addr()
@@ -659,7 +810,11 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 		<div id='boxB' class='box' style='left:<?php print $from_left;?>px;top:<?php print $from_top;?>px; position:fixed;' > <!-- 9/23/10 -->
 		<div class="bar" style="width:12em;"
 			 onmousedown="dragStart(event, 'boxB')">Drag me</div><!-- drag bar -->
-			 <div style = 'height:20px;'/>&nbsp;</div>
+		<div style = "margin-top:10px;">
+		<IMG SRC="markers/down.png" BORDER=0  onclick = "location.href = '#page_bottom';" STYLE = 'margin-left:2px;' />		
+		<IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#page_top';" STYLE = 'margin-left:40px;'/><br />
+		</div>
+			 <div style = 'height:10px;'/>&nbsp;</div>
 
 <?php
 
@@ -676,13 +831,94 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 			if ($nr_units>0) {			
 				print "<BR /><INPUT TYPE='button' value='DISPATCH\nUNITS' onClick = '" . $thefunc . "' />\n";	// 6/14/09
 				}
-			print "<BR /><BR /><SPAN STYLE='display: 'inline-block'><NOBR><H3>to:<BR /><I>{$addr}</I></H3></NOBR></SPAN>\n";
+			print "<BR /><BR /><SPAN STYLE='display: inline-block;' class='normal_text'><NOBR><H3>to:<BR /><I>{$addr}</I></H3></NOBR></SPAN>\n";
 			print "<SPAN ID=\"loading\" STYLE=\"display: 'inline-block'\">";
 			print "</SPAN>";
 
 ?>
 	</DIV>
-	
+<?php
+
+		$user_level = is_super() ? 9999 : $_SESSION['user_id']; 
+		$regions_inuse = get_regions_inuse($user_level);	//	5/4/11
+		$group = get_regions_inuse_numbers($user_level);	//	5/4/11		
+		
+		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]' ORDER BY `id` ASC;";	// 4/13/11
+		$result = mysql_query($query);	// 4/13/11
+		$al_groups = array();
+		$al_names = "";	
+		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 4/13/11
+			$al_groups[] = $row['group'];
+			if(!(is_super())) {
+				$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` WHERE `id`= '$row[group]';";	// 4/13/11
+				$result2 = mysql_query($query2);	// 4/13/11
+				while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	// 4/13/11		
+					$al_names .= $row2['group_name'] . ", ";
+					}
+				} else {
+					$al_names = "ALL. Superadmin Level";
+				}
+			}
+
+
+		$from_right = 20;	//	6/10/11
+		$from_top = 50;		//	6/10/11
+
+	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
+		$regs_col_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "s")) ? "" : "none";	//	6/10/11
+		$regs_exp_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "h")) ? "" : "none";	//	6/10/11			
+?>
+		<div id = 'outer' style = "position:fixed; right:<?php print $from_right;?>%; top:<?php print $from_top;?>%; z-index: 1000; ">		<!-- 6/10/11 -->
+		<div id="boxC" class="box2" style="z-index:1000;">
+		<div class="bar_header" class="heading_2" STYLE="z-index: 1000;">Viewed Regions
+		<SPAN id="collapse_regs" style = "display: <?php print $regs_col_butt;?>; z-index:1001; cursor: pointer;" onclick="hideDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/collapse.png" ALIGN="right"></SPAN>
+		<SPAN id="expand_regs" style = "display: <?php print $regs_exp_butt;?>; z-index:1001; cursor: pointer;" onclick="showDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/expand.png" ALIGN="right"></SPAN></div>
+			<div class="bar2" STYLE="color:red; z-index: 1000;"
+				onmousedown="dragStart(event, 'boxC')"><i>Drag me</i></div>
+			<div id="region_boxes" class="content" style="z-index: 1000;"></div>
+		</div>
+		</div>
+<?php
+}
+		function get_buttons($user_id) {		//	6/10/11
+			if(isset($_SESSION['viewed_groups'])) {
+				$regs_viewed= explode(",",$_SESSION['viewed_groups']);
+				}
+			
+			$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id' ORDER BY `group`";			//	6/10/11
+			$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+
+			$al_buttons="";	
+			while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	//	6/10/11
+				if(!empty($regs_viewed)) {
+					if(in_array($row2['group'], $regs_viewed)) {
+						$al_buttons.="<DIV style='float: left; width: 100%; text-align: left;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
+					} else {
+						$al_buttons.="<DIV style='float: left; width: 100%; text-align: left;'><INPUT TYPE='checkbox' name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
+					}
+					} else {
+						$al_buttons.="<DIV style='float: left; width: 100%; text-align: left;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
+					}
+				}
+			return $al_buttons;
+			}
+		
+		if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
+?>
+			<SCRIPT>
+				side_bar_html= "";
+				side_bar_html+="<TABLE><TR class='even'><TD CLASS='td_label'><form name='region_form' METHOD='post' action='#'><DIV>";
+				side_bar_html += "<?php print get_buttons($_SESSION['user_id']);?>";
+				side_bar_html+="</DIV></form></TD></TR><TR><TD COLSPAN=99>&nbsp;</TD></TR><TR><TD ALIGN='center' COLSPAN=99><INPUT TYPE='button' VALUE='Update' onClick='form_validate(document.region_form);'></TD></TR></TABLE>";
+				$("region_boxes").innerHTML = side_bar_html;		
+			</SCRIPT>
+<?php
+			} 			
+?>				
+		<A NAME="page_bottom" /> <!-- 5/13/10 -->	
+		<FORM NAME='reLoad_Form' METHOD = 'get' ACTION="<?php print basename( __FILE__); ?>">
+		<INPUT TYPE='hidden' NAME='ticket_id' 	VALUE='<?php print $_GET['ticket_id']; ?>' />	<!-- 10/25/08 -->
+		</FORM>
 	</BODY>
 
 <?php
@@ -998,9 +1234,10 @@ function do_list($unit_id ="", $capabilities ="", $searchtype) {
 //			dump ($query);
 			}
 
-		$where = (empty($unit_id))? "" : " WHERE `$GLOBALS[mysql_prefix]responder`.`id` = $unit_id ";		// revised 5/23/08 per AD7PE 
+		$where = (empty($unit_id))? "" : " AND `r`.`id` = $unit_id ";		// revised 5/23/08 per AD7PE 
+		
 		if(empty($unit_id)) {	// 11/18/10
-			$where2 = (empty($capabilities))? "" : " WHERE (";	// 11/18/10
+			$where2 = (empty($capabilities))? "" : " AND (";	// 11/18/10
 			$searchitems = (empty($capabilities))? "" : explode(" ", $capabilities);
 			if($searchitems) {
 				for($j = 0; $j < count($searchitems); $j++){
@@ -1014,17 +1251,87 @@ function do_list($unit_id ="", $capabilities ="", $searchtype) {
 		} else {
 			$where2="";
 		}
-																			// 4/5/10
+// ============================= Regions Stuff							
+// Allows Tickets to be dispatched to any responders in the same region as the current user.		
+	
+			// $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]' ORDER BY `id` ASC;";	// 4/18/11
+			// $result = mysql_query($query);	// 5/4/11
+			// $al_groups = array();
+			// $al_names = "";	
+			// while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 5/4/11
+				// $al_groups[] = $row['group'];
+				// $query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` WHERE `id`= '$row[group]';";	// 5/4/11
+				// $result2 = mysql_query($query2);	// 5/4/11
+				// while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	// 5/4/11		
+						// $al_names .= $row2['group_name'] . ", ";
+					// }
+				// }
+
+			// if(isset($_SESSION['viewed_groups'])) {
+				// $al_groups= explode(",",$_SESSION['viewed_groups']);
+				// }
+				
+			// if(!isset($_SESSION['viewed_groups'])) {	//	5/4/11
+			// $x=0;	
+			// $where3 = "AND (";
+			// foreach($al_groups as $grp) {
+				// $where4 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				// $where3 .= "`a`.`group` = '{$grp}'";
+				// $where3 .= $where4;
+				// $x++;
+				// }
+			// } else {
+			// $x=0;	
+			// $where3 = "AND (";	
+			// foreach($al_groups as $grp) {
+				// $where4 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				// $where3 .= "`a`.`group` = '{$grp}'";
+				// $where3 .= $where4;
+				// $x++;
+				// }
+			// }
+			// $where3 .= " AND `a`.`type` = 2";
+			
+// Replacement code - only allows Tickets to be dispatched to responders in the same region
+			
+$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `resource_id` = " . quote_smart($_GET['ticket_id']) . " ORDER BY `id` ASC;";	// 4/18/11
+			$result = mysql_query($query);	// 5/4/11
+			$al_groups = array();
+			$al_names = "";	
+			while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 5/4/11
+				$al_groups[] = $row['group'];
+				$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` WHERE `id`= '$row[group]';";	// 5/4/11
+				$result2 = mysql_query($query2);	// 5/4/11
+				while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	// 5/4/11		
+						$al_names .= $row2['group_name'] . ", ";
+					}
+				}
+
+			$x=0;	
+			$where3 = "WHERE (";	
+			foreach($al_groups as $grp) {
+				$where4 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where3 .= "`a`.`group` = '{$grp}'";
+				$where3 .= $where4;
+				$x++;
+				}
+			
+			$where3 .= " AND (`a`.`type` = 2)";					
+			
+// ================================ end of regions stuff				
+
+		// 4/5/10
 		$query = "SELECT *, UNIX_TIMESTAMP(`updated`) AS `updated`,
-			`$GLOBALS[mysql_prefix]responder`.`id` AS `unit_id`, 
+			`r`.`id` AS `unit_id`, 
 			`s`.`status_val` AS `unitstatus`, `contact_via`, 
-			(POW(ABS({$latitude} - `$GLOBALS[mysql_prefix]responder`.`lat`), 2.0) +  POW(ABS({$longitude} - `$GLOBALS[mysql_prefix]responder`.`lng`), 2.0)) AS `distance`			
-			FROM `$GLOBALS[mysql_prefix]responder`
-			LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON (`$GLOBALS[mysql_prefix]responder`.`un_status_id` = `s`.`id`)
-			$where $where2
+			(POW(ABS({$latitude} - `r`.`lat`), 2.0) +  POW(ABS({$longitude} - `r`.`lng`), 2.0)) AS `distance`			
+			FROM `$GLOBALS[mysql_prefix]responder` `r`
+			LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON (`r`.`un_status_id` = `s`.`id`)
+			LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON (`r`.`id` = `a`.`resource_id`)					
+			$where3 $where $where2 GROUP BY unit_id
 			ORDER BY `distance` ASC, `handle` ASC, `name` ASC, `unit_id` ASC";		// 12/09/09
 
-//		dump($query);
+//		print $query;
 
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 

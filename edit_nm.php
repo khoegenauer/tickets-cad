@@ -25,8 +25,8 @@ error_reporting(E_ALL);
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" /> <!-- 7/7/09 -- />
-	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
+	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" /> <!-- 7/7/09 -->
+	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">			<!-- 3/15/11 -->
 	<SCRIPT SRC="./js/usng.js" TYPE="text/javascript"></SCRIPT>		<!-- 8/23/08 -->
 <?php
 	
@@ -216,7 +216,7 @@ function edit_ticket($id) {							/* post changes */
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" /> <!-- 7/7/09 -->
-	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
+	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">			<!-- 3/15/11 -->
 	<SCRIPT SRC="./js/usng.js" TYPE="text/javascript"></SCRIPT>		<!-- 8/23/08 -->
 <SCRIPT>
 
@@ -228,11 +228,9 @@ function edit_ticket($id) {							/* post changes */
 	catch(e) {
 		}
 
-
 	function get_new_colors() {		// 5/4/11
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
-
 
 	function dump (obj) {
 		var r = '';
@@ -500,7 +498,7 @@ require_once('./incs/links.inc.php');
 
 			print "<TABLE BORDER='0' ID = 'outer' ALIGN='left' CLASS = 'BGCOLOR' STYLE = 'margin-left:20px'>\n";
 			if(!($mode==1)) {					// 9/8/10
-				print "<TR CLASS='odd'><TD ALIGN='left COLSPAN=2>" . add_header($id, TRUE) . "</TD></TR>\n";	// 11/27/09
+				print "<TR CLASS='odd'><TD ALIGN='left>" . add_header($id, TRUE) . "</TD></TR>\n";	// 11/27/09
 				}
 			print "<TR CLASS='odd'><TD>&nbsp;</TD></TR>\n";	
 			print "<TR CLASS='even' valign='top'><TD CLASS='print_TD' ALIGN='left'>";
@@ -733,28 +731,6 @@ require_once('./incs/links.inc.php');
 				}
 
 			print "<TR CLASS='even'><TD CLASS='td_label' onClick = 'javascript: do_coords(document.edit.frm_lat.value ,document.edit.frm_lng.value  )'><U><A HREF=\"#\" TITLE=\"Position - Lat and Lng for Incident position. Click to show all position data.\">Position</A>:</U>:</TD><TD>";
-			// print "<INPUT SIZE='13' TYPE='text' NAME='show_lat' VALUE='" . $row['lat'] . "' DISABLED>\n";
-			// print "<INPUT SIZE='13' TYPE='text' NAME='show_lng' VALUE='" . $row['lng'] . "' DISABLED>&nbsp;&nbsp;";
-
-			// $locale = get_variable('locale');	// 08/03/09
-			// switch($locale) { 
-				// case "0":
-					// print "<B><SPAN ID = 'USNG' onClick = \"do_usng()\"><U><A HREF=\"#\" TITLE=\"US National Grid Co-ordinates.\">USNG</A></U>:&nbsp;</SPAN></B><INPUT SIZE='19' TYPE='text' NAME='frm_ngs' VALUE='" . LLtoUSNG($row['lat'], $row['lng']) . "' ></TD></TR>";		// 9/13/08, 5/2/09
-					// break;
-			
-				// case "1":
-					// print "<B><SPAN ID = 'USNG' onClick = \"do_usng()\"><U><A HREF=\"#\" TITLE=\"United Kingdom Ordnance Survey Grid Reference.\">OSGB</A></U>:&nbsp;</SPAN></B><INPUT SIZE='19' TYPE='text' NAME='frm_ngs' VALUE='" . LLtoOSGB($row['lat'], $row['lng']) . "' DISABLED ></TD></TR>";		// 9/13/08, 5/2/09
-					// break;
-			
-// //				case "2":
-// //					print "<B><SPAN ID = 'USNG' onClick = \"do_usng()\"><U><A HREF=\"#\" TITLE=\"United Kingdom Ordnance Survey Grid Reference.\">OSGB</A></U>:&nbsp;</SPAN></B><INPUT SIZE='19' TYPE='text' NAME='frm_ngs' VALUE='" . LLtoUTM($row['lat'], $row['lng']) . "' DISABLED ></TD></TR>";		// 9/13/08, 5/2/09
-// //					break;
-
-				// default:																	// 8/10/09
-				    // print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";				
-				// }
-
-//			print "<B><SPAN ID = 'USNG' onClick = \"do_usng()\"><U>USNG</U>:&nbsp;</SPAN></B><INPUT SIZE='19' TYPE='text' NAME='frm_ngs' VALUE='" . LLtoUSNG($row['lat'], $row['lng']) . "' ></TD></TR>";		// 9/13/08, 5/2/09
 			print "</TD></TR>\n";
 			print "<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Incident last updated - date & time.\">Updated</A>:</TD><TD>" . format_date($row['updated']) . "</TD></TR>\n";		// 10/21/08
 			$lat = $row['lat']; $lng = $row['lng'];	
@@ -783,7 +759,7 @@ require_once('./incs/links.inc.php');
 			print show_actions($row[0], "date", TRUE, TRUE, $mode);											// 9/8/10
 			print "</TD></TR>";																//8/7/09
 			print "</TABLE>";		// end data 8/7/09
-			print "</TD><TD>";																//8/7/09
+			print "</TD></TR>";																//8/7/09
 			print "<TR><TD CLASS='print_TD' COLSPAN='2'>";
 			print "</FORM>";
 			print "</TD></TR></TABLE>";		// bottom of outer

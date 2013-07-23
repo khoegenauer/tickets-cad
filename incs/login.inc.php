@@ -13,6 +13,7 @@
 3/15/11	Changes for show and hide and css colors
 3/19/11 get_unit() added for unit login, $_SESSION['user_unit_id']
 5/10/11 logo changed
+7/3/11 key check corrected
 */
 
 function do_logout($return=FALSE){						/* logout - destroy session data */
@@ -124,8 +125,8 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 	$now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
 
 	$the_sid = (isset($_SESSION['id']))? $_SESSION['id'] : null;
-
-	$warn = ((!(empty($_SESSION)))  && ($now > $_SESSION['expires']))? "Log-in has expired due to inactivity.  Please log in again." : "";
+//																			7/3/11
+	$warn = ((array_key_exists ('expires', $_SESSION)) && ($now > $_SESSION['expires']))? "Log-in has expired due to inactivity.  Please log in again." : "";
 	
 	$internet = get_variable("internet");				// 8/22/10
 	$temp = implode(";",  $_SESSION);
@@ -201,7 +202,7 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 					WHERE `id` = {$row['id']} LIMIT 1";
 					
 				$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-	
+
 				$_SESSION['id'] = 			$sid;
 				$_SESSION['expires'] = 		time();
 				$_SESSION['user_id'] = 		$row['id'];
@@ -230,8 +231,10 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 				$_SESSION['incs_list'] = "s";		// 3/15/11
 				$_SESSION['resp_list'] = "s";		// 3/15/11
 				$_SESSION['facs_list'] = "s";		// 3/15/11
+				$_SESSION['regions_boxes'] = "s";		// 6/10/11				
 				$_SESSION['user_unit_id'] = $row['responder_id'];		//3/19/11
-								
+				$_SESSION['show_hide_upper'] = "Show Menu";		//6/10/11
+				
 				foreach($categories as $key => $value) {				// 3/15/11
 					$sess_flag = "show_hide_" . $value;
 					$_SESSION[$sess_flag] = "s";
@@ -270,8 +273,17 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 
 //				$extra = ($row['level']== $GLOBALS['LEVEL_UNIT'])? 'mobile.php' : 'main.php?log_in=1';				// 8/29/10
 
-				$unit_id = get_unit();																				// 3/19/11
-				$extra = (($row['level']== $GLOBALS['LEVEL_UNIT']) ||($unit_id))? 'mobile.php' : 'main.php?log_in=1';				// 8/29/10
+				$unit_id = get_unit();				// 3/19/11
+				$level = $row['level'];
+				
+				if($level == $GLOBALS['LEVEL_UNIT']) {
+					$extra = 'mobile.php';
+					} else if ($level == $GLOBALS['LEVEL_STATS'] ) {
+					$extra = 'stats_scr.php?stats=stats';
+					} else {
+					$extra = 'main.php?log_in=1';
+					}
+//				$extra = (($row['level']== $GLOBALS['LEVEL_UNIT']) ||($unit_id))? 'mobile.php' : 'main.php?log_in=1';				// 8/29/10
 
 				header("Location: http://$host$uri/$extra");								// to top of calling script
 				exit;				
@@ -293,7 +305,7 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 		<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 		<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 		<META HTTP-EQUIV="Script-date" CONTENT="1/23/10">
-		<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">
+		<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">			<!-- 3/15/11 -->
 		<STYLE type="text/css">
 		input		{background-color:transparent;}		/* Benefit IE radio buttons */
 	  	</STYLE>
@@ -434,7 +446,6 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 			}
 		$temp =  isset($_SERVER['HTTP_REFERER'])? $_SERVER['HTTP_REFERER'] : "";
 		$my_click = ($_SERVER["HTTP_HOST"] == "127.0.0.1")? " onClick = \"document.login_form.frm_user.value='admin';document.login_form.frm_passwd.value='admin';\"" : "" ;
-
 //	print (array_key_exists ('frm_user', $_POST))? 		$_POST['frm_user'] . "/" : "";
 //	print (array_key_exists ('frm_passwd', $_POST))? 	$_POST['frm_passwd']: "";
 

@@ -23,10 +23,12 @@
 8/24/10 emd card handling cleanup
 8/25/10 server variables handling cleaned up
 8/27/10 chat error detection
+10/28/10 additions to support modules
 1/7/11  JSON re-introduced with length validation and parseInt()
 3/15/11 added reference to stylesheet.php for revisable day night colors.
 5/4/11 day/night color changes added
 5/10/11 log window width increased
+6/28/11 try/catch added to accommodate main's new auto-refresh
 */
 
 error_reporting(E_ALL);
@@ -34,6 +36,10 @@ require_once('./incs/functions.inc.php');		//7/28/10
 require_once('./incs/browser.inc.php');			// 6/12/10
 @session_start();
 
+if(file_exists("./incs/modules.inc.php")) {	//	10/28/10
+	require_once('./incs/modules.inc.php');
+	}
+	
 $temp = intval(get_variable('auto_poll'));
 $poll_cycle_time = ($temp > 0)? ($temp * 1000) : 15000;	// seconds to ms - 8/20/10
 
@@ -52,7 +58,7 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
+<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
 
 <STYLE type="text/css">
 	table			{border-collapse:collapse;}
@@ -79,6 +85,17 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 <SCRIPT SRC='./js/md5.js'></SCRIPT>				<!-- 11/30/08 -->
 <SCRIPT>
 	var current_butt_id = "main";
+<?php
+if(file_exists("./incs/modules.inc.php")) {
+	?>
+	var ticker_active = <?php print module_active("Ticker");?>;
+<?php
+	} else {
+	?>
+	var ticker_active = 0;
+<?php
+	}
+	?>
 
 	var NOT_STR = '<?php echo NOT_STR;?>';			// value if not logged-in, defined in functions.inc.php
 
@@ -123,14 +140,30 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 	var updated;					// 'moved' unit date/time
 	var dispatch;					// latest dispatch status change - date-time
 
-	function do_loop() {								// monitor for changes - 4/10/10	
+	function do_loop() {								// monitor for changes - 4/10/10, 6/10/11	
 		sendRequest ('get_latest_id.php',get_latest_id_cb, "");	
 		}			// end function do_loop()		
 
 	function get_latest_id_cb(req) {					// get_latest_id callback() - 8/16/10
 
-		var the_id_arr=JSON.decode(req.responseText);	// 1/7/11
-		if (the_id_arr.length != 6)  {
+		try {
+			var the_id_arr=JSON.decode(req.responseText);	// 1/7/11
+			}
+		catch (e) {
+			alert(136);
+			alert(req.responseText);
+			return;
+			}
+
+		try {			
+			var the_arr_lgth = the_id_arr.length;
+			}
+		catch (e) {
+			alert(144);
+			return;
+			}			
+		
+		if (the_arr_lgth != 6)  {
 			alert("server error at <?php print basename(__FILE__) . " " . __LINE__;?> ");
 			}
 
@@ -376,6 +409,12 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 		$('whom').innerHTML=NOT_STR; 
 		is_initialized = false;
 
+		if(ticker_active == 1) {
+			clearInterval(ticker_interval);
+			var ticker_interval = null;
+			ticker_is_initialized = false;
+		}
+
 		try {						// close() any open windows
 			newwindow_c.close();
 			}
@@ -419,7 +458,6 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 	
 	function hide_butts() {						// 10/27/08, 3/15/11
 		setTimeout(" $('buttons').style.visibility = 'hidden';" , 1000);
-		
 		$("daynight").style.display = "none";				// 5/2/11
 		$("main_body").style.backgroundColor  = "<?php print get_css('page_background', 'Day');?>";
 		$("main_body").style.color  = "<?php print get_css('titlebar_text', 'Day');?>";
@@ -439,7 +477,6 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 			}
 		catch(e) {
 			}
-
 		}
 
 	function show_butts() {						// 10/27/08
@@ -584,7 +621,6 @@ function get_daynight() {
 	return $day_night;
 	}
 ?>
-
 	function do_day_night(which){
 		for (i=0;i<document.day_night_form.elements.length;i++) {
 			if ((document.day_night_form.elements[i].type=='radio') && (document.day_night_form.elements[i].name=='frm_daynight')) {
@@ -638,7 +674,6 @@ function get_daynight() {
 ?>		
 		}		// end function top_init() 
 
-
 	function do_log (instr) {
 		$('log_div').innerHTML += instr + "<br />";
 		}
@@ -686,8 +721,13 @@ function get_daynight() {
 
 	$temp = get_variable('_version');				// 8/8/10
 	$version_ary = explode ( "-", $temp, 2);
+	if(get_variable('title_string')=="") {
+		$title_string = "<FONT SIZE='3'>ickets " . trim($version_ary[0]) . " on <B>" . get_variable('host') . "</B></FONT>";
+		} else {
+		$title_string = "<FONT SIZE='3'><B>" .get_variable('title_string') . "</B></FONT>";
+		}
 ?>
-				<SPAN ID="tagline" CLASS="titlebar_text"><FONT SIZE="3">ickets <?php print trim($version_ary[0]) . " on <B>". get_variable('host')."</B></FONT>"; ?></SPAN>	<!-- 3/15/11 -->
+				<SPAN ID="tagline" CLASS="titlebar_text"><?php print $title_string; ?></SPAN>	<!-- 3/15/11 -->
 				<SPAN ID="logged_in_txt" STYLE = 'margin-left: 8px;' CLASS="titlebar_text"><?php print get_text("Logged in"); ?>:</SPAN>	<!-- 3/15/11 -->
 				<SPAN ID="whom" CLASS="titlebar_text"><?php print NOT_STR ; ?></SPAN>
 				<SPAN ID="perms_txt" CLASS="titlebar_text">:<SPAN ID="level" CLASS="titlebar_text">na</SPAN>&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->

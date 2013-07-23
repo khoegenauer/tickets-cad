@@ -4,6 +4,7 @@
 12/1/10 get_text patient added
 4/28/11 add'l get_texts, error added
 5/25/11 intrusion detection added
+6/19/11 add LOG_CALL_EDIT
 */
 
 $patient = get_text("Patient");
@@ -28,6 +29,7 @@ $types = array();
 	$types[$GLOBALS['LOG_UNIT_COMPLETE']]					="{$unit} completed";
 	$types[$GLOBALS['LOG_UNIT_CHANGE']]						="{$unit} updated";
 	
+	$types[$GLOBALS['LOG_CALL_EDIT']]						="Call edit";				// 6/19/11
 	$types[$GLOBALS['LOG_CALL_DISP']]						="{$unit} dispatched";
 	$types[$GLOBALS['LOG_CALL_RESP']]						="{$unit} responding";
 	$types[$GLOBALS['LOG_CALL_ONSCN']]						="{$unit} on scene";

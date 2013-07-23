@@ -366,7 +366,7 @@ tr.even {
 	
 tr.odd { 
 	background-color: <?php print get_css("row_dark", $day_night);?>;
-	color: <?php print get_css("row_dark_background", $day_night);?>;
+	color: <?php print get_css("row_dark_text", $day_night);?>;
 	}
 
 .even { 
@@ -575,7 +575,7 @@ select.sit {
 	}
 
 .conf_next_button {
-	text_align: left;
+	text-align: left;
 	font-size: 10px; 
 	color: green; 
 	float:left;
@@ -584,7 +584,7 @@ select.sit {
 	}
 	
 .conf_can_button {
-	text_align: left;
+	text-align: left;
 	font-size: 10px; 
 	color: red; 
 	float:left; 

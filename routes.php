@@ -12,8 +12,8 @@ require_once($_SESSION['fmp']);		//8/25/10
 
 $sidebar_width = round( .5 * $_SESSION['scr_width']);		// pixels - 3/6/11
 
-$from_top = 10;				// buttons alignment, user-reviseable as needed
-//$from_left =  $sidebar_width +  get_variable('map_width') +2;
+$from_top = 50;				// buttons alignment, user-reviseable as needed
+//$from_left =  $sidebar_width + (get_variable('map_width')/2);
 $from_left =  intval(floor( 0.4 * $_SESSION['scr_width']));		// 5/22/11
 
 
@@ -82,12 +82,12 @@ $show_tick_left = FALSE;	// controls left-side vs. right-side appearance of inci
 5/4/11 get_new_colors() added
 5/22/11 revised drag bar location to approx screen center
 5/28/11 intrusion detection added
+6/10/11 Added Regions / Groups
+8/1/11 Added functions do_landb, drawBanner to support banners and boundaries.
 */
 
 do_login(basename(__FILE__));		// 
-
 if ((isset($_REQUEST['ticket_id'])) && (!(strval(intval($_REQUEST['ticket_id']))===$_REQUEST['ticket_id']))) {	shut_down();}	// 5/28/11
-
 //$istest = TRUE;
 if($istest) {
 	print "GET<br />\n";
@@ -97,7 +97,6 @@ if($istest) {
 if (!(isset ($_SESSION['allow_dirs']))) {	
 	$_SESSION['allow_dirs'] = 'true';			// note js-style LC
 	}
-
 
 function get_ticket_id () {				// 5/4/11
 	if (array_key_exists('ticket_id', ($_REQUEST))) {
@@ -149,7 +148,7 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" /> 
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/> 
 	
-	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
+	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
     <STYLE TYPE="text/css">
 		body 				{font-family: Verdana, Arial, sans serif;font-size: 11px;margin: 2px;}
 		table 				{border-collapse: collapse; }
@@ -165,6 +164,11 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 
 		.box { background-color: transparent; border: none; color: #000000; padding: 0px; position: absolute; }
 		.bar { background-color: transparent; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em; }
+		.bar_header { height: 20px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}			
+		
+		.box2 { background-color: #DEE3E7; border: 2px outset #606060; color: #000000; padding: 0px; position: absolute; z-index:10000; width: 180px; }
+		.bar2 { background-color: #FFFFFF; border-bottom: 2px solid #000000; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:10000; text-align: center;}
+		.content { padding: 1em; text-align: center; }		
 	</STYLE>
 
 <SCRIPT>
@@ -228,9 +232,7 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 		};
 
 	function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity) {		// 8/19/09
-		
 //		drawCircle(53.479874, -2.246704, 10.0, "#000080", 1, 0.75, "#0000FF", .5);
-
 		var d2r = Math.PI/180;
 		var r2d = 180/Math.PI;
 		var Clat = radius * 0.014483;
@@ -246,6 +248,89 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 		var polygon = new GPolygon(Cpoints, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity);
 		map.addOverlay(polygon);
 		}
+		
+	function drawBanner(point, html, text, font_size, color) {        // Create the banner
+	//	alert("<?php echo __LINE__;?> " + color);
+		var invisibleIcon = new GIcon(G_DEFAULT_ICON, "./markers/markerTransparent.png");      // Custom icon is identical to the default icon, except invisible
+
+		map.setCenter(point, 8);
+		map.addControl(new GLargeMapControl());
+		map.addControl(new GMapTypeControl());
+		var the_color = (typeof color == 'undefined')? "#000000" : color ;	// default to black
+
+		var style_str = 'background-color:transparent;font-weight:bold;border:0px black solid;white-space:nowrap; font-size:' + font_size + 'px; font-family:arial; opacity: 0.9; color:' + add_hash(the_color) + ';';
+
+		var contents = '<div><div style= "' + style_str + '">'+text+'<\/div><\/div>';
+		var label=new ELabel(point, contents, null, new GSize(-8,4), 75, 1);
+		map.addOverlay(label);
+		var marker = new GMarker(point,invisibleIcon);	        // Create an invisible GMarker
+		}				// end function draw Banner()
+
+	function add_hash(in_str) { // prepend # if absent
+		return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
+		}			
+			
+	function do_landb() {				// JS function - 8/1/11
+		var points = new Array();
+<?php
+		$query = "SELECT * FROM `{$GLOBALS['mysql_prefix']}mmarkup` WHERE `line_status` = 0 AND (`use_with_bm` = 1 OR `use_with_r` = 1)";
+		$result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
+
+		while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
+			$empty = FALSE;
+			extract ($row);
+			$name = $row['line_name'];
+			switch ($row['line_type']) {
+				case "p":		// poly
+					$points = explode (";", $line_data);
+					echo "\n\tvar points = new Array();\n";
+		
+					for ($i = 0; $i<count($points); $i++) {
+						$coords = explode (",", $points[$i]);
+?>
+						var thepoint = new GLatLng(<?php print $coords[0];?>, <?php print $coords[1];?>);
+						bounds.extend(thepoint);
+						points.push(thepoint);
+		
+<?php					}			// end for ($i = 0 ... )
+			 	if ((intval($filled) == 1) && (count($points) > 2)) {?>
+						var polyline = new GPolygon(points,add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>);
+<?php			} else {?>
+				        var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>);
+<?php			} ?>
+						map.addOverlay(polyline);
+<?php				
+					break;
+			
+				case "c":		// circle
+					$temp = explode (";", $line_data);
+					$radius = $temp[1];
+					$coords = explode (",", $temp[0]);
+					$lat = $coords[0];
+					$lng = $coords[1];
+					$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
+					
+					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}); // 513\n";
+					break;
+			
+				case "t":		// text banner
+
+					$temp = explode (";", $line_data);
+					$banner = $temp[1];
+					$coords = explode (",", $temp[0]);
+					echo "\n var point = new GLatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
+					$the_banner = htmlentities($banner, ENT_QUOTES);
+					$the_width = intval( trim($line_width), 10);		// font size
+					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width});\n";
+					break;
+			
+				}	// end switch
+				
+		}			// end while ()
+		
+		unset($query, $result);
+?>
+		}		// end function do_landb()
 
 	var to_visible = "visible";
 	var to_hidden = "hidden";
@@ -256,6 +341,63 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 		if ($('disp_but')) {$('disp_but').style.visibility = strValue;}
 		}
 
+	function hideDiv(div_area, hide_cont, show_cont) {	//	3/15/11
+		if (div_area == "buttons_sh") {
+			var controlarea = "hide_controls";
+			}
+		if (div_area == "resp_list_sh") {
+			var controlarea = "resp_list";
+			}
+		if (div_area == "facs_list_sh") {
+			var controlarea = "facs_list";
+			}
+		if (div_area == "incs_list_sh") {
+			var controlarea = "incs_list";
+			}
+		if (div_area == "region_boxes") {
+			var controlarea = "region_boxes";
+			}			
+		var divarea = div_area 
+		var hide_cont = hide_cont 
+		var show_cont = show_cont 
+		if($(divarea)) {
+			$(divarea).style.display = 'none';
+			$(hide_cont).style.display = 'none';
+			$(show_cont).style.display = '';
+			} 
+		var params = "f_n=" +controlarea+ "&v_n=h&sess_id=<?php print get_sess_key(__LINE__); ?>";
+		var url = "persist2.php";
+		sendRequest (url, gb_handleResult, params);			
+		} 
+
+	function showDiv(div_area, hide_cont, show_cont) {	//	3/15/11
+		if (div_area == "buttons_sh") {
+			var controlarea = "hide_controls";
+			}
+		if (div_area == "resp_list_sh") {
+			var controlarea = "resp_list";
+			}
+		if (div_area == "facs_list_sh") {
+			var controlarea = "facs_list";
+			}
+		if (div_area == "incs_list_sh") {
+			var controlarea = "incs_list";
+			}
+		if (div_area == "region_boxes") {
+			var controlarea = "region_boxes";
+			}				
+		var divarea = div_area
+		var hide_cont = hide_cont 
+		var show_cont = show_cont 
+		if($(divarea)) {
+			$(divarea).style.display = '';
+			$(hide_cont).style.display = '';
+			$(show_cont).style.display = 'none';
+			}
+		var params = "f_n=" +controlarea+ "&v_n=s&sess_id=<?php print get_sess_key(__LINE__); ?>";
+		var url = "persist2.php";
+		sendRequest (url, gb_handleResult, params);					
+		}
 </SCRIPT>	
 <script type="text/javascript">//<![CDATA[
 //*****************************************************************************
@@ -538,7 +680,7 @@ else {
 <SCRIPT SRC="http://maps.google.com/maps?file=api&amp;v=2.s&amp;key=<?php echo $api_key; ?>"></SCRIPT>
 <SCRIPT SRC="./js/usng.js"></SCRIPT>		<!-- 10/14/08 -->
 <SCRIPT SRC="./js/graticule.js"></SCRIPT>
-	
+<SCRIPT TYPE="text/javascript" src="./js/ELabel.js"></SCRIPT><!-- 8/1/11 -->	
 
 <SCRIPT>
 	parent.frames["upper"].document.getElementById("whom").innerHTML  = "<?php print $_SESSION['user'];?>";
@@ -648,6 +790,7 @@ function doReset() {
 			}
 		}		// end while (...)
 
+	
 //										8/10/09, 10/6/09, 1/7/10, 8/9/10
 	$query = "SELECT *,
 		UNIX_TIMESTAMP(problemstart) AS problemstart,
@@ -719,6 +862,83 @@ function filterReset() {		//	11/18/10
 	document.filter_Form.submit();
 	}
 
+function checkArray(form, arrayName)	{	//	5/3/11
+	var retval = new Array();
+	for(var i=0; i < form.elements.length; i++) {
+		var el = form.elements[i];
+		if(el.type == "checkbox" && el.name == arrayName && el.checked) {
+			retval.push(el.value);
+		}
+	}
+return retval;
+}	
+	
+function checkForm(form)	{	//	6/10/11
+	var errmsg="";
+	var itemsChecked = checkArray(form, "frm_group[]");
+	if(itemsChecked.length > 0) {
+		var params = "f_n=viewed_groups&v_n=" +itemsChecked+ "&sess_id=<?php print get_sess_key(__LINE__); ?>";	//	3/15/11
+		var url = "persist3.php";	//	3/15/11	
+		sendRequest (url, fvg_handleResult, params);				
+//			form.submit();
+	} else {
+		errmsg+= "\tYou cannot Hide all the regions\n";
+		if (errmsg!="") {
+			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			return false;
+		}
+	}
+}
+
+function fvg_handleResult(req) {	// 6/10/11	The persist callback function for viewed groups.
+	document.region_form.submit();
+	}
+	
+function form_validate(theForm) {	//	6/10/11
+//		alert("Validating");
+	checkForm(theForm);
+	}				// end function validate(theForm)
+
+function sendRequest(url,callback,postData) {	//	6/10/11
+	var req = createXMLHTTPObject();
+	if (!req) return;
+	var method = (postData) ? "POST" : "GET";
+	req.open(method,url,true);
+	req.setRequestHeader('User-Agent','XMLHTTP/1.0');
+	if (postData)
+		req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	req.onreadystatechange = function () {
+		if (req.readyState != 4) return;
+		if (req.status != 200 && req.status != 304) {
+			return;
+			}
+		callback(req);
+		}
+	if (req.readyState == 4) return;
+	req.send(postData);
+	}
+
+var XMLHttpFactories = [
+	function () {return new XMLHttpRequest()	},
+	function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
+	function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
+	function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+	];
+
+function createXMLHTTPObject() {
+	var xmlhttp = false;
+	for (var i=0;i<XMLHttpFactories.length;i++) {
+		try {
+			xmlhttp = XMLHttpFactories[i]();
+			}
+		catch (e) {
+			continue;
+			}
+		break;
+		}
+	return xmlhttp;
+	}	
+
 </SCRIPT>
 </HEAD>
 <BODY onLoad = "get_position(); do_notify(); ck_frames()" onUnload="GUnload()">
@@ -753,7 +973,8 @@ function filterReset() {		//	11/18/10
 			<INPUT TYPE='hidden' NAME='unit_id' 	VALUE='<?php print $unit_id; ?>' />
 			<TR class='odd'><TD align="center"><input type="button" OnClick="filterSubmit();" VALUE="Filter"/>&nbsp;&nbsp;<input type="button" OnClick="filterReset();" VALUE="Reset Filter" <?php print $disabled;?>/></TD></TR>	<!-- 3/15/11 -->	
 			</FORM></TABLE></DIV></TD>
-<?php 		}	?>
+		<?php }
+	?>
 
 </DIV>
 
@@ -848,7 +1069,7 @@ function filterReset() {		//	11/18/10
 		<IMG SRC="markers/down.png" BORDER=0  onclick = "location.href = '#page_bottom';" STYLE = 'margin-left:2px;' />		
 		<IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#page_top';" STYLE = 'margin-left:40px;'/><br />
 		</div>
-			 <div style = 'height:10px;'/>&nbsp;</div>
+		 <div style = 'height:10px;'/>&nbsp;</div>
 			 
 
 <?php
@@ -866,7 +1087,7 @@ function filterReset() {		//	11/18/10
 			if ($nr_units>0) {			
 				print "<BR /><INPUT TYPE='button' value='DISPATCH\nUNITS' onClick = '" . $thefunc . "' ID = 'disp_but'  STYLE = 'visibility: hidden;' />\n";	// 6/14/09
 				}
-			print "<BR /><BR /><SPAN STYLE='display: 'inline-block'><NOBR><H3>to:<BR /><I>{$addr}</I></H3></NOBR></SPAN>\n";
+			print "<BR /><BR /><SPAN STYLE='display: 'inline-block' class='normal_text'><NOBR><H3>to:<BR /><I>{$addr}</I></H3></NOBR></SPAN>\n";
 ?>
 		</div>	 <!-- end of outer -->
 <?php
@@ -876,6 +1097,84 @@ function filterReset() {		//	11/18/10
 
 ?>
 	</DIV>
+<?php
+
+		$user_level = is_super() ? 9999 : $_SESSION['user_id']; 
+		$regions_inuse = get_regions_inuse($user_level);	//	6/10/11
+		$group = get_regions_inuse_numbers($user_level);	//	6/10/11		
+		
+		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]' ORDER BY `id` ASC;";	// 4/13/11
+		$result = mysql_query($query);	// 4/13/11
+		$al_groups = array();
+		$al_names = "";	
+		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 4/13/11
+			$al_groups[] = $row['group'];
+			if(!(is_super())) {
+				$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` WHERE `id`= '$row[group]';";	// 4/13/11
+				$result2 = mysql_query($query2);	// 4/13/11
+				while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	// 4/13/11		
+					$al_names .= $row2['group_name'] . ", ";
+					}
+				} else {
+					$al_names = "ALL. Superadmin Level";
+				}
+			}
+
+
+		$from_right = 20;	//	5/3/11
+		$from_top = 50;		//	5/3/11	
+		
+	if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
+		$regs_col_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "s")) ? "" : "none";	//	6/10/11
+		$regs_exp_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "h")) ? "" : "none";	//	6/10/11			
+?>
+		<div id = 'outer' style = "position:fixed; right:<?php print $from_right;?>%; top:<?php print $from_top;?>%; z-index: 1000; ">		<!-- 5/3/11 -->
+		<div id="boxC" class="box2" style="z-index:1000;">
+		<div class="bar_header" class="heading_2" STYLE="z-index: 1000;">Viewed <?php print get_text("Regions");?>
+		<SPAN id="collapse_regs" style = "display: <?php print $regs_col_butt;?>; z-index:1001; cursor: pointer;" onclick="hideDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/collapse.png" ALIGN="right"></SPAN>
+		<SPAN id="expand_regs" style = "display: <?php print $regs_exp_butt;?>; z-index:1001; cursor: pointer;" onclick="showDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/expand.png" ALIGN="right"></SPAN></div>
+		<div class="bar2" STYLE="color:red; z-index: 1000;"
+				onmousedown="dragStart(event, 'boxC')"><i>Drag me</i></div>
+		<div id="region_boxes" class="content" style="z-index: 1000;"></div>
+		</div>
+		</div>
+<?php
+}
+		function get_buttons($user_id) {		//	5/3/11
+			if(isset($_SESSION['viewed_groups'])) {
+				$regs_viewed= explode(",",$_SESSION['viewed_groups']);
+				}
+			
+			$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id' ORDER BY `group`";			//	5/3/11
+			$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+
+			$al_buttons="";	
+			while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	//	5/3/11
+				if(!empty($regs_viewed)) {
+					if(in_array($row2['group'], $regs_viewed)) {
+						$al_buttons.="<DIV style='float: left; width: 100%; text-align: left;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
+					} else {
+						$al_buttons.="<DIV style='float: left; width: 100%; text-align: left;'><INPUT TYPE='checkbox' name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
+					}
+					} else {
+						$al_buttons.="<DIV style='float: left; width: 100%; text-align: left;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
+					}
+				}
+			return $al_buttons;
+			}
+		
+		if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
+?>
+			<SCRIPT>
+				side_bar_html= "";
+				side_bar_html+="<TABLE><TR class='even'><TD CLASS='td_label'><form name='region_form' METHOD='post' action='#'><DIV>";
+				side_bar_html += "<?php print get_buttons($_SESSION['user_id']);?>";
+				side_bar_html+="</DIV></form></TD></TR><TR><TD COLSPAN=99>&nbsp;</TD></TR><TR><TD ALIGN='center' COLSPAN=99><INPUT TYPE='button' VALUE='Update' onClick='form_validate(document.region_form);'></TD></TR></TABLE>";
+				$("region_boxes").innerHTML = side_bar_html;		
+			</SCRIPT>
+<?php
+			} 			
+?>				
 		<A NAME="page_bottom" /> <!-- 5/13/10 -->	
 		<FORM NAME='reLoad_Form' METHOD = 'get' ACTION="<?php print basename( __FILE__); ?>">
 		<INPUT TYPE='hidden' NAME='ticket_id' 	VALUE='<?php print get_ticket_id (); ?>' />	<!-- 10/25/08 -->

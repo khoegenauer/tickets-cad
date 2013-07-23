@@ -30,8 +30,8 @@
 		<TR><TD COLSPAN="99" ALIGN="center">
 		<BR />
 		<INPUT TYPE="button"	VALUE="Cancel" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="button"	VALUE="Reset" onClick = "Javascript: document.u.reset();icon_to_form("<?php print $row['icon'];?>"); "/>&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="button" NAME="sub_but" VALUE="               Submit                " onclick="Javascript: this.disabled=true; validate_u_t(document.u);"/> 
+		<INPUT TYPE="button"	VALUE="Reset" onClick = "Javascript: document.u.reset();icon_to_form('<?php print $row['icon'];?>'); "/>&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE="button" NAME="sub_but" VALUE="               Submit                " onclick="this.disabled=true; JSfnCheckInput(this.form, this );"/> 
 		
 		</TD></TR>
 		</FORM>

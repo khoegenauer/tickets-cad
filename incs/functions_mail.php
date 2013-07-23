@@ -2,6 +2,7 @@
 /*
 1/9/11 initial extractf from FIP
 4/19/11 corrections re smtp array makeup
+11/10/11 Changed 911 to get_text('911'), Revised Map to included locale settings.
 */
 function mail_it ($to_str, $text, $ticket_id, $text_sel=1, $txt_only = FALSE) {				// 10/6/08, 10/15/08,  2/18/09, 3/7/09
 	global $istest;
@@ -45,6 +46,8 @@ Host		Q
 	$t_row = stripslashes_deep(mysql_fetch_array($ticket_result));
 //	dump($t_row);
 	$eol = "\n";
+	
+	$locale = get_variable('locale');
 
 	$message="";
 	$_end = (good_date_time($t_row['problemend']))?  "  End:" . $t_row['problemend'] : "" ;		// 
@@ -95,8 +98,18 @@ Host		Q
 					$message .= "Run Start: " . format_date_time($t_row['problemstart']). $_end .$eol;
 				    break;
 				case "N":
-					$usng = LLtoUSNG($t_row['lat'], $t_row['lng']);
-					$message .= "Map: " . $t_row['lat'] . " " . $t_row['lng'] . ", " . $usng . "\n";
+					if($locale == 0) {
+						$usng = LLtoUSNG($t_row['lat'], $t_row['lng']);
+						$message .= "Map: " . $t_row['lat'] . " " . $t_row['lng'] . ", " . $usng . "\n";
+						}
+					if($locale == 1) {
+						$osgb = LLtoOSGB($t_row['lat'], $t_row['lng']);
+						$message .= "Map: " . $t_row['lat'] . " " . $t_row['lng'] . ", " . $osgb . "\n";
+						}	
+					if($locale == 2) {
+						$utm = LLtoUTM($t_row['lat'], $t_row['lng']);
+						$message .= "Map: " . $t_row['lat'] . " " . $t_row['lng'] . ", " . $utm . "\n";
+						}							
 				    break;
 			
 				case "P":															
@@ -129,7 +142,7 @@ Host		Q
 				    break;
 
 				case "R":							// 6/26/10
-					$message .= (empty($t_row['nine_one_one']))?  "": "911: ". wordwrap($t_row['nine_one_one']).$eol;
+					$message .= (empty($t_row['nine_one_one']))?  "": get_text('911') . ": ". wordwrap($t_row['nine_one_one']).$eol;	//	11/10/11
 				    break;
 
 				default:

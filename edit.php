@@ -81,7 +81,7 @@ $zoom_tight = FALSE;		// default is FALSE (no tight zoom); replace with a decima
 4/1/11 added 'by user' information
 4/1/11 Added extra update query to update any existing assigns records for the ticket if they are not closed.
 5/4/11 get_new_colors() 				// 
-5/22/11 corrected reverse geolocation
+6/10/11 Added changes required to support regional capability (Ticket region assignment) plus tidied screen for no maps.
 */
 	$addrs = FALSE;										// notifies address array doesn't exist
 
@@ -120,6 +120,9 @@ $zoom_tight = FALSE;		// default is FALSE (no tight zoom); replace with a decima
 //		$frm_problemstart = $_POST['frm_year_problemstart']-$_POST['frm_month_problemstart']-$_POST['frm_day_problemstart'] $_POST['frm_hour_problemstart']:$_POST['frm_minute_problemstart']:00";
 		$frm_problemstart = "$_POST[frm_year_problemstart]-$_POST[frm_month_problemstart]-$_POST[frm_day_problemstart] $_POST[frm_hour_problemstart]:$_POST[frm_minute_problemstart]:00$post_frm_meridiem_problemstart";
 
+		$curr_groups = $_POST['frm_exist_groups']; 	//	6/10/11
+		$groups = "," . implode(',', $_POST['frm_group']) . ","; 	//	6/10/11
+//		dump($_POST); 	//	6/10/11
 
 		if (!get_variable('military_time'))	{			//put together date from the dropdown box and textbox values
 			if ($post_frm_meridiem_problemstart == 'pm'){
@@ -138,12 +141,16 @@ $zoom_tight = FALSE;		// default is FALSE (no tight zoom); replace with a decima
 			}
 		$frm_problemend  = (isset($_POST['frm_year_problemend'])) ?  quote_smart("$_POST[frm_year_problemend]-$_POST[frm_month_problemend]-$_POST[frm_day_problemend] $_POST[frm_hour_problemend]:$_POST[frm_minute_problemend]:00") : "NULL";
 		$frm_booked_date  = (isset($_POST['frm_year_booked_date'])) ?  quote_smart("$_POST[frm_year_booked_date]-$_POST[frm_month_booked_date]-$_POST[frm_day_booked_date] $_POST[frm_hour_booked_date]:$_POST[frm_minute_booked_date]:00") : "NULL";	//10/1/09
+
+		if($_POST['frm_status'] != 1) {
+			$frm_problemend = "NULL";
+			}
 	
 		// perform db update
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));
 		$by = $_SESSION['user_id'];			// 12/7/10
 		if(empty($post_frm_owner)) {$post_frm_owner=0;}
-								// 8/23/08, 9/20/08, 9/22/09 (Facility), 10/1/09 (receiving facility), 6/26/10 (911)
+								// 8/23/08, 9/20/08, 9/22/09 (Facility), 10/1/09 (receiving facility), 6/26/10 (911), 6/10/11
 		$query = "UPDATE `$GLOBALS[mysql_prefix]ticket` SET 
 			`contact`= " . 		quote_smart(trim($_POST['frm_contact'])) .",
 			`street`= " . 		quote_smart(trim($_POST['frm_street'])) .",
@@ -170,6 +177,29 @@ $zoom_tight = FALSE;		// default is FALSE (no tight zoom); replace with a decima
 			WHERE ID='$id'";
 
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
+		
+		$list = $_POST['frm_exist_groups']; 	//	6/10/11
+		$ex_grps = explode(',', $list); 	//	6/10/11 
+		
+		if($curr_groups != $groups) { 	//	6/10/11
+			foreach($_POST['frm_group'] as $posted_grp) { 	//	6/10/11
+				if(!(in_array($posted_grp, $ex_grps))) {
+					$tick_stat = $_POST['frm_status'];
+					$query  = "INSERT INTO `$GLOBALS[mysql_prefix]allocates` (`group` , `type`, `al_as_of` , `al_status` , `resource_id` , `sys_comments` , `user_id`) VALUES 
+							($posted_grp, 1, '$now', $tick_stat, $id, 'Allocated to Group' , $by)";
+					$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);	
+					}
+				}
+			foreach($ex_grps as $existing_grp) { 	//	6/10/11
+				print $existing_grp;
+				if(in_array($existing_grp, get_allocates(4, $id))) {
+					if(!(in_array($existing_grp, $_POST['frm_group']))) {
+						$query  = "DELETE FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type` = 1 AND `group` = '$existing_grp' AND `resource_id` = {$id}";
+						$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);	
+						}
+					}
+				}
+			}
 		
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `ticket_id` = '$id' AND (`clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00')"; 
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
@@ -246,7 +276,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
-	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">		<!-- 3/15/11 -->
+	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">		<!-- 3/15/11 -->
 <?php
 	if ($gmaps) {		// 1/1/11
 ?>
@@ -258,6 +288,9 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 	?>
 	<SCRIPT SRC="./js/usng.js" TYPE="text/javascript"></SCRIPT>		<!-- 8/23/08 -->
 	<SCRIPT SRC='./js/jscoord.js'></SCRIPT>		<!-- coordinate conversion 12/11/10 -->	
+	<SCRIPT  SRC="./js/lat_lng.js" TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->
+	<SCRIPT  SRC="./js/geotools2.js" TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->
+	<SCRIPT  SRC="./js/osgb.js" TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->		
 
 <SCRIPT>
 
@@ -552,6 +585,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 	var protocols = new Array();		// 7/7/09
 	var fac_lat = [];
 	var fac_lng = [];
+	
+	function ReadOnlyCheckBox() {
+		alert("You can't change this value");
+		return false;
+	}	
 </SCRIPT>
 </HEAD>
 
@@ -659,14 +697,55 @@ $do_unload = ($gmaps)? " onUnload=\"GUnload();\"" : "";
 			$theClass = $priorities[$row['severity']];
 			$exist_rec_fac = $row['rec_facility'];
 
+			$query_al = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]' ORDER BY `id` ASC;";	// 6/10/11
+			$result_al = mysql_query($query_al);	// 6/10/11
+			$al_groups = array();
+			$al_names = "";	
+			while ($row_al = stripslashes_deep(mysql_fetch_assoc($result_al))) 	{	// 6/10/11
+				$al_groups[] = $row_al['group'];
+				$query_al2 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` WHERE `id`= '$row_al[group]';";	// 6/10/11
+				$result_al2 = mysql_query($query_al2);	// 6/10/11
+				while ($row_al2 = stripslashes_deep(mysql_fetch_assoc($result_al2))) 	{	// 6/10/11		
+						$al_names .= $row_al2['group_name'] . ", ";
+					}
+				}
+			if(is_super()) {
+				$al_names .= "&nbsp;&nbsp;Superadmin Level";
+			}	
+			
+			if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11		
+				$heading = "Edit Ticket - " . get_variable('map_caption') . "&nbsp;-----------&nbsp;Groups:&nbsp;&nbsp; " . $al_names;	//	6/10/11		
+			} else {
+				$heading = "Edit Ticket - " . get_variable('map_caption');	//	6/10/11		
+			}			
+				
+				
 				
 			print "<TABLE BORDER='0' ID = 'outer' ALIGN='left' CLASS = 'BGCOLOR'>\n";
-			print "<TR CLASS='odd'><TD ALIGN='left COLSPAN=2>" . add_header($id, TRUE) . "</TD></TR>\n";	// 11/27/09
+			if($gmaps) {	//	6/10/11		
+				print "<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'>" . $heading . "</FONT></TD></TR>";	//	6/10/11	
+				print "<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN=99 ALIGN='center'>&nbsp;</TD></TR><TR><TD>";	//	6/10/11					
+				print "<TR CLASS='odd'><TD ALIGN='left' COLSPAN='2'>";
+				} else {
+				print "<TR CLASS='header'><TD ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'>" . $heading . "</FONT></TD></TR>";	//	6/10/11	
+				print "<TR CLASS='spacer'><TD CLASS='spacer' ALIGN='center'>&nbsp;</TD></TR><TR><TD>";	//	6/10/11						
+				print "<TR CLASS='odd'><TD ALIGN='left'>";	
+				}
+			print add_header($id, TRUE);
+			print "</TD></TR>\n";
 			print "<TR CLASS='odd'><TD>&nbsp;</TD></TR>\n";	
+			if($gmaps) {	//	6/10/11
 			print "<TR CLASS='even' valign='top'><TD CLASS='print_TD' ALIGN='left'>";
+			} else {
+			print "<TR CLASS='even' valign='top'><TD CLASS='print_TD' ALIGN='left' style='width: 100%;' COLSPAN=99>";
+			}
 	
 			print "<FORM NAME='edit' METHOD='post' onSubmit='return validate(document.edit)' ACTION='" . basename(__FILE__) . "?id=$id&action=update'>";
-			print "<TABLE BORDER='0' ID='data'>\n";
+			if($gmaps) {	//	6/10/11
+				print "<TABLE BORDER='0' ID='data'>\n";
+				} else {
+				print "<TABLE BORDER='0' ID='data' WIDTH='100%'>\n";
+				}
 			print "<TR CLASS='odd'><TD ALIGN='center' COLSPAN=3><FONT CLASS='$theClass'><B>Edit Run Ticket</FONT> (#{$id})</B></TD></TR>";
 			print "<TR CLASS='odd'><TD ALIGN='center' COLSPAN=3><FONT CLASS='header'><FONT SIZE='-2'>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>";
 
@@ -742,9 +821,45 @@ $do_unload = ($gmaps)? " onUnload=\"GUnload();\"" : "";
 				print "</SELECT>";
 				print "</SPAN></TD></TR>";
 
-			print "<TR CLASS = 'even'>
+			print "<TR CLASS = 'odd'>
 					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_proto']}');\">" . get_text("Protocol") . ":</TD>";
 			print 	"<TD ID='proto_cell'>{$row['protocol']}</TD></TR>\n";
+
+			if(get_num_groups() > 1) {			
+			if((is_super()) && (get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
+					print "<TR CLASS='even' VALIGN='top'>";
+					print "<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');\">" . get_text('Group') . "</A>: </TD>";
+					print "<TD><SPAN id='expand_gps' onClick=\"$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';\" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>";
+					print "<SPAN id='collapse_gps' onClick=\"$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';\" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>";
+					print "<TD>";
+					$alloc_groups = implode(',', get_allocates(1, $id));	//	6/10/11
+					print get_sub_group_butts(($_SESSION['user_id']), 1, $id) ;	//	6/10/11		
+					print "</DIV></TD></TR>";		// 6/10/11
+					
+				} elseif((is_admin()) && (get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11	
+					print "<TR CLASS='even' VALIGN='top'>";
+					print "<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');\">" . get_text('Group') . "</A>: </TD>";
+					print "<TD><SPAN id='expand_gps' onClick=\"$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';\" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>";
+					print "<SPAN id='collapse_gps' onClick=\"$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';\" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>";
+					print "<TD>";
+					$alloc_groups = implode(',', get_allocates(1, $id));	//	6/10/11
+					print get_sub_group_butts(($_SESSION['user_id']), 1, $id) ;	//	6/10/11			
+					print "</DIV></TD></TR>";		// 6/10/11	
+					
+				} else {
+					print "<TR CLASS='even' VALIGN='top'>";
+					print "<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');\">" . get_text('Group') . "</A>: </TD>";
+					print "<TD><SPAN id='expand_gps' onClick=\"$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';\" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>";
+					print "<SPAN id='collapse_gps' onClick=\"$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';\" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>";
+					print "<TD>";
+					$alloc_groups = implode(',', get_allocates(1, $id));	//	6/10/11
+					print get_sub_group_butts_readonly(($_SESSION['user_id']), 1, $id) ;	//	6/10/11			
+					print "</DIV></TD></TR>";		// 6/10/11	
+				}
+			} else {
+			print "<INPUT TYPE='hidden' NAME='frm_group[]' VALUE='1'>";
+			}
+			
 			print "<TR CLASS='odd' VALIGN='top'>
 					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_synop']}');\">" . get_text("Synopsis") . ":</TD>";
 			print 	"<TD CLASS='td_label'><TEXTAREA NAME='frm_description' COLS='45' ROWS='2' {$dis} >" . $row['tick_descr'] . "</TEXTAREA></TD></TR>\n";		// 8/8/09
@@ -813,11 +928,45 @@ $do_unload = ($gmaps)? " onUnload=\"GUnload();\"" : "";
 
 //	facility handling  - 3/25/10
 
+			$query_al = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]';";	//	6/10/11
+			$result_al = mysql_query($query_al);	// 4/13/11
+			$al_groups = array();
+			while ($row_al = stripslashes_deep(mysql_fetch_assoc($result_al))) 	{	//	6/10/11
+				$al_groups[] = $row_al['group'];
+				}
+				
+			if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
+				$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+				}
+
+			if(!isset($curr_viewed)) {	
+				$x=0;	//	6/10/11
+				$where2 = "WHERE (";	//	6/10/11
+				foreach($al_groups as $grp) {	//	6/10/11
+					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`a`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
+			} else {
+				$x=0;	//	6/10/11
+				$where2 = "WHERE (";	//	6/10/11
+				foreach($curr_viewed as $grp) {	//	6/10/11
+					$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+					$where2 .= "`a`.`group` = '{$grp}'";
+					$where2 .= $where3;
+					$x++;
+					}
+			}
+			$where2 .= " AND `a`.`type` = 3";	//	6/10/11		
+
 			if (!($row['facility'] == NULL)) {				// 9/22/09
 	
 				print "<TR CLASS='odd'>
 					<TD CLASS='td_label' COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_facy']}');\">Facility: &nbsp;&nbsp;</TD>";		// 2/21/09
-				$query_fc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";		
+				$query_fc = "SELECT *, `f`.`id` AS `fac_id` FROM `$GLOBALS[mysql_prefix]facilities` `f`
+				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `f`.`id` = `a`.`resource_id` )		
+				$where2 GROUP BY `fac_id` ORDER BY `name` ASC";		
 				$result_fc = mysql_query($query_fc) or do_error($query_fc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 				print "<TD><SELECT NAME='frm_facility_id'  {$dis} onChange='document.edit.frm_fac_chng.value = 1; do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim());'>";
 				print "<OPTION VALUE=0>Not using facility</OPTION>";
@@ -826,22 +975,24 @@ $do_unload = ($gmaps)? " onUnload=\"GUnload();\"" : "";
 				print "\n<SCRIPT>fac_lng[" . 0 . "] = " . get_variable('def_lng') . " ;</SCRIPT>\n";
 	
 				while ($row_fc = mysql_fetch_array($result_fc, MYSQL_ASSOC)) {
-					$sel = ($row['facility'] == $row_fc['id']) ? " SELECTED " : "";
-					print "<OPTION VALUE=" . $row_fc['id'] . $sel . ">" . shorten($row_fc['name'], 20) . "</OPTION>";
-					print "\n<SCRIPT>fac_lat[" . $row_fc['id'] . "] = " . $row_fc['lat'] . " ;</SCRIPT>\n";
-					print "\n<SCRIPT>fac_lng[" . $row_fc['id'] . "] = " . $row_fc['lng'] . " ;</SCRIPT>\n";
+					$sel = ($row['facility'] == $row_fc['fac_id']) ? " SELECTED " : "";
+					print "<OPTION VALUE=" . $row_fc['fac_id'] . $sel . ">" . shorten($row_fc['name'], 20) . "</OPTION>";
+					print "\n<SCRIPT>fac_lat[" . $row_fc['fac_id'] . "] = " . $row_fc['lat'] . " ;</SCRIPT>\n";
+					print "\n<SCRIPT>fac_lng[" . $row_fc['fac_id'] . "] = " . $row_fc['lng'] . " ;</SCRIPT>\n";
 					}
 				print "</SELECT>&nbsp;&nbsp;&nbsp;&nbsp;\n";
 				unset ($result_fc);
 				} 				// end if (!($row['facility'] == NULL))
 			else {	
-				$query_fc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";		
+				$query_fc = "SELECT *, `f`.`id` AS `fac_id` FROM `$GLOBALS[mysql_prefix]facilities` `f`
+				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `f`.`id` = `a`.`resource_id` )		
+				$where2 GROUP BY `fac_id` ORDER BY `name` ASC";	
 				$result_fc = mysql_query($query_fc) or do_error($query_fc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 				$pulldown = '<option>Incident at Facility?</option>';
 				while ($row_fc = mysql_fetch_array($result_fc, MYSQL_ASSOC)) {
-					$pulldown .= "<option value=\"{$row_fc['id']}\">" . shorten($row_fc['name'], 20) . "</option>\n";
-					print "\n<SCRIPT>fac_lat[" . $row_fc['id'] . "] = " . $row_fc['lat'] . " ;</SCRIPT>\n";
-					print "\n<SCRIPT>fac_lng[" . $row_fc['id'] . "] = " . $row_fc['lng'] . " ;</SCRIPT>\n";
+					$pulldown .= "<option value=" . $row_fc['fac_id'] . ">" . shorten($row_fc['name'], 20) . "</option>\n";
+					print "\n<SCRIPT>fac_lat[" . $row_fc['fac_id'] . "] = " . $row_fc['lat'] . " ;</SCRIPT>\n";
+					print "\n<SCRIPT>fac_lng[" . $row_fc['fac_id'] . "] = " . $row_fc['lng'] . " ;</SCRIPT>\n";
 					}
 				unset ($result_fc);
 				print "<TR CLASS='odd'>
@@ -851,24 +1002,28 @@ $do_unload = ($gmaps)? " onUnload=\"GUnload();\"" : "";
 //	receiving facility - 3/25/10
 
 			if (!($row['rec_facility'] == NULL)) {				// 10/1/09
-				$query_rfc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";		
+				$query_rfc = "SELECT *, `f`.`id` AS `fac_id` FROM `$GLOBALS[mysql_prefix]facilities` `f`
+				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `f`.`id` = a.resource_id )		
+				$where2 GROUP BY `fac_id` ORDER BY `name` ASC";		
 				$result_rfc = mysql_query($query_rfc) or do_error($query_rfc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 				print "<SELECT NAME='frm_rec_facility_id' {$dis} onChange = 'document.edit.frm_fac_chng.value = parseInt(document.edit.frm_fac_chng.value)+ 2;'>";
 				print "<OPTION VALUE=0>No receiving facility</OPTION>";
 
 				while ($row_rfc = mysql_fetch_array($result_rfc, MYSQL_ASSOC)) {
-					$sel2 = ($row['rec_facility'] == $row_rfc['id']) ? " SELECTED " : "";
-					print "<OPTION VALUE=" . $row_rfc['id'] . $sel2 . ">" . shorten($row_rfc['name'], 20) . "</OPTION>";		// 2/14/11
+					$sel2 = ($row['rec_facility'] == $row_rfc['fac_id']) ? " SELECTED " : "";
+					print "<OPTION VALUE=" . $row_rfc['fac_id'] . $sel2 . ">" . shorten($row_rfc['name'], 20) . "</OPTION>";		// 2/14/11
 					}
 				print "</SELECT></TD></TR>\n";
 				unset ($result_rfc);
 				} 
 			else {
-				$query_rfc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";			//10/1/09
+				$query_rfc = "SELECT *, `f`.`id` AS `fac_id` FROM `$GLOBALS[mysql_prefix]facilities` `f`
+				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `f`.`id` = a.resource_id )		
+				$where2 GROUP BY `fac_id` ORDER BY `name` ASC";	
 				$result_rfc = mysql_query($query_rfc) or do_error($query_rfc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 				$pulldown2 = '<option>Receiving Facility?</option>';
 					while ($row_rfc = mysql_fetch_array($result_rfc, MYSQL_ASSOC)) {
-						$pulldown2 .= "<option value=\"{$row_rfc['id']}\">" . shorten($row_rfc['name'], 20) . "</option>\n";
+						$pulldown2 .= "<option value=" . $row_rfc['fac_id'] . ">" . shorten($row_rfc['name'], 20) . "</option>\n";
 					}
 				unset ($result_rfc);
 				print "<SELECT NAME='frm_rec_facility_id' {$dis} onChange = 'document.edit.frm_fac_chng.value = parseInt(document.edit.frm_fac_chng.value)+ 2;'>$pulldown2</SELECT></TD></TR>\n";	//10/1/09
@@ -950,12 +1105,12 @@ $do_unload = ($gmaps)? " onUnload=\"GUnload();\"" : "";
 			
 				case "1":
 					$osgb = LLtoOSGB($row['lat'], $row['lng']) ;
-					print "<B><SPAN ID = 'USNG' ><U><A HREF='#' TITLE='United Kingdom Ordnance Survey Grid Reference.'>OSGB</A></U>:&nbsp;</SPAN></B><INPUT SIZE='19' TYPE='text' NAME='frm_osgb' VALUE='{$osgb}' DISABLED ></TD></TR>";		// 9/13/08, 5/2/09
+					print "<B><SPAN ID = 'OSGB' ><U><A HREF='#' TITLE='United Kingdom Ordnance Survey Grid Reference.'>OSGB</A></U>:&nbsp;</SPAN></B><INPUT SIZE='19' TYPE='text' NAME='frm_osgb' VALUE='{$osgb}' DISABLED ></TD></TR>";		// 9/13/08, 5/2/09
 					break;			
 
 				default:																	// 8/10/09
 					$utm_str = toUTM("{$row['lat']}, {$row['lng']}");
-					print "<B><SPAN ID = 'USNG'><U><A HREF='#' TITLE='Universal Transverse Mercator coordinate.'>UTM</A></U>:&nbsp;</SPAN></B><INPUT SIZE='19' TYPE='text' NAME='frm_utm' VALUE='{$utm_str}' DISABLED ></TD></TR>";		// 9/13/08, 5/2/09
+					print "<B><SPAN ID = 'UTM'><U><A HREF='#' TITLE='Universal Transverse Mercator coordinate.'>UTM</A></U>:&nbsp;</SPAN></B><INPUT SIZE='19' TYPE='text' NAME='frm_utm' VALUE='{$utm_str}' DISABLED ></TD></TR>";		// 9/13/08, 5/2/09
 					break;
 
 				}
@@ -980,6 +1135,7 @@ $do_unload = ($gmaps)? " onUnload=\"GUnload();\"" : "";
 			<INPUT TYPE="hidden" NAME="frm_severity_default" VALUE="<?php print $row['severity'];?>">
 			<INPUT TYPE="hidden" NAME="frm_exist_rec_fac" VALUE="<?php print $exist_rec_fac;?>">
 			<INPUT TYPE="hidden" NAME="frm_exist_rec_fac" VALUE="<?php print $exist_rec_fac;?>">
+			<INPUT TYPE="hidden" NAME="frm_exist_groups" VALUE="<?php print (isset($alloc_groups)) ? $alloc_groups : 1;?>">			
 			<INPUT TYPE="hidden" NAME="frm_fac_chng" VALUE="0">		<!-- 3/25/10 -->
 <?php
 			print "<TR CLASS='even'>
@@ -989,9 +1145,9 @@ $do_unload = ($gmaps)? " onUnload=\"GUnload();\"" : "";
 			print show_actions($row[0], "date", !$disallow, TRUE);											//8/7/09
 			print "<BR /><BR /></TD></TR>";																//8/7/09
 			print "</TABLE>";		// end data 8/7/09
-			print "</TD><TD>";																//8/7/09
-			if ($gmaps) {		// 1/1/11
-	
+															//8/7/09
+			if ($gmaps) {		// 1/1/11, 6/10/11
+				print "</TD><TD>";		
 				print "<TABLE ID='mymap' border = 0><TR><TD ALIGN='center'><DIV ID='map' STYLE='WIDTH: " . get_variable('map_width') . "PX; HEIGHT:" . get_variable('map_height') . "PX'></DIV>
 					<BR /><SPAN ID='do_grid' onClick='toglGrid()'><U>Grid</U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;
 					<SPAN ID='do_sv' onClick = 'sv_win(document.edit)'><U>Street view</U></SPAN>";
@@ -1004,8 +1160,9 @@ $do_unload = ($gmaps)? " onUnload=\"GUnload();\"" : "";
 			print "<TR><TD CLASS='print_TD' COLSPAN='2'>";
 			print "</FORM>";
 			print "</TD></TR></TABLE>";		// bottom of outer
-$from_left = 450;
-$from_top = 50;			
+			
+			$from_left = $gmaps ? 450: 650;	//	6/10/11
+$from_top = 100;
 ?>			
 			<FORM NAME='can_Form' ACTION="main.php">
 			<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['id'];?>">
@@ -1324,10 +1481,10 @@ $maptype = get_variable('maptype');	// 08/02/09
 				my_form.frm_ngs.value=LLtoUSNG(my_form.frm_lat.value, my_form.frm_lng.value, 5);
 				}
 			if(locale == 1) {
-				my_form.frm_osgb.value=LLtoUSNG(my_form.frm_lat.value, my_form.frm_lng.value, 5);
+				my_form.frm_osgb.value=LLtoOSGB(my_form.frm_lat.value, my_form.frm_lng.value, 5);
 				}
 			if(locale == 2) {
-				my_form.frm_utm.value=LLtoUSNG(my_form.frm_lat.value, my_form.frm_lng.value, 5);
+				my_form.frm_utm.value=LLtoUTM(my_form.frm_lat.value, my_form.frm_lng.value, 5);
 				}				
 			
 			map.clearOverlays();
@@ -1392,7 +1549,7 @@ $maptype = get_variable('maptype');	// 08/02/09
 						alert("948: Status Code:" + response.Status.code);
 					} else { 
 						place = response.Placemark[0];
-//						locality = response.Placemark[0].AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality;   5/22/11
+						locality = response.Placemark[0].AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality;   
 						point = new GLatLng(place.Point.coordinates[1],place.Point.coordinates[0]);
 						marker = new GMarker(point);
 						map.addOverlay(marker);
@@ -1429,7 +1586,6 @@ $maptype = get_variable('maptype');	// 08/02/09
 		var theId = '<?php print $_GET['id'];?>';
 
 //			 		 ($to_str, $text, $ticket_id, $text_sel=1;, $txt_only = FALSE)
-		
 		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId ;		// ($to_str, $text, $ticket_id)   10/15/08
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 		}			// end function do notify()

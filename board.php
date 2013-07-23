@@ -110,7 +110,7 @@ Sequence numbering: SELECT a.id, @num := @num + 1 seqno from ticket a, (SELECT @
 2/8/11 added multi to line 712 sql
 3/15/11 Revisions to support user editable color schemes and day/night mode
 4/28/11 handle replaces unit name
-5/9/11 add test for existence of dform elem3nt
+12/17/11 on-scene date handling corrected
 */
 
 @session_start();
@@ -135,7 +135,7 @@ function show_top() {				// generates the document introduction
 		<META HTTP-EQUIV="Pragma" 				CONTENT="NO-CACHE"/>
 		<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript"/>
 		<META HTTP-EQUIV="Script-date" 			CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
-		<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css"> <!-- 3/15/11 -->
+		<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"> <!-- 3/15/11 -->
 	<STYLE>
 		span.even 	{ background-color: #DEE3E7;}
 		.odd 	{ background-color: #EFEFEF;}
@@ -1411,6 +1411,7 @@ setTimeout('do_post()', 1000);
 						$the_text_color = empty($row_type)? "black" :		$GLOBALS['UNIT_TYPES_TEXT'][$row_type['icon']];		// 
 						unset ($row_type);
 																																// 4/28/11
+//						$unit_name = empty($row['unit_id']) ? "[#{$row['unit_id']}]" : addslashes($row['unit_name']) ;			// id only if absent
 						$unit_name = empty($row['unit_id']) ? "[#{$row['unit_id']}]" : ($row['unit_name']) ;			// id only if absent
 						$short_name = cb_shorten($row['handle'], $COLS_UNIT);
 						print "\t<TD CLASS='$theClass' onClick = {$doUnit}('{$row['unit_id']}') 
@@ -1620,13 +1621,15 @@ setTimeout('do_post()', 1000);
 
 	function do_all() {										// 2/19/09
 		var do_refresh = false;								// 6/16/09
-		for (i=0; i< document.forms.length; i++) {			// look at each form - 5/9/11
-			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_dispatched)	&& (!document.forms[i].frm_dispatched.disabled ) && (document.forms[i].frm_dispatched.checked)) {do_this_form(i); do_refresh = true;}
-			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_responding)	&& (!document.forms[i].frm_responding.disabled ) && (document.forms[i].frm_responding.checked)) {do_this_form(i); do_refresh = true;}
-			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_on_scene)	&& (!document.forms[i].frm_on_scene.disabled ) && (document.forms[i].frm_on_scene.checked))  	{do_this_form(i); do_refresh = true;}
-			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_u2fenr)		&& (!document.forms[i].frm_u2fenr.disabled ) && (document.forms[i].frm_u2fenr.checked))   		{do_this_form(i); do_refresh = true;}	//10/6/09
-			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_u2farr)		&& (!document.forms[i].frm_u2farr.disabled ) && (document.forms[i].frm_u2farr.checked)) 		{do_this_form(i); do_refresh = true;}	//10/6/09
-			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_clear)		&& (!document.forms[i].frm_clear.disabled ) && (document.forms[i].frm_clear.checked))      		{do_this_form(i); do_refresh = true;}	// 6/16/09
+		for (i=0; i< document.forms.length; i++) {			// look at each form
+			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_dispatched.disabled ) && (document.forms[i].frm_dispatched.checked)) {do_this_form(i);}
+			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_responding.disabled ) && (document.forms[i].frm_responding.checked)) {do_this_form(i);}
+			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_on_scene.disabled ) && (document.forms[i].frm_on_scene.checked))   {do_this_form(i);}
+			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_u2fenr.disabled ) && (document.forms[i].frm_u2fenr.checked))   {do_this_form(i);}	//10/6/09
+			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_u2farr.disabled ) && (document.forms[i].frm_u2farr.checked))   {do_this_form(i);}	//10/6/09
+			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_clear.disabled ) && (document.forms[i].frm_clear.checked))      {do_this_form(i); do_refresh = true;}		// 6/16/09
+
+//			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_clear) && (!document.forms[i].frm_clear.disabled ) && (document.forms[i].frm_clear.checked)) {do_this_form(i); do_refresh = true;}		// 6/16/09
 			}
 		if (do_refresh) {document.can_Form.submit();}		//  at least one checked item - do screen refresh  6/16/09
 		}		// end function do all()
@@ -1635,12 +1638,12 @@ setTimeout('do_post()', 1000);
 		var a_check = false;
 
 		for (i=0; i< document.forms.length; i++) {			// look at each form
-			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_dispatched )	&& (!document.forms[i].frm_dispatched.disabled ) && (document.forms[i].frm_dispatched.checked)) 		{a_check = true; }
-			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_responding )	&& (!document.forms[i].frm_responding.disabled ) && (document.forms[i].frm_responding.checked)) 		{a_check = true; }
-			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_on_scene )	&& (!document.forms[i].frm_on_scene.disabled ) && (document.forms[i].frm_on_scene.checked)) 			{a_check = true; }
-			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_u2fenr )		&& (!document.forms[i].frm_u2fenr.disabled ) && (document.forms[i].frm_u2fenr.checked)) 				{a_check = true; }	//10/6/09
-			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_u2farr )		&& (!document.forms[i].frm_u2farr.disabled ) && (document.forms[i].frm_u2farr.checked)) 				{a_check = true; }	//10/6/09
-			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_clear) 		&& (!document.forms[i].frm_clear.disabled ) && (document.forms[i].frm_clear.checked)) 					{a_check = true; }
+			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_dispatched.disabled ) && (document.forms[i].frm_dispatched.checked)) 		{a_check = true; }
+			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_responding.disabled ) && (document.forms[i].frm_responding.checked)) 		{a_check = true; }
+			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_on_scene.disabled ) && (document.forms[i].frm_on_scene.checked)) 			{a_check = true; }
+			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_u2fenr.disabled ) && (document.forms[i].frm_u2fenr.checked)) 			{a_check = true; }	//10/6/09
+			if ((document.forms[i].name.substring(0,1)=="F") && (!document.forms[i].frm_u2farr.disabled ) && (document.forms[i].frm_u2farr.checked)) 			{a_check = true; }	//10/6/09
+			if ((document.forms[i].name.substring(0,1)=="F") && (document.forms[i].frm_clear) && (!document.forms[i].frm_clear.disabled ) && (document.forms[i].frm_clear.checked)) {a_check = true;  }
 			}				// end for ( ... )
 		if (!a_check){
 			$('apply_btn').style.visibility='hidden'; 
@@ -1994,8 +1997,8 @@ setTimeout('do_post()', 1000);
 				}
 			$chekd = (is_date($asgn_row['on_scene']))? " CHECKED ": "";
 			$the_date = (is_date($asgn_row['on_scene']))? $asgn_row['on_scene']	: $now ;
-			print "\n<TR CLASS='even'><TD CLASS='td_label' ALIGN='right'>On scene:</TD>";
-			print "<TD COLSPAN=3><INPUT NAME='frm_ob' TYPE='radio' onClick =  \"enable('on_scene')\" $chekd><SPAN ID = 'on_scene' STYLE = 'visibility:" . $the_vis ."'>";
+			print "\n<TR CLASS='even'><TD CLASS='td_label' ALIGN='right'>On scene:</TD>";		// 12/17/11
+			print "<TD COLSPAN=3><INPUT NAME='frm_os' TYPE='radio' onClick =  \"enable('on_scene')\" $chekd><SPAN ID = 'on_scene' STYLE = 'visibility:" . $the_vis ."'>";
 			generate_date_dropdown("on_scene",totime($the_date), $the_dis);
 			print "</SPAN></TD></TR>\n";
 
@@ -2125,7 +2128,7 @@ setTimeout('do_post()', 1000);
 	
 			if (!(empty($frm_complete))) 	{			// is run completed?  6/4/08	// 6/26/08		
 				do_log($GLOBALS['LOG_UNIT_COMPLETE'], $frm_ticket_id, $frm_unit_id);		// set clear times
-				$query = "UPDATE `$GLOBALS[mysql_prefix]assigns` SET `as_of`= " . quote_smart($now) . ", `clear`= " . quote_smart($now) . " WHERE `id` = " . quote_smart($_POST[frm_id]) . " LIMIT 1";
+				$query = "UPDATE `$GLOBALS[mysql_prefix]assigns` SET `as_of`= " . quote_smart($now) . ", `clear`= " . quote_smart($now) . " WHERE `id` = " .$_POST['frm_id'] . " LIMIT 1";
 				$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 				}
 			
@@ -2154,10 +2157,9 @@ setTimeout('do_post()', 1000);
 						 `end_miles`= " . quote_smart($_POST['frm_miles_end']) ;	//10/6/09
 
 			$query .= $date_part;
-			$query .=  " WHERE `id` = " . quote_smart($_POST['frm_id']) . " LIMIT 1";		// 5/26/11
+			$query .=  " WHERE `id` = " .$_POST['frm_id'] . " LIMIT 1";
 
 			$result	= mysql_query($query) or do_error($query,'',mysql_error(), basename( __FILE__), __LINE__);
-			dump($query);
 	
 			$message = "Update Applied";
 ?>
@@ -2174,7 +2176,7 @@ setTimeout('do_post()', 1000);
 			
 	case 'delete_db':		// =====  {  =====================  6/4/08	
 		
-			$query  = "DELETE FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` = " . quote_smart($_POST['frm_id']) . " LIMIT 1";	
+			$query  = "DELETE FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` = " .$_POST['frm_id'] . " LIMIT 1";	
 			$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 	
 			$message = "Assign record deleted";

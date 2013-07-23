@@ -61,7 +61,7 @@ function do_native_mail ($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_
 	    }
 	$temp = mail ( trim($my_from_ary[0]),  $my_subject_str,  $my_message_str ,  $headers);	
 	
-	return ($temp)? "0" : (string) count($my_to_ary);
+	return ($temp)? (string) count($my_to_ary) : "0" ;
 	} 				// end function do_native_mail
 
 ?>

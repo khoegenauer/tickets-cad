@@ -66,6 +66,7 @@ $poll_val = ($temp==0)? "none" : $temp ;
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 
 	<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
+	<SCRIPT TYPE="text/javascript" src="./js/ELabel.js"></SCRIPT><!-- 8/1/11 -->	
 	<SCRIPT>
 	if(document.all && !document.getElementById) {		// accomodate IE							
 		document.getElementById = function(id) {							
@@ -214,7 +215,7 @@ $poll_val = ($temp==0)? "none" : $temp ;
 	var line_text = "<STYLE TYPE='text/css'>.incs {font-size:" + line_text_size + "px;} .assigns {font-size:" + line_text_size + "px;} </STYLE>";
 	document.write (line_text);
 </SCRIPT>	
-<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
+<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
 <style type="text/css">
 .box {
 	background-color: #CECECE;

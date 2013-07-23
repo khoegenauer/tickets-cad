@@ -6,7 +6,6 @@ function syncAjax - - functions_major.inc.php
 9/27/10 added Canada reverse geocoding.
 1/6/11 json decode added
 2/19/11 drag function added
-4/20/11 addslashes added
 */
 	function do_sel_update (in_unit, in_val) {							// 12/17/09
 		to_server(in_unit, in_val);
@@ -568,8 +567,44 @@ function showDiv(div_area) {
 		} 
 	} 
 	} 
-												// 4/20/11
-String.prototype.addSlashes = function() {
-	return this.replace(/([\\"'])/g, "\\$1").replace(/\0/g, "\\0");
-	}
-
+	
+var min=8;
+var max=18;
+function increaseFontSize() {
+ 
+   var p = document.getElementsByTagName('p');
+   for(i=0;i<p.length;i++) {
+ 
+      if(p[i].style.fontSize) {
+         var s = parseInt(p[i].style.fontSize.replace("px",""));
+      } else {
+ 
+         var s = 12;
+      }
+      if(s!=max) {
+ 
+         s += 1;
+      }
+      p[i].style.fontSize = s+"px"
+ 
+   }
+}
+function decreaseFontSize() {
+   var p = document.getElementsByTagName('p');
+   for(i=0;i<p.length;i++) {
+ 
+      if(p[i].style.fontSize) {
+         var s = parseInt(p[i].style.fontSize.replace("px",""));
+      } else {
+ 
+         var s = 12;
+      }
+      if(s!=min) {
+ 
+         s -= 1;
+      }
+      p[i].style.fontSize = s+"px"
+ 
+   }
+} 
+	

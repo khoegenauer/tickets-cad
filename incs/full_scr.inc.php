@@ -13,6 +13,9 @@
 12/1/10 get_text disposition added
 3/29/11 Added Incident List, Assignment List and moved marker show / hide controls to hide-able div. Added side menu controls.
 4/5/11 Set shorten length by client screen width.
+4/11/11 Where clause updated in all major queries to support Group functionality
+6/10/11 Added Groups and Boundaries
+7/3/11 added lines data, do_landb() - 
 */
 error_reporting(E_ALL);
 
@@ -70,7 +73,7 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 		$units_buttons_width = (integer) get_variable('map_width') * .4; 			
 		$heading = $captions[$func];
 		$eols = array ("\r\n", "\n", "\r");		// all flavors of eol
-	
+		$group = isset($_SESSION['group']) ? $_SESSION['group'] : 0;	//	4/11/11
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `status` = {$GLOBALS['STATUS_CLOSED']} ";		// 10/26/09
 	
 			$result_ct = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -81,6 +84,19 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 			$result_scheduled = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 			$num_scheduled = mysql_num_rows($result_scheduled); 
 			unset($result_scheduled);
+			
+		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]' ORDER BY `id` ASC;";	// 6/10/11
+		$result = mysql_query($query);	// 6/10/11
+		$al_groups = array();
+		$al_names = "";	
+		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 6/10/11
+			$al_groups[] = $row['group'];
+			$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` WHERE `id`= '$row[group]';";	// 6/10/11
+			$result2 = mysql_query($query2);	// 6/10/11
+			while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	// 6/10/11		
+					$al_names .= $row2['group_name'] . ", ";
+				}
+			}			
 	
 ?>
 <!-- 3/29/11 DIVS Incident List & Assignments List -->
@@ -142,7 +158,7 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 		<SPAN class='fs_buttons' onClick='doGrid()' STYLE = 'margin-left: 60px'><U>Grid</U></SPAN>
 		<SPAN class='fs_buttons' onClick='doTraffic()' STYLE = 'margin-left: 60px'><U>Traffic</U></SPAN>
 <?php
-		if(((empty($closed)) && ($num_closed > 0)) || ($num_scheduled != 0)) {					// 10/26/09  added button, 10/21/09 added check for closed incidents on the database, 3/29/11 added scheduled runs option
+//		if(((!empty($num_closed)) && ($num_closed > 0)) || ($num_scheduled > 0)) {					// 10/26/09  added button, 10/21/09 added check for closed incidents on the database, 3/29/11 added scheduled runs option
 			echo "<SPAN class='fs_buttons' STYLE =  'margin-left: 60px'><U>Change display</U>&nbsp;&raquo;&nbsp;</SPAN>";
 			echo "\n\t\t <SELECT NAME = 'frm_interval' onChange = 'document.to_all.func.value=this.value; show_btns_closed();'>
 				<OPTION VALUE='99' SELECTED>Select</OPTION>
@@ -161,7 +177,7 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 			echo "<SPAN ID = 'btn_go' class='fs_buttons' onClick='document.to_all.submit()' STYLE = 'margin-left: 10px; display:none; color: #006600;'><U>Go</U></SPAN>";
 			echo "<SPAN ID = 'btn_can' class='fs_buttons' onClick='hide_btns_closed()' STYLE = 'margin-left: 10px; display:none; color: #FF0000;'><U>Cancel</U></SPAN>";
 
-			}
+//			}
 ?>
 		<SPAN class='fs_buttons' onClick = "opener.focus()" STYLE =  'margin-left: 60px'><U>Back</U></SPAN>
 		<A HREF="mailto:shoreas@Gmail.com?subject=Comment%20on%20Tickets%20Dispatch%20System"><SPAN STYLE = 'margin-left: 20px; font-size:10px; '><U>Contact us</U> <IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom; margin-left: 10px;"></SPAN></A>
@@ -282,11 +298,15 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 		$("map").style.backgroundImage = "url('http://maps.google.com/staticmap?center=<?php echo get_variable('def_lat');?>,<?php echo get_variable('def_lng');?>&zoom=<?php echo get_variable('def_zoom');?>&size=<?php echo get_variable('map_width');?>x<?php echo get_variable('map_height');?>&key=<?php echo get_variable('gmaps_api_key');?> ')";
 	
 		var colors = new Array ('odd', 'even');
-	
+
+		function add_hash(in_str) { // prepend # if absent
+			return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
+			}
+
 		function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity) {		// 8/19/09
 		
 	//		drawCircle(53.479874, -2.246704, 10.0, "#000080", 1, 0.75, "#0000FF", .5);
-	
+
 			var d2r = Math.PI/180;
 			var r2d = 180/Math.PI;
 			var Clat = radius * 0.014483;
@@ -302,6 +322,81 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 			var polygon = new GPolygon(Cpoints, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity);
 			map.addOverlay(polygon);
 			}
+			
+		function drawBanner(point, html, text, font_size, color) {        // Create the banner
+		//	alert("<?php echo __LINE__;?> " + color);
+			var invisibleIcon = new GIcon(G_DEFAULT_ICON, "./markers/markerTransparent.png");      // Custom icon is identical to the default icon, except invisible
+
+			map.setCenter(point, 8);
+			map.addControl(new GLargeMapControl());
+			map.addControl(new GMapTypeControl());
+			var the_color = (typeof color == 'undefined')? "#000000" : color ;	// default to black
+
+			var style_str = 'background-color:transparent;font-weight:bold;border:0px black solid;white-space:nowrap; font-size:' + font_size + 'px; font-family:arial; opacity: 0.9; color:' + add_hash(the_color) + ';';
+
+			var contents = '<div><div style= "' + style_str + '">'+text+'<\/div><\/div>';
+			var label=new ELabel(point, contents, null, new GSize(-8,4), 75, 1);
+			map.addOverlay(label);
+			
+			var marker = new GMarker(point,invisibleIcon);	        // Create an invisible GMarker
+		//	map.addOverlay(marker);
+			
+			}				// end function draw Banner()		
+
+		function do_landb() {				// JS function - 8/1/11
+			var points = new Array();
+	<?php
+			$query = "SELECT * FROM `{$GLOBALS['mysql_prefix']}mmarkup` WHERE `line_status` = 0 AND `use_with_bm` = 1";
+			$result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
+			while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
+				$empty = FALSE;
+				extract ($row);
+				$name = $row['line_name'];
+				switch ($row['line_type']) {
+					case "p":		// poly
+						$points = explode (";", $line_data);
+						echo "\n\tvar points = new Array();\n";
+						for ($i = 0; $i<count($points); $i++) {
+							$coords = explode (",", $points[$i]);
+	?>
+							var thepoint = new GLatLng(<?php print $coords[0];?>, <?php print $coords[1];?>);
+							bounds.extend(thepoint);
+							points.push(thepoint);
+	<?php					}			// end for ($i = 0 ... )
+					if ((intval($filled) == 1) && (count($points) > 2)) {?>
+							var polyline = new GPolygon(points,add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>);
+	<?php			} else {?>
+							var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>);
+	<?php			} ?>				        
+							map.addOverlay(polyline);
+	<?php				
+						break;
+				
+					case "c":		// circle
+						$temp = explode (";", $line_data);
+						$radius = $temp[1];
+						$coords = explode (",", $temp[0]);
+						$lat = $coords[0];
+						$lng = $coords[1];
+						$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
+						
+						echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}, {$name}); // 513\n";
+						break;
+					case "t":		// text banner
+
+						$temp = explode (";", $line_data);
+						$banner = $temp[1];
+						$coords = explode (",", $temp[0]);
+						echo "\n var point = new GLatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
+						$the_banner = htmlentities($banner, ENT_QUOTES);
+						$the_width = intval( trim($line_width), 10);		// font size
+						echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width});\n";
+						break;
+					}	// end switch
+			}			// end while ()
+			unset($query, $result);
+	?>
+			}		// end function do_landb()
 			
 		function URLEncode(plaintext ) {					// The Javascript escape and unescape functions do
 															// NOT correspond with what browsers actually do...
@@ -1160,6 +1255,8 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 	
 		map.enableScrollWheelZoom();
 	
+		do_landb();				// 7/3/11 - show lines		
+	
 		var baseIcon = new GIcon();
 		baseIcon.shadow = "./markers/sm_shadow.png";		// ./markers/sm_shadow.png
 	
@@ -1188,10 +1285,31 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 		$restrict_ticket = ((get_variable('restrict_user_tickets')==1) && !(is_administrator()))? " AND owner=$_SESSION[user_id]" : "";
 		$time_back = mysql_format_date(time() - (get_variable('delta_mins')*60) - ($cwi*3600));
 		
+		if(!isset($_POST['frm_group'])) {
+		$x=0;	
+		$where2 = "AND (";
+		foreach($al_groups as $grp) {
+			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+			$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+			$where2 .= $where3;
+			$x++;
+			}
+		} else {
+		$x=0;	
+		$where2 = "AND (";	
+		foreach($_POST['frm_group'] as $grp) {
+			$where3 = (count($_POST['frm_group']) > ($x+1)) ? " OR " : ")";	
+			$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+			$where2 .= $where3;
+			$x++;
+			}
+		}
+
 		switch($func) {				//9/29/09 Added capability for Special Incidents 10/27/09 changed to bring scheduled incidents to front when due.
 				case 0: 
 					$where = "WHERE (`status`='{$GLOBALS['STATUS_OPEN']}' OR (`status`='{$GLOBALS['STATUS_SCHEDULED']}' AND `booked_date` <= (NOW() + INTERVAL 2 DAY)) OR 
-					(`status`='{$GLOBALS['STATUS_CLOSED']}'  AND `problemend` >= '{$time_back}'))";	//	11/29/10, 4/11/11					
+					(`status`='{$GLOBALS['STATUS_CLOSED']}'  AND `problemend` >= '{$time_back}')){$where2}";	//	11/29/10, 6/10/11, 6/10/11
+
 					break;
 				case 1:
 				case 2:
@@ -1204,10 +1322,10 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 				case 9:
 					$the_start = get_start($func);		// mysql timestamp format 
 					$the_end = get_end($func);
-					$where = " WHERE (`status`='{$GLOBALS['STATUS_CLOSED']}' AND `problemend` BETWEEN '{$the_start}' AND '{$the_end}') ";		//	4/11/11
+					$where = " WHERE (`status`='{$GLOBALS['STATUS_CLOSED']}' AND `problemend` BETWEEN '{$the_start}' AND '{$the_end}') {$where2} ";		//	6/10/11, 6/10/11
 					break;	
 				case 10:
-					$where = "WHERE (`status`='{$GLOBALS['STATUS_SCHEDULED']}' AND `booked_date` >= (NOW() + INTERVAL 2 DAY))";	//	11/29/10, 4/11/11
+					$where = "WHERE (`status`='{$GLOBALS['STATUS_SCHEDULED']}' AND `booked_date` >= (NOW() + INTERVAL 2 DAY)) {$where2}";	//	11/29/10, 6/10/11, 6/10/11
 					break;				
 				default: print "error - error - error - error " . __LINE__;
 //				default: $where = "WHERE `status`='{$GLOBALS['STATUS_OPEN']}' OR (`status`='3'  AND `booked_date` <= (NOW() - INTERVAL 6 HOUR))"; break;
@@ -1232,10 +1350,11 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 			`$GLOBALS[mysql_prefix]facilities`.lng AS `fac_lng`, 
 			`$GLOBALS[mysql_prefix]facilities`.`name` AS `fac_name` 
 			FROM `$GLOBALS[mysql_prefix]ticket`
+			LEFT JOIN `$GLOBALS[mysql_prefix]allocates` ON `$GLOBALS[mysql_prefix]ticket`.id=`$GLOBALS[mysql_prefix]allocates`.`resource_id`				
 			LEFT JOIN `$GLOBALS[mysql_prefix]in_types` ON `$GLOBALS[mysql_prefix]ticket`.in_types_id=`$GLOBALS[mysql_prefix]in_types`.`id` 
 			LEFT JOIN `$GLOBALS[mysql_prefix]facilities` ON `$GLOBALS[mysql_prefix]ticket`.rec_facility=`$GLOBALS[mysql_prefix]facilities`.`id` 
 			$where $restrict_ticket 
-			ORDER BY `status` DESC, `severity` DESC, `$GLOBALS[mysql_prefix]ticket`.`id` ASC";		// 2/2/09, 10/28/09
+			 GROUP BY ticket_id ORDER BY `status` DESC, `severity` DESC, `$GLOBALS[mysql_prefix]ticket`.`id` ASC";		// 2/2/09, 10/28/09
 
 
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -1313,9 +1432,9 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 				//	3/29/11 Incident List sidebar				
 				sidebar_line += "<DIV CLASS='in_space <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('* means the incident is a scheduled one')\"><?php print $strike;?>&nbsp;<?php print $index_no;?><?php print $strikend;?></DIV></DIV>";
 				sidebar_line += "<DIV CLASS='in_space <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('* means the incident is a scheduled one')\"><?php print $strike;?>&nbsp;<?php print $sp;?><?php print $strikend;?></DIV></DIV>";
-				sidebar_line += "<DIV CLASS='in_1 <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('<?php print replace_quotes($row['scope']);?>')\"><?php print $strike;?>&nbsp;<?php print shorten($row['scope'],$shorten_length);?><?php print $strikend;?></DIV></DIV>";
+				sidebar_line += "<DIV CLASS='in_1 <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('<?php print $row['scope'];?>')\"><?php print $strike;?>&nbsp;<?php print shorten($row['scope'],$shorten_length);?><?php print $strikend;?></DIV></DIV>";
 				sidebar_line += "<DIV CLASS='in_type <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('<?php print $row['type'];?>')\"><?php print $strike;?>&nbsp;<?php print shorten($row['type'], $shorten_length);?><?php print $strikend;?></DIV></DIV>";
-				sidebar_line += "<DIV CLASS='in_1 <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('<?php print replace_quotes($row['tick_street'])  . " " . replace_quotes($row['tick_city']) . " " . replace_quotes($row['tick_state']);?>')\"><?php print $strike;?>&nbsp;<?php print shorten(($row['tick_street'] . ' ' . $row['tick_city'] . " " . $row['tick_state']), $shorten_length);?>&nbsp;<?php print $strikend;?></DIV></DIV>";
+				sidebar_line += "<DIV CLASS='in_1 <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('<?php print $row['tick_street']  . " " . $row['tick_city'] . " " . $row['tick_state'];?>')\"><?php print $strike;?>&nbsp;<?php print shorten(($row['tick_street'] . ' ' . $row['tick_city'] . " " . $row['tick_state']), $shorten_length);?>&nbsp;<?php print $strikend;?></DIV></DIV>";
 				sidebar_line += "<DIV CLASS='in_date <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('<?php print format_date($row['problemstart']);?>')\"><?php print $strike;?>&nbsp;<?php print shorten(format_date($row['problemstart']), $shorten_length);?><?php print $strikend;?></DIV></DIV>";
 				sidebar_line += "<DIV CLASS='in_dur <?php print $background_col;?> <?php print $severityclass;?>'><DIV class='incs' onClick = 'myclick(<?php print $sb_indx;?>);' onmouseout=\"UnTip()\" onmouseover=\"Tip('<?php print my_date_diff($row['problemstart'], $now);?>')\"><?php print $strike;?>&nbsp;<?php print shorten(my_date_diff($row['problemstart'], $now), $shorten_length);?><?php print $strikend;?></DIV></DIV></BR>";
 
@@ -1323,19 +1442,19 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 				$rand = ($istest)? "&rand=" . chr(rand(65,90)) : "";													// 10/21/08
 		
 				$tab_1 = "<TABLE CLASS='infowin' width='" . $_SESSION['scr_width']/4 . "'>";
-				$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>$strike" . replace_quotes(shorten($row['scope'], 48))  . "$strikend</B></TD></TR>";
+				$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>$strike" . shorten($row['scope'], 48)  . "$strikend</B></TD></TR>";
 				$tab_1 .= "<TR CLASS='odd'><TD>As of:</TD><TD>" . format_date($row['updated']) . "</TD></TR>";
 				if (good_date($row['booked_date'])) {	//4/13/10
 					$tab_1 .= "<TR CLASS='odd'><TD>Booked Date:</TD><TD>" . format_date($row['booked_date']) . "</TD></TR>";
 					}			
 				$tab_1 .= "<TR CLASS='even'><TD>Reported by:</TD><TD>" . shorten($row['contact'], 32) . "</TD></TR>";
 				$tab_1 .= "<TR CLASS='odd'><TD>Phone:</TD><TD>" . format_phone ($row['phone']) . "</TD></TR>";
-				$tab_1 .= "<TR CLASS='even'><TD>Addr:</TD><TD>" . replace_quotes($row['tick_street']) . ' ' . replace_quotes($row['tick_city']) . "</TD></TR>";
+				$tab_1 .= "<TR CLASS='even'><TD>Addr:</TD><TD>" . $row['tick_street'] . ' ' . $row['tick_city'] . "</TD></TR>";
 				$end_date = (intval($row['problemend'])> 1)? $row['problemend']:  (time() - (get_variable('delta_mins')*60));				
 				$elapsed = my_date_diff($row['problemstart'], $end_date);		// 5/13/10
 				$tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>Status:</TD><TD ALIGN='left'>" . get_status($row['status']) . "&nbsp;&nbsp;&nbsp;($elapsed)</TD></TR>";	// 3/27/10
 				if (!(empty($row['fac_name']))) {		
-					$tab_1 .= "<TR CLASS='even'><TD>Receiving Facility:</TD><TD>" . replace_quotes(shorten($row['fac_name'], 30))  . "</TD></TR>";	//10/28/09
+					$tab_1 .= "<TR CLASS='even'><TD>Receiving Facility:</TD><TD>" . shorten($row['fac_name'], 30)  . "</TD></TR>";	//10/28/09
 					}
 		
 				$utm = get_variable('UTM');
@@ -1423,6 +1542,31 @@ var sidebar_line = "";
 <?php
 	// ========================================== 3/29/11 ASSIGNMENTS start    ================================================
 
+	if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
+		$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+		}
+
+	if(!isset($curr_viewed)) {	
+		$x=0;	//	6/10/11
+		$where2 = "AND (";	//	6/10/11
+		foreach($al_groups as $grp) {	//	6/10/11
+			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+			$where2 .= "`a`.`group` = '{$grp}'";
+			$where2 .= $where3;
+			$x++;
+			}
+	} else {
+		$x=0;	//	6/10/11
+		$where2 = "AND (";	//	6/10/11
+		foreach($curr_viewed as $grp) {	//	6/10/11
+			$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+			$where2 .= "`a`.`group` = '{$grp}'";
+			$where2 .= $where3;
+			$x++;
+			}
+	}
+	$where2 .= "AND `a`.`type` = 2";	
+	
 	$query = "SELECT *,UNIX_TIMESTAMP(as_of) AS as_of,
 		`$GLOBALS[mysql_prefix]assigns`.`id` AS `assign_id` ,
 		`$GLOBALS[mysql_prefix]assigns`.`comments` AS `assign_comments`,
@@ -1440,11 +1584,12 @@ var sidebar_line = "";
 		`$GLOBALS[mysql_prefix]assigns`.`as_of` AS `assign_as_of`,
 		`$GLOBALS[mysql_prefix]assigns`.`clear` AS `clear`		
 		FROM `$GLOBALS[mysql_prefix]assigns` 
-		LEFT JOIN `$GLOBALS[mysql_prefix]ticket`	 `t` ON (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`)
-		LEFT JOIN `$GLOBALS[mysql_prefix]user`		 `u` ON (`$GLOBALS[mysql_prefix]assigns`.`user_id` = `u`.`id`)
-		LEFT JOIN `$GLOBALS[mysql_prefix]responder`	 `r` ON (`$GLOBALS[mysql_prefix]assigns`.`responder_id` = `r`.`id`)
-			WHERE (`clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00')   
-		ORDER BY `severity` DESC, `tick_pstart` ASC";		
+		LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` ON (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`)
+		LEFT JOIN `$GLOBALS[mysql_prefix]user` `u` ON (`$GLOBALS[mysql_prefix]assigns`.`user_id` = `u`.`id`)
+		LEFT JOIN `$GLOBALS[mysql_prefix]responder`	`r` ON (`$GLOBALS[mysql_prefix]assigns`.`responder_id` = `r`.`id`)
+		LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `r`.`id` = `a`.`resource_id` )		
+			WHERE (`clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00') {$where2}   
+		GROUP BY `unit_id` ORDER BY `severity` DESC, `tick_pstart` ASC";		
 //			dump($query);
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		$curr_calls =  mysql_num_rows($result);
@@ -1491,80 +1636,101 @@ var sidebar_line = "";
 			$evenodd = array ("even", "odd");	// CLASS names for alternating table row colors
 			
 			while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {		//	While for Assignments
+			
+//	============================= Regions stuff
+				$query_un = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 2 AND `resource_id` = '$row[unit_id]' ORDER BY `id` ASC;";	// 5/4/11
+				$result_un = mysql_query($query_un);	// 5/4/11
+				$un_groups = array();
+				while ($row_un = stripslashes_deep(mysql_fetch_assoc($result_un))) 	{	// 5/4/11
+					$un_groups[] = $row_un['group'];
+					}
+	
+//				dump($row);
+
+				$inviewed = 0;	//	5/4/11
+				foreach($un_groups as $un_val) {
+					if(in_array($un_val, $al_groups)) {
+						$inviewed++;
+						}
+					}
+					
+//	============================= end of Regions stuff				
 
 				$w==0 ? $bg_color_class = "even" : $bg_color_class = "odd";
 
 				$in_strike = 	((!(empty($row['scope']))) && ($row['tick_status']== $GLOBALS['STATUS_CLOSED']))? "<STRIKE>": "";					// 11/7/08
 				$in_strikend = 	((!(empty($row['scope']))) && ($row['tick_status']== $GLOBALS['STATUS_CLOSED']))? "</STRIKE>": "";
-				if (!(empty($row['scope']))) {			
+				if ($inviewed > 0) {	//	Tests to see whether assigned unit is in one of the users groups 5/4/11	
+					if (!(empty($row['scope']))) {	
 
-					$the_name = replace_quotes(addslashes($row['tick_scope']));															// 9/12/09
-					$the_short_name = shorten($row['tick_scope'], $shorten_length);
+						$the_name = addslashes ($row['tick_scope']);															// 9/12/09
+						$the_short_name = shorten($row['tick_scope'], $shorten_length);
 
-					$the_descr = (empty($row['tick_descr'])) ? "&nbsp;" : addslashes(str_replace($eols, " ", $row['tick_descr']));
-					$the_short_one = (empty($row['tick_descr'])) ? "&nbsp; " : shorten(addslashes(str_replace($eols, " ", $row['tick_descr'])), $shorten_length);
+						$the_descr = (empty($row['tick_descr'])) ? "&nbsp;" : addslashes(str_replace($eols, " ", $row['tick_descr']));
+						$the_short_one = (empty($row['tick_descr'])) ? "&nbsp; " : shorten(addslashes(str_replace($eols, " ", $row['tick_descr'])), $shorten_length);
+							
+						$address = (empty($row['tick_street']))? "&nbsp;" : $row['tick_street'] . ", ";		// 8/10/10
+						$address = addslashes($address . $row['tick_city']. "&nbsp;". $row['tick_state']);
+						$short_addr = shorten($address, $shorten_length);
 						
-					$address = (empty($row['tick_street']))? "&nbsp;" : $row['tick_street'] . ", ";		// 8/10/10
-					$address = replace_quotes(addslashes($address . $row['tick_city']. "&nbsp;". $row['tick_state']));
-					$short_addr = shorten($address, $shorten_length);
-					
 ?>
 //	3/29/11 Assignments List sidebar					
-					sidebar_line += "<DIV CLASS='c1 <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('[#<?php print $row['ticket_id'];?>] <?php print $the_name;?>')\" onmouseout=\"UnTip()\"><?php print $in_strike;?><?php print $the_short_name;?><?php print $in_strikend;?></DIV></DIV>";
-					sidebar_line += "<DIV CLASS='cdate <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('Opened: <?php print format_date($row['tick_pstart']);?>')\" onmouseout=\"UnTip()\"><?php print substr($row['problemstart'], 0, $shorten_length);?></DIV></DIV>";
-					sidebar_line += "<DIV CLASS='c1 <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('<?php print $the_descr;?>')\" onmouseout=\"UnTip()\"><?php print $in_strike;?><?php print $the_short_one;?><?php print $in_strikend;?></DIV></DIV>";
-					sidebar_line += "<DIV CLASS='c1 <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('<?php print $address;?>')\" ALIGN='left' onmouseout=\"UnTip()\"><?php print $in_strike;?><?php print $short_addr;?><?php print $in_strikend;?></DIV></DIV>";
+						sidebar_line += "<DIV CLASS='c1 <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('[#<?php print $row['ticket_id'];?>] <?php print $the_name;?>')\" onmouseout=\"UnTip()\"><?php print $in_strike;?><?php print $the_short_name;?><?php print $in_strikend;?></DIV></DIV>";
+						sidebar_line += "<DIV CLASS='cdate <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('Opened: <?php print format_date($row['tick_pstart']);?>')\" onmouseout=\"UnTip()\"><?php print substr($row['problemstart'], 0, $shorten_length);?></DIV></DIV>";
+						sidebar_line += "<DIV CLASS='c1 <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('<?php print $the_descr;?>')\" onmouseout=\"UnTip()\"><?php print $in_strike;?><?php print $the_short_one;?><?php print $in_strikend;?></DIV></DIV>";
+						sidebar_line += "<DIV CLASS='c1 <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('<?php print $address;?>')\" ALIGN='left' onmouseout=\"UnTip()\"><?php print $in_strike;?><?php print $short_addr;?><?php print $in_strikend;?></DIV></DIV>";
 <?php
-							} else {
+								} else {
 ?>							
-					sidebar_line += "<DIV CLASS='c0 <?php print $bg_color_class;?>'><DIV class='incs'>135[#<?php print $row['ticket_id'];?>]</DIV></DIV>";
+						sidebar_line += "<DIV CLASS='c0 <?php print $bg_color_class;?>'><DIV class='incs'>135[#<?php print $row['ticket_id'];?>]</DIV></DIV>";
 <?php					
-					}
+						}
 ?>
-					sidebar_line += "<DIV CLASS='cspace <?php print $bg_color_class;?>'><DIV class='incs'>&nbsp;</DIV></DIV>";	
+						sidebar_line += "<DIV CLASS='cspace <?php print $bg_color_class;?>'><DIV class='incs'>&nbsp;</DIV></DIV>";	
 <?php						
 //  UNITS			3 col's	- 9/12/09
-	
-					if (is_date($row['clear'])) {							// 6/26/08
-						$strike = "<STRIKE>"; $strikend = "</STRIKE>";		// strikethrough on closed assigns
-						}
-					else {
-						$strike = $strikend = "";
-						}			 
-					if (!($row['unit_id'] == 0)) {																	// 5/11/09
-						$query = "SELECT * FROM `$GLOBALS[mysql_prefix]unit_types`	WHERE `id`= '{$row['unit_type']}' LIMIT 1";
-						$result_type = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-						$row_type = (mysql_affected_rows() > 0) ? stripslashes_deep(mysql_fetch_assoc($result_type)) : "";
-						$the_bg_color = empty($row_type)?	"transparent" : $GLOBALS['UNIT_TYPES_BG'][$row_type['icon']];		// 3/15/10
-						$the_text_color = empty($row_type)? "black" :		$GLOBALS['UNIT_TYPES_TEXT'][$row_type['icon']];		// 
-						unset ($row_type);
+		
+						if (is_date($row['clear'])) {							// 6/26/08
+							$strike = "<STRIKE>"; $strikend = "</STRIKE>";		// strikethrough on closed assigns
+							}
+						else {
+							$strike = $strikend = "";
+							}			 
+						if (!($row['unit_id'] == 0)) {																	// 5/11/09
+							$query = "SELECT * FROM `$GLOBALS[mysql_prefix]unit_types`	WHERE `id`= '{$row['unit_type']}' LIMIT 1";
+							$result_type = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
+							$row_type = (mysql_affected_rows() > 0) ? stripslashes_deep(mysql_fetch_assoc($result_type)) : "";
+							$the_bg_color = empty($row_type)?	"transparent" : $GLOBALS['UNIT_TYPES_BG'][$row_type['icon']];		// 3/15/10
+							$the_text_color = empty($row_type)? "black" :		$GLOBALS['UNIT_TYPES_TEXT'][$row_type['icon']];		// 
+							unset ($row_type);
 
-						$unit_name = empty($row['unit_id']) ? "[#{$row['unit_id']}]" : addslashes($row['unit_name']) ;			// id only if absent
-						$short_name = shorten($unit_name, 10);
-?>							
-						sidebar_line += "<DIV CLASS='unit_n <?php print $bg_color_class;?>' STYLE='background-color:<?php print $the_bg_color;?>;  opacity: .7; color:<?php print $the_text_color;?>;'><DIV class='incs' onmouseover=\"Tip('#<?php print $row['unit_id'];?> <?php print $unit_name;?>')\" onmouseout=\"UnTip()\"><B><?php print $short_name;?></B></DIV></DIV>";								
-<?php
-						$the_disp_str =  fs_get_disp_status ($row);		// 3/25/11
-?>						
-						sidebar_line += "<DIV CLASS='unit_d disp_stat'><DIV class='incs'<b>&nbsp;<?php print $the_disp_str;?>&nbsp;</b></DIV></DIV>";
-<?php
-							$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated`,
-								`t`.`id` AS `type_id`, 
-								`r`.`id` AS `unit_id`, 
-								`r`.`name` AS `name`,
-								`s`.`description` AS `stat_descr`,  
-								`r`.`name` AS `unit_name`
-								FROM `$GLOBALS[mysql_prefix]responder` `r` 
-								LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` `t` ON ( `r`.`type` = t.id )	
-								LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON ( `r`.`un_status_id` = s.id ) 
-								WHERE `r`.`id` = '{$row['unit_id']}' LIMIT 1";
+							$unit_name = empty($row['unit_id']) ? "[#{$row['unit_id']}]" : addslashes($row['unit_name']) ;			// id only if absent
+							$short_name = shorten($unit_name, 10);
+	?>							
+							sidebar_line += "<DIV CLASS='unit_n <?php print $bg_color_class;?>' STYLE='background-color:<?php print $the_bg_color;?>;  opacity: .7; color:<?php print $the_text_color;?>;'><DIV class='incs' onmouseover=\"Tip('#<?php print $row['unit_id'];?> <?php print $unit_name;?>')\" onmouseout=\"UnTip()\"><B><?php print $short_name;?></B></DIV></DIV>";								
+	<?php
+							$the_disp_str =  fs_get_disp_status ($row);		// 3/25/11
+	?>						
+							sidebar_line += "<DIV CLASS='unit_d disp_stat'><DIV class='incs'<b>&nbsp;<?php print $the_disp_str;?>&nbsp;</b></DIV></DIV>";
+	<?php
+								$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated`,
+									`t`.`id` AS `type_id`, 
+									`r`.`id` AS `unit_id`, 
+									`r`.`name` AS `name`,
+									`s`.`description` AS `stat_descr`,  
+									`r`.`name` AS `unit_name`
+									FROM `$GLOBALS[mysql_prefix]responder` `r` 
+									LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` `t` ON ( `r`.`type` = t.id )	
+									LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON ( `r`.`un_status_id` = s.id ) 
+									WHERE `r`.`id` = '{$row['unit_id']}' LIMIT 1";
 
-							$result_unit = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-							$row_unit = stripslashes_deep(mysql_fetch_assoc($result_unit));
+								$result_unit = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+								$row_unit = stripslashes_deep(mysql_fetch_assoc($result_unit));
 ?>
-							sidebar_line += "<DIV CLASS='unit_s' <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('<?php print substr($row_unit['stat_descr'], 0, 12);?>')\" onmouseout=\"UnTip()\">&nbsp;<?php print substr($row_unit['stat_descr'], 0, 12);?></DIV></DIV>";
-							sidebar_line += "</DIV><BR />";	
+								sidebar_line += "<DIV CLASS='unit_s' <?php print $bg_color_class;?>'><DIV class='incs' onmouseover=\"Tip('<?php print substr($row_unit['stat_descr'], 0, 12);?>')\" onmouseout=\"UnTip()\">&nbsp;<?php print substr($row_unit['stat_descr'], 0, 12);?></DIV></DIV>";
+								sidebar_line += "</DIV><BR />";	
 <?php
+								}
 							}
 						$i++;
 				$w==0 ? $w=1 : $w=0;
@@ -1624,13 +1790,129 @@ var sidebar_line = "";
 			}
 		unset($result_st);
 		
+		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]';";	// 6/10/11
+		$result = mysql_query($query);	// 6/10/11
+		$al_groups = array();
+		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 6/10/11
+			$al_groups[] = $row['group'];
+			}	
+		if(!isset($_POST['frm_group'])) {
+			$x=0;	//	6/10/11
+			$where2 = "WHERE (";	//	6/10/11
+			foreach($al_groups as $grp) {	//	6/10/11
+				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`a`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+		} else {
+			$x=0;	//	6/10/11
+			$where2 = "WHERE (";	//	6/10/11
+			foreach($_POST['frm_group'] as $grp) {	//	6/10/11
+				$where3 = (count($_POST['frm_group']) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`a`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+		}
+		$where2 .= "AND `a`.`type` = 2";
+		
+//-----------------------UNIT RING FENCE STUFF--------------------6/10/11
+?>
+	var thepoint;
+	var points = new Array();
+	var boundary = new Array();	
+	var bound_names = new Array();	
+		
+<?php	
+	$query_bn = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` `l`
+				LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON ( `l`.`id` = `r`.`ring_fence`)
+				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `r`.`id` = `a`.`resource_id` )	
+				{$where2} AND `use_with_u_rf`=1 GROUP BY `l`.`id`";
+	$result_bn = mysql_query($query_bn)or do_error($query_bn, mysql_error(), basename(__FILE__), __LINE__);
+	while($row_bn = stripslashes_deep(mysql_fetch_assoc($result_bn))) {
+		extract ($row_bn);
+		$bn_name = $row_bn['line_name'];
+		$all_boundaries[] = $row_bn['ring_fence'];		
+		$points = explode (";", $line_data);
+		for ($i = 0; $i < count($points); $i++) {
+			$coords = explode (",", $points[$i]);
+?>
+			thepoint = new GLatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
+			points.push(thepoint);
+<?php
+			}			// end for ($i = 0 ... )
+		if (intval($filled) == 1) {		//	6/10/11
+?>
+			var polyline = new GPolygon(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>, {clickable:false, id:"ringfence"});
+			boundary.push(polyline);
+			bound_names.push("<?php print $bn_name;?>"); 
+<?php	
+			} else {
+?>
+			var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, , 0, {clickable:false, id:"ringfence"});
+			boundary.push(polyline);
+			bound_names.push("<?php print $bn_name;?>"); 
+<?php		
+			}
+?>
+			map.addOverlay(polyline);
+<?php
+		}	//	End while
+//-------------------------END OF UNIT RING FENCE STUFF-------------------------		
+
+//-----------------------UNIT EXCLUSION ZONE STUFF--------------------6/10/11
+?>
+	var thepoint;
+	var points = new Array();
+		
+<?php	
+	$query_bn = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` `l`
+				LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON ( `l`.`id` = `r`.`excl_zone`)
+				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `r`.`id` = `a`.`resource_id` )	
+				{$where2} AND `use_with_u_ex`=1 GROUP BY `l`.`id`";
+	$result_bn = mysql_query($query_bn)or do_error($query_bn, mysql_error(), basename(__FILE__), __LINE__);
+	while($row_bn = stripslashes_deep(mysql_fetch_assoc($result_bn))) {
+		extract ($row_bn);
+		$bn_name = $row_bn['line_name'];
+		$all_boundaries[] = $row_bn['ring_fence'];		
+		$points = explode (";", $line_data);
+		for ($i = 0; $i < count($points); $i++) {
+			$coords = explode (",", $points[$i]);
+?>
+			thepoint = new GLatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
+			points.push(thepoint);
+<?php
+			}			// end for ($i = 0 ... )
+		if (intval($filled) == 1) {		//	6/10/11
+?>
+			var polyline = new GPolygon(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>, {clickable:false, id:"ringfence"});
+			boundary.push(polyline);
+			bound_names.push("<?php print $bn_name;?>"); 
+<?php	
+			} else {
+?>
+			var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>, , 0, {clickable:false, id:"ringfence"});
+			boundary.push(polyline);
+			bound_names.push("<?php print $bn_name;?>"); 
+<?php		
+			}
+?>
+			map.addOverlay(polyline);
+<?php
+		}	//	End while
+//-------------------------END OF UNIT EXCLUSION ZONE STUFF-------------------------			
+	
 	//	$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `handle`";	//
 	//	$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `name`";	//
 		
-	$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated`, `r`.`name` AS `unit_name`, `r`.`id` AS `unit_id`, `t`.`name` AS `type_name`
+	$query = "SELECT *, UNIX_TIMESTAMP(updated) AS `updated`, `r`.`name` AS `unit_name`, `r`.`id` AS `unit_id`, `t`.`name` AS `type_name`, `r`.`type` AS `type`
 		FROM `$GLOBALS[mysql_prefix]responder` `r` 
+		LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `r`.`id` = a.resource_id )			
 		LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` `t` ON ( `r`.`type` = t.id )	
-		LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON ( `r`.`un_status_id` = s.id )";	//	4/11/11
+		LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON ( `r`.`un_status_id` = s.id ) 
+		{$where2} 
+		GROUP BY unit_id ";	//	4/11/11, 5/4/11
 		
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		
 		$units_ct = mysql_affected_rows();			// 1/4/10	
@@ -1651,8 +1933,7 @@ var sidebar_line = "";
 		$longitude = $row['lng'];		// 7/18/10	
 		$name = $row['unit_name'];			//	10/8/09
 		$temp = explode("/", $name );
-		$index =  (strlen($temp[count($temp) -1])<3)? substr($temp[count($temp) -1] ,0,strlen($temp[count($temp) -1])): substr($temp[count($temp) -1] ,-3 ,strlen($temp[count($temp) -1]));		
-		
+		$index = $row['icon_str'];	// 4/27/11		
 		print "\t\tvar sym = '$index';\n";				// for sidebar and icon 10/8/09
 		
 													// 2/13/09
@@ -2096,14 +2377,44 @@ var sidebar_line = "";
 	
 <?php
 	
+		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]';";	//	5/4/11
+		$result = mysql_query($query);	//	5/4/11
+		$al_groups = array();
+		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	//	5/4/11
+			$al_groups[] = $row['group'];
+			}	
+		
+		if(!isset($_POST['frm_group'])) {	//	5/4/11
+			$x=0;	//	5/4/11
+			$where2 = "WHERE (";	//	5/4/11
+			foreach($al_groups as $grp) {	//	5/4/11
+				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+		} else {
+			$x=0;	//	5/4/11
+			$where2 = "WHERE (";	//	5/4/11
+			foreach($_POST['frm_group'] as $grp) {	//	5/4/11
+				$where3 = (count($_POST['frm_group']) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+		}
+		$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	5/4/11
+		
 		$query_fac = "SELECT *,UNIX_TIMESTAMP(updated) AS updated, `$GLOBALS[mysql_prefix]facilities`.id AS fac_id,
 		`$GLOBALS[mysql_prefix]facilities`.description AS facility_description, 
 		`$GLOBALS[mysql_prefix]fac_types`.name AS fac_type_name, 
 		`$GLOBALS[mysql_prefix]facilities`.name AS facility_name 
 		FROM `$GLOBALS[mysql_prefix]facilities` 
+		LEFT JOIN `$GLOBALS[mysql_prefix]allocates` ON ( `$GLOBALS[mysql_prefix]facilities`.`id` = `$GLOBALS[mysql_prefix]allocates`.resource_id )			
 		LEFT JOIN `$GLOBALS[mysql_prefix]fac_types` ON `$GLOBALS[mysql_prefix]facilities`.type = `$GLOBALS[mysql_prefix]fac_types`.id 
 		LEFT JOIN `$GLOBALS[mysql_prefix]fac_status` ON `$GLOBALS[mysql_prefix]facilities`.status_id = `$GLOBALS[mysql_prefix]fac_status`.id 
-		ORDER BY `$GLOBALS[mysql_prefix]facilities`.type ASC";
+		{$where2} 
+		GROUP BY fac_id ORDER BY `$GLOBALS[mysql_prefix]facilities`.type ASC";
 		$result_fac = mysql_query($query_fac) or do_error($query_fac, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 	//	dump($query_fac);
 		
@@ -2115,9 +2426,7 @@ var sidebar_line = "";
 		$fac_name = $row_fac['facility_name'];			//	10/8/09
 	//	$fac_name = $row_fac['name'];					//	10/8/09
 		$fac_temp = explode("/", $fac_name );			//  11/27/09
-		$fac_index =  (strlen($fac_temp[count($fac_temp) -1])<3)? 
-			substr($fac_temp[count($fac_temp) -1] ,0,strlen($fac_temp[count($fac_temp) -1])):
-			substr($fac_temp[count($fac_temp) -1] ,-3 ,strlen($fac_temp[count($fac_temp) -1]));		
+		$fac_index = $row_fac['icon_str'];		
 		
 		print "\t\tvar fac_sym = '$fac_index';\n";				// for sidebar and icon 10/8/09
 		
@@ -2212,6 +2521,77 @@ var sidebar_line = "";
 			echo "\t\t" . $kml_olays[$i] . "\n";
 			}
 ?>
+	function add_hash(in_str) { // prepend # if absent
+		return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
+		}
+
+	function do_landb() {				// JS function - 8/1/11
+		var points = new Array();
+<?php
+		$query = "SELECT * FROM `{$GLOBALS['mysql_prefix']}mmarkup` WHERE `line_status` = 0 AND (`use_with_bm` = 1 OR `use_with_r` = 1)";
+		$result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
+
+		while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
+			$empty = FALSE;
+			extract ($row);
+			$name = $row['line_name'];
+			switch ($row['line_type']) {
+				case "p":		// poly
+					$points = explode (";", $line_data);
+					echo "\n\tvar points = new Array();\n";
+		
+					for ($i = 0; $i<count($points); $i++) {
+						$coords = explode (",", $points[$i]);
+?>
+						var thepoint = new GLatLng(<?php print $coords[0];?>, <?php print $coords[1];?>);
+						bounds.extend(thepoint);
+						points.push(thepoint);
+		
+<?php					}			// end for ($i = 0 ... )
+			 	if ((intval($filled) == 1) && (count($points) > 2)) {?>
+						var polyline = new GPolygon(points,add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>);
+<?php			} else {?>
+				        var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>);
+<?php			} ?>				        
+						map.addOverlay(polyline);
+<?php				
+					break;
+			
+				case "c":		// circle
+					$temp = explode (";", $line_data);
+					$radius = $temp[1];
+					$coords = explode (",", $temp[0]);
+					$lat = $coords[0];
+					$lng = $coords[1];
+					$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
+					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}); // 513\n";
+					break;
+			
+				case "t":		// text banner
+
+					$temp = explode (";", $line_data);
+					$banner = $temp[1];
+					$coords = explode (",", $temp[0]);
+					echo "\n var point = new GLatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
+					$the_banner = htmlentities($banner, ENT_QUOTES);
+					$the_width = intval( trim($line_width), 10);		// font size
+					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width});\n";
+					break;
+			
+				}	// end switch
+				
+		}			// end while ()
+		
+		unset($query, $result);
+?>
+		}		// end function do_landb()
+/*
+	try {
+		do_landb();				// 7/3/11 - show lines
+		}
+	catch (e) {	}
+*/
+
 		if (!(map_is_fixed)){
 			if (!points) {		// any?
 				map.setCenter(new GLatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);

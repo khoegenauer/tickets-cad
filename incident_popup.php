@@ -9,15 +9,13 @@
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 8/26/10 fmp added - AH
 3/15/11 changed stylesheet.php to stylesheet.php
-5/28/11 intrusion attempt detection added
 */
 
 error_reporting(E_ALL);
 
 @session_start();
-require_once('./incs/functions.inc.php');
+require_once($_SESSION['fip']);		//7/28/10
 do_login(basename(__FILE__));
-if ((isset($_REQUEST['id'])) && (!(strval(intval($_REQUEST['id']))===$_REQUEST['id']))) {	win_shut_down();}	// 5/28/11
 require_once($_SESSION['fmp']);		// 8/26/10
 $api_key = get_variable('gmaps_api_key');		// empty($_GET)
 
@@ -59,7 +57,7 @@ $ticket_start_str = format_date($row['problemstart']);		//
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<HEAD><TITLE>Incident Popup - Incident <?php print $title;?> <?php print $ticket_updated;?></TITLE>
-	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
+	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
 	<SCRIPT src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
 
 <?php

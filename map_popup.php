@@ -2,15 +2,12 @@
 /*
 9/6/10 initial release
 3/15/11 changed stylesheet.php to stylesheet.php
-5/28/11 intrusion attempt detection added
 */
 error_reporting(E_ALL);
 
 @session_start();
-require_once('./incs/functions.inc.php');
+require_once($_SESSION['fip']);		//7/28/10
 do_login(basename(__FILE__));
-if ((isset($_REQUEST['id'])) && (!(strval(intval($_REQUEST['id']))===$_REQUEST['id']))) {	win_shut_down();}	// 5/28/11
-
 require_once($_SESSION['fmp']);		// 8/26/10
 $api_key = get_variable('gmaps_api_key');		// empty($_GET)
 

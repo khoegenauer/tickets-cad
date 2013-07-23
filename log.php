@@ -11,7 +11,6 @@
 3/15/11 changed stylesheet.php to stylesheet.php
 4/19/11 obtain log codes via a 'require'
 4/5/11 get_new_colors() added
-5/10/11 added recent log entries display to entry form
 */
 error_reporting(E_ALL);
 
@@ -31,7 +30,7 @@ require_once($_SESSION['fip']);		//7/28/10
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
+<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
 <STYLE>
 .box { background-color: transparent; border: 0px solid #000000; color: #000000; padding: 0px; position: absolute; z-index:1000; }
 .bar { background-color: #DEE3E7; color: #000000; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; }
@@ -66,38 +65,13 @@ if (empty($_POST)) {
 <CENTER><BR /><BR /><BR /><BR /><BR /><H3>Guests not allowed Log access. </CENTER><BR /><BR />
 
 <INPUT TYPE='button' value='Cancel' onClick = 'window.exit();'>
-<?php } 										// 5/10/11
-		$query = "
-			SELECT *,  `u`.`user` AS `thename`, `$GLOBALS[mysql_prefix]log`.`info` AS `theinfo`
-			FROM `$GLOBALS[mysql_prefix]log`
-			LEFT JOIN `$GLOBALS[mysql_prefix]user` u ON ($GLOBALS[mysql_prefix]log.who = u.id)
-			WHERE `$GLOBALS[mysql_prefix]log`.`code` = {$GLOBALS['LOG_COMMENT']}
-			ORDER BY `$GLOBALS[mysql_prefix]log`.`when` DESC LIMIT 10 ;";
-		$result = mysql_query($query) or do_error($query, $query, mysql_error(), basename( __FILE__), __LINE__);
-		$evenodd = array ("even", "odd");	// CLASS names for alternating table row colors
-
-		$print = "<A NAME='page_top'></A>\n<TABLE ALIGN='left' BORDER = 0 CELLSPACING = 1  >";
-		$do_hdr = TRUE; 
-		$i=1;
-
-		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
-			if ($do_hdr) {
-				print "<TABLE ALIGN='center' BORDER = 0><TR CLASS='even'><TH COLSPAN=99> Prior entries</TH></TR>\n";
-				$do_hdr = FALSE; 
-				}
-			$thedate = format_date((string) mysql2timestamp($row['when']));
-			print "<TR CLASS = {$evenodd[($i)%2]}><TD>{$row['thename']}</TD><TD>{$row['theinfo']}</TD><TD>{$thedate}</TD></TD></TR>";
-			$i++;
-			}
-		print "</TABLE><BR />\n";
-
-?>
+<?php } ?>
 
 
 <FORM NAME="log_form" METHOD = "post" ACTION="<?php print basename(__FILE__); ?>">
 <TABLE>
-<TR CLASS = 'even' ><TH COLSPAN=2>New Station Log entry</TH></TR>
-<TR CLASS = 'odd'><TD>Log entry:</TD><TD><TEXTAREA NAME="frm_comment" COLS="80" ROWS="1" WRAP="virtual"></TEXTAREA></TD></TR>
+<TR CLASS = 'even' ><TH COLSPAN=2>Station Log</TH></TR>
+<TR CLASS = 'odd'><TD>Log entry:</TD><TD><TEXTAREA NAME="frm_comment" COLS="45" ROWS="2" WRAP="virtual"></TEXTAREA></TD></TR>
 <TR CLASS = 'even'><TD COLSPAN=2 ALIGN='center'>
 <INPUT TYPE = 'button' VALUE='Submit' onClick="document.log_form.submit()" />&nbsp;&nbsp;&nbsp;&nbsp;
 <INPUT TYPE = 'button' VALUE='Reset' onClick="document.log_form.reset()" />&nbsp;&nbsp;&nbsp;&nbsp;

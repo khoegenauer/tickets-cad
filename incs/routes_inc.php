@@ -11,14 +11,15 @@ error_reporting(E_ALL);
 12/18/10 Added filter by capabilities.
 2/5/11 calls assigned added as list order element
 3/15/11 correction for embedded apostrophe, function get_assigned_td()added, locale switch added
+5/4/11 Additions for multi region working.
 5/4/11 white-space style added, accommodate session/get ticket id container re color change
+8/1/11 Added function call for do_landb.
 */
-
 
 function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/15/11
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns`  
 		LEFT JOIN `$GLOBALS[mysql_prefix]ticket` t ON ($GLOBALS[mysql_prefix]assigns.ticket_id = t.id)
-		WHERE `responder_id` = '{$unit_id}' AND ( `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00' )";
+		WHERE `responder_id` = '{$unit_id}' AND ( `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00' )";	//	5/4/11
 	
 	$result_as = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	if ( mysql_num_rows($result_as) == 0) {unset($result_as); return "<TD></TD>";}
@@ -44,7 +45,6 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
 			    $the_disp_stat = "<SPAN CLASS='disp_stat'>&nbsp;" . mysql_affected_rows() . "&nbsp;</SPAN>&nbsp;";
 			    break;
 			}						// end switch()
-																					// 5/4/11
 		$ass_td = "<TD ALIGN='left' onMouseover=\\\"Tip('{$tip}')\\\" onmouseout=\\\"UnTip()\\\" onClick = '{$on_click}' CLASS='$severityclass'  STYLE = 'white-space:nowrap;'>{$the_disp_stat}" . shorten($row_assign['scope'], 24) . "</TD>";
 		return $ass_td;
 		}		// end else
@@ -454,6 +454,9 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
 //			map.addControl(new GSmallMapControl());						// 9/23/08
 			map.setUIToDefault();										// 8/13/10
 			map.addControl(new GMapTypeControl());
+			var bounds = new GLatLngBounds();						// create empty bounding box			
+			
+			do_landb();				// 8/1/11 - show scribbles				
 <?php if (intval(get_variable('terrain')) == 1) { ?>
 				map.addMapType(G_PHYSICAL_MAP);
 <?php } ?>	
@@ -463,8 +466,6 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
 			GEvent.addListener(gdir, "load", onGDirectionsLoad);
 			try {GEvent.addListener(gdir, "error", handleErrors);}
 			catch (e) {}
-		
-			var bounds = new GLatLngBounds();						// create empty bounding box
 		
 			var listIcon = new GIcon();
 			listIcon.image = "./markers/yellow.png";	// yellow.png - 16 X 28
@@ -555,7 +556,7 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
 				}
 	
 			$where = (empty($unit_id))? "" : " AND `r`.`id` = $unit_id ";		// revised 5/23/08 per AD7PE 
-			$where2 = (empty($capabilities))? "" : " AND (";	// 12/18/10
+//			$where2 = (empty($capabilities))? "" : " AND (";	// 12/18/10
 			if(!empty($unit_id)) { 
 				$where2="";
 			} else {
@@ -594,7 +595,78 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
 			$have_position = (!(($latitude==0.999999) && ($longitude==0.999999)));
 			$by_distance = (($sortby_distance)&& ($have_position))? "`distance` ASC, ": "";			// 6/19/10 - user-set variable, 2/5/11 calls assigned added as order element
 							// 5/30/10, 11/24/10
-			$query = "(SELECT *, UNIX_TIMESTAMP(`updated`) AS `updated`, `r`.`name` AS `unit_name`, `t`.`name` AS `type_name`,
+
+// ============================= Regions Stuff	
+
+// Allows Tickets to be dispatched to any responders in the same region as the current user.						
+							
+			// $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]' ORDER BY `id` ASC;";	// 4/18/11
+			// $result = mysql_query($query);	// 5/4/11
+			// $al_groups = array();
+			// $al_names = "";	
+			// while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 5/4/11
+				// $al_groups[] = $row['group'];
+				// $query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` WHERE `id`= '$row[group]';";	// 5/4/11
+				// $result2 = mysql_query($query2);	// 5/4/11
+				// while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	// 5/4/11		
+						// $al_names .= $row2['group_name'] . ", ";
+					// }
+				// }
+
+			// if(isset($_SESSION['viewed_groups'])) {
+				// $al_groups= explode(",",$_SESSION['viewed_groups']);
+				// }
+				
+			// if(!isset($_SESSION['viewed_groups'])) {	//	5/4/11
+			// $x=0;	
+			// $where3 = "AND (";
+			// foreach($al_groups as $grp) {
+				// $where4 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				// $where3 .= "`a`.`group` = '{$grp}'";
+				// $where3 .= $where4;
+				// $x++;
+				// }
+			// } else {
+			// $x=0;	
+			// $where3 = "AND (";	
+			// foreach($al_groups as $grp) {
+				// $where4 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				// $where3 .= "`a`.`group` = '{$grp}'";
+				// $where3 .= $where4;
+				// $x++;
+				// }
+			// }
+			// $where3 .= " AND `a`.`type` = 2";
+
+// Replacement code - only allows Tickets to be dispatched to responders in the same region
+			
+$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `resource_id` = " . get_ticket_id () . " ORDER BY `id` ASC;";	// 4/18/11
+			$result = mysql_query($query);	// 5/4/11
+			$al_groups = array();
+			$al_names = "";	
+			while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 5/4/11
+				$al_groups[] = $row['group'];
+				$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` WHERE `id`= '$row[group]';";	// 5/4/11
+				$result2 = mysql_query($query2);	// 5/4/11
+				while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	// 5/4/11		
+						$al_names .= $row2['group_name'] . ", ";
+					}
+				}
+
+			$x=0;	
+			$where3 = "AND (";	
+			foreach($al_groups as $grp) {
+				$where4 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where3 .= "`a`.`group` = '{$grp}'";
+				$where3 .= $where4;
+				$x++;
+				}
+			
+			$where3 .= " AND `a`.`type` = 2";			
+			
+// ================================ end of regions stuff			
+							
+			$query = "(SELECT *, UNIX_TIMESTAMP(`updated`) AS `updated`, `r`.`name` AS `unit_name`, `t`.`name` AS `type_name`, `r`.`type` AS `type`,
 				`r`.`id` AS `unit_id`, `r`.`capab` AS `capab`,
 				`s`.`status_val` AS `unitstatus`, `contact_via`, 
 				(((acos(sin(({$latitude}*pi()/180)) * sin((`r`.`lat`*pi()/180))+cos(({$latitude}*pi()/180)) * cos((`r`.`lat`*pi()/180)) * cos((({$longitude} - `r`.`lng`)*pi()/180))))*180/pi())*60*{$nm_to_what}) AS `distance`,
@@ -606,9 +678,10 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
 				FROM `$GLOBALS[mysql_prefix]responder` `r`
 				LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON (`r`.`un_status_id` = `s`.`id`)
 				LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` `t` ON (`r`.`type` = `t`.`id`)
-				 WHERE  `dispatch` = 0 $where $where2)
-			UNION 
-				(SELECT *, UNIX_TIMESTAMP(`updated`) AS `updated`, `r`.`name` AS `unit_name`, `t`.`name` AS `type_name`,
+				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON (`r`.`id` = `a`.`resource_id`)					
+				 WHERE  `dispatch` = 0 $where $where2 $where3 GROUP BY unit_id )
+			UNION DISTINCT
+				(SELECT *, UNIX_TIMESTAMP(`updated`) AS `updated`, `r`.`name` AS `unit_name`, `t`.`name` AS `type_name`, `r`.`type` AS `type`,
 				`r`.`id` AS `unit_id`, `r`.`capab` AS `capab`,
 				`s`.`status_val` AS `unitstatus`, `contact_via`, 
 				9999 AS `distance`,
@@ -620,8 +693,9 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
 				FROM `$GLOBALS[mysql_prefix]responder` `r`
 				LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON (`r`.`un_status_id` = `s`.`id`)
 				LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` `t` ON (`r`.`type` = `t`.`id`)
-				 WHERE  `dispatch` > 0 $where $where2)
-			ORDER BY `dispatch` ASC, `calls_assigned` ASC, {$by_distance} `handle` ASC, `unit_name` ASC, `unit_id` ASC			 ";		
+				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON (`r`.`id` = `a`.`resource_id`)					
+				 WHERE  `dispatch` > 0 $where $where2 $where3 GROUP BY unit_id )
+			 ORDER BY `dispatch` ASC, `calls_assigned` ASC, {$by_distance} `handle` ASC, `unit_name` ASC, `unit_id` ASC 		 ";		//	5/4/11	
 //	 		dump($query);
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	
@@ -655,7 +729,8 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
 					unit_names[i] = "<?php print addslashes($unit_row['unit_name']);?>";	// unit name 8/25/08, 4/27/09
 					unit_preselected = "<?php print $unit_id;?>";
 					if (unit_preselected != "") {
-						unit_sets[i] = true;								// pre-set checkbox settings	
+						unit_sets[i] = true;								// pre-set checkbox settings
+						show_butts(to_visible);		//	sets dispatch button visible if there is a pre-selected unit - for dispatch from unit functionality.	5/4/11
 						} else {
 						unit_sets[i] = false;
 						}

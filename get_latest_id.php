@@ -5,34 +5,124 @@
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 9/1/10 - fix  to error_reporting(E_ALL);
 1/6/11 - json encode added
+6/10/11 Added groups capability - restricts 
 */
 error_reporting(E_ALL);
 @session_start();
 require_once('./incs/functions.inc.php');		//7/28/10
-
 get_current();
 $me = $_SESSION['user_id'];
 //$me = 999;
+
+$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]';";	// 4/18/11
+$result = mysql_query($query);	// 4/18/11
+$al_groups = array();
+while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 4/18/11
+	$al_groups[] = $row['group'];
+	}
+
+if(isset($_SESSION['viewed_groups'])) {		//	6/10/11
+	$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+	}
+
+
 				// most recent chat invites other than written by 'me'
 $query = "SELECT * FROM `$GLOBALS[mysql_prefix]chat_invites` WHERE `_by` <> {$me}  AND (`to` = 0   OR `to` = {$me}) ORDER BY `id` DESC LIMIT 1";		// broadcasts
 $result = mysql_query($query) or do_error($query, $query, mysql_error(), basename( __FILE__), __LINE__);
 $row = (mysql_affected_rows()>0)? stripslashes_deep(mysql_fetch_assoc($result)): FALSE;
 
 $the_chat_id = ($row)? $row['id'] : "0";
+
+
 				// most recent ticket other than written by 'me'
-$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `_by` <> {$me} AND `status` = {$GLOBALS['STATUS_OPEN']} ORDER BY `id` DESC LIMIT 1";		// broadcasts
+
+if(!isset($curr_viewed)) {			//	6/10/11
+	$x=0;	
+	$where2 = "AND (";
+	foreach($al_groups as $grp) {
+		$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+		$where2 .= "`a`.`group` = '{$grp}'";
+		$where2 .= $where3;
+		$x++;
+		}
+	} else {
+	$x=0;	
+	$where2 = "AND (";	
+	foreach($curr_viewed as $grp) {
+		$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+		$where2 .= "`a`.`group` = '{$grp}'";
+		$where2 .= $where3;
+		$x++;
+		}
+	}
+
+	$where2 .= "AND `a`.`type` = 1";	
+				
+$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` `t`
+ 		LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON `t`.`id` = `a`.`resource_id`
+		WHERE `t`.`_by` <> {$me} AND `t`.`status` = {$GLOBALS['STATUS_OPEN']} $where2 ORDER BY `t`.`id` DESC LIMIT 1";		// broadcasts
 $result = mysql_query($query) or do_error($query, $query, mysql_error(), basename( __FILE__), __LINE__);
 $row = (mysql_affected_rows()>0)? stripslashes_deep(mysql_fetch_assoc($result)): FALSE;
 
 $the_tick_id = ($row)? $row['id'] : "0";
 
 							// position updates?
-$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE  `callsign` > '' AND (`aprs` = 1 OR  `instam` = 1 OR  `locatea` = 1 OR  `gtrack` = 1 OR  `glat` = 1 ) ORDER BY `updated` DESC LIMIT 1";
+							
+if(!isset($curr_viewed)) {			//	6/10/11
+	$x=0;	
+	$where2 = "AND (";
+	foreach($al_groups as $grp) {
+		$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+		$where2 .= "`a`.`group` = '{$grp}'";
+		$where2 .= $where3;
+		$x++;
+		}
+	} else {
+	$x=0;	
+	$where2 = "AND (";	
+	foreach($curr_viewed as $grp) {
+		$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+		$where2 .= "`a`.`group` = '{$grp}'";
+		$where2 .= $where3;
+		$x++;
+		}
+	}
+
+	$where2 .= "AND `a`.`type` = 2";	
+							
+$where4 = "AND `a`.`type` = 2";							
+$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` `r`
+		LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON `r`.`id` = `a`.`resource_id`
+		WHERE  `callsign` > '' AND (`aprs` = 1 OR  `instam` = 1 OR  `locatea` = 1 OR  `gtrack` = 1 OR  `glat` = 1 ) $where2 ORDER BY `r`.`updated` DESC LIMIT 1";
 $result = mysql_query($query) or do_error($query, $query, mysql_error(), basename( __FILE__), __LINE__);
 $row = (mysql_affected_rows()>0)? stripslashes_deep(mysql_fetch_assoc($result)): FALSE;
 
-if (!($row )) {				// latest unit status updates written by others 
-	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `user_id` != {$me} ORDER BY `updated` DESC LIMIT 1";		// get most recent
+if (!($row )) {				// latest unit status updates written by others
+	if(!isset($curr_viewed)) {			//	6/10/11
+		$x=0;	
+		$where2 = "AND (";
+		foreach($al_groups as $grp) {
+			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+			$where2 .= "`a`.`group` = '{$grp}'";
+			$where2 .= $where3;
+			$x++;
+			}
+		} else {
+		$x=0;	
+		$where2 = "AND (";	
+		foreach($curr_viewed as $grp) {
+			$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+			$where2 .= "`a`.`group` = '{$grp}'";
+			$where2 .= $where3;
+			$x++;
+			}
+		}
+
+		$where2 .= "AND `a`.`type` = 2";
+		
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` `r`
+	LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON `r`.`id` = `a`.`resource_id`
+	WHERE `r`.`user_id` != {$me} $where2 $where4 ORDER BY `r`.`updated` DESC LIMIT 1";		// get most recent
 	$result = mysql_query($query) or do_error($query, $query, mysql_error(), basename( __FILE__), __LINE__);
 	$row =  (mysql_affected_rows()>0)? stripslashes_deep(mysql_fetch_assoc($result)): FALSE;
 	}
@@ -42,7 +132,33 @@ if ($row) {
 //	$_SESSION['unit_flag_2'] = $me;		// 6/11/10
 	}
 						// 1/21/11 - get most recent dispatch
-$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `user_id` != {$me} ORDER BY `as_of` DESC LIMIT 1";		// get most recent
+
+if(!isset($curr_viewed)) {			//	6/10/11
+	$x=0;	
+	$where2 = "AND (";
+	foreach($al_groups as $grp) {
+		$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+		$where2 .= "`a`.`group` = '{$grp}'";
+		$where2 .= $where3;
+		$x++;
+		}
+	} else {
+	$x=0;	
+	$where2 = "AND (";	
+	foreach($curr_viewed as $grp) {
+		$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+		$where2 .= "`a`.`group` = '{$grp}'";
+		$where2 .= $where3;
+		$x++;
+		}
+	}
+
+	$where2 .= "AND `a`.`type` = 1";							
+						
+$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` `as`
+		LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` ON `as`.`ticket_id` = `t`.`id`
+		LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON `t`.`id` = `a`.`resource_id`		
+		WHERE `as`.`user_id` != {$me} $where2 ORDER BY `as`.`as_of` DESC LIMIT 1";		// get most recent
 $result = mysql_query($query) or do_error($query, $query, mysql_error(), basename( __FILE__), __LINE__);
 $assign_row = (mysql_affected_rows()>0)? stripslashes_deep(mysql_fetch_assoc($result)): FALSE;
 

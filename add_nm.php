@@ -89,8 +89,7 @@ if($istest) {print "_POST"; dump($_POST);}
 12/1/10 get_text changes
 12/18/10 set signals added
 1/1/11 Titles array added, scheduled incidents revised
-5/5/11 added get_new_colors()
-5/22/11 corrected reverse geolocation lookup
+5/5/11 added get_new_colors() {				// 
 */
 
 $api_key = get_variable('gmaps_api_key');
@@ -1092,7 +1091,7 @@ $maptype = get_variable('maptype');	// 08/02/09
 				} else { 
 					place = response.Placemark[0];    
 					point = new GLatLng(place.Point.coordinates[1],place.Point.coordinates[0]);
-// 					locality = response.Placemark[0].AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality;   5/22/11
+ 					locality = response.Placemark[0].AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality;   
 					marker = new GMarker(point);
 					map.addOverlay(marker);
 					results = pars_goog_addr(place.address);

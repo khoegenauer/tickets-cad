@@ -153,6 +153,175 @@ function get_fac_category_butts() {
 		}
 	return $fac_category_butts;
 	} 	// end function get_fac_category_butts()
+	
+function get_bnd_butts() {
+	$bnd_butts = array();
+	$i=0;
+	$query = "SELECT *, `$GLOBALS[mysql_prefix]mmarkup`.`type`, `$GLOBALS[mysql_prefix]mmarkup`.`line_name`
+				FROM `$GLOBALS[mysql_prefix]mmarkup`";	
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+		$bnd_name = $row['line_name'];
+		$bnd_butts[$i] = $bnd_name;
+		$i++;
+		}
+	return $bnd_butts;
+	} 	// end function get_bnd_butts()	
+	
+function get_bound_name($value) {
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id` = '{$value}'";	
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+	$row = stripslashes_deep(mysql_fetch_assoc($result));
+	$bnd_name = $row['line_name'];
+	return $bnd_name;
+	}
+	
+function get_sess_boundaries() {
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]' ORDER BY `id` ASC;";	//	6/10/11
+	$result = mysql_query($query);	//	6/10/11
+	$a_all_boundaries = array();
+	$all_boundaries = array();
+	$al_groups = array();
+	if(isset($_SESSION['viewed_groups'])) {
+		$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+		}
+		
+	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	//	6/10/11
+		$al_groups[] = $row['group'];
+		$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` WHERE `id`= '$row[group]';";	//	6/10/11
+		$result2 = mysql_query($query2);	// 4/18/11
+		while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{	//	//	6/10/11	
+			if($row2['boundary'] != 0) {
+				$a_all_boundaries[] = $row2['boundary'];
+				}
+		}
+	}
+
+	if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
+		foreach(explode(",",$_SESSION['viewed_groups']) as $val_vg) {
+			$query3 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` WHERE `id`= '$val_vg';";
+			$result3 = mysql_query($query3);	//	6/10/11		
+			while ($row3 = stripslashes_deep(mysql_fetch_assoc($result3))) 	{
+					if($row3['boundary'] != 0) {
+						$all_boundaries[] = $row3['boundary'];
+						}
+				}
+			}
+		} else {
+			$all_boundaries = $a_all_boundaries;
+		}
+
+	if(!isset($curr_viewed)) {	
+		$x=0;	//	4/18/11
+		$where2 = "WHERE (";	//	4/18/11
+		foreach($al_groups as $grp) {	//	4/18/11
+			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+			$where2 .= "`a`.`group` = '{$grp}'";
+			$where2 .= $where3;
+			$x++;
+			}
+	} else {
+		$x=0;	//	4/18/11
+		$where2 = "WHERE (";	//	4/18/11
+		foreach($curr_viewed as $grp) {	//	4/18/11
+			$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+			$where2 .= "`a`.`group` = '{$grp}'";
+			$where2 .= $where3;
+			$x++;
+			}
+	}
+	$where2 .= "AND `a`.`type` = 2";		
+		
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` `l`
+				LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON ( `l`.`id` = `r`.`ring_fence`)
+				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `r`.`id` = `a`.`resource_id` )	
+				{$where2} AND `use_with_u_rf`=1 GROUP BY `l`.`id`";
+	$result = mysql_query($query)or do_error($query, mysql_error(), basename(__FILE__), __LINE__);
+	while($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+		$all_boundaries[] = $row['ring_fence'];		
+		}	//	End while		
+		
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` `l`
+				LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON ( `l`.`id` = `r`.`excl_zone`)
+				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `r`.`id` = `a`.`resource_id` )	
+				{$where2} AND `use_with_u_ex`=1 GROUP BY `l`.`id`";
+	$result = mysql_query($query)or do_error($query, mysql_error(), basename(__FILE__), __LINE__);
+	while($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+		$all_boundaries[] = $row['excl_zone'];		
+		}	//	End while			
+	return $all_boundaries;
+	}
+
+function get_bnd_session() {	
+	$boundaries = array();
+	$boundaries = get_sess_boundaries();
+	$bnds_sess = array();
+	$bn=0;
+	if(!empty($boundaries)) {
+		foreach($boundaries as $key => $value) {	
+			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id`='{$value}'";	
+			$result = mysql_query($query)or do_error($query, mysql_error(), basename(__FILE__), __LINE__);
+			$row = stripslashes_deep(mysql_fetch_assoc($result));
+			$boundary_names[$bn] = $row['line_name'];
+			$bn++;
+			}	
+		$i = 0;
+		foreach($boundary_names as $key => $value) {
+			$bnd_key = "show_hide_bnds_" . $value;
+			if(isset($_SESSION[$bnd_key])) {
+				$bnds_sess[$i] = ($_SESSION[$bnd_key]);
+			} else {
+				$bnds_sess[$i] = "s";
+			}		
+			$i++;
+			}
+			return $bnds_sess;
+		} else {
+		return 0;
+		}
+	}	//	end function get_bnd_session()
+	
+function get_bnd_session_names() {
+	$bn=0;
+	$tmp = array();
+	$tmp = get_sess_boundaries();
+	if(!empty($tmp)) {
+		foreach($tmp as $key => $value) {	
+			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id`='{$value}'";	
+			$result = mysql_query($query)or do_error($query, mysql_error(), basename(__FILE__), __LINE__);
+			$row = stripslashes_deep(mysql_fetch_assoc($result));
+			$boundary_names[$bn] = $row['line_name'];
+			$bn++;
+			}
+		return $boundary_names;
+		} else {
+		return "";
+		}
+	}
+	
+function find_bnd_hidden() {
+	$stat_array = get_bnd_session();
+	if(!empty($stat_array)) {
+		$counter=0;
+		$string = "h";
+		foreach($stat_array as $val) {$string == $val ? $counter++ : null;}
+		return $counter;
+		} else {
+		return 0;
+		}
+	}
+
+function find_bnd_showing() {
+	$stat_array = get_bnd_session();
+	if(!empty($stat_array)) {	
+		$counter=0;
+		$string = "s";
+		foreach($stat_array as $val) {$string == $val ? $counter++ : null;}
+		return $counter;
+		} else {
+		return 0;
+		}
+	}	
 
 function get_fac_category($facility) {
 	$fac_category="";

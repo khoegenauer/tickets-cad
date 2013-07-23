@@ -16,14 +16,12 @@
 8/15/10 dupe prvention added
 8/27/10 missing fmp call
 3/15/11 changed default.css to stylesheet.php
-5/26/11 added intrusion detection
 */
 error_reporting(E_ALL);
 
 session_start();
 require_once('./incs/functions.inc.php');
 do_login(basename(__FILE__));
-if ((isset($_REQUEST['ticket_id'])) && 	(strlen(trim($_REQUEST['ticket_id']))>6)) {	shut_down();}			// 5/26/11
 require_once($_SESSION['fmp']);		// 8/27/10
 
 $istest = FALSE;

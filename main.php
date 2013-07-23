@@ -40,6 +40,10 @@ require_once($the_inc);
 3/15/11	Added reference to stylesheet.php for revisable day night colors
 3/19/11 added top term button value
 4/22/11 gunload correction
+5/16/11 Added code to support Ticker Module
+6/10/11	added groups and boundaries
+6/28/11 auto refresh added
+7/3/11 lazy logout button moved out of try/catch
 */
 
 if (isset($_GET['logout'])) {
@@ -81,19 +85,24 @@ $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_ni
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
+	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	
 	<STYLE>
 		.disp_stat	{ FONT-WEIGHT: bold; FONT-SIZE: 9px; COLOR: #FFFFFF; BACKGROUND-COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;}
 	</STYLE>
 <?php 
 @session_start();	
+if(file_exists("./incs/modules.inc.php")) {	//	10/28/10
+	require_once('./incs/modules.inc.php');
+	}	
 if ($_SESSION['internet']) {				// 8/22/10
 	$api_key = get_variable('gmaps_api_key');	
 ?>
 <SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
-
+<SCRIPT SRC="./js/epoly.js" TYPE="text/javascript"></SCRIPT>	<!-- 6/10/11 -->
+<SCRIPT TYPE="text/javascript" src="./js/ELabel.js"></SCRIPT><!-- 8/1/11 -->
 <?php } ?>
-	
-	<SCRIPT>
+<SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>	<!-- 5/3/11 -->	
+<SCRIPT>
 <?php
 if ( get_variable('call_board') == 2) {		// 7/20/10
 	$cb_per_line = 22;						// adjust as needed
@@ -134,7 +143,9 @@ if (is_guest()) {													// 8/25/10
 ?>
 
 	var NOT_STR = '<?php echo NOT_STR;?>';			// value if not logged-in, defined in functions.inc.php
-
+	var check_initialized = false;
+	var check_interval = null;
+	
 	function logged_in() {								// returns boolean
 		var temp = parent.frames["upper"].$("whom").innerHTML==NOT_STR;
 		return !temp;
@@ -150,19 +161,102 @@ if (is_guest()) {													// 8/25/10
 			}
 		return elements;
 		}
+		
+	function fence_get() {								// set cycle
+		if (check_interval!=null) {return;}			// ????
+		check_interval = window.setInterval('check_fence_loop()', 60000);		// 4/7/10 
+		}			// end function mu get()
+
+	function fence_init() {								// get initial values from server -  4/7/10
+		if (check_initialized) { return; }
+		check_initialized = true;
+			ring_fence();
+			exclude();				
+			fence_get();				// start loop
+		}				// end function mu_init()		
+		
+	function check_fence_loop() {								// monitor for changes - 4/10/10, 6/10/11	
+			ring_fence();
+			exclude();			
+		}			// end function do_loop()			
 	
+	function blink_text(id, bgcol, bgcol2, maincol, seccol) {	//	6/10/11
+		if(!document.getElementById(id)) {
+			alert("A unit in your group is\noutside a ring fence\nhowever you aren't currently\nviewing the group it is allocated to");
+		} else {	
+			function BlinkIt () {
+				if(document.getElementById (id)) {
+					var blink = document.getElementById (id);
+					var flag = id + "_flag";					
+					color = (color == maincol) ? seccol : maincol;
+					back = (back == bgcol) ? bgcol2 : bgcol;
+					blink.style.background = back;
+					blink.style.color = color;
+					document.getElementById(id).title = "Outside Ringfence";
+					$(flag).innerHTML = "RF";							
+					}
+				}
+			window.setInterval (BlinkIt, 1000);
+			var color = maincol;
+			var back = bgcol;				
+			}
+		}
+		
+	function unblink_text(id) {	//	6/10/11
+		if(!document.getElementById(id)) {
+		} else {	
+		if(document.getElementById (id)) {
+			var unblink = document.getElementById (id);
+			unblink.style.background = "";
+			unblink.style.color = "";			
+				}
+			}
+		}	
+
+	function blink_text2(id, bgcol, bgcol2, maincol, seccol) {	//	6/10/11
+		if(!document.getElementById(id)) {
+			alert("A unit in your group is\ninside an exclusion zone\nhowever you aren't currently\nviewing the group it is allocated to");
+		} else {	
+			function BlinkIt () {
+				if(document.getElementById (id)) {
+					var blink = document.getElementById (id);
+					var flag = id + "_flag";
+					color = (color == maincol) ? seccol : maincol;
+					back = (back == bgcol) ? bgcol2 : bgcol;
+					blink.style.background = back;
+					blink.style.color = color;
+					document.getElementById(id).title = "Inside Exclusion Zone";
+					$(flag).innerHTML = "EZ";					
+					}
+				}
+			window.setInterval (BlinkIt, 1000);
+			var color = maincol;
+			var back = bgcol;				
+			}
+		}			
+		
+	function unblink_text2(id) {	//	6/10/11
+		if(!document.getElementById(id)) {
+		} else {	
+		if(document.getElementById (id)) {
+			var unblink = document.getElementById (id);
+			unblink.style.background = "";
+			unblink.style.color = "";			
+				}
+			}
+		}	
 <?php
 	if (array_key_exists('log_in', $_GET)) {			// 12/26/09- array_key_exists('internet', $_SESSION)
 ?>
-
-	parent.frames["upper"].mu_init ();					// start polling
-	if (parent.frames.length == 3) {										// 1/20/09, 4/10/09
-		parent.calls.location.href = 'board.php';							// 1/11/09
-		}
+		parent.frames["upper"].$("gout").style.display  = "inline";								// logout button - 7/3/11
+		parent.frames["upper"].mu_init ();					// start polling
+		if (parent.frames.length == 3) {										// 1/20/09, 4/10/09
+			parent.calls.location.href = 'board.php';							// 1/11/09
+			}
 <?php
 		}
-$temp = get_unit();															// 3/19/11
-$term_str = ($temp )? $temp : "Mobile" ;
+		$temp = get_unit();															// 3/19/11
+		$term_str = ($temp )? $temp : "Mobile" ;
 
 ?>
 /*
@@ -173,14 +267,12 @@ $term_str = ($temp )? $temp : "Mobile" ;
 			}							
 		}		
 */		
-	try {
-		parent.frames["upper"].$("manual").style.display  = "inline";								// manual link - 5/27/11
-		parent.frames["upper"].$("gout").style.display  = "inline";									// logout button
+
 		parent.frames["upper"].$("user_id").innerHTML  = "<?php print $_SESSION['user_id'];?>";	
 		parent.frames["upper"].$("whom").innerHTML  = "<?php print $_SESSION['user'];?>";			// user name
 		parent.frames["upper"].$("level").innerHTML = "<?php print get_level_text($_SESSION['level']);?>";
 		parent.frames["upper"].$("script").innerHTML  = "<?php print LessExtension(basename(__FILE__));?>";				// module name
-//		parent.frames["upper"].$("poll_id").innerHTML  = "<?php print $poll_val;?>";
+	try {
 		parent.frames["upper"].$("main_body").style.backgroundColor  = "<?php print get_css('page_background', $day_night);?>";	//	3/15/11
 		parent.frames["upper"].$("main_body").style.color  = "<?php print get_css('normal_text', $day_night);?>";	//	3/15/11
 		parent.frames["upper"].$("tagline").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
@@ -214,6 +306,184 @@ $term_str = ($temp )? $temp : "Mobile" ;
 			parent.upper.do_day_night("<?php print $_SESSION['day_night'];?>")
 			}
 		}		// end function ck_frames()
+		
+	function ring_fence() {	//	run when new tracked data is received	6/10/11
+	
+		var thepoint;
+		var bound_names = new Array();
+
+		  // === A method for testing if a point is inside a polygon
+		  // === Returns true if poly contains point
+		  // === Algorithm shamelessly stolen from http://alienryderflex.com/polygon/ 
+		  
+		  GPolygon.prototype.Contains = function(point) {
+			var j=0;
+			var oddNodes = false;
+			var x = point.lng();
+			var y = point.lat();
+			for (var i=0; i < this.getVertexCount(); i++) {
+			  j++;
+			  if (j == this.getVertexCount()) {j = 0;}
+			  if (((this.getVertex(i).lat() < y) && (this.getVertex(j).lat() >= y))
+			  || ((this.getVertex(j).lat() < y) && (this.getVertex(i).lat() >= y))) {
+				if ( this.getVertex(i).lng() + (y - this.getVertex(i).lat())
+				/  (this.getVertex(j).lat()-this.getVertex(i).lat())
+				*  (this.getVertex(j).lng() - this.getVertex(i).lng())<x ) {
+				  oddNodes = !oddNodes
+				}
+			  }
+			}
+			return oddNodes;
+		  }
+<?php
+
+		$query_al = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]';";	//	6/10/11
+		$result_al = mysql_query($query_al);	// 6/10/11
+		$al_groups = array();
+		while ($row_al = stripslashes_deep(mysql_fetch_assoc($result_al))) 	{	//	6/10/11
+			$al_groups[] = $row_al['group'];
+			}	
+
+		$x=0;	//	6/10/11
+		$where2 = "WHERE (";	//	6/10/11
+		foreach($al_groups as $grp) {	//	6/10/11
+			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+			$where2 .= "`a`.`group` = '{$grp}'";
+			$where2 .= $where3;
+			$x++;
+			}
+
+		$where2 .= " AND `a`.`type` = 2 AND `r`.`ring_fence` > 0 AND `r`.`lat` != '' AND `r`.`lng` != ''";	//	6/10/11
+		
+		$query66 = "SELECT `r`.`id` AS `responder_id`,
+					`a`.`id` AS `all_id`, 
+					`a`.`resource_id` AS `resource_id`,
+					`a`.`type` AS `resource_type`,
+					`r`.`ring_fence` AS `ring_fence`,
+					`r`.`lat` AS `lat`,
+					`r`.`lng` AS `lng`,
+					`r`.`name` AS `name`
+					FROM `$GLOBALS[mysql_prefix]responder` `r`
+					LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `r`.`id` = `a`.`resource_id` )	
+					{$where2} GROUP BY `r`.`id`";
+
+		$result66 = mysql_query($query66)or do_error($query66, mysql_error(), basename(__FILE__), __LINE__);
+		while ($row66 = stripslashes_deep(mysql_fetch_assoc($result66))) 	{
+			extract ($row66);
+			if((my_is_float($lat)) && (my_is_float($lng))) {
+				print "\t\t	var resp_name = \"$name\";\n";
+				print "\t\t var points = new Array();\n";
+				print "\t\t var newpoint = new GLatLng({$lat}, {$lng});\n";
+				$query67 = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id` = {$ring_fence}";
+				$result67 = mysql_query($query67)or do_error($query67, mysql_error(), basename(__FILE__), __LINE__);
+				$row67 = stripslashes_deep(mysql_fetch_assoc($result67));
+					extract ($row67);
+					$points = explode (";", $line_data);
+					print "\t\t var boundary1 = new Array();\n";					
+					print "\t\t var fencename = \"$line_name\";\n";
+					for ($yy = 0; $yy < count($points); $yy++) {
+						$coords = explode (",", $points[$yy]);		
+						print "\t\t thepoint = new GLatLng(parseFloat($coords[0]), parseFloat($coords[1]));\n";
+						print "\t\t points.push(thepoint);\n";
+					}			// end for ($yy = 0 ... )
+					print "\t\t var pline = new GPolygon(points, \"$line_color\", $line_width, $line_opacity, \"$fill_color\", $fill_opacity, {clickable:false});\n";
+					print "\t\t boundary1.push(pline);\n";
+					print "\t\t if (!(boundary1[0].Contains(newpoint))) {\n";
+					print "\t\t blink_text(resp_name, '#FF0000', '#FFFF00', '#FFFF00', '#FF0000');\n";
+					print "\t\t }\n";
+				}
+			}
+?>
+		}	// end function ring_fence	
+		
+	function exclude() {	//	run when new tracked data is received	6/10/11
+	
+		var thepoint;
+		var bound_names = new Array();
+
+		  // === A method for testing if a point is inside a polygon
+		  // === Returns true if poly contains point
+		  // === Algorithm shamelessly stolen from http://alienryderflex.com/polygon/ 
+		  
+		  GPolygon.prototype.Contains = function(point) {
+			var j=0;
+			var oddNodes = false;
+			var x = point.lng();
+			var y = point.lat();
+			for (var i=0; i < this.getVertexCount(); i++) {
+			  j++;
+			  if (j == this.getVertexCount()) {j = 0;}
+			  if (((this.getVertex(i).lat() < y) && (this.getVertex(j).lat() >= y))
+			  || ((this.getVertex(j).lat() < y) && (this.getVertex(i).lat() >= y))) {
+				if ( this.getVertex(i).lng() + (y - this.getVertex(i).lat())
+				/  (this.getVertex(j).lat()-this.getVertex(i).lat())
+				*  (this.getVertex(j).lng() - this.getVertex(i).lng())<x ) {
+				  oddNodes = !oddNodes
+				}
+			  }
+			}
+			return oddNodes;
+		  }
+<?php
+
+		$query_al = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]';";	//	6/10/11
+		$result_al = mysql_query($query_al);	// 6/10/11
+		$al_groups = array();
+		while ($row_al = stripslashes_deep(mysql_fetch_assoc($result_al))) 	{	//	6/10/11
+			$al_groups[] = $row_al['group'];
+			}	
+
+		$x=0;	//	6/10/11
+		$where2 = "WHERE (";	//	6/10/11
+		foreach($al_groups as $grp) {	//	6/10/11
+			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+			$where2 .= "`a`.`group` = '{$grp}'";
+			$where2 .= $where3;
+			$x++;
+			}
+
+		$where2 .= " AND `a`.`type` = 2 AND `r`.`excl_zone` > 0 AND `r`.`lat` != '' AND `r`.`lng` != ''";	//	6/10/11
+		
+		$query66 = "SELECT `r`.`id` AS `responder_id`,
+					`a`.`id` AS `all_id`, 
+					`a`.`resource_id` AS `resource_id`,
+					`a`.`type` AS `resource_type`,
+					`r`.`excl_zone` AS `excl_zone`,
+					`r`.`lat` AS `lat`,
+					`r`.`lng` AS `lng`,
+					`r`.`name` AS `name`
+					FROM `$GLOBALS[mysql_prefix]responder` `r`
+					LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `r`.`id` = `a`.`resource_id` )	
+					{$where2} GROUP BY `r`.`id`";
+
+		$result66 = mysql_query($query66)or do_error($query66, mysql_error(), basename(__FILE__), __LINE__);
+		while ($row66 = stripslashes_deep(mysql_fetch_assoc($result66))) 	{
+			extract ($row66);
+			if((my_is_float($lat)) && (my_is_float($lng))) {
+				print "\t\t	var resp_name = \"$name\";\n";
+				print "\t\t var points = new Array();\n";
+				print "\t\t var newpoint = new GLatLng({$lat}, {$lng});\n";
+				$query67 = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id` = {$excl_zone}";
+				$result67 = mysql_query($query67)or do_error($query67, mysql_error(), basename(__FILE__), __LINE__);
+				$row67 = stripslashes_deep(mysql_fetch_assoc($result67));
+					extract ($row67);
+					$points = explode (";", $line_data);
+					print "\t\t var boundary1 = new Array();\n";					
+					print "\t\t var fencename = \"$line_name\";\n";
+					for ($yy = 0; $yy < count($points); $yy++) {
+						$coords = explode (",", $points[$yy]);		
+						print "\t\t thepoint = new GLatLng(parseFloat($coords[0]), parseFloat($coords[1]));\n";
+						print "\t\t points.push(thepoint);\n";
+					}			// end for ($yy = 0 ... )
+					print "\t\t var pline = new GPolygon(points, \"$line_color\", $line_width, $line_opacity, \"$fill_color\", $fill_opacity, {clickable:false});\n";
+					print "\t\t boundary1.push(pline);\n";
+					print "\t\t if ((boundary1[0].Contains(newpoint))) {\n";
+					print "\t\t blink_text2(resp_name, '#00FF00', '#FFFF00', '#FFFF00', '#FF0000');\n";
+					print "\t\t }\n";
+				}
+			}
+?>
+		}	// end function exclude	
 <?php																	// 4/10/10
 	if (intval(get_variable('call_board')) == 0) {						// hide the button
 		print "\t parent.frames['upper'].$('call').style.display = 'none';";
@@ -291,23 +561,63 @@ $term_str = ($temp )? $temp : "Mobile" ;
 		}
 	</SCRIPT>
 
-<?php if ($_SESSION['internet']) {	?>
-	<SCRIPT SRC='./js/usng.js' TYPE='text/javascript'></SCRIPT>		<!-- 10/14/08 -->
-	<SCRIPT SRC='./js/graticule.js' type='text/javascript'></SCRIPT>
-<?php } ?>
-	
-	
-<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
+<?php 
+	if ($_SESSION['internet']) {	
+?>
+		<SCRIPT SRC='./js/usng.js' TYPE='text/javascript'></SCRIPT>		<!-- 10/14/08 -->
+		<SCRIPT SRC='./js/graticule.js' type='text/javascript'></SCRIPT>
+<?php 
+ 
+		if(module_active("Ticker")==1) {
+?>
+			<SCRIPT SRC='./modules/Ticker/js/mootools-1.2-core.js' type='text/javascript'></SCRIPT>
+			<SCRIPT SRC='./modules/Ticker/js/ticker_core.js' type='text/javascript'></SCRIPT>
+			<LINK REL=StyleSheet HREF="./modules/Ticker/css/ticker_css.php?version=<?php print time();?>" TYPE="text/css">
+<?php
+			$ld_ticker = "ticker_init();";	//	3/23/11 To support ticket module
+			} else {
+			$ld_ticker = "";	//	3/23/11 To support ticket module
+		}
+	} else {
+		$ld_ticker = "";	//	3/23/11 To support ticket module
+	}
+?>	
+<STYLE TYPE="text/css">
+.box { background-color: #DEE3E7; border: 2px outset #606060; color: #000000; padding: 0px; position: absolute; z-index:1000; width: 180px; }
+.bar { background-color: #FFFFFF; border-bottom: 2px solid #000000; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
+.bar_header { height: 20px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
+.content { padding: 1em; }
+</STYLE>
+
 </HEAD>
 <?php
+	if(!(is_guest())) {	//	4/6/11 Added for add on modules
+		if(file_exists("./incs/modules.inc.php")) {
+			get_modules('main');
+			}
+		}
+		
+	$get_print = 			(array_key_exists('print', ($_GET)))?			$_GET['print']: 		NULL;
+	$get_id = 				(array_key_exists('id', ($_GET)))?				$_GET['id']  :			NULL;
+	$get_sort_by_field = 	(array_key_exists('sort_by_field', ($_GET)))?	$_GET['sort_by_field']:	NULL;
+	$get_sort_value = 		(array_key_exists('sort_value', ($_GET)))?		$_GET['sort_value']:	NULL;	
+	
 	$gunload = ($_SESSION['internet'])? " onUnload='GUnload();'" : "" ;				// 4/22/11
+	$fences = (($_SESSION['internet']) && (!($get_id)))? "fence_init();" : "" ;				// 4/22/11	
 	$set_showhide = ((array_key_exists('print', ($_GET)) || (array_key_exists('id', ($_GET)))))? "" : "set_initial_pri_disp(); set_categories(); set_fac_categories();";	//	3/15/11
-//	dump($_SESSION);	
-?>
+	$from_right = 20;	//	5/3/11
+	$from_top = 10;		//	5/3/11
+	$temp = intval(trim(get_variable('situ_refr')));		// 6/27/11
+	$refresh =  ($temp < 15)? 15000: $temp * 1000;
+	$set_to = (intval(trim(get_variable('situ_refr')))>0)? "setTimeout('location.reload(true);', {$refresh});": "";
+	$set_bnds = (($_SESSION['internet']) && (!($get_id)))? "set_bnds();" : "";
 
-<BODY onLoad = "<?php print $set_showhide;?>; ck_frames(); location.href = '#top'; <?php print $do_mu_init;?>" <?php print $gunload;?>>	<!-- 3/15/11 -->
+
+	
+?>
+<BODY onLoad = "<?php print $set_showhide;?> <?php print $set_bnds;?> parent.frames['upper'].document.getElementById('gout').style.display  = 'inline'; ck_frames(); location.href = '#top'; <?php print $do_mu_init;?> <?php print $ld_ticker;?> <?php print $fences;?>" <?php print $gunload;?>>	<!-- 3/15/11 -->
 <?php
-include("./incs/links.inc.php");		// 8/13/10
+	include("./incs/links.inc.php");		// 8/13/10
 ?>
 <DIV ID='to_bottom' style="position: fixed; top: 20px; left: 20px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png" BORDER=0 /></div>
 
@@ -315,11 +625,23 @@ include("./incs/links.inc.php");		// 8/13/10
 
 <A NAME="top" /> <!-- 11/11/09 -->
 <?php
-	$get_print = 			(array_key_exists('print', ($_GET)))?			$_GET['print']: 		NULL;
-	$get_id = 				(array_key_exists('id', ($_GET)))?				$_GET['id']  :			NULL;
-	$get_sort_by_field = 	(array_key_exists('sort_by_field', ($_GET)))?	$_GET['sort_by_field']:	NULL;
-	$get_sort_value = 		(array_key_exists('sort_value', ($_GET)))?		$_GET['sort_value']:	NULL;
-
+if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11
+$regs_col_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "s")) ? "" : "none";	//	6/10/11
+$regs_exp_butt = ((isset($_SESSION['regions_boxes'])) && ($_SESSION['regions_boxes'] == "h")) ? "" : "none";	//	6/10/11	
+?>
+<div id = 'outer' style = "position:fixed; right:<?php print $from_right;?>%; top:<?php print $from_top;?>%; z-index: 1000; ">		<!-- 6/10/11 -->
+<div id="boxB" class="box" style="z-index:5000;">
+	<div class="bar_header" class="heading_2" STYLE="z-index: 5000;">Viewed <?php print get_text("Regions");?>
+	<SPAN id="collapse_regs" style = "display: <?php print $regs_col_butt;?>; z-index:5001; cursor: pointer;" onclick="hideDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/collapse.png" ALIGN="right"></SPAN>
+	<SPAN id="expand_regs" style = "display: <?php print $regs_exp_butt;?>; z-index:5001; cursor: pointer;" onclick="showDiv('region_boxes', 'collapse_regs', 'expand_regs');"><IMG SRC = "./markers/expand.png" ALIGN="right"></SPAN></div>
+	<div class="bar" STYLE="color:red; z-index: 5000;"
+       onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></div>
+	<div 
+  <div id="region_boxes" class="content" style="z-index: 5000;"></div>
+</div>
+</div>
+<?php
+}
 	if ($get_print) {
 		show_ticket($get_id,'true');
 		print "<BR /><P ALIGN='left'>";
@@ -359,5 +681,6 @@ include("./incs/links.inc.php");		// 8/13/10
 <span onclick = "alert(parent.$('what').rows)">Test3</span>
 -->
 <br /><br />
+<DIV ID='to_top' style="position:fixed; bottom:50px; left:20px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>
 <A NAME="bottom" /> <!-- 11/11/09 -->
 </BODY></HTML>

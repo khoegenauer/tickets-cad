@@ -39,7 +39,11 @@
 4/14/11 added shorten() width factors as a function of user monitor width
 4/24/11  problemstart data added to dispatch report 
 4/5/11 get_new_colors() added
-
+6/4/11  added facility actions LOG_CALL_U2FENR, etc. to the test
+6/8/11 do_dispreport complete re-write, using problemstart as base for elapsed times
+7/22/11 - correction per MC email.
+7/24/11 corrections to qualifier per MC email.
+11/4/11 - AS corrections to Unit log per AJ email; handle final unprinted log entry
 */
 error_reporting(E_ALL);									// 10/1/08
 $asof = "3/24/10";
@@ -375,34 +379,71 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 
 // =================================================== DISPATCH LOG =========================================	1/31/09
 
-	function do_dispreport($date_in, $func_in) {				// $frm_date, $mode as params
+	function do_dispreport($date_in, $func_in) {				// $frm_date, $mode as params - 6/8/11
 		global $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
 		global $evenodd, $types;
 		global $w_tiny, $w_small, $w_medium, $w_large;		// 4/14/11
 
+		function the_time($in_val) {
+			return date("j H:i", (int)$in_val);
+			}
+		function print_row($ary_in, $_i) {			//
+			$_evenodd = array ("even", "odd");
+			$_priorities = array("typical","high","highest" );
+
+			$disp_str = (empty($ary_in[6]))? "" : 	the_time($ary_in[6]) . " <I>(" . round((($ary_in[6]) - $ary_in[2])/60) . ")</I>";
+			$enr_str = (empty($ary_in[7]))? "" :  	the_time($ary_in[7]) . " <I>(" . round((($ary_in[7]) - $ary_in[2])/60) . ")</I>";
+			$onsc_str = (empty($ary_in[8]))? "" :  	the_time($ary_in[8]) . " <I>(" . round((($ary_in[8]) - $ary_in[2])/60) . ")</I>";
+			$facen_str = (empty($ary_in[9]))? "" : 	the_time($ary_in[9]) .  " <I>(" . round((($ary_in[9]) - $ary_in[2])/60) . ")</I>";
+			$facar_str = (empty($ary_in[10]))? "" : the_time($ary_in[10]) . " <I>(" . round((($ary_in[10]) - $ary_in[2])/60) . ")</I>";
+			$clr_str = (empty($ary_in[11]))? "" : 	the_time($ary_in[11]) . " <I>(" . round((($ary_in[11]) - $ary_in[2])/60) . ")</I>";
+			$res_str = (empty($ary_in[12]))? "" :  	the_time($ary_in[12]) ;
+			$_class = (isset($_priorities[$ary_in[3]]))? $_priorities[$ary_in[3]] : $_priorities[0];
+			$_shortname = empty($ary_in[1])? "[#{$ary_in[0]}]" : shorten($ary_in[1], 32);
+			$_full_time = format_date((string)$ary_in[2]);
+			echo "<TR CLASS='{$_evenodd[$_i%2]}'>";
+			echo "<TD class='{$_class}' onmouseout='UnTip()' onmouseover=\"Tip('{$ary_in[1]}');\" >{$_shortname}</TD>";		//	ticket name
+			echo "<TD  onmouseout='UnTip()' onmouseover=\"Tip('{$_full_time}');\">" . the_time($ary_in[2]). "</TD>";			//	ticket start
+			$_unit_name = (empty($ary_in[5]))? "[#{$ary_in[4]}]" : $ary_in[5] ;
+			echo "<TD>{$_unit_name}</TD>";							//	unit name
+			echo "<TD>{$disp_str}</TD>";							//	dispatched
+			echo "<TD>{$enr_str}</TD>";								//	en route
+			echo "<TD>{$onsc_str}</TD>";							//	on scene
+			echo "<TD>{$facen_str}</TD>";							//	far enroute
+			echo "<TD>{$facar_str}</TD>";							//	fac arr
+			echo "<TD>{$clr_str}</TD>";								//	clear
+			echo "<TD>{$res_str}</TD>";								//	reset
+			echo "</TR>\n";
+			}				// end function echo row()
+/*
+0	- ticket id
+1	- ticket name
+2	- ticket start
+3	- ticket severity
+4	- unit id
+5	- unit name
+6	- dispatched
+7	- en route
+8	- on scene
+9	- far enroute
+10	- fac arr
+11	- clear
+12	- reset
+*/
+
+		function initial ($row_in) {
+			$ary_out = array("","","","","","","","","","","","","");
+			$ary_out[0] = $row_in['ticket_id'];
+			$ary_out[1] = $row_in['scope'];
+			$ary_out[2] = $row_in['problemstart'];
+			$ary_out[3] = $row_in['severity'];
+			$ary_out[4] = $row_in['responder_id'];
+			$ary_out[5] = $row_in['handle'];
+			return $ary_out;
+			};
+
 		$from_to = date_range($date_in,$func_in);	// get date range as array
 
-		$incidents = $severity = $unit_names = $status_vals = $users = $unit_status_ids = $problemstarts = array();		// 4/24/11
-
-		$query = "SELECT `id`, `scope`, `severity`,  UNIX_TIMESTAMP(problemstart) AS `problemstart` FROM `$GLOBALS[mysql_prefix]ticket`";
-		$temp_result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
-		$incidents[0]="";
-
-		while ($temp_row = mysql_fetch_assoc($temp_result)) {
-			$incidents[$temp_row['id']]=$temp_row['scope'];
-			$severity[$temp_row['id']]=$temp_row['severity'];
-			$problemstarts[$temp_row['id']]=$temp_row['problemstart'];
-			}
-
-		$query = "SELECT `id`, `name`, `un_status_id` FROM `$GLOBALS[mysql_prefix]responder`";
-		$temp_result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
-		$unit_names[0]="TBD";
-		while ($temp_row = mysql_fetch_assoc($temp_result)) {
-			$unit_names[$temp_row['id']]=$temp_row['name'];
-			$unit_status_ids[$temp_row['id']]=$temp_row['un_status_id'];
-			}
-
-		$priorities = array("typical","high","highest" );
 		$titles = array ();
 		$titles['dr'] = "Dispatch - Daily Report - ";
 		$titles['cm'] = "Dispatch - Current Month-to-date - ";
@@ -412,153 +453,75 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 		$titles['cy'] = "Dispatch - Current Year-to-date - ";
 		$titles['ly'] = "Dispatch - Last Year - ";
 		$to_str = ($func_in=="dr")? "": " to " . $from_to[3];
-		print "\n<TABLE ALIGN='left' BORDER = 0>\n<TR CLASS='even' style='height: 24px'>\n";
+		print "\n<TABLE ALIGN='left' BORDER = 0 >\n<TR CLASS='even' style='height: 24px'>\n";
 		print "<TH COLSPAN=99 ALIGN = 'center' border=1>" . $titles[$func_in] . $from_to[2] . $to_str . "</TH></TR>\n";
 
 		$where = " WHERE `when` BETWEEN '" . $from_to[0] . "' AND '" . $from_to[1] . "'";
 		$which_inc = ($_POST['frm_tick_sel'] ==0)? "" : " AND `ticket_id` = " . $_POST['frm_tick_sel'];				// 2/7/09
 		$which_unit = ($_POST['frm_resp_sel']==0)? "" : " AND `responder_id` = " .$_POST['frm_resp_sel'];
+												// 6/4/11
+		$codes = "{$GLOBALS['LOG_CALL_DISP']}, {$GLOBALS['LOG_CALL_RESP']}, {$GLOBALS['LOG_CALL_ONSCN']}, {$GLOBALS['LOG_CALL_CLR']}, {$GLOBALS['LOG_CALL_RESET']}, {$GLOBALS['LOG_CALL_U2FENR']}, {$GLOBALS['LOG_CALL_U2FARR']}";
+//		$codes = "{$GLOBALS['LOG_CALL_U2FENR']}, {$GLOBALS['LOG_CALL_U2FARR']}";
+		$query = "SELECT *, 
+			UNIX_TIMESTAMP(`l`.`when`) AS `when_num`, 
+			UNIX_TIMESTAMP(`t`.`problemstart`) AS `problemstart`, 
+			`r`.`name` AS `unit_name`, 
+			`l`.`info` AS `status`
+			FROM `$GLOBALS[mysql_prefix]log` `l`
+			LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` ON (`t`.`id` = `l`.`ticket_id`)
+			LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON (`r`.`id` = `l`.`responder_id`)
+			{$where} {$which_inc} {$which_unit}
+			AND `l`.`code` IN ({$codes})
+			ORDER BY `l`.`ticket_id` ASC, `l`.`responder_id` ASC, `l`.`code` ASC" ;
 
-		$query = "SELECT *, UNIX_TIMESTAMP(`when`) AS `when_num`,
-			`responder_id` AS `unit`, 
-			`info` AS `status`, 
-			`ticket_id` AS `incident` 
-			FROM `$GLOBALS[mysql_prefix]log`" . 
-			$where . $which_inc . $which_unit . " 
-			AND `code` BETWEEN '" . $GLOBALS['LOG_CALL_DISP'] . "' AND '" . $GLOBALS['LOG_CALL_CLR']. "' 
-			ORDER BY `incident` ASC, `unit` ASC, `code` ASC" ;
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 //		dump($query);
+
+		$normalize = array(	$GLOBALS['LOG_CALL_DISP']	 => 6 ,
+							$GLOBALS['LOG_CALL_RESP']	 => 7 ,
+							$GLOBALS['LOG_CALL_ONSCN']	 => 8 ,
+							$GLOBALS['LOG_CALL_U2FENR']	 => 9 ,
+							$GLOBALS['LOG_CALL_U2FARR']	 => 10 ,
+							$GLOBALS['LOG_CALL_CLR']	 => 11,
+							$GLOBALS['LOG_CALL_RESET']	 => 12							
+							);
 		$i = 0;
 		$disp_start = "";
-
-		$times = $empty = array("", "", "", "", "", "");	// incident, unit, dispatch time, responding time, on-scene time, clear time
-		$counts = $minutes = $stats = array(0, 0, 0);				// elapsed minutes and counts to responding, on-scene, cleared - 2/6/09
+		$_data = $empty = array("", "", "", "", "", "", "", "", "", "", "", "", "");	// incident, unit, start, dispatch time, responding time, on-scene time, fac-enr time, fac-arr time, clear, reset
+		$counts = $minutes = $stats = array(0, 0, 0, 0, 0, 0, 0);							// elapsed minutes and counts to dispatched, responding, on-scene, fac-enr, fac-arr, cleared - 2/6/09
 
 		if (mysql_affected_rows()>0) {				// main loop - top
-//			print "<TR><TH>{$incident}</TH><TH>Opened</TH><TH>" . get_text("Unit") . "</TH><TH>Dispatched</TH><TH>Responding</TH><TH>On-scene</TH><TH>Cleared</TH></TR>\n";
-			print "<TR><TH>{$incident}</TH><TH>" . get_text("Unit") . "</TH><TH>Dispatched</TH><TH>Responding</TH><TH>On-scene</TH><TH>Cleared</TH></TR>\n";
+			$header= "<TR><TH ALIGN='left'>&nbsp;{$incident}&nbsp;</TH><TH ALIGN='left'>&nbsp;Start&nbsp;</TH><TH ALIGN='left'>&nbsp;" . get_text("Unit") . "&nbsp;</TH><TH ALIGN='left'>&nbsp;Dispatched&nbsp;</TH><TH ALIGN='left'>&nbsp;Responding&nbsp;</TH><TH ALIGN='left'>&nbsp;On-scene&nbsp;</TH><TH ALIGN='left'>&nbsp;Fac-enr&nbsp;</TH><TH ALIGN='left'>&nbsp;Fac-arr&nbsp;</TH><TH ALIGN='left'>&nbsp;Cleared&nbsp;</TH><TH ALIGN='left'>&nbsp;Reset&nbsp;</TH></TR>\n";
+			echo $header;
 			$i = 0;
+			$initialized = FALSE;
 			while($row = stripslashes_deep(mysql_fetch_assoc($result))) {
-				if (($i==0) && (($row['code'] == $GLOBALS['LOG_CALL_DISP']))) {
-					$disp_start = intval($row['when_num']);
-					}														// dispatch start time
-				$disp_event = $row['code'] - $GLOBALS['LOG_CALL_DISP']; 	// normalize
-				if ((($row['incident'])!=$times[0]) || (!$row['unit']==$times[1]) || (!($times[2+$disp_event]==""))) {
 
-					if ($i>0){
-
-						$theUnitName = (array_key_exists($times[1], $unit_names))? shorten($unit_names[$times[1]], 16): "#" . $times[1] ;
-						$theTickName = (array_key_exists($times[0], $incidents))? shorten($incidents[$times[0]], 16): "#" . $times[0] ;
-						$theSeverity = (empty($severity[$times[0]]))? 0: $severity[$times[0]];
-
-						$diff = array("","","","");
-						if (!empty($disp_start)) {
-
-							if ((!empty($times[3])) && ($disp_start < mysql2timestamp($times[3])))  {
-								$diff[1] = " /<i>" . round((mysql2timestamp($times[3]) - $disp_start)/60);
-								$counts[0]++;
-								$minutes[0] += ((mysql2timestamp($times[3]) - $disp_start)/60);
-								}
-							else {$diff[1] = "";}
-
-							if ((!empty($times[4])) && ($disp_start < mysql2timestamp($times[4])))  {
-								$diff[2] = " /<i>" . round((mysql2timestamp($times[4]) - $disp_start)/60);
-								$counts[1]++;
-								$minutes[1] += ((mysql2timestamp($times[4]) - $disp_start)/60);
-								}
-							else {$diff[2] = "";}
-
-							if ((!empty($times[5])) && ($disp_start < mysql2timestamp($times[5])))  {
-								$diff[3] = " /<i>" . round((mysql2timestamp($times[5]) - $disp_start)/60);
-								$counts[2]++;
-								$minutes[2] += ((mysql2timestamp($times[5]) - $disp_start)/60);
-								}
-							else {$diff[3] = "";}
-
-							}
-						$name_arr = explode("/", $theUnitName);
-
-						print "<TR CLASS='{$evenodd[$i%2]}'><TD class='{$priorities[$theSeverity]}'>{$theTickName}</TD>
-							<TD>{$name_arr[0]}</TD><TD>".  substr($times[2], 8, 8) . "</TD>
-							<TD>". substr($times[3], 8, 8) . $diff[1] . "</TD>
-							<TD>". substr($times[4], 8, 8) . $diff[2] . "</TD>
-							<TD>". substr($times[5], 8, 8) . $diff[3] . "</TD></TR>\n";
-
-/*
-						print "<TR CLASS='{$evenodd[$i%2]}'><TD class='{$priorities[$theSeverity]}'>{$theTickName}</TD>
-							<TD>&nbsp;" . format_date($problemstarts[$row['incident']]) . "</TD>
-							<TD>{$name_arr[0]}</TD><TD>".  substr($times[2], 8, 8) . "</TD>
-							<TD>". substr($times[3], 8, 8) . $diff[1] . "</TD>
-							<TD>". substr($times[4], 8, 8) . $diff[2] . "</TD>
-							<TD>". substr($times[5], 8, 8) . $diff[3] . "</TD></TR>\n";
-*/							
-							
-						$times = $empty;
-						$disp_start = ($row['code'] == $GLOBALS['LOG_CALL_DISP'])? intval($row['when_num']) : "" ;
-						}				// end if ($i>0)
-
+				if (!($initialized)) { 
+					$_data = initial ($row); 
+					$initialized = TRUE; 
+					}
+				$disp_event = $normalize[$row['code']]; 		// normalize to column position
+																// change in incident, unit, or code collision?
+				if ((($row['ticket_id'])!=$_data[0]) || 
+						(!$row['responder_id']==$_data[4]) || 
+						(!(empty($_data[$disp_event])))) {
+					print_row($_data, $i);
 					$i++;
-					$times[0]=$row['incident'];
-					$times[1]=$row['unit'];
-					$times[2+$disp_event]=$row['when'];
+					if (($i%100)==0) {echo $header;}
+					$_data =  initial($row);
+					$_data[$normalize[$row['code']]] = $row['when_num'];
 					}
 				else {
-					$times[2+$disp_event]=$row['when'];
+					$_data[$normalize[$row['code']]] = $row['when_num'];
 					}
-				if ($row['code'] == $GLOBALS['LOG_CALL_DISP']) {
-					$disp_start = intval($row['when_num']);
-					}
-
 				}				// end while ...
 
-								// do the last line
-			$theUnitName = (array_key_exists($times[1], $unit_names))? shorten($unit_names[$times[1]], 16): "#" . $times[1] ;
-			$theTickName = (array_key_exists($times[0], $incidents))? shorten($incidents[$times[0]], 16): "#" . $times[0] ;
-			$theSeverity = (empty($severity[$times[0]]))? 0: $severity[$times[0]];
-
-			$diff = array("","","","");
-			if (!empty($disp_start)) {				// show elapsed times in min's from dispatch
-
-				if ((!empty($times[3])) && ($disp_start < mysql2timestamp($times[3])))  {
-					$diff[1] = " /<i>" . round((mysql2timestamp($times[3]) - $disp_start)/60);
-					$counts[0]++;
-					$minutes[0] += ((mysql2timestamp($times[3]) - $disp_start)/60);
-					}
-				else {$diff[1] = "";}
-
-				if ((!empty($times[4])) && ($disp_start < mysql2timestamp($times[4])))  {
-					$diff[2] = " /<i>" . round((mysql2timestamp($times[4]) - $disp_start)/60);
-					$counts[1]++;
-					$minutes[1] += ((mysql2timestamp($times[4]) - $disp_start)/60);
-					}
-				else {$diff[2] = "";}
-
-				if ((!empty($times[5])) && ($disp_start < mysql2timestamp($times[5])))  {
-					$diff[3] = " /<i>" . round((mysql2timestamp($times[5]) - $disp_start)/60);
-					$counts[2]++;
-					$minutes[2] += ((mysql2timestamp($times[5]) - $disp_start)/60);
-					}
-				else {$diff[3] = "";}
+								// do the last line if any
+			if ((!(empty($_data[6]))) ||(!(empty($_data[7]))) ||(!(empty($_data[8]))) ||(!(empty($_data[9]))) ||(!(empty($_data[10]))) ||(!(empty($_data[11]))) ||(!(empty($_data[12]))) ) {
+				print_row($_data, $i);
 				}
 
-			print "<TR CLASS='" . $evenodd[$i%2] . "'>
-				<TD class='" . $priorities[$theSeverity] . "'>" . $theTickName . "A</TD>
-				<TD>". $theUnitName . "</TD><TD>".  substr($times[2], 8, 8) . "</TD>
-				<TD>". substr($times[3], 8, 8) . $diff[1] . "</TD>
-				<TD>". substr($times[4], 8, 8) . $diff[2] . "</TD>
-				<TD>". substr($times[5], 8, 8) . $diff[3] . "</TD></TR>\n";
-
-			print "<TR><TD ALIGN='center' COLSPAN=99>";
-			$i++;
-			print "</TD></TR>";
-//			print "<TR CLASS='" . $evenodd[$i%2] . "'><TD COLSPAN=3 ALIGN='right'>count: </TD><TD ALIGN='right'>" . $counts[0] . 					"</TD><TD ALIGN='right'>" . $counts[1] . 					"</TD><TD ALIGN='right'>" . $counts[2] . "</TD></TR>";
-
-			$stats[0] = ($counts[0]==0)? "" : round(($minutes[0]/$counts[0]), 1);
-			$stats[1] = ($counts[1]==0)? "" : round(($minutes[1]/$counts[1]), 1);
-			$stats[2] = ($counts[2]==0)? "" : round(($minutes[2]/$counts[2]), 1);
-
-			print "<TR CLASS='" . $evenodd[$i%2] . "'><TD COLSPAN=3 ALIGN='right'><b>average elapsed minutes from dispatch: </b></TD><TD ALIGN='right'>" . $stats[0] . 	"</TD><TD ALIGN='right'>" .  $stats[1]. "</TD><TD ALIGN='right'>" . $stats[2] . "</TD></TR>";
 			}		// end if (mysql_affected_rows()>0)
 		else {																// 10/31/09
 			print "\n<TR CLASS='odd'><TD COLSPAN='99' ALIGN='center'><br /><I>No data for this period</I><BR /></TD></TR>\n";
@@ -567,6 +530,7 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 
 		print "</TABLE>\n";
 		}		// end function do_dispreport()
+
 
 // =================================================== UNIT LOG =========================================
 
@@ -714,10 +678,15 @@ th {font-family: Verdana, Arial, Helvetica, sans-serif;color:#000000;font-weight
 			$theUnitName = (array_key_exists($curr_unit, $unit_names))? shorten($unit_names[$curr_unit], 16):  "#" . $curr_unit ;
 			print "<TD onClick = 'viewU(" .$curr_unit . ")'><B>" . $theUnitName . "</B></TD>";		// flush tail-end Charlie
 
+/*
 			if (!empty($do_date)) {
 				print "<TD>" . date ('D, M j', $do_date) . "</TD>";
 //				$do_date = "";
 				}
+*/
+			$work_date = (!empty($do_date))? date ('D, M j', $do_date) : "" ; // 11/4/11 - AS
+			print "<TD>{$work_date}</TD>";
+
 			foreach($statuses as $key => $val) {
 				print "<TD ALIGN='center'> $val </TD>";
 				}
@@ -1403,10 +1372,10 @@ function my_stripslashes_deep($value) {
 				}		// end function do print_log()
 				
 																			// populate global logs array
-			$where_l = str_replace ("problemstart",  "when", $where);		// log version
-			$query = "SELECT `code`, `log`.`info`, UNIX_TIMESTAMP(`when`) AS `when`, `u`.`user`
-				FROM `$GLOBALS[mysql_prefix]log`
-				LEFT JOIN `$GLOBALS[mysql_prefix]user` u ON (`$GLOBALS[mysql_prefix]log`.who = u.id)
+			$where_l = str_replace ("problemstart",  "when", $where);		// log version - 7/22/11
+			$query = "SELECT `l`.`code`, `l`.`info` AS `info`, UNIX_TIMESTAMP(`l`.`when`) AS `when`, `u`.`user`, `u`.`info` AS `user_info`
+				FROM `$GLOBALS[mysql_prefix]log` `l`
+				LEFT JOIN `$GLOBALS[mysql_prefix]user` u ON (`l`.who = u.id)
 				{$where_l}
 				AND (`code` = {$GLOBALS['LOG_COMMENT']})
 				ORDER BY `when` ASC";
@@ -1426,8 +1395,8 @@ function my_stripslashes_deep($value) {
 		
 			$query = "SELECT *, UNIX_TIMESTAMP(problemstart) AS `problemstart`,
 				UNIX_TIMESTAMP(problemend) AS `problemend`,
-				`$GLOBALS[mysql_prefix]a`.`id` AS `assign_id` ,
-				`$GLOBALS[mysql_prefix]a`.`comments` AS `assign_comments`,
+				`a`.`id` AS `assign_id` ,
+				`a`.`comments` AS `assign_comments`,
 				`u`.`user` AS `theuser`, `t`.`scope` AS `tick_scope`,
 				`t`.`id` AS `tick_id`,
 				`t`.`description` AS `tick_descr`,
@@ -1439,12 +1408,12 @@ function my_stripslashes_deep($value) {
 				`r`.`name` AS `unit_name` ,
 				`r`.`type` AS `unit_type` ,
 				`f`.`name` AS `facy_name` ,
-				`$GLOBALS[mysql_prefix]a`.`as_of` AS `assign_as_of`
+				`a`.`as_of` AS `assign_as_of`
 				FROM `$GLOBALS[mysql_prefix]assigns` `a`
-				LEFT JOIN `$GLOBALS[mysql_prefix]ticket`	 `t` ON (`$GLOBALS[mysql_prefix]a`.`ticket_id` = `t`.`id`)
-				LEFT JOIN `$GLOBALS[mysql_prefix]user`		 `u` ON (`$GLOBALS[mysql_prefix]a`.`user_id` = `u`.`id`)
-				LEFT JOIN `$GLOBALS[mysql_prefix]responder`	 `r` ON (`$GLOBALS[mysql_prefix]a`.`responder_id` = `r`.`id`)
-				LEFT JOIN `$GLOBALS[mysql_prefix]facilities` `f` ON (`$GLOBALS[mysql_prefix]a`.`facility_id` = `f`.`id`)
+				LEFT JOIN `$GLOBALS[mysql_prefix]ticket`	 `t` ON (`a`.`ticket_id` = `t`.`id`)
+				LEFT JOIN `$GLOBALS[mysql_prefix]user`		 `u` ON (`a`.`user_id` = `u`.`id`)
+				LEFT JOIN `$GLOBALS[mysql_prefix]responder`	 `r` ON (`a`.`responder_id` = `r`.`id`)
+				LEFT JOIN `$GLOBALS[mysql_prefix]facilities` `f` ON (`a`.`facility_id` = `f`.`id`)
 				{$where}
 				AND `t`.`status` <> '{$GLOBALS['STATUS_RESERVED']}'				
 				ORDER BY `problemstart` ASC";

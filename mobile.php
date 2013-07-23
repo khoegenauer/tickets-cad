@@ -24,6 +24,8 @@ $units_side_bar_height = .6;		// max height of units sidebar as decimal fraction
 4/5/11 get_new_colors() added
 5/19/11 f_arr_btn button label corrected, unit handle replaces name in list, refresh to current assign selection
 5/23/11 Actions/Persons buttons now available to operator/user.
+6/19/11 corrections to incident selection check
+10/18/11 Added Regions stuff
 */
 
 session_start();	
@@ -35,15 +37,16 @@ define("ALL", 2);
 
 //$istest = TRUE;
 if ($istest) {
-	if (!empty($_GET)) {
+	if (count($_GET)>0) {
 		print "GET<BR/>\n";
 		dump ($_GET);
 		}
-	if (!empty($_POST)) {
+	if (count($_POST)>0) {
 		print "POST<BR/>\n";
 		dump ($_POST);
 		}
 	}
+	
 $internet = $_SESSION['internet'];	
 require_once('incs/functions_major_nm.inc.php');				// 7/28/10
 $patient = get_text("Patient");									// 12/1/10
@@ -75,15 +78,17 @@ function get_butts($ticket_id, $unit_id) {
 		print "<INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Map' onClick  = \"var popWindow = window.open('map_popup.php?id={$ticket_id}', 'PopWindow', 'resizable=1, scrollbars, height={$win_height}, width={$win_width}, left=250,top=50,screenX=250,screenY=50'); popWindow.focus();\" />\n"; // 7/3/10
 		}
 	if (can_edit()) {		// 5/23/11
-		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'New' onClick = \"var newWindow = window.open('add_nm.php?mode=1', 'addWindow', 'resizable=1, scrollbars, height=500, width=600, left=100,top=100,screenX=100,screenY=100'); newWindow.focus();\" />\n"; // 8/9/10
+		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'New' onClick = \"var newWindow = window.open('add.php?mode=1', 'addWindow', 'resizable=1, scrollbars, height=640, width=800, left=100,top=100,screenX=100,screenY=100'); newWindow.focus();\" />\n"; // 8/9/10
 		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Edit' onClick = \"var newWindow = window.open('edit_nm.php?mode=1&id={$ticket_id}', 'editWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100'); newWindow.focus();\" />\n"; // 2/1/10
 
 		if (!is_closed($ticket_id)) {		// 10/5/09
 			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Close' onClick = \"var mailWindow = window.open('close_in.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=480, width=700, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\" />\n";  // 8/20/09
 			}
+		} 		// end if ($can_edit())
+	if (is_administrator() || is_super() || is_unit()){
 		if (!is_closed($ticket_id)) {
-			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Action' onClick  = \"var actWindow = window.open('action_w.php?mode=1&ticket_id={$ticket_id}', 'ActWindow', 'resizable=1, scrollbars, height=480, width=900, left=250,top=50,screenX=250,screenY=50'); popWindow.focus();\" />\n"; // 7/3/10
-			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '{$patient}' onClick  = \"var popWindow = window.open('patient_w.php?mode=1&ticket_id={$ticket_id}', 'PerWindow', 'resizable=1, scrollbars, height=400, width=600, left=250,top=50,screenX=250,screenY=50'); actWindow.focus();\" />\n"; // 7/3/10
+			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Action' onClick  = \"var actWindow = window.open('action_w.php?mode=1&ticket_id={$ticket_id}', 'ActWindow', 'resizable=1, scrollbars, height=480, width=900, left=250,top=50,screenX=250,screenY=50'); ActWindow.focus();\" />\n"; // 7/3/10
+			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '{$patient}' onClick  = \"var patWindow = window.open('patient_w.php?mode=1&ticket_id={$ticket_id}', 'patWindow', 'resizable=1, scrollbars, height=480,width=720, left=250,top=50,screenX=250,screenY=50'); patWindow.focus();\" />\n"; // 7/3/10
 			}
 		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Notify' onClick  = \"var notWindow = window.open('config.php?mode=1&func=notify&id={$ticket_id}', 'NotWindow', 'resizable=1, scrollbars, height=400, width=600, left=250,top=50,screenX=250,screenY=50'); notWindow.focus();\" />\n"; // 7/3/10
 		}
@@ -124,9 +129,41 @@ function adj_time($time_stamp) {
 		.disp_stat 			{ FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #FFFFFF; BACKGROUND-COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;}
 		option				{ FONT-SIZE: 16px;}
 		input				{background-color:transparent;}		/* Benefit IE radio buttons */
-
 	</STYLE>	
 	<SCRIPT TYPE="text/javascript" src="./js/misc_function.js"></SCRIPT>
+	<script language="JavaScript">
+	<!--
+	function showhideFrame(btn) {
+		xx = window.top.document.getElementsByTagName("frameset")[0];
+		if (xx.rows == "75,*")
+			{xx.rows = "0,*";
+			var params = "f_n=show_hide_upper&v_n=h&sess_id=<?php print get_sess_key(__LINE__); ?>";
+			var url = "persist2.php";	//	3/15/11
+			sendRequest (url, handleResult, params);
+			btn.value = "Show Menu";
+		} else {
+			xx.rows = "75,*";
+			var params = "f_n=show_hide_upper&v_n=s&sess_id=<?php print get_sess_key(__LINE__); ?>";
+			var url = "persist2.php";
+			sendRequest (url, handleResult, params);
+			btn.value = "Hide Menu";			
+		}
+	}
+	
+	function checkUpper() {
+		xx = window.top.document.getElementsByTagName("frameset")[0];	
+		var upperVis = "<?php print $_SESSION['show_hide_upper'];?>";
+		if (upperVis == "h") {
+			xx = window.top.document.getElementsByTagName("frameset")[0];
+			xx.rows = "0,*";
+			$('b1').value = "Show Menu";
+			} else {
+			xx.rows = "75,*";
+			$('b1').value = "Hide Menu";
+		}
+	}	
+	-->
+	</script>	
 	<SCRIPT>
 <?php
 if ( get_variable('call_board') == 2) {		// 3/19/11
@@ -184,7 +221,6 @@ $term_str = ($temp )? $temp : "Mobile" ;
 $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_night']))? $_SESSION['day_night'] : 'Day';	//	3/15/11
 ?>
 	try {
-		parent.frames["upper"].$("manual").style.display  = "inline";								// manual link - 5/27/11
 		parent.frames["upper"].$("gout").style.display  = "inline";									// logout button
 		parent.frames["upper"].$("user_id").innerHTML  = "<?php print $_SESSION['user_id'];?>";	
 		parent.frames["upper"].$("whom").innerHTML  = "<?php print $_SESSION['user'];?>";			// user name
@@ -211,6 +247,8 @@ $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_ni
 		}
 	var frame_rows;			// frame
 	parent.upper.show_butts();										// 1/21/09
+	parent.frames["upper"].document.getElementById("gout").style.display  = "inline";
+
 
 	function get_new_colors() {								// 4/5/11
 		window.location.href = '<?php print basename(__FILE__);?>';
@@ -335,8 +373,6 @@ $buster = strval(rand());			//  cache buster
 </HEAD>
 
 <?php																// 0=>unit, 1=>my calls, 2=> all calls - 9/3/10 
-//dump($mode);
-//dump($_GET);
 if ((($mode==0) || ($mode==1))) {									// pull $the_unit, $the_unit_name, this user
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` `u` 
 		LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON ( `u`.`responder_id` = `r`.`id` )
@@ -345,7 +381,6 @@ if ((($mode==0) || ($mode==1))) {									// pull $the_unit, $the_unit_name, thi
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$user_row = stripslashes_deep(mysql_fetch_assoc($result));
 	$the_unit = $user_row['responder_id'];
-//	dump($user_row);
 	$the_unit_name = (empty($user_row['name']))? "NA": $user_row['name'];	// 'NA' if no responder this user
 	}
 else {
@@ -357,7 +392,8 @@ $restrict = (($mode==UNIT) || ($mode==MINE))? " `responder_id` = {$the_unit} AND
 $query = "SELECT *, 
 	`a`.`id` AS `assign_id`,
 	`r`.`id` AS `unit_id`,
-	`r`.`handle` AS `unit_name`,
+	`r`.`name` AS `unit_name`,
+	`r`.`handle` AS `unit_handle`,
 	`t`.`street` AS `tick_street`,
 	`t`.`city` AS `tick_city`
 	FROM `$GLOBALS[mysql_prefix]assigns` `a`
@@ -365,7 +401,7 @@ $query = "SELECT *,
 	LEFT JOIN `$GLOBALS[mysql_prefix]responder`	 `r` ON (`a`.`responder_id` = `r`.`id`)
 	LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` `u` ON ( `r`.`type` = u.id )	
 	WHERE ({$restrict}
-	(`clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00'))
+	(`clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00') AND (`r`.`id` != '' OR `r`.`id` IS NOT NULL))
 	ORDER BY `t`.`severity` ASC, `unit_name` ASC, `t`.`problemstart` ASC ;";	
 
 $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
@@ -378,9 +414,11 @@ if (mysql_affected_rows()==0) {
 	$caption = ($mode==MINE)? "All calls": $the_unit_name;
 	$frm_mode = ($mode==MINE)? ALL: MINE;
 ?>
-<BODY>
+<BODY onLoad="checkUpper()">
 <BR /><BR /><BR /><BR />
-<CENTER><H2><?php print $for_str;?>: no current calls  as of <?php print substr($now, 11,5);?></H2>
+<CENTER>
+<input id="b1" type="button" value="Hide Top Menu" onclick="showhideFrame(this)"><BR /><BR /> 
+<H2><?php print $for_str;?>: no current calls  as of <?php print substr($now, 11,5);?></H2>
 <FORM NAME = 'switch_form' METHOD = 'get' ACTION = '<?php print basename(__FILE__);?>'>
 <INPUT TYPE='button' CLASS='btn_not_chkd' VALUE = '<?php print $caption;?>' onClick = 'this.form.submit()'>
 <INPUT TYPE='hidden' NAME = 'frm_mode' VALUE = '<?php print $frm_mode;?>'>
@@ -394,20 +432,23 @@ else {
 	
 	$i = $selected_indx = 0;
 	$assigns_stack = array();
-	if (array_key_exists ('assign_id', $_GET)) {									// do we have a selection?
+	if (array_key_exists ('assign_id', $_GET) && (intval($_GET['assign_id'])> 0)) {	// do we have a selection? - 6/19/11
 //		print __LINE__ . " " . $_GET['assign_id'];
 		while ($in_row = stripslashes_deep(mysql_fetch_assoc($result))) {			// yes		
-			if ($_GET['assign_id']== $in_row['assign_id']) 	{
+			if (intval($_GET['assign_id'])== intval($in_row['assign_id'])) 	{		// 6/19/11
 				$assn_row = $in_row;												// do this one 
 				$selected_indx = $i;
 				}
 			array_push($assigns_stack, $in_row);									// save all
 			$i++;
 			}
+		if (empty($assn_row)) {										// 6/19/11 - empty if last action was 'clear'
+			$assn_row = $assigns_stack[0];												// do this one 
+			$selected_indx = 0;		
+			}
 		}
 	else {																			// no selection - take first
 		while ($in_row = stripslashes_deep(mysql_fetch_assoc($result))) {
-//			dump($in_row["id"]);
 			if ($i==0) 	{
 				$assn_row = $in_row;
 				}										// do first one
@@ -479,12 +520,35 @@ else {
 	}
 ?>
 		}		// end function set_assign()
+		
+	function set_rec_fac(which) {	//	10/18/11 function to update receiving facility
+		var params = "rec_fac=" +which;
+		params += "&unit=" +<?php print $unit_id;?>;
+		params += "&tick_id=" +<?php print $ticket_id;?>;
+		params += "&frm_id=" +<?php print $assign_id;?>;		
+		sendRequest ('rec_fac_t.php',handleResult, params);			// does the work	
+		parent.frames['upper'].show_msg ("Receiving Facility Updated");
+<?php
+		if (array_key_exists('assign_id', ($_GET))) {
+?>	
+			document.to_refresh.assign_id.value = <?php print $_GET['assign_id']; ?>
+<?php
+		}
+
+		if (get_variable('call_board')==2			) {	
+			print "\n\t parent.top.calls.do_refresh();\n";
+			}
+		else {
+			print "\n\t document.to_refresh.submit();\n";
+			}
+?>		
+	}	//	end function set_rec_fac
 </SCRIPT>
 <?php
 $unload_str = ($_SESSION['internet'])? " onUnload='GUnload();'"  : "";
 ?>
 
-	<BODY onLoad = "ck_frames(); <?php echo $unload_str;?> ">
+	<BODY onLoad = "ck_frames(); checkUpper(); <?php echo $unload_str;?> ">
 		<SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT>
 	<DIV ID='to_bottom' style="position:fixed; top:10px; left:150px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png" BORDER=0 /></div>
 	
@@ -512,26 +576,29 @@ $unload_str = ($_SESSION['internet'])? " onUnload='GUnload();'"  : "";
 		</TD></TR></TABLE>
 	</TD>
 	<TD ID = 'ctr top' ALIGN='center'>
-		<TABLE BORDER=0 ><TR><TD ALIGN='left'>	<!-- 3/15/11 -->	
+		<TABLE BORDER=0 >
+		<TR><TD ALIGN='center'><input id="b1" type="button" value="Hide Menu" onclick="showhideFrame(this)"></TD></TR>
+		<TR class='spacer'><TD class='spacer'>&nbsp;</TD></TR>
+		<TR><TD ALIGN='left'>	<!-- 3/15/11 -->	
 <?php
 			echo "<CENTER><SPAN CLASS='normal_text' STYLE = 'display:inline; margin-left:{$margin}px;'>Current calls {$unit_str}</SPAN></CENTER><BR />\n";	//	3/15/11
 			for ($i = 0; $i<count($assigns_stack); $i++) {
-				$the_icon = $assigns_stack[$i]['icon'];
+				$the_icon = intval($assigns_stack[$i]['icon']);					// 6/19/11
 				$the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$the_icon];		// 8/29/10
 				$the_text_color = 	$GLOBALS['UNIT_TYPES_TEXT'][$the_icon];
 		
 				$checked = ($i == $selected_indx) ? "CHECKED": "";											// this one?
+				$unit_name = addslashes($assigns_stack[$i]['unit_name']);
 				$the_ticket = (!(is_unit()))? 
-					"<SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . shorten($assigns_stack[$i]['unit_name'], 12) . "</SPAN>: ":
+					"<SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};' onmouseout='UnTip()' onmouseover=\"Tip('{$unit_name}');\" >" . shorten($assigns_stack[$i]['unit_handle'], 12) . "</SPAN>: ":
 					"";
 		
 				$the_ticket .= shorten("{$assigns_stack[$i]['scope']}: 
 					{$assigns_stack[$i]['tick_street']}, 
 					{$assigns_stack[$i]['tick_city']}", 48);
-//				dump($the_ticket);
 				$the_disp_stat = get_disp_status ($assigns_stack[$i]);		// 8/29/10
 				print "<INPUT TYPE = 'radio' NAME = 'others' VALUE='{$i}' {$checked} STYLE='margin-left: {$margin}px;' \
-					onClick = 'location.href=\"" . basename(__FILE__) . "?assign_id={$assigns_stack[$i]['assign_id']}&frm_mode={$mode}\";'>&nbsp;{$the_disp_stat}&nbsp;<FONT CLASS='normal_text'>{$the_ticket}</FONT><BR />\n";	
+					onClick = 'location.href=\"" . basename(__FILE__) . "?assign_id={$assigns_stack[$i]['assign_id']}&frm_mode={$mode}\";' >&nbsp;{$the_disp_stat}&nbsp;<FONT CLASS='normal_text'>{$the_ticket}</FONT><BR />\n";	
 				}
 ?>
 		</TD></TR></TABLE>
@@ -553,7 +620,7 @@ $unload_str = ($_SESSION['internet'])? " onUnload='GUnload();'"  : "";
 	$map_width = ($_SESSION['internet'])? get_variable('map_width'): 0;
 	$position =  $sb_width + $map_width + $butts_width +10;
 ?>
-		<TABLE BORDER=0><TR><TD ID='buttons' style=" height: auto; width: 170px; overflow-y: scroll; overflow-x: scroll;">
+		<TABLE BORDER=0><TR><TD ID='buttons' style=" height: auto; width: 200px; overflow-y: scroll; overflow-x: hidden;">
 <?php	if (is_date($time_disp)) { 
 ?>
 		<INPUT ID='disp_btn' TYPE= 'button' CLASS='btn_chkd' VALUE='Disp @ <?php print adj_time($time_disp) ;?>' onClick = 'toss();'/>
@@ -578,7 +645,7 @@ $unload_str = ($_SESSION['internet'])? " onUnload='GUnload();'"  : "";
 ?>
 		<INPUT ID='onsc_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE='On-scene' onClick = "set_assign('s');"/>
 <?php			} 
-			if (($assn_row['facility_id']>0) || ($assn_row['rec_facility_id']>0)) {
+			if ($assn_row['rec_facility_id']>0) {		//	10/18/11 changed to just check if receiving facility is set - Incident at facility is not valid for this function.
 				if (is_date($time_fenr)) { 
 ?>
 			<INPUT ID='f_enr_btn' TYPE= 'button' CLASS='btn_chkd' VALUE="Fac'y enr @ <?php print adj_time($time_fenr);?>" onClick = 'toss();'/>
@@ -607,13 +674,14 @@ $unload_str = ($_SESSION['internet'])? " onUnload='GUnload();'"  : "";
 <?php
 					}		// end if (is_date($time_clear))
 
-	if ((is_unit())|| (has_admin())) {				// do/do-not allow staTus change
+	if ((is_unit()) || (has_admin())) {				// do/do-not allow staTus change
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` `u` 
 			WHERE `u`.`id` = {$unit_id} LIMIT 1";
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		$temp_row = mysql_fetch_assoc($result);    
 ?>
-		<DIV CLASS='sel'><?php print get_text("Status"); ?>:<BR /><?php print get_status_sel($unit_id, $temp_row['un_status_id'], "u", 10);?></DIV>
+		<DIV CLASS='sel' style='width: 152px;'><?php print get_text("Status"); ?>:<BR /><?php print get_status_sel($unit_id, $temp_row['un_status_id'], "u", 10);?></DIV>
+		<DIV CLASS='sel' style='width: 152px;'><?php print get_text("Receiving Facility"); ?>:<BR /><?php print get_recfac_sel($unit_id, $ticket_id, $assign_id);?></DIV>	<!-- 10/18/11 -->	
 <?php
 		}
 	 if ($mode == ALL) {
@@ -624,7 +692,6 @@ $unload_str = ($_SESSION['internet'])? " onUnload='GUnload();'"  : "";
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
 		$user_row = stripslashes_deep(mysql_fetch_assoc($result));
-//		dump ($user_row);
 		if (intval($user_row['responder_id'])>0) {
 ?>		
 			<FORM NAME = 'switch_form' METHOD = 'get' ACTION = '<?php print basename(__FILE__);?>'>
@@ -667,9 +734,7 @@ $unload_str = ($_SESSION['internet'])? " onUnload='GUnload();'"  : "";
 		$get_sort_value = 		(array_key_exists('sort_value', ($_GET)))?		$_GET['sort_value']:	NULL;
 	
 ?>
-
 <A NAME="bottom" /> <!-- 11/11/09 -->
-
 <?php
 	}		// end if/else
 
@@ -695,6 +760,7 @@ $unload_str = ($_SESSION['internet'])? " onUnload='GUnload();'"  : "";
 <a href="javascript:decreaseFontSize();">-</a> 
 <a href="javascript:increaseFontSize();">+</a>
 </p>
+<DIV ID='to_bottom' style="position:fixed; bottom:50px; left:150px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png" BORDER=0 /></div>
 </BODY>
 
 </HTML>

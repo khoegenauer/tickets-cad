@@ -5,7 +5,6 @@
 10/6/09 added unused entries for unit to facility fields
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 9/1/10 set unit 'updated' time
-5/25/11 sql inject prevention added
 */
 error_reporting(E_ALL);
 
@@ -30,7 +29,7 @@ $GLOBALS['LOG_CALL_RESET']			= 34;		// 5/25/09
 //	WHERE `id` = {$_POST['frm_id']} LIMIT 1;";
 
 
-$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` =  " . quote_smart($_POST['frm_id']) . " LIMIT 1";
+$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` =  {$_POST['frm_id']} LIMIT 1";
 $result = mysql_query($query) or do_error($query, "", mysql_error(), basename( __FILE__), __LINE__);
 
 $row = mysql_fetch_assoc($result);													// collect for log

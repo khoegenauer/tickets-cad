@@ -49,7 +49,7 @@
 
 error_reporting(E_ALL);				// 2/3/09
 
-$version = "2.12_base beta";				// see usage below 8/5/10
+$version = "2.20 A base beta";				// see usage below 8/5/10
 
 function dump($variable) {
 	echo "\n<PRE>";					// pretty it a bit
@@ -134,28 +134,50 @@ switch(strtoupper($_SERVER["HTTP_HOST"])) {
 		//check if tables exists and if drop_tables is 1
 
 		table_exists($db_prefix."action",$drop_tables);		// 10/11/08	 - 1/25/09
+		table_exists($db_prefix."allocates",$drop_tables);		
 		table_exists($db_prefix."assigns",$drop_tables);
+		table_exists($db_prefix."captions",$drop_tables);		
 		table_exists($db_prefix."certs",$drop_tables);
 		table_exists($db_prefix."certs_x_user",$drop_tables);
+		table_exists($db_prefix."chat_invites",$drop_tables);		
 		table_exists($db_prefix."chat_messages",$drop_tables);
 		table_exists($db_prefix."chat_rooms",$drop_tables);
 		table_exists($db_prefix."cities",$drop_tables);
 		table_exists($db_prefix."clones",$drop_tables);
+		table_exists($db_prefix."codes",$drop_tables);		
+		table_exists($db_prefix."constituents",$drop_tables);		
 		table_exists($db_prefix."contacts",$drop_tables);
 		table_exists($db_prefix."courses",$drop_tables);
 		table_exists($db_prefix."courses_x_user",$drop_tables);
+		table_exists($db_prefix."css_day",$drop_tables);
+		table_exists($db_prefix."css_night",$drop_tables);		
 		table_exists($db_prefix."documents",$drop_tables);
 		table_exists($db_prefix."documents_log",$drop_tables);
+		table_exists($db_prefix."facilities",$drop_tables);		
+		table_exists($db_prefix."fac_status",$drop_tables);	
+		table_exists($db_prefix."fac_types",$drop_tables);	
+		table_exists($db_prefix."hints",$drop_tables);	
+		table_exists($db_prefix."insurance",$drop_tables);		
 		table_exists($db_prefix."in_types",$drop_tables);
 		table_exists($db_prefix."log",$drop_tables);
 		table_exists($db_prefix."logins",$drop_tables);
+		table_exists($db_prefix."mmarkup",$drop_tables);	
+		table_exists($db_prefix."mmarkups_cats",$drop_tables);	
+		table_exists($db_prefix."modules",$drop_tables);		
 		table_exists($db_prefix."notify",$drop_tables);
 		table_exists($db_prefix."patient",$drop_tables);
 		table_exists($db_prefix."photos",$drop_tables);
+		table_exists($db_prefix."pin_ctrl",$drop_tables);	
+		table_exists($db_prefix."places",$drop_tables);		
+		table_exists($db_prefix."region",$drop_tables);		
+		table_exists($db_prefix."region_type",$drop_tables);		
+		table_exists($db_prefix."remote_devices",$drop_tables);		
 		table_exists($db_prefix."responder",$drop_tables);
+		table_exists($db_prefix."rss",$drop_tables);		
 		table_exists($db_prefix."settings",$drop_tables);
 		table_exists($db_prefix."skills",$drop_tables);
 		table_exists($db_prefix."skills_x_user",$drop_tables);
+		table_exists($db_prefix."stats_settings",$drop_tables);		
 		table_exists($db_prefix."teams",$drop_tables);
 		table_exists($db_prefix."teams_x_user",$drop_tables);
 		table_exists($db_prefix."team_types",$drop_tables);
@@ -567,6 +589,12 @@ switch(strtoupper($_SERVER["HTTP_HOST"])) {
 		 `id` bigint(8) NOT NULL auto_increment,
 		 `ticket_id` int(8) NOT NULL default '0',
 		 `name` varchar(32) default NULL,
+		 `fullname` varchar(64) NULL default NULL,
+		 `dob` varchar(32) NULL default NULL,
+		 `gender` int(1) NOT NULL default '0',
+		 `insurance_id` int(3) NOT NULL default '0' COMMENT 'see table insurance',
+		 `facility_contact` varchar(64) NULL,
+		 `facility_id` int(3) NOT NULL default '0',		 
 		 `date` datetime default NULL,
 		 `description` text NOT NULL,
 		 `user` int(8) default NULL,
@@ -1009,7 +1037,7 @@ switch(strtoupper($_SERVER["HTTP_HOST"])) {
 		do_insert_settings('frameborder','1');
 		do_insert_settings('framesize','50');
 		do_insert_settings('gmaps_api_key',$_POST['frm_api_key']);		//
-		do_insert_settings('group or dispatch','0');		//		1/10/11
+		do_insert_settings('group_or_dispatch','0');		//		1/10/11
 		do_insert_settings('guest_add_ticket','0');
 		do_insert_settings('host','www.yourdomain.com');
 		do_insert_settings('instam_key','');			// 4/10/09

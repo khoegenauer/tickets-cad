@@ -27,16 +27,73 @@ $query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]caller_id` (
 		) ENGINE=MyISAM  DEFAULT CHARSET=latin1;";
 $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 
-// if ((isset($_REQUEST['id'])) && (!(strval(intval($_REQUEST['id']))===$_REQUEST['id']))) {	win_shut_down();}	// 5/28/11
+$query	= "DELETE FROM `$GLOBALS[mysql_prefix]caller_id` WHERE `_on` < (NOW() - INTERVAL 7 DAY)";		 // remove if older than one week
+$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 
-$phone = (empty($_REQUEST))? "4108498721": $_REQUEST['phone'];
-
-	function cid_lookup($phone )  {
-		$aptStr = " Apt:";															
-		function do_the_row($inRow) {		// for ticket or constituents data
+		function get_wp_data ($instr, $source_id, $the_phone) {
 			global $apartment, $misc;
-			$outStr = $inRow['contact']	. ";";		// phone
-			$outStr .= $inRow['phone']	. ";";			// phone
+			$wp_key = "729c1a751fd3d2428cfe2a7b43442c64";				// 
+			$url = "http://api.whitepages.com/reverse_phone/1.0/?phone=" . urlencode($instr) . ";api_key={$wp_key};outputtype=JSON";
+
+			$resp_data = "";
+			if (function_exists("curl_init")) {		// got CURL?
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+				$resp_data = curl_exec ($ch);
+				curl_close ($ch);
+				}
+			else {									// no CURL
+				if ($fp = @fopen($url, "r")) {
+					while (!feof($fp) && (strlen($resp_data)<9000)) $resp_data .= fgets($fp, 128);
+					fclose($fp);
+					}		
+				else {
+					return FALSE;
+					}
+				}
+			$jsonresp = json_decode ($resp_data, true); 		// to array
+
+			if(@$jsonresp["errors"]) {
+//				dump(__LINE__);
+				$error_str = "0;;{$the_phone};;;;;;;;0;";
+				return $error_str;}						// ! empty => errors
+			
+			if(array_key_exists ( "business", $jsonresp['listings'][0])) 
+				{$name = $jsonresp['listings'][0]["business"]["businessname"];}
+			else {
+				$name = (array_key_exists ( "people", $jsonresp['listings'][0]))  ?			
+					"{$jsonresp['listings'][0]['people'][0]['lastname']},
+					 {$jsonresp['listings'][0]['people'][0]['firstname']}
+					 {$jsonresp['listings'][0]['people'][0]['middlename']}":
+					 "";
+				}
+
+			$outStr = "0;";																	// priors
+			$outStr .= "{$name};";															// name
+			$outStr .= extr_digits($the_phone) . ";";										// phone
+																							// street
+			$outStr .= (array_key_exists ( "fullstreet", $jsonresp['listings'][0]["address"])) ?
+				$jsonresp['listings'][0]["address"]["fullstreet"] . ";":
+				";";
+
+			$outStr .= $jsonresp['listings'][0]["address"]["city"]	. ";";					// city 
+			$outStr .= $jsonresp['listings'][0]["address"]["state"] . ";";					// state 	
+			$outStr .= ";";								// zip - unused 
+			$outStr .= $jsonresp['listings'][0]["geodata"]["latitude"]	. ";"; 
+			$outStr .= $jsonresp['listings'][0]["geodata"]["longitude"]	. ";"; 
+			$outStr .=  ";"; 			// misc placeholder
+			$outStr .=$source_id . ";"; 			//
+			return 	$outStr;						// end function do_the_row()
+
+			}				// end function get wp_data ()
+
+	function cid_lookup($phone)  {
+		$aptStr = " Apt:";															
+		function do_the_row($inRow, $source_id, $the_phone ) {		// for ticket or constituents data
+			global $apartment, $misc;
+			$outStr = $inRow['contact']	. ";";			// name
+			$outStr .= extr_digits($the_phone) . ";";			// phone
 			$outStr .= $inRow['street'] . (stripos($inRow['street'], " Apt:"))? "" : $apartment;		// street and apartment - 3/13/10
 			
 			$outStr .= $inRow['street']	. $apartment . ";";			// street and apartment - 3/13/10
@@ -46,7 +103,8 @@ $phone = (empty($_REQUEST))? "4108498721": $_REQUEST['phone'];
 			$outStr .=$inRow['lat']		. ";"; 
 			$outStr .=$inRow['lng']		. ";"; 
 			$outStr .=$misc			. ";"; 			// possibly empty - 3/13/10
-			return 	$outStr;						// end function do_the_row()
+			$outStr .=$source_id . ";"; 			//
+			return 	$outStr;						// end function do the_row()
 			}
 	
 																// collect constituent data this phone no.
@@ -56,110 +114,55 @@ $phone = (empty($_REQUEST))? "4108498721": $_REQUEST['phone'];
 	
 	$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$cons_row = (mysql_num_rows($result)==1)	? stripslashes_deep(mysql_fetch_array($result)): NULL;
-	$apartment = 	(is_null($cons_row))		? "" : $aptStr . $cons_row['apartment']; 						// note brackets
+	$apartment = 	(is_null($cons_row))		? "" : $aptStr . $cons_row['apartment']; 
 	$misc = 		(is_null($cons_row))		? "" : $cons_row['miscellaneous'];
+	$source = 0;	// none
 	
+
 	$query  = "SELECT  * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `phone`= '{$phone}' ORDER BY `updated` DESC";			// 9/29/09
 	$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$ret = mysql_num_rows($result) . ";";						// hits - common to each return
 	if (mysql_num_rows($result)> 0) {							// build return string from newest incident data
 		$row = stripslashes_deep(mysql_fetch_array($result));
-		$ret .= do_the_row($row);
-		$source = 0;										// incidents
-
+		$source_id = 1;										// incidents
+		$ret .= do_the_row($row, $source_id, $phone);
 		}
 	
 	 elseif (!(is_null($cons_row))) {						// 3/13/10
-	 	$source = 1;										// constituents
-		$ret .= do_the_row($cons_row);						// otherwise use constituents data
+	 	$source_id = 2;										// constituents
+		$ret .= do_the_row($cons_row, $source_id, $phone);						// otherwise use constituents data
 		}
 	
 	else {													// no priors or constituents - do WP
-			$wp_key = get_variable("wp_key");				// 1/26/09
-			$url = "http://api.whitepages.com/reverse_phone/1.0/?phone=" . urlencode($phone) . ";api_key=". $wp_key;
-			if(isset($phone)) {								// wp phone lookup
-				$url = "http://api.whitepages.com/reverse_phone/1.0/?phone=" . urlencode($phone) . ";api_key=". $wp_key;
-				}
-			$data = "";
-			if (function_exists("curl_init")) {
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, $url);
-				curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-				$data = curl_exec ($ch);
-				curl_close ($ch);
-				}
-			else {				// not CURL
-				if ($fp = @fopen($url, "r")) {
-					while (!feof($fp) && (strlen($data)<9000)) $data .= fgets($fp, 128);
-					fclose($fp);
-					}		
-				else {
-					print "-error 1";		// @fopen fails
-					}
-				}
-					
-		//						target: "Arnold Shore;(410) 849-8721;1684 Anne Ct;  Annapolis; MD;21401;lattitude;longitude; miscellaneous"
-			if  (!(((strpos ($data, "Invalid")>0)) || ((strpos ($data, "Missing")>0)))){
-
-				$source = 2;				// White Pages
-		
-				$aryk[0] = "<wp:firstname>";
-				$aryk[1] = "<wp:lastname>";
-				$aryk[2] = "<wp:fullphone>";
-				$aryk[3] = "<wp:fullstreet>";
-				$aryk[4] = "<wp:city>";
-				$aryk[5] = "<wp:state>";
-				$aryk[6] = "<wp:zip>";
-				$aryk[7] = "<wp:latitude>";
-				$aryk[8] = "<wp:longitude>";
-	//			dump($aryk);
-				$aryv = array(9);				// values
-			//	First Last;(123) 456-7890;1234 Name Ct,  Where, NY 12345"
-				$arys[0] = " ";		// firstname
-				$arys[1] = ";";		// lastname
-				$arys[2] = ";";		// fullphone
-				$arys[3] = ";";		// fullstreet
-				$arys[4] = ";";		// city
-				$arys[5] = ";";		// state
-				$arys[6] = ";";		// zip
-				$arys[7] = ";";		// latitude
-				$arys[8] = ";";		// longitude
-				
-				$pos = 0;					//
-				for ($i=0; $i< count($aryk); $i++) {
-					$pos = strpos ( $data, $aryk[$i], $pos);
-					if ($pos === false) {								// bad
-						$arys="";
-						break;
-						}
-					$lhe = $pos+strlen($aryk[$i]);
-					$rhe = strpos ( $data, "<", $lhe);
-					$aryv[$i] = substr ( $data, $lhe , $rhe-$lhe );		// substr ( string, start , length )
-					}		// end for ($i...)
-	//			dump($aryv);
-		
-				if (!(empty($arys))) {									// 11/11/09
-					for ($i=0; $i< count($aryk); $i++) {				// append return string to match count
-						$ret .= $aryv[$i].$arys[$i];					// value + separator
-						}			// end for ()
-					unset($result);
-					}
-				}
+		$source_id = 3;										// wp
+		$ret = get_wp_data ($phone, $source_id, $phone);
 		}					// end no priors
 	
-	//dump($ret);
 	$ret .= ";" . $source;	// add data source
-//	dump(explode(";", $ret));
 	return $ret;			// semicolon-separated string
-	}			// end function cid_lookup() 
+	}			// end function cid lookup() 
+
+function extr_digits ($in_str) {
+	return ereg_replace("[^0-9]", "", $in_str);
+	}
 
 
-$lookup_str =  cid_lookup($phone);
-$query = "INSERT INTO `$GLOBALS[mysql_prefix]caller_id` (`call_str`, `lookup_vals`, `status`)  VALUES ( " . quote_smart(trim($phone)) . ", " .  quote_smart(addslashes(trim($lookup_str))) . ", 0);";
+//$cid_str = (empty($_GET))? "0000000000": $_GET['phone'];		// bad 
+$cid_str = (empty($_GET))? "2125867000": $_GET['phone'];		// Hilton
+//$cid_str = (empty($_GET))? "4102242850": $_GET['phone'];		// Giant pharmacy
+//$cid_str = (empty($_GET))? "4103533986": $_GET['phone'];		// cell
+//$cid_str = (empty($_GET))? "4108498240": $_GET['phone'];
+//$cid_str = (empty($_GET))? "4108498721": $_GET['phone'];
+
+$lookup_str =  cid_lookup(extr_digits ($cid_str));		// given a phone no., returns data string
+
+$query = "INSERT INTO `$GLOBALS[mysql_prefix]caller_id` (`call_str`, `lookup_vals`, `status`)  
+	VALUES ( " . quote_smart(trim($cid_str)) . ", " .  quote_smart(addslashes(trim($lookup_str))) . ", 0);";
 $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
+
 $retval =  (explode(";", $lookup_str)) ;
 $received = format_date_time(mysql_format_date(now()));
-$sources = array("prior incidents", "Constituents data", "White pages");
+$sources = array("NA", "prior incidents", "Constituents data", "White pages");
 $extra = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 $url = "http://{$_SERVER['HTTP_HOST']}:{$_SERVER['SERVER_PORT']}{$extra}/";
 
@@ -174,7 +177,7 @@ $url = "http://{$_SERVER['HTTP_HOST']}:{$_SERVER['SERVER_PORT']}{$extra}/";
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
-	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">		<!-- 3/15/11 -->
+	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	
 	</HEAD>
 	<BODY>
 
@@ -214,6 +217,7 @@ $url = "http://{$_SERVER['HTTP_HOST']}:{$_SERVER['SERVER_PORT']}{$extra}/";
 	<TD>Longitude</TD>
 	<TD><?php echo $retval[8];?></TD>
 	</TR>
+<!--
 <TR ALIGN="left" VALIGN="baseline" CLASS='odd'>
 	<TD>tbd</TD>
 	<TD><?php echo $retval[9];?></TD>
@@ -222,6 +226,7 @@ $url = "http://{$_SERVER['HTTP_HOST']}:{$_SERVER['SERVER_PORT']}{$extra}/";
 	<TD>tbd</TD>
 	<TD><?php echo $retval[10];?></TD>
 	</TR>
+-->	
 <TR ALIGN="left" VALIGN="baseline" CLASS='odd'>
 	<TD>Call received</TD>
 	<TD><?php echo $received;?></TD>

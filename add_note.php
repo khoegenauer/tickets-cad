@@ -7,7 +7,6 @@
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 12/1/10 added get_text(disposition)
 3/15/11 changed stylesheet.php to stylesheet.php
-5/26/11 added intrusion detection
 */
 error_reporting(E_ALL);
 
@@ -36,7 +35,7 @@ $disposition = get_text("Disposition");				// 12/1/10
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
-<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
+<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
 <SCRIPT>
 	String.prototype.trim = function () {				// 3/16/10
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
@@ -93,10 +92,7 @@ Description &raquo; <INPUT TYPE = 'radio' NAME='frm_add_to' value='0' CHECKED />
 </FORM>
 <?php
 		}		// end if (empty($_POST))
-
 	else {
-		if ((isset($_REQUEST['frm_ticket_id'])) && 	(strlen(trim($_REQUEST['frm_ticket_id']))>6)) {	win_shut_down();}			// 5/26/11
-	
 		$field_name = array('description', 'comments');
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id` = {$_POST['frm_ticket_id']} LIMIT 1";
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);

@@ -34,8 +34,11 @@ improvements to datatype 'time' handling
 11/9/10 function is_in_use() added
 11/20/10 corrected 'push' sgl-quote handling
 12/15/10 accommodate comments problem
-3/15/11 changed stylesheet.php to stylesheet.php
+3/15/11 changed default.css to stylesheet.php
 3/18/11 revised to correct error if $_POST['srch_str'] does not exist
+6/10/11 Added Regions
+12/12/11 - special case table user added
+
 */
 $gmap=TRUE;
 
@@ -145,6 +148,12 @@ function is_in_use($index_val) {	// 11/9/10 - return boolean based on whether th
 			$res_test = mysql_query($query) or myerror(get_file(__FILE__), __LINE__, 'mysql_error', $query);
 			$in_use = (mysql_num_rows($res_test)>0);
 		    break;						    
+		case "region":						// 6/10/11
+			$the_table = $mysql_prefix . "allocates";
+			$query ="SELECT * FROM `$the_table` WHERE `group` = {$index_val} LIMIT 1";						// get in_row count only
+			$res_test = mysql_query($query) or myerror(get_file(__FILE__), __LINE__, 'mysql_error', $query);
+			$in_use = (mysql_num_rows($res_test)>0);
+		    break;				
 		default:
 			$in_use = FALSE;
 		}				// end switch
@@ -725,7 +734,7 @@ if(array_key_exists('srch_str', $_POST)) {		//	3/18/11
 	$search_str = "";
 	}
 ?>
-<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
+<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
 
 <BODY onLoad = "do_onload()">	<!-- 9/21/08 -->
 <?php $the_table = (strlen($tablename)>0)? $tablename : "tbd"; ?>
@@ -1055,7 +1064,12 @@ switch ($func) {		// ================================== case "c" ===============
 //				echo __line__ . $query . "<br>";
 				$temp_result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);
 				while ($temp_row = mysql_fetch_array($temp_result))  {											// each row/value => $substitutions array
-					$subst[fnSubTableExists(mysql_field_name($result, $i))][$temp_row[0]] = $temp_row[1];		// assign value to column_name[index]  value
+					if (($temp == 'user') && (array_key_exists('user', $temp_row))) {							// 12/12/11 - special case table user
+						$subst[fnSubTableExists(mysql_field_name($result, $i))][$temp_row[0]] = $temp_row['user'];		// assign value to column_name[index]  value
+						}
+					else {
+						$subst[fnSubTableExists(mysql_field_name($result, $i))][$temp_row[0]] = $temp_row[1];		// assign value to column_name[index]  value
+						}
 					}						// end while ($temp_row = ...
 				unset ($temp_result);
 				}
@@ -1466,7 +1480,8 @@ case "u":	// =======================================  Update 	==================
 			$temp_result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query); 
 			if (mysql_affected_rows()>0) 	{										// defined?
 				$temp_row = mysql_fetch_array($temp_result);						// yes
-				print $temp_row[1];			// value, whatever name
+				print (($temp == 'user')&&(array_key_exists('user', $temp_row)))? $temp_row['user']: $temp_row[1];		// 12/12/11 - special case
+//				print $temp_row[1];			// value, whatever name
 				}
 			else { 																	// no
 				print $row[$i];

@@ -536,9 +536,76 @@ Changes for Tickets V 2.13  (Most of it by Andy Harvey)
       values.  The icon string remains at three character, and is taken from the low-order portion of unit
       name.
 
-173.  While not inherent to this release, Tickets now has a User's Manual - thanks to Alan Jump;  consult 
+174.  While not inherent to this release, Tickets now has a User's Manual - thanks to Alan Jump;  consult 
       that for information on Tickets setup and usage - rather than these cursory notes.
 
+Changes for Tickets V 2.13A
+
+175.  Log information field sizes have been increased.  The Incident Management report now includes 
+      information log entries.  Reports now have a 'full width' option, in which longer data elements
+      are not truncated.
+
+176.  Unit and facility handles are used in the Situation Screen as the primary identification.  (Where the 
+      handle fields weren't used these were filled automatically from the unit name.   In addition, the 
+      short icon string is now a separately editable field, also filled  automatically for you.  (We 
+      recommend you review your installation on both these points.)
+
+177.  The dark/light color scheme may now be switched at any time while logged in.
+
+178.  We applied a significant cleanup to the remote tracking modules; operation should be more reliable.
+
+179.  On the situation screen, the call dispatch status now shows the time in minutes (maximum 99) since
+      last update.
+
+Changes for Tickets V 2.13 B
+
+180.  This is primarily a maintenance release, with fixes applied to geo-location processing in the several
+      modules using that capability, to notifies (which now honor incident-severity filtering), and to 
+      faciliities handling.  Some extra strengthening against unauthorized intrusion is included.
+
+181.  You may now place the Tickets User Config and Operating Manual online via a link in the top frame. To
+      do so, store that pdf file in the new 'manual' subdirectory.  Clicking on the "Manual" link will open 
+      the first pdf file in that subdirectory, thus providing you with some flexibility, including the 
+      ability to make your own revisions.
+
+Changes for Tickets V 2.13 C
+
+182.  'Person' data has been expanded to include additional elements, notably Insurance - with a select list and
+	  supporting reviseable table, accessible via Config/Insurance.  New data elements have reviseable captions
+	  in order to provide for terminology revision and translation.  The count of Person record is now highlighted 
+	  on the Situation screen, and is now click-able to reach information details.
+
+183.  Automatic page refresh has been implemented for the Situation screen and Full-screen displays; the time period
+	  selected by the Setting entry 'Situ refr' in seconds.  A zero value indicates no automatic refresh, and a
+	  15-second lower limit is imposed.  Please note: page refresh times will depend on network capability and the 
+	  browser used, as well as the number of incidents, response units and facilities.
+	  
+184.  Situation screen layout has been revised on both the standard as well as no-maps version.
+
+185.  KML file handling has been enhanced to allow for external files, addressed via URL.  To do so, insert a 
+	  text file (anything.txt) with any number of complete valid urls (each on a separate line) into the 
+	  kml_files sub-directory.  This is in addition to any kml files in that directory
+	  
+Changes for Tickets V 2.20 A
+
+186.  Addition of "Regions" capability. Tickets, Users, Responders and Facilities can now assigned to one or more
+      Regions on the system to enable partitioning into multiple operational groups or regions.
+	  
+187.  Addition of Map Markup such as visible boundaries and text banners. Boundaries can be Polygons or Circles.
+	  Boundaries can be assigned to Responders as Exclusion zones or Ringfences and to Facilities as Catchment
+	  areas. Boundaries can also be assigned to "Regions". Map Markup can be set to appear on selected screens
+	  however Regional Boundaries always appear on the Situation screen. On the situation screen, map markup items
+	  can be selectively shown or hidden in the same way as the various types of map markers.
+	  
+188.  The Title string is now revisable - entering text in the "Title String" setting in configuration causes
+	  the default title string to be replaced, removing this text returns the default title string.
+
+189.  A new Statistics user and Statistics screen have been created. This creates a similar type of screen
+	  to a Call Center wall board. A statistics user is taken direct to this screen. You can configure various
+	  types of operational statistics for showing in up to 8 statistics boxes. Thresholds can be assigned against the
+	  statistics types to change the color of the boxes from white to yellow, orange and red (in ascending seriousness).
+	  
+190.  Various fixes to reports, the call board and also to the Situation, Responder and Facility screen format.	  
 
 And, as always, we've applied a goodly number of corrections.  Please ensure that you're running the latest 
 available release before reporting a problem.      
@@ -546,7 +613,7 @@ available release before reporting a problem.
 Let us know if the above is too terse and where further expansion wd be useful.
 <A NAME = 'bottom'></A>
 
-Apr '11
+October '11
 Arnie Shore
 Andy Harvey, UK
 

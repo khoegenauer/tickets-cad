@@ -13,10 +13,10 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 	
 $query = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `status` = 'Accepted', `accepted_date` = '" .$now . "' WHERE `id` = " . strip_tags($_GET['id']);
 $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-
 $query = "SELECT *, UNIX_TIMESTAMP(`request_date`) AS `request_date` FROM `$GLOBALS[mysql_prefix]requests` WHERE `id` = " . strip_tags($_GET['id']) . " LIMIT 1";
 $result	= mysql_query($query) or do_error($query,'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
 $row = stripslashes_deep(mysql_fetch_assoc($result));
+$description = (($row['description'] == "") && ($row['comments'] == "")) ? "New Ticket from Portal - Accepted " . $now : $row['description'] . $row['comments'];
 $ret_arr = array();
 $query = "INSERT INTO `$GLOBALS[mysql_prefix]ticket` (
 				`in_types_id`,
@@ -42,24 +42,24 @@ $query = "INSERT INTO `$GLOBALS[mysql_prefix]ticket` (
 			) VALUES (
 				0, 
 				0,
-				" .$row['the_name'] . ", 
-				" . $row['street'] . ", 
-				" . $row['city'] . ", 
-				" . $row['state'] . ", 
-				" . $row['phone'] . ", 
-				" . $row['orig_facility'] . ", 				
-				" . $row['rec_facility'] . ", 
+				" . quote_smart(trim($row['the_name'])) . ", 
+				" . quote_smart(trim($row['street'])) . ", 
+				" . quote_smart(trim($row['city'])) . ", 
+				" . quote_smart(trim($row['state'])) . ", 
+				" . quote_smart(trim($row['phone'])) . ", 
+				" . quote_smart(trim($row['orig_facility'])) . ", 				
+				" . quote_smart(trim($row['rec_facility'])) . ", 
 				" . $row['lat'] . ", 
 				" . $row['lng'] . ", 
-				" . $row['request_date'] . ", 
- 				" . $now . ", 
-				" . $row['scope'] . ", 
-				" . $row['description'] . " " . $row['comments'] . ", 
+				" . quote_smart(trim($row['request_date'])) . ", 
+ 				" . quote_smart(trim($now)) . ", 
+				" . quote_smart(trim(($row['scope'])) . ", 
+				" . quote_smart(trim($description)) . ", 
 				2, 
-				" . $by . ",  
+				" . quote_smart(trim($by)) . ",  
 				0, 
- 				" . $now . ", 
-				" . $by . ")";
+ 				" . quote_smart($now)) . ", 
+				" . quote_smart(trim($by)) . ")";
 			
 $result	= mysql_query($query) or do_error($query,'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
 if($result) {

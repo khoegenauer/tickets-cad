@@ -960,25 +960,34 @@ require_once('./incs/socket2me.inc.php');		// 5/22/2013
 				}
 
 			if(!isset($curr_viewed)) {	
-				$x=0;	//	6/10/11
-				$where2 = "WHERE (";	//	6/10/11
-				foreach($al_groups as $grp) {	//	6/10/11
-					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-					$where2 .= "`a`.`group` = '{$grp}'";
-					$where2 .= $where3;
-					$x++;
+				if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	6/24/13
+					$where2 = "WHERE `a`.`type` = 3";
+					} else {			
+					$x=0;	//	6/10/11
+					$where2 = "WHERE (";	//	6/10/11
+					foreach($al_groups as $grp) {	//	6/10/11
+						$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+						$where2 .= "`a`.`group` = '{$grp}'";
+						$where2 .= $where3;
+						$x++;
+						}
+					$where2 .= " AND `a`.`type` = 3";	//	6/10/11		
 					}
-			} else {
-				$x=0;	//	6/10/11
-				$where2 = "WHERE (";	//	6/10/11
-				foreach($curr_viewed as $grp) {	//	6/10/11
-					$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-					$where2 .= "`a`.`group` = '{$grp}'";
-					$where2 .= $where3;
-					$x++;
+				} else {
+				if(count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	6/24/13
+					$where2 = "WHERE `a`.`type` = 3";
+					} else {				
+					$x=0;	//	6/10/11
+					$where2 = "WHERE (";	//	6/10/11
+					foreach($curr_viewed as $grp) {	//	6/10/11
+						$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+						$where2 .= "`a`.`group` = '{$grp}'";
+						$where2 .= $where3;
+						$x++;
+						}
+					$where2 .= " AND `a`.`type` = 3";	//	6/10/11		
 					}
-			}
-			$where2 .= " AND `a`.`type` = 3";	//	6/10/11		
+				}
 
 			if (!($row['facility'] == NULL)) {				// 9/22/09
 	

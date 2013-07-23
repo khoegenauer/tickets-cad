@@ -283,26 +283,35 @@ function get_sess_boundaries() {
 		}
 
 	if(!isset($curr_viewed)) {	
-		$x=0;	//	4/18/11
-		$where2 = "WHERE (";	//	4/18/11
-		foreach($al_groups as $grp) {	//	4/18/11
-			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`a`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
+		if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	6/24/13
+			$where2 = "WHERE `a`.`type` = 2";
+			} else {
+			$x=0;	//	4/18/11
+			$where2 = "WHERE (";	//	4/18/11
+			foreach($al_groups as $grp) {	//	4/18/11
+				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`a`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+			$where2 .= " AND `a`.`type` = 2";	//	6/24/13						
 			}
-	} else {
-		$x=0;	//	4/18/11
-		$where2 = "WHERE (";	//	4/18/11
-		foreach($curr_viewed as $grp) {	//	4/18/11
-			$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`a`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
+		} else {
+		if(count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	6/24/13
+			$where2 = "WHERE `a`.`type` = 2";
+			} else {
+			$x=0;
+			$where2 = "WHERE (";	//
+			foreach($curr_viewed as $grp) {
+				$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`a`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+			$where2 .= " AND `a`.`type` = 2";	//	6/24/13						
 			}
-	}
-	$where2 .= "AND `a`.`type` = 2";		
-		
+		}
+
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` `l`
 				LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON ( `l`.`id` = `r`.`ring_fence`)
 				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `r`.`id` = `a`.`resource_id` )	

@@ -2650,25 +2650,34 @@ function curr_regs() {	//	10/18/11	Gets currently allocated or viewed regions
 		}
 
 	if(!isset($curr_viewed)) {	
-		$x=0;	//	6/10/11
-		$where = "WHERE (";
-		foreach($al_groups as $grp) {
-			$where2 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-			$where .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-			$where .= $where2;
-			$x++;
-			}
+		if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+			$where = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 3";
+			} else {	
+			$x=0;	//	6/10/11
+			$where = "WHERE (";
+			foreach($al_groups as $grp) {
+				$where2 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+				$where .= $where2;
+				$x++;
+				}
+			$where .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	sets the region allocations searched for to type = 3 - Facilities.
+			}				
 		} else {
-		$x=0;	//	6/10/11
-		$where = "WHERE (";	//	6/10/11
-		foreach($curr_viewed as $grp) {
-			$where2 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-			$where .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-			$where .= $where2;
-			$x++;
+		if(count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+			$where = "WHERE `a`.`type` = 2";
+			} else {
+			$x=0;	//	6/10/11
+			$where = "WHERE (";	//	6/10/11
+			foreach($curr_viewed as $grp) {
+				$where2 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+				$where .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+				$where .= $where2;
+				$x++;
+				}
+			$where .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	sets the region allocations searched for to type = 3 - Facilities.
 			}
 		}
-	$where .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	sets the region allocations searched for to type = 3 - Facilities.
 	return $where;
 	}	
 	

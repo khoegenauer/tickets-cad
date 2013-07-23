@@ -1452,25 +1452,34 @@ require_once('./incs/socket2me.inc.php');		// 5/22/2013
 		}
 
 	if(!isset($curr_viewed)) {	
-		$x=0;	//	6/10/11
-		$where2 = "WHERE (";	//	6/10/11
-		foreach($al_groups as $grp) {	//	6/10/11
-			$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
+		if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	6/24/13
+			$where2 = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 3";
+			} else {
+			$x=0;	//	6/10/11
+			$where2 = "WHERE (";	//	6/10/11
+			foreach($al_groups as $grp) {	//	6/10/11
+				$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+			$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	6/10/11					
 			}
-	} else {
-		$x=0;	//	6/10/11
-		$where2 = "WHERE (";	//	6/10/11
-		foreach($curr_viewed as $grp) {	//	6/10/11
-			$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
-			$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
-			$where2 .= $where3;
-			$x++;
+		} else {
+		if(count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	6/24/13
+			$where2 = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 3";
+			} else {		
+			$x=0;	//	6/10/11
+			$where2 = "WHERE (";	//	6/10/11
+			foreach($curr_viewed as $grp) {	//	6/10/11
+				$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
+				$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
+				$where2 .= $where3;
+				$x++;
+				}
+			$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	6/10/11	
 			}
-	}
-	$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 3";	//	6/10/11		
+		}
 
 		// Pulldown menu for use of Incident set at Facility 9/22/09, 3/18/10 - 2/12/11
 	$query_fc = "SELECT *, `$GLOBALS[mysql_prefix]facilities`.`id` AS `fac_id` FROM `$GLOBALS[mysql_prefix]facilities`	

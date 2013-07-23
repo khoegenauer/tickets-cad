@@ -7,7 +7,7 @@ if(!(file_exists("./incs/mysql.inc.php"))) {
 
 require_once('./incs/functions.inc.php');	
 
-$version = "2.40B Beta - 6/18/2013";	
+$version = "2.40C Beta - 6/26/2013";	
 
 /*
 10/1/08 added error reporting
@@ -1398,6 +1398,9 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 		
 			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]allocates` ADD INDEX ( `type` ) ";
 			$result = mysql_query($query); 		// disregard error
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `status_updated` DATETIME NULL DEFAULT NULL AFTER `updated`";	//	add new field to register status updates separate from other updates
+			$result = mysql_query($query); 		// disregard error
 		
 			do_setting ('broadcast','0');					// 5/26/2013 do/do-not (1/0) use the broadcast feature - default is do-not
 			do_setting ('hide_booked','48');				// 5/26/2013 hide scheduled/booked until n hours before	
@@ -1405,6 +1408,8 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 			do_setting ('auto_refresh','1/1/1');			// 5/21/2013 auto-refresh for sitscr, fullscr, mobile
 			do_msg_setting ('no_whitelist','0');						// 5/21/2013 apply ICS button to top.php if == 1
 			do_caption("HAS");								// 'Hello all stations' button
+			
+
 
 		}		// end (!($version ==...) ==================================================			
 

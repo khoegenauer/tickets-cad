@@ -2,6 +2,7 @@
 /*
 4/8/10 update user_id field
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
+6/21/13 Added setting of "status_updated" field when updating status. Used for auto status function.
 */
 error_reporting(E_ALL);
 //	file as_up_un_status.php
@@ -16,6 +17,7 @@ $now = time() - (get_variable('delta_mins')*60);
 $query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET `un_status_id`= ";
 $query .= quote_smart($frm_status_id) ;
 $query .= ", `updated` = " . quote_smart(mysql_format_date($now));
+$query .= ", `status_updated` = " . quote_smart(mysql_format_date($now));
 $query .= ", `user_id` = " . $_SESSION['user_id'];
 $query .= " WHERE `id` = ";
 $query .= quote_smart($frm_responder_id);

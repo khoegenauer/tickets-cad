@@ -19,6 +19,8 @@ if (empty($_SESSION)) {
 	}
 do_login(basename(__FILE__));
 $retrivemode = (!empty($_GET['mode'])) ? 1 : 0;
+$response = 0;
+$response2 = 0;
 $ret_arr = array();
 if((get_variable('use_messaging') == 2) || (get_variable('use_messaging') == 3)) {
 	$the_ret = do_smsg_retrieve($orgcode,$apipin,$mode,$retrivemode);

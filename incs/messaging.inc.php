@@ -1,4 +1,9 @@
 <?php
+/*
+3/15/11 New file for Messaging functionality
+6/21/13 Changes to incorporate new field "status_updated" in responder table - used for aut status update
+*/
+
 extract($_GET);
 set_time_limit(0);
 require_once('functions.inc.php');
@@ -218,7 +223,7 @@ function GetBetween($content,$start,$end){	//	Function to check for presence of 
     	return '';
 	}
 	
-function auto_status($message, $responder, $datestring) {
+function auto_status($message, $responder, $datestring) {	//	6/21/13
 	$time = strtotime($datestring);
 	$now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
 	$start_tag = get_msg_variable('start_tag');
@@ -232,8 +237,8 @@ function auto_status($message, $responder, $datestring) {
 		$query_time = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `smsg_id`='" . $responder . "'";
 		$result_time = mysql_query($query_time) or do_error($query_time, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
 		$row_time = stripslashes_deep(mysql_fetch_assoc($result_time));
-		if(strtotime($row_time['updated']) < $time) {
-			$query2 = "UPDATE `$GLOBALS[mysql_prefix]responder` SET `un_status_id`=" . $the_val . ", `user_id`='999999', `updated`= '" . $datestring . "'WHERE `smsg_id`='" . $responder . "'";
+		if(strtotime($row_time['status_updated']) < $time) {
+			$query2 = "UPDATE `$GLOBALS[mysql_prefix]responder` SET `un_status_id`=" . $the_val . ", `user_id`='999999', `status_updated`= '" . $datestring . "', `updated`= '" . $datestring . "' WHERE `smsg_id`='" . $responder . "'";	//	6/21/13
 			$result2 = mysql_query($query2) or do_error($query2, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
 			if($result2) {
 				$the_ret = $the_val;
@@ -281,7 +286,9 @@ function clean_hdr_fm_text($thetext) {
 
 // Xpertmailer version
 function get_emails($url, $user, $password, $port, $ssl="", $timeout=10 ) {	//	Called from AJAX file to get emails in background - AJAX file called by top.php
+//	print $url . "," . $user . "," . $password . "," . $port . "," . $ssl . "," . $timeout . "<BR />";
 	$no_whitelist = intval(get_msg_variable('no_whitelist'));
+	$del_emails = intval(get_msg_variable('email_del'));
 	$counter = 0;
 	$now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));	
 	$ret = array();
@@ -301,7 +308,7 @@ function get_emails($url, $user, $password, $port, $ssl="", $timeout=10 ) {	//	C
 	// $i - total number of messages, $b - total bytes
 	list($i, $b) = each($s);
 	$x = intval($i);
-	if ($i >= 1) { // if we have messages
+	if ($x >= 1) { // if we have messages
 		$the_message = array();
 		$the_message2 = array();		
 		for($z = 1; $z <= $x; $z++) {
@@ -390,11 +397,13 @@ function get_emails($url, $user, $password, $port, $ssl="", $timeout=10 ) {	//	C
 						}
 					}
 				}
-			if(get_msg_variable('email_del') == '1') {		//optional, you can delete this message from server
-				POP3::pDele($c, $i);
-				}				
+			if($del_emails == 1) {		//optional, you can delete this message from server
+				POP3::pDele($c, $z) or die(print_r($_RESULT));
+				}							
 			}
 		}
+	POP3::pQuit($c);
+	POP3::disconnect($c);	
 	$ret[0] = $i;
 	$ret[1] = $counter;
 	return $ret;

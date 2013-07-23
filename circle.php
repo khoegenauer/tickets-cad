@@ -241,7 +241,7 @@ function chk_circle(theForm) {
 		strokeColor = theForm.frm_line_color.value;
 		strokeWidth = parseInt(theForm.frm_line_width.value);
 		strokeOpacity = parseFloat(theForm.frm_line_opacity.value);
-		fillColor = theForm.frm_fill_color.value;
+		fillColor = (theForm.frm_filled.value = 0)? 0: theForm.frm_fill_color.value;
 		fillOpacity = (theForm.frm_filled.value = 0)? 0: parseFloat(theForm.frm_fill_opacity.value);
 
 		drawCircle(lat, lng, radius, add_hash(strokeColor), strokeWidth, strokeOpacity, add_hash(fillColor), fillOpacity); // 191
@@ -345,7 +345,7 @@ function chk_circle(theForm) {
 			strokeColor = theForm.frm_line_color.value;
 			strokeWidth = parseInt(theForm.frm_line_width.value);
 			strokeOpacity = parseFloat(theForm.frm_line_opacity.value);
-			fillColor = theForm.frm_fill_color.value;
+			fillColor = (theForm.frm_filled.value = 0)? 0: theForm.frm_fill_color.value;
 			fillOpacity = (theForm.frm_filled.value = 0)? 0: parseFloat(theForm.frm_fill_opacity.value);
 			drawCircle(lat, lng, radius, add_hash(strokeColor), strokeWidth, strokeOpacity, add_hash(fillColor), fillOpacity);	// 324
 			break;		

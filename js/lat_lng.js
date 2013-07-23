@@ -8,7 +8,7 @@
 		document.write('<script type="text/javascript" src="' + jsFile + '"></scr' + 'ipt>'); 
 		}
 
-	IncludeJavaScript('geotools2.js');	
+	IncludeJavaScript('./js/geotools2.js');	
 	
 	function do_coords(inlat, inlng) { 										 //9/14/08
 		if((inlat.length==0)||(inlng.length==0)) {return;}

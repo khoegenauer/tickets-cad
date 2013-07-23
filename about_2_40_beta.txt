@@ -675,6 +675,10 @@ Changes for Tickets V 2.40B
 219.  Database schema was revised to add indexing to certain of the larger tables.  Volume users will see some 
 	  performance gains.  And as usual various other fixes.
 
+Changes for Tickets 2.40C
+
+220.  Various fixes. No new functionality.
+
 June '13
 Arnie Shore
 Andy Harvey, UK

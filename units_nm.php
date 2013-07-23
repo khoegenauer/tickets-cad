@@ -20,6 +20,7 @@ $zoom_tight = FALSE;		// replace with a decimal number to over-ride the standard
 3/24/12 fixed to accommodate OGTS in validate()
 12/1/2012 - unix time revisions
 5/30/13 Implement catch for when there are no allocated regions for current user. 
+6/21/13 Added "Status_updated" field. Used for Auto status functionality
 */
 
 session_start();
@@ -529,14 +530,15 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	//	6/10/11
 		$al_groups[] = $row['group'];
 		}	
-	if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
-		$where2 = "WHERE `a`.`type` = 2";
-		} else {
-		if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
-			$curr_viewed= explode(",",$_SESSION['viewed_groups']);
-			}
 
-		if(!isset($curr_viewed)) {	
+	if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
+		$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+		}
+
+	if(!isset($curr_viewed)) {	
+		if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+			$where2 = "WHERE `a`.`type` = 2";
+			} else {			
 			$x=0;	//	6/10/11
 			$where2 = "WHERE (";	//	6/10/11
 			foreach($al_groups as $grp) {	//	6/10/11
@@ -545,7 +547,12 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				$where2 .= $where3;
 				$x++;
 				}
-			} else {
+			$where2 .= "AND `a`.`type` = 2";	//	6/10/11
+			}
+		} else {
+		if(count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+			$where2 = "WHERE `a`.`type` = 2";
+			} else {					
 			$x=0;	//	6/10/11
 			$where2 = "WHERE (";	//	6/10/11
 			foreach($curr_viewed as $grp) {	//	6/10/11
@@ -554,8 +561,8 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				$where2 .= $where3;
 				$x++;
 				}
+			$where2 .= "AND `a`.`type` = 2";	//	6/10/11
 			}
-		$where2 .= "AND `a`.`type` = 2";	//	6/10/11		
 		}
 		
 	$query = "SELECT *, 
@@ -750,6 +757,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			$station = TRUE;			//
 			$the_lat = empty($_POST['frm_lat'])? "0.999999" : quote_smart(trim($_POST['frm_lat'])) ; // 2/24/09
 			$the_lng = empty($_POST['frm_lng'])? "0.999999" : quote_smart(trim($_POST['frm_lng'])) ;
+			$status_updated = ($_POST['frm_status_update'] == 1) ? $now : $_POST['frm_status_updated'];	//	6/21/13	
 			$curr_groups = $_POST['frm_exist_groups']; 	//	4/14/11
 			$groups = isset($_POST['frm_group']) ? ", " . implode(',', $_POST['frm_group']) . "," : $_POST['frm_exist_groups'];	//	3/28/12 - fixes error when accessed from view ticket screen..	
 			$resp_id = $_POST['frm_id'];
@@ -786,7 +794,8 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				`smsg_id`= " . 		quote_smart(trim($_POST['frm_smsg_id'])) . ",				
 				`type`= " . 		quote_smart(trim($_POST['frm_type'])) . ",
 				`user_id`= " . 		quote_smart(trim($_SESSION['user_id'])) . ",
-				`updated`= " . 		quote_smart(trim($now)) . "
+				`updated`= " . 		quote_smart(trim($now)) . ",
+				`status_updated`= " . quote_smart(trim($status_updated)) . " 	
 				WHERE `id`= " . 	quote_smart(trim($_POST['frm_id'])) . ";";
 
 			$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -820,7 +829,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$frm_lng = (empty($_POST['frm_lng']))? '0.999999': quote_smart(trim($_POST['frm_lng']));						// 9/3/08
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));							// 1/27/09
 		$query = "INSERT INTO `$GLOBALS[mysql_prefix]responder` (
-			`name`, `street`, `city`, `state`, `phone`, `handle`,  `icon_str`, `description`, `capab`, `un_status_id`, `callsign`, `mobile`, `multi`, `aprs`, `instam`, `locatea`, `gtrack`, `glat`, `t_tracker`, `ogts`, `direcs`, `contact_name`, `contact_via`, `smsg_id`, `lat`, `lng`, `type`, `user_id`, `updated` )
+			`name`, `street`, `city`, `state`, `phone`, `handle`,  `icon_str`, `description`, `capab`, `un_status_id`, `callsign`, `mobile`, `multi`, `aprs`, `instam`, `locatea`, `gtrack`, `glat`, `t_tracker`, `ogts`, `direcs`, `contact_name`, `contact_via`, `smsg_id`, `lat`, `lng`, `type`, `user_id`, `updated`, `status_updated` )
 			VALUES (" .
 				quote_smart(trim($_POST['frm_name'])) . "," .
 				quote_smart(trim($_POST['frm_street'])) . "," .
@@ -850,6 +859,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 				$frm_lng . "," .
 				quote_smart(trim($_POST['frm_type'])) . "," .
 				quote_smart(trim($_SESSION['user_id'])) . "," .
+				quote_smart(trim($now)) . "," .				
 				quote_smart(trim($now)) . ");";								// 8/23/08
 
 		$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
@@ -1221,7 +1231,7 @@ if(get_num_groups() > 1) {
 			</TD>
 			</TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print get_text("Units");?> Status - Select from pulldown menu">Status</A>:&nbsp;</TD>
-			<TD ALIGN='left'><SELECT NAME="frm_un_status_id" onChange = "this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color; document.res_edit_Form.frm_log_it.value='1'">
+			<TD ALIGN='left'><SELECT NAME="frm_un_status_id" onChange = "this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color; document.res_edit_Form.frm_log_it.value='1'; document.res_edit_Form.frm_status_update.value='1';">
 <?php
 			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]un_status` ORDER BY `status_val` ASC, `group` ASC, `sort` ASC";
 			$result_st = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -1313,6 +1323,8 @@ if(get_num_groups() > 1) {
 		<INPUT TYPE="hidden" NAME = "frm_ogts" VALUE=<?php print $row['ogts'] ;?> />
 		<INPUT TYPE="hidden" NAME = "frm_direcs" VALUE=<?php print $row['direcs'] ;?> />
 		<INPUT TYPE="hidden" NAME="frm_exist_groups" VALUE="<?php print (isset($alloc_groups)) ? $alloc_groups : 1;?>">	 <!-- 2/8/12 -->	
+		<INPUT TYPE="hidden" NAME = "frm_status_updated" VALUE="<?php print $row['status_updated'] ;?>" />	 <!-- 6/21/13 -->		
+		<INPUT TYPE="hidden" NAME = "frm_status_update" VALUE=0 />	 <!-- 6/21/13 -->				
 		</FORM></TABLE>
 		</TD></TR></TABLE>
 <?php
@@ -1491,33 +1503,39 @@ if(get_num_groups() > 1) {
 		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 6/10/11
 			$al_groups[] = $row['group'];
 			}	
-		if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
-			$where2 = "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
-			} else {		
-			if(isset($_SESSION['viewed_groups'])) {		//	6/10/11
-				$curr_viewed= explode(",",$_SESSION['viewed_groups']);
-				}
+			
+		if(isset($_SESSION['viewed_groups'])) {		//	6/10/11
+			$curr_viewed= explode(",",$_SESSION['viewed_groups']);
+			}
 
-			if(!isset($curr_viewed)) {			//	6/10/11
-				$x=0;	
-				$where2 = "AND (";
-				foreach($al_groups as $grp) {
+		if(!isset($curr_viewed)) {	
+			if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+				$where2 = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
+				} else {			
+				$x=0;	//	6/10/11
+				$where2 = "WHERE (";	//	6/10/11
+				foreach($al_groups as $grp) {	//	6/10/11
 					$where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";	
 					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
 					$where2 .= $where3;
 					$x++;
 					}
-				} else {
-				$x=0;	
-				$where2 = "AND (";	
-				foreach($curr_viewed as $grp) {
+				$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";	//	6/10/11
+				}
+			} else {
+			if(count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+				$where2 = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
+				} else {					
+				$x=0;	//	6/10/11
+				$where2 = "WHERE (";	//	6/10/11
+				foreach($curr_viewed as $grp) {	//	6/10/11
 					$where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";	
 					$where2 .= "`$GLOBALS[mysql_prefix]allocates`.`group` = '{$grp}'";
 					$where2 .= $where3;
 					$x++;
 					}
+				$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";	//	6/10/11
 				}
-			$where2 .= "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";	//	6/10/11		
 			}
 		
 		$query_t = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` 

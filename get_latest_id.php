@@ -11,18 +11,14 @@
 2/25/12 added act_id and pat_id to the returned array  -AS
 5/29/2013 error handling upgrades several lines, notably error_out()
 5/30/2013 relocated get_current() call to after json data return;	// update remotes position
-
+6/23/2013 correction to obtain affected row count
 */
 error_reporting(E_ALL);
 @session_start();
 require_once('./incs/functions.inc.php');		//7/28/10
-// snap(basename(__FILE__), __LINE__);
 
 function error_out($err_arg) {							// 2/10/12
-//	snap(__FUNCTION__);
 	do_log($GLOBALS['LOG_ERROR'], 0, 0, $err_arg);		// logs supplied error message
-//	echo "";											// ajax return data
-//	exit();												// finished - die
 	return;
 	}				// end function error_out()
 
@@ -43,7 +39,7 @@ if(isset($_SESSION['viewed_groups'])) {		//	6/10/11
 				// most recent chat invites other than written by 'me'
 $query = "SELECT * FROM `$GLOBALS[mysql_prefix]chat_invites` WHERE `_by` <> {$me}  AND (`to` = 0   OR `to` = {$me}) ORDER BY `id` DESC LIMIT 1";		// broadcasts
 $result = mysql_query($query) or error_out(basename(__FILE__) . "@"  . __LINE__) ;			// 2/10/12
-$row = (@mysql_affected_rows($result)>0)? stripslashes_deep(mysql_fetch_assoc($result)): FALSE;
+$row = (@mysql_num_rows($result)>0)? stripslashes_deep(mysql_fetch_assoc($result)): FALSE;		// 6/23/2013
 
 $the_chat_id = ($row)? $row['id'] : "0";
 
@@ -193,7 +189,6 @@ $result = mysql_query($query) or error_out(basename(__FILE__) . "@"  . __LINE__)
 //$req_row =  (mysql_affected_rows($result)>0)? stripslashes_deep(mysql_fetch_assoc($result)): FALSE;
 $the_reqs = @mysql_num_rows($result);
 
-
 $the_act_id = ($act_row)? $act_row['updated'] : "0";		// action item
 $the_pat_id = ($pat_row)? $pat_row['updated'] : "0";		// patient item
 
@@ -202,8 +197,6 @@ $the_updated = ($row)? $row['updated'] : "0";
 $the_dispatch_change = ($assign_row)? $assign_row['as_of']: "";
 $the_hash = md5($the_chat_id . $the_tick_id . $the_unit_id . $the_updated . $the_dispatch_change . $the_act_id . $the_pat_id . $the_reqs);	//	10/23/12
 $ret_arr = array ($the_chat_id, $the_tick_id, $the_unit_id, $the_updated, $the_dispatch_change, $the_act_id, $the_pat_id, $the_reqs, $the_hash);	//	10/23/12
-//snap(basename(__FILE__), __LINE__);
-// snap (__LINE__, json_encode($ret_arr));
 print json_encode($ret_arr);				// 1/6/11
 get_current();								// update remotes position - 5/30/2013
 

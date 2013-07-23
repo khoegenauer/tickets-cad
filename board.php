@@ -1416,16 +1416,17 @@ setTimeout('do_post()', 1000);
 			if(is_super()) {	//	6/10/11
 				$al_names .= "Superadmin Level";
 			}				
-			if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
-				$where = "WHERE `a`.`type` = 1";
+
+			if(isset($_SESSION['viewed_groups'])) {	//	5/4/11
+				$curr_viewed= explode(",",$_SESSION['viewed_groups']);
 				} else {
-				if(isset($_SESSION['viewed_groups'])) {	//	5/4/11
-					$curr_viewed= explode(",",$_SESSION['viewed_groups']);
-					} else {
-					$curr_viewed = $al_groups;
-					}	
-				
-				if(!isset($_SESSION['viewed_groups'])) {	//	6/10/11
+				$curr_viewed = $al_groups;
+				}	
+			
+			if(!isset($_SESSION['viewed_groups'])) {	//	6/10/11
+				if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+					$where = "WHERE `a`.`type` = 1";
+					} else {				
 					$x=0;	
 					$where = "WHERE ((";
 					foreach($al_groups as $grp) {
@@ -1434,7 +1435,12 @@ setTimeout('do_post()', 1000);
 						$where .= $where2;
 						$x++;
 						}
-					} else {
+					$where .= " AND `a`.`type` = 1) ";
+					}	//	end if count($al_groups ==0)
+				} else {
+				if(count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+					$where = "WHERE `a`.`type` = 1";
+					} else {	
 					$x=0;	
 					$where = "WHERE ((";		//	6/10/11
 					foreach($curr_viewed as $grp) {
@@ -1443,9 +1449,9 @@ setTimeout('do_post()', 1000);
 						$where .= $where2;
 						$x++;
 						}
-					}
-				$where .= " AND `a`.`type` = 1) ";
-				}
+					$where .= " AND `a`.`type` = 1) ";							
+					}	//	end if count($curr_viewed ==0)
+				}	//	End if !isset $_SESSION['viewed_groups']
 			
 // ================================ end of regions stuff																				
 																	
@@ -1559,10 +1565,14 @@ setTimeout('do_post()', 1000);
 	
 //				dump($row);
 
-				$inviewed = 0;	//	6/10/11
-				foreach($un_groups as $un_val) {
-					if(in_array($un_val, $al_groups)) {
-						$inviewed++;
+				if(count($al_groups) == 0) {
+					$inviewed = 1;
+					} else {
+					$inviewed = 0;	//	6/10/11
+					foreach($un_groups as $un_val) {
+						if(in_array($un_val, $al_groups)) {
+							$inviewed++;
+							}
 						}
 					}
 					

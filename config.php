@@ -141,11 +141,18 @@
 		
 		for ($i=0;$i<$broj;$i++) {						//dump all tables:
 			$table_name = $backup->tables[$i]; 			//get table name
-			if(($mysql_prefix != "")  || (strrpos($table_name, $mysql_prefix) === 0)) {
+			if(($mysql_prefix == "")  || (strrpos($table_name, $mysql_prefix) === 0)) {
 				$backup->dump_table($table_name); 			//dump it to output (buffer)
 				$the_db_dump .=htmlspecialchars($backup->output); 	//write output
 				}
 			}
+
+		// for ($i=0;$i<$broj;$i++) {						//dump all tables:
+			// $table_name = $backup->tables[$i]; 			//get table name
+			// $backup->dump_table($table_name); 			//dump it to output (buffer)
+			// $the_db_dump .=htmlspecialchars($backup->output); 	//write output
+			// }			
+		
 		$the_db_dump .="\n\n-- end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end \n";
 		$file = './backups/' . $the_now . '_tickets_backup.sql';
 		$fh = fopen($file, 'w');
@@ -1828,13 +1835,20 @@ if (mysql_num_rows($result)>0) {
 		$_echo ="\n\n-- start  start  start  start  start  start  start  start  start  start  start  start  start  start  start  start  start  start  start \n";
 		$_echo .="\n-- Dumping tables for database: $mysql_db\n"; //write "intro" ;)
 	
-		for ($i=0;$i<$broj;$i++) {						//dump all tables:
-			$table_name = $backup->tables[$i]; 			//get table name
-			if(($mysql_prefix != "")  || (strrpos($table_name, $mysql_prefix) === 0)) {
+		for ($n=0;$n<$broj;$n++) {						//dump all tables:
+			$table_name = $backup->tables[$n]; 			//get table name
+			if(($mysql_prefix == "")  || (strrpos($table_name, $mysql_prefix) === 0)) {
 				$backup->dump_table($table_name); 			//dump it to output (buffer)
 				$_echo .=htmlspecialchars($backup->output); 	//write output
 				}	
 			}
+
+		// for ($i=0;$i<$broj;$i++) {						//dump all tables:
+			// $table_name = $backup->tables[$i]; 			//get table name
+			// $backup->dump_table($table_name); 			//dump it to output (buffer)
+			// $_echo .=htmlspecialchars($backup->output); 	//write output
+			// }	
+
 		$_echo .="\n\n-- end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end  end \n";
 		echo "\n<FORM NAME='the_form'><TEXTAREA NAME ='the_dump' COLS=120 ROWS=20>{$_echo}</TEXTAREA>";
 		echo "<BR /><BR /><INPUT onclick='copyit()' type='button' value='Click to copy the dump' name='cpy'\>\n</FORM>\n";

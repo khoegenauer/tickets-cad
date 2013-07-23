@@ -2,8 +2,12 @@
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
 error_reporting (E_ALL  ^ E_DEPRECATED);
 @session_start();
+$logged_in = $logged_out = false;
 if (empty($_SESSION)) {
+	$logged_out = true;
 	header("Location: index.php");
+	} else {
+	$logged_in = true;
 	}
 require_once './incs/functions.inc.php';
 do_login(basename(__FILE__));
@@ -19,6 +23,7 @@ function get_user_name($the_id) {
 	return $the_ret;
 	}
 	
+$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -29,12 +34,18 @@ function get_user_name($the_id) {
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+<LINK REL=StyleSheet HREF="./portal/css/stylesheet.php?version=<?php print time();?>" TYPE="text/css">
 <SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
-<?php
-$api_key = get_variable('gmaps_api_key');
-?>	
-<SCRIPT SRC="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
+<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry,weather&sensor=false"></SCRIPT>
+<SCRIPT  TYPE="text/javascript"SRC="./js/epoly.js"></SCRIPT>
+<SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 8/1/11 -->
+<SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 1/29/2013 -->
+<SCRIPT TYPE="text/javascript" SRC="./js/misc_function.js"></SCRIPT>	<!-- 5/3/11 -->	
+<SCRIPT TYPE="text/javascript" SRC="./js/domready.js"></script>
+
+
+
+
 <SCRIPT>
 var randomnumber;
 var the_string;
@@ -43,9 +54,13 @@ var lat_lng_frmt = <?php print get_variable('lat_lng'); ?>;
 var request_lat;
 var request_lng;
 var the_color;
+var fac_lat = [];
+var fac_lng = [];
 var fac_street = [];
 var fac_city = [];
 var fac_state = [];
+var showall = "yes";
+var point;
 
 function out_frames() {		//  onLoad = "out_frames()"
 	if (top.location != location) top.location.href = document.location.href;
@@ -141,16 +156,40 @@ function syncAjax(strURL) {
 		}																						 
 	}
 	
-function requests_get() {
-	msgs_interval = window.setInterval('do_requests_loop()', 60000);
-	}	
+function requests_get(showall) {
+	showall = showall;
+	msgs_interval = window.setInterval('do_requests_loop("' + showall + '")', 60000);
+	}
 	
-function do_requests_loop() {
+function do_requests_loop(showall) {
+	showall == showall;
 	randomnumber=Math.floor(Math.random()*99999999);
-	var url ="./portal/ajax/list_requests.php?id=<?php print $_SESSION['user_id'];?>&version=" + randomnumber;
+	var url ="./portal/ajax/list_requests.php?id=<?php print $_SESSION['user_id'];?>&showall=" + showall + "&version=" + randomnumber;
 	sendRequest (url, requests_cb2, "");
 	}
 
+function logged_in() {								// returns boolean
+	var temp = <?php print $logged_in;?>;
+	return temp;
+	}	
+	
+var newwindow = null;
+var starting;
+function do_window(id) {				// 1/19/09
+	if ((newwindow) && (!(newwindow.closed))) {newwindow.focus(); return;}		// 7/28/10	
+	if (logged_in()) {
+		if(starting) {return;}						// 6/6/08
+		starting=true;	
+		newwindow=window.open("./portal/request.php?id=" + id, "view_request",  "titlebar, location=0, resizable=1, scrollbars=yes, height=600, width=600, status=0, toolbar=0, menubar=0, location=0, left=100, top=300, screenX=100, screenY=300");
+		if (isNull(newwindow)) {
+			alert ("Station log operation requires popups to be enabled. Please adjust your browser options.");
+			return;
+			}
+		newwindow.focus();
+		starting = false;
+		}
+	}		// end function do_window()
+	
 function requests_cb2(req) {
 	var the_requests=JSON.decode(req.responseText);
 	if(the_requests[0][0] == "No Current Requests") {
@@ -160,53 +199,53 @@ function requests_cb2(req) {
 		}
 	theClass = "background-color: #CECECE";
 	the_string = "<TABLE cellspacing='0' cellpadding='1' style='width: 100%; table-layout: fixed;'>";
-	the_string += "<TR class='heading' style='font-weight: bold; font-size: 1em; color: #FFFFFF; text-align: left;'>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>ID</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Patient</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Phone</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Contact</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Scope</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Description</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Comments</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Status</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Requested</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Tentative</TD>";	
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Accepted</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Declined</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Resourced</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Completed</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Closed</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Updated</TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>By</TD>";			
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Mileage</TD>";		
+	the_string += "<TR class='list_heading'>";
+	the_string += "<TD class='list_heading' style='" + width + "'>ID</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>Patient</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>Phone</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>Contact</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>Scope</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>Description</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>Comments</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>Status</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>Requested</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>Tentative</TD>";	
+	the_string += "<TD class='list_heading' style='" + width + "'>Accepted</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>Declined</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>Resourced</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>Completed</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>Closed</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>Updated</TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'>By</TD>";			
+	the_string += "<TD class='list_heading' style='" + width + "'>Mileage</TD>";		
 	the_string += "</TR>";			
 	for(var key in the_requests) {
 		if(the_requests[key][0] == "No Current Requests") {
 			$('export_but').style.display = "none";			
 			the_string += "<TR style='" + theClass + "; border-bottom: 2px solid #000000;'>";
-			the_string += "<TD COLSPAN=99 width='100%' style='font-weight: bold; font-size: 16px; text-align: center;'>No Current Requests</TD></TR>";
+			the_string += "<TD COLSPAN=99 class='list_entry' width='100%'>No Current Requests</TD></TR>";
 			} else {
 			$('export_but').style.display = "inline-block";				
 			var the_request_id = the_requests[key][0];
-			the_string += "<TR title='" + the_requests[key][13] + "' style='" + the_requests[key][17] + "; border-bottom: 2px solid #000000; height: 12px; text-align: left;'>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_request','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][0] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][2] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][3] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][4] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][13] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][14] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][15] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][16] + "</TD>";	
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][18] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][19] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][20] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][21] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][22] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][23] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][24] + "</TD>";	
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][25] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][26] + "</TD>";
-			the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][27] + "</TD>";
+			the_string += "<TR class='list_row' title='" + the_requests[key][13] + "' style='" + the_requests[key][17] + ";'>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][0] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][2] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][3] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][4] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][13] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][14] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][15] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][16] + "</TD>";	
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][18] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][19] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][20] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][21] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][22] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][23] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][24] + "</TD>";	
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][25] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][26] + "</TD>";
+			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][27] + "</TD>";
 			the_string += "</TR>";
 			if(the_requests[key][16] == "Accepted"){
 				the_color = 3;
@@ -217,8 +256,9 @@ function requests_cb2(req) {
 				}
 			if((the_requests[key][29] != .999999) && (the_requests[key][30] != .999999) && (the_color != 3)) {
 				request_lat = the_requests[key][29];
-				request_lng = the_requests[key][20];					
-				createMarker(request_lat, request_lng, the_color)
+				request_lng = the_requests[key][20];
+				point = new google.maps.LatLng(request_lat, request_lng);
+				createMarker(point, the_color, the_request_id);
 				}		
 			}
 		}
@@ -226,10 +266,10 @@ function requests_cb2(req) {
 		$('all_requests').innerHTML = the_string;
 	}
 
-function get_requests() {
+function get_requests(showall) {
 	var width = "";	
 	randomnumber=Math.floor(Math.random()*99999999);
-	var url ="./portal/ajax/list_requests.php?id=<?php print $_SESSION['user_id'];?>&version=" + randomnumber;
+	var url ="./portal/ajax/list_requests.php?id=<?php print $_SESSION['user_id'];?>&showall=" + showall + "&version=" + randomnumber;
 	sendRequest (url, requests_cb, "");
 	function requests_cb(req) {
 		var the_requests=JSON.decode(req.responseText);
@@ -240,53 +280,53 @@ function get_requests() {
 			}
 		theClass = "background-color: #CECECE";
 		the_string = "<TABLE cellspacing='0' cellpadding='1' style='width: 100%; table-layout: fixed;'>";
-		the_string += "<TR class='heading' style='font-weight: bold; font-size: 1em; color: #FFFFFF; text-align: left;'>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>ID</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Patient</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Phone</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Contact</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Scope</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Description</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Comments</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Status</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Requested</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Tentative</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Accepted</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Declined</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Resourced</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Completed</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Closed</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Updated</TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>By</TD>";			
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 1em; color: #FFFFFF;'>Mileage</TD>";		
+		the_string += "<TR class='list_heading'>";
+		the_string += "<TD class='list_heading' style='" + width + "'>ID</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>Patient</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>Phone</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>Contact</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>Scope</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>Description</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>Comments</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>Status</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>Requested</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>Tentative</TD>";	
+		the_string += "<TD class='list_heading' style='" + width + "'>Accepted</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>Declined</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>Resourced</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>Completed</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>Closed</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>Updated</TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'>By</TD>";			
+		the_string += "<TD class='list_heading' style='" + width + "'>Mileage</TD>";		
 		the_string += "</TR>";			
 		for(var key in the_requests) {
 			if(the_requests[key][0] == "No Current Requests") {
 				$('export_but').style.display = "none";				
 				the_string += "<TR style='" + theClass + "; border-bottom: 2px solid #000000;'>";
-				the_string += "<TD COLSPAN=99 width='100%' style='font-weight: bold; font-size: 16px; text-align: center;'>No Current Requests</TD></TR>";
+				the_string += "<TD COLSPAN=99 class='list_entry' width='100%'>No Current Requests</TD></TR>";
 				} else {
 				$('export_but').style.display = "inline-block";						
 				var the_request_id = the_requests[key][0];	
-				the_string += "<TR title='" + the_requests[key][13] + "' style='" + the_requests[key][17] + "; border-bottom: 2px solid #000000; height: 12px; text-align: left;'>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_request','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][0] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][2] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][3] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][4] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][13] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][14] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][15] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][16] + "</TD>";	
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][18] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][19] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][20] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][21] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][22] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][23] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][24] + "</TD>";	
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][25] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][26] + "</TD>";
-				the_string += "<TD style='white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap;' onClick=\"window.open('./portal/request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][27] + "</TD>";
+				the_string += "<TR class='list_row' title='" + the_requests[key][13] + "' style='" + the_requests[key][17] + ";'>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][0] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][2] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][3] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][4] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][13] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][14] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][15] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][16] + "</TD>";	
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][18] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][19] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][20] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][21] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][22] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][23] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][24] + "</TD>";	
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][25] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][26] + "</TD>";
+				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][27] + "</TD>";
 				the_string += "</TR>";
 				if(the_requests[key][16] == "Accepted"){
 					the_color = 3;
@@ -297,14 +337,15 @@ function get_requests() {
 					}
 				if((the_requests[key][29] != .999999) && (the_requests[key][30] != .999999) && (the_color != 3)) {
 					request_lat = the_requests[key][29];
-					request_lng = the_requests[key][30];		
-					createMarker(request_lat, request_lng, the_color)
+					request_lng = the_requests[key][30];
+					point = new google.maps.LatLng(request_lat, request_lng);
+					createMarker(point, the_color, the_request_id);
 					}	
 				}
 			}
 			the_string += "</TABLE>";
 			$('all_requests').innerHTML = the_string;
-			requests_get();
+			requests_get(showall);
 		}
 	}		
 
@@ -322,12 +363,15 @@ function markers_cb2(req) {
 	var the_markers=JSON.decode(req.responseText);
 	for (var key in the_markers) {
 		var the_lat = the_markers[key].lat;
-		var the_lng = the_markers[key].lng;		
-		createMarker(the_lat, the_lng, 2);
+		var the_lng = the_markers[key].lng;
+		point = new google.maps.LatLng(the_lat, the_lng);			
+		createMarker(point, 2, "T");
+
+
 		for(var elements in the_markers[key].responders) {
 			var r_lat = the_markers[key].responders[elements].lat;
 			var r_lng = the_markers[key].responders[elements].lng;		
-			createMarker(r_lat, r_lng, 1);			
+			createMarker(point, 1, "R");			
 			}
 		} 	
 	}
@@ -341,11 +385,15 @@ function get_the_markers() {
 		for (var key in the_markers) {
 			var the_lat = the_markers[key].lat;
 			var the_lng = the_markers[key].lng;	
-			createMarker(the_lat, the_lng, 2);
+			point = new google.maps.LatLng(the_lat, the_lng);			
+			createMarker(point, 2, "T");
+
 			for(var elements in the_markers[key].responders) {
 				var r_lat = the_markers[key].responders[elements].lat;
-				var r_lng = the_markers[key].responders[elements].lng;		
-				createMarker(r_lat, r_lng, 1);			
+				var r_lng = the_markers[key].responders[elements].lng;	
+				point = new google.maps.LatLng(r_lat, r_lng);				
+				createMarker(point, 1, "R");			
+
 				}
 			} 		
 		}
@@ -472,168 +520,313 @@ function do_osgb (theForm) {
 	theForm.frm_grid.value = LLtoOSGB(theForm.frm_lat.value, theForm.frm_lng.value);
 	}
 	
-function pt_to_map (my_form, lat, lng) {				// 1/19/09
-	map.clearOverlays();								// 4/27/10
-	var loc = <?php print get_variable('locale');?>;
+function pt_to_map (my_form, lat, lng) {						// 7/5/10
+	myMarker.setMap(null);			// destroy predecessor
+
+
 	my_form.frm_lat.value=lat;	
 	my_form.frm_lng.value=lng;		
-	map.setCenter(new GLatLng(my_form.frm_lat.value, my_form.frm_lng.value), <?php print get_variable('def_zoom');?>);
-	var marker = new GMarker(map.getCenter());		// marker to map center
-	var myIcon = new GIcon();
-	myIcon.image = "./markers/sm_red.png";
-	map.addOverlay(marker, myIcon);
+
+	var loc = <?php print get_variable('locale');?>;
+	map.setCenter(new google.maps.LatLng(lat, lng), <?php print get_variable('def_zoom');?>);
+
+	var iconImg = new Image();														// obtain icon dimensions
+	iconImg.src ='./markers/crosshair.png';
+	myIcon.anchor= new google.maps.Point(iconImg.width/2, iconImg.height/2);		// 8/11/12 - center offset = half icon width and height
+	var dp_latlng = new google.maps.LatLng(lat, lng);
+
+	myMarker = new google.maps.Marker({
+		position: dp_latlng,
+		icon: myIcon, 
+		draggable: true,
+		map: map
+		});
+	myMarker.setMap(map);		// add marker with icon
+
+
+
+
+
 	}				// end function pt_to_map ()
-	
-function loc_lkup(my_form) {		   // added 1/19/09 -- getLocations(address,  callback -- not currently used )
+
+
+function loc_lkup(my_form) {		   						// 7/5/10
 	if ((my_form.frm_city.value.trim()==""  || my_form.frm_state.value.trim()=="")) {
 		alert ("City and State are required for location lookup.");
 		return false;
 		}
-	var geocoder = new GClientGeocoder();
-//				"1521 1st Ave, Seattle, WA"		
-	var address = my_form.frm_street.value.trim() + ", " +my_form.frm_city.value.trim() + " "  +my_form.frm_state.value.trim();
-	
-	if (geocoder) {
-		geocoder.getLatLng(
-			address,
-			function(point) {
-				if (!point) {
-					alert(address + " not found");
-					} 
-				else {
-					pt_to_map (my_form, point.lat(), point.lng())
-					}
-				}
-			);
+	var geocoder = new google.maps.Geocoder();
+
+	var myAddress = my_form.frm_street.value.trim() + ", " +my_form.frm_city.value.trim() + " "  +my_form.frm_state.value.trim();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	geocoder.geocode( { 'address': myAddress}, function(results, status) {		
+		if (status == google.maps.GeocoderStatus.OK)	{ pt_to_map (my_form, results[0].geometry.location.lat(), results[0].geometry.location.lng());}					
+		else 											{ alert("Geocode lookup failed: " + status);}
+		});				// end geocoder.geocode()
+
+	}				// end function loc_lkup()
+
+
+
+
+
+
+
+
+
+
+
+
+
+// maps v3 stuff
+var map;
+var myMarker;
+var lat_var;
+var lng_var;
+var zoom_var;
+
+
+var icon_file = "./markers/crosshair.png";
+
+
+
+
+function load(the_lat, the_lng, the_zoom) {	
+	function call_back (in_obj){
+		do_lat(in_obj.lat);
+		do_lng(in_obj.lng);
 		}
-	}				// end function addrlkup()
 
 
-var map;						// note globals
-var geocoder = null;
-var thePoint;
-var baseIcon;
-var cross;
-var fac_lat = [];
-var fac_lng = [];
-var icons=[];	
-icons[1] = "./portal/markers/sm_white.png";		// white
-icons[2] = "./portal/markers/sm_red.png";	// red
-icons[3] = "./portal/markers/sm_blue.png";	// blue
-icons[4] = "./portal/markers/sm_yellow.png";	// yellow
 
-var baseIcon = new GIcon();
-baseIcon.shadow = "./markers/sm_shadow.png";
-
-baseIcon.iconSize = new GSize(20, 34);
-baseIcon.iconAnchor = new GPoint(9, 34);
-baseIcon.infoWindowAnchor = new GPoint(9, 2);
-
-var unit_icon = new GIcon(baseIcon);
-unit_icon.image = icons[1];
-
-function do_marker(lat, lng, zoom) {		// 9/16/08 - 12/6/08
-//	map.clearOverlays();
-	var center = new GLatLng(lat, lng);
-	var myzoom = zoom;
-	map.setCenter(center, myzoom);
-	thisMarker  = new GMarker(center, {icon: cross});				// 9/16/08
-	map.addOverlay(thisMarker);
-	}
-
-function createMarker(lat, lng, number) {		// Show this markers index in the info window when clicked
-	var point = new GLatLng(lat, lng);
-	var the_icon = new GIcon(baseIcon);
-	the_icon.image = icons[number];
-	var marker = new GMarker(point, the_icon);	
-	map.addOverlay(marker);
-	}	
-
-function domap() {										// called from phone, addr lookups
-	map = new GMap2($('map'));
-<?php
-	$maptype = get_variable('maptype');
-
-	switch($maptype) { 
-		case "1":
-		break;
-
-		case "2":?>
-		map.setMapType(G_SATELLITE_MAP);<?php
-		break;
-	
-		case "3":?>
-		map.setMapType(G_PHYSICAL_MAP);<?php
-		break;
-	
-		case "4":?>
-		map.setMapType(G_HYBRID_MAP);<?php
-		break;
-
-		default:
-		print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";
-	}
-?>
-	$("map").style.backgroundImage = "url(./markers/loading.jpg)";
-	map.setUIToDefault();										// 8/13/10
-
-	map.addControl(new GMapTypeControl());
-<?php print (get_variable('terrain') == 1)? "\t\tmap.addMapType(G_PHYSICAL_MAP);\n" : "";?>
-	map.setCenter(new GLatLng(document.add.frm_lat.value, document.add.frm_lng.value), <?php echo get_variable('def_zoom'); ?>);			// larger # => tighter zoom
-	map.addControl(new GOverviewMapControl());
-	map.enableScrollWheelZoom();
-	do_marker(null, null, null)	;		// 12/6/08
-	}				// end function do map()
-	
-function load(the_lat, the_lng, the_zoom) {				// onLoad function - 4/28/09
-	if (GBrowserIsCompatible()) {
-		map = new GMap2($('map'));
-<?php
-	$maptype = get_variable('maptype');	// 08/02/09
-
-	switch($maptype) { 
-		case "1":
-		break;
-
-		case "2":?>
-		map.setMapType(G_SATELLITE_MAP);<?php
-		break;
-	
-		case "3":?>
-		map.setMapType(G_PHYSICAL_MAP);<?php
-		break;
-	
-		case "4":?>
-		map.setMapType(G_HYBRID_MAP);<?php
-		break;
-
-		default:
-		print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";
-	}
-?>
-		map.setUIToDefault();										// 8/13/10
-		map.addControl(new GMapTypeControl());
-		map.addControl(new GLargeMapControl());			
-<?php 		
-		print (get_variable('terrain') == 1)? "\t\tmap.addMapType(G_PHYSICAL_MAP);\n" : "";
-?>
-		baseIcon = new GIcon();				// 
-		baseIcon.iconSize=new GSize(20,34);
-		baseIcon.iconAnchor=new GPoint(16,16);
-		cross = new GIcon(baseIcon, "./markers/crosshair.png", null);	
-		do_marker(the_lat, the_lng, the_zoom);		// 12/6/08
-		}			// end if (GBrowserIsCompatible())
+	map = gmaps_v3_init(call_back, 'map_canvas', 
+		<?php echo get_variable('def_lat');?>, 
+		<?php echo get_variable('def_lng');?>, 
+		<?php echo get_variable('def_zoom');?>, 
+		icon_file, 
+		<?php echo get_variable('maptype');?>, 
+		false);		
+	doTraffic();
+	doWeather();
 	}			// end function load()
 
-function GUnload(){				// dummy
+
+
+
+
+
+
+
+
+var icons=[];	
+icons[0] = "white.png";		// white
+icons[1] = "red.png";	// red
+icons[2] = "blue.png";	// blue
+icons[3] = "yellow.png";	// yellow
+icons[4] = "black.png";	// black
+var bounds = new google.maps.LatLngBounds();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function createMarker(point, color, sym) {
+	var iconStr = sym;
+	var image_file = "./portal/markers/gen_icon.php?blank=" + color + "&text=" + iconStr;
+	var marker = new google.maps.Marker({position: point, map: map, icon: image_file});	
+	bounds.extend(point);
+	return marker;
+	}				// end function create Marker()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+var trafficInfo = new google.maps.TrafficLayer();
+trafficInfo.setMap(map);
+
+
+
+
+
+
+
+
+
+
+
+
+
+var toggleState = true;
+
+
+
+
+
+
+
+function doTraffic() {
+	if (toggleState) {
+		trafficInfo.setMap(null);
+		}
+	else {
+		trafficInfo.setMap(map);		
+		}
+	toggleState = !toggleState;
+
+
+
+
+
+
+	}				// end function doTraffic()
+
+
+
+
+
+
+
+var weatherLayer = new google.maps.weather.WeatherLayer({
+  temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
+});
+
+
+
+
+var cloudLayer = new google.maps.weather.CloudLayer();	
+
+
+
+
+
+
+
+
+
+
+
+
+var toggleWeather = true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function doWeather() {
+	if (toggleWeather) {
+		weatherLayer.setMap(null);
+		cloudLayer.setMap(null);
+		}
+	else {
+		weatherLayer.setMap(map);
+		cloudLayer.setMap(map);				
+		}
+	toggleWeather = !toggleWeather;
+	}				// end function doWeather()		
+		
+function GUnload(){
 	return;
 	}		
 
 function do_logout() {
-	// clearInterval(mu_interval);
-	// mu_interval = null;
-	// is_initialized = false;
-	document.gout_form.submit();			// send logout 
+
+
+
+	document.gout_form.submit();
 	}		
 
 <?php
@@ -677,17 +870,20 @@ if((!isset($_SESSION)) && (empty($_POST))) {
 	$onload_str = "load(" .  get_variable('def_lat') . ", " . get_variable('def_lng') . "," . get_variable('def_zoom') . ");";
 	$now = time() - (intval(get_variable('delta_mins')*60));
 ?>
-	<BODY onLoad="out_frames(); location.href = '#top'; get_requests(); get_the_markers(); <?php echo $onload_str ;?>" onUnload="GUnload()">
+
+<BODY onLoad="out_frames(); location.href = '#top'; get_requests('yes'); get_the_markers(); <?php print $onload_str;?>;">
 	<FORM NAME="go" action="#" TARGET = "main"></FORM>
 	<DIV id='outer' style='position: absolute; width: 95%; text-align: center; margin: 10px;'>
-		<DIV id='banner' class='heading' style='font-size: 28px; position: relative: top: 5%; width: 100%; border: 1px outset #000000;'>Tickets Service User Portal
-			<SPAN ID='gout' CLASS='plain' style='float: right;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="do_logout()">Logout</SPAN>
-			<SPAN ID='upload_but' CLASS='plain' style='float: right;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/import_requests.php','Import Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')">Import Requests from CSV</SPAN>
-			<SPAN ID='export_but' CLASS='plain' style='float: right; display: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/csv_export.php','Export Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')">Export Requests to CSV</SPAN>
-		</DIV><BR /><BR />
-		<DIV id='leftcol' style='position: fixed; left: 2%; top: 10%; width: 45%; height: 45%;'>
-			<DIV id='the_heading' class='heading' style='font-size: 20px;'>ADD A NEW REQUEST</DIV>		
-			<DIV id='left_scroller' style='position: relative; top: 0px; left: 0px; height: 100%; overflow-y: auto; overflow-x: hidden; border: 1px outset #000000;'>
+		<DIV id='banner' class='heading' style='font-size: 1.6em; position: relative: top: 5%; width: 100%; border: 1px outset #000000; height: 35px; vertical-align: middle;'>Tickets Service User Portal
+			<SPAN ID='gout' CLASS='plain' style='float: right; font-size: 0.6em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="do_logout()">Logout</SPAN>
+			<SPAN ID='upload_but' CLASS='plain' style='float: right; font-size: 0.6em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/import_requests.php','Import Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')" TITLE='Import Request from CSV File'>Import</SPAN>
+			<SPAN ID='export_but' CLASS='plain' style='float: right; display: none; font-size: 0.6em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/csv_export.php','Export Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')">Export Requests to CSV</SPAN>
+		</DIV>
+		<DIV id='leftcol' style='position: fixed; left: 2%; top: 10%; width: 45%; height: 40%;'>
+			<DIV id='the_heading' class='heading' style='font-size: 1.25em; height: 30px;'>ADD A NEW REQUEST
+				<SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.add.submit();">Submit</SPAN>
+			</DIV>		
+			<DIV id='left_scroller' style='height: 100%; overflow-y: auto; overflow-x: hidden; border: 1px outset #000000;'>
 				<FORM NAME='add' METHOD='POST' ACTION = "<?php print basename( __FILE__); ?>">
 				<TABLE style='width: 100%;'>
 					<TR class='odd'>	
@@ -747,19 +943,29 @@ if((!isset($_SESSION)) && (empty($_POST))) {
 				<INPUT NAME='fac_city' TYPE='hidden' SIZE='48' VALUE="">	
 				<INPUT NAME='fac_state' TYPE='hidden' SIZE='48' VALUE="">	-->				
 				</FORM>
-			</DIV><BR /><BR />
-			<SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.add.submit();">Submit</SPAN><BR /><BR />
+			</DIV>
 		</DIV>
-		<DIV id='the_bottom' style='position: fixed; left: 2%; bottom: 2%; width: 95%; height: 30%; max-height: 30%; border: 2px outset #CECECE; padding: 10px; overflow-y: scroll;'>
-			<DIV ID='all_requests' style='width: 100%;'></DIV>
-		</DIV>	
+		<DIV style='position: fixed; left: 2%; bottom: 2%; width: 95%; height: 30%; max-height: 30%;'>
+			<DIV class='heading' style='width: 100%; text-align: left;'>Current Requests
+				<SPAN id='hide_closed' style='float: right;' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="get_requests('no'); $('hide_closed').style.display ='none'; $('show_closed').style.display = 'inline-block';">Hide Closed</SPAN>
+				<SPAN id='show_closed' style='float: right; display: none;' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="get_requests('yes'); $('hide_closed').style.display ='inline-block'; $('show_closed').style.display = 'none';">Show All</SPAN>			
+			</DIV>
+			<DIV id='the_bottom' style='width: 98%; height: 70%; border: 2px outset #CECECE; padding: 10px; overflow-y: scroll;'>
+				<DIV ID='all_requests' style='width: 100%;'></DIV>
+			</DIV>	
+		</DIV>
 <?php
 		if(get_variable('map_in_portal') == 1) {
 ?>
-			<DIV id='map_wrapper' style='position: fixed; right: 2%; top: 9%; width: 40%; height: 45%; border: 2px outset #CECECE; padding: 10px; float: right; overflow: auto;'>
-				<DIV id='map' style='width: 800px; height: 800px;'>
+			<DIV id='map_outer' style='position: fixed; right: 2%; top: 9%; width: 45%; height: 45%; border: 2px outset #CECECE; padding: 10px; float: right;'>
+				<DIV id='map_wrapper' style='width: 100%; height: 95%; overflow: auto;'>
+					<DIV id='map_canvas' style='width: 500px; height: 450px;'></DIV>
 				</DIV>
+				<DIV id='map_controls'>
+					<CENTER><A HREF='#' onClick='doTraffic()'><U>Traffic</U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doWeather()'><U>Weather</U></A>
+				</DIV>					
 			</DIV>
+		
 <?php
 			}
 ?>

@@ -648,6 +648,12 @@ Changes for Tickets V 2.30B & C
 
 211.  Various fixes to Messaging
 
-February '13
+Changes for Tickets V 2.40A
+
+212.  Revised mapping to Google Maps API V3.
+
+213.  Various other fixes to messaging.
+
+May '13
 Arnie Shore
 Andy Harvey, UK

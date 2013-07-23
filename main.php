@@ -51,7 +51,7 @@ require_once($the_inc);
 6/1/12 Revised loading of main page modules so tha they only load on the main screen, not the Ticket Detail screen.
 6/14/12 Moved position of ck_frames() in onLoad string.
 10/23/12 Added code for Messaging
-2/14/2013 - disabled check for GMaps key
+3/26/2013 revised per RC Charlie
 */
 
 if (isset($_GET['logout'])) {
@@ -104,15 +104,23 @@ if(file_exists("./incs/modules.inc.php")) {	//	10/28/10
 	require_once('./incs/modules.inc.php');
 	}	
 if ($_SESSION['internet']) {				// 8/22/10
-	$api_key = get_variable('gmaps_api_key');	
+	$api_key = trim(get_variable('gmaps_api_key'));
+	$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 ?>
-<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
-<SCRIPT SRC="./js/epoly.js" TYPE="text/javascript"></SCRIPT>	<!-- 6/10/11 -->
-<SCRIPT TYPE="text/javascript" src="./js/ELabel.js"></SCRIPT><!-- 8/1/11 -->
+<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry,weather&sensor=false"></SCRIPT>
+<SCRIPT  TYPE="text/javascript"SRC="./js/epoly.js"></SCRIPT>
+<!--
+<SCRIPT  TYPE="text/javascript"SRC="./js/epoly_v3.js"></SCRIPT>	
+-->
+<SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 8/1/11 -->
+<SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 1/29/2013 -->
 <?php } ?>
-<SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>	<!-- 5/3/11 -->	
-<SCRIPT SRC="./js/messaging.js" TYPE="text/javascript"></SCRIPT>	<!-- 10/23/12 -->
+<SCRIPT TYPE="text/javascript" SRC="./js/misc_function.js"></SCRIPT>	<!-- 5/3/11 -->	
+<SCRIPT TYPE="text/javascript" SRC="./js/messaging.js"></SCRIPT>	<!-- 10/23/12 -->
+<SCRIPT TYPE="text/javascript" SRC="./js/domready.js"></script>
+
 <SCRIPT>
+var map;				// make globally visible
 var sortby = '`date`';	//	10/23/12
 var sort = "DESC";	//	10/23/12
 var columns = "<?php print get_msg_variable('columns');?>";	//	10/23/12
@@ -170,7 +178,7 @@ if (is_guest()) {													// 8/25/10
 		if(document.getElementById(the_control)) {
 			thelength = document.getElementById(the_control).options.length;
 			existing = document.getElementById(the_control).selectedIndex;
-			if(document.getElementById(the_control).options[existing].value) {	
+			if(document.getElementById(the_control).options[existing].value) {		
 				oldval = document.getElementById(the_control).options[existing].value;
 				}
 			for(var f = 0; f < thelength; f++) {
@@ -226,13 +234,15 @@ if (is_guest()) {													// 8/25/10
 			function BlinkIt () {
 				if(document.getElementById (id)) {
 					var blink = document.getElementById (id);
-					var flag = id + "_flag";					
+					var flag = id + "_flag";	
 					color = (color == maincol) ? seccol : maincol;
 					back = (back == bgcol) ? bgcol2 : bgcol;
 					blink.style.background = back;
 					blink.style.color = color;
 					document.getElementById(id).title = "Outside Ringfence";
-					$(flag).innerHTML = "RF";							
+					if($(flag)) {	
+						$(flag).innerHTML = "RF";
+						}							
 					}
 				}
 			window.setInterval (BlinkIt, 1000);
@@ -250,7 +260,7 @@ if (is_guest()) {													// 8/25/10
 			unblink.style.color = "";			
 				}
 			}
-		}	
+		}
 
 	function blink_text2(id, bgcol, bgcol2, maincol, seccol) {	//	6/10/11
 		if(!document.getElementById(id)) {
@@ -265,7 +275,9 @@ if (is_guest()) {													// 8/25/10
 					blink.style.background = back;
 					blink.style.color = color;
 					document.getElementById(id).title = "Inside Exclusion Zone";
-					$(flag).innerHTML = "EZ";					
+					if($(flag)) {	
+						$(flag).innerHTML = "EZ";
+						}				
 					}
 				}
 			window.setInterval (BlinkIt, 1000);
@@ -347,33 +359,53 @@ if (is_guest()) {													// 8/25/10
 		}		// end function ck_frames()
 		
 	function ring_fence() {	//	run when new tracked data is received	6/10/11
-	
+		if (!google.maps.Polygon.prototype.Contains) {   						// 3/29/2013
+				google.maps.Polygon.prototype.Contains = function(latLng) {
+						// Outside the bounds means outside the polygon
+						if (this.getBounds && !this.getBounds().Contains(latLng)) {
+								return false;
+						}
+					   
+						var lat = latLng.lat();
+						var lng = latLng.lng();
+						var paths = this.getPaths();
+						var path, pathLength, inPath, i, j, vertex1, vertex2;
+					   
+						// Walk all the paths
+						for (var p = 0; p < paths.getLength(); p++) {
+							   
+								path = paths.getAt(p);
+								pathLength = path.getLength();
+								j = pathLength - 1;
+								inPath = false;
+							   
+								for (i = 0; i < pathLength; i++) {
+
+										vertex1 = path.getAt(i);
+										vertex2 = path.getAt(j);
+
+										if (vertex1.lng() < lng && vertex2.lng() >= lng || vertex2.lng() < lng && vertex1.lng() >= lng) {
+												if (vertex1.lat() + (lng - vertex1.lng()) / (vertex2.lng() - vertex1.lng()) * (vertex2.lat() - vertex1.lat()) < lat) {
+										inPath = !inPath;
+									}
+								}
+
+								j = i;
+									   
+								}
+							   
+								if (inPath) {
+										return true;
+								}
+							   
+						}
+					   
+						return false;
+				}				// end function()
+			}			// end if (!google.maps.Polygon.prototype.Contains)	
 		var thepoint;
 		var bound_names = new Array();
 
-		  // === A method for testing if a point is inside a polygon
-		  // === Returns true if poly contains point
-		  // === Algorithm shamelessly stolen from http://alienryderflex.com/polygon/ 
-		  
-		  GPolygon.prototype.Contains = function(point) {
-			var j=0;
-			var oddNodes = false;
-			var x = point.lng();
-			var y = point.lat();
-			for (var i=0; i < this.getVertexCount(); i++) {
-			  j++;
-			  if (j == this.getVertexCount()) {j = 0;}
-			  if (((this.getVertex(i).lat() < y) && (this.getVertex(j).lat() >= y))
-			  || ((this.getVertex(j).lat() < y) && (this.getVertex(i).lat() >= y))) {
-				if ( this.getVertex(i).lng() + (y - this.getVertex(i).lat())
-				/  (this.getVertex(j).lat()-this.getVertex(i).lat())
-				*  (this.getVertex(j).lng() - this.getVertex(i).lng())<x ) {
-				  oddNodes = !oddNodes
-				}
-			  }
-			}
-			return oddNodes;
-		  }
 <?php
 
 		$query_al = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]';";	//	6/10/11
@@ -410,59 +442,91 @@ if (is_guest()) {													// 8/25/10
 		while ($row66 = stripslashes_deep(mysql_fetch_assoc($result66))) 	{
 			extract ($row66);
 			if((my_is_float($lat)) && (my_is_float($lng))) {
-				print "\t\t	var resp_name = \"$name\";\n";
-				print "\t\t var thepoints = new Array();\n";
-				print "\t\t var newpoint = new GLatLng({$lat}, {$lng});\n";
+?>			
+				var resp_name = "<?php print $name;?>";
+				var thepoints = new Array();
+				var newpoint = new google.maps.LatLng(<?php print $lat;?>, <?php print $lng;?>);
+<?php				
 				$query67 = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id` = {$ring_fence}";
 				$result67 = mysql_query($query67)or do_error($query67, mysql_error(), basename(__FILE__), __LINE__);
 				$row67 = stripslashes_deep(mysql_fetch_assoc($result67));
-					extract ($row67);
-					$points = explode (";", $line_data);
-					print "\t\t var boundary1 = new Array();\n";					
-					print "\t\t var fencename = \"$line_name\";\n";
-					for ($yy = 0; $yy < count($points); $yy++) {
-						$coords = explode (",", $points[$yy]);		
-						print "\t\t thepoint = new GLatLng(parseFloat($coords[0]), parseFloat($coords[1]));\n";
-						print "\t\t thepoints.push(thepoint);\n";
+				extract ($row67);
+				$points = explode (";", $line_data);
+?>
+				var boundary1 = new Array();					
+				var fencename = "<?php print $line_name;?>";
+<?php					
+				for ($yy = 0; $yy < count($points); $yy++) {
+					$coords = explode (",", $points[$yy]);
+?>						
+					thepoint = new google.maps.LatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
+					thepoints.push(thepoint);
+<?php
 					}			// end for ($yy = 0 ... )
-					print "\t\t var pline = new GPolygon(thepoints, \"$line_color\", $line_width, $line_opacity, \"$fill_color\", $fill_opacity, {clickable:false});\n";
-					print "\t\t boundary1.push(pline);\n";
-					print "\t\t if (!(boundary1[0].Contains(newpoint))) {\n";
-					print "\t\t blink_text(resp_name, '#FF0000', '#FFFF00', '#FFFF00', '#FF0000');\n";
-					print "\t\t }\n";
+?>
+//				var pline = new GPolygon(thepoints, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, "<?php print $fill_color;?>", <?php print $fill_opacity;?>, {clickable:false});
+				var pline = new google.maps.Polygon({
+					paths: 			thepoints,
+					strokeColor: 	add_hash("<?php echo $line_color;?>"),
+					strokeOpacity: 	<?php echo $line_opacity;?>,
+					strokeWeight: 	<?php echo $line_width;?>,
+					fillColor: 		add_hash("<?php echo $fill_color;?>"),
+					fillOpacity: 	<?php echo $fill_opacity;?>
+					});
+				boundary1.push(pline);
+				if(!google.maps.geometry.poly.containsLocation(newpoint,pline)) {
+//				if(!pline.Contains(newpoint)) {	
+					blink_text(resp_name, '#FF0000', '#FFFF00', '#FFFF00', '#FF0000');
+					}
+<?php
 				}
 			}
 ?>
-		}	// end function ring_fence	
+		}	// end function ring_fence		
 		
 	function exclude() {	//	run when new tracked data is received	6/10/11
-	
-		var thepoint;
-		var bound_names = new Array();
+		if (!google.maps.Polygon.prototype.Contains) {   						// 3/29/2013
+				google.maps.Polygon.prototype.Contains = function(latLng) {
+						// Outside the bounds means outside the polygon
+						if (this.getBounds && !this.getBounds().Contains(latLng)) {
+								return false;
+						}
+					   
+						var lat = latLng.lat();
+						var lng = latLng.lng();
+						var paths = this.getPaths();
+						var path, pathLength, inPath, i, j, vertex1, vertex2;
+					   
+						// Walk all the paths
+						for (var p = 0; p < paths.getLength(); p++) {
+							   
+								path = paths.getAt(p);
+								pathLength = path.getLength();
+								j = pathLength - 1;
+								inPath = false;
+							   
+								for (i = 0; i < pathLength; i++) {
 
-		  // === A method for testing if a point is inside a polygon
-		  // === Returns true if poly contains point
-		  // === Algorithm shamelessly stolen from http://alienryderflex.com/polygon/ 
-		  
-		  GPolygon.prototype.Contains = function(point) {
-			var j=0;
-			var oddNodes = false;
-			var x = point.lng();
-			var y = point.lat();
-			for (var i=0; i < this.getVertexCount(); i++) {
-			  j++;
-			  if (j == this.getVertexCount()) {j = 0;}
-			  if (((this.getVertex(i).lat() < y) && (this.getVertex(j).lat() >= y))
-			  || ((this.getVertex(j).lat() < y) && (this.getVertex(i).lat() >= y))) {
-				if ( this.getVertex(i).lng() + (y - this.getVertex(i).lat())
-				/  (this.getVertex(j).lat()-this.getVertex(i).lat())
-				*  (this.getVertex(j).lng() - this.getVertex(i).lng())<x ) {
-				  oddNodes = !oddNodes
-				}
-			  }
-			}
-			return oddNodes;
-		  }
+										vertex1 = path.getAt(i);
+										vertex2 = path.getAt(j);
+
+										if (vertex1.lng() < lng && vertex2.lng() >= lng || vertex2.lng() < lng && vertex1.lng() >= lng) {
+												if (vertex1.lat() + (lng - vertex1.lng()) / (vertex2.lng() - vertex1.lng()) * (vertex2.lat() - vertex1.lat()) < lat) {
+										inPath = !inPath;
+									}
+								}
+
+								j = i;
+									   
+								}
+							   
+								if (inPath) {
+										return true;
+								}
+						}
+						return false;
+				}				// end function()
+			}			// end if (!google.maps.Polygon.prototype.Contains)	
 <?php
 
 		$query_al = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]';";	//	6/10/11
@@ -499,26 +563,42 @@ if (is_guest()) {													// 8/25/10
 		while ($row66 = stripslashes_deep(mysql_fetch_assoc($result66))) 	{
 			extract ($row66);
 			if((my_is_float($lat)) && (my_is_float($lng))) {
-				print "\t\t	var resp_name = \"$name\";\n";
-				print "\t\t var thepoints = new Array();\n";
-				print "\t\t var newpoint = new GLatLng({$lat}, {$lng});\n";
+?>
+				var resp_name = "<?php print $name;?>";
+				var thepoints = new Array();
+				var newpoint = new google.maps.LatLng(<?php print $lat;?>, <?php print $lng;?>);
+<?php
 				$query67 = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id` = {$excl_zone}";
 				$result67 = mysql_query($query67)or do_error($query67, mysql_error(), basename(__FILE__), __LINE__);
 				$row67 = stripslashes_deep(mysql_fetch_assoc($result67));
 					extract ($row67);
 					$points = explode (";", $line_data);
-					print "\t\t var boundary1 = new Array();\n";					
-					print "\t\t var fencename = \"$line_name\";\n";
+?>
+					var boundary1 = new Array();					
+					var fencename = "<?php print $line_name;?>";
+<?php
 					for ($yy = 0; $yy < count($points); $yy++) {
-						$coords = explode (",", $points[$yy]);		
-						print "\t\t thepoint = new GLatLng(parseFloat($coords[0]), parseFloat($coords[1]));\n";
-						print "\t\t thepoints.push(thepoint);\n";
+						$coords = explode (",", $points[$yy]);	
+?>						
+						thepoint = new google.maps.LatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
+						thepoints.push(thepoint);
+<?php
 					}			// end for ($yy = 0 ... )
-					print "\t\t var pline = new GPolygon(thepoints, \"$line_color\", $line_width, $line_opacity, \"$fill_color\", $fill_opacity, {clickable:false});\n";
-					print "\t\t boundary1.push(pline);\n";
-					print "\t\t if ((boundary1[0].Contains(newpoint))) {\n";
-					print "\t\t blink_text2(resp_name, '#00FF00', '#FFFF00', '#FFFF00', '#FF0000');\n";
-					print "\t\t }\n";
+?>
+//					var pline = new GPolygon(thepoints, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, "<?php print $fill_color;?>", <?php print $fill_opacity;?>, {clickable:false});
+					var pline = new google.maps.Polygon({
+					    paths: 			thepoints,
+					    strokeColor: 	add_hash("<?php echo $line_color;?>"),
+					    strokeOpacity: 	<?php echo $line_opacity;?>,
+					    strokeWeight: 	<?php echo $line_width;?>,
+					    fillColor: 		add_hash("<?php echo $fill_color;?>"),
+					    fillOpacity: 	<?php echo $fill_opacity;?>
+						});
+					boundary1.push(pline);
+					if(google.maps.geometry.poly.containsLocation(newpoint, pline)) {	
+						blink_text2(resp_name, '#FF0000', '#FFFF00', '#FFFF00', '#FF0000');
+						}
+<?php
 				}
 			}
 ?>
@@ -673,8 +753,8 @@ if (is_guest()) {													// 8/25/10
 <?php 
 	if ($_SESSION['internet']) {	
 ?>
-		<SCRIPT SRC='./js/usng.js' TYPE='text/javascript'></SCRIPT>		<!-- 10/14/08 -->
-		<SCRIPT SRC='./js/graticule.js' type='text/javascript'></SCRIPT>
+		<SCRIPT SRC='./js/usng.js' 			TYPE='text/javascript'></SCRIPT>		<!-- 10/14/08 -->
+		<SCRIPT SRC="./js/graticule_V3.js" 	TYPE="text/javascript"></SCRIPT>
 <?php 
 		$sit_scr = (array_key_exists('id', ($_GET)))? $_GET['id'] :	NULL;	 	//	10/23/12
 		if((module_active("Ticker")==1) && (!($sit_scr))) {	//	6/1/12, 10/23/12
@@ -781,6 +861,9 @@ if (is_guest()) {													// 8/25/10
 <STYLE TYPE="text/css">
 .box { background-color: #DEE3E7; border: 2px outset #606060; color: #000000; padding: 0px; position: absolute; z-index:1000; width: 180px; }
 .bar { background-color: #FFFFFF; border-bottom: 2px solid #000000; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
+/* 3/26/2013
+.bar_header { height: 20px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
+*/
 .bar_header { height: 30px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
 .content { padding: 1em; }
 </STYLE>
@@ -852,12 +935,16 @@ if (is_guest()) {													// 8/25/10
 		$(waste_but).style.display = "inline";
 		$(inbox_but).style.display = "none";	
 		$('the_box').innerHTML = "Showing Inbox";	
+/*		get_main_messagelist(ticket_id,'',sortby, 'DESC','', 'ticket');  3/26/2013  */
 		get_all_messagelist(ticket_id,'',sortby, 'DESC','', 'ticket');
+
 		}			
 		
 	function get_mainmessages(ticket_id, responder_id, sortby, sort, filter, thescreen) {	//	10/23/12
 		ticket_id = ticket_id;
+/*		get_main_messagelist(ticket_id,'',sortby, sort, filter, 'ticket');	3/26/2013  */
 		get_all_messagelist(ticket_id,'',sortby, sort, filter, 'ticket');
+
 		}
 <?php
 	$do_blink_str = ($do_blink)? "start_blink()" : "";
@@ -877,7 +964,7 @@ if (is_guest()) {													// 8/25/10
 			}
 		}	
 	
-	$gunload = ($_SESSION['internet'])? "GUnload();" : "" ;				// 3/23/12
+	$gunload = "";				// 3/23/12
 	$fences = (($_SESSION['internet']) && (!($get_id)))? "fence_init();" : "" ;				// 4/22/11	
 	$set_showhide = ((array_key_exists('print', ($_GET)) || (array_key_exists('id', ($_GET)))))? "" : "set_initial_pri_disp(); set_categories(); set_fac_categories();";	//	3/15/11
 	$from_right = 20;	//	5/3/11
@@ -886,11 +973,13 @@ if (is_guest()) {													// 8/25/10
 	$refresh =  ($temp < 15)? 15000: $temp * 1000;
 	$set_to = (intval(trim(get_variable('situ_refr')))>0)? "setTimeout('location.reload(true);', {$refresh});": "";
 	$set_bnds = (($_SESSION['internet']) && (!($get_id)))? "set_bnds();" : "";
-//			removed gmaps api key check - 2/14/2013
+	$the_api_key = trim(get_variable('gmaps_api_key'));							// 3/5/12	
+//	$set_map = (empty($the_api_key))? "document.to_map.submit();" : "";			 - 1/16/2013
+	$set_map = "";	// 1/16/2013
 	$set_regions_control = ((!($get_id)) && ((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))) ? "set_regions_control();" : "";	//	6/1/12
 	$get_messages = ($get_id) ? "get_mainmessages(" . $get_id . " ,'',sortby, sort, '', 'ticket');" : "";
 ?>
-<BODY onLoad = "ck_frames(); <?php print $ld_ticker;?> <?php print $set_regions_control;?> <?php print $get_messages;?> <?php print $set_showhide;?> <?php print $set_bnds;?> parent.frames['upper'].document.getElementById('gout').style.display  = 'inline'; ck_frames(); start_watch(); location.href = '#top'; <?php print $do_mu_init;?> <?php print $fences;?> <?php print $do_blink_str;?> " onUnload = "end_watch(); end_blink(); <?php print $gunload;?>";>	<!-- 3/15/11, 10/23/12 -->
+<BODY onLoad = "ck_frames(); <?php print $ld_ticker;?> <?php print $set_regions_control;?> <?php print $get_messages;?> <?php print $set_showhide;?> <?php print $set_bnds;?> parent.frames['upper'].document.getElementById('gout').style.display  = 'inline'; start_watch(); location.href = '#top'; <?php print $do_mu_init;?> <?php print $fences;?> <?php print $do_blink_str;?> " onUnload = "end_watch(); end_blink(); <?php print $gunload;?>";>	<!-- 3/15/11, 10/23/12 -->
 <?php
 	include("./incs/links.inc.php");		// 8/13/10
 ?>
@@ -914,12 +1003,18 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
 ?>
 		<DIV id = 'regions_outer' style = "position: fixed; right: 20%; top: 10%; z-index: 1000;">
 			<DIV id="boxB" class="box" style="z-index:1000;">
-				<DIV class="bar_header" class="heading_2" style='white-space: nowrap;'>	
+<!-- 3/26/2013
+				<DIV class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;">Viewed Regions
+				<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
 				<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
-					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i>
-					<DIV id="collapse_regs" class='plain' style ="display: inline; z-index:1001; cursor: pointer; float: right; margin-left: 0px; font-size: 10px;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
-				</DIV>
-				<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV>
+					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
+-->					
+ 				<DIV class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;">Viewed Regions
+ 				<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+ 				<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
+ 					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
+
+				<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV> 
 				</DIV>
 			</DIV>
 		</DIV>
@@ -942,28 +1037,7 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
 		}
 		
 	$sit_scr = (array_key_exists('id', ($_GET)))? $_GET['id'] :	NULL;		//	10/23/12	
-	if((module_active("Ticker")==1) && (!($sit_scr))) {			//	10/23/12
-		require_once('./modules/Ticker/incs/ticker.inc.php');
-		$the_markers = buildmarkers();
-		foreach($the_markers AS $value) {
-?>
-<SCRIPT>
-			var the_point = new GLatLng(<?php print $value[3];?>, <?php print $value[4];?>);		//	10/23/12
-			var the_header = "Traffic Alert";		//	10/23/12
-			var the_text = "<?php print $value[1];?>";		//	10/23/12
-			var the_id = "<?php print $value[0];?>";		//	10/23/12
-			var the_category = "<?php print $value[5];?>";		//	10/23/12
-			var the_descrip = "<DIV style='font-size: 14px; color: #000000; font-weight: bold;'>" + the_header + "</DIV><BR />";		//	10/23/12
-			the_descrip += "<DIV style='font-size: 14px; color: #FFFFFF; background-color: #707070; font-weight: bold;'>" + the_category + "</DIV><BR />";		//	10/23/12
-			the_descrip += "<DIV style='font-size: 12px; color: blue; font-weight: normal;'>";		//	10/23/12
-			the_descrip += "<?php print $value[2];?>";		//	10/23/12
-			the_descrip += "</DIV>";		//	10/23/12
-			var rss_marker = create_feedMarker(the_point, the_text, the_descrip, the_id, the_id);		//	10/23/12
-			map.addOverlay(rss_marker);		//	10/23/12
-</SCRIPT>
-<?php
-		}
-	}
+
 ?>
 <FORM NAME='to_closed' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'> <!-- 11/28/10 not now used - replaced with form to_listtype -->
 <INPUT TYPE='hidden' NAME='status' VALUE='<?php print $GLOBALS['STATUS_CLOSED'];?>' /> <!-- 11/28/10 not now used - replaced with form to_listtype -->

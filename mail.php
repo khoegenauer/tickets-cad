@@ -10,7 +10,6 @@
 7/19/10 line # print removed
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 3/15/11 changed stylesheet.php to stylesheet.php
-4/16/13 Revised calls to mail_it and do_send to fix errors
 */
 
 @session_start();
@@ -171,7 +170,7 @@ else {
 //	snap(basename(__FILE__) . __LINE__, $_POST['frm_subj'] );
 //	snap(basename(__FILE__) . __LINE__, $_POST['frm_text']);
 
-	do_send ($_POST['frm_to_str'], "", $_POST['frm_subj'], $_POST['frm_text'], $_POST['frm_ticket_id'], 0) ;		// ($to, $subject, $text) ;
+	do_send ($_POST['frm_to_str'], $_POST['frm_subj'], $_POST['frm_text'], $_POST['frm_ticket_id'], 0) ;		// ($to, $subject, $text) ;
 ?>
 <SCRIPT>
 /*

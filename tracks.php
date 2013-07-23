@@ -107,7 +107,7 @@ global $u_types;
 
 	function do_track(callsign) {
 		if (parent.frames["upper"].logged_in()) {
-			map.closeInfoWindow();
+			try  {open_iw.close()} catch (e) {;}
 			var width = <?php print get_variable('map_width');?>+360;
 			var spec ="titlebar, resizable=1, scrollbars, height=640,width=" + width + ",status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300";
 			var url = "track_u.php?source="+callsign;
@@ -147,33 +147,40 @@ global $u_types;
 
 		}			// end function
 
-	function create_track_Marker(point,html, mytype, ender, heading) {
+	function create_track_Marker(point,html, mytype, ender, heading) {	//	5/1/13
 		switch (mytype){
 			case 1:
 //				alert(99);
-				var marker = new GMarker(point, starticon);	
-				GEvent.addListener(marker, "click", function() {
-					marker.openInfoWindowHtml(html);
-					});
+				var marker = new google.maps.Marker({position: point, map: map, icon: starticon});
+				google.maps.event.addListener(marker, "click", function() {		// here for both side bar and icon click
+					try {open_iw.close()} catch(err) {;}
+					map.setCenter(point);
+					infowindow = new google.maps.InfoWindow({ content: html, maxWidth: 300});	 
+					open_iw = infowindow;
+					infowindow.open(map, marker);		
+					});			// end google.maps.event.add Listener()				
 				break;
 			case ender:
 //				alert(106);
-				var marker = new GMarker(point, endicon);	
-				GEvent.addListener(marker, "click", function() {
-					marker.openInfoWindowHtml(html);
-					});
+				var marker = new google.maps.Marker({position: point, map: map, icon: endicon});
+				google.maps.event.addListener(marker, "click", function() {		// here for both side bar and icon click
+					try {open_iw.close()} catch(err) {;}
+					map.setCenter(point);
+					infowindow = new google.maps.InfoWindow({ content: html, maxWidth: 300});	 
+					open_iw = infowindow;
+					infowindow.open(map, marker);		
+					});			// end google.maps.event.add Listener()			
 				break;
 			default : 
-				var infoicon = new GIcon();
-				infoicon.image = "./markers/" + direcs[heading];
-				
-				infoicon.iconSize = new GSize(15, 15);
-				infoicon.iconAnchor = new GPoint(4, 4);
-			
-				var marker = new GMarker(point, infoicon);	
-				GEvent.addListener(marker, "click", function() {
-					marker.openInfoWindowHtml(html);
-					});
+				var infoicon = "./markers/" + direcs[heading];
+				var marker = new google.maps.Marker({position: point, map: map, icon: infoicon});		
+				google.maps.event.addListener(marker, "click", function() {		// here for both side bar and icon click
+					try {open_iw.close()} catch(err) {;}
+					map.setCenter(point);
+					infowindow = new google.maps.InfoWindow({ content: html, maxWidth: 300});	 
+					open_iw = infowindow;
+					infowindow.open(map, marker);		
+					});			// end google.maps.event.add Listener()			
 				}
 		return marker;
 		}
@@ -181,45 +188,40 @@ global $u_types;
 	function createMarker(point,tabs, color, id) {				// Creates marker and sets up click event infowindow 
 		points = true;											// at least one
 		var letter = String.fromCharCode("A".charCodeAt(0) + id);		// start with A - 1/5/09
+		var icon = "./our_icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + letter;				// 1/5/09
 
-		var icon = new GIcon(listIcon);
-		var icon_url = "./our_icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + letter;				// 1/5/09
-		icon.image = icon_url;		// ./our_icons/gen_icon.php?blank=4&text=zz"
+		var marker = new google.maps.Marker({position: point, map: map, icon: icon});
 
-		var marker = new GMarker(point, icon);
-		marker.id = color;				// for hide/unhide - unused
-
-		GEvent.addListener(marker, "click", function() {		// here for both side bar and icon click
-			map.closeInfoWindow();
+		google.maps.event.addListener(marker, "click", function() {		// here for both side bar and icon click
+			try {open_iw.close()} catch(err) {;}
+			map.setCenter(point);
+			infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});	 
+			open_iw = infowindow;
 			which = id;
-			gmarkers[which].hide();
-			marker.openInfoWindowTabsHtml(infoTabs[id]);
-			
+//			gmarkers[which].hide();
+			infowindow.open(map, marker);			
 //			var dMapDiv = document.getElementById("detailmap");
 //			var detailmap = new GMap2(dMapDiv);
 //			detailmap.addControl(new GSmallMapControl());
 //			detailmap.setCenter(point, 13);  					// larger # = closer
 //			detailmap.addOverlay(marker);
 
-			setTimeout(function() {										// wait for rendering complete - 12/17/08
-			if ($("detailmap")) {				
-				var dMapDiv = $("detailmap");
-				var detailmap = new GMap2(dMapDiv);
-				detailmap.addControl(new GSmallMapControl());
-				detailmap.setCenter(point, 17);  						// larger # = closer
-				detailmap.addOverlay(marker);
-				}
-			else {
-//				alert(62);
-//				alert($("detailmap"));
-				}
-			},4000);				// end setTimeout(...)
+			// setTimeout(function() {										// wait for rendering complete - 12/17/08
+			// if ($("detailmap")) {				
+				// var dMapDiv = $("detailmap");
+				// var detailmap = new GMap2(dMapDiv);
+				// detailmap.addControl(new GSmallMapControl());
+				// detailmap.setCenter(point, 17);  						// larger # = closer
+				// detailmap.addOverlay(marker);
+				// }
+			// else {
+// //				alert(62);
+// //				alert($("detailmap"));
+				// }
+			// },4000);				// end setTimeout(...)
 
 
 		});			// end 	GEvent.addListener()
-
-
-
 
 		gmarkers[id] = marker;									// marker to array for side_bar click function
 		infoTabs[id] = tabs;									// tabs to array
@@ -245,23 +247,28 @@ global $u_types;
 		}
 
 	function myclick(id, call) {					// Responds to sidebar click, then triggers listener above -  note [id]
-		GEvent.trigger(gmarkers[id], "click");
+//		GEvent.trigger(gmarkers[id], "click");
+		google.maps.event.trigger(gmarkers[id], 'click');		
 		}
-
+		
+	var grid_bool = false;	
 	function doGrid() {
 		map.addOverlay(new LatLonGraticule());
-		}
+		grid_bool = !grid_bool;
+		if (grid_bool)	{ grid = new Graticule(map); }
+		else 			{ grid.setMap(null); }
+		}		// end function doGrid()		
 
-	function do_lat (lat) {
-		document.forms[0].frm_lat.disabled=false;
-		document.forms[0].frm_lat.value=lat.toFixed(6);
-		document.forms[0].frm_lat.disabled=true;
-		}
-	function do_lng (lng) {
-		document.forms[0].frm_lng.disabled=false;
-		document.forms[0].frm_lng.value=lng.toFixed(6);
-		document.forms[0].frm_lng.disabled=true;
-		}
+//	function do_lat (lat) {
+//		document.forms[0].frm_lat.disabled=false;
+//		document.forms[0].frm_lat.value=lat.toFixed(6);
+//		document.forms[0].frm_lat.disabled=true;
+//		}
+//	function do_lng (lng) {
+//		document.forms[0].frm_lng.disabled=false;
+//		document.forms[0].frm_lng.value=lng.toFixed(6);
+//		document.forms[0].frm_lng.disabled=true;
+//		}
 						// 2/24/09
 	var direcs=new Array("north.png","north_east.png","east.png","south_east.png","south.png","south_west.png","west.png","north_west.png", "north.png");	// 10/4/08
 
@@ -280,18 +287,6 @@ unset($result);
 
 
 ?>
-
-	var starticon = new GIcon();
-	starticon.image = "./markers/start.png";	
-	starticon.iconSize = new GSize(16, 16);
-	starticon.iconAnchor = new GPoint(8, 8);
-
-	var endicon = new GIcon();
-	endicon.image = "./markers/end.png";
-	endicon.iconSize = new GSize(16, 16);
-	endicon.iconAnchor = new GPoint(8, 8);
-
-	var map;
 	var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_responders'>";
 	side_bar_html += "<TR class='even'>	<TD colspan=99 ALIGN='center'><B>Mobile Units</B></TD></TR>";
 	side_bar_html += "<TR class='odd'>	<TD colspan=99 ALIGN='center'>Click line or icon for information</TD></TR>";
@@ -301,31 +296,63 @@ unset($result);
 	var which;
 	var i = k = 0;			// sidebar/icon index, track point index
 	var points = false;								// none
+	var marker;
+	var bounds = new google.maps.LatLngBounds();	
+	var infowindow;
+	var center = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
+	var theLat;
+	var theLng;
+	var theLastLat;
+	var theLastLng;
+	
+	
+	var starticon = {
+		url: "./markers/start.png",
+		size: new google.maps.Size(16, 16),
+		origin: new google.maps.Point(0,0),
+		anchor: new google.maps.Point(8, 8)
+		};
 
-	map = new GMap2(document.getElementById("map"));		// create the map
-//	map.addControl(new GSmallMapControl());
-	map.setUIToDefault();									// 8/13/10
+	var endicon = {
+		url: "./markers/start.png",
+		size: new google.maps.Size(16, 16),
+		origin: new google.maps.Point(0,0),
+		anchor: new google.maps.Point(8, 8)
+		};	
 
-	map.addControl(new GMapTypeControl());
-	map.setCenter(new GLatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);		// <?php echo get_variable('def_lat'); ?>
+	var map = null;				// the map object - note GLOBAL
+	var icon_file = {
+		url: "./markers/yellow.png",
+		size: new google.maps.Size(20, 34),
+		origin: new google.maps.Point(0,0),
+		anchor: new google.maps.Point(8, 28)
+		};
+	var shadow = {
+		url: "./markers/sm_shadow.png",
+		size: new google.maps.Size(37, 34),
+		origin: new google.maps.Point(0,0),
+		anchor: new google.maps.Point(18, 25)
+		};
 
-	var bounds = new GLatLngBounds();						// create  bounding box
-//	map.addControl(new GOverviewMapControl());
-	map.enableScrollWheelZoom(); 	
-
-	var listIcon = new GIcon();
-	listIcon.image = "./markers/yellow.png";	
-	listIcon.shadow = "./markers/sm_shadow.png";
-	listIcon.iconSize = new GSize(20, 34);
-	listIcon.shadowSize = new GSize(37, 34);
-	listIcon.iconAnchor = new GPoint(8, 28);
-	listIcon.infoWindowAnchor = new GPoint(9, 2);
-	listIcon.infoShadowAnchor = new GPoint(18, 25);
-
-	GEvent.addListener(map, "infowindowclose", function() {		// re-center after  move/zoom
-		map.setCenter(center,zoom);
-		map.addOverlay(gmarkers[which])
-		});
+	function call_back (in_obj){				// callback function - from gmaps_v3_init()
+//		do_lat(parseFloat(in_obj.lat));			// set form values
+//		do_lng(parseFloat(in_obj.lng));
+//		do_ngs();	
+		}
+//				2114 - Add/Edit	common
+	map = gmaps_v3_init(call_back, 'map_canvas', 
+		<?php echo get_variable('def_lat');?>, 
+		<?php echo get_variable('def_lng');?>, 
+		<?php echo get_variable('def_zoom');?>, 
+		icon_file, 
+		<?php echo get_variable('maptype');?>, 
+		false);				
+ 
+	// google.maps.event.addListener(infowindow,'closeclick', function() {
+		// map.setZoom(<?php echo get_variable('def_zoom'); ?>);
+		// map.setCenter(center);
+	 // });	
+	 
 
 <?php
 	$calls = array();
@@ -384,42 +411,56 @@ unset($result);
 			}
 		else {			// is mobile, do infowin, etc.
 			$query = "SELECT DISTINCT `source`, `latitude`, `longitude` ,`course` ,`speed` ,`altitude` ,`closest_city` ,`status` , UNIX_TIMESTAMP(packet_date) AS `packet_date`, UNIX_TIMESTAMP(updated) AS `updated` FROM `$GLOBALS[mysql_prefix]tracks` WHERE `source` = '" .$row['callsign'] . "' ORDER BY `updated`";	//	6/16/08 
+//			print $query . "<BR />";
 			$result_tr = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 			if (mysql_affected_rows()> 0 ) {
 ?>
 				var j=1;				// point counter this unit
 				var ender = <?php print mysql_affected_rows(); ?> ;
+				var path = new google.maps.MVCArray;				
+				var poly = new google.maps.Polyline({		// Create the polyline
+					paths: path,				
+					map: map,
+					strokeColor: "#000000",									
+					strokeWeight: 3							
+					});			
+				poly.setPath(new google.maps.MVCArray([path]));					
+				var thePoints = new Array();				
 <?php
-				$last = "";
+				$theLast = "";
 				while ($row_tr = stripslashes_deep(mysql_fetch_assoc($result_tr))) {
+					if($theLast != "") {
 ?>
-					bounds.extend(new GLatLng(<?php print $row_tr['latitude'];?>, <?php print $row_tr['longitude'];?>));	// all points to bounding box
-					var point = new GLatLng(<?php print $row_tr['latitude'];?>, <?php print $row_tr['longitude'];?>);
-					var html = "<b><?php print $row_tr['source'];?></b><br /><br /><?php print format_date($row['updated']);?>";
-					var heading = Math.round(<?php print intval($row_tr['course']);?>/45);		// 10/4/08
-		
-					var marker = create_track_Marker(point, html, j, ender, heading);
-					map.addOverlay(marker);	
-
+						theLastLat = <?php print $theLast['latitude'];?>;
+						theLastLng = <?php print $theLast['longitude'];?>;
+						theLat = <?php print $row_tr['latitude'];?>;
+						theLng = <?php print $row_tr['longitude'];?>;
+						var point = new google.maps.LatLng(theLat, theLng);		
+						bounds.extend(point);
+						map.fitBounds(bounds);					
+						var html = "<b><?php print $row_tr['source'];?></b><br /><br /><?php print format_date($row['updated']);?>";
+						var heading = Math.round(<?php print intval($row_tr['course']);?>/45);		// 10/4/08
+			
+						var marker = create_track_Marker(point, html, j, ender, heading);
+						marker.setMap(map);
+							var theOldPoint = new google.maps.LatLng(parseFloat(theLastLat), parseFloat(theLastLng));
+							path.insertAt(path.length, theOldPoint);							
+							var theNewPoint = new google.maps.LatLng(parseFloat(theLat), parseFloat(theLng));
+							path.insertAt(path.length, theNewPoint);
+							points++;
+							j++;k++;
 <?php
-					if (!empty($last)) {
-?>			
-						var polyline = new GPolyline([
-						    new GLatLng(<?php print $last['latitude'];?>, <?php print $last['longitude'];?>),		// prior point
-						    new GLatLng(<?php print $row_tr['latitude'];?>, <?php print $row_tr['longitude'];?>)	// current point
-							], "#FF0000", 2);
-						map.addOverlay(polyline);
-						points++;
-						j++;k++;
-<?php
-						}		// end if (!empty($last))
-					$last = $row_tr;										// either way 
+						}	//	end if(!empty($last))
+						$theLast = $row_tr;
 					}		// end while ($row_tr...)
-	
-					$mode = ($last['speed'] == 0)? 1: 2 ;
-					if ($last['speed'] >= 50) { $mode = 3;}
+
+					$mode = ($theLast['speed'] == 0)? 1: 2 ;
+					if ($theLast['speed'] >= 50) { $mode = 3;}
 ?>
-					var point = new GLatLng(<?php print $last['latitude'];?>, <?php print $last['longitude'];?>);	// mobile position
+					poly.setPath(path);
+					poly.setMap(map);
+					var point = new google.maps.LatLng(theLat, theLng);		// mobile position
+
 <?php
 					}				// end (mysql_affected_rows()> 0 )
 				else {				// no track data, do sidebar only
@@ -450,7 +491,7 @@ unset($result);
 ?>
 
 		var do_map = true;		// default
-		
+	
 <?php
 		$temptype = $u_types[$row['type']];
 		$the_type = $temptype[0];																			// 1/1/09
@@ -469,10 +510,10 @@ unset($result);
 			case 0:				// not mobile
 ?>			
 				do_sidebar ("<?php print str_replace($eols, " ", $sidebar_line); ?>", i, <?php print $row_tr['source'] ;?>);
-				var myinfoTabs = [
-					new GInfoWindowTab("<?php print nl2brr(shorten($row['name'], 10));?>", "<?php print $tab_1;?>"),
-					new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>")
-					];
+//				var myinfoTabs = [
+//					new GInfoWindowTab("<?php print nl2brr(shorten($row['name'], 10));?>", "<?php print $tab_1;?>"),
+//					new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>")
+//					];
 <?php
 			    break;
 			case 1:				// stopped
@@ -481,20 +522,20 @@ unset($result);
 ?>			
 				do_sidebar ("<?php print str_replace($eols, " ", $sidebar_line); ?>", i);
 <?php			
-				$tab_2 = "<TABLE CLASS='infowin' width='" . $_SESSION['scr_width']/4 . "'>";
-				$tab_2 .="<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . $last['source'] . "</B></TD></TR>";
-				$tab_2 .= "<TR CLASS='odd'><TD>Course: </TD><TD>" . $last['course'] . ", Speed:  " . $last['speed'] . ", Alt: " . $last['altitude'] . "</TD></TR>";
-				$tab_2 .= "<TR CLASS='even'><TD>Closest city: </TD><TD>" . $last['closest_city'] . "</TD></TR>";
-				$tab_2 .= "<TR CLASS='odd'><TD>Status: </TD><TD>" . $last['status'] . "</TD></TR>";
-				$tab_2 .= "<TR CLASS='even'><TD>As of: </TD><TD>" . format_date($last['packet_date']) . "(UTC)</TD></TR>";	//	6/16/08 
-				$tab_2 .= "</TABLE>";
+				$tab_1 .= "<BR /><TABLE CLASS='infowin' width='" . $_SESSION['scr_width']/4 . "'>";
+				$tab_1 .="<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . $theLast['source'] . "</B></TD></TR>";
+				$tab_1 .= "<TR CLASS='odd'><TD>Course: </TD><TD>" . $theLast['course'] . ", Speed:  " . $theLast['speed'] . ", Alt: " . $theLast['altitude'] . "</TD></TR>";
+				$tab_1 .= "<TR CLASS='even'><TD>Closest city: </TD><TD>" . $theLast['closest_city'] . "</TD></TR>";
+				$tab_1 .= "<TR CLASS='odd'><TD>Status: </TD><TD>" . $theLast['status'] . "</TD></TR>";
+				$tab_1 .= "<TR CLASS='even'><TD>As of: </TD><TD>" . format_date($theLast['packet_date']) . "(UTC)</TD></TR>";	//	6/16/08 
+				$tab_1 .= "</TABLE>";
+				$tab2 = "";
 ?>
-
-				var myinfoTabs = [
-					new GInfoWindowTab("<?php print nl2brr(shorten($row['name'], 10));?>", "<?php print $tab_1;?>"),
-					new GInfoWindowTab("<?php print $last['source']; ?>", "<?php print $tab_2;?>"),
-					new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>")
-					];
+//				var myinfoTabs = [
+//					new GInfoWindowTab("<?php print nl2brr(shorten($row['name'], 10));?>", "<?php print $tab_1;?>"),
+//					new GInfoWindowTab("<?php print $theLast['source']; ?>", "$tab_2 reference here"),
+//					new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>")
+//					];
 <?php			
 			    break;
 			case 4:				// mobile - no track
@@ -509,8 +550,9 @@ unset($result);
 			}		// end switch
 ?>
 			if (do_map) {
-				var marker = createMarker(point, myinfoTabs,<?php print $row['type'];?>, i);	// (point,tabs, color, id)
-				map.addOverlay(marker);
+//				alert(point);
+				var marker = createMarker(point, "<?php print $tab_1;?>", <?php print $row['type'];?>, i);	// (point,tabs, color, id)
+				marker.setMap(map);
 				}
 			i++;				// zero-based
 <?php
@@ -519,13 +561,18 @@ unset($result);
 		$aprs_legend = ($aprs)? "<TD CLASS='aprs' ALIGN='center'>APRS time</TD>": "<TD></TD>";
 
 ?>
+
 	if (!points) {		// any?
-		map.setCenter(new GLatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
+		center = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
+		map.setZoom(<?php echo get_variable('def_zoom'); ?>);
+		map.setCenter(center);
 		}
 	else {
-		center = bounds.getCenter();
-		zoom = map.getBoundsZoomLevel(bounds)-1;
-		map.setCenter(center,zoom);
+//		map.fitBounds(bounds);
+//		center = bounds.getCenter();
+//		zoom = map.getZoom();
+//		map.setZoom(zoom);
+//		map.setCenter(center);		
 		}
 	side_bar_html+= "<TR CLASS='" + colors[i%2] +"'><TD COLSPAN=6>&nbsp;</TD></TR>";
 	side_bar_html+= "<TR CLASS='" + colors[(i+1)%2] +"'><TD COLSPAN=6 ALIGN='center'><B>M</B>obility:&nbsp;&nbsp; stopped: <FONT COLOR='red'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;moving: <FONT COLOR='green'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;fast: <FONT COLOR='white'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;silent: <FONT COLOR='black'><B>&bull;</B></FONT></TD><?php print $aprs_legend;?></TR>";
@@ -538,7 +585,7 @@ unset($result);
 	$aprs_but = "";		
 ?>
 	side_bar_html += "<?php print $aprs_but;?>";
-	
+
 	document.getElementById("side_bar").innerHTML += side_bar_html;	// append the assembled side_bar_html contents to the side_bar div
 	
 <?php
@@ -547,6 +594,7 @@ unset($result);
 </SCRIPT>
 <?php
 	}				// end function list_responders() ===========================================================
+$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";	
 ?>
 
 
@@ -554,10 +602,14 @@ unset($result);
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<HEAD><TITLE>Tickets - Tracks Module</TITLE>
 	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
-	<SCRIPT src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
+	<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry,weather&sensor=false"></SCRIPT>
+	<SCRIPT SRC='./js/graticule_V3.js' type='text/javascript'></SCRIPT> 
+	<SCRIPT SRC='./js/misc_function.js' type='text/javascript'></SCRIPT>  <!-- 4/14/10 -->
+	<SCRIPT SRC="./js/domready.js"		TYPE="text/javascript" ></script>
+	<SCRIPT SRC="./js/gmaps_v3_init.js"	TYPE="text/javascript" ></script>
 
+	<SCRIPT>
 <?php
-	print "<SCRIPT>\n";
 	print "var user = '";
 	print $_SESSION['user'];
 	print "'\n";
@@ -579,11 +631,11 @@ unset($result);
 
 </SCRIPT>
 	</HEAD>
-	<BODY onLoad = "ck_frames()" onUnload="GUnload()">
+	<BODY onLoad = "ck_frames();">
 		<TABLE ID='outer'><TR CLASS='even'><TD ALIGN='center' colspan=2><B><FONT SIZE='+1'>Mobile Unit Tracks</FONT></B></TD></TR><TR><TD>
 			<DIV ID='side_bar'></DIV>
 			</TD><TD ALIGN='center'>
-			<DIV ID='map' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
+			<DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
 			<BR /><BR />Units:&nbsp;&nbsp;&nbsp;&nbsp;
 <?php
 		print get_icon_legend ();				// 1/24/09

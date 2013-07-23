@@ -27,8 +27,8 @@ function get_contact_details($the_id) {
 $where = ((!empty($_GET)) && (isset($_GET['id']))) ? "WHERE `requester` = " . strip_tags($_GET['id']): " ";
 $order = "ORDER BY `request_date`";
 $order2 = "ASC";
-
-
+$showall = ((isset($_GET['showall'])) && ($_GET['showall'] == 'yes')) ? true : false;
+$where .= ($showall == true) ? " AND (`completed_date` IS NULL OR `completed_date` = '' OR DATE_FORMAT(`completed_date`,'%y') = '00') " : "";
 $query = "SELECT *, 
 		`r`.`id` AS `request_id`,
 		`a`.`id` AS `assigns_id`,

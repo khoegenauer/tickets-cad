@@ -35,6 +35,10 @@ $evenodd = array ("even", "odd");
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry&sensor=false"></SCRIPT>	<!-- 4/23/13 -->
+<SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 4/23/13 -->
+<SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 4/23/13 -->
+<SCRIPT TYPE="text/javascript" SRC="./js/misc_function.js"></SCRIPT>	<!-- 5/3/11 -->	
 <SCRIPT>
 
 function ck_frames() {		//  onLoad = "ck_frames()"
@@ -167,13 +171,19 @@ function validate(theForm) {
 			
 	// ___________________________________  END NEW STUFF __________________		
 //			dump(mysql_num_rows($result));
-			
-			if(mysql_num_rows($result) == 1) {
-				// display ticket in whole if just one returned
+
+			if(mysql_num_rows($result) == 1) {	//	revised to redirect to main.php rather than show ticket in search.php	4/29/13
 				$row = stripslashes_deep(mysql_fetch_assoc($result));
-				add_header($row['id']);
-				show_ticket($row['id'], FALSE, $_POST['frm_query']);				// include search term for highlighting
+				header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+				header('Cache-Control: no-store, no-cache, must-revalidate');
+				header('Cache-Control: post-check=0, pre-check=0', FALSE);
+				header('Pragma: no-cache');
+	
+				$host  = $_SERVER['HTTP_HOST'];
+				$url = "main.php?id=" . $row['id'];
+				redir($url);
 				exit();
+
 				}
 			elseif (mysql_num_rows($result) == 0) {
 				print "<SPAN STYLE = 'margin-left:80px'><B>No matches found</B></SPAN><BR /><BR />";

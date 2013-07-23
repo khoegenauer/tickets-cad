@@ -64,10 +64,12 @@ tr.front 					{height: 18px; }
 </STYLE>
 
 <SCRIPT SRC="./js/jscolor/jscolor.js"  type="text/javascript"></SCRIPT>
-
-<SCRIPT src="http://maps.google.com/maps?file=api&amp;v=2.173&amp;sensor=false&amp;key=<?php print get_variable('gmaps_api_key');?>""></SCRIPT>
-<SCRIPT src = "./js/ELabel.js"></SCRIPT>
-
+<?php
+	$api_key = trim(get_variable('gmaps_api_key'));
+	$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
+?>
+<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>sensor=false"></SCRIPT>
+<SCRIPT src = "./js/elabel_v3.js"></SCRIPT>
 <SCRIPT>
 	var map;		// note global
 	var comma = ","; 
@@ -378,11 +380,24 @@ function to_view(id) {						// invoke switch case 'u' for selected id
 	function buildMap_l() {				// 'list' version
 	
 		var container = document.getElementById("map");
-		map = new GMap2(container, {draggableCursor:"auto", draggingCursor:"move"});
+
+		var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
+		var mapOptions = {
+			zoom: <?php print get_variable('def_zoom');?>,
+			center: myLatlng,
+			panControl: true,
+		    zoomControl: true,
+		    scaleControl: true,
+		    mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
+			}	
+
+		var map = new google.maps.Map($('map'), mapOptions);				// 481
+		map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
+		var bounds = new google.maps.LatLngBounds();		// Initialize bounds for the map
+
 		tooltip = document.createElement("DIV"); // Add a DIV element for toolips
 		tooltip.className = "tooltip";
 		map.getPane(G_MAP_MARKER_PANE).appendChild(tooltip);
-		var bounds = new GLatLngBounds();						// create  bounding box for centering		
 		var points = new Array();
 <?php
 		$query = "SELECT * FROM `{$tablename}` WHERE `line_type` = 'c'";
@@ -502,7 +517,7 @@ switch ($_POST["_func"]) {
 
 	case "l":				// list
 ?>
-<BODY onLoad = "buildMap_l()" onUnload="GUnload();">
+<BODY onLoad = "buildMap_l()" >	<!-- <?php echo basename(__FILE__); ?> -->
 <SCRIPT TYPE='text/javascript' src='./js/wz_tooltip.js'></SCRIPT>
 <TABLE ID = 'outer' ALIGN='center' BORDER = 0 STYLE = 'margin-left:20px;margin-top:20px;'>
 <TR CLASS='even'><TH colspan=2>Lines and Boundaries</TH></TR>
@@ -578,6 +593,7 @@ switch ($_POST["_func"]) {
 <SCRIPT>
 function buildMap_c() {															// 'create' version
 	var container = document.getElementById("map");
+/*
 	map = new GMap2(container, {draggableCursor:"auto", draggingCursor:"move"});
 	tooltip = document.createElement("DIV"); 									// Add a DIV element for toolips
 	tooltip.className = "tooltip";
@@ -605,6 +621,7 @@ function buildMap_c() {															// 'create' version
 			alert(<?php echo __LINE__;?>);
 			}
 		});		// end GEvent.add Listener()
+*/
 
 	}				// end function buildMap_c()
 
@@ -626,7 +643,7 @@ function buildMap_c() {															// 'create' version
 		  }
 		}
 </SCRIPT>
-<BODY onLoad = "buildMap_c(); do_un_checked(); document.c.frm_name.focus();"  onUnload='GUnload();'>	
+<BODY onLoad = "buildMap_c(); do_un_checked(); document.c.frm_name.focus();" >	
 <?php
 	print (array_key_exists("caption", $_POST))? "<H3>{$_POST['caption']}</H3>" : "";
 
@@ -1049,12 +1066,12 @@ function do_point(in_lat, in_lng) {
 <?php
 if ($_func == "r") {
 ?>
-<BODY onLoad = "buildMap_r();"  onUnload='GUnload();'>
+<BODY onLoad = "buildMap_r();" >
 <?php
 	}
 else {
 ?>
-<BODY onLoad = "buildMap_u(); fillmap(); fillfields(); document.u.frm_name.focus();"  onUnload='GUnload();'>	
+<BODY onLoad = "buildMap_u(); fillmap(); fillfields(); document.u.frm_name.focus();" >	
 <?php	
 	}
 	$visible_true = (intval($row['line_status'])==0)? "CHECKED" : "";

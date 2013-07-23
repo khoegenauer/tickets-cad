@@ -47,6 +47,7 @@
 1/10/11 Added default setting for Group or dispatch
 5/11/12 Added code for quick start.
 1/9/2013 API key is no longer mandatory
+4/2/2013 removed API key value.
 */
 
 error_reporting(E_ALL);				// 2/3/09
@@ -1246,8 +1247,9 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 			<TABLE BORDER="0">
 			<TR CLASS="even"><TD width="200px">MySQL Database: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_dbname" VALUE=""> your just-created MySQL database</TD></TR>
 			<TR CLASS="odd"><TD>MySQL Table Prefix (optional): </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_prefix" VALUE=""> your choice</TD></TR>
-			<TR CLASS="even"><TD>Google API Key:<BR /></TD><TD><INPUT TYPE="text" SIZE="70" MAXLENGTH="255" NAME="frm_api_key"  VALUE="<?php print $api_key; ?>"><BR>
-				&nbsp;&nbsp;&nbsp;&nbsp;Note: this is a temporary key; Obtain your site's API key at https://code.google.com/apis/console/
+			<!-- 4/2/2013 -->
+			<TR CLASS="even"><TD>Google API Key (optional):<BR /></TD><TD><INPUT TYPE="text" SIZE="70" MAXLENGTH="255" NAME="frm_api_key"  VALUE=""><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;Note: You may obtain your site's API key at https://code.google.com/apis/console/
 				</TD></TR>
 			<TR CLASS="odd"><TD>Install Option: </TD><TD>
 			<INPUT TYPE="radio" VALUE="install" NAME="frm_option" checked> Install Database - new<BR />

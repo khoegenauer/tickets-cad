@@ -209,7 +209,7 @@ if(file_exists("./incs/modules.inc.php")) {
 		catch (e) {
 			alert("<?php echo 'error: ' . basename(__FILE__) . '@' .  __LINE__;?>");
 			alert(req.responseText);
-			do_logout();				// 2/10/12			
+//			do_logout();				// 2/10/12			
 			return;
 			}
 

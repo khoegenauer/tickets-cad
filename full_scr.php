@@ -65,9 +65,20 @@ $poll_val = ($temp==0)? "none" : $temp ;
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 
-	<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
-	<SCRIPT TYPE="text/javascript" src="./js/ELabel.js"></SCRIPT><!-- 8/1/11 -->	
+	<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry,weather&sensor=false"></SCRIPT>
+	<SCRIPT  TYPE="text/javascript"SRC="./js/epoly.js"></SCRIPT>
+	<!--
+	<SCRIPT  TYPE="text/javascript"SRC="./js/epoly_v3.js"></SCRIPT>	
+	-->
+	<SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 8/1/11 -->
+	<SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 1/29/2013 -->
+	<SCRIPT TYPE="text/javascript" SRC="./js/misc_function.js"></SCRIPT>	<!-- 5/3/11 -->	
+	<SCRIPT TYPE="text/javascript" SRC="./js/domready.js"></script>	
+	<SCRIPT SRC='../js/usng.js' TYPE='text/javascript'></SCRIPT>
+	<SCRIPT SRC="../js/graticule_V3.js" type="text/javascript"></SCRIPT>	
 	<SCRIPT>
+	var grid;
+	
 	if(document.all && !document.getElementById) {		// accomodate IE							
 		document.getElementById = function(id) {							
 			return document.all[id];							
@@ -209,10 +220,11 @@ $poll_val = ($temp==0)? "none" : $temp ;
 
 </SCRIPT> 
 <SCRIPT SRC='./js/usng.js' TYPE='text/javascript'></SCRIPT>		<!-- 10/14/08 --> 
-<SCRIPT SRC='./js/graticule.js' type='text/javascript'></SCRIPT>
+<SCRIPT SRC='./js/graticule_V3.js' type='text/javascript'></SCRIPT>
 <SCRIPT>	<!-- 4/1/11 sets font size depending on screen size -->
 	var line_text_size = window.screen.width > 1200 ? "12" : "9";
 	var line_text = "<STYLE TYPE='text/css'>.incs {font-size:" + line_text_size + "px;} .assigns {font-size:" + line_text_size + "px;} </STYLE>";
+	var grid;
 	document.write (line_text);
 </SCRIPT>	
 <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->

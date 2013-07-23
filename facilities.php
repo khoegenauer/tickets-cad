@@ -1,11 +1,6 @@
 <?php
 
 error_reporting(E_ALL);
-
-function do_updated ($instr) {		// 11/1/2012
-	return substr($instr, 8, 8);
-	}
-
 $facs_side_bar_height = .5;		// max height of facilities sidebar as decimal fraction of screen height - default is 0.6 (60%)
 $zoom_tight = FALSE;				// replace with a decimal number to over-ride the standard default zoom setting
 $iw_width= "300px";					// map infowindow with
@@ -23,7 +18,7 @@ $iw_width= "300px";					// map infowindow with
 7/7/10 mysql_fetch_array -> mysql_fetch_assoc
 7/7/10 removed refresh, add mail button, list_xxx function name changed
 7/22/10 NULL handling revised, miscjs, google reverse geocode parse added
-7/27/10 unit-leel limitation applied
+7/27/10 unit-level limitation applied
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 7/28/10 Added default icon for tickets entered in no-maps operation
 8/13/10 map.setUIToDefault();
@@ -39,8 +34,8 @@ $iw_width= "300px";					// map infowindow with
 8/1/11 state length increased to 4 chars
 6/10/11 Added Groups and Boundaries
 6/18/12 'points' boolean to 'got_points'
-10/29/2012 Beds handling added
-12/1/2012 - re-do re unix SQL time replacement
+9/5/12 GMaps V3 key handling added
+1/4/2013 V3 polylines and polygon, setMap conversions made 
 */
 
 @session_start();	
@@ -59,14 +54,28 @@ extract($_GET);
 extract($_POST);
 if((($istest)) && (!empty($_GET))) {dump ($_GET);}
 if((($istest)) && (!empty($_POST))) {dump ($_POST);}
+
+
+function do_updated ($instr) {		// 11/1/2012
+	return substr($instr, 8, 8);
+	}
+
+function fac_format_date($date){							/* 1/20/2013 */ 
+	if (get_variable('locale')==1)	{return date("j/n/y H:i",$date);}					// 08/27/10 - Revised to show UK format for locale = 1	
+	else 							{return date(get_variable("date_format"),$date);}	// return date(get_variable("date_format"),strtotime($date));
+	}				// end function fac format date
+function isempty($arg) {
+	return (bool) (strlen($arg) == 0) ;
+	}
+
 $usng = get_text('USNG');
 $osgb = get_text('OSGB');
 
-$u_types = array();
+$f_types = array();
 $query = "SELECT * FROM `$GLOBALS[mysql_prefix]fac_types` ORDER BY `id`";		// types in use
 $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
-	$u_types [$row['id']] = array ($row['name'], $row['icon']);
+	$f_types [$row['id']] = array ($row['name'], $row['icon']);
 	}
 unset($result);
 
@@ -74,16 +83,16 @@ $icons = $GLOBALS['fac_icons'];
 $sm_icons = $GLOBALS['sm_fac_icons'];	//	3/15/11
 
 function get_icon_legend (){			// returns legend string
-	global $u_types, $sm_icons;
+	global $f_types, $sm_icons;
 	$query = "SELECT DISTINCT `type` FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `type`";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$print = "";											// output string
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
-		$temp = $u_types[$row['type']];
+		$temp = $f_types[$row['type']];
 		$print .= "\t\t<DIV class='legend' style='height: 3em; text-align: center; vertical-align: middle; float: left;'> ". $temp[0] . " &raquo; <IMG SRC = './our_icons/" . $sm_icons[$temp[1]] . "' STYLE = 'vertical-align: middle' BORDER=0 PADDING='10'>&nbsp;&nbsp;&nbsp;</DIV>\n";
 		}
 	return $print;
-	}			// end function get_icon_legend ()
+	}			// end function get_icon_legend ()	
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -96,16 +105,26 @@ function get_icon_legend (){			// returns legend string
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
 	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">			<!-- 3/15/11 -->
-	<SCRIPT  SRC="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo get_variable('gmaps_api_key'); ?>"></SCRIPT>
-	<SCRIPT  SRC="./js/usng.js" TYPE="text/javascript"></SCRIPT>
-	<SCRIPT  SRC="./js/lat_lng.js" TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->
-	<SCRIPT  SRC="./js/geotools2.js" TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->
-	<SCRIPT  SRC="./js/osgb.js" TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->		
-	<SCRIPT  SRC='./js/graticule.js' type='text/javascript'></SCRIPT>
-	<SCRIPT  SRC='./js/misc_function.js' type='text/javascript'></SCRIPT>  <!-- 7/22/10 -->
-	<script src="./js/epoly.js" type="text/javascript"> </script>	<!-- 6/10/11 -->		
-	<SCRIPT TYPE="text/javascript" src="./js/ELabel.js"></SCRIPT> <!-- 8/1/11 -->	
+<?php
+$api_key = trim(get_variable('gmaps_api_key'));
+$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
+?>
+	<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>sensor=false"></SCRIPT>
+
+	<SCRIPT SRC="./js/usng.js" 			TYPE="text/javascript"></SCRIPT>
+	<SCRIPT SRC="./js/lat_lng.js" 		TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->
+	<SCRIPT SRC="./js/geotools2.js" 	TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->
+	<SCRIPT SRC="./js/osgb.js" 			TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->		
+	<SCRIPT SRC='./js/misc_function.js' TYPE='text/javascript'></SCRIPT>  <!-- 7/22/10 -->
+	<SCRIPT SRC='./js/graticule_V3.js' 	TYPE='text/javascript'></SCRIPT> 	
+<!--
+	<SCRIPT SRC="./js/v3_epoly.js" 		TYPE="text/javascript"></SCRIPT>
+-->	
+	<SCRIPT src="./js/elabel_v3.js" TYPE="text/javascript"></SCRIPT> 	<!-- 8/1/11 -->
+	<SCRIPT SRC="./js/domready.js"		TYPE="text/javascript" ></script>
+	<SCRIPT SRC="./js/gmaps_v3_init.js"	TYPE="text/javascript" ></script>
 	<SCRIPT>
+	var map;		// note global
 
 	try {
 		parent.frames["upper"].$("whom").innerHTML  = "<?php print $_SESSION['user'];?>";
@@ -119,6 +138,7 @@ function get_icon_legend (){			// returns legend string
 	parent.upper.light_butt('facy');		// light the button - 8/25/10
 
 	var lat_lng_frmt = <?php print get_variable('lat_lng'); ?>;
+	var map;								// map object
 
 	function set_regions_control() {
 		var reg_control = "<?php print get_variable('regions_control');?>";
@@ -182,8 +202,10 @@ function get_icon_legend (){			// returns legend string
 	function do_usng_conv(theForm){						// usng to LL array
 		tolatlng = new Array();
 		USNGtoLL(theForm.frm_ngs.value, tolatlng);
+//		var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
 
-		var point = new GLatLng(tolatlng[0].toFixed(6) ,tolatlng[1].toFixed(6));
+
+		var point = new google.maps.LatLng(tolatlng[0].toFixed(6) ,tolatlng[1].toFixed(6));
 		map.setCenter(point, <?php echo get_variable('def_zoom'); ?>);
 		var marker = new GMarker(point);
 		theForm.frm_lat.value = point.lat(); theForm.frm_lng.value = point.lng();
@@ -265,30 +287,29 @@ function get_icon_legend (){			// returns legend string
 			}
 		}
 
-	var grid_obj = new LatLonGraticule();;
-	var grid_bln = false;
-	function doGrid() {
-		if (grid_bln) {
-			map.removeOverlay(grid_obj);
-			}
-		else {
-			map.addOverlay(grid_obj);
-			}
-		grid_bln = !grid_bln;				// flip
-		}				// end function do Grid()
+	var grid_bool = false;		
+	function toglGrid() {						// toggle
+		grid_bool = !grid_bool;
+		if (grid_bool)	{ grid = new Graticule(map); }
+		else 			{ grid.setMap(null); }
+		}		// end function toglGrid()
 
-    var trafficInfo = new GTrafficOverlay();
-    var toggleState = true;
-
+/*
+//    var trafficInfo = new GTrafficOverlay();
+//    var toggleState = true;
+//
 	function doTraffic() {
-		if (toggleState) {
-	        map.removeOverlay(trafficInfo);
-	     	}
-		else {
-	        map.addOverlay(trafficInfo);
-	    	}
-        toggleState = !toggleState;			// swap
+		return;
+//		if (toggleState) {
+//	        google.maps.addOverlay(trafficInfo);
+//	     	}
+//		else {
+//	        google.maps.addOverlay(trafficInfo);
+//	    	}
+//        toggleState = !toggleState;			// swap
 	    }				// end function doTraffic()
+//
+*/
 
 	function isNull(val) {								// checks var stuff = null;
 		return val === null;
@@ -419,61 +440,143 @@ function get_icon_legend (){			// returns legend string
 		showit('res_add_form');
 		hideit('tbl_facilities');
 		hideIcons();			// hides responder icons
-		map.setCenter(new GLatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
+		map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
 		}
 
 // *********************************************************************
 	function pt_to_map (my_form, lat, lng) {						// 7/5/10
-		map.clearOverlays();	
-		var loc = <?php print get_variable('locale');?>;
+		myMarker.setMap(null);			// destroy predecessor
 		my_form.frm_lat.value=lat;	
 		my_form.frm_lng.value=lng;		
 			
-		my_form.show_lat.value=do_lat_fmt(my_form.frm_lat.value);
-		my_form.show_lng.value=do_lng_fmt(my_form.frm_lng.value);
+		my_form.show_lat.value=do_lat_fmt(lat);
+		my_form.show_lng.value=do_lng_fmt(lng);
 			
-		if(loc == 0) {	
-			my_form.frm_ngs.value=LLtoUSNG(my_form.frm_lat.value, my_form.frm_lng.value, 5);
-			}
-		if(loc == 1) {
-			my_form.frm_ngs.value=LLtoOSGB(my_form.frm_lat.value, my_form.frm_lng.value, 5);
-			}
-		if(loc == 2) {
-			my_form.frm_ngs.value=LLtoUTM(my_form.frm_lat.value, my_form.frm_lng.value, 5);
-			}
+		var loc = <?php print get_variable('locale');?>;
+		if(loc == 0) { my_form.frm_ngs.value=LLtoUSNG(lat, lng, 5); }
+		if(loc == 1) { my_form.frm_ngs.value=LLtoOSGB(lat, lng, 5); }
+		if(loc == 2) { my_form.frm_ngs.value=LLtoUTM(lat, lng, 5); }
 	
-		map.setCenter(new GLatLng(my_form.frm_lat.value, my_form.frm_lng.value), <?php print get_variable('def_zoom');?>);
-		var marker = new GMarker(map.getCenter());		// marker to map center
-		var myIcon = new GIcon();
-		myIcon.image = "./markers/sm_red.png";
-		map.removeOverlay(marker);
-		
-		map.addOverlay(marker, myIcon);
+		map.setCenter(new google.maps.LatLng(lat, lng), <?php print get_variable('def_zoom');?>);
+
+		var iconImg = new Image();														// obtain icon dimensions
+		iconImg.src ='./markers/crosshair.png';
+		myIcon.anchor= new google.maps.Point(iconImg.width/2, iconImg.height/2);		// 8/11/12 - center offset = half icon width and height
+		var dp_latlng = new google.maps.LatLng(lat, lng);
+
+		myMarker = new google.maps.Marker({
+			position: dp_latlng,
+			icon: myIcon, 
+			draggable: true,
+			map: map
+			});
+		myMarker.setMap(map);		// add marker with icon
 		}				// end function pt_to_map ()
 
 	function loc_lkup(my_form) {		   						// 7/5/10
-//		alert (my_form.frm_city.value);
 		if ((my_form.frm_city.value.trim()==""  || my_form.frm_state.value.trim()=="")) {
 			alert ("City and State are required for location lookup.");
 			return false;
 			}
-		var geocoder = new GClientGeocoder();
-		var address = my_form.frm_street.value.trim() + ", " +my_form.frm_city.value.trim() + " "  +my_form.frm_state.value.trim();
-		
-		if (geocoder) {
-			geocoder.getLatLng(
-				address,
-				function(point) {
-					if (!point) {
-						alert(address + " not found");
-						} 
-					else {
-						pt_to_map (my_form, point.lat(), point.lng())
-						}
-					}
-				);
+		var geocoder = new google.maps.Geocoder();
+		var myAddress = my_form.frm_street.value.trim() + ", " +my_form.frm_city.value.trim() + " "  +my_form.frm_state.value.trim();
+
+		geocoder.geocode( { 'address': myAddress}, function(results, status) {		
+			if (status == google.maps.GeocoderStatus.OK)	{ pt_to_map (my_form, results[0].geometry.location.lat(), results[0].geometry.location.lng());}					
+			else 											{ alert("Geocode lookup failed: " + status);}
+			});				// end geocoder.geocode()
+
+		}				// end function loc_lkup()
+
+	function getAddress(latlng, currform) {
+		var rev_coding_on = '<?php print get_variable('reverse_geo');?>';		// 7/5/10	
+		if (rev_coding_on == 0) return;		
+		if(markersArray.length > 1) {
+			clearOverlays(); 
+			marker = new google.maps.Marker({position: latlng, map: map, draggable: true});			
 			}
-		}				// end function addrlkup()
+		map.setCenter(latlng);
+		map.setZoom(18);
+		var theCity = "";
+		var thePostCode = "";
+		var theState = "";
+		var theStreet = "";
+
+		(new google.maps.Geocoder()).geocode({latLng: latlng}, function(resp) {
+			if (resp[0]) {
+				var bits = [];
+				for (var i = 0, I = resp[0].address_components.length; i < I; ++i) {
+					var component = resp[0].address_components[i];
+					if (contains(component.types, 'political')) {
+						bits.push(component.long_name);
+						}
+					if (contains(component.types, 'administrative_area_level_1')) {
+						theState = component.short_name;
+						bits.push(component.long_name);
+						}	
+					if (contains(component.types, 'administrative_area_level_2')) {
+						bits.push(component.long_name);
+						}	
+					if (contains(component.types, 'administrative_area_level_3')) {
+						bits.push(component.long_name);
+						}
+					if (contains(component.types, 'colloquial_area')) {
+						bits.push(component.long_name);
+						}	
+					if (contains(component.types, 'premise')) {
+						bits.push(component.long_name);
+						}		
+					if (contains(component.types, 'sub_premise')) {
+						bits.push(component.long_name);
+						}										
+					if (contains(component.types, 'street_address')) {
+						theStreet = component.long_name;
+						bits.push(component.long_name);
+						}
+					if (contains(component.types, 'postal_code')) {
+						thePostCode = component.long_name
+						bits.push(component.long_name);
+						}						
+					if (contains(component.types, 'intersection')) {
+						bits.push(component.long_name);
+						}	
+					if (contains(component.types, 'route')) {
+						bits.push(component.long_name);
+						}						
+					if (contains(component.types, 'locality')) {
+						theCity = component.long_name;
+						bits.push(component.long_name);
+						}			
+					if (contains(component.types, 'sublocality')) {
+						bits.push(component.long_name);
+						}		
+					if (contains(component.types, 'neighborhood')) {
+						bits.push(component.long_name);
+						}	
+					if (contains(component.types, 'neighborhood')) {
+						bits.push(component.long_name);
+						}						
+					}
+					switch(currform) {
+					case "a":
+						document.res_add_Form.frm_street.value = resp[0].formatted_address;
+						document.res_add_Form.frm_city.value = theCity;
+						document.res_add_Form.frm_state.value = theState;
+						document.res_add_Form.frm_street.focus();	
+						break;
+
+					case "e":
+						document.res_edit_Form.frm_street.value = resp[0].formatted_address;
+						document.res_edit_Form.frm_city.value = theCity;
+						document.res_edit_Form.frm_state.value = theState;
+						document.res_edit_Form.frm_street.focus();
+						break;
+					default:
+						alert ("596: error");
+					}		// end switch()		
+				}
+			});
+		}		
 
 	function getAddress(overlay, latlng, currform) {		//7/5/10
 		var rev_coding_on = '<?php print get_variable('reverse_geo');?>';		// 7/5/10	
@@ -485,10 +588,10 @@ function get_icon_legend (){			// returns legend string
 						alert("948: Status Code:" + response.Status.code);
 					} else { 
 						place = response.Placemark[0];    
-						point = new GLatLng(place.Point.coordinates[1],place.Point.coordinates[0]);
+						point = new google.maps.LatLng(place.Point.coordinates[1],place.Point.coordinates[0]);
 // 						locality = response.Placemark[0].AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality;    5/22/11
 						marker = new GMarker(point);
-						map.addOverlay(marker);
+						google.maps.addOverlay(marker);					// 514
 
 						results = pars_goog_addr(place.address);		// 7/22/10
 						
@@ -506,7 +609,7 @@ function get_icon_legend (){			// returns legend string
 							document.res_edit_Form.frm_street.focus();
 							break;
 						default:
-							alert ("522: error");
+							alert ("441: error");
 						}
 						}
 					});
@@ -599,77 +702,89 @@ function get_icon_legend (){			// returns legend string
 		return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
 		}		
 
-	function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity) {		// 8/19/09
-	
-//		drawCircle(53.479874, -2.246704, 10.0, "#000080", 1, 0.75, "#0000FF", .5);
+	function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity) {		// 8/19/09, 2/26/2013
 
-		var d2r = Math.PI/180;
-		var r2d = 180/Math.PI;
-		var Clat = radius * 0.014483;
-		var Clng = Clat/Math.cos(lat * d2r);
-		var Cpoints = [];
-		for (var i=0; i < 33; i++) {
-			var theta = Math.PI * (i/16);
-			Cy = lat + (Clat * Math.sin(theta));
-			Cx = lng + (Clng * Math.cos(theta));
-			var P = new GPoint(Cx,Cy);
-			Cpoints.push(P);
-			}
-		var polygon = new GPolygon(Cpoints, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity);
-		map.addOverlay(polygon);
+		var circle = new google.maps.Circle({
+				center: new google.maps.LatLng(lat,lng),
+				map: map,
+				fillColor: fillColor,
+				fillOpacity: fillOpacity,
+				strokeColor: strokeColor,
+				strokeOpacity: strokeOpacity,
+				strokeWeight: strokeWidth
+			});
+		circle.setRadius(radius*5000); 
+
 		}
 		
 	function drawBanner(point, html, text, font_size, color) {        // Create the banner
 	//	alert("<?php echo __LINE__;?> " + color);
-		var invisibleIcon = new GIcon(G_DEFAULT_ICON, "./markers/markerTransparent.png");      // Custom icon is identical to the default icon, except invisible
-
+//		var invisibleIcon = new GIcon(G_DEFAULT_ICON, "./markers/markerTransparent.png");      // Custom icon is identical to the default icon, except invisible
+		var invisibleIcon = new google.maps.MarkerImage("./markers/markerTransparent.png");
 		map.setCenter(point, 8);
-		map.addControl(new GLargeMapControl());
-		map.addControl(new GMapTypeControl());
+//		map.addControl(new GLargeMapControl());
+//		map.addControl(new GMapTypeControl());
 		var the_color = (typeof color == 'undefined')? "#000000" : color ;	// default to black
 
 		var style_str = 'background-color:transparent;font-weight:bold;border:0px black solid;white-space:nowrap; font-size:' + font_size + 'px; font-family:arial; opacity: 0.9; color:' + add_hash(the_color) + ';';
 
 		var contents = '<div><div style= "' + style_str + '">'+text+'<\/div><\/div>';
 		var label=new ELabel(point, contents, null, new GSize(-8,4), 75, 1);
-		map.addOverlay(label);
+		google.maps.addOverlay(label);							// 658
 		
 		var marker = new GMarker(point,invisibleIcon);	        // Create an invisible GMarker
-	//	map.addOverlay(marker);
+	//	map.addOverlay(marker);														// 661
 		
 		}				// end function draw Banner()		
 
 	function do_landb() {				// JS function - 8/1/11
-	
-
 		var points = new Array();
 <?php
-		$query = "SELECT * FROM `{$GLOBALS['mysql_prefix']}mmarkup` WHERE `line_status` = 0 AND (`use_with_f` = 1 OR `use_with_r` = 1)";
+		$query = "SELECT * FROM `{$GLOBALS['mysql_prefix']}mmarkup` WHERE `line_status` = 0 AND `use_with_bm` = 1";
 		$result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
-
 		while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
 			$empty = FALSE;
 			extract ($row);
 			$name = $row['line_name'];
 			switch ($row['line_type']) {
-				case "p":		// poly
+				case "p":				// poly
 					$points = explode (";", $line_data);
-					echo "\n\tvar points = new Array();\n";
-		
+
+					$sep = "";
+					echo "\n\t var points = [\n";
 					for ($i = 0; $i<count($points); $i++) {
 						$coords = explode (",", $points[$i]);
+						echo	"{$sep}\n\t\tnew google.maps.LatLng({$coords[0]}, {$coords[1]})";
+						$sep = ",";					
+						}			// end for ($i = 0 ... )
+					echo "];\n";
+
+			 	if ((intval($filled) == 1) && (count($points) > 2)) {
 ?>
-						var thepoint = new GLatLng(<?php print $coords[0];?>, <?php print $coords[1];?>);
-						bounds.extend(thepoint);
-						points.push(thepoint);
-		
-<?php					}			// end for ($i = 0 ... )
-			 	if ((intval($filled) == 1) && (count($points) > 2)) {?>
-						var polyline = new GPolygon(points,add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>);
-<?php			} else {?>
-				        var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,0 ,0);
+//					446
+					  polyline = new google.maps.Polygon({
+					    paths: 			 points,
+					    strokeColor: 	 add_hash("<?php echo $line_color;?>"),
+					    strokeOpacity: 	 <?php echo $line_opacity;?>,
+					    strokeWeight: 	 <?php echo $line_width;?>,
+					    fillColor: 		 add_hash("<?php echo $fill_color;?>"),
+					    fillOpacity: 	 <?php echo $fill_opacity;?>
+						});
+
+<?php			} else {
+?>
+//					457
+//				    var polyline = new google.maps.Polyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>);
+					  polyline = new google.maps.Polygon({
+					    paths: 			points,
+					    strokeColor: 	add_hash("<?php echo $line_color;?>"),
+					    strokeOpacity: 	<?php echo $line_opacity;?>,
+					    strokeWeight: 	<?php echo $line_width;?>,
+					    fillColor: 		add_hash("<?php echo $fill_color;?>"),
+					    fillOpacity: 	<?php echo $fill_opacity;?>
+						});
 <?php			} ?>				        
-						map.addOverlay(polyline);
+					polyline.setMap(map);		
 <?php				
 					break;
 			
@@ -681,24 +796,20 @@ function get_icon_legend (){			// returns legend string
 					$lng = $coords[1];
 					$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
 					
-					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}); // 513\n";
+					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}, {$name}); // 513\n";
 					break;
-			
 				case "t":		// text banner
 
 					$temp = explode (";", $line_data);
 					$banner = $temp[1];
 					$coords = explode (",", $temp[0]);
-					echo "\n var point = new GLatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
+					echo "\n var point = new google.maps.LatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
 					$the_banner = htmlentities($banner, ENT_QUOTES);
 					$the_width = intval( trim($line_width), 10);		// font size
 					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width});\n";
 					break;
-			
 				}	// end switch
-				
 		}			// end while ()
-		
 		unset($query, $result);
 ?>
 		}		// end function do_landb()
@@ -727,7 +838,7 @@ function get_icon_legend (){			// returns legend string
 <?php
 function list_facilities($addon = '', $start) {
 //	global {$_SESSION['fip']}, $fmp, {$_SESSION['editfile']}, {$_SESSION['addfile']}, {$_SESSION['unitsfile']}, {$_SESSION['facilitiesfile']}, {$_SESSION['routesfile']}, {$_SESSION['facroutesfile']};
-	global $iw_width, $u_types, $tolerance;
+	global $iw_width, $f_types, $tolerance;
 
 //	$assigns = array();
 //	$tickets = array();
@@ -744,10 +855,7 @@ function list_facilities($addon = '', $start) {
 	$calls_nr = array();
 	$calls_time = array();
 
-	$query = "SELECT * , 
-		`packet_date` AS `packet_date` 
-		FROM `$GLOBALS[mysql_prefix]tracks` 
-		ORDER BY `packet_date` ASC";	
+	$query = "SELECT * , UNIX_TIMESTAMP(packet_date) AS `packet_date` FROM `$GLOBALS[mysql_prefix]tracks` ORDER BY `packet_date` ASC";	
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 	while ($row = mysql_fetch_assoc($result)) {
 		if (isset($calls[$row['source']])) {		// array_key_exists ( mixed key, array search )
@@ -769,8 +877,33 @@ function list_facilities($addon = '', $start) {
 ?>
 
 <SCRIPT >
+// function list_facilities()
 
-var color=0;
+		var map = null;				// the map object - note GLOBAL
+		var myMarker;					// the marker object
+		var lat_var;						// see init.js
+		var lng_var;
+		var zoom_var;
+
+	var icon_file = "./markers/crosshair.png";
+
+	function call_back (in_obj){				// callback function - from gmaps_v3_init()
+		do_lat(in_obj.lat);			// set form values
+		do_lng(in_obj.lng);
+		do_ngs();	
+		}
+//				826
+
+		map =  gmaps_v3_init(call_back, 'map_canvas', 
+			<?php echo get_variable('def_lat');?>, 
+			<?php echo get_variable('def_lng');?>, 
+			<?php echo (get_variable('def_zoom')*2);?>, 
+			icon_file, 
+			<?php echo get_variable('maptype');?>, 
+			true);									// read-only
+//	alert("instantiate @ 845");
+
+	var color=0;
 	var colors = new Array ('odd', 'even');
 
 	function hideDiv(div_area, hide_cont, show_cont) {	//	3/15/11
@@ -938,57 +1071,34 @@ var color=0;
 		}
 
 	function createMarker(point, tabs, color, id, fac_id) {						// (point, myinfoTabs,<?php print $row['type'];?>, i)
-		got_points = true;													// at least one - 6/18/12
-//		var letter = to_str(id);
-		var fac_id = fac_id;	
-		
-		var icon = new GIcon(listIcon);
-		var icon_url = "./our_icons/gen_fac_icon.php?blank=" + escape(icons[color]) + "&text=" + fac_id;
+//		alert(1014);
+		got_points = true;													// at least one
 
-		icon.image = icon_url;		// 
-
-		var marker = new GMarker(point, icon);
+		var image_file = "./our_icons/gen_fac_icon.php?blank=" + escape(icons[color]) + "&text=" + fac_id;
+		var marker = new google.maps.Marker({position: point, map: map, icon: image_file});
 		marker.id = color;				// for hide/unhide - unused
 
-		GEvent.addListener(marker, "click", function() {		// here for both side bar and icon click
-			if (marker) {
-				map.closeInfoWindow();
-				which = id;
-				gmarkers[which].hide();
-				marker.openInfoWindowTabsHtml(infoTabs[id]);
+		google.maps.event.addListener(marker, "click", function() {		// here for both side bar and icon click
+			if (open_iw) {open_iw.close();} 							// another IW possibly open
+			open_iw = infowindow;
+			map.setCenter(point, 8);
 
-				setTimeout(function() {										// wait for rendering complete
-					if ($("detailmap")) {
-						var dMapDiv = $("detailmap");
-						var detailmap = new GMap2(dMapDiv);
-						detailmap.addControl(new GSmallMapControl());
-						detailmap.setCenter(point, 17);  						// larger # = closer
-						detailmap.addOverlay(marker);
-						}
-					else {
-						}
-					},4000);				// end setTimeout(...)
-
-				}		// end if (marker)
-			else {
-//				alert(984);
-				}
-			});			// end GEvent.add Listener()
+			var infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});	 
+			infowindow.open(map, marker);		
+			});			// end google.maps.event.add Listener()
 
 		gmarkers[id] = marker;									// marker to array for side_bar click function
 		infoTabs[id] = tabs;									// tabs to array
-		if (!(map_is_fixed)) {
-			bounds.extend(point);
-			}
+		bounds.extend(point);
 		return marker;
 		}				// end function create Marker()
 
-	function createdummyMarker(point, tabs, color, id, fac_id) {						// 7/28/10
-		got_points = true;																	// at least one - 6/18/12
+	function createdummyMarker(point, tabs, color, id, fac_id) {						// handles no-maps facility
+		got_points = true;																// at least one
 //		var letter = to_str(id);
 		var fac_id = fac_id;	
 		
-		var icon = new GIcon(listIcon);
+		var icon = new GIcon(listIcon);					<?php echo "// " . __LINE__ . "\n";?>
 		var icon_url = "./our_icons/question1.png";
 
 		icon.image = icon_url;		// 
@@ -996,9 +1106,9 @@ var color=0;
 		var dummymarker = new GMarker(point, icon);
 		dummymarker.id = color;				// for hide/unhide - unused
 
-		GEvent.addListener(dummymarker, "click", function() {		// here for both side bar and icon click
+		google.maps.event.addListener(dummymarker, "click", function() {		// here for both side bar and icon click
 			if (dummymarker) {
-				map.closeInfoWindow();
+//				map.closeInfoWindow();
 				which = id;
 				gmarkers[which].hide();
 				dummymarker.openInfoWindowTabsHtml(infoTabs[id]);
@@ -1006,21 +1116,24 @@ var color=0;
 				setTimeout(function() {										// wait for rendering complete
 					if ($("detailmap")) {
 						var dMapDiv = $("detailmap");
-						var detailmap = new GMap2(dMapDiv);
+//						var detailmap = new GMap2(dMapDiv);
+						var detailmap = new google.maps.Map(dMapDiv);			// 998
+
 						detailmap.addControl(new GSmallMapControl());
-						detailmap.setCenter(point, 17);  						// larger # = closer
-						detailmap.addOverlay(dummymarker);
+						detailmap.setCenter(point, 17);  						// e.g., 1 = world
+						detailmap.addOverlay(dummymarker);						// 1017
 						}
 					else {
 						}
 					},4000);				// end setTimeout(...)
 
 				}		// end if (marker)
-			});			// end GEvent.add Listener()
+			});			// end google.maps.event.add Listener()
 
 		gmarkers[id] = dummymarker;									// marker to array for side_bar click function
 		infoTabs[id] = tabs;									// tabs to array
 		if (!(map_is_fixed)) {
+//			alert(1070);
 			bounds.extend(point);
 			}
 		return dummymarker;
@@ -1045,7 +1158,8 @@ var color=0;
 		}
 
 	function myclick(id) {					// Responds to sidebar click, then triggers listener above -  note [id]
-		GEvent.trigger(gmarkers[id], "click");
+//		alert(1085);
+		google.maps.event.trigger(gmarkers[id], "click");
 		location.href = '#top';		// 11/11/090
 		}
 
@@ -1091,6 +1205,29 @@ var color=0;
 			}				// end if/else (payload.substring(... )
 		}		// end function to_server()
 
+		function get_info_win_ary( fac_id) { 					// gmaps API V3
+				var contentString = [
+				  '<div id="tabs">',
+				  '<ul>',
+					'<li><a href="#tab-1"><span>One</span></a></li>',
+					'<li><a href="#tab-2"><span>Two</span></a></li>',
+					'<li><a href="#tab-3"><span>Three</span></a></li>',
+				  '</ul>',
+				  '<div id="tab-1">',
+					'<p>Tab 1</p>',
+				  '</div>',
+				  '<div id="tab-2">',
+				   '<p>Tab 2</p>',
+				  '</div>',
+				  '<div id="tab-3">',
+					'<p>Tab 3</p>',
+				  '</div>',
+				  '</div>'
+				].join('');
+				return contentString;
+				}
+
+
 	var icons=new Array;							// maps type to icon blank
 
 <?php
@@ -1106,87 +1243,62 @@ unset($result);
 
 $dzf = get_variable('def_zoom_fixed');
 print "\tvar map_is_fixed = ";
-
 print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "true;\n":"false;\n";
 
 ?>
-	var map;
-	var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_facilities' WiDTH='100%'>";	//	10/23/12
-	side_bar_html += "<TR class='even'>	<TD><B>Icon</B></TD><TD ALIGN='left'><B><?php print get_text("Type"); ?></B></TD><TD><B>Handle</B></TD><TD ALIGN='left'><B>Name</B></TD><TD ALIGN='center' COLSPAN=2><B><?php print get_text("Beds"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("Status"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("As of"); ?></B></TD></TR>";
+	var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_facilities'>";
+	side_bar_html += "<TR class='even'>	<TD><B>Icon</B></TD><TD><B>Handle</B></TD><TD ALIGN='left'><B>Name</B></TD><TD ALIGN='left'><B><?php print get_text("Type"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("Status"); ?></B></TD><TD ALIGN='left'><B><?php print get_text("As of"); ?></B></TD></TR>";
 	var gmarkers = [];
 	var infoTabs = [];
 	var which;
 	var i = <?php print $start; ?>;					// sidebar/icon index
-	var got_points = false;								// none - 6/18/12
+	var got_points = false;							// none
+	var open_iw = false;							// no open infowindow
 
-	map = new GMap2($("map"));						// create the map
-<?php
-$maptype = get_variable('maptype');
-$the_id = 0;
-	switch($maptype) { 
-		case "1":
-		break;
+	var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
+	var mapOptions = {
+		zoom: <?php print get_variable('def_zoom');?>,
+		center: myLatlng,
+		panControl: true,
+	    zoomControl: true,
+	    scaleControl: true,
+	    mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
+		}	
 
-		case "2":?>
-		map.setMapType(G_SATELLITE_MAP);<?php
-		break;
+	var map = new google.maps.Map($('map_canvas'), mapOptions);				// 1145
+
+	map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
+
+	var bounds = new google.maps.LatLngBounds();		// Initialize bounds for the map
+//	do_landb();				// 8/1/11 - show scribbles		
 	
-		case "3":?>
-		map.setMapType(G_PHYSICAL_MAP);<?php
-		break;
-	
-		case "4":?>
-		map.setMapType(G_HYBRID_MAP);<?php
-		break;
-
-		default:
-		print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";
-	}
-?>
-
-//	map.addControl(new GSmallMapControl());
-	map.setUIToDefault();										// 8/13/10
-
-	map.addControl(new GMapTypeControl());
-<?php if (get_variable('terrain') == 1) { ?>
-	map.addMapType(G_PHYSICAL_MAP);
-<?php } ?>
-
-	map.setCenter(new GLatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
-	mapBounds=new GLatLngBounds(map.getBounds().getSouthWest(), map.getBounds().getNorthEast());
-
-	var bounds = new GLatLngBounds();						// create  bounding box
-	map.enableScrollWheelZoom();
-
-	do_landb();				// 8/1/11 - show scribbles		
-	
-	var listIcon = new GIcon();
-	listIcon.image = "./markers/yellow.png";	// yellow.png - 16 X 28
+	var listIcon = new google.maps.MarkerImage("./markers/yellow.png");		<?php echo "// " . __LINE__ . "\n";?>
+//	listIcon.image = "./markers/yellow.png";	// yellow.png - 16 X 28
 	listIcon.shadow = "./markers/sm_shadow.png";
-	listIcon.iconSize = new GSize(30, 30);
-	listIcon.shadowSize = new GSize(16, 28);
-	listIcon.iconAnchor = new GPoint(8, 28);
-	listIcon.infoWindowAnchor = new GPoint(9, 2);
-	listIcon.infoShadowAnchor = new GPoint(18, 25);
+	listIcon.iconSize = new google.maps.Size(30, 30);
+	listIcon.shadowSize = new google.maps.Size(16, 28);
+	listIcon.iconAnchor = new google.maps.Point(8, 28);
+	listIcon.infoWindowAnchor = new google.maps.Point(9, 2);
+	listIcon.infoShadowAnchor = new google.maps.Point(18, 25);
 
-	GEvent.addListener(map, "infowindowclose", function() {		// re-center after  move/zoom
-		map.addOverlay(gmarkers[which])
-		});
+//	google.maps.event.addListener(map, "infowindowclose", function() {		// re-center after  move/zoom
+//		google.maps.addOverlay(gmarkers[which])
+//		});
 
 //-----------------------BOUNDARIES STUFF--------------------6/10/11
 
-	var thepoint;
-	var points = new Array();
+	var thepoint;			// 	
+	var points = new Array();		// 1184
 	var boundary = new Array();	
 	var bound_names = new Array();
 	
-	GEvent.addListener(map, "click", function(overlay,boundpoint) {
-	for (var n = 0; n < boundary.length; n++) {
-		if (boundary[n].Contains(boundpoint)) {
-			map.openInfoWindowHtml(boundpoint,"This is " + bound_names[n]);
-			}
-		}
-	});	
+//	google.maps.event.addListener(map, "click", function(overlay,boundpoint) {
+//	for (var n = 0; n < boundary.length; n++) {
+//		if (boundary[n].Contains(boundpoint)) {
+//			map.openInfoWindowHtml(boundpoint,"This is " + bound_names[n]);
+//			}
+//		}
+//	});	
 <?php
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$_SESSION[user_id]' ORDER BY `id` ASC;";	//	6/10/11
 	$result = mysql_query($query);	//	6/10/11
@@ -1219,62 +1331,51 @@ $the_id = 0;
 		
 	foreach($gp_bounds as $value) {		//	6/10/11
 ?>
-		var points = new Array();
+		var points = new Array();		// <?php echo __LINE__;?>
 <?php	
 		if($value !=0) {
-			$query_bn = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id`='$value' AND `use_with_f`=1";
-//			print $query_bn;
+			$query_bn = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id`='{$value}' LIMIT 1";
 			$result_bn = mysql_query($query_bn)or do_error($query_bn, mysql_error(), basename(__FILE__), __LINE__);
-			while($row_bn = stripslashes_deep(mysql_fetch_assoc($result_bn))) {
-				extract ($row_bn);
-				$bn_name = $row_bn['line_name'];
-				$points = explode (";", $line_data);
-				for ($xx = 0; $xx < count($points); $xx++) {
-					$coords = explode (",", $points[$xx]);
-		?>
-					thepoint = new GLatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
-					points.push(thepoint);
-<?php
-					}			// end for ($i = 0 ... )
-			?>
+			$row_bn = stripslashes_deep(mysql_fetch_assoc($result_bn));
+			extract ($row_bn);
+			$bn_name = $row_bn['line_name'];
+			$points = explode (";", $line_data);
 
-<?php
-			switch ($row_bn['line_type']) {
-				case "p":		// poly
-					if (intval($filled) == 1) {		//	6/10/11
+			$sep = "";
+			echo "\n\t var points = [\n";
+			for ($i = 0; $i<count($points); $i++) {
+				$coords = explode (",", $points[$i]);
+				echo	"{$sep}\n\t\tnew google.maps.LatLng({$coords[0]}, {$coords[1]})";
+				$sep = ",";					
+				}			// end for ($i = 0 ... )
+			echo "];\n";
+			if ((intval($filled) == 1) && (count($points) > 2)) {
 ?>
-						var polyline = new GPolygon(points, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, "<?php print $fill_color;?>", <?php print $fill_opacity;?>, {clickable:false});
-						boundary.push(polyline);
-						bound_names.push("<?php print $bn_name;?>"); 			
-						<?php	
-						} else {
-?>
-						var polyline = new GPolyline(points, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>,0 , 0, {clickable:false});
-						boundary.push(polyline);
-						bound_names.push("<?php print $bn_name;?>"); 			
-<?php		
-						}
-?>	
-					map.addOverlay(polyline);
-<?php
-				break;
-				
-				case "c":
-					$temp = explode (";", $line_data);
-					$radius = $temp[1];
-					$coords = explode (",", $temp[0]);
-					$lat = $coords[0];
-					$lng = $coords[1];
-					$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
-					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_opacity}, {$line_width}, add_hash('{$fill_color}'), {$fill_opacity}); // 513\n";
+				  polyline = new google.maps.Polygon({
+				    paths: 			 points,
+				    strokeColor: 	 add_hash("<?php echo $line_color;?>"),
+				    strokeOpacity: 	 <?php echo $line_opacity;?>,
+				    strokeWeight: 	 <?php echo $line_width;?>,
+				    fillColor: 		 add_hash("<?php echo $fill_color;?>"),
+				    fillOpacity: 	 <?php echo $fill_opacity;?>
+					});
 
-				break;				
-				}
+<?php		} else {
 ?>
-				map.addOverlay(polyline);
+				  polyline = new google.maps.Polygon({
+				    paths: 			points,
+				    strokeColor: 	add_hash("<?php echo $line_color;?>"),
+				    strokeOpacity: 	<?php echo $line_opacity;?>,
+				    strokeWeight: 	<?php echo $line_width;?>,
+				    fillColor: 		add_hash("<?php echo $fill_color;?>"),
+				    fillOpacity: 	<?php echo $fill_opacity;?>
+					});
+<?php		} ?>				        
+			polyline.setMap(map);		
+			boundary.push(polyline);
+			bound_names.push("<?php print $bn_name;?>"); 
 <?php
-			}	//	End while
-		}	//	end if $value !=0
+		}
 	}	//	end foreach $gp_bounds
 
 //-------------------------END OF BOUNDARIES STUFF-------------------------			
@@ -1336,7 +1437,7 @@ $the_id = 0;
 	}
 	$where2 .= "AND `a`.`type` = 3";	//	6/10/11				
 	unset($result);
-	//	3/15/11, 6/10/11
+	//	3/15/11, 6/10/11, 1/19/2013
 
 	$query = "SELECT *, 
 		`f`.id AS id, 
@@ -1355,6 +1456,7 @@ $the_id = 0;
 		LEFT JOIN `$GLOBALS[mysql_prefix]fac_status` `s` ON `f`.status_id = `s`.id 
 		{$where2} GROUP BY `f`.id ORDER BY `f`.type ASC";		
 
+//	$query .= " LIMIT 0";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$num_facilities = mysql_affected_rows();
 	$i=0;				// counter
@@ -1366,57 +1468,52 @@ $the_id = 0;
 //-----------------------FACILITY BOUNDARIES / CATCHMENT STUFF--------------------6/10/11
 ?>
 	var thepoint;
-	var points = new Array();
+	var points = new Array();			// <?php echo __LINE__;?>
 <?php	
 		$query_bn = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `id`='$boundary' AND `use_with_f`=1";
 		$result_bn = mysql_query($query_bn)or do_error($query_bn, mysql_error(), basename(__FILE__), __LINE__);
 		while($row_bn = stripslashes_deep(mysql_fetch_assoc($result_bn))) {
-			$the_type = $row_bn['line_type'];
-			switch ($the_type) {
-		
-			case "p":
-				extract ($row_bn);
-				$bn_name = $row_bn['line_name'];
-				$points = explode (";", $line_data);
-				for ($z = 0; $z < count($points); $z++) {
-					$coords = explode (",", $points[$z]);
-?>
-					thepoint = new GLatLng(parseFloat(<?php print $coords[0];?>), parseFloat(<?php print $coords[1];?>));
-					points.push(thepoint);
-<?php
-					}			// end for ($z = 0 ... )
-				if (intval($filled) == 1) {		//	6/10/11
-?>
-					var polyline = new GPolygon(points, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>, "<?php print $fill_color;?>", <?php print $fill_opacity;?>, {clickable:false});
-					boundary.push(polyline);
-					bound_names.push("<?php print $bn_name;?>"); 			
-<?php	
-					} else {
-?>
-					var polyline = new GPolyline(points, "<?php print $line_color;?>", <?php print $line_width;?>, <?php print $line_opacity;?>,0 , 0, {clickable:false});
-					boundary.push(polyline);
-					bound_names.push("<?php print $bn_name;?>"); 			
-<?php		
-					}
-?>
-					map.addOverlay(polyline);
-<?php
-			break;
-		
-			case "c":
-				extract ($row_bn);
-				$temp = explode (";", $line_data);
-				$radius = $temp[1];
-				$coords = explode (",", $temp[0]);
-				$lat = $coords[0];
-				$lng = $coords[1];
-				$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
-				echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_opacity}, {$line_width}, add_hash('{$fill_color}'), {$fill_opacity}); // 513\n";
+			extract ($row_bn);
+			$bn_name = $row_bn['line_name'];
+			$points = explode (";", $line_data);
 
-			break;
-		
-			}	// end switch
-		}	//	End while
+			$sep = "";
+			echo "\n\t var points = [\n";
+			for ($i = 0; $i<count($points); $i++) {
+				$coords = explode (",", $points[$i]);
+				echo	"{$sep}\n\t\tnew google.maps.LatLng({$coords[0]}, {$coords[1]})";
+				$sep = ",";					
+				}			// end for ($i = 0 ... )
+			echo "];\n";
+
+			if ((intval($filled) == 1) && (count($points) > 2)) {
+?>
+				  polyline = new google.maps.Polygon({
+					paths: 			 points,
+					strokeColor: 	 add_hash("<?php echo $line_color;?>"),
+					strokeOpacity: 	 <?php echo $line_opacity;?>,
+					strokeWeight: 	 <?php echo $line_width;?>,
+					fillColor: 		 add_hash("<?php echo $fill_color;?>"),
+					fillOpacity: 	 <?php echo $fill_opacity;?>
+					});
+
+<?php		} else {
+?>
+				  polyline = new google.maps.Polygon({
+					paths: 			points,
+					strokeColor: 	add_hash("<?php echo $line_color;?>"),
+					strokeOpacity: 	<?php echo $line_opacity;?>,
+					strokeWeight: 	<?php echo $line_width;?>,
+					fillColor: 		add_hash("<?php echo $fill_color;?>"),
+					fillOpacity: 	<?php echo $fill_opacity;?>
+					});
+<?php		} ?>				        
+
+				boundary.push(polyline);
+				bound_names.push("<?php print $bn_name;?>"); 
+				polyline.setMap(map);	
+<?php
+			}	//	End while
 //-------------------------END OF FACILITY BOUNDARIES STUFF-------------------------			
 	$fac_gps = get_allocates(3, $row['id']);	//	6/10/11
 		$grp_names = "Groups Assigned: ";	//	6/10/11
@@ -1443,109 +1540,94 @@ $the_id = 0;
 			$toroute = "&nbsp;<A HREF='{$_SESSION['facroutesfile']}?fac_id=" . $row['id'] . "'><U>Route To Facility</U></A>";	
 			}		
 
+		$temp = $row['status_id'] ;	
+		$the_status = (array_key_exists($temp, $status_vals))? $status_vals[$temp] : "??";	
+
+		$temp_type = $row['type'] ;	
+		$the_type = (array_key_exists($temp_type, $type_vals))? $type_vals[$temp_type] : "??";
+
 		if (!($got_point) && ((my_is_float($row['lat'])))) {
-			if(($row['lat']==0.999999) && ($row['lng']==0.999999)) {
-				echo "\t\tvar point = new GLatLng(" . get_variable('def_lat') . ", " . get_variable('def_lng') .");\n";
+			if(((float) $row['lat']==$GLOBALS['NM_LAT_VAL']) && ((float)$row['lng']==$GLOBALS['NM_LAT_VAL'])) {
+				echo "\t\tvar point = new google.maps.LatLng(" . get_variable('def_lat') . ", " . get_variable('def_lng') .");\n";
 			} else {
-				echo "\t\tvar point = new GLatLng(" . $row['lat'] . ", " . $row['lng'] .");\n";
+				echo "\t\tvar point = new google.maps.LatLng(" . $row['lat'] . ", " . $row['lng'] .");\n";
 			}
 			$got_point= TRUE;
 			}
 
 		$update_error = strtotime('now - 6 hours');							// set the time for silent setting
 		$index = $row['icon_str'];
-
-// type
-		$temp_type = $row['type'] ;	
-		$the_type = (array_key_exists($temp_type, $type_vals))? $type_vals[$temp_type] : "??";
-		$sidebar_line = "&nbsp;&nbsp;<TD >{$the_type}</TD>";
 // name
+
 		$display_name = $name = htmlentities($row['name'], ENT_QUOTES);	
 		$handle = htmlentities($row['handle'], ENT_QUOTES);					// 7/7/11
-		$sidebar_line .= "<TD TITLE = '{$row['handle']}' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($handle, 15)) ."</SPAN></U></TD>";	//	6/10/11
-		$sidebar_line .= "<TD TITLE = '" . addslashes($name) . "' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'><NOBR>" . addslashes(shorten($name, 24)) ."</NOBR></SPAN></U></TD>";
-// beds 10/30/2012
-		$sidebar_line .= "<TD TITLE = 'Beds' {$the_on_click} ALIGN='right'><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'><NOBR>{$row['beds_a']}/{$row['beds_o']}</NOBR></SPAN></U></TD>";
-		$sidebar_line .= "<TD TITLE = '{$row['beds_info']}' {$the_on_click} ALIGN='left'><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'><NOBR>" . shorten($row['beds_info'], 20) . "</NOBR></SPAN></U></TD>";
-// status
-		$temp = $row['status_id'] ;	
-		$the_status = (array_key_exists($temp, $status_vals))? $status_vals[$temp] : "??";	
-		$sidebar_line .= "<TD TITLE = '" . addslashes ($the_status) . "'> " . get_status_sel($row['id'], $row['status_id'], 'f') . "</TD>";	
-//		$sidebar_line .= "<TD TITLE = 'status' {$the_on_click} ALIGN='left'><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>{$the_status}</SPAN></U></TD>";
+
+		$sidebar_line = "&nbsp;&nbsp;<TD WIDTH='15%' TITLE = '{$row['handle']}' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'>" . addslashes(shorten($handle, 15)) ."</SPAN></U></TD>";	//	6/10/11
+		$sidebar_line .= "<TD WIDTH='40%' TITLE = '" . addslashes($name) . "' {$the_on_click}><U><SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'><NOBR>" . addslashes(shorten($name, 24)) ."</NOBR></SPAN></U></TD><TD WIDTH='15%'>{$the_type}</TD>";
+		$sidebar_line .= "<TD WIDTH='20%' CLASS='td_data' TITLE = '" . addslashes ($the_status) . "'> " . get_status_sel($row['id'], $row['status_id'], 'f') . "</TD>";	//	3/15/11
+
 // as of
-		$strike = $strike_end = $the_class = "";
+		$strike = $strike_end = "";
 		$the_time = $row['updated'];
-		$sidebar_line .= "<TD CLASS='$the_class'> $strike <NOBR>" . format_sb_date_2($the_time) . "</NOBR> $strike_end</TD>";
+		$the_class = "";
+		$sidebar_line .= "<TD WIDTH='20%' CLASS='$the_class'> $strike <NOBR>" . new_format_sb_date($the_time) . "</NOBR> $strike_end</TD>";
 
 // tab 1
-		if (my_is_float($row['lat'])) {										// position data?
-			$temptype = $u_types[$row['type']];
-			$the_type = $temptype[0];
+
+		if (my_is_float($row['lat'])) {										// position data of any type?
 		
+			$temptype = $f_types[$row['type']];
+			$the_type = $temptype[0];
+			$line_ctr = 0;
 			$tab_1 = "<TABLE CLASS='infowin' width='{$iw_width}'>";
 			$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . addslashes(shorten($display_name, 48)) . "</B> - " . $the_type . "</TD></TR>";
-			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Description:&nbsp;</TD><TD ALIGN='left'>" . addslashes(shorten(str_replace($eols, " ", $row['description']), 32)) . "</TD></TR>";
-			$tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>Status:&nbsp;</TD><TD ALIGN='left'>" . $the_status . " </TD></TR>";
-// 10/29/2012
-			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>" . get_text("Beds") . ":&nbsp;</TD><TD ALIGN='left'>" . get_text("Available"). ":&nbsp;&nbsp;" . $row['beds_a'] . "&nbsp;&nbsp;&nbsp;" . get_text("Occupied") . ":&nbsp;&nbsp;" . $row['beds_o'] . "</TD></TR>";
-			$tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>" . get_text("Beds information") . ":&nbsp;</TD><TD ALIGN='left'>" . $row['beds_info'] . "</TD></TR>";
-
-			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Contact:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['contact_name']). " Via: " . addslashes($row['contact_email']) . "</TD></TR>";
-			$tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>As of:&nbsp;</TD><TD ALIGN='left'>" . format_sb_date_2($row['updated']) . "</TD></TR>";
 			$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . $toedit . $tomail . "&nbsp;&nbsp;<A HREF='{$_SESSION['facilitiesfile']}?func=responder&view=true&id=" . $row['id'] . "'><U>View</U></A></TD></TR>";	// 08/8/02
+			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Description:&nbsp;</TD><TD ALIGN='left'>" . addslashes(shorten(str_replace($eols, " ", $row['facility_description']), 32)) . "</TD></TR>";
+			$tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>Status:&nbsp;</TD><TD ALIGN='left'>" . $the_status . " </TD></TR>";
+			$tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>As of:&nbsp;</TD><TD ALIGN='left'>" . format_date(strtotime($row['updated'])) . "</TD></TR>";
+			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Contact:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['contact_name']). " Via: " . addslashes($row['contact_email']) . "</TD></TR>";
+			if(!(isempty(trim($row['security_contact']))))	{$line_ctr++; $tab_1 .= "<TR CLASS='odd'><TD ALIGN='right' STYLE= 'width:50%'>Security contact:&nbsp;</TD><TD ALIGN='left' STYLE= 'width:50%'>" . addslashes($row['security_contact']) . " </TD></TR>";}
+			if(!(isempty(trim($row['security_email']))))  	{$line_ctr++; $tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>Security email:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['security_email']) . " </TD></TR>";}
+			if(!(isempty(trim($row['security_phone']))))  	{$line_ctr++; $tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Security phone:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['security_phone']) . " </TD></TR>";}
+			if(!(isempty(trim($row['access_rules']))))  	{$line_ctr++; $tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>" . get_text("Access rules") . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row['access_rules'])) . "</TD></TR>";}
+			if(!(isempty(trim($row['security_reqs']))))  	{$line_ctr++; $tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Security reqs:&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row['security_reqs'])) . "</TD></TR>";}
+			if(!(isempty(trim($row['opening_hours']))))  	{$line_ctr++; $tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>Opening hours:&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row['opening_hours'])) . "</TD></TR>";}
+			if(!(isempty(trim($row['pager_p']))))  			{$line_ctr++; $tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Prim pager:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['pager_p']) . " </TD></TR>";}
+			if(!(isempty(trim($row['pager_s']))))  			{$line_ctr++; $tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>Sec pager:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['pager_s']) . " </TD></TR>";}
 			$tab_1 .= "</TABLE>";
-
-			$tab_2 = "<TABLE CLASS='infowin' width='{$iw_width}' ALIGN = 'center' >";
-			$tab_2 .= "<TR CLASS='odd'><TD ALIGN='right' STYLE= 'width:50%'>Security contact:&nbsp;</TD><TD ALIGN='left' STYLE= 'width:50%'>" . addslashes($row['security_contact']) . " </TD></TR>";
-			$tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>Security email:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['security_email']) . " </TD></TR>";
-			$tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>Security phone:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['security_phone']) . " </TD></TR>";
-			$tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>" . get_text("Access rules") . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row['access_rules'])) . "</TD></TR>";
-			$tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>Security reqs:&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row['security_reqs'])) . "</TD></TR>";
-			$tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>Opening hours:&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row['opening_hours'])) . "</TD></TR>";
-			$tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>Prim pager:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['pager_p']) . " </TD></TR>";
-			$tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>Sec pager:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row['pager_s']) . " </TD></TR>";
-			$tab_2 .= "</TABLE>";
+?>
+			var myinfoTabs = "<?php echo $tab_1;?>";
+<?php
 
 
 // tab 2
 		$tabs_done=FALSE;		// default
 
 		if (!($tabs_done)) {	//
-?>
-			var myinfoTabs = [
-				new GInfoWindowTab("<?php print nl2brr(addslashes(shorten($row['handle'], 10)));?>", "<?php print $tab_1;?>"),
-				new GInfoWindowTab("More ...", "<?php print str_replace($eols, " ", $tab_2);?>"),
-				new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>")
-				];
-
-<?php
 			}		// end if/else
 
 		$name = $row['name'];	// 10/8/09		 4/28/11
-		if(($row['lat']==0.999999) && ($row['lng']==0.999999)) {	// check for facilities added in no mpas mode 7/28/10
-			
+		if(((float)$row['lat']==$GLOBALS['NM_LAT_VAL']) && ((float)$row['lng']==$GLOBALS['NM_LAT_VAL'])) {	// check for facilities added in no maps mode 7/28/10			
 ?>
 		var fac_id = "<?php print $index;?>";	//	10/8/09
-		var n = <?php print $the_id;?>;			
-		var the_id = "<?php print $row['id'];?>";
-		var the_class = ((map_is_fixed) && (!(mapBounds.containsLatLng(point))))? "emph" : "td_label";
+		var the_class = ((map_is_fixed) && (!(bounds.contains(point))))? "emph" : "td_label";
 
-		do_sidebar ("<?php print $sidebar_line; ?>", n, the_class, fac_id);
-		var dummymarker = createdummyMarker(point, myinfoTabs,<?php print $row['type'];?>, n, fac_id);	// 771 (point,tabs, color, id)
-		map.addOverlay(dummymarker);
+		do_sidebar ("<?php print $sidebar_line; ?>", i, the_class, fac_id);
+		var dummymarker = createdummyMarker(point, myinfoTabs,<?php print $row['type'];?>, i, fac_id);	// 1561 (point,tabs, color, id)
+		dummymarker.setMap(map);
 <?php
 		} else {
 ?>
 		var fac_id = "<?php print $index;?>";	//	10/8/09
-		var n = <?php print $the_id;?>;	
-		var the_class = ((map_is_fixed) && (!(mapBounds.containsLatLng(point))))? "emph" : "td_label";
+		var the_class = ((map_is_fixed) && (!(bounds.contains(point))))? "emph" : "td_label";
 
-		do_sidebar ("<?php print $sidebar_line; ?>", n, the_class, fac_id);
-		var marker = createMarker(point, myinfoTabs,<?php print $row['type'];?>, n, fac_id);	// 771 (point,tabs, color, id)
-		map.addOverlay(marker);
+		do_sidebar ("<?php print $sidebar_line; ?>", i, the_class, fac_id);
+		var marker = createMarker(point, myinfoTabs,<?php print $row['type'];?>, i, fac_id);	// 1548 (point,tabs, color, id)
+		marker.setMap(map);		// 1578
+
 <?php
-			}	// End of check for facilities added in no maps mode 7/28/10
-		} else {		// end position data available
+			}	// End if/else check for facilities added in no maps mode 7/28/10
+		} else {		// end ANY position data available
 
 			$name = $row['name'];	// 11/11/09		
 			$temp = explode("/", $name );
@@ -1557,20 +1639,22 @@ $the_id = 0;
 			print "\tdo_sidebar_nm (\" {$sidebar_line} \" , i, {$row['id']}, fac_id);\n";	// sidebar only - no map
 			}
 	$i++;				// zero-based
-	$the_id++;
 	}				// end  ==========  while() for Facility ==========
 
 ?>
 	if (!(map_is_fixed)) {
 		if (!got_points) {		// any? - 6/18/12
-			map.setCenter(new GLatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
+			map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
 			}
 		else {
-			center = bounds.getCenter();
-			zoom = map.getBoundsZoomLevel(bounds);
-			map.setCenter(center,zoom);
+			map.fitBounds(bounds);					// Now fit the map to the bounds  - ({Z:{b:33.7489954, d:49.3844788492429}, ca:{b:-97.23322530034568, d:-76.612189}})
+			var listener = google.maps.event.addListenerOnce (map, "idle", function() { 
+				if (map.getZoom() > 16) map.setZoom(15); 
+				});			
 			}
 		}
+		
+do_landb();				// 8/1/11 - show scribbles		
 
 var buttons_html = "";
 <?php
@@ -1585,260 +1669,17 @@ var buttons_html = "";
 	$("num_facilities").innerHTML = <?php print $num_facilities;?>;
 
 <?php
-	do_kml();
+//	do_kml();
 ?>
-
-
+// end function list_facilities()
+//	alert(1628);
 </SCRIPT>
 <?php
 	}				// end function list_facilities() ===========================================================
 
-function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
-	$have_coords = is_numeric($lat);
-	$the_lat = my_is_float($lat)? $lat : get_variable('def_lat')  ;
-	$the_lng = my_is_float($lat)? $lng : get_variable('def_lng')  ;
-
-?>
-
-<SCRIPT >
-	var mode = "<?php print $mode; ?>";
-	function writeConsole(content) {
-		top.consoleRef=window.open('','myconsole',
-			'width=800,height=250' +',menubar=0' +',toolbar=0' +',status=0' +',scrollbars=0' +',resizable=1')
-	 	top.consoleRef.document.writeln('<html><head><title>Console</title></head>'
-			+'<body bgcolor=white onLoad="self.focus()">' +content +'</body></HTML>'
-			)				// end top.consoleRef.document.writeln()
-	 	top.consoleRef.document.close();
-		}				// end function writeConsole(content)
-
-	function map_reset() {
-		map.clearOverlays();
-		var point = new GLatLng(<?php print $the_lat;?>, <?php print $the_lng;?>);
-		map.setCenter(point, <?php print get_variable('def_zoom');?>);
-		map.addOverlay(new GMarker(point, myIcon));
-		}
-	function map_cen_reset() {				// reset map center icon
-		map.clearOverlays();
-		}
-
-	function ReadOnlyCheckBox() {
-		alert("You can't change this value");
-		return false;
-	}		
-
-	var map = new GMap2($('map'));
-<?php
-	$maptype = get_variable('maptype');
-
-	switch($maptype) { 
-		case "1":
-		break;
-
-		case "2":?>
-		map.setMapType(G_SATELLITE_MAP);<?php
-		break;
-	
-		case "3":?>
-		map.setMapType(G_PHYSICAL_MAP);<?php
-		break;
-	
-		case "4":?>
-		map.setMapType(G_HYBRID_MAP);<?php
-		break;
-
-		default:
-		print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";
-	}
-
-?>
-
-	var	gdir = new GDirections(map, $("directions"));
-
-   	G_START_ICON.image = "";
-   	G_END_ICON.image = "";
-
-	var bounds = new GLatLngBounds();										// create empty bounding box
-	var geocoder = null;												// 	7/5/10
-	var rev_coding_on;												//	7/5/10
-	geocoder = new GClientGeocoder();										//	7/5/10
-
-
-	var myZoom;						// note globals
-	var marker;
-
-	var myIcon = new GIcon();
-<?php
-	if(($the_lat==0.999999) && ($the_lng==0.999999)) {	// check of Tickets entered in "no maps" mode 7/28/10	
-?>
-		myIcon.image = "./our_icons/question1.png";	// 7/28/10
-		myIcon.iconSize = new GSize(16, 28);		
-		myIcon.iconAnchor = new GPoint(8, 28);
-		myIcon.infoWindowAnchor = new GPoint(5, 1);			
-<?php	} else { ?>		
-		myIcon.image = "./markers/yellow.png";
-		myIcon.shadow = "./markers/sm_shadow.png";
-		myIcon.iconSize = new GSize(16, 28);
-		myIcon.shadowSize = new GSize(16, 28);
-		myIcon.iconAnchor = new GPoint(8, 28);
-		myIcon.infoWindowAnchor = new GPoint(5, 1);
-<?php 	}	// end of check of Tickets entered in "no maps" mode 7/28/10	
-?>	
-//	map.addControl(new GSmallMapControl());
-	map.setUIToDefault();										// 8/13/10
-
-	map.addControl(new GMapTypeControl());
-	map.addControl(new GOverviewMapControl());
-<?php if (get_variable('terrain') == 1) { ?>
-	map.addMapType(G_PHYSICAL_MAP);
-<?php } ?>
-
-	map.enableScrollWheelZoom();
-
-	var tab1contents;				// info window contents - first/only tab
-									// default point - possible dummy
-<?php
-	if(($the_lat==0.999999) && ($the_lng==0.999999)) {	// check of Tickets entered in "no maps" mode 7/28/10	
-?>									
-	map.setCenter(new GLatLng(<?php print get_variable('def_lat'); ?>, <?php print get_variable('def_lng'); ?>), <?php print get_variable('def_zoom');?>);	// larger # => tighter zoom
-<?php
-	} else {	
-?>
-	map.setCenter(new GLatLng(<?php print $the_lat; ?>, <?php print $the_lng; ?>), <?php print get_variable('def_zoom');?>);	// larger # => tighter zoom
-<?php
-}	// end of check of Tickets entered in "no maps" mode 7/28/10
-
-	if ($icon)	{							// icon display?
-		if(($the_lat==0.999999) && ($the_lng==0.999999)) {	// check of Tickets entered in "no maps" mode 7/28/10	
-?>
-		var point = new GLatLng(<?php print get_variable('def_lat') . ", " . get_variable('def_lng'); ?>);
-		var marker = new GMarker(point, {icon: myIcon, draggable:false});
-		map.addOverlay(new GMarker(point, myIcon));
-<?php } else { ?>
-		var point = new GLatLng(<?php print $the_lat . ", " . $the_lng; ?>); // 888
-		var marker = new GMarker(point, {icon: myIcon, draggable:false});
-		map.addOverlay(new GMarker(point, myIcon));
-<?php
-		}	// end of check of Tickets entered in "no maps" mode 7/28/10		
-	}		// end if ($icon)
-
-	else {
-?>
-		var baseIcon = new GIcon();
-		baseIcon.iconSize=new GSize(30,30);
-		baseIcon.iconAnchor=new GPoint(16,16);
-		var cross = new GIcon(baseIcon, "./markers/crosshair.png", null);
-		var center = new GLatLng(<?php print get_variable('def_lat') ?>, <?php print get_variable('def_lng'); ?>);
-		map.setCenter(center, <?php print get_variable('def_zoom');?>);
-		var thisMarker  = new GMarker(center, {icon: cross, draggable:false} );
-		map.addOverlay(thisMarker);
-
-<?php
-			}							// end else
-		if ($mode=="v") {				// only in view mode
-?>
-		function handleErrors(){
-			if (gdir.getStatus().code == G_GEO_UNKNOWN_DIRECTIONS ) {
-				alert("501: directions unavailable\n\nClick map point for directions.");
-				}
-			else if (gdir.getStatus().code == G_GEO_UNKNOWN_ADDRESS)
-				alert("440: No corresponding geographic location could be found for one of the specified addresses. This may be due to the fact that the address is relatively new, or it may be incorrect.\nError code: " + gdir.getStatus().code);
-			else if (gdir.getStatus().code == G_GEO_SERVER_ERROR)
-				alert("442: A map request could not be processed, reason unknown.\n Error code: " + gdir.getStatus().code);
-			else if (gdir.getStatus().code == G_GEO_MISSING_QUERY)
-				alert("444: Technical error.\n Error code: " + gdir.getStatus().code);
-			else if (gdir.getStatus().code == G_GEO_BAD_KEY)
-				alert("448: The given key is either invalid or does not match the domain for which it was given. \n Error code: " + gdir.getStatus().code);
-			else if (gdir.getStatus().code == G_GEO_BAD_REQUEST)
-				alert("450: A directions request could not be successfully parsed.\n Error code: " + gdir.getStatus().code);
-			else alert("451: An unknown error occurred.");
-			}		// end function handleErrors()
-
-
-	    function setDirections(fromAddress, toAddress, locale) {
-	    	var Direcs = gdir.load("from: " + fromAddress + " to: " + toAddress, { "locale": locale, preserveViewport : true  });
-			GEvent.addListener(Direcs, "addoverlay", GEvent.callback(Direcs, cb()));
-	    	}		// end function set Directions()
-
-	    function cb() {
-//			alert(847);	    							// onto floor ??
-	    	}
-
-		GEvent.addListener(map, "click", function(marker, point) {
-
-			bounds.extend(point);								// endpoint to bounding box
-	    	var the_start = new GLatLng(<?php print $the_lat;?>, <?php print $the_lng;?>);
-	    	bounds.extend(the_start);									// start to bounding box
-
-			var the_start = "<?php print $the_lat . " " . $the_lng;?>";
-			var the_end = point.lat().toFixed(6).toString() + " " + point.lng().toFixed(6).toString();
-
-			center = bounds.getCenter();
-			zoom = map.getBoundsZoomLevel(bounds);
-			map.clearOverlays();
-			map.setCenter(center,zoom);
-
-			setDirections(the_start, the_end, "en_US");
-
-			});				// end GEvent.add Listener()
-
-<?php
-		}				// end if ($mode=="v")
-		else {					// disallow if view mode
-?>
-
-	var the_zoom = <?php print get_variable('def_zoom');?>;
-
-	map.enableScrollWheelZoom();
-	if ((mode=="a") || (mode=="e")){
-		the_marker = new GMarker(map.getCenter(), {draggable: true	});
-
-		GEvent.addListener(map, "click", function(overlay, latlng) {
-
-			if (latlng) {
-				map.clearOverlays();
-				marker = new GMarker(latlng, {draggable:true});
-				map.setCenter(marker.getPoint(), the_zoom);
-				do_lat(marker.getPoint().lat());			// set form values
-				do_lng(marker.getPoint().lng());
-				do_ngs();
-
-				GEvent.addListener(marker, "dragend", function() {
-					map.setCenter(marker.getPoint(), <?php echo get_variable('def_zoom'); ?>);
-					do_lat (marker.getPoint().lat());		// set form values
-					do_lng (marker.getPoint().lng());
-					do_ngs();
-
-					});
-				map.addOverlay(marker);
-				}		// end if (latlng)
-			switch(mode) {		// 7/5/10 added for reverse geocoding of map click
-				case "a":
-					currform="a";				
-					getAddress(overlay, latlng, currform);				// 7/5/10
-					break;
-				case "e":
-					currform="e";				
-					getAddress(overlay, latlng, currform);				// 7/5/10
-					break;
-				default:
-					alert("Invalid Function - 1829");
-				}			
-
-			});		// end GEvent.add Listener()
-
-		}		//  end if ((mode=="a") ...
-<?php
-			}				// end if ($mode=="v")
-
-		do_kml();			// kml functions
-?>
-
-	</SCRIPT>
-<?php
-	}		// end function map()
 
 	function finished ($caption) {
-		print "</HEAD><BODY> <!-- 1820 -->\n";
+		print "</HEAD><BODY><!--" . __LINE__ . " -->";
 		require_once('./incs/links.inc.php');	// 10/6/09
 		print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:50px; height: 12px; width: 10px;' onclick = 'to_bottom()'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
 		print "<FORM NAME='fin_form' METHOD='get' ACTION='" . basename(__FILE__) . "'>";
@@ -1887,7 +1728,6 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			$fac_id = $_POST['frm_id'];
 			$fac_stat = $_POST['frm_status_id'];
 			$by = $_SESSION['user_id'];			
-			
 			$query = "UPDATE `$GLOBALS[mysql_prefix]facilities` SET
 				`name`= " . 		quote_smart(trim($_POST['frm_name'])) . ",
 				`street`= " . 		quote_smart(trim($_POST['frm_street'])) . ",
@@ -1897,9 +1737,6 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				`icon_str`= " . 	quote_smart(trim($_POST['frm_icon_str'])) . ",
 				`boundary`= " . 	quote_smart(trim($_POST['frm_boundary'])) . ",				
 				`description`= " . 	quote_smart(trim($_POST['frm_descr'])) . ",
-				`beds_a`= " . 		quote_smart(trim($_POST['frm_beds_a'])) . ",
-				`beds_o`= " . 		quote_smart(trim($_POST['frm_beds_o'])) . ",
-				`beds_info`= " . 	quote_smart(trim($_POST['frm_beds_info'])) . ",
 				`capab`= " . 		quote_smart(trim($_POST['frm_capab'])) . ",
 				`status_id`= " .	quote_smart(trim($_POST['frm_status_id'])) . ",
 				`lat`= " . 			$the_lat . ",
@@ -1921,6 +1758,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				WHERE `id`= " . 	quote_smart(trim($_POST['frm_id'])) . ";";
 
 			$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
+
 			if (!empty($_POST['frm_log_it'])) { do_log($GLOBALS['LOG_FACILITY_CHANGE'], 0, $_POST['frm_id'], $_POST['frm_status_id']);}	//2/17/11
 			$list = $_POST['frm_exist_groups']; 	//	4/14/11
 			$ex_grps = explode(',', $list); 	//	4/14/11 
@@ -1951,9 +1789,8 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		$frm_lat = (empty($_POST['frm_lat']))? 'NULL': quote_smart(trim($_POST['frm_lat']));		// 7/22/10
 		$frm_lng = (empty($_POST['frm_lng']))? 'NULL': quote_smart(trim($_POST['frm_lng']));		// 7/15/10
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));
-// 10/29/2012
 		$query = "INSERT INTO `$GLOBALS[mysql_prefix]facilities` (
-			`name`, `street`, `city`, `state`, `handle`, `icon_str`, `boundary`, `description`, `capab`, `beds_a`, `beds_o`, `beds_info`, `status_id`, `contact_name`, `contact_email`, `contact_phone`, `security_contact`, `security_email`, `security_phone`, `opening_hours`, `access_rules`, `security_reqs`, `pager_p`, `pager_s`, `lat`, `lng`, `type`, `user_id`, `updated` )
+			`name`, `street`, `city`, `state`, `handle`, `icon_str`, `boundary`, `description`, `capab`, `status_id`, `contact_name`, `contact_email`, `contact_phone`, `security_contact`, `security_email`, `security_phone`, `opening_hours`, `access_rules`, `security_reqs`, `pager_p`, `pager_s`, `lat`, `lng`, `type`, `user_id`, `updated` )
 			VALUES (" .
 				quote_smart(trim($_POST['frm_name'])) . "," .
 				quote_smart(trim($_POST['frm_street'])) . "," .
@@ -1964,9 +1801,6 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				quote_smart(trim($_POST['frm_boundary'])) . "," .				
 				quote_smart(trim($_POST['frm_descr'])) . "," .
 				quote_smart(trim($_POST['frm_capab'])) . "," .
-				quote_smart(trim($_POST['frm_beds_a'])) . "," .
-				quote_smart(trim($_POST['frm_beds_o'])) . "," .
-				quote_smart(trim($_POST['frm_beds_info'])) . "," .
 				quote_smart(trim($_POST['frm_status_id'])) . "," .
 				quote_smart(trim($_POST['frm_contact_name'])) . "," .
 				quote_smart(trim($_POST['frm_contact_email'])) . "," .
@@ -2012,7 +1846,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		print do_calls();		// call signs to JS array for validation
 ?>
 		</HEAD>
-		<BODY onLoad = "ck_frames();" onUnload="GUnload()"> <!-- 2020 -->
+		<BODY onLoad = "ck_frames();">		<!-- <?php echo __LINE__; ?> -->
 		<A NAME='top'>		<!-- 11/11/09 -->
 <?php
 		require_once('./incs/links.inc.php');
@@ -2031,7 +1865,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 					<INPUT TYPE="text" SIZE = 3 MAXLENGTH=3 NAME="frm_icon_str" VALUE="" />			
 			</TD></TR>
 <?php
-	if(get_num_groups()) {
+	if(get_num_groups() > 1) {
 		if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>		
 			<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
@@ -2102,7 +1936,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Type - Select from pulldown menu"><?php print get_text("Type"); ?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>
 			<TD ALIGN='left'><SELECT NAME='frm_type'><OPTION VALUE=0>Select one</OPTION>
 <?php
-	foreach ($u_types as $key => $value) {
+	foreach ($f_types as $key => $value) {
 		$temp = $value; 												// 2-element array
 		print "\t\t\t\t<OPTION VALUE='" . $key . "'>" .$temp[0] . "</OPTION>\n";
 		}
@@ -2138,12 +1972,6 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print get_variable('def_city'); ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=40 ROWS=2></TEXTAREA></TD></TR>
-<!--10/29/2012 -->		
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information"><?php print get_text("Beds"); ?></A>:&nbsp;</TD>
-			<TD  CLASS="td_label">&nbsp;&nbsp;&nbsp;&nbsp;<?php print get_text("Available"); ?>: <INPUT TYPE='text' NAME="frm_beds_a" SIZE=4 VALUE=''/>&nbsp;&nbsp;&nbsp;&nbsp;
-			<?php print get_text("Occupied"); ?>: <INPUT TYPE='text' NAME="frm_beds_o" SIZE=4 VALUE=''/></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information "><?php print get_text("Beds information"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_beds_info" COLS=40 ROWS=1></TEXTAREA></TD></TR>
-		
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_capab" COLS=40 ROWS=2></TEXTAREA></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility main contact name"><?php print get_text("Contact name"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact email - main contact email address"><?php print get_text("Contact email"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_email" VALUE="" /></TD></TR>
@@ -2197,9 +2025,9 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		<INPUT TYPE='hidden' NAME = 'frm_direcs' VALUE=1 />  <!-- note default -->
 		</FORM></TABLE> <!-- end inner left -->
 		</TD><TD ALIGN='center' WIDTH='50%'>
-		<DIV ID='map' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
+		<DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
 		<BR /><BR /><B>Drag/Click to unit location</B>
-		<BR /><A HREF='#' onClick='doGrid()'><u>Grid</U></A>
+		<BR /><A HREF='#' onClick='toglGrid()'><u>Grid</U></A>
 
 		<BR /><BR />
 		<SPAN CLASS="legend" STYLE="text-align: center; vertical-align: middle;">Facility Legend:</SPAN><BR /><BR /><DIV CLASS="legend" ALIGN='center' VALIGN='middle' style='padding: 20px; text-align: center; vertical-align: middle; width: <?php print get_variable('map_width');?>px;'>  <!-- 3/15/11 -->
@@ -2211,10 +2039,40 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		</TD></TR></TABLE><!-- end outer -->
 
 <?php
-		map("a",get_variable('def_lat') , get_variable('def_lng'), FALSE) ;				// call GMap js ADD mode, no icon
+//		map_func("a",get_variable('def_lat') , get_variable('def_lng'), FALSE) ;				// call GMap js ADD mode, no icon
+
+		$icon_file = "./markers/crosshair.png";
 ?>
+<script>
+//										some globals		
+		var map = null;				// the map object - note GLOBAL
+		var myMarker;					// the marker object
+		var lat_var;						// see init.js
+		var lng_var;
+		var zoom_var;
+
+	var icon_file = "./markers/crosshair.png";
+
+	function call_back (in_obj){				// callback function - from gmaps_v3_init()
+		do_lat(in_obj.lat);			// set form values
+		do_lng(in_obj.lng);
+		do_ngs();	
+		}
+//				2192 - Add
+
+		map = gmaps_v3_init(call_back, 'map_canvas', 
+			<?php echo get_variable('def_lat');?>, 
+			<?php echo get_variable('def_lng');?>, 
+			<?php echo get_variable('def_zoom');?>, 
+			icon_file, 
+			<?php echo get_variable('maptype');?>, 
+			false);		
+
+</script>
+
+
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
-		<!-- 2183 -->
+		<!-- <?php echo __LINE__;?> -->
 		<A NAME="bottom" /> 
 		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>		
 		</BODY>
@@ -2245,7 +2103,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 //		print do_calls($id);								// generate JS calls array
 ?>
 		</HEAD>
-		<BODY onLoad = "ck_frames(); " onUnload="GUnload()"> <!-- 2214 -->
+		<BODY onLoad = "ck_frames(); " > 	<!-- <?php echo __LINE__; ?> -->
 		<A NAME='top'>		<!-- 11/11/09 -->
 <?php
 		require_once('./incs/links.inc.php');
@@ -2264,7 +2122,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				<INPUT TYPE="text" SIZE = 3 MAXLENGTH=3 NAME="frm_icon_str" VALUE="<?php print $row['icon_str'];?>" />			
 			</TD></TR>
 <?php
-		if(get_num_groups()) {
+		if(get_num_groups() > 1) {
 			if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>			
 			<TR CLASS='even' VALIGN='top'>;
@@ -2332,7 +2190,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		<TD ALIGN='left'><FONT SIZE='-2'>
 			<SELECT NAME='frm_type'>
 <?php
-	foreach ($u_types as $key => $value) {
+	foreach ($f_types as $key => $value) {
 		$temp = $value; 												// 2-element array
 		$sel = ($row['type']==$key)? " SELECTED": "";
 		print "\t\t\t\t<OPTION VALUE='{$key}'{$sel}>{$temp[0]}</OPTION>\n";
@@ -2372,11 +2230,6 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=40 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
-<!--10/29/2012 -->		
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information"><?php print get_text("Beds"); ?></A>:&nbsp;</TD>
-			<TD  CLASS="td_label">&nbsp;&nbsp;&nbsp;&nbsp;<?php print get_text("Available"); ?>: <INPUT TYPE='text' NAME="frm_beds_a" SIZE=4 VALUE="<?php print $row['beds_a'] ;?>" />&nbsp;&nbsp;&nbsp;&nbsp;
-			<?php print get_text("Occupied"); ?>: <INPUT TYPE='text' NAME="frm_beds_o" SIZE=4 VALUE="<?php print $row['beds_o'];?>"/></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information "><?php print get_text("Beds information"); ?></A>:&nbsp;</TD><TD COLSPAN=3 ><TEXTAREA NAME="frm_beds_info" COLS=40 ROWS=1><?php print $row['beds_info'];?></TEXTAREA></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Capability - e.g ER, Cells, Medical distribution"><?php print get_text("Capability"); ?></A>:&nbsp;</TD><TD COLSPAN=3><TEXTAREA NAME="frm_capab" COLS=40 ROWS=2><?php print $row['capab'];?></TEXTAREA></TD></TR>
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility main contact name">Contact name</A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_name" VALUE="<?php print $row['contact_name'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility contact email - main contact email address"><?php print get_text("Contact email"); ?></A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_contact_email" VALUE="<?php print $row['contact_email'] ;?>" /></TD></TR>
@@ -2445,21 +2298,41 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		<INPUT TYPE="hidden" NAME = "frm_log_it" VALUE=""/>
 		<INPUT TYPE="hidden" NAME="frm_exist_groups" VALUE="<?php print (isset($alloc_groups)) ? $alloc_groups : 1;?>">			
 		</FORM></TABLE>
-		</TD><TD ALIGN='center' WIDTH='50%'><DIV ID='map' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: inset'></DIV>
-		<BR /><A HREF='#' onClick='doGrid()'><u>Grid</U></A><BR />
+		</TD><TD ALIGN='center' WIDTH='50%'><DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: inset'></DIV>
+		<BR /><A HREF='#' onClick='toglGrid()'><u>Grid</U></A><BR />
 
 		<?php print $map_capt; ?></TD></TR></TABLE>
 <?php
 		if (my_is_float($row['lat'])) {
-			map("e", $lat, $lng, TRUE) ;
+//			map_func("e", $lat, $lng, TRUE) ;
 			}
 		else {
-			map("e", get_variable('def_lat'),  get_variable('def_lng'), FALSE) ;
+//			map_func("e", get_variable('def_lat'),  get_variable('def_lng'), FALSE) ;
 			}
+		$icon_file = "./markers/crosshair.png";
 ?>
+<script>
+	var icon_file = "./markers/crosshair.png";
+
+	function call_back (in_obj){				// callback function - from gmaps_v3_init()
+		do_lat(parseFloat(in_obj.lat));			// set form values
+		do_lng(parseFloat(in_obj.lng));
+		do_ngs();	
+		}
+//		2268 - Edit
+
+		map = gmaps_v3_init(call_back, 'map_canvas', 
+			<?php echo $row['lat'];?>, 
+			<?php echo $row['lng'];?>, 
+			<?php echo (get_variable('def_zoom'));?>, 
+			icon_file, 
+			<?php echo get_variable('maptype');?>, 
+			false);		
+
+</script>
 
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
-		<!-- 1231 -->
+		<!-- 2431 -->
 		<A NAME="bottom" /> 
 		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>		
 		</BODY>
@@ -2486,7 +2359,8 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 				}
 				
 			$id = $_GET['id'];
-			$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id`=$id LIMIT 1";
+			$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id`={$id} LIMIT 1";	// 1/19/2013
+
 			$result	= mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 			$row	= stripslashes_deep(mysql_fetch_assoc($result));
 			$lat = $row['lat'];
@@ -2527,17 +2401,19 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 
 
 		</SCRIPT>
-		</HEAD>
+		</HEAD>	<!-- <?php echo __LINE__; ?> -->
 <?php
-		print "\t<BODY onLoad = 'ck_frames()' onUnload='GUnload()'><!-- 2494 -->\n";
+		print "\t<BODY onLoad = 'ck_frames()' > <!-- " . __LINE__ . "-->\n";
 		print "<A NAME='top'>\n";			// 11/11/09
 		require_once('./incs/links.inc.php');
 		print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:50px; height: 12px; width: 10px;' onclick = 'to_bottom()'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
-		$temp = $u_types[$row['type']];
+		$temp = $f_types[$row['type']];
 		$the_type = $temp[0];			// name of type
 
+//		dump($row['updated']);
+//		dump(format_date_time(strtotime($row['updated'])));
 ?>
-			<FONT CLASS="header">&nbsp;'<?php print $row['name'] ;?>' Data</FONT> (#<?php print$row['id'];?>) <BR /><BR />
+			<FONT CLASS="header">&nbsp;'<?php print $row['name'] ;?>' Data</FONT> (#<?php print $row['id'];?>) <BR /><BR />
 			<TABLE BORDER=0 ID='outer'><TR><TD>
 			<TABLE BORDER=0 ID='view_unit' STYLE='display: block'>
 			<FORM METHOD="POST" NAME= "res_view_Form" ACTION="<?php print basename(__FILE__);?>?func=responder">
@@ -2555,12 +2431,6 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Status"); ?>:</TD>		<TD><?php print $un_st_val;?>
 			</TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Description"); ?>: </TD>	<TD><?php print $row['description'];?></TD></TR>
-<!--10/29/2012 -->		
-			<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information"><?php print get_text("Beds"); ?></A>:&nbsp;</TD>
-				<TD><SPAN STYLE = "margin-left:40px;" CLASS="td_label"><?php print get_text("Available"); ?></SPAN>: <?php print $row['beds_a'] ;?>&nbsp;&nbsp;&nbsp;&nbsp;
-					<SPAN STYLE = "margin-left:40px;" CLASS="td_label"><?php print get_text("Occupied"); ?></SPAN>: <?php print $row['beds_o'] ;?></TD></TR>
-			<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Beds information"><?php print get_text("Beds information"); ?></A>:&nbsp;</TD>
-				<TD COLSPAN=3 ><?php print $row['beds_info'] ;?></TD></TR>
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Capability"); ?>: </TD>	<TD><?php print $row['capab'];?></TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Contact name"); ?>:</TD>	<TD><?php print $row['contact_name'] ;?></TD></TR>
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Contact email"); ?>:</TD>	<TD><?php print $row['contact_email'] ;?></TD></TR>
@@ -2573,7 +2443,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Security reqs"); ?>:</TD>	<TD><?php print $row['security_reqs'] ;?></TD></TR>
 			<TR CLASS = "odd"><TD CLASS="td_label"><?php print get_text("Primary pager"); ?>:</TD>	<TD><?php print $row['pager_p'] ;?></TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Secondary pager"); ?>:</TD>	<TD><?php print $row['pager_s'] ;?></TD></TR>
-			<TR CLASS = 'odd'><TD CLASS="td_label">As of:</TD>	<TD><?php print format_sb_date_2($row['updated']); ?></TD></TR>
+			<TR CLASS = 'odd'><TD CLASS="td_label">As of:</TD>	<TD><?php print fac_format_date(strtotime($row['updated'])); ?></TD></TR>
 <?php
 		if (my_is_float($lat)) {
 ?>		
@@ -2625,10 +2495,10 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 		print "</FORM></TABLE>\n";
 ?>
 			<BR /><BR /><BR />
-			</TD><TD ALIGN='center'><DIV ID='map' style="width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: inset"></DIV>
+			</TD><TD ALIGN='center'><DIV ID='map_canvas' style="width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: inset"></DIV>
 			<BR />
 			<DIV ID="directions" STYLE="width: <?php print get_variable('map_width');?>"><BR />Click map point for directions</DIV>
-			<BR /><SPAN onClick='doGrid()'><u>Grid</U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<BR /><SPAN onClick='toglGrid()'><u>Grid</U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<SPAN onClick='doTraffic()'><U>Traffic</U></SPAN>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<SPAN ID='do_sv' onClick = 'sv_win(document.res_view_Form)'><u>Street view</U></SPAN>
@@ -2639,20 +2509,31 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			<INPUT TYPE="hidden" NAME="fac_id" 	VALUE="">						<!-- 10/16/08 -->
 			<INPUT TYPE="hidden" NAME="unit_id" 	VALUE="<?php print $id; ?>">
 			</FORM>
-							<!-- END UNIT VIEW -->
+							<!-- END Facility VIEW -->
 <?php
 				if(!(my_is_float($lat))) {	
-					map("v", get_variable('def_lat'),  get_variable('def_lng'), FALSE) ;	// default center, no icon
+//					map_func("v", get_variable('def_lat'),  get_variable('def_lng'), FALSE) ;	// default center, no icon
 					}
 				else {
-					if(($lat==0.999999) && ($lng==0.999999)) {	// checks for facilities input in no maps mode 7/28/10
-						map("v", get_variable('def_lat'),  get_variable('def_lng'), FALSE) ;	// default center, no icon
+					if(((float)$lat==$GLOBALS['NM_LAT_VAL']) && ((float)$lng==$GLOBALS['NM_LAT_VAL'])) {	// checks for facilities input in no maps mode 7/28/10
+//						map_func("v", get_variable('def_lat'),  get_variable('def_lng'), FALSE) ;	// default center, no icon
 					} else {
-						map("v", $lat, $lng, TRUE) ;						// do icon
+//						map_func("v", $lat, $lng, TRUE) ;						// do icon
 					}											
 					}
-
+		$icon_file =  ((float)$lat==(float)$GLOBALS['NM_LAT_VAL'])? "./our_icons/question1.png" : "./markers/crosshair.png";
 ?>
+<script>
+//			 2665 - no callback, read-only
+		map = gmaps_v3_init(null, 'map_canvas', 
+			<?php echo $lat;?>, 
+			<?php echo $lng;?>, 
+			<?php echo (get_variable('def_zoom')*2);?>, 
+			'<?php echo $icon_file;?>',  
+			<?php echo get_variable('maptype');?>, 
+			true);		
+</script>
+
 			<!-- 1408 -->
 			<A NAME="bottom" /> 
 			<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>			
@@ -2663,13 +2544,15 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			}		// end if ($_GET['view'])
 // ============================================= initial display =======================
 		if (!isset($mapmode)) {$mapmode="a";}
+?>
+		</HEAD>
+		<BODY onLoad = "ck_frames(); set_regions_control();" ><!-- <?php echo __LINE__ ;?> -->
+		<SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT><!-- 1/3/10 -->
+		<SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT><!-- 3/28/2013 -->		
+		<A NAME='top'>		<!-- 11/11/09 -->
+<?php
 		print "<SPAN STYLE = 'margin-left:100px;'>{$caption}</SPAN>";
 ?>
-		</HEAD><!-- 2624 -->
-		<BODY onLoad = "ck_frames(); set_regions_control();" onUnload="GUnload()"> <!-- 2625 -->
-		<SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT><!-- 1/3/10 -->
-		<SCRIPT TYPE="text/javascript" src="./js/ELabel.js"></SCRIPT><!-- 8/1/11 -->		
-		<A NAME='top'>		<!-- 11/11/09 -->
 		<DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;z-index: 1;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0></DIV>
 <?php
 		require_once('./incs/links.inc.php');
@@ -2777,12 +2660,12 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 							<TABLE ID = 'MAP' BORDER=0>
 								<TR class='even'>
 									<TD ALIGN='center'>	<!-- 3/15/11 -->
-										<DIV ID='map' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
+										<DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
 									</TD>
 								</TR>	<!-- 3/15/11 -->
 								<TR class='even'>
 									<TD ALIGN='center' class='td_label'>  <!-- 3/15/11 -->
-										<SPAN onClick='doGrid()'><u>Grid</U></SPAN>  <!-- 3/15/11 -->
+										<SPAN onClick='toglGrid()'><u>Grid</U></SPAN>  <!-- 3/15/11 -->
 										<SPAN onClick='doTraffic()'STYLE = 'margin-left:80px;'><U>Traffic</U></SPAN>
 									</TD>
 								</TR>		<!-- 4/10/09, 3/15/11 -->
@@ -2817,11 +2700,10 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 ?>
 			<DIV id = 'regions_outer' style = "position: fixed; right: 20%; top: 10%; z-index: 1000;">
 				<DIV id="boxB" class="box" style="z-index:1000;">
-					<DIV class="bar_header" class="heading_2" style='white-space: nowrap;'>	
+					<div class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;">Viewed Regions
+					<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
 					<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
-						onmousedown="dragStart(event, 'boxB')"><i>Drag me</i>
-						<DIV id="collapse_regs" class='plain' style ="display: inline; z-index:1001; cursor: pointer; float: right; margin-left: 0px; font-size: 10px;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
-					</DIV>
+						onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
 					<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV>
 					</DIV>
 				</DIV>
@@ -2843,7 +2725,7 @@ function map($mode, $lat, $lng, $icon) {						// Facility add, edit, view
 			</FORM>
 
 			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print  basename(__FILE__);?>?func=responder"></FORM>
-			<!-- 2801 -->
+			<!-- 1452 -->
 			<A NAME="bottom" /> 
 			<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>			
 			</BODY>				<!-- END RESPONDER LIST and ADD -->

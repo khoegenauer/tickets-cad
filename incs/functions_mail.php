@@ -22,12 +22,12 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 		}
 
 	if (empty($match_str)) {$match_str = " " . implode ("", range("A", "V"));}		// empty get all - force non-zero hit
-	
+	snap(basename(__FILE__), __LINE__);
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id`=$ticket_id LIMIT 1";
+	snap(__LINE__, $query );
 	$ticket_result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$t_row = stripslashes_deep(mysql_fetch_array($ticket_result));
 	$the_scope = strlen(trim($t_row['scope']))>0? trim($t_row['scope']) : "[#{$ticket_id}]" ;	// possibly empty
-
 	$eol = PHP_EOL;
 	$locale = get_variable('locale');	
 
@@ -76,6 +76,7 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 					$message .= (empty($t_row['date']))? "":  "{$gt}: " . format_date_2($t_row['date']) . $eol;
 				    break;
 				case "F":
+					snap(__LINE__, $t_row['updated']);
 					$gt = get_text("Updated");
 					$message .= "{$gt}: " . format_date_2($t_row['updated']) . $eol;
 				    break;
@@ -88,6 +89,7 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 					$message .= (empty($t_row['comments']))? "": "{$gt}: ".wordwrap($t_row['comments']).$eol;
 				    break;
 				case "M":
+					snap(__LINE__, $t_row['problemstart']);
 					$gt = get_text("Run Start");
 					$message .= get_text("{$gt}") . ": " . format_date_2($t_row['problemstart']). $_end .$eol;
 				    break;
@@ -161,6 +163,7 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 						$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	// 3/22/09
 						if (mysql_num_rows ($result)>0) {
 							$f_row = stripslashes_deep(mysql_fetch_array($result));
+							$message .= "{$gt}: {$f_row['handle']}\n";
 							$message .= "{$gt}: {$f_row['beds_info']}\n";
 							}
 						}
@@ -178,15 +181,18 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 						while($u_row = stripslashes_deep(mysql_fetch_assoc($result_u))) {
 							$message .= "{$u_row['handle']},";
 							}
+						$message .= $eol;		// 4/1/2013
 						}	
 					unset ($result_u);
 					break;
 					
 				case "V":
-					$gt = get_text("Scheduled For");
-					$message .= get_text("{$gt}") . ": " . format_date_2($t_row['booked_date']). $_end .$eol;
+					if (is_date($t_row['booked_date'])) {
+						$gt = get_text("Scheduled For");
+						$message .= get_text("{$gt}") . ": " . format_date_2($t_row['booked_date']). $_end .$eol;
+						}
 				    break;
-				
+
 				default:
 //				    $message = "Match string error:" . $match_str[$i]. " " . $match_str . $eol ;
 					@session_start();
@@ -213,122 +219,85 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 	}				// end function mail_it ()
 // ________________________________________________________
 
-function do_send ($to_str, $smsg_to_str, $subject_str, $text_str, $ticket_id, $responder_ids) {					// 7/7/09
-//	print $to_str . "," . $smsg_to_str . "," . $subject_str . "," . $text_str . "," . $ticket_id . "," . $responder_ids . "<BR />";
-	$the_resp_ids = "";
-	if($responder_ids != 0) {
-		$the_responder_ids = explode("|", $responder_ids);
-		$the_responders = "";
-		$sep = "";
-		$the_resp_ids = implode(",", $the_responder_ids);
-		foreach($the_responder_ids as $val) {
-			if($val == 0) {
-				$the_responders = "Not Set";
-				} else {
-				$the_responders = get_responder($val) . $sep;
-				$sep = ",";
-				}
-			}
-		$the_responders = substr($the_responders,0,-1);
-	} else {
-		$the_responders = "";
-	}
-
-	$count_cells = $count_ll = $count_smsg = 0; 				// counters	
-	$theaddresses = "";
+function do_send ($to_str, $subject_str, $text_str ) {					// 7/7/09
 	global $istest;
-	require_once('smtp.inc.php');     									// defer load until required - 8/2/10
-	require_once("messaging.inc.php");     									// defer load until required - 4/24/12
+    require_once('smtp.inc.php');     									// defer load until required - 8/2/10
 	$sleep = 4;															// seconds delay between text messages
-	$now = time() - (intval(intval(get_variable('delta_mins')))*60);
+
 	$my_smtp_ary = explode ("/",  trim(get_variable('smtp_acct')));   
-	if ((count($my_smtp_ary)>1) && (count($my_smtp_ary)<5)) {					// 4/19/11, 10/23/12, 11/2/12
+
+	if ((count($my_smtp_ary)>1) && (count($my_smtp_ary)!=6)) {
 		 do_log($GLOBALS['LOG_ERROR'], 0, 0, "Invalid smtp account information: " . trim(get_variable('smtp_acct')));
-		 return;
+		 return ;
 		}
 
-	$temp = explode("/", trim(get_variable('email_reply_to'))); 
-	if (!(is_email(trim($temp[0])))) {								// accommodate possible /B
+	if ((count($my_smtp_ary)==6) && (!(is_email(trim($my_smtp_ary[5]))))) {									// email format test
+		 do_log($GLOBALS['LOG_ERROR'], 0, 0, "Invalid smtp account address: " . trim($my_smtp_ary[5]));
+		 return ;
+		}
+	if (!(is_email(trim(get_variable('email_reply_to'))))) {					// email format test
 		do_log($GLOBALS['LOG_ERROR'], 0, 0, "Invalid email reply-to: " . trim(get_variable('email_reply_to')));
 		return ;		
 		}
-	if(!function_exists('stripLabels')) {
-		function stripLabels($sText){
-			$labels = array("Incident:", "Priority:", "Nature:", "Addr:", "Descr:", "Reported by:", "Phone:", "Written:", "Updated:", "Status:", "Disp:", "Run Start:", "Map:", "Patient:", "Actions:", "Tickets host:"); // 5/9/10
-			for ($x = 0; $x < count($labels); $x++) {
-				$sText = str_replace($labels[$x] , '', $sText);
-				}
-			return $sText;
+
+
+	function stripLabels($sText){
+		$labels = array("Incident:", "Priority:", "Nature:", "Addr:", "Descr:", "Reported by:", "Phone:", "Written:", "Updated:", "Status:", "Disp:", "Run Start:", "Map:", "Patient:", "Actions:", "Tickets host:"); // 5/9/10
+		for ($x = 0; $x < count($labels); $x++) {
+			$sText = str_replace($labels[$x] , '', $sText);
 			}
+		return $sText;
 		}
+
 	$to_array = array_values(array_unique(explode ("|", ($to_str))));		// input is pipe-delimited string  - 10/17/08
-	$to_smsg_array = ($smsg_to_str != NULL) ? array_values(array_unique(explode (",", ($smsg_to_str)))) : NULL;		// input is comma string  - 4/24/12
 	require_once("cell_addrs.inc.php");										// 10/22/08
+	
 	$ary_cell_addrs = $ary_ll_addrs = array();
-	if($to_str != "") {
-		if(count($to_array) > 0) {
-			for ($i = 0; $i < count($to_array); $i++) {								// walk down the input address string/array
-				$temp =  explode ( "@", $to_array[$i]);
-				include('cell_addrs.inc.php');										// 10/22/08				
-				if (in_array(trim(strtolower($temp[1])), $cell_addrs))  {				// cell addr?
-					array_push ($ary_cell_addrs, $to_array[$i]);						// yes
-					}
-				else {																	// no, land line addr
-					array_push ($ary_ll_addrs, $to_array[$i]);	
-					}
-				}				// end for ($i = ...)
-			$caption="";
-			$my_from_ary = explode("/", trim(get_variable('email_from')));				// note /B option
-			$my_replyto_str = trim(get_variable('email_reply_to'));
-			if (count($ary_ll_addrs)>0) {												// got landline addee's?
-				$theaddresses = implode(",", $ary_ll_addrs);
-				if($the_responders == "") { $the_responders = $theaddresses;}
-		//								($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_str, $my_from_ary, $my_replyto_str)	
-				if (count($my_smtp_ary)>1) {
-					$count_ll = do_swift_mail ($my_smtp_ary, $ary_ll_addrs, $subject_str, $text_str, $my_from_ary, $my_replyto_str );	
-					store_email(1, $the_responders, "email", $subject_str, $text_str, $ticket_id, $the_resp_ids, date("Y/m/d H:i:s", $now), $my_replyto_str, 'Tickets');	// 7/9/12		
-					}
-				else {
-		//								($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_str, $my_from_ary, $my_replyto_str)
-					$count_ll = do_native_mail ($my_smtp_ary, $ary_ll_addrs, $subject_str, $text_str, $my_from_ary, $my_replyto_str );
-					store_email(1, $the_responders, "email", $subject_str, $text_str, $ticket_id, $the_resp_ids, date("Y/m/d H:i:s", $now), $my_replyto_str, 'Tickets'); // 7/9/12				
-					}		
-				}
-			if (count($ary_cell_addrs)>0) {		// got cell addee's?
-				$theaddressess = implode(",", $ary_cell_addrs);
-				if($the_responders == "") { $the_responders = $theaddresses;}	
-				$lgth = 140;
-				$ix = 0;
-				$i = 1;
-				$cell_text_str = stripLabels($text_str);								// strip labels 5/10/10
-				while (substr($cell_text_str, $ix , $lgth )) {							// chunk to $lgth-length strings
-					$subject_ex = $subject_str . "/part " . $i . "/";					// 10/21/08
-		//										 ($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_str, $my_from_ary, $my_replyto_str)	
-					if (count($my_smtp_ary)>1) {
-						$count_cells = do_swift_mail ($my_smtp_ary, $ary_cell_addrs, $subject_ex, substr ($cell_text_str, $ix , $lgth ), $my_from_ary, $my_replyto_str);
-						store_email(1, $the_responders, "email", $subject_str, $text_str, $ticket_id, $the_resp_ids, date("Y/m/d H:i:s", $now), $my_replyto_str, 'Tickets');	 // 7/9/12			
-						} else {
-		//										  ($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_str, $my_from_ary, $my_replyto_str)
-						$count_cells = do_native_mail ($my_smtp_ary, $ary_cell_addrs, $subject_ex, substr ($cell_text_str, $ix , $lgth ), $my_from_ary, $my_replyto_str);	
-						store_email(1, $the_responders, "email", $subject_str, $text_str, $ticket_id, $the_resp_ids, date("Y/m/d H:i:s", $now), $my_replyto_str, 'Tickets');	 // 7/9/12				
-						if($i>1) {sleep ($sleep);}								// 10/17/08
-						}	//	end if/else	(count($my_smtp_ary)>1))		// 12/13/2012	
-					$ix+=$lgth;
-					$i++;
-					}				// end while (substr($cell_text_...))
-				}		// end if (count($ary_cell_addrs)>0)
-			}	//	end if(count($to_array) > 0)
-		}	//	end if($to_str != "")
-	if($smsg_to_str != "") {
-		if((get_variable('use_messaging') == 2) || (get_variable('use_messaging') == 3)) {
-			if (count($to_smsg_array)>0) {		// got sms gateway addresses?
-				$addressess = "";
-				$cell_text_str = stripLabels($text_str);								// strip labels 5/10/10
-				$count_smsg = do_smsg_send(get_msg_variable('smsg_orgcode'),get_msg_variable('smsg_apipin'),"OG SMS Dispatch Message",$cell_text_str,"CALLSIGNS",$smsg_to_str,"standard_priority",get_msg_variable('smsg_replyto'),"SENDXML", $ticket_id);			
-				}	// end if (count($to_smsg_array)>0)
-			}	// end if((get_variable('use_messaging') == 2) || (get_variable('use_messaging') == 3))
-		}	//	end if($smsg_to_str != "")
-	return (string) ($count_ll + $count_cells + $count_smsg);
+	for ($i = 0; $i< count($to_array); $i++) {								// walk down the input address string/array
+		$temp =  explode ( "@", $to_array[$i]);
+//		if (in_array(trim(strtolower($temp[1])), $cell_addrs))  {				// cell addr?
+		if (!(in_array(trim(strtolower($temp[1])), $cell_addrs)))  {				// cell addr?
+			array_push ($ary_cell_addrs, $to_array[$i]);						// yes
+			}
+		else {																	// no, land line addr
+			array_push ($ary_ll_addrs, $to_array[$i]);	
+			}
+		}				// end for ($i = ...)
+
+	$caption="";
+	$my_from_ary = explode("/", trim(get_variable('email_from')));				// note /B option
+	$my_replyto_str = trim(get_variable('email_reply_to'));
+	$count_cells = $count_ll = 0; 				// counters
+	if (count($ary_ll_addrs)>0) {												// got landline addee's?
+//								  ($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_str, $my_from_ary, $my_replyto_str)	
+		if (count($my_smtp_ary)>1) {
+			$count_ll = do_swift_mail ($my_smtp_ary, $ary_ll_addrs, $subject_str, $text_str, $my_from_ary, $my_replyto_str );		
+			}
+		else {
+			$count_ll = do_native_mail ($my_smtp_ary, $ary_ll_addrs, $subject_str, $text_str, $my_from_ary, $my_replyto_str );		
+			}		
+		}
+
+	if (count($ary_cell_addrs)>0) {		// got cell addee's?
+		$lgth = 140;
+		$ix = 0;
+		$i = 1;
+		$cell_text_str = stripLabels($text_str);								// strip labels 5/10/10
+		while (substr($cell_text_str, $ix , $lgth )) {							// chunk to $lgth-length strings
+			$subject_ex = $subject_str . "/part " . $i . "/";					// 10/21/08
+//										 ($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_str, $my_from_ary, $my_replyto_str)	
+		if (count($my_smtp_ary)>1) {
+			$count_cells = do_swift_mail ($my_smtp_ary, $ary_cell_addrs, $subject_ex, substr ($cell_text_str, $ix , $lgth ), $my_from_ary, $my_replyto_str);	
+			}
+		else {
+			$count_cells = do_native_mail ($my_smtp_ary, $ary_cell_addrs, $subject_ex, substr ($cell_text_str, $ix , $lgth ), $my_from_ary, $my_replyto_str);	
+			}
+			if($i>1) {sleep ($sleep);}								// 10/17/08
+			$ix+=$lgth;
+			$i++;
+			}				// end while (substr($cell_text_...)
+		}									// end if (count($ary_cell_addrs)>0)
+	return (string) ($count_ll + $count_cells);
 	}					// end function do send ()
 
 function is_email($email){		   //  validate email, code courtesy of Jerrett Taylor - 10/8/08, 7/2/10

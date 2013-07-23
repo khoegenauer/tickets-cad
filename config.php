@@ -78,6 +78,7 @@
 4/25/12 audio window correction
 6/20/12 applied get_text() to 'Unit'
 10/23/12 Added Level 'Service User' for Portal, added messaging
+3/29/2013 added include for GMaps V3 setcenter
 */
 	$asterisk = FALSE;		// user: change to TRUE  in order to make the Pin Control table accessible.	
 	if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/7/09 
@@ -1658,7 +1659,10 @@ if (mysql_num_rows($result)>0) {
 			}				// end if($_GET['add'] ...		
 	    break;
 	
-	case 'center' :
+	case 'center' :					// 3/29/2013
+		require_once('./incs/config.setcenter.inc.php');
+	    break;
+/*
 ?>
 		<SCRIPT SRC="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo get_variable('gmaps_api_key'); ?>"></SCRIPT>
 		<SCRIPT SRC="./js/usng.js" TYPE="text/javascript"></SCRIPT>
@@ -1752,7 +1756,7 @@ if (mysql_num_rows($result)>0) {
 			exit();
 			}		// end if/else ($_GET['update'] 	
 	    break;
-	    
+*/	    
 	case 'api_key' :		
 		if((isset($_GET)) && (isset($_GET['update'])) && ($_GET['update'] == 'true')) {
 			$query = "UPDATE `$GLOBALS[mysql_prefix]settings` SET `value`='$_POST[frm_value]' WHERE `name`='gmaps_api_key';";

@@ -166,6 +166,10 @@
 11/30/2012 significant re-do, dropping unixtimestamp in favor of strtotime.  Also see FMP
 12/14/2012 corrections to case "S", if/else for cell messages, date string handling in function mail_it
 3/4/2013 corrections to function format_date_2()
+3/27/2013 AS revisions - $GLOBALS['NM_LAT_VAL'], function get_maptype_str () - used with GMaps V3 
+4/10/13 revised calling of KML files for GMaps V3
+5/11/2013 revised do_error() logging
+5/11/2013 fix to remove '_on' from set_u_updated () sql 
 */
 error_reporting(E_ALL);
 
@@ -326,6 +330,8 @@ $GLOBALS['MSGTYPE_OG_SMS']		= 3;	//	10/23/12
 $GLOBALS['MSGTYPE_IC_SMS']		= 4;	//	10/23/12
 $GLOBALS['MSGTYPE_IC_SMS_DR']	= 5;	//	10/23/12
 $GLOBALS['MSGTYPE_IC_SMS_DF']	= 6;	//	10/23/12
+
+$GLOBALS['NM_LAT_VAL'] 		= 0.999999;												// 3/27/2013	
 
 $evenodd = array ("even", "odd", "heading");	// class names for alternating table row css colors
 
@@ -609,35 +615,39 @@ function list_messages($the_id, $theSort="date", $links, $display) {
 		$actr++;		
 		$query_messages = "SELECT * FROM `$GLOBALS[mysql_prefix]messages` WHERE `ticket_id`= " . $the_id . " ORDER BY '" . $theSort . "' ASC;";
 		$result_messages = mysql_query($query_messages) or do_error($query_messages, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
-		while ($row_messages = mysql_fetch_assoc($result_messages))	{
-			if ($row_messages['msg_type'] == 1) {
-				$type_flag = "Outoging Email";
-				$type = 1;
-				$color = "background-color: blue; color: white;";
-				} elseif ($row_messages['msg_type'] ==2) {
-				$type_flag = "Incoming Email";
-				$type = 2;
-				$color = "background-color: white; color: blue;";			
-				} elseif ($row_messages['msg_type'] ==3) {
-				$color = "background-color: orange; color: white;";			
-				$type_flag = "Outgoing SMS";
-				$type = 3;
-				} elseif (($row_messages['msg_type'] ==4) || ($row_messages['msg_type'] ==5) || ($row_messages['msg_type'] ==6)) {
-				$color = "background-color: white; color: orange;";				
-				$type_flag = "Incoming SMS";	
-				$type = 4;
-				} else {
-				$color = "";				
-				$type_flag = "?";
-				$type = 99;
-				}	
-			$print .= "<TR CLASS='{$evenodd[$actr%2]}'><TD WIDTH='10%'>" . $type_flag . "</TD>";
-			$print .= "<TD WIDTH='15%'>" . stripslashes_deep(shorten($row_messages['recipients'], 18)) . "</TD>";
-			$print .= "<TD WIDTH='15%'>" . $row_messages['fromname'] . "</TD>";
-			$print .= "<TD WIDTH='20%'>" . stripslashes_deep(shorten($row_messages['subject'], 18)) . "</TD>";
-			$print .= "<TD WIDTH='30%'>" . stripslashes_deep(shorten($row_messages['message'], 100)) . "</TD>";
-			$print .= "<TD WIDTH='10%'>" . format_date_2(strtotime($row_messages['date'])) . "</TD></TR>";
-			$actr++;
+		if(mysql_num_rows($result_messages) == 0) {
+			$print .= "<TR CLASS='{$evenodd[$actr%2]}'><TD ALIGN='center' COLSPAN='99'>No Messages</TD></TR>";
+			} else {
+			while ($row_messages = mysql_fetch_assoc($result_messages))	{
+				if ($row_messages['msg_type'] == 1) {
+					$type_flag = "Outoging Email";
+					$type = 1;
+					$color = "background-color: blue; color: white;";
+					} elseif ($row_messages['msg_type'] ==2) {
+					$type_flag = "Incoming Email";
+					$type = 2;
+					$color = "background-color: white; color: blue;";			
+					} elseif ($row_messages['msg_type'] ==3) {
+					$color = "background-color: orange; color: white;";			
+					$type_flag = "Outgoing SMS";
+					$type = 3;
+					} elseif (($row_messages['msg_type'] ==4) || ($row_messages['msg_type'] ==5) || ($row_messages['msg_type'] ==6)) {
+					$color = "background-color: white; color: orange;";				
+					$type_flag = "Incoming SMS";	
+					$type = 4;
+					} else {
+					$color = "";				
+					$type_flag = "?";
+					$type = 99;
+					}	
+				$print .= "<TR CLASS='{$evenodd[$actr%2]}'><TD WIDTH='10%'>" . $type_flag . "</TD>";
+				$print .= "<TD WIDTH='15%'>" . stripslashes_deep(shorten($row_messages['recipients'], 18)) . "</TD>";
+				$print .= "<TD WIDTH='15%'>" . $row_messages['fromname'] . "</TD>";
+				$print .= "<TD WIDTH='20%'>" . stripslashes_deep(shorten($row_messages['subject'], 18)) . "</TD>";
+				$print .= "<TD WIDTH='30%'>" . stripslashes_deep(shorten($row_messages['message'], 100)) . "</TD>";
+				$print .= "<TD WIDTH='10%'>" . format_date_2(strtotime($row_messages['date'])) . "</TD></TR>";
+				$actr++;
+				}
 			}
 		$print .= "</TABLE>";
 		}
@@ -1116,8 +1126,15 @@ function format_sb_date($date){							/* format sidebar date Oct-30 07:46 */
 	else {return "TBD";}
 	}				// end function format_sb_date($date)
 
-function new_format_sb_date($date){							/* 10/31/2012 */ 
+/*		3/27/2013
+function new_format_sb_date($date){					
 	if (is_string ($date) && strlen($date)==19) {return  (substr(inval, 5, 2) . substr(inval, 10, 6));}
+	else 										{return "TBD";}
+	}				// end new_format_sb_date();
+*/
+
+function new_format_sb_date($date){						// 1/19/2013
+	if (is_string ($date) && strlen($date)==19) {return  substr($date, 8, 8);}	/* 2013-01-19 21:18:19 	 */ 
 	else 										{return "TBD";}
 	}				// end new_format_sb_date();
 
@@ -1238,8 +1255,25 @@ function get_css($element, $day_night){								/* get hex color string from db c
 	}	
 	return (array_key_exists($element, $css))? "#" . $css[$element] : FALSE ;
 	}	
+/* raise an error event
+function do_error($err_function,$err,$custom_err='',$file='',$line=''){
+	print "<FONT CLASS=\"warn\">An error occured in function '<B>$err_function</B>': '<B>$err</B>'<BR />";
+	if ($file OR $line) print "Error occured in '$file' at line '$line'<BR />";
+	if ($custom_err != '') print "Additional info: '<B>$custom_err</B>'<BR />";
+	print '<BR />Check your MySQL connection and if the problem persist, contact the <A HREF="help.php?q=credits">author</A>.<BR />';
+	die('<B>Execution stopped.</B></FONT>');
+	}
+*/
 
-function do_error($err_function,$err,$custom_err='',$file='',$line=''){/* raise an error event */
+function do_error($err_function, $err, $custom_err='', $file='', $line=''){ /* report an error event - revised 5/11/2013 */
+	@session_start();											//
+	$log_message = substr ( "application error: {[$file]@[$line] [$err_function]", 0, 2048) ;
+	if (!(array_key_exists ( $log_message, $_SESSION ))) {		// limit to once per session
+		$_SESSION[$log_message] = TRUE;		
+		do_log($GLOBALS['LOG_ERROR'], 0, 0, $log_message);		// visible in reports station log
+		@error_log ($log_message);								// to server log
+		}
+
 	print "<FONT CLASS=\"warn\">An error occured in function '<B>$err_function</B>': '<B>$err</B>'<BR />";
 	if ($file OR $line) print "Error occured in '$file' at line '$line'<BR />";
 	if ($custom_err != '') print "Additional info: '<B>$custom_err</B>'<BR />";
@@ -1559,9 +1593,9 @@ function dumpp($variable) {
 	echo "</PRE>\n";
 	}
 function dump($variable) {
-	echo "\n//<PRE>";				// pretty it a bit
+	echo "\n<PRE>\n";				// pretty it a bit - 2/23/2013
 	var_dump($variable) ;
-	echo "//</PRE>\n";
+	echo "</PRE>\n";
 	}
 
 function shorten($instring, $limit) {
@@ -1861,7 +1895,8 @@ function do_kml() {									// emits JS for kml-type files in noted directory - 
 				case "kmz":
 				case "xml":
 					$url = $server_str . $filename;
-					echo "\tmap.addOverlay(new GGeoXml(\"" . $url . "\"));\n";
+					echo "\tvar kml_layer = new google.maps.KmlLayer(\"" . $url . "\");\n";	//	4/10/13
+					echo "kml_layer.setMap(map);";			//	4/10/13			
 					break;
 // ---------------------------------
 
@@ -1870,7 +1905,8 @@ function do_kml() {									// emits JS for kml-type files in noted directory - 
 					$lines = file($the_addr );
 					foreach ($lines as $line_num => $line) {				// Loop through our array.
 						if(isValidURL( trim($line))) {
-							echo "\n\t map.addOverlay(new GGeoXml(\"" . trim($line) . "\"));\n";
+							echo "\tvar kml_layer = new google.maps.KmlLayer(\"" . trim($line) . "\");\n";	//	4/10/13
+							echo "kml_layer.setMap(map);";						//	4/10/13		
 							}
 						}
 						break;
@@ -1951,25 +1987,27 @@ function get_lng($in_lng) {					// 9/7/08
 	
 /*
 Subject		A
-Incident	B  Title
-Priority	C  Priorit
-Nature		D  Nature
+Incident	B  Title*
+Priority	C  Priority*
+Nature		D  Nature*
 Written		E  Written
 Updated		F  As of
-Reporte		G  By
-Phone: 		H  Phone: 
-Status:		I  Status:
+Reporte		G  By*
+Phone: 		H  Phone: * 
+Status:		I  Status:*
 Address		J  Location
-Descrip'n	K  Descrip
-Dispos'n	L  Disposi
+Descrip'n	K  Description*
+Dispos'n	L  Disposition
 Start/end	M
-Map: " 		N  Map: " 
+Map: " 		N  Map: " *
 Actions		O
 Patients	P
 Host		Q
 911 contact	R				// 6/26/10
 Ticket link S				// 6/20/12
 Facility 	T				// 6/20/12
+Handle		U				// 3/25/13
+Scheduled	V				// 3/25/13
 */
 
 function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_only = FALSE) {	// 10/6/08, 10/15/08,  2/18/09, 3/7/09, 10/23/12, 11/14/2012, 12/14/2012
@@ -1990,12 +2028,12 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 		}
 
 	if (empty($match_str)) {$match_str = " " . implode ("", range("A", "V"));}		// empty get all - force non-zero hit
-	
+//	snap(basename(__FILE__), __LINE__);
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id`=$ticket_id LIMIT 1";
+//	snap(__LINE__, $query );
 	$ticket_result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$t_row = stripslashes_deep(mysql_fetch_array($ticket_result));
 	$the_scope = strlen(trim($t_row['scope']))>0? trim($t_row['scope']) : "[#{$ticket_id}]" ;	// possibly empty
-
 	$eol = PHP_EOL;
 	$locale = get_variable('locale');	
 
@@ -2044,6 +2082,7 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 					$message .= (empty($t_row['date']))? "":  "{$gt}: " . format_date_2($t_row['date']) . $eol;
 				    break;
 				case "F":
+//					snap(__LINE__, $t_row['updated']);
 					$gt = get_text("Updated");
 					$message .= "{$gt}: " . format_date_2($t_row['updated']) . $eol;
 				    break;
@@ -2056,6 +2095,7 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 					$message .= (empty($t_row['comments']))? "": "{$gt}: ".wordwrap($t_row['comments']).$eol;
 				    break;
 				case "M":
+//					snap(__LINE__, $t_row['problemstart']);
 					$gt = get_text("Run Start");
 					$message .= get_text("{$gt}") . ": " . format_date_2($t_row['problemstart']). $_end .$eol;
 				    break;
@@ -2129,6 +2169,7 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 						$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	// 3/22/09
 						if (mysql_num_rows ($result)>0) {
 							$f_row = stripslashes_deep(mysql_fetch_array($result));
+							$message .= "{$gt}: {$f_row['handle']}\n";
 							$message .= "{$gt}: {$f_row['beds_info']}\n";
 							}
 						}
@@ -2146,19 +2187,18 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 						while($u_row = stripslashes_deep(mysql_fetch_assoc($result_u))) {
 							$message .= "{$u_row['handle']},";
 							}
+						$message .= $eol;		// 4/1/2013
 						}	
 					unset ($result_u);
 					break;
 					
 				case "V":
-					$gt = get_text("Scheduled For");
-					if($t_row['booked_date'] == NULL) {
-						$message .= "" . $_end .$eol;
-						} else {
+					if (is_date($t_row['booked_date'])) {
+						$gt = get_text("Scheduled For");
 						$message .= get_text("{$gt}") . ": " . format_date_2($t_row['booked_date']). $_end .$eol;
 						}
 				    break;
-				
+
 				default:
 //				    $message = "Match string error:" . $match_str[$i]. " " . $match_str . $eol ;
 					@session_start();
@@ -2890,7 +2930,9 @@ function get_disp_status ($row_in) {			// 4/26/11
 	if (is_date($dispatched))	{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[0]}&nbsp;" . elapsed ($dispatched) . "</SPAN>";}
 	}
 														
-function set_u_updated ($in_assign) {			// given a disaptch record id, updates unit data - 9/1/10									
+// 5/11/2013 fix to remove '_on'  change ' _by' to 'user_id' from set_u_updated () sql 
+function set_u_updated ($in_assign) {			// given a disaptch record id, updates unit data - 9/1/10
+	snap(basename(__FILE__) . __LINE__, $in_assign);
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` =  {$in_assign} LIMIT 1";
 	$result = mysql_query($query) or do_error($query, "", mysql_error(), basename( __FILE__), __LINE__);
 	$row_temp = mysql_fetch_assoc($result);					// 
@@ -2898,9 +2940,7 @@ function set_u_updated ($in_assign) {			// given a disaptch record id, updates u
 	$user = quote_smart(trim($_SESSION['user_id']));
 	$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET
 		`updated`= 			{$now},
-		`_on`= 				{$now},
-		`user_id`=  		{$user},
-		`_by`=   			{$user},
+		`user_id`=   		{$user},
 		`_from`= " . 		quote_smart(trim($_SERVER['REMOTE_ADDR'])) . "
 		WHERE `id`=			{$row_temp['responder_id']}";
 	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -3120,7 +3160,6 @@ function get_index_str ($in_str) {
 		}
 
 	function format_date_2($date_in){								// datetime: 2012-11-03 14:13:45 - 11/29/2012
-
 		$date_wk = (strlen(trim($date_in))== 19)? strtotime(trim($date_in)) : trim($date_in) ;			// force to integer
 		if (get_variable('locale')==1)	{ return date("j/n/y H:i", intval($date_wk));}					// 08/27/10 - Revised to show UK format for locale = 1	
 		else 							{ return date(get_variable("date_format"), intval($date_wk)); }
@@ -3130,4 +3169,13 @@ function get_index_str ($in_str) {
 		do_log($GLOBALS['LOG_ERROR'], 0, 0, $err_arg);		// logs supplied error message
 		}				// end function log_error()
 
+	function get_maptype_str () {			// 3/27/2013
+		switch(get_variable('maptype')) { 
+			case "1":			return "ROADMAP";			break;
+			case "2":			return "SATELLITE";			break;	
+			case "3":			return "TERRAIN";			break;	
+			case "4":			return "HYBRID";			break;
+			default:			return "HYBRID";
+			}	// end switch
+		}	// end function get maptype str
 ?>

@@ -7,7 +7,7 @@ if(!(file_exists("./incs/mysql.inc.php"))) {
 
 require_once('./incs/functions.inc.php');	
 
-$version = "2.30C Beta - 04/17/13";	
+$version = "2.40A Beta - 05/17/13";	
 
 /*
 10/1/08 added error reporting
@@ -89,6 +89,7 @@ $version = "2.30C Beta - 04/17/13";
 5/11/12 Added code for invocation of quick start choice on first login.
 6/21/12 Version number change
 10/23/12 New code for Messaging and Portal
+04/02/13 version no. change only
 */
 
 //snap(basename(__FILE__) . " " . __LINE__  , count($_SESSION));
@@ -577,7 +578,7 @@ if (!($version == $old_version)) {		// current? - 5/19/10 ======================
 			}		
 		unset ($result);	
 								// 10/19/10
-		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]log` CHANGE `info` `info` VARCHAR( 256 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ";
+		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]log` CHANGE `info` `info` VARCHAR( 2049 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ";
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		
 		do_setting ('internet','1');						// 8/5/10 - just in case

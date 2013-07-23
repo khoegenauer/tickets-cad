@@ -4,7 +4,7 @@ header('Content-type: text/css');
 3/15/11 new file - dynamic css file
 10/23/12 Added styles for messaging
 */
-require_once('incs/functions.inc.php');
+require_once('../../incs/functions.inc.php');
 session_start();
 $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_night']))? $_SESSION['day_night'] : 'Day';
 $alt_day_night = ($day_night=="Day") ? "Night" : "Day"; 
@@ -14,7 +14,7 @@ BODY {
 	background-color: <?php print get_css("page_background", $day_night);?>;
 	margin:0;
 	font-weight: normal; 
-	font-size: 12px; 
+	font-size: 0.75em; 
 	color: <?php print get_css("normal_text", $day_night);?>; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none; 
@@ -27,7 +27,7 @@ TABLE {
 INPUT { 
 	background-color: <?php print get_css("form_input_background", $day_night);?>;
 	font-weight: normal; 
-	font-size: 12px; 
+	font-size: .9em; 
 	color: <?php print get_css("form_input_text", $day_night);?>; 
 	font-style: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
@@ -37,7 +37,7 @@ INPUT {
 TEXTAREA { 
 	background-color: <?php print get_css("form_input_background", $day_night);?>;
 	font-weight: normal; 
-	font-size: 12px; 
+	font-size: .9em; 
 	color: <?php print get_css("form_input_text", $day_night);?>; 
 	font-style: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
@@ -47,7 +47,7 @@ TEXTAREA {
 SELECT {
 	background-color: <?php print get_css("select_menu_background", $day_night);?>; 
 	font-weight: normal; 
-	font-size: 12px; 
+	font-size: .9em; 
 	color: <?php print get_css("select_menu_text", $day_night);?>; 
 	font-style: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
@@ -56,7 +56,7 @@ SELECT {
 	
 A { 
 	font-weight: bold; 
-	font-size: 12px; 
+	font-size: 0.75em; 
 	color: <?php print get_css("links", $day_night);?>; 
 	font-style: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
@@ -65,7 +65,7 @@ A {
 
 li.mylink { 
 	font-weight: bold; 
-	font-size: 24px; 
+	font-size: 1.2em; 
 	color: <?php print get_css("links", $day_night);?>; 
 	font-style: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
@@ -75,7 +75,7 @@ li.mylink {
 TD { 
 	background-color: inherit; 
 	font-weight: normal; 
-	font-size: 10px; 
+	font-size: 0.6em; 
 	color: #000000; 
 	font-style: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
@@ -86,7 +86,7 @@ TD {
 .print_TD { 
 	background-color: #FFFFFF; 
 	font-weight: normal; 
-	font-size: 12px; 
+	font-size: 0.75em; 
 	color: #000000; 
 	font-style: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
@@ -97,38 +97,16 @@ TD {
 	background-color: inherit;
 	color: <?php print get_css("label_text", $day_night);?>; 
 	font-weight: bold; 
-	font-size: 12px; 
+	font-size: .9em; 
 	font-style: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
-	}
-	
-.td_fs_buttons {
-	background-color: <?php print get_css("page_background", $day_night);?>;
-	color: <?php print get_css("normal_text", $day_night);?>
-	}
-
-.fs_buttons {
-	font-weight: bold; 
-	font-size: 1.2em; 
-	font-style: normal; 
-	font-family: Verdana, Arial, Helvetica, sans-serif; 
-	text-decoration: none;
-	}	
-	
-.td_mand { 
-	font-weight: bold; 
-	font-size: 12px; 
-	color: #CC0000; 
-	font-style: normal; 
-	font-family: Verdana, Arial, Helvetica, sans-serif; 
-	text-decoration: none; 
 	}
 	
 .td_data { 
 	white-space:nowrap; 
 	background-color: inherit;
-	font-size: 12px; 
+	font-size: .9em; 
 	color: #000000; 
 	font-style: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
@@ -137,25 +115,17 @@ TD {
 
 .emph { 
 	background-color: #99b2cc;
-	font-size: 12px; 
+	font-size: 0.75em; 
 	color: #ffffff; 
 	font-style: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
 	}
 
-.nodir { 
-	background-color: #99b2cc;
-	font-size: 12px; 
-	color: #ffffff; 
-	font-style: normal; 
-	font-family: Verdana, Arial, Helvetica, sans-serif; 
-	text-decoration: none;
-	}
-	
+
 #td_header { 
 	font-weight: bold; 
-	font-size: 15px; 
+	font-size: 0.8em;  
 	color: <?php print get_css("header_text", $day_night);?>;
 	background-color: <?php print get_css("header_background", $day_night);?>;
 	font-style: normal; 
@@ -165,7 +135,7 @@ TD {
 	
 .td_link { 
 	font-weight: bold; 
-	font-size: 15px; 
+	font-size: 0.8em; 
 	color: #000099; 
 	font-style: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
@@ -173,7 +143,7 @@ TD {
 	
 .header { 
 	font-weight: bold; 
-	font-size: 12pt; 
+	font-size: 0.75em; 
 	color: <?php print get_css("header_text", $day_night);?>;
 	background-color: <?php print get_css("header_background", $day_night);?>;
 	font-style: normal; 
@@ -183,7 +153,7 @@ TD {
 	
 .header_reverse { 
 	font-weight: bold; 
-	font-size: 12pt; 
+	font-size: 0.75em; 
 	color: <?php print get_css("header_background", $day_night);?>;
 	background-color: <?php print get_css("header_text", $day_night);?>;
 	font-style: normal; 
@@ -191,18 +161,9 @@ TD {
 	text-decoration: none;
 	}
 
-.update_conf { 
-	font-weight: bold; 
-	font-size: 12pt; 
-	color: <?php print get_css("header_text", $day_night);?>;
-	font-style: normal; 
-	font-family: Verdana, Arial, Helvetica, sans-serif; 
-	text-decoration: none;
-	}
-	
 .text { 
 	font-weight: normal; 
-	font-size: 12px; 
+	font-size: 0.75em; 
 	color:	#000000; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
@@ -210,7 +171,7 @@ TD {
 	
 .warn { 
 	font-weight: normal; 
-	font-size: 12px; 
+	font-size: 0.75em; 
 	color: #CC0000; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
@@ -218,7 +179,7 @@ TD {
 	
 .severity_high { 
 	font-weight: bold; 
-	font-size: 10px; 
+	font-size: 0.6em; 
 	color: #C00000; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
@@ -226,7 +187,7 @@ TD {
 	
 .severity_medium { 
 	font-weight: bold; 
-	font-size: 10px; 
+	font-size: 0.6em; 
 	color: #008000; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
@@ -234,25 +195,15 @@ TD {
 	
 .severity_normal { 
 	font-weight: bold; 
-	font-size: 10px; 
+	font-size: 0.6em; 
 	color: #0000FF; 
-	font-family: Verdana, Arial, Helvetica, sans-serif; 
-	text-decoration: none; 
-	}
-
-.sev_counts { 
-	font-weight: bold; 
-	font-size: 10px; 
-	background-color: #CECECE;
-	margin-left: 40px; 
-	margin-right: 40px; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none; 
 	}
 	
 .text_green { 
 	font-weight: normal; 
-	font-size: 10px; 
+	font-size: 0.6em; 
 	color: #009000; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
@@ -260,7 +211,7 @@ TD {
 	
 .text_orange { 
 	font-weight: normal; 
-	font-size: 10px; 
+	font-size: 0.6em; 
 	color: #EBA500; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
@@ -268,7 +219,7 @@ TD {
 	
 .text_blue { 
 	font-weight: normal; 
-	font-size: 10px; 
+	font-size: 0.6em; 
 	color: #0000E0; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
@@ -276,7 +227,7 @@ TD {
 	
 .text_red { 
 	font-weight: normal; 
-	font-size: 10px; 
+	font-size: 0.6em; 
 	color: #C00000; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
@@ -284,7 +235,7 @@ TD {
 	
 .text_black { 
 	font-weight: normal; 
-	font-size: 10px; 
+	font-size: 0.6em; 
 	color: #000000; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
@@ -292,7 +243,7 @@ TD {
 	
 .text_small { 
 	font-weight: normal; 
-	font-size: 8px; 
+	font-size: 0.5em; 
 	color: #000000; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
@@ -300,7 +251,7 @@ TD {
 	
 .text_medium { 
 	font-weight: normal; 
-	font-size: 10px; 
+	font-size: 0.6em; 
 	color: #000000; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
@@ -308,22 +259,17 @@ TD {
 	
 .text_big { 
 	font-weight: normal; 
-	font-size: 14px; 
+	font-size: 9em; 
 	color: #000000; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
-	}
-	
-.found  { 
-	background-color: #000000; 
-	color: #ffffff;
 	}
 	
 .scheduled {
 	white-space:nowrap; 
 	background-color: #0000FF; 
 	color: #FFFFFF; 
-	font-size: 12px; 
+	font-size: 0.875em; 
 	font-weight: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none; 
@@ -333,7 +279,7 @@ TD {
 	white-space:nowrap; 
 	background-color: #FF0000; 
 	color: #FFFF00; 
-	font-size: 12px; 
+	font-size: 0.875em; 
 	font-weight: bold; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none; 
@@ -341,34 +287,19 @@ TD {
 
 .spacer {
 	background-color: <?php print get_css("row_spacer", $day_night);?>;
-	font-size: 3px;
+	font-size: 0.4em;
 	height: 2px;
 	}
 
 .input { 
 	background-color: <?php print get_css("form_input_background", $day_night);?>;
 	font-weight: normal; 
-	font-size: 12px; 
+	font-size: 0.875em; 
 	color: <?php print get_css("form_input_text", $day_night);?>; 
 	font-style: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none; 
 	}
-	
-#detailmap, #mapDiv { 
-	font: normal 10px verdana; 
-	}
-	
-#detailmap {
-	width: 300px; 
-	height: 120px; 
-	border:1px solid gray; 
-	}
-
-#infowin {
-	width:	600px; 
-	overflow:auto; 
-	} 
 	
 tr.even { 
 	background-color: <?php print get_css("row_light", $day_night);?>;
@@ -396,7 +327,7 @@ tr.plain {
 tr.heading { 
 	background-color: <?php print get_css("row_heading_background", $day_night);?>;
 	color: <?php print get_css("row_heading_text", $day_night);?>;	
-	font-size: 14px; 
+	font-size: 0.875em; 
 	font-weight: bold; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 	
 	}
@@ -404,23 +335,38 @@ tr.heading {
 .heading { 
 	background-color: <?php print get_css("row_heading_background", $day_night);?>;
 	color: <?php print get_css("row_heading_text", $day_night);?>;	
-	font-size: 14px; 
+	font-size: 0.7em; 
+	font-weight: bold; 
+	font-family: Verdana, Arial, Helvetica, sans-serif; 	
+	}	
+
+.list_heading { 
+	background-color: <?php print get_css("row_heading_background", $day_night);?>;
+	color: <?php print get_css("row_heading_text", $day_night);?>;	
+	font-size: 0.8em; 
 	font-weight: bold; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 	
 	}	
 	
-tr.heading_2 { 
-	background-color: <?php print get_css("row_heading_background", $day_night);?>;
-	color: <?php print get_css("row_heading_text", $day_night);?>;	
-	font-size: 12px; 
-	font-weight: normal; 
-	font-family: Verdana, Arial, Helvetica, sans-serif; 	
+.list_entry {
+	font-size: 0.6em; 
+	font-weight: bold; 
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	white-space: normal; 
+	word-wrap: break-word; 
+	-ms-word-wrap : sWrap;	
+	}	
+	
+.list_row {
+	border-bottom: 2px solid #000000; 
+	height: 12px; 
+	text-align: left;	
 	}	
 
 tr.spacer { 
 	background-color: <?php print get_css("row_spacer", $day_night);?>;
 	height: 2px;
-	font-size: 3px;
+	font-size: 0.4em;
 	}	
 	
 tr.fs_buttons { 
@@ -434,7 +380,7 @@ td {
 	}
 	
 .hovermenu ul {
-	font: bold 13px arial;
+	font: bold 0.8em arial;
 	padding-left: 0;
 	margin-left: 0;
 	height: 20px;
@@ -489,7 +435,7 @@ checkbox {
 	}
 	
 *.unselected {
-	font: bold 13px arial;
+	font: bold 0.8em arial;
 	padding-left: 0;
 	margin-left: 0;
 	height: 20px;
@@ -500,7 +446,7 @@ checkbox {
 	}
 	
 *.selected {
-	font: bold 13px arial;
+	font: bold 0.8em arial;
 	color: <?php print get_css("page_background", $day_night);?>;
 	background-color: <?php print get_css("links", $day_night);?>;
 	border-style: outset;
@@ -508,7 +454,7 @@ checkbox {
 	}
 
 select.sit { 
-	font: 9px Verdana, Geneva, Arial, Helvetica, sans-serif; 
+	font: 0.6em Verdana, Geneva, Arial, Helvetica, sans-serif; 
 	background-color: transparent; 
 	color: #102132; 
 	border: none;
@@ -541,44 +487,6 @@ select.sit {
 	color:black;
 	font-weight:bold;
 	}
-
-.cat_button {
-	font-size: 11px;
-	font-weight: bold;	
-	color: <?php print get_css("label_text", $day_night);?>;
-	float:left; 
-	padding:2px; 
-	vertical-align:middle;
-	}
-	
-.pri_button {
-	font-size: 11px;
-	font-weight: bold;	
-	color: <?php print get_css("label_text", $day_night);?>; 
-	float:left; 
-	padding:2px; 
-	vertical-align:middle; 
-	}
-	
-.cat_button_fs {
-	text-align: left;
-	font-size: 11px;
-	font-weight: bold;	
-	color: <?php print get_css("label_text", $day_night);?>; 
-	float:left; 
-	padding:2px; 
-	vertical-align:middle;
-	}
-	
-.pri_button_fs {
-	text-align: left;
-	font-size: 11px;
-	font-weight: bold;
-	color: <?php print get_css("label_text", $day_night);?>; 
-	float:left; 
-	padding:2px; 
-	vertical-align:middle; 
-	}	
 
 .conf_button {
 	font-size: 10px; 
@@ -625,31 +533,6 @@ select.sit {
 	color: <?php print get_css("legend", $day_night);?>; 
 	}
 
-.full_screen_buttons {
-	font: bold 15px arial;
-	color: <?php print get_css("legend", $day_night);?>; 
-	}
-
-.mobile { 
-	background-color: <?php print get_css("page_background", $day_night);?>;
-	color: <?php print get_css("normal_text", $day_night);?>; 
-	}
-
-#directions {
-	background-color: <?php print get_css("row_light", $day_night);?>;
-	color: <?php print get_css("row_light_text", $day_night);?>;
-	}
-
-#the_ticket {
-	background-color: <?php print get_css("row_light", $day_night);?>;
-	color: <?php print get_css("row_light_text", $day_night);?>;
-	}
-	
-#disp_details {
-	background-color: <?php print get_css("row_light", $day_night);?>;
-	color: <?php print get_css("row_light_text", $day_night);?>;
-	}
-	
 #the_messages {
 	background-color: <?php print get_css("row_light", $day_night);?>;
 	color: <?php print get_css("row_light_text", $day_night);?>;
@@ -713,7 +596,7 @@ select.sit {
 	
 .plain 	{ 
 	margin-left: 4px;  
-	font: normal 12px Arial, Helvetica, sans-serif; 
+	font: normal 0.6em Arial, Helvetica, sans-serif; 
 	color:#000000; 
 	border: 1px outset #FFFFFF;
 	padding: 4px 0.5em;
@@ -726,7 +609,7 @@ select.sit {
 	
 .hover 	{ 
 	margin-left: 4px;  
-	font: normal 12px Arial, Helvetica, sans-serif; 
+	font: normal 0.6em Arial, Helvetica, sans-serif; 
 	color:#000000; 
 	border: 1px inset #FFFFFF;
 	padding: 4px 0.5em;
@@ -737,91 +620,4 @@ select.sit {
 	cursor: pointer;
 	}
 
-.fence_warn {
-	background-color: #FF0000; 
-	font-weight: bold;
-	}
 
-.box {
-	background-color: #DEE3E7; 
-	border: 2px outset #606060; 
-	color: #000000; 
-	padding: 0px; 
-	position: absolute; 
-	z-index:1000; 
-	width: 180px; 
-	}
-	
-.bar { 
-	background-color: #FFFFFF; 
-	border-bottom: 2px solid #000000; 
-	cursor: move; 
-	font-weight: bold; 
-	padding: 2px 1em 2px 1em;  
-	z-index:1000; 
-	text-align: center;
-	}
-.bar_header {
-	height: 20px; 
-	background-color: #CECECE; 
-	font-weight: bold; 
-	padding: 2px 1em 2px 1em;  
-	z-index:1000; 
-	text-align: center;
-	}
-	
-.content { 
-	padding: 1em; 
-	float: left; 
-	}
-	
-.cols_h {
-	font-size: 10px; 
-	font-weight: bold; 
-	display: inline-block; 	
-	background-color: #CECECE; 
-	color: #000000;
-	padding-top: 3px; 
-	padding-bottom: 3px; 
-	border: 1px outset #DEDEDE;
-	}
-	
-.msg_col_h {
-	font-size: 10px; 
-	font-weight: bold; 
-	display: inline-block; 
-	background-color: #CECECE; 
-	color: #000000;	
-	padding-top: 3px; 
-	padding-bottom: 3px; 	
-	border: 1px outset #FFFFFF;
-	}
-	
-.cols {
-	display: inline-block; 
-	white-space: normal; 
-	word-wrap: break-word; 
-	padding-top: 5px; 
-	padding-bottom: 5px; 
-	height: auto; 
-	-ms-word-wrap : sWrap;
-	}
-	
-.msg_col {
-	background-color: #FFFFFF; 
-	display: inline-block; 
-	white-space: normal; 
-	word-wrap: break-word; 
-	padding-top: 5px; 
-	padding-bottom: 5px; 
-	-ms-word-wrap : sWrap; 
-	}	
-	
-.msg_div {
-	background-color: #FFFFFF; 
-	max-height: 150px; 
-	overflow-y: auto; 
-	overflow-x: hidden; 
-	word-wrap: break-word; 
-	display: block;
-	}

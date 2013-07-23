@@ -311,7 +311,7 @@ function get_sess_boundaries() {
 	while($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 		$all_boundaries[] = $row['ring_fence'];		
 		}	//	End while		
-		
+	
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` `l`
 				LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON ( `l`.`id` = `r`.`excl_zone`)
 				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `r`.`id` = `a`.`resource_id` )	
@@ -319,8 +319,8 @@ function get_sess_boundaries() {
 	$result = mysql_query($query)or do_error($query, mysql_error(), basename(__FILE__), __LINE__);
 	while($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 		$all_boundaries[] = $row['excl_zone'];		
-		}	//	End while			
-	return $all_boundaries;
+		}	//	End while
+	return array_unique($all_boundaries);
 	}
 
 function get_bnd_session() {	

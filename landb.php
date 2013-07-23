@@ -92,8 +92,12 @@ $_func = (empty($_POST)) ?  "l" : $_POST['_func'];							// list mode as default
 ?>
 <SCRIPT SRC="./js/jscolor/jscolor.js"  type="text/javascript"></SCRIPT>
 
-<SCRIPT src="http://maps.google.com/maps?file=api&amp;v=2.173&amp;sensor=false&amp;key=<?php print get_variable('gmaps_api_key');?>""></SCRIPT>
-<SCRIPT src = "./js/ELabel.js"></SCRIPT>
+<?php
+	$api_key = trim(get_variable('gmaps_api_key'));
+	$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
+?>
+<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>sensor=false"></SCRIPT>
+<SCRIPT src = "./js/elabel_v3.js"></SCRIPT>
 
 <SCRIPT>
 	var map;		// note global
@@ -168,17 +172,20 @@ function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, f
 	
 
 function drawBanner(point, html, text, font_size) {        // Create the Label
-	var invisibleIcon = new GIcon(G_DEFAULT_ICON, "./markers/markerTransparent.png");      // Custom icon is identical to the default icon, except invisible
-
+	var icon = "./markers/markerTransparent.png";      // Custom icon is identical to the default icon, except invisible
 	map.setCenter(point, 8);
 	var style_str = 'background-color:transparent;font-weight:bold;border:0px black solid;white-space:nowrap; font-size:' + font_size + 'em; font-family:arial; opacity: 0.75; font-style:italic;';
 	var contents = '<div><div style= "' + style_str + '">'+text+'<\/div><\/div>';
 	var label=new ELabel(point, contents, null, new GSize(-8,4), 75, 1);
 	map.addOverlay(label);
-	
-	var marker = new GMarker(point,invisibleIcon);	        // Create an invisible GMarker
+	var marker = new google.maps.Marker({
+		position: point, 
+		icon: icon, 
+		draggable: true, 
+		bouncy:false, 
+		dragCrossMove:true
+	});
 //	map.addOverlay(marker);
-	
 	}				// end function draw Banner()
 	
 var circle_OK = false;	
@@ -228,8 +235,6 @@ function chk_circle(theForm) {
 ?>
 	function do_display(the_type) {
 		theForm  = (document.u)? document.u : document.c ;
-		map.clearOverlays();
-		
 		switch (the_type) {
 		case "p":				// poly
 			points.length = 0;							// build points array
@@ -245,28 +250,50 @@ function chk_circle(theForm) {
 
 			if (theForm.frm_filled.value == 1) {		 // Polygon mode - filled
 				points.push(markers[0].getLatLng());
-				poly = new GPolygon(points, add_hash(strokeColor), strokeWidth, strokeOpacity, add_hash(fillColor), fillOpacity);
+				var poly = new google.maps.Polygon({
+					paths: 			points,
+					strokeColor: 	add_hash(strokeColor),
+					strokeOpacity: 	strokeOpacity,
+					strokeWeight: 	strokeWidth,
+					fillColor: 		add_hash(fillColor),
+					fillOpacity: 	fillOpacity
+					});				
 				}
 			 else {		 								// Polyline mode - no fill
-				poly = new GPolyline(points, add_hash(strokeColor), strokeWidth, strokeOpacity);
+				var poly = new google.maps.Polygon({
+					paths: 			points,
+					strokeColor: 	add_hash(strokeColor),
+					strokeOpacity: 	strokeOpacity,
+					strokeWeight: 	strokeWidth
+					});					
 				var length = poly.getLength()/1000;
 				}
-			map.addOverlay(poly);
+			polyline.setMap(map);	
 			break;					// end poly
 		
 		case "c":				// circle
 			var theForm = document.c;
 			var lat = parseFloat(points[0].lat().toFixed(6));
 			var lng = parseFloat(points[0].lng().toFixed(6));
-			var radius = parseFloat(theForm.circ_radius.value);
+			var radius = parseFloat(theForm.circ_radius.value);		
+			var center = new google.maps.LatLng(lat, lng);		
 			strokeColor = theForm.frm_line_color.value;
 			strokeWidth = parseInt(theForm.frm_line_width.value);
 			strokeOpacity = parseFloat(theForm.frm_line_opacity.value);
 			fillColor = theForm.frm_fill_color.value;
-//			fillOpacity = parseFloat(theForm.frm_fill_opacity.value);
-			fillOpacity = (theForm.frm_filled.value = 0)? 0: parseFloat(theForm.frm_fill_opacity.value);
-
-			drawCircle(lat, lng, radius, add_hash(strokeColor), strokeWidth, strokeOpacity, add_hash(fillColor), fillOpacity);		// 265
+			fillOpacity = (theForm.frm_filled.value = 0)? 0: parseFloat(theForm.frm_fill_opacity.value);			
+			
+			var	draw_circle = new google.maps.Circle({
+				center: center,
+				radius: radius,
+				strokeColor: strokeColor,
+				strokeOpacity: strokeOpacity,
+				strokeWeight: strokeWidth,
+				fillColor: fillColor,
+				fillOpacity: 0.35,
+				map: map
+				});
+			draw_circle.setMap(map);
 			break;		
 		
 		case "t":				// text
@@ -371,6 +398,7 @@ function showTooltip(marker) { // Display tooltips
 
 
 function leftClick(overlay, point) {
+	alert(378);
 <?php 
 	if ($_func == "r") {	
 		echo "\n\t\t return;\n";		// bypass click handling
@@ -384,25 +412,31 @@ function leftClick(overlay, point) {
 		addIcon(icon);	 
 <?php $do_drag = ($_func == "r")? "false": "true"; ?>
 										  				// Make markers draggable
-		var marker = new GMarker(point, {icon:icon, draggable:<?php echo $do_drag;?>, bouncy:false, dragCrossMove:true});
-		map.addOverlay(marker);
+		var marker = new google.maps.Marker({
+			position:point, 
+			icon:icon, 
+			draggable:<?php echo $do_drag;?>, 
+			bouncy:false, 
+			dragCrossMove:true
+			});
+		myMarker.setMap(map);		// add marker with icon		
 		marker.content = count;
 		markers.push(marker);
 		marker.tooltip = "Point "+ count;
-		GEvent.addListener(marker, "mouseover", function() {
-		 showTooltip(marker);
+		google.maps.event.addListener(marker, "mouseover", function() {		// here for both side bar and icon click		
+			showTooltip(marker);
 		});
-		GEvent.addListener(marker, "mouseout", function() {
-		 tooltip.style.display = "none";
+		google.maps.event.addListener(marker, "mouseout", function() {		// here for both side bar and icon click			
+			tooltip.style.display = "none";
 		});
-	
-		GEvent.addListener(marker, "drag", function() {	  // Drag listener
-		 tooltip.style.display= "none";
-		 drawOverlay();
+
+		google.maps.event.addListener(marker, "drag", function() {		// here for both side bar and icon click			
+			tooltip.style.display= "none";
+			drawOverlay();
 		});
-		
-		GEvent.addListener(marker, "click", function() {  // Click listener to remove a marker
-		 tooltip.style.display = "none";
+
+		google.maps.event.addListener(marker, "click", function() {		// here for both side bar and icon click			
+			tooltip.style.display = "none";
 	
 		for(var n = 0; n < markers.length; n++) {	  // Find out which marker to remove
 		 if(markers[n] == marker) {
@@ -462,14 +496,25 @@ function to_view(id) {						// invoke switch case 'u' for selected id
 	}
 	
 
-	function buildMap_l() {				// 'list' version
-	
+	function buildMap_l() {				// 'list' version	
 		var container = document.getElementById("map");
-		map = new GMap2(container, {draggableCursor:"auto", draggingCursor:"move"});
+		var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
+		var mapOptions = {
+			zoom: <?php print get_variable('def_zoom');?>,
+			center: myLatlng,
+			panControl: true,
+		    zoomControl: true,
+		    scaleControl: true,
+		    mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
+			}	
+
+		var map = new google.maps.Map($('map'), mapOptions);				// 481
+		map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
+		var bounds = new google.maps.LatLngBounds();		// Initialize bounds for the map
+
 		tooltip = document.createElement("DIV"); // Add a DIV element for toolips
 		tooltip.className = "tooltip";
-		map.getPane(G_MAP_MARKER_PANE).appendChild(tooltip);
-		var bounds = new GLatLngBounds();						// create  bounding box for centering		
+//		map.getPane(G_MAP_MARKER_PANE).appendChild(tooltip);
 		var points = new Array();
 <?php
 		$query = "SELECT * FROM `{$tablename}`";
@@ -485,44 +530,45 @@ function to_view(id) {						// invoke switch case 'u' for selected id
 			$use_w_f = ($use_with_f==1) ? "CHECKED" : "";
 			$use_w_u_ex = ($use_with_u_ex==1) ? "CHECKED" : "";
 			$use_w_u_rf = ($use_with_u_rf==1) ? "CHECKED" : "";
+
 			
 			switch ($row['line_type']) {
 				case "p":		// poly
 					$points = explode (";", $line_data);
-					echo "\n\tvar points = new Array();\n";
-		
-					for ($i = 0; $i<count($points); $i++) {
+					for ($i = 0; $i<count($points); $i++) {		//
 						$coords = explode (",", $points[$i]);
 ?>
-						var thepoint = new GLatLng(<?php print $coords[0];?>, <?php print $coords[1];?>);
+						var thepoint = new google.maps.LatLng(<?php echo round ( $coords[0], 6);?>, <?php echo round ( $coords[1], 6);?>); 
 						bounds.extend(thepoint);
-						points.push(thepoint);
-		
+						points.push(thepoint);		
 <?php					}			// end for ($i = 0 ... )
+
 			 	if ((intval($filled) == 1) && (count($points) > 2)) {?>
-						var polyline = new GPolygon(points,add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>);
+//						var polyline = new google.maps(points,add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>);	// 698
+						var polyline = new google.maps.Polyline({		// Create the polyline
+							paths: points,
+							map: map,
+							strokeColor: 	add_hash("<?php echo $line_color;?>"),
+							strokeOpacity: 	<?php echo $line_opacity;?>,
+							strokeWeight: 	<?php echo $line_width;?>,
+							fillColor: 		add_hash("<?php echo $fill_color;?>"),
+							fillOpacity: 	<?php echo $fill_opacity;?>
+							});
 <?php			} else {?>
-				        var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>);
-<?php			} ?>				        
-						map.addOverlay(polyline);
-<?php				
-					break;
-			
-				case "c":		// circle
-//					dump($row);
-					$temp = explode (";", $line_data);
-					$radius = $temp[1];
-					$coords = explode (",", $temp[0]);
-					$lat = $coords[0];
-					$lng = $coords[1];
-					$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
-					
-					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_opacity}, {$line_width}, add_hash('{$fill_color}'), {$fill_opacity}); // 513\n";
 
-?>
+// <?php echo __LINE__; ?>
 
-//		drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity);		
-<?php
+						var polygon = new google.maps.Polygon({		// Create the polygon
+							paths: points,
+							map: map,
+							strokeColor: add_hash("<?php print $line_color;?>"),
+							strokeOpacity: <?php print $line_opacity;?>,
+							strokeWeight: <?php print $line_width;?>,
+							fillColor: add_hash("<?php print $fill_color;?>"),
+							fillOpacity: <?php print $fill_opacity;?>
+							});
+<?php			} 
+
 					break;
 			
 				case "t":		// banner
@@ -531,7 +577,7 @@ function to_view(id) {						// invoke switch case 'u' for selected id
 					$temp = explode (";", $line_data);
 					$banner = $temp[1];
 					$coords = explode (",", $temp[0]);
-					echo "\n var point = new GLatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
+					echo "\n var point = new google.maps.LatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
 					$the_banner = htmlentities($banner, ENT_QUOTES);
 					$the_width = intval( trim($line_width), 10);		// font size
 					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width});\n";
@@ -541,17 +587,33 @@ function to_view(id) {						// invoke switch case 'u' for selected id
 				
 		}			// end while ()
 		
-		unset($query, $result);
+	unset($query, $result);
+	$dzf = get_variable('def_zoom_fixed');
+	print "\tvar map_is_fixed = ";
+	print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "true;\n":"false;\n";
+
 ?>
-		map.setCenter(new GLatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo (get_variable('def_zoom')-4); ?>);
+	if (!(map_is_fixed)) {
+		if (points.length==0) {		// any? - 6/18/12
+			map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
+			}
+		else {
+			map.fitBounds(bounds);					// Now fit the map to the bounds  - ({Z:{b:33.7489954, d:49.3844788492429}, ca:{b:-97.23322530034568, d:-76.612189}})
+			var listener = google.maps.event.addListenerOnce (map, "idle", function() { 
+				if (map.getZoom() > 16) map.setZoom(15); 
+				});			
+			}
+		}
+
+/*
 		map.addControl(new GLargeMapControl3D()); 									// Zoom control
 		map.addMapType(G_PHYSICAL_MAP);
 		var hierarchy = new GHierarchicalMapTypeControl(); 							// Create a hierarchical map type control
 		hierarchy.addRelationship(G_SATELLITE_MAP, G_HYBRID_MAP, "Labels", true);	// make Hybrid the Satellite default
 		map.addControl(hierarchy); 													// add the control to the map
 		map.addControl(new GScaleControl()); 										// Scale bar
-	
-		}				// end function buildMap_l()
+*/	
+		}				// end function buildMap l()
 
 <?php
 	$func = (has_admin())? "u": "v";
@@ -592,7 +654,7 @@ switch ($_func) {
 
 	case "l":				// list
 ?>
-<BODY onLoad = "buildMap_l()" onUnload="GUnload();">
+<BODY onLoad = "buildMap_l()">			<!-- <?php echo basename(__FILE__); ?> -->
 <SCRIPT TYPE='text/javascript' src='./js/wz_tooltip.js'></SCRIPT>
 <TABLE ID = 'outer' ALIGN='center' BORDER = 0 STYLE = 'margin-left:20px;margin-top:20px;'>
 <TR CLASS='even'><TH colspan=2>Map Markup</TH></TR>
@@ -666,25 +728,42 @@ switch ($_func) {
 	case "c":			// create 
 ?>
 <SCRIPT>
-function buildMap_c() {															// 'create' version
+function buildMap_c() {															// 'create' version - 691
 	var container = document.getElementById("map");
-	map = new GMap2(container, {draggableCursor:"auto", draggingCursor:"move"});
 	tooltip = document.createElement("DIV"); 									// Add a DIV element for toolips
 	tooltip.className = "tooltip";
-	map.getPane(G_MAP_MARKER_PANE).appendChild(tooltip);
-	
-	map.setCenter(new GLatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo (get_variable('def_zoom')-4); ?>);
+		var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
+		var mapOptions = {
+			zoom: <?php print get_variable('def_zoom');?>,
+			center: myLatlng,
+			panControl: true,
+		    zoomControl: true,
+		    scaleControl: true,
+		    mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
+			}	
 
+		var map = new google.maps.Map($('map'), mapOptions);				// 705
+		map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
+		
+  		google.maps.event.addListener(map, 'click', function() {
+  			alert(709);
+  			})		// end function
+
+	}				// end function buildMap c()
+		
+/*	
+//	map.getPane(G_MAP_MARKER_PANE).appendChild(tooltip);
+	map = new GMap2(container, {draggableCursor:"auto", draggingCursor:"move"});
+	map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo (get_variable('def_zoom')-4); ?>);
 	map.addControl(new GLargeMapControl3D()); 									// Zoom control
 	map.addMapType(G_PHYSICAL_MAP);
 	var hierarchy = new GHierarchicalMapTypeControl(); 							// Create a hierarchical map type control
 	hierarchy.addRelationship(G_SATELLITE_MAP, G_HYBRID_MAP, "Labels", true);	// make Hybrid the Satellite default
 	map.addControl(hierarchy); 													// add the control to the map
 	map.addControl(new GScaleControl()); 										// Scale bar
-
 	map.disableDoubleClickZoom();
 	GEvent.addListener(map, "click", leftClick); // Add listener for the click event
-	}				// end function buildMap_c()
+*/	
 
 /*
 	function do_checked(the_Form) {						// 676
@@ -705,7 +784,7 @@ function buildMap_c() {															// 'create' version
 		}
 */
 </SCRIPT>
-<BODY onLoad = "buildMap_c(); do_un_checked(document.c); document.c.frm_name.focus();"  onUnload='GUnload();'>	
+<BODY onLoad = "buildMap_c(); do_un_checked(document.c); document.c.frm_name.focus();">	
 <?php
 	print (array_key_exists("caption", $_POST))? "<H3>{$_POST['caption']}</H3>" : "";
 
@@ -932,7 +1011,7 @@ function buildMap_c() {															// 'create' version
 		map = new GMap2(container, {draggableCursor:"auto", draggingCursor:"move"});
 		tooltip = document.createElement("DIV"); // Add a DIV element for toolips
 		tooltip.className = "tooltip";
-		map.getPane(G_MAP_MARKER_PANE).appendChild(tooltip);
+//		map.getPane(G_MAP_MARKER_PANE).appendChild(tooltip);
 		var bounds = new GLatLngBounds();						// create  bounding box for centering
 		var points = new Array();
 		
@@ -949,7 +1028,7 @@ function buildMap_c() {															// 'create' version
 			for ($i = 0; $i<count($points); $i++) {
 				$coords = explode (",", $points[$i]);
 ?>
-						var thepoint = new GLatLng(<?php print $coords[0];?>, <?php print $coords[1];?>);
+						var thepoint = new google.maps.LatLng(<?php print $coords[0];?>, <?php print $coords[1];?>);
 						bounds.extend(thepoint);
 						points.push(thepoint);
 		
@@ -960,7 +1039,7 @@ function buildMap_c() {															// 'create' version
 				        var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>);
 <?php			} ?>				        
 						map.addOverlay(polyline);
-		map.setCenter(new GLatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo (get_variable('def_zoom')-4); ?>);
+		map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo (get_variable('def_zoom')-4); ?>);
 		map.addControl(new GLargeMapControl3D()); 									// Zoom control
 		map.addMapType(G_PHYSICAL_MAP);
 		var hierarchy = new GHierarchicalMapTypeControl(); 							// Create a hierarchical map type control
@@ -969,7 +1048,7 @@ function buildMap_c() {															// 'create' version
 		map.addControl(new GScaleControl()); 										// Scale bar
 		map.disableDoubleClickZoom();
 	
-		}				// end function buildMap_r()
+		}				// end function buildMap r()
 
 	function fillmap() {
 //	GLog.write("fillmap() 1002");
@@ -978,7 +1057,7 @@ function buildMap_c() {															// 'create' version
 	for ($i = 0; $i< count($points_ary); $i++) {
 		$temp = explode(",", $points_ary[$i]);
 ?>
-		var thepoint = new GLatLng(<?php echo $temp[0];?>, <?php echo $temp[1];?>);
+		var thepoint = new google.maps.LatLng(<?php echo $temp[0];?>, <?php echo $temp[1];?>);
 		bounds.extend(thepoint);
 		do_point(<?php echo $temp[0];?>, <?php echo $temp[1];?>);
 <?php	
@@ -997,7 +1076,7 @@ function buildMap_c() {															// 'create' version
 							// Add a div element for toolips
 		tooltip = document.createElement("div");
 		tooltip.className = "tooltip";
-		map.getPane(G_MAP_MARKER_PANE).appendChild(tooltip);		
+//		map.getPane(G_MAP_MARKER_PANE).appendChild(tooltip);		
 							// Load initial map and a bunch of controls
 		map.addControl(new GLargeMapControl3D()); 									// Zoom control
 		map.addMapType(G_PHYSICAL_MAP);
@@ -1007,11 +1086,11 @@ function buildMap_c() {															// 'create' version
 		map.addControl(new GScaleControl()); 										// Scale bar
 							// Add listener for the click event
 		GEvent.addListener(map, "click", leftClick);
-		}				// end function buildMap_u()
+		}				// end function buildMap u()
 
 
 function do_point(in_lat, in_lng) {
-	var point = new GLatLng( in_lat, in_lng);
+	var point = new google.maps.LatLng( in_lat, in_lng);
 	count++;
 	var icon = new GIcon();	// Red marker icon
 	icon.image = icon_url + "sm_red.png";		// sm_red.png

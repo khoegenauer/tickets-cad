@@ -41,6 +41,7 @@ error_reporting(E_ALL);		// 3/5/12
 6/10/11 Added revisable Title string
 11/7/11	Added Statistics users to count in System Summary
 10/23/12 Added code for messaging and added extra missing settings to reset function
+5/8/2013 date display corrected
  */
 $colors = array ('odd', 'even');
 
@@ -349,7 +350,8 @@ function list_users(){		/* list users */
 		$onclick = (has_admin())? " onClick = \"self.location.href = 'config.php?func=user&id={$row['userid']}' \"": "";
 
 		$level = get_level_text($row['level']);
-		$login = format_date_time($row['login']);
+//		$login = format_date_time($row['login']);		
+		$login = format_sb_date_2($row['login']);		// 5/8/2013
 		$online = ($row['expires'] > $now)? "<IMG SRC = './markers/checked.png' BORDER=0>" : "";
 		print "<TR CLASS='{$colors[$i%2]}' {$onclick}>
 				<TD>{$row['userid']}</TD>

@@ -60,11 +60,8 @@
 // === Returns true if poly contains point
 // === Algorithm shamelessly stolen from http://alienryderflex.com/polygon/ 
 
-/*		3/29/2013  */
-
+/*		3/29/2013
 google.maps.Polygon.prototype.Contains = function(point) {
-	try {
-//	alert(65);
   var j=0;
   var oddNodes = false;
   var x = point.lng();
@@ -82,11 +79,8 @@ google.maps.Polygon.prototype.Contains = function(point) {
     }
   }
   return oddNodes;
-  }		// end try{}
-catch(err){
-	return true;
-	}
 }
+*/
 // === A method which returns the approximate area of a non-intersecting polygon in square metres ===
 // === It doesn't fully account for spechical geometry, so will be inaccurate for large polygons ===
 // === The polygon must not intersect itself ===

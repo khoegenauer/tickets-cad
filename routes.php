@@ -2,6 +2,8 @@
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
 error_reporting (E_ALL  ^ E_DEPRECATED);
 
+$GLOBALS['NM_LAT_VAL'] 		= 0.999999;												// 2/3/2013
+
 $sortby_distance = TRUE;			// user: set to TRUE or FALSE to determine unit ordering
 
 $units_side_bar_height = .6;		// max height of units sidebar as decimal fraction of screen height - default is 0.6 (60%)
@@ -86,6 +88,7 @@ $show_tick_left = FALSE;	// controls left-side vs. right-side appearance of inci
 8/1/11 Added functions do_landb, drawBanner to support banners and boundaries.
 3/13/12 corrected log record written re dispatch
 6/20/12 applied get_text() to "Units"
+3/29/2013 conform to 20C
 */
 
 do_login(basename(__FILE__));		// 
@@ -113,7 +116,6 @@ function get_ticket_id () {				// 5/4/11
 		}								// end if/else
 	}				// end function
 
-$api_key = get_variable('gmaps_api_key');
 $_GET = stripslashes_deep($_GET);
 $eol = "< br />\n";
 
@@ -228,28 +230,39 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 			}
 		return elements;
 		}
+		
+	function CngClass(obj, the_class){
+		$(obj).className=the_class;
+		return true;
+		}	
+		
+	function do_hover (the_id) {
+		CngClass(the_id, 'hover');
+		return true;
+		}
 
+	function do_plain (the_id) {				// 8/21/10
+		CngClass(the_id, 'plain');
+		return true;
+		}
 	String.prototype.trim = function () {									// added 6/10/08
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
 
 	function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity) {		// 8/19/09
-//		drawCircle(53.479874, -2.246704, 10.0, "#000080", 1, 0.75, "#0000FF", .5);
-		var d2r = Math.PI/180;
-		var r2d = 180/Math.PI;
-		var Clat = radius * 0.014483;
-		var Clng = Clat/Math.cos(lat * d2r);
-		var Cpoints = [];
-		for (var i=0; i < 33; i++) {
-			var theta = Math.PI * (i/16);
-			Cy = lat + (Clat * Math.sin(theta));
-			Cx = lng + (Clng * Math.cos(theta));
-			var P = new GPoint(Cx,Cy);
-			Cpoints.push(P);
-			}
-		var polygon = new GPolygon(Cpoints, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity);
-		map.addOverlay(polygon);
-		}
+
+		var circle = new google.maps.Circle({
+				center: new google.maps.LatLng(lat,lng),
+				map: map,
+				fillColor: fillColor,
+				fillOpacity: fillOpacity,
+				strokeColor: strokeColor,
+				strokeOpacity: strokeOpacity,
+				strokeWeight: strokeWidth
+			});
+		circle.setRadius(radius*5000); 
+
+		}		// end drawCircle 
 		
 	function drawBanner(point, html, text, font_size, color) {        // Create the banner
 	//	alert("<?php echo __LINE__;?> " + color);
@@ -272,35 +285,57 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 		return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
 		}			
 			
+//	$query = "SELECT * FROM `{$GLOBALS['mysql_prefix']}mmarkup` WHERE `line_status` = 0 AND (`use_with_bm` = 1 OR `use_with_r` = 1)";
+
 	function do_landb() {				// JS function - 8/1/11
+//		alert(347);
 		var points = new Array();
 <?php
 		$query = "SELECT * FROM `{$GLOBALS['mysql_prefix']}mmarkup` WHERE `line_status` = 0 AND (`use_with_bm` = 1 OR `use_with_r` = 1)";
 		$result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
-
 		while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
 			$empty = FALSE;
 			extract ($row);
 			$name = $row['line_name'];
 			switch ($row['line_type']) {
-				case "p":		// poly
+				case "p":				// poly
 					$points = explode (";", $line_data);
-					echo "\n\tvar points = new Array();\n";
-		
+
+					$sep = "";
+					echo "\n\t var points = [\n";
 					for ($i = 0; $i<count($points); $i++) {
 						$coords = explode (",", $points[$i]);
+						echo	"{$sep}\n\t\tnew google.maps.LatLng({$coords[0]}, {$coords[1]})";
+						$sep = ",";					
+						}			// end for ($i = 0 ... )
+					echo "];\n";
+
+			 	if ((intval($filled) == 1) && (count($points) > 2)) {
 ?>
-						var thepoint = new GLatLng(<?php print $coords[0];?>, <?php print $coords[1];?>);
-						bounds.extend(thepoint);
-						points.push(thepoint);
-		
-<?php					}			// end for ($i = 0 ... )
-			 	if ((intval($filled) == 1) && (count($points) > 2)) {?>
-						var polyline = new GPolygon(points,add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>,add_hash("<?php print $fill_color;?>"), <?php print $fill_opacity;?>);
-<?php			} else {?>
-				        var polyline = new GPolyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>);
-<?php			} ?>
-						map.addOverlay(polyline);
+//					446
+					  polyline = new google.maps.Polygon({
+					    paths: 			 points,
+					    strokeColor: 	 add_hash("<?php echo $line_color;?>"),
+					    strokeOpacity: 	 <?php echo $line_opacity;?>,
+					    strokeWeight: 	 <?php echo $line_width;?>,
+					    fillColor: 		 add_hash("<?php echo $fill_color;?>"),
+					    fillOpacity: 	 <?php echo $fill_opacity;?>
+						});
+
+<?php			} else {
+?>
+//					457
+//				    var polyline = new google.maps.Polyline(points, add_hash("<?php print $line_color;?>"), <?php print $line_width;?>, <?php print $line_opacity;?>);
+					  polyline = new google.maps.Polygon({
+					    paths: 			points,
+					    strokeColor: 	add_hash("<?php echo $line_color;?>"),
+					    strokeOpacity: 	<?php echo $line_opacity;?>,
+					    strokeWeight: 	<?php echo $line_width;?>,
+					    fillColor: 		add_hash("<?php echo $fill_color;?>"),
+					    fillOpacity: 	<?php echo $fill_opacity;?>
+						});
+<?php			} ?>				        
+					polyline.setMap(map);		
 <?php				
 					break;
 			
@@ -312,27 +347,23 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 					$lng = $coords[1];
 					$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
 					
-					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}); // 513\n";
+					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}, {$name}); // 513\n";
 					break;
-			
 				case "t":		// text banner
 
 					$temp = explode (";", $line_data);
 					$banner = $temp[1];
 					$coords = explode (",", $temp[0]);
-					echo "\n var point = new GLatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
+					echo "\n var point = new google.maps.LatLng(parseFloat({$coords[0]}) , parseFloat({$coords[1]}));\n";
 					$the_banner = htmlentities($banner, ENT_QUOTES);
 					$the_width = intval( trim($line_width), 10);		// font size
 					echo "\n drawBanner( point, '{$the_banner}', '{$the_banner}', {$the_width});\n";
 					break;
-			
 				}	// end switch
-				
 		}			// end while ()
-		
 		unset($query, $result);
 ?>
-		}		// end function do_landb()
+		}		// end function do landb()
 
 	var to_visible = "visible";
 	var to_hidden = "hidden";
@@ -679,14 +710,20 @@ else {
 	require_once ('./incs/routes_inc.php');		// 7/8/10
 
 	$the_ticket_id = get_ticket_id ();
+	$api_key = trim(get_variable('gmaps_api_key'));
+	$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 ?>
+<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>sensor=false"></SCRIPT>
 
-<SCRIPT SRC="http://maps.google.com/maps?file=api&amp;v=2.s&amp;key=<?php echo $api_key; ?>"></SCRIPT>
 <SCRIPT SRC="./js/usng.js"></SCRIPT>		<!-- 10/14/08 -->
-<SCRIPT SRC="./js/graticule.js"></SCRIPT>
-<SCRIPT TYPE="text/javascript" src="./js/ELabel.js"></SCRIPT><!-- 8/1/11 -->	
+<SCRIPT SRC="./js/graticule_V3.js"></SCRIPT>
+<SCRIPT SRC="./js/elabel_v3.js" TYPE="text/javascript"></SCRIPT><!-- 8/1/11 -->	
+<SCRIPT SRC="./js/gmaps_v3_init.js"	TYPE="text/javascript" ></script>	<!-- 1/29/2013 -->
+<SCRIPT SRC="./js/domready.js"		TYPE="text/javascript" ></script>
 
 <SCRIPT>
+
+
 	parent.frames["upper"].document.getElementById("whom").innerHTML  = "<?php print $_SESSION['user'];?>";
 	parent.frames["upper"].document.getElementById("level").innerHTML = "<?php print get_level_text($_SESSION['level']);?>";
 	parent.frames["upper"].document.getElementById("script").innerHTML  = "<?php print LessExtension(basename( __FILE__));?>";
@@ -943,9 +980,50 @@ function createXMLHTTPObject() {
 	return xmlhttp;
 	}	
 
+function toggle_div(theDiv, theButton, theText) {
+	if($(theDiv).style.display == 'block') {
+			$(theDiv).style.display = 'none';
+			$(theButton).innerHTML = "Show " + theText; 
+		} else {
+		if(theButton == "toggle_dirs") {
+			$('the_ticket').style.display = 'none';
+			$('disp_details').style.display = 'none';	
+			$('the_messages').style.display = 'none';				
+			$('toggle_tkt').innerHTML = "Show Ticket";	
+			$('toggle_dispatch').innerHTML = "Show Disp Details";
+			$('toggle_msgs').innerHTML = "Show Messages";			
+			} else if(theButton == "toggle_tkt") {
+			$('directions').style.display = 'none';
+			$('disp_details').style.display = 'none';
+			$('the_messages').style.display = 'none';				
+			$('toggle_dirs').innerHTML = "Show Directions";	
+			$('toggle_dispatch').innerHTML = "Show Disp Details";
+			$('toggle_msgs').innerHTML = "Show Messages";				
+			} else if(theButton == "toggle_dispatch") {
+			$('directions').style.display = 'none';
+			$('disp_details').style.display = 'none';	
+			$('the_messages').style.display = 'none';	
+			$('toggle_dirs').innerHTML = "Show Directions";	
+			$('toggle_dispatch').innerHTML = "Show Disp Details";
+			$('toggle_msgs').innerHTML = "Show Messages";				
+			} else if(theButton == "toggle_msgs") {
+			$('the_ticket').style.display = 'none';			
+			$('directions').style.display = 'none';
+			$('disp_details').style.display = 'none';	
+			$('toggle_tkt').innerHTML = "Show Ticket";				
+			$('toggle_dirs').innerHTML = "Show Directions";	
+			$('toggle_dispatch').innerHTML = "Show Disp Details";
+			}
+		$(theButton).innerHTML = "Hide " + theText;				
+		$(theDiv).style.display = 'block';
+		$(theButton).innerHTML = "Hide " + theText;
+		}
+	}
+		
+
 </SCRIPT>
 </HEAD>
-<BODY onLoad = "get_position(); do_notify(); ck_frames()" onUnload="GUnload()">
+<BODY onLoad = "get_position(); do_notify(); ck_frames()" >
 <SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT>		<!-- 3/4/11 -->
 
 <A NAME='page_top' />
@@ -993,9 +1071,20 @@ function createXMLHTTPObject() {
 ?>
 		</TD>
 		<TD VALIGN="top" ALIGN='center'>
-			<DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
+			<DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset; display: inline-block;'></DIV>
+			<span id='toggle_dirs' class='plain' style='position: fixed; top: 0px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('directions', 'toggle_dirs', 'Directions')">Show Directions</span><BR />
+			<span id='toggle_tkt' class='plain' style='position: fixed; top: 25px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('the_ticket', 'toggle_tkt', 'Ticket')">Show Ticket</span><BR />
+			<span id='toggle_msgs' class='plain' style='position: fixed; top: 50px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('the_messages', 'toggle_msgs', 'Messages')">Show Messages</span><BR />
+			<span id='toggle_dispatch' class='plain' style='position: fixed; top: 75px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('disp_details', 'toggle_dispatch', 'Disp details')">Show Disp Details</span><BR />
+			<DIV ID="directions" STYLE="position: fixed; top: 125px; right: 0px; width: <?php print get_variable('map_width') * .35;?>px; height: <?php print get_variable('map_height');?>px; text-align: left; font-weight: bold; display: none; border: 2px outset #707070; overflow-y: auto; overflow-x: auto;"></DIV>
+			<DIV ID="disp_details" STYLE="position: fixed; top: 125px; right: 0px; width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; text-align: left; font-weight: bold; display: none; border: 2px outset #707070; overflow-y: scroll;">
+			<?php print do_ticket_extras($row_ticket, $the_width, FALSE, FALSE);?>
+			</DIV>
+			<DIV ID="the_messages" STYLE="position: fixed; top: 125px; right: 0px; width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; text-align: left; font-weight: bold; display: none; border: 2px outset #707070; overflow-y: scroll; overflow-x: hidden;">
+			<?php print	do_ticket_messages($row_ticket, $the_width, FALSE, FALSE);?>
+			</DIV>			
 			<BR />
-			<SPAN CLASS = "span_link" onClick ='doGrid()'>Grid</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->
+			<SPAN CLASS = "span_link" onClick ='toglGrid()'>Grid</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->
 			<SPAN CLASS = "span_link" onClick ='doTraffic()'>Traffic</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->
 			<SPAN CLASS = "span_link" onClick = "sv_win('<?php print $row_ticket['lat'];?>','<?php print $row_ticket['lng'];?>' );">Street view</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- 8/17/09, 3/15/11 -->
 			<SPAN CLASS = "warn" ID = "loading_2">Loading Directions, Please wait........</SPAN>
@@ -1020,12 +1109,11 @@ function createXMLHTTPObject() {
 			<BR /><BR />
 <?php
 	if (!($show_tick_left)) {				// 11/27/09
-		print "\n<DIV ID='the_ticket' STYLE='width: " .  get_variable('map_width') . "'>\n";	
-		print do_ticket($row_ticket, $the_width, FALSE, FALSE); 
+		print "\n<DIV ID='the_ticket' STYLE=\"position: fixed; top: 125px; right: 0px; width: " . get_variable('map_width') . "px; height: " . get_variable('map_height') . "px; text-align: left; font-weight: bold; display: none; border: 2px outset #707070; overflow-y: scroll; overflow-x: hidden;\">\n";	
+		print do_ticket_only($row_ticket, $the_width, FALSE, FALSE); 
 		print "\n</DIV>\n";		
 		}
 ?>
-			<DIV ID="directions" STYLE="width: <?php print get_variable('map_width');?>px"></DIV>
 		</TD></TR></TABLE><!-- end outer -->
 	<DIV ID='bottom' STYLE='display:none'>
 	<CENTER>
@@ -1083,7 +1171,7 @@ function createXMLHTTPObject() {
 			print "<INPUT TYPE='hidden' NAME='frm_u_id' VALUE='' />";	//10/6/09
 			print "<INPUT TYPE='hidden' NAME='frm_mail_subject' VALUE='Directions to Incident' />";	//10/6/09
 			print "<INPUT TYPE='hidden' NAME='frm_scope' VALUE='' />"; // 10/29/09
-			print "<INPUT TYPE='hidden' NAME='frm_tick_id' VALUE='" . get_ticket_id() . "' />"; // 10/29/09			
+			print "<INPUT TYPE='hidden' NAME='frm_tick_id' VALUE='" . get_ticket_id() . "' />"; // 3/29/2013	
 			print "<INPUT TYPE='submit' value='Mail Direcs' ID = 'mail_dir_but' STYLE = 'visibility: hidden;' />";	//10/6/09
 			print "</FORM>";	
 			print "<INPUT TYPE='button' VALUE='Reset' onClick = 'show_butts(to_hidden) ; doReset()' ID = 'reset_but' STYLE = 'visibility: hidden;'  />";

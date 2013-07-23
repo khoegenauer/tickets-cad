@@ -282,7 +282,6 @@ function clean_hdr_fm_text($thetext) {
 
 // Xpertmailer version
 function get_emails($url, $user, $password, $port, $ssl="", $timeout=10 ) {	//	Called from AJAX file to get emails in background - AJAX file called by top.php
-//	print $url . "," . $user . "," . $password . "," . $port . "," .  $ssl . "," . $timeout . "<BR />"; 
 	$counter = 0;
 	$now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));	
 	$ret = array();
@@ -304,6 +303,7 @@ function get_emails($url, $user, $password, $port, $ssl="", $timeout=10 ) {	//	C
 	$x = intval($i);
 	if ($i >= 1) { // if we have messages
 		$the_message = array();
+		$the_message2 = array();		
 		for($z = 1; $z <= $x; $z++) {
 			$the_message[$z]['id'] = $z;
 			// RETR
@@ -313,31 +313,63 @@ function get_emails($url, $user, $password, $port, $ssl="", $timeout=10 ) {	//	C
 			if($headers && $body) {
 				foreach($headers AS $val) {
 					if($val['name'] == "From") { 
-						if((substr($val['value'], 0, 1) == "<") && ($val['value'] != "")) {
+						$pos = strpos($val['value'], "<");
+						if(($pos >= 0) && ($val['value'] != "")) {
 							$the_message[$z]['from'] = GetBetween($val['value'],'<','>'); 
-							$thename = explode("<", $val['value']); 
-							$the_message[$z]['fromname'] = $thename[0]; 
+							$the_message[$z]['fromname'] = $the_message[$z]['from'];
 							} else {
-							$the_message[$z]['from'] = $val['value'];
-							$the_message[$z]['fromname'] = $val['value'];
+							if(is_email($val['value'])) {
+								$the_message[$z]['from'] = $val['value'];
+								$the_message[$z]['fromname'] = $the_message[$z]['from'];
+								}
 							}
 						}
-					if($val['name'] == "To") { 
-						if((substr($val['value'], 0, 1) == "<") && ($val['value'] != "")) {
+					if($val['name'] == "To") {
+						$pos = strpos($val['value'], "<");					
+						if(($pos >= 0) && ($val['value'] != "")) {
 							$the_message[$z]['to'] = GetBetween($val['value'],'<','>');
 							} else {
-							$the_message[$z]['to'] = $val['value'];
+							if(is_email($val['value'])) {
+								$the_message[$z]['to'] = $val['value'];
+								}							
+							}
+						}
+					if($val['name'] == "X-Originating-Email") { 
+						$pos = strpos($val['value'], "[");
+						if(($pos >= 0) && ($val['value'] != "")) {					
+							$the_message2['from'] = GetBetween($val['value'],'[',']'); 
+							$the_message2['fromname'] = $the_message2['from'];							
+							} else {
+							if(is_email($val['value'])) {
+								$the_message2['from'] = $val['value'];
+								$the_message2['fromname'] = $the_message[$z]['from'];
+								}
 							}
 						}
 					if($val['name'] == "Subject") { $the_message[$z]['subject'] = $val['value']; } 
 					if($val['name'] == "Date") { $the_message[$z]['date'] = $val['value']; } 
+					if((!isset($the_message[$z]['from'])) && ($the_message2['from'] != "")) {
+						$the_message[$z]['from'] = $the_message2['from'];
+						} elseif((!isset($the_message[$z]['from'])) && (!isset($the_message2['from']))) {
+						$the_message[$z]['from'] = "No Address";
+						} else {
+						$the_message[$z]['from'] = $the_message[$z]['from'];
+						}
+					if((!isset($the_message[$z]['fromname'])) && ($the_message2['fromname'] != "")) {
+						$the_message[$z]['fromname'] = $the_message2['fromname'];
+						} elseif((!isset($the_message[$z]['fromname'])) && (!isset($the_message2['fromname']))) {
+						$the_message[$z]['fromname'] = "No Name";
+						} else {
+						$the_message[$z]['fromname'] = $the_message[$z]['fromname'];
+						}						
+					if((!isset($the_message[$z]['fromname'])) && ($the_message2['fromname'] != "")) {
+						$the_message[$z]['fromname'] = $the_message2['fromname'];
+						}						
 					}
-				$the_message[$z]['from'] = ((isset($the_message[$z]['from'])) && ($the_message[$z]['from'] != "")) ? $the_message[$z]['from'] : "No address";		
-				$the_message[$z]['fromname'] = (($the_message[$z]['fromname'] == "") && ($the_message[$z]['from'] != "No Address")) ? $the_message[$z]['from'] : "No Name";						
 				$the_message[$z]['to'] = ((isset($the_message[$z]['to'])) && ($the_message[$z]['to'] != "")) ? $the_message[$z]['to'] : "Tickets";				
 				$the_message[$z]['subject'] = ((isset($the_message[$z]['subject'])) && ($the_message[$z]['subject'] != "")) ? $the_message[$z]['subject'] : "Email";
 				$the_message[$z]['text'] = clean_hdr_fm_text(addslashes(htmlentities($body[0]['content'])));
-				$the_message[$z]['text'] = ((isset($the_message[$z]['text'])) && ($the_message[$z]['text'] != "")) ? $the_message[$z]['text'] : "No Text";				
+				$the_message[$z]['text'] = ((isset($the_message[$z]['text'])) && ($the_message[$z]['text'] != "")) ? $the_message[$z]['text'] : "No Text";	
 				$from_address = $the_message[$z]['from'];
 				$from_name = (($the_message[$z]['fromname'] == "No Name") && ($from_address != "")) ? $from_address : $the_message[$z]['fromname'];	
 				$to = $the_message[$z]['to'];	
@@ -356,7 +388,7 @@ function get_emails($url, $user, $password, $port, $ssl="", $timeout=10 ) {	//	C
 					if($the_count == 1) {
 						$counter++;
 						}
-					}			
+					}
 				}
 			}
 		// optional, you can delete this message from server
@@ -500,7 +532,6 @@ function send_message($server,$orgcode,$apipin,$message,$reciptype,$recipients,$
 		
 		if ($curl_errno > 0) {
 			print $curl_error . "<BR />";
-			print $curl_errno . "<BR />";
 			$result = "999";
 			}
 	} else {	//	No cURL
@@ -878,7 +909,6 @@ function do_smsg_retrieve($orgcode,$apipin,$mode) {	// retrieves responses from 
 						$temp = store_msg($replyto, $messageid, "SMS Reply", $message, $respname, $ticket_id, $datestring, 0, 4);
 						if(get_msg_variable('use_autostat') == 1) {	//	 Check if Auto Status Updates is set as on and if so check replies for smart text.
 							$the_return = auto_status($message, $replyto, $datestring);
-							print $the_return . "<BR />";
 							if($the_return != 0) {
 								$stat_up[$resp_id] = $the_return;	//	if auto status is on and funtion auto status returns a required update then write that update to $stat_up array for output.
 								}

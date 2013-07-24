@@ -41,26 +41,43 @@ function get_user_name($the_id) {
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-	<meta http-equiv=”X-UA-Compatible” content=”IE=EmulateIE7" />
+	<meta http-equiv=ï¿½X-UA-Compatibleï¿½ content=ï¿½IE=EmulateIE7" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
 	<LINK REL=StyleSheet HREF="../stylesheet.php?version=<?php print time();?>" TYPE="text/css">
 	<SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
 	<SCRIPT type="text/javascript">
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */    
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
 		}
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */		
 	function do_hover (the_id) {
 		CngClass(the_id, 'hover');
 		return true;
 		}
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */		
 	function do_plain (the_id) {				// 8/21/10
 		CngClass(the_id, 'plain');
 		return true;
 		}
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {															// 12/20/08
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {

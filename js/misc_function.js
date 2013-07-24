@@ -7,11 +7,22 @@ function syncAjax - - functions_major.inc.php
 1/6/11 json decode added
 2/19/11 drag function added
 */
+/**
+ * 
+ * @param {type} in_unit
+ * @param {type} in_val
+ * @returns {undefined}
+ */
 	function do_sel_update (in_unit, in_val) {							// 12/17/09
 		to_server(in_unit, in_val);
 		}
 
-
+/**
+ * 
+ * @param {type} the_unit
+ * @param {type} the_status
+ * @returns {Boolean}
+ */
 	function to_server(the_unit, the_status) {							// write unit status data via ajax xfer
 		var querystr = "frm_responder_id=" + the_unit;
 		querystr += "&frm_status_id=" + the_status;
@@ -27,7 +38,11 @@ function syncAjax - - functions_major.inc.php
 			return true;
 			}				// end if/else (payload.substring(... )
 		}		// end function to_server()
-	
+/**
+ * 
+ * @param {type} strURL
+ * @returns {Boolean|@exp;AJAX@pro;responseText}
+ */	
 	function syncAjax(strURL) {							// synchronous ajax function
 		if (window.XMLHttpRequest) {						 
 			AJAX=new XMLHttpRequest();						 
@@ -62,7 +77,11 @@ South Tyneside NE32 5,
 UK	 [2]
 
 */
-
+/**
+ * 
+ * @param {type} addr_str
+ * @returns {Array}
+ */
 	function pars_goog_addr(addr_str) {
 		var addr = "";
 		var city = "";
@@ -115,12 +134,20 @@ UK	 [2]
 		var return_ar = new Array(addr, city, st);
 		return return_ar;
 		}		// end function pars_goog_addr(addr_str) 
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 	function CngClass(obj, the_class){		// 7/26/10
 		$(obj).className=the_class;
 		return true;
 		}
-
+/**
+ * 
+ * @returns {String}
+ */
 	function do_time() {							//7/26/10
 		var today=new Date();
 		today.setDate(today.getSeconds()+7.5);		// half-adjust
@@ -131,7 +158,10 @@ UK	 [2]
 		return h+":"+m;
 		}
 
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 JSON = new function(){	
 	
 	/* Section: Methods - Public */	
@@ -383,7 +413,10 @@ JSON = new function(){
 //*****************************************************************************
 
 // Determine browser and version.
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 function Browser() {
 
   var ua, s, i;
@@ -424,7 +457,12 @@ var browser = new Browser();
 
 var dragObj = new Object();
 dragObj.zIndex = 0;
-
+/**
+ * 
+ * @param {type} event
+ * @param {type} id
+ * @returns {undefined}
+ */
 function dragStart(event, id) {
 
   var el;
@@ -488,7 +526,11 @@ function dragStart(event, id) {
     event.preventDefault();
   }
 }
-
+/**
+ * 
+ * @param {type} event
+ * @returns {undefined}
+ */
 function dragGo(event) {
 
   var x, y;
@@ -518,7 +560,11 @@ function dragGo(event) {
   if (browser.isNS)
     event.preventDefault();
 }
-
+/**
+ * 
+ * @param {type} event
+ * @returns {undefined}
+ */
 function dragStop(event) {  // Stop capturing mousemove and mouseup events.
 
   if (browser.isIE) {
@@ -530,6 +576,10 @@ function dragStop(event) {  // Stop capturing mousemove and mouseup events.
     document.removeEventListener("mouseup",   dragStop, true);
   }
 }
+/**
+ * 
+ * @returns {Array}
+ */
 function getWinDims() {							// 2/20/11
 	var myWidth = 0, myHeight = 0;
 	if( typeof( window.innerWidth ) == 'number' ) {
@@ -541,7 +591,11 @@ function getWinDims() {							// 2/20/11
 	}
 	return new Array(myWidth, myHeight);
 }
-
+/**
+ * 
+ * @param {type} div_area
+ * @returns {undefined}
+ */
 function hideDiv(div_area) {
 	var divarea = div_area 
 	if (document.getElementById) { // DOM3 = IE5, NS6 
@@ -554,7 +608,11 @@ function hideDiv(div_area) {
 		} 
 	} 
 	} 
-
+/**
+ * 
+ * @param {type} div_area
+ * @returns {undefined}
+ */
 function showDiv(div_area) {
 	var divarea = div_area 
 	if (document.getElementById) { // DOM3 = IE5, NS6 
@@ -570,6 +628,10 @@ function showDiv(div_area) {
 	
 var min=8;
 var max=18;
+/**
+ * 
+ * @returns {undefined}
+ */
 function increaseFontSize() {
  
    var p = document.getElementsByTagName('p');
@@ -589,6 +651,10 @@ function increaseFontSize() {
  
    }
 }
+/**
+ * 
+ * @returns {undefined}
+ */
 function decreaseFontSize() {
    var p = document.getElementsByTagName('p');
    for(i=0;i<p.length;i++) {
@@ -607,7 +673,10 @@ function decreaseFontSize() {
  
    }
 } 
-
+/**
+ * 
+ * @returns {Array}
+ */
 function $() {									// 1/21/09, 7/18/10
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -618,17 +687,30 @@ function $() {									// 1/21/09, 7/18/10
 		}
 	return elements;
 	}
-	
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */	
 function do_hover (the_id) {
 	CngClass(the_id, 'hover');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_plain (the_id) {				// 8/21/10
 	CngClass(the_id, 'plain');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 function CngClass(obj, the_class){
 	$(obj).className=the_class;
 	return true;

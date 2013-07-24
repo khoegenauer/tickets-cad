@@ -133,10 +133,17 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
 <SCRIPT SRC="./js/misc_function.js"></SCRIPT>
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -149,11 +156,17 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 			}
 		return elements;
 		}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 	function do_step_1() {
 		document.mail_form.submit();
 		}
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 	function do_step_2() {
 		if (document.mail_form.frm_text.value.trim()=="") {
 			alert ("Message text is required");
@@ -191,7 +204,11 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 			}
 		document.mail_form.submit();	
 		}
-
+/**
+ * 
+ * @param {type} lines
+ * @returns {undefined}
+ */
 	function reSizeScr(lines){							// 5/25/10 
 		var the_width = 1200;							// 11/19/10
 		var the_height = ((lines * 18)+200);			// values derived via trial/error (more of the latter, mostly)
@@ -199,7 +216,11 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 		window.resizeTo(the_width,the_height);	
 		}
 	var set_text = true;
-
+/**
+ * 
+ * @param {type} inval
+ * @returns {undefined}
+ */
 	function set_signal(inval) {
 		var temp_ary = inval.split("|", 2);		// inserted separator
 		if (set_text) {
@@ -213,7 +234,11 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 			document.mail_form.frm_subj.focus();
 			}
 		}		// end function set_signal()
-		
+/**
+ * 
+ * @param {type} message
+ * @returns {undefined}
+ */		
 	function set_message(message) {	//	10/23/12
 		var randomnumber=Math.floor(Math.random()*99999999);	
 		var tick_id = <?php print $tik_id;?>;
@@ -229,7 +254,13 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 				document.mail_form.frm_text.value += replacement_text;					
 				}			// end function replacetext_cb()	
 		}		// end function set_message(message)
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -248,14 +279,20 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -269,7 +306,11 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 			}
 		return xmlhttp;
 		}
-
+/**
+ * 
+ * @param {type} strURL
+ * @returns {@exp;AJAX@pro;responseText|Boolean}
+ */
 	function syncAjax(strURL) {							// synchronous ajax function - 4/5/10
 		if (window.XMLHttpRequest) {						 
 			AJAX=new XMLHttpRequest();						 
@@ -473,7 +514,10 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 			$no_rows = mysql_affected_rows();
 ?>
 			<SCRIPT>
-			
+/**
+ * 
+ * @returns {undefined}
+ */			
 			function do_clear(){
 				for (i=0;i<document.mail_form.elements.length; i++) {
 					if(document.mail_form.elements[i].type =='checkbox'){
@@ -483,7 +527,10 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 				$('clr_spn').style.display = "none";
 				$('chk_spn').style.display = "block";
 				}		// end function do_clear
-
+/**
+ * 
+ * @returns {undefined}
+ */
 			function do_check(){
 				for (i=0;i<document.mail_form.elements.length; i++) {
 					if(document.mail_form.elements[i].type =='checkbox'){

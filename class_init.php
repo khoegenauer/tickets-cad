@@ -18,6 +18,10 @@ require_once('./incs/functions.inc.php');
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<LINK REL=StyleSheet HREF="default.css" TYPE="text/css" />
 	<SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */    
 		function depart() {location.href = "index.php";  }
 	</SCRIPT>
 	</HEAD>

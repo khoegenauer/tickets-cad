@@ -241,11 +241,18 @@ function edit_ticket($id) {							/* post changes */
 		}
 	catch(e) {
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function get_new_colors() {		// 5/4/11
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
-
+/**
+ * 
+ * @param {type} obj
+ * @returns {undefined}
+ */
 	function dump (obj) {
 		var r = '';
 		var dep = 10;
@@ -264,7 +271,10 @@ function edit_ticket($id) {							/* post changes */
 		alert("dump: " + r);
 		}	
 	
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {									// 2/11/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -277,13 +287,19 @@ function edit_ticket($id) {							/* post changes */
 			}
 		return elements;
 		}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {									// 1/19/09
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
 
 	var lat_lng_frmt = <?php print get_variable('lat_lng'); ?>;				// 9/9/08
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {		// onLoad = "ck_frames()"
 <?php if ($mode==1) { print "\t\t return;\n"; } else { ?>	
 		if(self.location.href==parent.location.href) {
@@ -294,7 +310,11 @@ function edit_ticket($id) {							/* post changes */
 			}
 <?php } ?>		
 		}		// end function ck_frames()
-
+/**
+ * 
+ * @param {type} str
+ * @returns {@exp;words@call;join}
+ */
 	function capWords(str){ 
 		var words = str.split(" "); 
 		for (var i=0 ; i < words.length ; i++){ 
@@ -305,7 +325,11 @@ function edit_ticket($id) {							/* post changes */
 	  	 	} 
 		return( words.join(" ")); 
 		} 
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function validate(theForm) {
 //		alert (theForm);
 		var errmsg="";
@@ -336,7 +360,12 @@ function edit_ticket($id) {							/* post changes */
 			return true;
 			}
 		}				// end function validate(theForm)
-
+/**
+ * 
+ * @param {type} text
+ * @param {type} index
+ * @returns {undefined}
+ */
 	function do_fac_to_loc(text, index){													// 9/22/09
 			var curr_lat = fac_lat[index];
 			var curr_lng = fac_lng[index];
@@ -344,7 +373,11 @@ function edit_ticket($id) {							/* post changes */
 			do_lng(curr_lng);
 			pt_to_map (document.edit, curr_lat, curr_lng)
 	}					// end function do_fac_to_loc
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_end(theForm) {				// make run-end date/time inputs available for posting
 		elem = document.getElementById("runend1");
 		elem.style.visibility = "visible";
@@ -361,7 +394,11 @@ function edit_ticket($id) {							/* post changes */
 ?>
 		}
 	var good_end = false;		// boolean defines run end 
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_booking(theForm) {				// 	10/1/09 make booking date/time inputs available for posting
 		elem = document.getElementById("booked1");
 		elem.style.visibility = "visible";
@@ -377,7 +414,11 @@ function edit_ticket($id) {							/* post changes */
 		}
 ?>
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function reset_end(theForm) {		// on reset()
 		if (!good_end) {
 			elem = document.getElementById("runend1");
@@ -389,7 +430,11 @@ function edit_ticket($id) {							/* post changes */
 			theForm.frm_minute_problemend.disabled = true;		
 			}
 	}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function st_unlk(theForm) {										// problem start time enable 8/10/08
 		theForm.frm_year_problemstart.disabled = false;
 		theForm.frm_month_problemstart.disabled = false;
@@ -398,7 +443,11 @@ function edit_ticket($id) {							/* post changes */
 		theForm.frm_minute_problemstart.disabled = false;
 //		document.getElementById("lock").style.visibility = "hidden";	//8/23/08
 		}
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */		
 	function st_unlk_res(theForm) {										// 8/10/08
 		theForm.frm_year_problemstart.disabled = true;
 		theForm.frm_month_problemstart.disabled = true;
@@ -407,7 +456,11 @@ function edit_ticket($id) {							/* post changes */
 		theForm.frm_minute_problemstart.disabled = true;
 //		document.getElementById("lock").style.visibility = "visible";	// 8/23/08
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function pb_unlk(theForm) {										// Booking time enable 8/10/08
 		theForm.frm_year_booked_date.disabled = false;
 		theForm.frm_month_booked_date.disabled = false;
@@ -417,7 +470,11 @@ function edit_ticket($id) {							/* post changes */
 		if (theForm.frm_meridiem_booked_date) {theForm.frm_meridiem_booked_date.disabled = false;}
 		document.getElementById("pb_lock").style.visibility = "hidden";	//8/23/08
 		}
-
+/**
+ * 
+ * @param {type} indx
+ * @returns {undefined}
+ */
 	function do_inc_nature(indx) {										// 7/16/09
 		if (protocols[indx]) {
 			$('proto_cell').innerHTML = protocols[indx];
@@ -671,12 +728,21 @@ require_once('./incs/links.inc.php');
 
 ?>
 <SCRIPT>
+/**
+ * 
+ * @param {type} inval
+ * @returns {undefined}
+ */  
 	function set_signal(inval) {
 		var temp_ary = inval.split("|", 2);		// inserted separator
 		document.edit.frm_description.value+=" " + temp_ary[1] + ' ';		
 		document.edit.frm_description.focus();		
 		}		// end function set_signal()
-
+/**
+ * 
+ * @param {type} inval
+ * @returns {undefined}
+ */
 	function set_signal2(inval) {
 		var temp_ary = inval.split("|", 2);		// inserted separator
 		document.edit.frm_comments.value+=" " + temp_ary[1] + ' ';		
@@ -795,6 +861,11 @@ require_once('./incs/links.inc.php');
 ?>
 
 // *********************************************************************
+/**
+ * 
+ * @param {type} plaintext
+ * @returns {String}
+ */
 	function URLEncode(plaintext ) {					// The Javascript escape and unescape functions do
 		var SAFECHARS = "0123456789" +					// Numeric
 						"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +	// Alphabetic
@@ -829,6 +900,13 @@ require_once('./incs/links.inc.php');
 		};			// end function
 
 	var the_form;
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */  
 	function sendRequest(my_form, url,callback,postData) {		// ajax function set - 1/17/09
 		the_form = my_form;
 		var req = createXMLHTTPObject();
@@ -851,14 +929,20 @@ require_once('./incs/links.inc.php');
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array|Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -872,7 +956,11 @@ require_once('./incs/links.inc.php');
 			}
 		return xmlhttp;
 		}
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 	function handleResult(req) {			// the called-back function 9/29/09 added frequent fliers
 		if (req.responseText.substring(0,1)=="-") {
 			alert("lookup failed");
@@ -890,7 +978,10 @@ require_once('./incs/links.inc.php');
 
 			}		// end else ...			
 		}		// end function handleResult()
-	
+/**
+ * 
+ * @returns {unresolved}
+ */	
 	function phone_lkup(){	
 		var goodno = document.edit.frm_phone.value.replace(/\D/g, "" );		// strip all non-digits - 1/18/09
 		if (goodno.length<10) {
@@ -916,6 +1007,10 @@ require_once('./incs/links.inc.php');
 			if ($addrs) {				// 10/21/08
 ?>			
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	function do_notify() {
 		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
 		var theText= "TICKET-Update: ";
@@ -926,10 +1021,20 @@ require_once('./incs/links.inc.php');
 		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId ;		// ($to_str, $text, $ticket_id)   10/15/08
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 		}			// end function do notify()
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 	function handleResult(req) {				// the 'called-back' function
 		}
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -951,14 +1056,20 @@ require_once('./incs/links.inc.php');
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array|Array|Array|Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -980,6 +1091,10 @@ require_once('./incs/links.inc.php');
 		else {
 ?>		
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	function do_notify() {
 		return;
 		}			// end function do notify()

@@ -98,6 +98,10 @@ if(!empty($_POST)) {
 		<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
 		<link rel="shortcut icon" href="favicon.ico" />
 	<SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */    
 	function ck_frames() {
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
@@ -145,6 +149,10 @@ if(!empty($_POST)) {
 			.flag 			{ border: 2px outset #707070; background: #CECECE; font-size: 20px; font-weight: bold; display: inline; position: fixed; right:30%; top: 5%;}				
 		</STYLE>			
 	<SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */    
 	function ck_frames() {
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
@@ -153,7 +161,10 @@ if(!empty($_POST)) {
 			parent.upper.show_butts();
 			}
 		}		// end function ck_frames()	
-	
+/**
+ * 
+ * @returns {Array}
+ */	
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {

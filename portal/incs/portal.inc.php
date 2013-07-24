@@ -2,6 +2,12 @@
 /*
 11/28/12	New incs file for portal
 */
+/**
+ * 
+ * @param type $the_id
+ * @param type $status_val_in
+ * @return string
+ */
 function get_status_selection($the_id, $status_val_in) {					// returns select list as click-able string - 2/6/10
 	$tablename = "requests";
 	$status_field = "status";

@@ -122,10 +122,17 @@ function do_is_start($in_row) {				// 3/22/10
 	global $disposition;
 ?>
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 	function validate() {
 		if(document.frm_note.frm_disp.value.trim().length == 0) {
 			alert("<?php print $disposition;?> is required"); 
@@ -160,12 +167,21 @@ function do_is_start($in_row) {				// 3/22/10
 ?>		
 	<TR CLASS='odd'><TD ALIGN='right' CLASS='td_label' ><?php print $capt;?>:&nbsp;</TD>
 <SCRIPT>
+/**
+ * 
+ * @param {type} inval
+ * @returns {undefined}
+ */  
 	function set_signal(inval) {				// 12/18/10
 		var temp_ary = inval.split("|", 2);		// inserted separator
 		document.frm_note.frm_synopsis.value+=" " + temp_ary[1] + ' ';		
 		document.frm_note.frm_synopsis.focus();		
 		}		// end function set_signal()
-
+/**
+ * 
+ * @param {type} inval
+ * @returns {undefined}
+ */
 	function set_signal2(inval) {
 		var temp_ary = inval.split("|", 2);		// inserted separator
 		document.frm_note.frm_disp.value+=" " + temp_ary[1] + ' ';		

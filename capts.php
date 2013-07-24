@@ -46,6 +46,11 @@ $func = (empty($_POST))? "l":$_POST['func'];
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 <LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
 <SCRIPT>
+/**
+ * 
+ * @param {type} in_id
+ * @returns {undefined}
+ */  
 	function do_edit(in_id) {
 <?php								// 3/19/11
 		if ( (is_administrator()) || (is_super()) ) {

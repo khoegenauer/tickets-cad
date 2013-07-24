@@ -28,22 +28,46 @@ var folder = "";
 // Browser Window Size and Position
 // copyright Stephen Chapman, 3rd Jan 2005, 8th Dec 2005
 // you may copy these functions but please keep the copyright notice as well
+/**
+ * 
+ * @returns {@exp;window@pro;innerWidth|@exp;document@pro;documentElement@pro;clientWidth@exp;document@pro;documentElement@exp;window@pro;innerWidth|@exp;document@pro;documentElement@pro;clientWidth@exp;document@pro;documentElement@pro;clientWidth@exp;document@pro;documentElement@exp;window@pro;innerWidth|@exp;document@pro;documentElement@exp;window@pro;innerWidth|@exp;document@pro;body@pro;clientWidth@exp;document@pro;documentElement@pro;clientWidth@exp;document@pro;documentElement@pro;clientWidth@exp;document@pro;documentElement@exp;window@pro;innerWidth}
+ */
 function pageWidth() {
 	return window.innerWidth != null? window.innerWidth : document.documentElement && document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body != null ? document.body.clientWidth : null;
 	} 
+/**
+ * 
+ * @returns {@exp;window@pro;innerHeight|@exp;document@pro;documentElement@pro;clientHeight@exp;document@pro;documentElement@pro;clientHeight@exp;document@pro;documentElement@exp;window@pro;innerHeight|@exp;document@pro;body@pro;clientHeight@exp;document@pro;documentElement@pro;clientHeight@exp;document@pro;documentElement@pro;clientHeight@exp;document@pro;documentElement@exp;window@pro;innerHeight|@exp;document@pro;documentElement@pro;clientHeight@exp;document@pro;documentElement@exp;window@pro;innerHeight|@exp;document@pro;documentElement@exp;window@pro;innerHeight}
+ */  
 function pageHeight() {
 	return  window.innerHeight != null? window.innerHeight : document.documentElement && document.documentElement.clientHeight ?  document.documentElement.clientHeight : document.body != null? document.body.clientHeight : null;
 	} 
+/**
+ * 
+ * @returns {@exp;document@pro;documentElement@pro;scrollLeft@exp;document@pro;documentElement@pro;scrollLeft@exp;document@pro;documentElement@exp;window@pro;pageXOffset|Number|@exp;window@pro;pageXOffset|@exp;document@pro;documentElement@pro;scrollLeft@exp;document@pro;documentElement@exp;window@pro;pageXOffset|@exp;document@pro;body@pro;scrollLeft@exp;document@pro;documentElement@pro;scrollLeft@exp;document@pro;documentElement@pro;scrollLeft@exp;document@pro;documentElement@exp;window@pro;pageXOffset|@exp;document@pro;body@pro;scrollLeft@exp;document@pro;body@pro;scrollLeft@exp;document@pro;documentElement@pro;scrollLeft@exp;document@pro;documentElement@pro;scrollLeft@exp;document@pro;documentElement@exp;window@pro;pageXOffset|@exp;document@pro;documentElement@exp;window@pro;pageXOffset}
+ */  
 function posLeft() {
 	return typeof window.pageXOffset != 'undefined' ? window.pageXOffset :document.documentElement && document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ? document.body.scrollLeft : 0;
 	} 
+/**
+ * 
+ * @returns {Number|@exp;document@pro;body@pro;scrollTop@exp;document@pro;body@pro;scrollTop@exp;document@pro;documentElement@pro;scrollTop@exp;document@pro;documentElement@pro;scrollTop@exp;document@pro;documentElement@exp;window@pro;pageYOffset|@exp;document@pro;documentElement@pro;scrollTop@exp;document@pro;documentElement@pro;scrollTop@exp;document@pro;documentElement@exp;window@pro;pageYOffset|@exp;document@pro;documentElement@pro;scrollTop@exp;document@pro;documentElement@exp;window@pro;pageYOffset|@exp;document@pro;documentElement@exp;window@pro;pageYOffset|@exp;document@pro;body@pro;scrollTop@exp;document@pro;documentElement@pro;scrollTop@exp;document@pro;documentElement@pro;scrollTop@exp;document@pro;documentElement@exp;window@pro;pageYOffset|@exp;window@pro;pageYOffset}
+ */  
 function posTop() {
 	return typeof window.pageYOffset != 'undefined' ?  window.pageYOffset : document.documentElement && document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ? document.body.scrollTop : 0;
 	} 
+/**
+ * 
+ * @returns {@exp;@exp;@@call;call;posLeftpageWidth|@exp;@call;posLeft}
+ */  
 function posRight() {
 	return posLeft()+pageWidth();} function posBottom() {return posTop()+pageHeight();
 	}
-                    
+/**
+ * 
+ * @param {type} value
+ * @returns {Boolean}
+ */                    
 Array.prototype.inArray = function (value) {
 	var i;
 	for (i=0; i < this.length; i++) {
@@ -53,7 +77,15 @@ Array.prototype.inArray = function (value) {
 		}
 	return false;
 	};
-					
+/**
+ * 
+ * @param {type} thescreen
+ * @param {type} ticket_id
+ * @param {type} responder_id
+ * @param {type} sort_by
+ * @param {type} filter
+ * @returns {undefined}
+ */					
 function sort_switcher(thescreen, ticket_id, responder_id, sort_by, filter) {
 	if(sort_by == '`ticket_id`') {
 		if($('fromname')) {$('fromname').innerHTML = "From";}	
@@ -421,7 +453,13 @@ function sort_switcher(thescreen, ticket_id, responder_id, sort_by, filter) {
 			}
 		}
 	}
-	
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */	
 function sendRequest(url,callback,postData) {
 	var req = createXMLHTTPObject();
 	if (!req) return;
@@ -440,14 +478,20 @@ function sendRequest(url,callback,postData) {
 	if (req.readyState == 4) return;
 	req.send(postData);
 	}
-
+/**
+ * 
+ * @type Array
+ */
 var XMLHttpFactories = [
 	function () {return new XMLHttpRequest()	},
 	function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 	function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 	function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 	];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 function createXMLHTTPObject() {
 	var xmlhttp = false;
 	for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -461,7 +505,11 @@ function createXMLHTTPObject() {
 		}
 	return xmlhttp;
 	}
-
+/**
+ * 
+ * @param {type} strURL
+ * @returns {Boolean|@exp;AJAX@pro;responseText}
+ */
 function syncAjax(strURL) {
 	if (window.XMLHttpRequest) {						 
 		AJAX=new XMLHttpRequest();						 
@@ -479,11 +527,24 @@ function syncAjax(strURL) {
 		return false;
 		}																						 
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function startup() {
 	$('date').innerHTML = "Date &#9660";
 	}
-	
+/**
+ * 
+ * @param {type} ticket_id
+ * @param {type} responder_id
+ * @param {type} sortby
+ * @param {type} sort
+ * @param {type} filter
+ * @param {type} thescreen
+ * @param {type} archive
+ * @returns {undefined}
+ */	
 function get_arch_messagelist(ticket_id, responder_id, sortby, sort, filter, thescreen, archive) {
 	if((sortby == '`ticket_id`') || (sortby == 'ticket_id')) {
 		theSort = 'ticket_id';
@@ -531,6 +592,11 @@ function get_arch_messagelist(ticket_id, responder_id, sortby, sort, filter, the
 		}
 	var url ='./ajax/list_arch_msgs.php?filename='+archive+'&sort='+theSort+'&columns='+columns+'&way='+theOrder+thefilter+the_selected_ticket+the_selected_responder + "&screen=" + theScreen + "&version=" + randomnumber;
 	sendRequest (url, arch_mess_cb, "");
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */  
 	function arch_mess_cb(req) {
 		the_messages=JSON.decode(req.responseText);
 		var theClass = "background-color: #CECECE";
@@ -574,7 +640,16 @@ function get_arch_messagelist(ticket_id, responder_id, sortby, sort, filter, the
 			setTimeout(function() {$('message_list').innerHTML = the_string;},1000);
 		}
 	}		
-	
+/**
+ * 
+ * @param {type} ticket_id
+ * @param {type} responder_id
+ * @param {type} sortby
+ * @param {type} sort
+ * @param {type} filter
+ * @param {type} thescreen
+ * @returns {undefined}
+ */	
 function get_main_messagelist(ticket_id, responder_id, sortby, sort, filter, thescreen) {
 	window.clearInterval(msgs_interval);
 	window.clearInterval(sentmsgs_interval);
@@ -607,6 +682,11 @@ function get_main_messagelist(ticket_id, responder_id, sortby, sort, filter, the
 		}
 	var url ='./ajax/list_messages.php?sort='+theSort+'&columns='+columns+'&way='+theOrder+thefilter+the_selected_ticket+the_selected_responder + "&screen=" + theScreen + "&version=" + randomnumber;
 	sendRequest (url, main_mess_cb, "");
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */  
 	function main_mess_cb(req) {
 		the_messages=JSON.decode(req.responseText);
 		var theClass = "background-color: #CECECE";
@@ -678,7 +758,16 @@ function get_main_messagelist(ticket_id, responder_id, sortby, sort, filter, the
 			main_messagelist_get(theTicket, theResponder, theSort, theOrder, theFilter, theScreen);			
 		}
 	}		
-	
+/**
+ * 
+ * @param {type} ticket_id
+ * @param {type} responder_id
+ * @param {type} sortby
+ * @param {type} sort
+ * @param {type} filter
+ * @param {type} thescreen
+ * @returns {undefined}
+ */	
 function main_messagelist_get(ticket_id, responder_id, sortby, sort, filter, thescreen) {
 	theTicket = ticket_id;
 	theResponder = responder_id;
@@ -688,7 +777,16 @@ function main_messagelist_get(ticket_id, responder_id, sortby, sort, filter, the
 	theScreen = thescreen;
 	msgs_interval = window.setInterval('do_main_msgs_loop(\''+theTicket+'\',\''+theResponder+'\',\''+theSort+'\',\''+theOrder+'\',\''+theFilter+'\',\''+theScreen+'\')', 60000);
 	}	
-	
+/**
+ * 
+ * @param {type} ticket_id
+ * @param {type} responder_id
+ * @param {type} sortby
+ * @param {type} sort
+ * @param {type} filter
+ * @param {type} thescreen
+ * @returns {undefined}
+ */	
 function do_main_msgs_loop(ticket_id, responder_id, sortby, sort, filter, thescreen) {
 	folder = "inbox";
 	if(thescreen == "ticket") {
@@ -713,7 +811,11 @@ function do_main_msgs_loop(ticket_id, responder_id, sortby, sort, filter, thescr
 		var url = './ajax/list_messages.php?sort='+theSort+'&columns='+columns+'&way='+theOrder+thefilter+the_selected_ticket+the_selected_responder + "&screen=" + theScreen + "&version=" + randomnumber;
 	sendRequest (url, main_msg_cb, "");
 	}
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 function main_msg_cb(req) {
 	var the_string = "";	
 	the_messages=JSON.decode(req.responseText);
@@ -761,7 +863,11 @@ function main_msg_cb(req) {
 		$('message_list').innerHTML = "Loading Messages............";
 		setTimeout(function() {$('message_list').innerHTML = the_string;},1000);
 	}
-	
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */	
 function expand(id) {
 	var the_msg = "M" + id;
 	var the_control = "C" + id;
@@ -773,7 +879,11 @@ function expand(id) {
 		$(the_control).innerHTML = "&#9650";		
 		}
 	}
-	
+/**
+ * 
+ * @param {type} folder
+ * @returns {undefined}
+ */	
 function do_filter(folder) {
 	filter = document.the_filter.frm_filter.value;
 	theFilter = filter;
@@ -806,7 +916,11 @@ function do_filter(folder) {
 			}
 		}
 	}
-	
+/**
+ * 
+ * @param {type} folder
+ * @returns {undefined}
+ */	
 function clear_filter(folder) {
 	if(folder == "inbox") {
 		get_main_messagelist(theTicket,theResponder,theSort, theOrder,'', theScreen);		
@@ -846,7 +960,12 @@ function clear_filter(folder) {
 		theFilter = "";
 		}		
 	}
-	
+/**
+ * 
+ * @param {type} ticket_id
+ * @param {type} filter
+ * @returns {undefined}
+ */	
 function select_ticket(ticket_id, filter) {
 	theTicket = ticket_id;
 	get_main_messagelist(ticket_id, responder_id,sortby,'DESC', filter, thescreen);
@@ -854,7 +973,15 @@ function select_ticket(ticket_id, filter) {
 	$('filter_box').onclick = do_filter(the_ticket);
 	$('the_clear').onclick = clear_filter(the_ticket);	
 	}
-	
+/**
+ * 
+ * @param {type} status
+ * @param {type} id
+ * @param {type} thescreen
+ * @param {type} ticket_id
+ * @param {type} responder_id
+ * @returns {undefined}
+ */	
 function read_status(status, id, thescreen,ticket_id,responder_id) {
 	var randomnumber=Math.floor(Math.random()*99999999);
 	var url="./ajax/msg_status.php?status=" + status + "&id=" + id + "&version=" + randomnumber;
@@ -867,7 +994,12 @@ function read_status(status, id, thescreen,ticket_id,responder_id) {
 			}
 		}
 	}
-
+/**
+ * 
+ * @param {type} the_screen
+ * @param {type} thefolder
+ * @returns {undefined}
+ */
 function refresh_opener(the_screen, thefolder) {
 	if(the_screen == "ticket") {
 		if(thefolder== "inbox") {
@@ -884,7 +1016,11 @@ function refresh_opener(the_screen, thefolder) {
 		get_mainmessages();
 		}
 	}
-
+/**
+ * 
+ * @param {type} the_screen
+ * @returns {undefined}
+ */
 function refresh_waste(the_screen) {
 	if(the_screen = "ticket") {
 		window.opener.get_wastebin();
@@ -894,13 +1030,23 @@ function refresh_waste(the_screen) {
 		get_wastebin();
 		}
 	}
-
+/**
+ * 
+ * @param {type} id
+ * @param {type} folder
+ * @returns {undefined}
+ */
 function del_message(id, folder) {
 	var randomnumber=Math.floor(Math.random()*99999999);
 	var url="./ajax/del_message.php?id=" + id + "&version=" + randomnumber;	
 	if (confirm("Are you sure you want to delete this message?")) { 	
 		sendRequest (url, msgdel_cb, "");
 		}
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */    
 	function msgdel_cb(req) {
 		var resp=JSON.decode(req.responseText);
 		if(resp[0] == 100) {
@@ -916,13 +1062,21 @@ function del_message(id, folder) {
 			}
 		}
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function del_all_messages() {
 	var randomnumber=Math.floor(Math.random()*99999999);
 	var url="./ajax/del_messages.php?version=" + randomnumber;	
 	if (confirm("Are you sure you want to delete all the messages?")) { 	
 		sendRequest (url, msgsdel_cb, "");
 		}
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */    
 	function msgsdel_cb(req) {
 		var resp=JSON.decode(req.responseText);
 		if(resp[0] == 100) {
@@ -932,13 +1086,21 @@ function del_all_messages() {
 			}
 		}
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function empty_waste() {
 	var randomnumber=Math.floor(Math.random()*99999999);
 	var url="./ajax/empty_wastebasket.php?version=" + randomnumber;	
 	if (confirm("Are you sure you want to empty the wastebin?")) { 	
 		sendRequest (url, emp_waste_cb, "");
 		}
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */    
 	function emp_waste_cb(req) {
 		var resp=JSON.decode(req.responseText);
 		if(resp[0] == 100) {
@@ -949,13 +1111,23 @@ function empty_waste() {
 			}
 		}
 	}
-	
+/**
+ * 
+ * @param {type} id
+ * @param {type} folder
+ * @returns {undefined}
+ */	
 function restore_msg(id, folder) {
 	var randomnumber=Math.floor(Math.random()*99999999);
 	var url="./ajax/restore_message.php?id=" + id + "&version=" + randomnumber;	
 	if (confirm("Are you sure you want to restore this message?")) { 	
 		sendRequest (url, emp_waste_cb, "");
 		}
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */    
 	function emp_waste_cb(req) {
 		var resp=JSON.decode(req.responseText);
 		if(resp[0] == 100) {
@@ -965,7 +1137,16 @@ function restore_msg(id, folder) {
 			}
 		}
 	}
-	
+/**
+ * 
+ * @param {type} ticket_id
+ * @param {type} responder_id
+ * @param {type} sortby
+ * @param {type} sort
+ * @param {type} filter
+ * @param {type} thescreen
+ * @returns {undefined}
+ */	
 function get_wastelist(ticket_id, responder_id, sortby, sort, filter, thescreen) {
 	window.clearInterval(msgs_interval);
 	window.clearInterval(sentmsgs_interval);
@@ -992,6 +1173,11 @@ function get_wastelist(ticket_id, responder_id, sortby, sort, filter, thescreen)
 		}	
 	var url ='./ajax/list_waste_messages.php?sort='+sortby+'&columns='+columns+'&way='+sort+thefilter+the_selected_ticket+the_selected_responder+"&screen=" + thescreen + "&version=" + randomnumber;
 	sendRequest (url, waste_mess_cb, "");
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */  
 	function waste_mess_cb(req) {
 		var the_string = "";
 		the_messages=JSON.decode(req.responseText);
@@ -1038,7 +1224,16 @@ function get_wastelist(ticket_id, responder_id, sortby, sort, filter, thescreen)
 		setTimeout(function() {$('message_list').innerHTML = the_string;},1000);
 		}
 	}	
-
+/**
+ * 
+ * @param {type} ticket_id
+ * @param {type} responder_id
+ * @param {type} sortby
+ * @param {type} sort
+ * @param {type} filter
+ * @param {type} thescreen
+ * @returns {undefined}
+ */
 function get_sent_messagelist(ticket_id, responder_id, sortby, sort, filter, thescreen) {
 	$('message_list').innerHTML = "";
 	var the_sentstring = "";	
@@ -1072,6 +1267,11 @@ function get_sent_messagelist(ticket_id, responder_id, sortby, sort, filter, the
 		}
 	var url ='./ajax/list_sent_messages.php?sort='+theSort+'&columns='+columns+'&way='+theOrder+thefilter+the_selected_ticket+the_selected_responder + "&screen=" + theScreen + "&version=" + randomnumber;
 	sendRequest (url, sent_mess_cb, "");
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */  
 	function sent_mess_cb(req) {
 		the_messages=JSON.decode(req.responseText);
 		var theClass = "background-color: #CECECE";
@@ -1143,7 +1343,16 @@ function get_sent_messagelist(ticket_id, responder_id, sortby, sort, filter, the
 			sent_messagelist_get(theTicket, theResponder, theSort, theOrder, theFilter, theScreen);			
 		}
 	}		
-	
+/**
+ * 
+ * @param {type} ticket_id
+ * @param {type} responder_id
+ * @param {type} sortby
+ * @param {type} sort
+ * @param {type} filter
+ * @param {type} thescreen
+ * @returns {undefined}
+ */	
 function sent_messagelist_get(ticket_id, responder_id, sortby, sort, filter, thescreen) {
 	theTicket = ticket_id;
 	theResponder = responder_id;
@@ -1153,7 +1362,16 @@ function sent_messagelist_get(ticket_id, responder_id, sortby, sort, filter, the
 	theScreen = thescreen;
 	sentmsgs_interval = window.setInterval('do_sent_msgs_loop(\''+theTicket+'\',\''+theResponder+'\',\''+theSort+'\',\''+theOrder+'\',\''+theFilter+'\',\''+theScreen+'\')', 60000);
 	}	
-	
+/**
+ * 
+ * @param {type} ticket_id
+ * @param {type} responder_id
+ * @param {type} sortby
+ * @param {type} sort
+ * @param {type} filter
+ * @param {type} thescreen
+ * @returns {undefined}
+ */	
 function do_sent_msgs_loop(ticket_id, responder_id, sortby, sort, filter, thescreen) {
 	folder = "sent";
 	if(thescreen == "ticket") {
@@ -1178,7 +1396,11 @@ function do_sent_msgs_loop(ticket_id, responder_id, sortby, sort, filter, thescr
 		var url = './ajax/list_sent_messages.php?sort='+theSort+'&columns='+columns+'&way='+theOrder+thefilter+the_selected_ticket+the_selected_responder + "&screen=" + theScreen + "&version=" + randomnumber;
 	sendRequest (url, sent_msg_cb2, "");
 	}
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 function sent_msg_cb2(req) {
 	$('message_list').innerHTML = "";
 	var the_sentstring = "";	
@@ -1227,7 +1449,16 @@ function sent_msg_cb2(req) {
 		$('message_list').innerHTML = "Loading Messages............";
 		setTimeout(function() {$('message_list').innerHTML = the_string;},1000);
 	}
-	
+/**
+ * 
+ * @param {type} ticket_id
+ * @param {type} responder_id
+ * @param {type} sortby
+ * @param {type} sort
+ * @param {type} filter
+ * @param {type} thescreen
+ * @returns {undefined}
+ */	
 function get_all_messagelist(ticket_id, responder_id, sortby, sort, filter, thescreen) {
 	folder="all"
 	window.clearInterval(msgs_interval);
@@ -1260,6 +1491,11 @@ function get_all_messagelist(ticket_id, responder_id, sortby, sort, filter, thes
 		}
 	var url ='./ajax/list_all_messages.php?sort='+theSort+'&columns='+columns+'&way='+theOrder+thefilter+the_selected_ticket+the_selected_responder + "&screen=" + theScreen + "&version=" + randomnumber;
 	sendRequest (url, all_mess_cb, "");
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */  
 	function all_mess_cb(req) {
 		the_messages=JSON.decode(req.responseText);
 		var theClass = "background-color: #CECECE";
@@ -1324,7 +1560,16 @@ function get_all_messagelist(ticket_id, responder_id, sortby, sort, filter, thes
 			all_messagelist_get(theTicket, theResponder, theSort, theOrder, theFilter, theScreen);			
 		}
 	}		
-	
+/**
+ * 
+ * @param {type} ticket_id
+ * @param {type} responder_id
+ * @param {type} sortby
+ * @param {type} sort
+ * @param {type} filter
+ * @param {type} thescreen
+ * @returns {undefined}
+ */	
 function all_messagelist_get(ticket_id, responder_id, sortby, sort, filter, thescreen) {
 	theTicket = ticket_id;
 	theResponder = responder_id;
@@ -1334,7 +1579,16 @@ function all_messagelist_get(ticket_id, responder_id, sortby, sort, filter, thes
 	theScreen = thescreen;
 	msgs_interval = window.setInterval('do_all_msgs_loop(\''+theTicket+'\',\''+theResponder+'\',\''+theSort+'\',\''+theOrder+'\',\''+theFilter+'\',\''+theScreen+'\')', 60000);
 	}	
-	
+/**
+ * 
+ * @param {type} ticket_id
+ * @param {type} responder_id
+ * @param {type} sortby
+ * @param {type} sort
+ * @param {type} filter
+ * @param {type} thescreen
+ * @returns {undefined}
+ */	
 function do_all_msgs_loop(ticket_id, responder_id, sortby, sort, filter, thescreen) {
 	folder = "all";
 	if(thescreen == "ticket") {
@@ -1359,7 +1613,11 @@ function do_all_msgs_loop(ticket_id, responder_id, sortby, sort, filter, thescre
 		var url = './ajax/list_all_messages.php?sort='+theSort+'&columns='+columns+'&way='+theOrder+thefilter+the_selected_ticket+the_selected_responder + "&screen=" + theScreen + "&version=" + randomnumber;
 	sendRequest (url, all_msg_cb, "");
 	}
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 function all_msg_cb(req) {
 	folder="all";
 	var the_string = "";	

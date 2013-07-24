@@ -319,11 +319,18 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		}
 	catch(e) {
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function get_new_colors() {				// 5/4/11
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
-
+/**
+ * 
+ * @param {type} obj
+ * @returns {undefined}
+ */
 	function dump (obj) {
 		var r = '';
 		var dep = 10;
@@ -342,7 +349,10 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		alert("dump: " + r);
 		}	
 	
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {									// 2/11/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -355,7 +365,10 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			}
 		return elements;
 		}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {									// 1/19/09
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
@@ -363,6 +376,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 	var lat_lng_frmt = <?php print get_variable('lat_lng'); ?>;				// 9/9/08
 
 	var starting = false;
+/**
+ * 
+ * @param {type} theForm
+ * @returns {unresolved}
+ */  
 	function sv_win(theForm) {				// 2/11/09
 		if(starting) {return;}				// dbl-click proof
 		starting = true;					
@@ -378,12 +396,19 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		newwindow_sl.focus();
 		starting = false;
 		}		// end function sv win()
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_usng() {														// 5/2/09
 		alert(279);
 		if (document.edit.frm_ngs.value.trim().length>6) {do_usng_conv();}
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_usng_conv(){			// usng to LL array			- 12/4/08
 		tolatlng = new Array();
 		USNGtoLL(document.edit.frm_ngs.value, tolatlng);
@@ -398,7 +423,12 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 
 		}				// end function
 		
-
+/**
+ * 
+ * @param {type} inlat
+ * @param {type} inlng
+ * @returns {unresolved}
+ */
 	function do_coords(inlat, inlng) { 										 //9/14/08
 		if(inlat.toString().length==0) return;								// 10/15/08
 		var str = inlat + ", " + inlng + "\n";
@@ -406,7 +436,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		str += lat2ddm(inlat) + ", " +lng2ddm(inlng);		
 		alert(str);
 		}
-
+/**
+ * 
+ * @param {type} inval
+ * @returns {String}
+ */
 	function ll2dms(inval) {				// lat/lng to degr, mins, sec's - 9/9/08
 		var d = new Number(inval);
 		d  = (inval>0)?  Math.floor(d):Math.round(d);
@@ -416,7 +450,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		var s = si.toFixed(1);
 		return d + '\260 ' + Math.abs(m) +"' " + Math.abs(s) + '"';
 		}
-
+/**
+ * 
+ * @param {type} inlat
+ * @returns {String}
+ */
 	function lat2ddm(inlat) {				// lat to degr, dec min's  9/7/08
 		var x = new Number(inlat);
 		var y  = (inlat>0)?  Math.floor(x):Math.round(x);
@@ -424,7 +462,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		var nors = (inlat>0.0)? " N":" S";
 		return Math.abs(y) + '\260 ' + z +"'" + nors;
 		}
-	
+/**
+ * 
+ * @param {type} inlng
+ * @returns {String}
+ */	
 	function lng2ddm(inlng) {				// lng to degr, dec min's 
 		var x = new Number(inlng);
 		var y  = (inlng>0)?  Math.floor(x):Math.round(x);
@@ -432,7 +474,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		var eorw = (inlng>0.0)? " E":" W";
 		return Math.abs(y) + '\260 ' + z +"'" + eorw;
 		}
-	
+/**
+ * 
+ * @param {type} inlat
+ * @returns {String}
+ */	
 	function do_lat_fmt(inlat) {				// 9/9/08
 		switch(lat_lng_frmt) {
 		case 0:
@@ -448,7 +494,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			alert ("invalid LL format selector");
 			}	
 		}
-
+/**
+ * 
+ * @param {type} inlng
+ * @returns {String}
+ */
 	function do_lng_fmt(inlng) {
 		switch(lat_lng_frmt) {
 		case 0:
@@ -464,7 +514,10 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			alert ("invalid LL format selector");
 			}	
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {		// onLoad = "ck_frames()"
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
@@ -473,7 +526,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			parent.upper.show_butts();										// 1/21/09
 			}
 		}		// end function ck_frames()
-
+/**
+ * 
+ * @param {type} str
+ * @returns {@exp;words@call;join}
+ */
 	function capWords(str){ 
 		var words = str.split(" "); 
 		for (var i=0 ; i < words.length ; i++){ 
@@ -484,7 +541,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 	  	 	} 
 		return( words.join(" ")); 
 		} 
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function validate(theForm) {
 //		alert (theForm);
 		var errmsg="";
@@ -514,7 +575,12 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			theForm.submit();
 			}
 		}				// end function validate(theForm)
-
+/**
+ * 
+ * @param {type} text
+ * @param {type} index
+ * @returns {undefined}
+ */
 	function do_fac_to_loc(text, index){													// 9/22/09
 			var curr_lat = fac_lat[index];
 			var curr_lng = fac_lng[index];
@@ -522,7 +588,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			do_lng(curr_lng);
 			pt_to_map (document.edit, curr_lat, curr_lng)
 	}					// end function do_fac_to_loc
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_end(theForm) {				// make run-end date/time inputs available for posting		
 		elem = document.getElementById("runend1");
 		elem.style.visibility = "visible";
@@ -539,7 +609,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 ?>
 		}
 	var good_end = false;		// boolean defines run end 
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_booking(theForm) {				// 	10/1/09 make booking date/time inputs available for posting	
 		elem = document.getElementById("booked1");
 		elem.style.visibility = "visible";
@@ -555,7 +629,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		}
 ?>
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function reset_end(theForm) {		// on reset()	
 		if (!good_end) {
 			elem = document.getElementById("runend1");
@@ -567,7 +645,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			theForm.frm_minute_problemend.disabled = true;		
 			}
 	}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function st_unlk(theForm) {										// problem start time enable 8/10/08	
 		theForm.frm_year_problemstart.disabled = false;
 		theForm.frm_month_problemstart.disabled = false;
@@ -576,7 +658,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		theForm.frm_minute_problemstart.disabled = false;
 //		document.getElementById("lock").style.visibility = "hidden";	//8/23/08
 		}
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */		
 	function st_unlk_res(theForm) {										// 8/10/08	
 		theForm.frm_year_problemstart.disabled = true;
 		theForm.frm_month_problemstart.disabled = true;
@@ -585,7 +671,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		theForm.frm_minute_problemstart.disabled = true;
 //		document.getElementById("lock").style.visibility = "visible";	// 8/23/08
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function pb_unlk(theForm) {										// Booking time enable 8/10/08	
 		theForm.frm_year_booked_date.disabled = false;
 		theForm.frm_month_booked_date.disabled = false;
@@ -595,7 +685,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		if (theForm.frm_meridiem_booked_date) {theForm.frm_meridiem_booked_date.disabled = false;}
 		document.getElementById("pb_lock").style.visibility = "hidden";	//8/23/08
 		}
-
+/**
+ * 
+ * @param {type} indx
+ * @returns {undefined}
+ */
 	function do_inc_nature(indx) {										// 7/16/09
 		if (protocols[indx]) {
 			$('proto_cell').innerHTML = protocols[indx];
@@ -609,7 +703,10 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 	var protocols = new Array();		// 7/7/09
 	var fac_lat = [];
 	var fac_lng = [];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function ReadOnlyCheckBox() {
 		alert("You can't change this value");
 		return false;
@@ -906,13 +1003,22 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			if (mysql_num_rows($result_sigs)>0) {				// 2/11/11
 ?>
 <SCRIPT>
+/**
+ * 
+ * @param {type} inval
+ * @returns {undefined}
+ */                  
 	function set_signal(inval) {
 		var lh_sep = (document.edit.frm_description.value.trim().length>0)? " " : "";
 		var temp_ary = inval.split("|", 2);		// inserted separator
 		document.edit.frm_description.value+= lh_sep + temp_ary[1] + ' ';		
 		document.edit.frm_description.focus();		
 		}		// end function set_signal()
-
+/**
+ * 
+ * @param {type} inval
+ * @returns {undefined}
+ */
 	function set_signal2(inval) {
 		var lh_sep = (document.edit.frm_comments.value.trim().length>0)? " " : "";
 		var temp_ary = inval.split("|", 2);		// inserted separator
@@ -1231,6 +1337,10 @@ if (!$disallow) {
 ?>
 	<SCRIPT>
 	var grid_bool = false;		
+/**
+ * 
+ * @returns {undefined}
+ */  
 	function toglGrid() {						// toggle
 		grid_bool = !grid_bool;
 		if (grid_bool)	{ grid = new Graticule(map_obj); }
@@ -1250,7 +1360,11 @@ if (!$disallow) {
 		var lat_var;					// see init.js
 		var lng_var;
 		var zoom_var;
-
+/**
+ * 
+ * @param {type} in_obj
+ * @returns {undefined}
+ */
 	function call_back (in_obj){				// callback function - from gmaps_v3_init()
 		do_lat(in_obj.lat);			// set form values
 		do_lng(in_obj.lng);
@@ -1277,20 +1391,32 @@ if (!$disallow) {
 			<?php echo get_variable('maptype');?>, 
 			false);		
 
-
+/**
+ * 
+ * @param {type} lat
+ * @returns {undefined}
+ */
 	function do_lat (lat) {
 		document.edit.frm_lat.value=parseFloat(lat).toFixed(6);			// 9/9/08, 5/2/09
 		document.edit.show_lat.disabled=false;							// permit read/write
 		document.edit.show_lat.value=do_lat_fmt(document.edit.frm_lat.value);
 		document.edit.show_lat.disabled=true;
 		}
+/**
+ * 
+ * @param {type} lng
+ * @returns {undefined}
+ */    
 	function do_lng (lng) {
 		document.edit.frm_lng.value=parseFloat(lng).toFixed(6);			// 5/2/09
 		document.edit.show_lng.disabled=false;
 		document.edit.show_lng.value=do_lng_fmt(document.edit.frm_lng.value);
 		document.edit.show_lng.disabled=true;
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_ngs() {											// LL to USNG
 		var loc = <?php print get_variable('locale');?>;
 		document.forms[0].frm_ngs.disabled=false;
@@ -1299,23 +1425,40 @@ if (!$disallow) {
 		if(loc == 2) { document.forms[0].frm_ngs.value = LLtoOSGB(document.forms[0].frm_lat.value, document.forms[0].frm_lng.value);			}			
 		document.forms[0].frm_ngs.disabled=true;
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_grids(theForm) {								//12/13/10
 //		if (theForm.frm_ngs.value) {do_usng(theForm) ;}
 		if (theForm.frm_utm) {do_utm (theForm);}
 		if (theForm.frm_osgb) {do_osgb (theForm);}
 		}
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */    
 	function do_usng(theForm) {								// 8/23/08, 12/5/10
 		theForm.frm_ngs.value = LLtoUSNG(theForm.frm_lat.value, theForm.frm_lng.value, 5);	// US NG
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_utm (theForm) {
 		var ll_in = new LatLng(parseFloat(theForm.frm_lat.value), parseFloat(theForm.frm_lng.value));
 		var utm_out = ll_in.toUTMRef().toString();
 		temp_ary = utm_out.split(" ");
 		theForm.frm_utm.value = (temp_ary.length == 3)? temp_ary[0] + " " +  parseInt(temp_ary[1]) + " " + parseInt(temp_ary[2]) : "";
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_osgb (theForm) {
 		var ll_in = new LatLng(parseFloat(theForm.frm_lat.value), parseFloat(theForm.frm_lng.value));
 		var osgb_out = ll_in.toOSRef();
@@ -1328,6 +1471,12 @@ if (!$disallow) {
 ?>
 
 <SCRIPT>
+/**
+ * 
+ * @param {type} lat
+ * @param {type} lng
+ * @returns {undefined}
+ */                  
 	function resetmap(lat, lng) {						// restore original marker and center
 <?php
 		if (!($gmaps)) {print "\n\t return;\n";}		// 1/1/11
@@ -1344,6 +1493,11 @@ if (!$disallow) {
 		}
 
 // *********************************************************************
+/**
+ * 
+ * @param {type} plaintext
+ * @returns {String}
+ */
 	function URLEncode(plaintext ) {					// The Javascript escape and unescape functions do
 		var SAFECHARS = "0123456789" +					// Numeric
 						"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +	// Alphabetic
@@ -1378,6 +1532,13 @@ if (!$disallow) {
 		};			// end function
 
 	var the_form;
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */  
 	function sendRequest(my_form, url,callback,postData) {		// ajax function set - 1/17/09
 		the_form = my_form;
 		var req = createXMLHTTPObject();
@@ -1400,14 +1561,20 @@ if (!$disallow) {
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array|Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -1421,7 +1588,11 @@ if (!$disallow) {
 			}
 		return xmlhttp;
 		}
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 	function handleResult(req) {			// the called-back function 9/29/09 added frequent fliers
 		if (req.responseText.substring(0,1)=="-") {
 			alert("lookup failed");
@@ -1441,7 +1612,10 @@ if (!$disallow) {
 			
 			}		// end else ...			
 		}		// end function handleResult()
-	
+/**
+ * 
+ * @returns {unresolved}
+ */	
 	function phone_lkup(){	
 		var goodno = document.edit.frm_phone.value.replace(/\D/g, "" );		// strip all non-digits - 1/18/09
 		if (goodno.length<10) {
@@ -1456,6 +1630,13 @@ if (!$disallow) {
 	if ($gmaps) {				// 6/4/2013
 ?>
 // *********************************************************************
+/**
+ * 
+ * @param {type} my_form
+ * @param {type} lat
+ * @param {type} lng
+ * @returns {undefined}
+ */
 	function pt_to_map (my_form, lat, lng) {						// 7/5/10
 		myMarker.setMap(null);			// destroy predecessor
 		my_form.frm_lat.value=lat;	
@@ -1485,7 +1666,11 @@ if (!$disallow) {
 		myMarker.setMap(map_obj);		// add marker with icon
 
 		}				// end function pt_to_map ()
-
+/**
+ * 
+ * @param {type} my_form
+ * @returns {Boolean}
+ */
 	function loc_lkup(my_form) {		   						// 7/5/10
 		if ((my_form.frm_city.value.trim()==""  || my_form.frm_state.value.trim()=="")) {
 			alert ("City and State are required for location lookup.");
@@ -1506,7 +1691,12 @@ if (!$disallow) {
 	var geocoder = new google.maps.Geocoder();
 	var address;
 	var rev_coding_on = '<?php print get_variable('reverse_geo');?>';		// 7/5/10	
-		
+/**
+ * 
+ * @param {type} lat
+ * @param {type} lng
+ * @returns {undefined}
+ */		
 	function codeLatLng(lat, lng) {
 		var latlng = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
 		geocoder.geocode({'latLng': latlng}, function(results, status) {
@@ -1553,7 +1743,11 @@ if (!$disallow) {
 	}				// end function
 
 // *****************************************************************************
-
+/**
+ * 
+ * @param {type} the_form
+ * @returns {unresolved}
+ */
 	function do_nearby(the_form){		// 11/22/2012
 		if (the_form.frm_lat.value.length == 0) {
 			alert("Map <?php echo get_text("Location");?> is required for nearby <?php echo get_text("Incident");?> lookup.");
@@ -1588,6 +1782,10 @@ if (!$disallow) {
 			if ($addrs) {				// 10/21/08
 ?>			
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */                          
 	function do_notify() {
 		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
 		var theText= "TICKET-Update: ";
@@ -1599,10 +1797,20 @@ if (!$disallow) {
 		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId + "&text_sel=1" ;		// ($to_str, $text, $ticket_id)   10/15/08
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 		}			// end function do notify()
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 	function handleResult(req) {				// the 'called-back' function
 		}
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -1624,14 +1832,20 @@ if (!$disallow) {
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array|Array|Array|Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -1653,6 +1867,10 @@ if (!$disallow) {
 		else {
 ?>		
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */                          
 	function do_notify() {
 		return;
 		}			// end function do notify()

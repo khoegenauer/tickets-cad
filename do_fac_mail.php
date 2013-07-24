@@ -37,11 +37,17 @@ if (empty($_POST)) {
 ?>
 
 <SCRIPT>
- 
+/**
+ * 
+ * @returns {unresolved}
+ */ 
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -54,13 +60,20 @@ if (empty($_POST)) {
 			}
 		return elements;
 		}
-	
+/**
+ * 
+ * @param {type} lines
+ * @returns {undefined}
+ */	
 	function reSizeScr(lines){
 		var the_width = 720;
 		var the_height = ((lines * 21)+400);				// values derived via trial/error (more of the latter, mostly)
 		window.resizeTo(the_width,the_height);	
 		}
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 	function validate() {
 		var addr_err = true;
 			for (i=0; i< document.mail_form.length; i++) {

@@ -390,6 +390,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 //			snap(basename( __FILE__) . __LINE__, count($addrs));
 
 ?>	
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	function do_notify() {
 
 		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
@@ -403,14 +407,25 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 		}			// end function do notify()
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 	function handleResult(req) {				// the 'called-back' function
 <?php
 
 		if($istest) {print "\t\t\talert('HTTP error ' + req.status + '" . __LINE__ . "');\n";}
 ?>
 		}
-
+/**
+ * 
+ * @param {type} my_form
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -432,14 +447,20 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array|Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -454,6 +475,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		}				// end if ($addrs)
 	else {
 ?>
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	function do_notify() {	// dummy
 		return;
 		}
@@ -553,10 +578,17 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 <SCRIPT SRC="./js/gmaps_v3_init.js"	TYPE="text/javascript" ></SCRIPT>
 
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */  
 	function get_new_colors() {				// 5/4/11
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {		// onLoad = "ck_frames()"
 <?php if ($in_win) {echo "\n\t\t return;\n"; }?>	
 		if(self.location.href==parent.location.href) {
@@ -575,7 +607,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 	parent.frames["upper"].$("script").innerHTML  = "<?php print LessExtension(basename( __FILE__));?>";
 
 	var lat_lng_frmt = <?php print get_variable('lat_lng'); ?>;				// 9/9/08		
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {									// 2/11/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -588,11 +623,20 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 			}
 		return elements;
 		}
+/**
+ * 
+ * @param {type} str
+ * @returns {Boolean}
+ */    
 	function isNullOrEmpty(str) {
 		if (null == str || "" == str) {return true;} else { return false;}
 		}
 	var starting = false;
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {unresolved}
+ */
 	function sv_win(theForm) {				// 2/11/09
 		if(starting) {return;}				// dbl-click proof
 		starting = true;					
@@ -609,19 +653,36 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		starting = false;
 		}		// end function sv win()
 
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-	
+/**
+ * 
+ * @param {type} val
+ * @returns {unresolved}
+ */	
 	function chknum(val) { 
 		return ((val.trim().replace(/\D/g, "")==val.trim()) && (val.trim().length>0));}
-	
+/**
+ * 
+ * @param {type} val
+ * @param {type} lo
+ * @param {type} hi
+ * @returns {@exp;@call;chknum}
+ */	
 	function chkval(val, lo, hi) { 
 		return  (chknum(val) && !((val> hi) || (val < lo)));}
 	
 	
 	starting=false;						// 12/16/09
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	function do_hist_win() {
 		if(starting) {return;}	
 		var goodno = document.add.frm_phone.value.replace(/\D/g, "" );		// strip all non-digits - 1/18/09
@@ -645,7 +706,12 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		newwindow_c_h.focus();
 		starting = false;
 		}		// function do hist_win()
-			
+/**
+ * 
+ * @param {type} inlat
+ * @param {type} inlng
+ * @returns {unresolved}
+ */			
 	function do_coords(inlat, inlng) { 										 //9/14/08
 		if((inlat.length==0)||(inlng.length==0)) {return;}
 		var str = inlat + ", " + inlng + "\n";
@@ -653,7 +719,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		str += lat2ddm(inlat) + ", " +lng2ddm(inlng);		
 		alert(str);
 		}
-
+/**
+ * 
+ * @param {type} inval
+ * @returns {String}
+ */
 	function ll2dms(inval) {				// lat/lng to degr, mins, sec's - 9/9/08
 		var d = new Number(Math.abs(inval));
 		d  = Math.floor(d);
@@ -663,7 +733,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		var s = si.toFixed(1);
 		return d + '\260 ' + Math.abs(m) +"' " + Math.abs(s) + '"';
 		}
-
+/**
+ * 
+ * @param {type} inlat
+ * @returns {String}
+ */
 	function lat2ddm(inlat) {				//  lat to degr, dec.min's - 9/9/089/7/08
 		var x = new Number(Math.abs(inlat));
 		var degs  = Math.floor(x);				// degrees
@@ -671,7 +745,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		var nors = (inlat>0.0)? " N":" S";
 		return degs + '\260'  + mins +"'" + nors;
 		}
-	
+/**
+ * 
+ * @param {type} inlng
+ * @returns {String}
+ */	
 	function lng2ddm(inlng) {				//  lng to degr, dec.min's - 9/9/089/7/08
 		var x = new Number(Math.abs(inlng));
 		var degs  = Math.floor(x);				// degrees
@@ -679,7 +757,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		var eorw = (inlng>0.0)? " E":" W";
 		return degs + '\260' + mins +"'" + eorw;
 		}
-
+/**
+ * 
+ * @param {type} inlat
+ * @returns {String}
+ */
 	function do_lat_fmt(inlat) {				// 9/9/08
 		switch(lat_lng_frmt) {
 			case 0:
@@ -695,7 +777,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 				alert ( "error <?php print __LINE__;?>");
 			}	
 		}
-
+/**
+ * 
+ * @param {type} inlng
+ * @returns {String}
+ */
 	function do_lng_fmt(inlng) {
 		switch(lat_lng_frmt) {
 			case 0:
@@ -711,7 +797,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 				alert ("error <?php print __LINE__;?>");
 			}	
 		}
-
+/**
+ * 
+ * @param {type} content
+ * @returns {undefined}
+ */
 	function writeConsole(content) {
 		top.consoleRef=window.open('','myconsole',
 			'width=800,height=250' +',menubar=0' +',toolbar=0' +',status=0' +',scrollbars=1' +',resizable=1')
@@ -720,7 +810,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 			)				// end top.consoleRef.document.writeln()
 	 	top.consoleRef.document.close();
 		}				// end function writeConsole(content)
-	
+/**
+ * 
+ * @returns {String}
+ */	
 	function getRes() {
 		return window.screen.width + ' x ' + window.screen.height;
 		}
@@ -737,12 +830,19 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 	var cross;
 	
 	var grid_bool = false;		
+/**
+ * 
+ * @returns {undefined}
+ */  
 	function toglGrid() {						// toggle
 		grid_bool = !grid_bool;
 		if (grid_bool)	{ grid = new Graticule(map_obj); }
 		else 			{ grid.setMap(null); }
 		}		// end function toglGrid()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function clearmap(){
 <?php
 	if ((!($gmaps)) || ($in_win)) {
@@ -753,7 +853,13 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		load(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>, <?php echo get_variable('def_zoom'); ?>);
 //		if (grid) {map.addOverlay(new LatLonGraticule());}
 		}
-	
+/**
+ * 
+ * @param {type} lat
+ * @param {type} lng
+ * @param {type} zoom
+ * @returns {undefined}
+ */	
 	function do_marker(lat, lng, zoom) {		// 9/16/08 - 12/6/08
 		map.clearOverlays();
 		var center = isNullOrEmpty(lat)?  GLatLng(map.getCenter()) : new GLatLng(lat, lng);
@@ -772,14 +878,24 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		var zoom_var;
 
 		var icon_file = "./markers/crosshair.png";
-
+/**
+ * 
+ * @param {type} the_lat
+ * @param {type} the_lng
+ * @param {type} the_zoom
+ * @returns {undefined}
+ */
 	function load(the_lat, the_lng, the_zoom) {				// onLoad function - 4/28/09
 <?php
 	if ((!($gmaps)) || ($in_win)) {
 		print "\n\t return;\n";
 		}
 ?>	
-
+/**
+ * 
+ * @param {type} in_obj
+ * @returns {undefined}
+ */
 	function call_back (in_obj){				// callback function - from gmaps_v3_init()
 //		alert(756);
 		do_lat(in_obj.lat);			// set form values
@@ -815,7 +931,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		var do_rev_geo = true;
 
 		}			// end function load()
-
+/**
+ * 
+ * @param {type} plaintext
+ * @returns {String}
+ */
 	function URLEncode(plaintext ) {					// The Javascript escape and unescape functions do
 														// NOT correspond with what browsers actually do...
 		var SAFECHARS = "0123456789" +					// Numeric
@@ -849,7 +969,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 			} 			// end for(...)
 		return encoded;
 		};			// end function
-	
+/**
+ * 
+ * @param {type} encoded
+ * @returns {String}
+ */	
 	function URLDecode(encoded ){   					// Replace + with ' '
 	   var HEXCHARS = "0123456789ABCDEFabcdef";  		// Replace %xx with equivalent character
 	   var plaintext = "";   							// Place [ERROR] in output if %xx is invalid.
@@ -877,20 +1001,32 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		} 				// end  while (...)
 		return plaintext;
 		};				// end function URLDecode()
-	
+/**
+ * 
+ * @param {type} lat
+ * @returns {undefined}
+ */	
 	function do_lat (lat) {
 		document.add.frm_lat.value=lat;			// 9/9/08
 		document.add.show_lat.disabled=false;				// permit read/write
 		document.add.show_lat.value=do_lat_fmt(document.add.frm_lat.value);
 		document.add.show_lat.disabled=true;
 		}
+/**
+ * 
+ * @param {type} lng
+ * @returns {undefined}
+ */    
 	function do_lng (lng) {
 		document.add.frm_lng.value=lng;
 		document.add.show_lng.disabled=false;
 		document.add.show_lng.value=do_lng_fmt(document.add.frm_lng.value);
 		document.add.show_lng.disabled=true;
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_ngs() {											// LL to USNG - 6/2/2013
 		var loc = <?php print get_variable('locale');?>;
 		document.forms[0].frm_ngs.disabled=false;
@@ -899,7 +1035,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		if(loc == 2) { document.forms[0].frm_ngs.value = LLtoOSGB(document.forms[0].frm_lat.value, document.forms[0].frm_lng.value);			}			
 		document.forms[0].frm_ngs.disabled=true;
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_grids(theForm) {								// 12/13/10
 <?php															// 1/24/11
 			$locale = intval(trim(get_variable("locale"))); 
@@ -918,26 +1058,47 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 				}		// end switch
 ?>
 		}
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */    
 	function do_usng(theForm) {								// 8/23/08, 12/5/10
 		theForm.frm_ngs.value = LLtoUSNG(theForm.frm_lat.value, theForm.frm_lng.value, 5);	// US NG
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_utm (theForm) {
 		var ll_in = new LatLng(parseFloat(theForm.frm_lat.value), parseFloat(theForm.frm_lng.value));
 		var utm_out = ll_in.toUTMRef().toString();
 		temp_ary = utm_out.split(" ");
 		theForm.frm_ngs.value = (temp_ary.length == 3)? temp_ary[0] + " " +  parseInt(temp_ary[1]) + " " + parseInt(temp_ary[2]) : "";
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_osgb (theForm) {
 		theForm.frm_ngs.value = LLtoOSGB(theForm.frm_lat.value, theForm.frm_lng.value);
 		}
-		
+/**
+ * 
+ * @param {type} the_form
+ * @returns {undefined}
+ */		
 	function do_cancel(the_form) {			// 6/9/11
 		var params = "ticket_id=" + the_form.ticket_id.value;	
 		sendRequest (the_form, 'cancel_add.php',handleResult_can, params);	// (my_form, url,callback,postData))   10/15/08
 		}			// end function do cancel()
-		
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */		
 	function handleResult_can(req) {				// the called-back function
 <?php
 		if($istest) {print "\t\t\talert('HTTP error ' + req.status + '" . __LINE__ . "');\n";}
@@ -959,6 +1120,14 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 
 // *********************************************************************
 	var the_form;
+/**
+ * 
+ * @param {type} my_form
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */  
 	function sendRequest(my_form, url,callback,postData) {		// ajax function set - 1/17/09
 		the_form = my_form;
 		var req = createXMLHTTPObject();
@@ -979,14 +1148,20 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array|Array|Array|Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -1003,7 +1178,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 
 // "Juan Wzzzzz;(123) 456-9876;1689 Abcd St;Abcdefghi;MD;16701;99.013297;-88.544775;"
 //  1           2              3            4         5  6     7         8
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 	function handleResult(req) {									// the called-back phone lookup function
 		var result=req.responseText.split(";");						// parse semic-separated return string
 		$('repeats').innerHTML = "(" + result[0].trim() + ")";		// prior calls this phone no. - 9/29/09 
@@ -1034,7 +1213,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 				}
 			}		// end else ...			
 		}		// end function handleResult()
-	
+/**
+ * 
+ * @returns {unresolved}
+ */	
 	function phone_lkup(){	
 		var goodno = document.add.frm_phone.value.replace(/\D/g, "" );		// strip all non-digits - 1/18/09
 <?php
@@ -1051,6 +1233,13 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		}
 		
 // *********************************************************************
+/**
+ * 
+ * @param {type} my_form
+ * @param {type} lat
+ * @param {type} lng
+ * @returns {undefined}
+ */
 	function pt_to_map (my_form, lat, lng) {						// 7/5/10
 		myMarker.setMap(null);			// destroy predecessor
 		my_form.frm_lat.value=lat;	
@@ -1080,7 +1269,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		myMarker.setMap(map_obj);		// add marker with icon
 
 		}				// end function pt_to_map ()
-
+/**
+ * 
+ * @param {type} my_form
+ * @returns {Boolean}
+ */
 	function loc_lkup(my_form) {		   						// 7/5/10
 		if ((my_form.frm_city.value.trim()==""  || my_form.frm_state.value.trim()=="")) {
 			alert ("City and State are required for location lookup.");
@@ -1106,7 +1299,12 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 	var geocoder = new google.maps.Geocoder();
 	var address;
 	var rev_coding_on = '<?php print get_variable('reverse_geo');?>';		// 7/5/10	
-		
+/**
+ * 
+ * @param {type} lat
+ * @param {type} lng
+ * @returns {undefined}
+ */		
 	function codeLatLng(lat, lng) {
 		var latlng = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
 		geocoder.geocode({'latLng': latlng}, function(results, status) {
@@ -1153,7 +1351,12 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 	}				// end function
 	
 
-
+/**
+ * 
+ * @param {type} overlay
+ * @param {type} latlng
+ * @returns {undefined}
+ */
 	function getAddress(overlay, latlng) {		//7/5/10
 //		if (rev_coding_on == 1) {	
 			alert(1076);
@@ -1191,6 +1394,12 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 
 	var tbd_str = "TBD";									// 1/11/09
 	var user_inc_name = false;							// 4/21/10
+/**
+ * 
+ * @param {type} str
+ * @param {type} indx
+ * @returns {undefined}
+ */  
 	function do_inc_name(str, indx) {								// 10/4/08, 7/7/09
 <?php
 //	$inc_num_ary = unserialize (get_variable('_inc_num'));					// 2/27/11
@@ -1214,7 +1423,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 			$('proto_cell').innerHTML = "";		
 			}
 		}			// end function do_inc_name()
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function datechk_s(theForm) {		// pblm start vs now
 		var start = new Date();
 		start.setFullYear(theForm.frm_year_problemstart.value, theForm.frm_month_problemstart.value-1, theForm.frm_day_problemstart.value);
@@ -1222,6 +1435,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		var now = new Date();
 		return (start.valueOf() <= now.valueOf());	
 		}
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */    
 	function datechk_e(theForm) {		// pblm end vs now
 		var end = new Date();
 		end.setFullYear(theForm.frm_year_problemend.value, theForm.frm_month_problemend.value-1, theForm.frm_day_problemend.value);
@@ -1229,6 +1447,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		var now = new Date();
 		return (end.valueOf() <= now.valueOf());	
 		}
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */    
 	function datechk_r(theForm) {		// pblm start vs end
 		var start = new Date();
 		start.setFullYear(theForm.frm_year_problemstart.value, theForm.frm_month_problemstart.value-1, theForm.frm_day_problemstart.value);
@@ -1239,7 +1462,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		end.setHours(theForm.frm_hour_problemend.value,theForm.frm_minute_problemend.value, 0,0);
 		return (start.valueOf() <= end.valueOf());	
 		}
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */		
 	function validate(theForm) {	// 
 		do_unlock_ps(theForm);								// 8/11/08
 	
@@ -1305,7 +1532,12 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 //			return true;
 			}
 		}				// end function validate(theForm)
-	
+/**
+ * 
+ * @param {type} text
+ * @param {type} index
+ * @returns {undefined}
+ */	
 	function do_fac_to_loc(text, index){			// 9/22/09
 			var curr_lat = fac_lat[index];
 			var curr_lng = fac_lng[index];
@@ -1315,7 +1547,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 			document.add.frm_lat.disabled=true;
 			document.add.frm_lng.disabled=true;
 	}					// end function do_fac_to_loc
-
+/**
+ * 
+ * @param {type} str
+ * @returns {@exp;words@call;join}
+ */
 	function capWords(str){ 
 		var words = str.split(" "); 
 		for (var i=0 ; i < words.length ; i++){ 
@@ -1326,7 +1562,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 	  	 	} 
 		return( words.join(" ")); 
 		} 
-	
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */	
 	function do_end(theForm) {			// enable run-end date/time inputs
 		elem = $("runend1");
 		elem.style.visibility = "visible";
@@ -1339,7 +1579,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 ?>
 		do_unlock_pe(theForm);								// problemend values
 		}
-	
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */	
 	function do_reset(theForm) {				// disable run-end date/time inputs
 		clearmap();
 		do_lock_ps(theForm);				// hskp problem start date
@@ -1361,7 +1605,12 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		$('proto_cell').innerHTML = "";					// 8/7/10
 
 		}		// end function reset()
-
+/**
+ * 
+ * @param {type} theForm
+ * @param {type} theBool
+ * @returns {undefined}
+ */
 	function do_problemstart(theForm, theBool) {							// 8/10/08
 		theForm.frm_year_problemstart.disabled = theBool;
 		theForm.frm_month_problemstart.disabled = theBool;
@@ -1370,7 +1619,12 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		theForm.frm_minute_problemstart.disabled = theBool;
 		if (theForm.frm_meridiem_problemstart) {theForm.frm_meridiem_problemstart.disabled = theBool;}
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @param {type} theBool
+ * @returns {undefined}
+ */
 	function do_problemend(theForm, theBool) {								// 8/10/08
 		theForm.frm_year_problemend.disabled = theBool;
 		theForm.frm_month_problemend.disabled = theBool;
@@ -1379,7 +1633,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		theForm.frm_minute_problemend.disabled = theBool;
 		if (theForm.frm_meridiem_problemend) {theForm.frm_meridiem_problemend.disabled = theBool;}
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_booking(theForm) {			// 10/1/09 enable booked date entry
 		theForm.frm_do_scheduled.value=1;	// 1/1/11
 		for (i=0;i<theForm.frm_status.options.length; i++){
@@ -1399,7 +1657,12 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 ?>
 		do_booked_date(theForm, false);
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @param {type} theBool
+ * @returns {undefined}
+ */
 	function do_booked_date(theForm, theBool) {							// 10/1/09 Booked Date processing
 		theForm.frm_year_booked_date.disabled = theBool;
 		theForm.frm_month_booked_date.disabled = theBool;
@@ -1408,39 +1671,66 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		theForm.frm_minute_booked_date.disabled = theBool;
 		if (theForm.frm_meridiem_booked_date) {theForm.frm_meridiem_booked_date.disabled = theBool;}
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_unlock_ps(theForm) {											// 8/10/08
 		do_problemstart(theForm, false)
 		$("lock_s").style.visibility = "hidden";		
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_unlock_bd(theForm) {									// 9/29/09 Unlock booked date
 		do_booked_date(theForm, false)
 		$("lock_b").style.visibility = "hidden";		
 		}
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */		
 	function do_lock_ps(theForm) {												// 8/10/08
 		do_problemstart(theForm, true)
 		$("lock_s").style.visibility = "visible";
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_unlock_pe(theForm) {											// 8/10/08 
 		do_problemend(theForm, false)
 //		$("lock_e").style.visibility = "hidden";		
 		}
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */		
 	function do_lock_pe(theForm) {												// 8/10/08
 		do_problemend(theForm, true)
 //		$("lock_e").style.visibility = "visible";
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_unlock_pos(theForm) {											// 12/5/08
 		document.add.frm_ngs.disabled=false;
 		$("lock_p").style.visibility = "hidden";		
 		try {$("grid_link").style.textDecoration = "underline";	}						// 4/30/09		
 		catch (e) { }
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function do_grid_to_ll(){						// grid to LL array			- 12/4/08
 <?php
 	switch(get_variable("locale")) { 				// 4/23/11
@@ -1470,7 +1760,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 	var protocols = new Array();		// 7/7/09
 	var fac_lat = [];
 	var fac_lng = [];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 	function ReadOnlyCheckBox() {
 		alert("You can't change this value");
 		return false;
@@ -1554,11 +1847,19 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		print "\t severities.push({$row['set_severity']});\n";
 		}
 ?>
-
+/**
+ * 
+ * @param {type} in_val
+ * @returns {undefined}
+ */
 	function do_set_severity (in_val) {				// 6/26/10
 		if(severities[in_val]>0) {document.add.frm_severity.selectedIndex = severities[in_val]};
 		}
-
+/**
+ * 
+ * @param {type} the_url
+ * @returns {unresolved}
+ */
 	function do_act_window(the_url) {				// 5/6/11
 		newwindow=window.open(the_url, "new_window",  "titlebar, location=0, resizable=1, scrollbars, height=480,width=960,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 		if (newwindow == null) {
@@ -1567,7 +1868,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 			}
 		newwindow.focus();
 		}
-
+/**
+ * 
+ * @param {type} the_url
+ * @returns {unresolved}
+ */
 	function do_pat_window(the_url) {				// 5/6/11
 		newwindow=window.open(the_url, "new_window",  "titlebar, location=0, resizable=1, scrollbars, height=480,width=720,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 		if (newwindow == null) {
@@ -1722,12 +2027,20 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
 ?>
 <SCRIPT>
 var obj_sugg;
+/**
+ * 
+ * @returns {undefined}
+ */
  function createAutoComplete() {
 // 	alert(<?php print __LINE__;?>);
 	obj_sugg = new autoComplete(aNames,document.getElementById('my_txt'),document.getElementById('suggest'),50);
 	}
  var aNames =[<?php print $city_name_array_str;?>];
-
+/**
+ * 
+ * @param {type} the_form
+ * @returns {unresolved}
+ */
 function do_nearby(the_form){		// 11/22/2012
 	if (the_form.frm_lat.value.length == 0) {
 		alert("Map <?php echo get_text("Location");?> is required for nearby <?php echo get_text("Incident");?> lookup.");
@@ -1890,13 +2203,22 @@ if(get_num_groups()) {
 ?>
 
 <SCRIPT>
+/**
+ * 
+ * @param {type} inval
+ * @returns {undefined}
+ */                          
 	function set_signal(inval) {				// 12/18/10
 		var lh_sep = (document.add.frm_description.value.trim().length>0)? " " : "";
 		var temp_ary = inval.split("|", 2);		// inserted separator
 		document.add.frm_description.value+= lh_sep + temp_ary[1] + ' ';		
 		document.add.frm_description.focus();		
 		}		// end function set_signal()
-
+/**
+ * 
+ * @param {type} inval
+ * @returns {undefined}
+ */
 	function set_signal2(inval) {				// 12/18/10
 		var lh_sep = (document.add.frm_comments.value.trim().length>0)? " " : "";
 		var temp_ary = inval.split("|", 2);		// inserted separator

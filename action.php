@@ -73,6 +73,10 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		}
 ?>
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */  
 	function ck_frames() {		//  onLoad = "ck_frames()"
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
@@ -96,7 +100,10 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		}
 	catch(e) {
 		}
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {									// 2/11/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -109,7 +116,13 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			}
 		return elements;
 		}
-		
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */		
 	function hideDiv(div_area, hide_cont, show_cont) {	//	6/10/11
 		if (div_area == "buttons_sh") {
 			var controlarea = "hide_controls";
@@ -136,7 +149,13 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		var url = "persist2.php";
 		sendRequest (url, gb_handleResult, params);			
 		} 
-
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */
 	function showDiv(div_area, hide_cont, show_cont) {	//	6/10/11
 		if (div_area == "buttons_sh") {
 			var controlarea = "hide_controls";
@@ -162,19 +181,36 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		var url = "persist2.php";
 		sendRequest (url, gb_handleResult, params);					
 		} 	
-		
+/**
+ * 
+ * @returns {unresolved}
+ */		
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @param {type} str
+ * @returns {Boolean}
+ */
 	function chknum(str) {
 		var nums = str.trim().replace(/\D/g, "" );							// strip all non-digits
 		return (nums == str.trim());
 		}
-
+/**
+ * 
+ * @param {type} val
+ * @param {type} lo
+ * @param {type} hi
+ * @returns {@exp;@call;chknum}
+ */
 	function chkval(val, lo, hi) { 
 		return  (chknum(val) && !((val> hi) || (val < lo)));}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function datechk_r(theForm) {		// as-of vs now
 		var start = new Date();
 		start.setFullYear(theForm.frm_year_asof.value, theForm.frm_month_asof.value-1, theForm.frm_day_asof.value);
@@ -183,7 +219,11 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		var end = new Date();
 		return (start.valueOf() <= end.valueOf());	
 		}
-	
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */	
 	function validate(theForm) {
 		var errmsg="";
 		if (theForm.frm_description.value == "")		{errmsg+= "\tDescription is required\n";}
@@ -213,7 +253,12 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			theForm.submit();
 			}
 		}				// end function validate(theForm)
-		
+/**
+ * 
+ * @param {type} form
+ * @param {type} arrayName
+ * @returns {Array}
+ */		
 	function checkArray(form, arrayName)	{	//	6/10/11
 		var retval = new Array();
 		for(var i=0; i < form.elements.length; i++) {
@@ -224,7 +269,11 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		}
 	return retval;
 	}		
-		
+/**
+ * 
+ * @param {type} form
+ * @returns {Boolean}
+ */		
 	function checkForm(form)	{	//	6/10/11
 		var errmsg="";
 		var itemsChecked = checkArray(form, "frm_group[]");
@@ -240,15 +289,29 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			}
 		}
 	}
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 	function fvg_handleResult(req) {	// 6/10/11	The persist callback function for viewed groups.
 		document.region_form.submit();
 		}
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */		
 	function form_validate(theForm) {	//	6/10/11
 		checkForm(theForm);
 		}				// end function validate(theForm)
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {								// 6/10/11
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -267,14 +330,20 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-
+/**
+ * 
+ * @type Array|Array
+ */
 	var XMLHttpFactories = [								// 6/10/11
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 	function createXMLHTTPObject() {								// 6/10/11
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -288,17 +357,30 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			}
 		return xmlhttp;
 		}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_hover (the_id) {
 		CngClass(the_id, 'hover');
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_plain (the_id) {				// 8/21/10
 		CngClass(the_id, 'plain');
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
@@ -382,7 +464,10 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			if ($addrs) {
 ?>			
 <SCRIPT>
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	function do_notify() {
 		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
 		var theText= "TICKET - ACTION: ";
@@ -393,10 +478,20 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId +"&text_sel=1";		// ($to_str, $text, $ticket_id)   10/15/08
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 		}			// end function do notify()
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 	function handleResult(req) {				// the 'called-back' function
 		}
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -418,14 +513,20 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array|Array|Array|Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -447,6 +548,10 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		else {
 ?>		
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	function do_notify() {
 		return;
 		}			// end function do notify()
@@ -632,6 +737,11 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			<TD colspan=2><TEXTAREA ROWS="2" COLS="90" NAME="frm_description"></TEXTAREA>
 			</TD></TR>
 <SCRIPT>
+/**
+ * 
+ * @param {type} inval
+ * @returns {undefined}
+ */  
 	function set_signal(inval) {				// 12/17/10
 		var lh_sep = (document.add_frm.frm_description.value.trim().length>0)? " " : "";
 		var temp_ary = inval.split("|", 2);		// inserted separator
@@ -762,6 +872,12 @@ $from_top = 10;		//	6/10/11
 ?>
 <SCRIPT LANGUAGE="Javascript">
 init();
+/**
+ * 
+ * @param {type} theForm
+ * @param {type} theBool
+ * @returns {undefined}
+ */
 function do_asof(theForm, theBool) {							// 8/10/08, 6/11/12
 //		alert(56);
 //		alert(theForm.name);
@@ -771,17 +887,28 @@ function do_asof(theForm, theBool) {							// 8/10/08, 6/11/12
 	theForm.frm_hour_asof.disabled = theBool;
 	theForm.frm_minute_asof.disabled = theBool;
 	}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 function do_unlock(theForm) {									// 8/10/08, 6/11/12
 	document.getElementById("lock").style.visibility = "hidden";		
 	do_asof(theForm, false)
 	}
-	
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */	
 function do_lock(theForm) {										// 8/10/08, 6/11/12
 	do_asof(theForm, true)
 	document.getElementById("lock").style.visibility = "visible";
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function init () {
 	do_unlock(document.forms[0])
 	var now = new Date();

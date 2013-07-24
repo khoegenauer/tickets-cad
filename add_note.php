@@ -37,9 +37,17 @@ $disposition = get_text("Disposition");				// 12/1/10
 <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
 <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	String.prototype.trim = function () {				// 3/16/10
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
+/**
+ * 
+ * @returns {Boolean}
+ */    
 function validate () {
 	if(document.frm_note.frm_text.value.trim().length==0) {
 		alert("Enter text - or Cancel"); 
@@ -61,6 +69,11 @@ if (empty($_POST)) {
 <TEXTAREA NAME='frm_text' COLS=60 ROWS = 3></TEXTAREA>
 <BR />
 <SCRIPT>
+/**
+ * 
+ * @param {type} inval
+ * @returns {undefined}
+ */  
 	function set_signal(inval) {
 		var temp_ary = inval.split("|", 2);		// inserted separator
 		document.frm_note.frm_text.value+=" " + temp_ary[1] + ' ';		

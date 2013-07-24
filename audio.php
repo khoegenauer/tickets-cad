@@ -17,6 +17,11 @@ h3	{MARGIN:12PX; FONT-SIZE: 12px; COLOR: #000000; FONT-FAMILY: Verdana, Arial, H
 div {MARGIN:12PX; TEXT-DECORATION: underline; }
 </STYLE>
 <SCRIPT>
+/**
+ * 
+ * @param {type} n
+ * @returns {undefined}
+ */  
 	function playit(n) {	// 6/12/10
 		try 		{document.getElementsByTagName('audio')[n].play();}
 		catch (e) 	{alert('Not supported');}		// ignore

@@ -4,7 +4,7 @@
 * Version:      1.4
 * Date:         Aug 2006
 * Author:       Barry Andrew
-* Copyright:    © BA Andrew 2003
+* Copyright:    ï¿½ BA Andrew 2003
 * Licence       Free for non-commercial use
 *               http://members.aol.com/barryaandrew/baaLic.html
 ***********************************************************
@@ -115,6 +115,15 @@ class baaChart  {
     /********************************************************
     *                   public methods                      *
     ********************************************************/
+/**
+ * 
+ * @param type $awidth
+ * @param type $aheight
+ * @param type $pic
+ * @param type $clip
+ * @param type $picx
+ * @param type $picy
+ */    
     function baaChart ($awidth, $aheight=0, $pic='', $clip=0, $picx=0, $picy=0) {
         $this->width = $awidth;
         $this->height = $aheight==0 ? floor($awidth / 1.616) : $aheight;

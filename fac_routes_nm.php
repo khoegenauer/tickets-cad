@@ -171,11 +171,18 @@ function do_fac($theFac, $theWidth, $search=FALSE, $dist=TRUE) {
 		}
 	catch(e) {
 		}
-	
+/**
+ * 
+ * @param {type} arg
+ * @returns {Boolean}
+ */	
 	function isNull(arg) {
 		return arg===null;
 		}
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -197,6 +204,10 @@ function do_fac($theFac, $theWidth, $search=FALSE, $dist=TRUE) {
 // See http://www.brainjar.com for terms of use.
 //*****************************************************************************
 // Determine browser and version.
+/**
+ * 
+ * @returns {unresolved}
+ */
 function Browser() {
 	var ua, s, i;
 	this.isIE		= false;
@@ -226,6 +237,12 @@ function Browser() {
 var browser = new Browser();
 var dragObj = new Object();		// Global object to hold drag information.
 dragObj.zIndex = 0;
+/**
+ * 
+ * @param {type} event
+ * @param {type} id
+ * @returns {undefined}
+ */
 function dragStart(event, id) {
 	var el;
 	var x, y;
@@ -268,6 +285,11 @@ function dragStart(event, id) {
 		event.preventDefault();
 		}
 	}
+/**
+ * 
+ * @param {type} event
+ * @returns {undefined}
+ */  
 function dragGo(event) {
 	var x, y;
 	if (browser.isIE) {	// Get cursor position with respect to the page.
@@ -289,6 +311,11 @@ function dragGo(event) {
 	if (browser.isNS)
 		event.preventDefault();
 	}
+/**
+ * 
+ * @param {type} event
+ * @returns {undefined}
+ */  
 function dragStop(event) {
 	if (browser.isIE) {	// Stop capturing mousemove and mouseup events.
 		document.detachEvent("onmousemove", dragGo);
@@ -308,6 +335,12 @@ if (!empty($_POST)) {
 	$now = mysql_format_date(time() - (get_variable('delta_mins')*60)); 
 ?>	
 <SCRIPT>
+/**
+ * 
+ * @param {type} form
+ * @param {type} arrayName
+ * @returns {Array}
+ */  
 	function checkArray(form, arrayName)	{	//	5/3/11
 		var retval = new Array();
 		for(var i=0; i < form.elements.length; i++) {
@@ -318,7 +351,11 @@ if (!empty($_POST)) {
 		}
 	return retval;
 	}	
-		
+/**
+ * 
+ * @param {type} form
+ * @returns {Boolean}
+ */		
 	function checkForm(form)	{	//	6/10/11
 		var errmsg="";
 		var itemsChecked = checkArray(form, "frm_group[]");
@@ -335,16 +372,30 @@ if (!empty($_POST)) {
 			}
 		}
 	}
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 	function fvg_handleResult(req) {	// 6/10/11	The persist callback function for viewed groups.
 		document.region_form.submit();
 		}
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */		
 	function form_validate(theForm) {	//	6/10/11
 	//		alert("Validating");
 		checkForm(theForm);
 		}				// end function validate(theForm)
-	
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */	
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -364,14 +415,20 @@ if (!empty($_POST)) {
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array|Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -386,13 +443,22 @@ if (!empty($_POST)) {
 		return xmlhttp;
 		}
 	
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 	function handleResult(req) {				// the 'called-back' function
 												// onto floor!
 		}
 
 	var starting = false;
-
+/**
+ * 
+ * @param {type} addrs
+ * @param {type} fac_id
+ * @returns {unresolved}
+ */
 	function do_mail_win(addrs, fac_id) {	
 		if(starting) {return;}					// dbl-click catcher
 		starting=true;	
@@ -406,14 +472,11 @@ if (!empty($_POST)) {
 		starting = false;
 		}		// end function do mail_win()
 
-
-
 <?php 
 	if(get_variable('call_board')==2) {
 		print "\n\tparent.top.calls.location.reload(true);\n";
 		}
 ?>	
-
 </SCRIPT>
 </HEAD>
 <?php
@@ -445,7 +508,10 @@ else {		// 201-439
 	parent.frames["upper"].document.getElementById("whom").innerHTML  = "<?php print $_SESSION['user'];?>";
 	parent.frames["upper"].document.getElementById("level").innerHTML = "<?php print get_level_text($_SESSION['level']);?>";
 	parent.frames["upper"].document.getElementById("script").innerHTML  = "<?php print LessExtension(basename( __FILE__));?>";
-
+/**
+ * 
+ * @returns {String.prototype.parseDeg.deg}
+ */
 	String.prototype.parseDeg = function() {
 		if (!isNaN(this)) return Number(this);								// signed decimal degrees without NSEW
 		
@@ -465,16 +531,35 @@ else {		// 201-439
 		if (/^-/.test(this) || /[WS]/i.test(this)) deg = -deg; // take '-', west and south as -ve
 		return deg;
 		}
+/**
+ * 
+ * @returns {Number|@exp;Math@pro;PI|Number.prototype}
+ */    
 	Number.prototype.toRad = function() {  // convert degrees to radians
 		return this * Math.PI / 180;
 		}
-
+/**
+ * 
+ * @returns {Number|@exp;Math@pro;PI|Number.prototype}
+ */
 	Number.prototype.toDeg = function() {  // convert radians to degrees (signed)
 		return this * 180 / Math.PI;
 		}
+/**
+ * 
+ * @returns {Number}
+ */    
 	Number.prototype.toBrng = function() {  // convert radians to degrees (as bearing: 0...360)
 		return (this.toDeg()+360) % 360;
 		}
+/**
+ * 
+ * @param {type} lat1
+ * @param {type} lon1
+ * @param {type} lat2
+ * @param {type} lon2
+ * @returns {@exp;Math@pro;atan2@call;@call;toBrng|@exp;@exp;Math@pro;atan2@call;@call;toBrng}
+ */    
 	function brng(lat1, lon1, lat2, lon2) {
 		lat1 = lat1.toRad(); lat2 = lat2.toRad();
 		var dLon = (lon2-lon1).toRad();
@@ -484,7 +569,14 @@ else {		// 201-439
 						Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
 		return Math.atan2(y, x).toBrng();
 		}
-
+/**
+ * 
+ * @param {type} lat1
+ * @param {type} lon1
+ * @param {type} lat2
+ * @param {type} lon2
+ * @returns {unresolved}
+ */
 	distCosineLaw = function(lat1, lon1, lat2, lon2) {
 		var R = 6371; // earth's mean radius in km
 		var d = Math.acos(Math.sin(lat1.toRad())*Math.sin(lat2.toRad()) +
@@ -492,7 +584,11 @@ else {		// 201-439
 		return d;
 		}
     var km2feet = 3280.83;
-
+/**
+ * 
+ * @param {type} inArray
+ * @returns {Number}
+ */
 	function min(inArray) {				// returns index of least float value in inArray
 		var minsofar =  40076.0;		// initialize to earth circumference (km)
 		var j=-1;
@@ -504,7 +600,10 @@ else {		// 201-439
 			}
 		return j;
 		}		// end function min()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {		// onLoad = "ck_frames()"
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
@@ -513,6 +612,10 @@ else {		// 201-439
 			parent.upper.show_butts();
 			}
 		}		// end function ck_frames()
+/**
+ * 
+ * @returns {undefined}
+ */    
 function doReset() {
 	document.reLoad_Form.submit();
 	}	// end function doReset()
@@ -650,6 +753,10 @@ require_once('./incs/links.inc.php');
 			if ($addrs) {				// 10/21/08
 ?>			
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */          
 	function do_notify() {
 //		alert(352);
 		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
@@ -660,10 +767,20 @@ require_once('./incs/links.inc.php');
 		var params = "frm_to="+ theAddresses + "&frm_text=" + theText + "&frm_fac_id=" + theId ;		// ($to_str, $text, $fac_id)
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $fac_id)
 		}			// end function do notify()
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 	function handleResult(req) {				// the 'called-back' function  - ignore returned data
 		}
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -683,14 +800,20 @@ require_once('./incs/links.inc.php');
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array|Array|Array|Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -712,6 +835,10 @@ require_once('./incs/links.inc.php');
 		else {
 ?>		
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */          
 	function do_notify() {
 //		alert(414);
 		return;
@@ -768,12 +895,18 @@ function do_list($unit_id ="") {
 	    	var Direcs = gdir.load("from: " + fromAddress + " to: " + toAddress, { "locale": locale, preserveViewport : true  });
 			GEvent.addListener(Direcs, "addoverlay", GEvent.callback(Direcs, cb())); 
 	    	}		// end function set Directions()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 		function cb() {
 			setTimeout(cb2,3000);     // I THINK you need quotes around the named function - here's 2 seconds of delay
 		}      // end function cb()
 
-
+/**
+ * 
+ * @returns {undefined}
+ */
 		function cb2() {                                        // callback function 09/11/09
 			var output_direcs = "";
 			for ( var i = 0; i < gdir.getNumRoutes(); i++) {        // Traverse all routes - not really needed here, but ...
@@ -798,7 +931,11 @@ function do_list($unit_id ="") {
 			$("mail_button").style.display = "inline-block";	//10/6/09
 			$("loading").style.display = "none";		// 10/28/09			
 		}                // end function cb2()
-
+/**
+ * 
+ * @param {type} f
+ * @returns {Boolean}
+ */
 		function mail_direcs(f) {
 			f.target = 'Mail Form'
 			newwindow_mail=window.open('',f.target,'titlebar, location=0, resizable=1, scrollbars, height=360,width=600,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300');
@@ -811,7 +948,14 @@ function do_list($unit_id ="") {
 			return false;
 			}
 
-	
+/**
+ * 
+ * @param {type} sidebar
+ * @param {type} color
+ * @param {type} id
+ * @param {type} unit_id
+ * @returns {unresolved}
+ */	
 		function do_sidebar(sidebar, color, id, unit_id) {						// No map
 			var letter = ""+ id;	
 			marker = null;
@@ -826,7 +970,16 @@ function do_list($unit_id ="") {
 			return null;
 			}				// end function create Marker()
 
-
+/**
+ * 
+ * @param {type} point
+ * @param {type} sidebar
+ * @param {type} tabs
+ * @param {type} color
+ * @param {type} id
+ * @param {type} unit_id
+ * @returns {GMarker}
+ */
 		function createMarker(point,sidebar,tabs, color, id, unit_id) {		// Creates marker and sets up click event infowindow
 			do_sidebar(sidebar, color, id, unit_id)
 			var icon = new GIcon(listIcon);
@@ -856,7 +1009,12 @@ function do_list($unit_id ="") {
 			bounds.extend(point);							// extend the bounding box		
 			return marker;
 			}				// end function create Marker()
-	
+/**
+ * 
+ * @param {type} id
+ * @param {type} unit_id
+ * @returns {undefined}
+ */	
 		function myclick(id, unit_id) {								// responds to side bar click - 11/13/09
 //			alert("550 " + direcs[id]);
 			which = id;
@@ -877,6 +1035,10 @@ function do_list($unit_id ="") {
 	
 		var the_grid;
 		var grid = false;
+/**
+ * 
+ * @returns {undefined}
+ */    
 		function doGrid() {
 			if (grid) {
 				map.removeOverlay(the_grid);
@@ -890,7 +1052,10 @@ function do_list($unit_id ="") {
 			
 	    var trafficInfo = new GTrafficOverlay();
 	    var toggleState = true;
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 		function doTraffic() {
 			if (toggleState) {
 		        map.removeOverlay(trafficInfo);
@@ -902,7 +1067,12 @@ function do_list($unit_id ="") {
 		    }				// end function doTraffic()
 	
 		var starting = false;
-
+/**
+ * 
+ * @param {type} theLat
+ * @param {type} theLng
+ * @returns {unresolved}
+ */
 		function sv_win(theLat, theLng) {
 			if(starting) {return;}						// dbl-click proof
 			starting = true;					
@@ -917,7 +1087,10 @@ function do_list($unit_id ="") {
 			starting = false;
 			}		// end function sv win()
 
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 		function handleErrors(){		//G_GEO_UNKNOWN_DIRECTIONS 
 			if (gdir.getStatus().code == G_GEO_UNKNOWN_DIRECTIONS ) {
 				alert("501: directions unavailable\n\nClick map point for directions.");
@@ -934,15 +1107,24 @@ function do_list($unit_id ="") {
 				alert("450: A directions request could not be successfully parsed.\n Error code: " + gdir.getStatus().code);
 			else alert("451: An unknown error occurred.");
 			}		// end function handleErrors()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 		function onGDirectionsLoad(){ 
 //			var temp = gdir.getSummaryHtml();
 			}		// function onGDirectionsLoad()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 		function guest () {
 			alert ("Demonstration only.  Guests may not commit dispatch!");
 			}
-			
+/**
+ * 
+ * @returns {Boolean}
+ */			
 		function validate(){		// frm_id_str
 			msgstr="";
 			for (var i =1;i<unit_sets.length;i++) {
@@ -969,9 +1151,13 @@ function do_list($unit_id ="") {
 					return false;
 					}
 				}
-
 			}		// end function validate()
-	
+/**
+ * 
+ * @param {type} myarray
+ * @param {type} myid
+ * @returns {Boolean}
+ */	
 		function exists(myarray,myid) {
 			var str_key = " " + myid;		// force associative
 			return ((typeof myarray[str_key])!="undefined");		// exists if not undefined

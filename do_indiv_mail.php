@@ -36,11 +36,17 @@ if (empty($_POST)) {
 ?>
 
 <SCRIPT>
- 
+/**
+ * 
+ * @returns {unresolved}
+ */ 
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -54,7 +60,10 @@ if (empty($_POST)) {
 		return elements;
 		}
 	
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 	function validate() {
 		var errmsg="";
 		if (document.mail_form.frm_addr.value.trim()=="") {errmsg+="Message address is required";}

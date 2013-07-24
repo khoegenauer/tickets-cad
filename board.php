@@ -187,6 +187,11 @@ function show_top() {				// generates the document introduction
 		tr td		{white-space:nowrap;}
 		</STYLE>
 <SCRIPT>
+/**
+ * 
+ * @param {type} strURL
+ * @returns {@exp;AJAX@pro;responseText|Boolean}
+ */  
 		function syncAjax(strURL) {							// synchronous ajax function
 			if (window.XMLHttpRequest) {						 
 				AJAX=new XMLHttpRequest();						 
@@ -205,7 +210,10 @@ function show_top() {				// generates the document introduction
 				}																						 
 			}		// end function sync Ajax(strURL)
 
-
+/**
+ * 
+ * @returns {undefined}
+ */
 		function do_refresh() {						// 7/10/10
 <?php
 	if (get_variable('call_board')==2) 	{			// window vs. frame behavior
@@ -214,7 +222,10 @@ function show_top() {				// generates the document introduction
 ?>	
 		document.can_Form.submit();					// reload frame or window
 		}		// end function do_refresh()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function do_frm_refresh() {				// frame refresh - call board option 2
 	var temp = parent.document.getElementById('the_frames').getAttribute('rows');		// e.g., '63, 126,*'
 	var rows = temp.split(",", 4)
@@ -225,13 +236,22 @@ function do_frm_refresh() {				// frame refresh - call board option 2
 	document.nav_form.func.value='board';
 	document.nav_form.submit();														// refresh it
 	}
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 function get_lines(){							// returns pixel count
 	lines = syncAjax("lines_a.php");			// note synch call - 8/10/10
 	return lines;	
 	}				// end function get_lines()
 	
-	
+/**
+ * 
+ * @param {type} in_val
+ * @param {type} min_val
+ * @param {type} max_val
+ * @returns {unresolved}
+ */	
 	function tween(in_val, min_val, max_val) {							// min and max inclusive
 		if ((in_val >= min_val) && (in_val<= max_val)) return in_val;
 		else {
@@ -241,20 +261,31 @@ function get_lines(){							// returns pixel count
 			alert ("err 192");
 			}
 		}
-	
+/**
+ * 
+ * @param {type} lines
+ * @returns {undefined}
+ */	
 	function reSizeScr_add(lines) {				// 196			-- 5/23/09
 		var the_height = ((lines * 25)+280);
 		window.resizeTo(800, tween(the_height, 200, (window.screen.height - 200)));		// 10/31/09 - derived via trial/error (more of the latter, mostly)
 		}		// end function re SizeScr()
 
-
+/**
+ * 
+ * @param {type} lines
+ * @returns {undefined}
+ */
 	function reSizeScr(lines) {				// 196			-- 5/23/09
 //		var the_height = ((lines * 25)+80);				// 4/27/10
 		var the_height = ((lines * 30)+120);				// 4/27/10
 		window.resizeTo((0.98)* screen.width, tween(the_height, 200, (window.screen.height - 200)));		// 10/31/09 - derived via trial/error (more of the latter, mostly)
 //		alert(tween(the_height, 200, (window.screen.height - 200)));
 		}		// end function re SizeScr()
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	function do_add_btn() {							// 11/4/09
 <?php
 		if (intval(get_variable('call_board'))==1) {
@@ -416,6 +447,10 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 		catch(e) {
 			}
 		}			
+/**
+ * 
+ * @returns {Array}
+ */    
 	function $() {									// 1/12/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -428,15 +463,28 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 			}
 		return elements;
 		}
-		
+/**
+ * 
+ * @returns {unresolved}
+ */		
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-	
+/**
+ * 
+ * @param {type} val
+ * @returns {Boolean}
+ */	
 	function isNull(val) {								// checks var stuff = null;
 		return val === null;
 		}
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {		// ajax function set - 1/15/09
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -459,14 +507,20 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -480,7 +534,11 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 			}
 		return xmlhttp;
 		}
-	
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */	
 		function editA(id) {							// edit assigns
 			document.nav_form.frm_id.value=id;
 <?php
@@ -489,7 +547,10 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 ?>	
 			document.nav_form.submit();
 			}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 		function do_mail_all_win() {			// 6/16/09
 			if(starting) {return;}					
 			starting=true;	
@@ -503,35 +564,61 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 			starting = false;
 			}
 	
-	
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */	
 		function viewT(id) {			// view ticket
 			document.T_nav_form.id.value=id;
 			document.T_nav_form.action='main.php';
 			document.T_nav_form.submit();
 			if (!(window.opener==null)){window.opener.focus();}		
 			}
-	
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */	
 		function editT(id) {			// edit ticket
 			document.T_nav_form.id.value=id;
 			document.T_nav_form.action='edit.php';
 			document.T_nav_form.submit();
 			if (!(window.opener==null)){window.opener.focus();}		
 			}
-	
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */	
 		function viewU(id) {			// view unit
 			document.U_nav_form.id.value=id;
 			document.U_nav_form.submit();
 			if (!(window.opener==null)){window.opener.focus();}		
 			}
-	
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */	
 		function editU(id) {			// edit unit
 			document.U_edit_form.id.value=id;
 			document.U_edit_form.submit();
 			if (!(window.opener==null)){window.opener.focus();}		
 			}
-	
+/**
+ * 
+ * @param {type} id
+ * @param {type} the_form
+ * @returns {unresolved}
+ */	
 		function do_assgn_reset(id, the_form) {						// 4/26/09 - 7/16/2013
-	
+/**
+ * 
+ * @param {type} id
+ * @param {type} the_form
+ * @returns {undefined}
+ */	
 			function our_reset(id, the_form) {									// reset dispatch checks 
 				var dis = <?php print ($guest)? "true": "false"; ?>;			// disallow guest actions
 	
@@ -576,7 +663,12 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 	
 				}		// end function do_assgn_reset()
 	
-	
+/**
+ * 
+ * @param {type} id
+ * @param {type} the_form
+ * @returns {undefined}
+ */	
 			function our_delete(id, the_form) {				// delete this dispatch record
 				$('del_id').style.display='block';
 				var url = "assign_del.php";
@@ -584,7 +676,10 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 				sendRequest(url,our_wrapup,postData) ;
 				setTimeout('$(\'del_id\').style.display=\'none\';document.can_Form.submit();', 2000);			// show for 2 seconds
 				}		// end function our delete()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 			function our_wrapup() {
 				setTimeout('$(\'del_id\').style.display=\'none\';', 2000);			// show for 2 seconds
 
@@ -673,6 +768,10 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 				$row = mysql_fetch_assoc($result);
 ?>
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */        
 function do_post() {
 	document.temp_Form.frm_ticket_id.value=<?php print $row['tick_id'];?>;
 	document.temp_Form.submit();
@@ -794,6 +893,11 @@ setTimeout('do_post()', 1000);
 				}
 ?>
 		<SCRIPT>	
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */            
 		function validate_ad(theForm) {
 			var errmsg="";
 			if (theForm.frm_unit_id_str.value == "")	{errmsg+= "\tSelect one or more units\n";}
@@ -975,9 +1079,18 @@ setTimeout('do_post()', 1000);
 		if ($istest) {print "\n\t alert(648);\n";}
 ?>		
 						}		// end function handle Result()	
-
+/**
+ * 
+ * @param {type} addr
+ * @param {type} msg
+ * @returns {Boolean}
+ */
 					function send_it(addr, msg) {				// 12/13/09
-					
+/**
+ * 
+ * @param {type} str
+ * @returns {unresolved}
+ */					
 						function isValidEmail(str) {
 							return (str.lastIndexOf(".") > 2) && (str.indexOf("@") > 0) && (str.lastIndexOf(".") > (str.indexOf("@")+1)) && (str.indexOf("@") == str.lastIndexOf("@"));
 							} 
@@ -1014,11 +1127,17 @@ setTimeout('do_post()', 1000);
 						return true;
 						
 						}		// end function send it()
-					
+/**
+ * 
+ * @returns {undefined}
+ */					
 					function dummy() {		
 						window.close();
 						}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 					function ender() {
 						$('sending').style.display = 'none';
 <?php
@@ -1027,7 +1146,10 @@ setTimeout('do_post()', 1000);
 ?>			
 						}		// end function ender()
 							
-		
+/**
+ * 
+ * @returns {Boolean}
+ */		
 					function do_send_it () {
 						if (send_it(document.add_mail_form.frm_to.value, document.add_mail_form.frm_text.value )) {
 							$('sending').style.display = 'inline';
@@ -1183,7 +1305,11 @@ setTimeout('do_post()', 1000);
 		}
 ?>
 	<SCRIPT>
-	
+/**
+ * 
+ * @param {type} plaintext
+ * @returns {String}
+ */	
 		function URLEncode(plaintext ) {					// The Javascript escape and unescape functions do
 															// NOT correspond with what browsers actually do...
 			var SAFECHARS = "0123456789" +					// Numeric
@@ -1217,7 +1343,11 @@ setTimeout('do_post()', 1000);
 				} 			// end for(...)
 			return encoded;
 			};			// end function
-		
+/**
+ * 
+ * @param {type} encoded
+ * @returns {String}
+ */		
 		function URLDecode(encoded ){   					// Replace + with ' '
 		   var HEXCHARS = "0123456789ABCDEFabcdef";  		// Replace %xx with equivalent character
 		   var plaintext = "";   							// Place [ERROR] in output if %xx is invalid.
@@ -1247,6 +1377,11 @@ setTimeout('do_post()', 1000);
 			};				// end function URLDecode()
 		
 		var button_live = false;
+/**
+ * 
+ * @param {type} id
+ * @returns {Boolean}
+ */    
 		function show_but(id) {
 			if (button_live) {
 				alert ("Please complete button action.");
@@ -1260,7 +1395,11 @@ setTimeout('do_post()', 1000);
 				return false;
 				}
 			}		// end function show_but(id)
-	
+/**
+ * 
+ * @param {type} id
+ * @returns {Boolean}
+ */	
 		function hide_but(id) {
 			var theid = "TD"+id;
 			if(!$(theid)) {return false;}		// 9/17/08
@@ -1271,6 +1410,11 @@ setTimeout('do_post()', 1000);
 			}
 	
 		var last_form_no;
+/**
+ * 
+ * @param {type} the_Form
+ * @returns {Boolean}
+ */    
 		function to_server(the_Form) {							// write unit status data via ajax xfer
 			var querystr = "?frm_ticket_id=" + URLEncode(the_Form.frm_ticket_id.value.trim());
 			querystr += "&frm_responder_id=" + URLEncode(the_Form.frm_responder_id.value.trim());
@@ -1301,7 +1445,10 @@ setTimeout('do_post()', 1000);
 	
 		
 
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_res() {									//  reset all forms
 		for (i = 0; i< document.forms.length; i++) {
 			if (document.forms[i].name.substr(0,1) == "F") {	
@@ -1405,21 +1552,35 @@ setTimeout('do_post()', 1000);
 		var is_guest = <?php print ($guest)? "true;\n": "false;\n"; ?>
 
 		var win_spec = "titlebar, resizable=1, scrollbars, height=200,width=1000,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300";
+/**
+ * 
+ * @returns {undefined}
+ */    
 		function open_list_win(){
 //			document.list_win_form.submit();				// 10/31/09
 			var cb_window=window.open('<?php print basename(__FILE__);?>?func=list', 'Callboard_List', win_spec);
 			cb_window.focus();
 			}		// end function
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 		function open_add_win(){
 			var cb_window=window.open('<?php print basename(__FILE__);?>?func=add&close=y', 'Callboard_Add',  'titlebar, resizable=1, scrollbars, height=200,width=800,status=0,toolbar=0,menubar=0,location=0, left=50,top=50,screenX=50,screenY=50'); cb_window.focus();
 				}		// end function
-	
+/**
+ * 
+ * @param {type} the_id
+ * @returns {undefined}
+ */	
 		function open_edit_win(the_id){
 			var the_url = "<?php print basename(__FILE__);?>?func=edit&id="+ the_id;
 			var cb_window=window.open(the_url, 'Callboard_Edit',  'titlebar, resizable=1, scrollbars, height=200,width=800,status=0,toolbar=0,menubar=0,location=0, left=50,top=50,screenX=50,screenY=50'); cb_window.focus();
 			}		// end function
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 		function apply_all_clicked (){
 			do_all();
 			$('apply_btn').style.display='none'; 					// hide 'Apply all'
@@ -1435,7 +1596,10 @@ setTimeout('do_post()', 1000);
 			setTimeout('$(\'done_id\').style.display=\'none\';', 2000);
 			window.location.reload(true);							// 1/8/2013
 			}
-			
+/**
+ * 
+ * @returns {undefined}
+ */			
 		function checkbox_clicked(){								//  hide/show on any cb click 10/21/09
 			$('add_btn').style.display='none';
 			$('mail_btn').style.display='none';
@@ -1445,7 +1609,10 @@ setTimeout('do_post()', 1000);
 			$('apply_btn').style.display='inline';
 			$('can_btn').style.display='inline';
 			}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 		function cancel_clicked(){									//  hide/show on Cancel click 10/21/09
 			do_res();
 			$('add_btn').style.display='inline';
@@ -1458,7 +1625,12 @@ setTimeout('do_post()', 1000);
 			}
 
 		var starting = false;						// 2/15/09
-	
+/**
+ * 
+ * @param {type} addrs
+ * @param {type} ticket_id
+ * @returns {unresolved}
+ */	
 		function do_mail_win(addrs, ticket_id) {	// 3/27/09
 			if(starting) {return;}					// dbl-click catcher
 			starting=true;	
@@ -1861,7 +2033,11 @@ setTimeout('do_post()', 1000);
 
 
 <SCRIPT>
-
+/**
+ * 
+ * @param {type} str
+ * @returns {undefined}
+ */
 	function do_hors (str) {		// set hide/show cleared via reload - 2/20/09
 		document.nav_form.hide_cl.value=str;	
 		document.nav_form.chg_hide.value=1;	
@@ -1870,11 +2046,19 @@ setTimeout('do_post()', 1000);
 		}
 
 		var announce;					// set = false for group update $('apply_btn').style.visibility
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 	function handleResult(req) {			// the called-back function
 		if (announce) {alert('Update complete (no e-mail sent)');}
 		}			// end function handle Result(
-	
+/**
+ * 
+ * @param {type} the_form
+ * @returns {undefined}
+ */	
 	function do_sub(the_form) {				// form submitted	1/20/09, 2/28/09, 5/20/09
 		var vals = sep = "";
 		for (j=0; j<document.forms[the_form].elements.length; j++) {
@@ -1897,7 +2081,11 @@ setTimeout('do_post()', 1000);
 
 	var ary_addrs = [];								// key = incident id, value = pipe-sep'd emails			
 	var the_ticket_id = "";
-
+/**
+ * 
+ * @param {type} the_index
+ * @returns {undefined}
+ */
 	function do_this_form(the_index) {				// call ajax function for each clicked button
 		the_val = parseInt(the_index)+1;
 //		var t=setTimeout("var dummy = false",10000);
@@ -1912,7 +2100,10 @@ setTimeout('do_post()', 1000);
 				}
 			}
 		}				// end function do_this_form()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_all() {										// 2/19/09
 		var do_refresh = false;								// 6/16/09
 		for (i=0; i< document.forms.length; i++) {			// look at each form - 1/8/2013
@@ -1928,7 +2119,10 @@ setTimeout('do_post()', 1000);
 			}
 		if (do_refresh) {document.can_Form.submit();}		//  at least one checked item - do screen refresh  6/16/09
 		}		// end function do all()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function clr_all_btn(){
 		var a_check = false;
 
@@ -2088,18 +2282,30 @@ setTimeout('do_post()', 1000);
 ?>
 	<SCRIPT>
 		var incident_st = unit_st = assign_st = true;		// changes to false on activation
-
+/**
+ * 
+ * @param {type} the_Form
+ * @returns {undefined}
+ */
 		function do_del(the_Form) {
 			if (confirm("Delete this dispatch record?")) {the_Form.submit();}
 			}
-			
+/**
+ * 
+ * @param {type} the_Form
+ * @returns {undefined}
+ */			
 		function do_reset(the_Form) {
 	//		incident_st = unit_st = assign_st = true;
 			the_Form.func.value='edit';
 			the_Form.frm_id.value='<?php print $frm_id;?>';		
 			the_Form.submit();
 			}		// end function do_reset()
-	
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */	
 		function validate_ed(theForm) {
 			var errmsg="";
 			if (theForm.frm_unit_id) {						// defined?
@@ -2122,7 +2328,10 @@ setTimeout('do_post()', 1000);
 				theForm.submit();
 				}
 			}				// end function validate_ed(theForm)
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 		function confirmation() {
 			var answer = confirm("This dispatch run completed?")
 			if (answer){
@@ -2133,6 +2342,11 @@ setTimeout('do_post()', 1000);
 <?php
 //		if (get_variable('call_board')==1) {print "\t\treSizeScr(18);\n";}
 ?>				
+/**
+ * 
+ * @param {type} instr
+ * @returns {undefined}
+ */        
 		function enable(instr) {
 			var element= instr
 			$(element).style.visibility = "visible";

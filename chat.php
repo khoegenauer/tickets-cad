@@ -71,7 +71,10 @@ $signals_list .= "</SELECT>\n";
     var the_to = false;				// timeout object
     var first = true;
 	window.onBlur = clearTimeout (the_to);
-  
+/**
+ * 
+ * @returns {Array}
+ */  
 	function $() {									// 1/21/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -82,14 +85,25 @@ $signals_list .= "</SELECT>\n";
 			}
 		return elements;
 		}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
+/**
+ * 
+ * @returns {undefined}
+ */    
 	function get_new_colors() {								// 5/4/11
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
-
+/**
+ * 
+ * @param {type} plaintext
+ * @returns {String}
+ */
 	function URLEncode(plaintext ) {					// The Javascript escape and unescape functions do
 														// NOT correspond with what browsers actually do...
 		var SAFECHARS = "0123456789" +					// Numeric
@@ -123,7 +137,11 @@ $signals_list .= "</SELECT>\n";
 			} 			// end for(...)
 		return encoded;
 		};			// end function
-	
+/**
+ * 
+ * @param {type} encoded
+ * @returns {String}
+ */	
 	function URLDecode(encoded ){   					// Replace + with ' '
 	   var HEXCHARS = "0123456789ABCDEFabcdef";  		// Replace %xx with equivalent character
 	   var plaintext = "";   							// Place [ERROR] in output if %xx is invalid.
@@ -151,7 +169,11 @@ $signals_list .= "</SELECT>\n";
 		} 				// end  while (...)
 		return plaintext;
 		};				// end function URLDecode()
-
+/**
+ * 
+ * @param {type} strURL
+ * @returns {Boolean|@exp;AJAX@pro;responseText}
+ */
 	function syncAjax(strURL) {							// synchronous ajax function
 		if (window.XMLHttpRequest) {						 
 			AJAX=new XMLHttpRequest();						 
@@ -172,7 +194,10 @@ $signals_list .= "</SELECT>\n";
 		}		// end function sync Ajax(strURL)
 	
 	var last_msg_id=0;									// initial value at page load
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function rd_chat_msg() {							// read chat messages via ajax xfer - 5/29/10
 
 		var our_max = (first)? 5 : <?php print $list_length ;?>;		// startup limiter
@@ -181,7 +206,11 @@ $signals_list .= "</SELECT>\n";
 //		alert("211 " + params);
 		sendRequest ('chat_rd.php',handleResult, params);	// 
 		}
-
+/**
+ * 
+ * @param {type} req
+ * @returns {Boolean}
+ */
 	function handleResult(req) {									// the called-back phone lookup function
 		var payload = req.responseText;		
 		if (payload.substring(0,1)=="-") {
@@ -218,7 +247,13 @@ $signals_list .= "</SELECT>\n";
 				}
 			}
 		}		// end function handleResult()
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -238,14 +273,20 @@ $signals_list .= "</SELECT>\n";
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -255,7 +296,11 @@ $signals_list .= "</SELECT>\n";
 			}
 		return xmlhttp;
 		}
-
+/**
+ * 
+ * @param {type} target
+ * @returns {Boolean}
+ */
 	function wr_invite(target) {							// write chat message via ajax xfer
 		var url = "chat_invite.php?frm_to=" + target.trim() + "&frm_user=" + document.chat_form.frm_user.value;		// user id or broadcast
 		var payload = syncAjax(url);						// send lookup url
@@ -269,7 +314,11 @@ $signals_list .= "</SELECT>\n";
 			}				// end if/else (payload.substring(... )
 		}		// end function wr invite msg()
 		
-
+/**
+ * 
+ * @param {type} the_Form
+ * @returns {Boolean}
+ */
 	function wr_chat_msg(the_Form) {							// write chat message via ajax xfer
 		if (the_Form.frm_message.value.trim()=="") {return;}
 
@@ -301,16 +350,27 @@ $signals_list .= "</SELECT>\n";
 			do_focus ()
 			}				// end if/else (payload.substring(... )
 		}		// end function wr_chat_ msg()
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {undefined}
+ */
  	function show_hide(the_id) {						// display then hide given id
 		$(the_id).style.display='inline';
 		setTimeout("$('sent_msg').style.display='none';", 3000);
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_focus () {	
 		document.chat_form.frm_message.focus();
 		}	
-
+/**
+ * 
+ * @param {type} e
+ * @returns {unresolved}
+ */
 	function do_enter(e) {										// enter key submits form
 		var keynum;
 		var keychar;
@@ -325,20 +385,33 @@ $signals_list .= "</SELECT>\n";
 			return keychar;
 				}
 		} //	end function do_enter(e)
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function announce() {										//end announcement
 		wr_chat_msg(document.chat_form);
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function set_to() {										// set timeout
 		if (!the_to) {the_to=setTimeout('getMessages(false)', <?php print $cycle; ?>)}
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function clear_to() {
 		clearTimeout (the_to);
 		the_to = false;
 		}
-		
+/**
+ * 
+ * @param {type} ignore
+ * @returns {undefined}
+ */		
 	function getMessages(ignore){
 //		alert(<?php print __LINE__;?>)
 		clear_to();
@@ -346,14 +419,22 @@ $signals_list .= "</SELECT>\n";
 		set_to();												// set timeout again
 		do_focus ();
 		}
-
+/**
+ * 
+ * @param {type} in_val
+ * @returns {undefined}
+ */
 	function do_send_inv(in_val) {
 		show_hide('sent_msg');
 		wr_invite(in_val);
 		$('send_butt').style.display='none';
 		do_can ();			// hide some buttons and reset select
 		}
-
+/**
+ * 
+ * @param {type} ctr
+ * @returns {undefined}
+ */
 	function trim_list(ctr) {			// delete oldest rows from display
 		ctr = $('person').rows.length;
 		while ($('person').rows.length>ctr){
@@ -361,7 +442,10 @@ $signals_list .= "</SELECT>\n";
 			main.deleteRow(-1);
 			}
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_can () {
 		$('send_butt').style.display='none';
 		$('can_butt').style.display='none';

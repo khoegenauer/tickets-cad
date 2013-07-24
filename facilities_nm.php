@@ -115,7 +115,10 @@ function get_icon_legend (){			// returns legend string
 	parent.upper.light_butt('facy');										// light the button - 8/25/10
 
 	var lat_lng_frmt = <?php print get_variable('lat_lng'); ?>;
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function set_regions_control() {
 		var reg_control = "<?php print get_variable('regions_control');?>";
 		var regions_showing = "<?php print get_num_groups();?>";
@@ -129,7 +132,10 @@ function get_icon_legend (){			// returns legend string
 				}
 			}
 		}
-	
+/**
+ * 
+ * @returns {Array}
+ */	
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -142,30 +148,52 @@ function get_icon_legend (){			// returns legend string
 			}
 		return elements;
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function get_new_colors() {								// 5/4/11
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
 			}
 		}		// end function ck_frames()
 
-		
+/**
+ * 
+ * @param {type} instr
+ * @returns {String|@exp;@call;to_char}
+ */		
 	function to_str(instr) {
 		function ord( string ) {
 		    return (string+'').charCodeAt(0);
 			}
-
+/**
+ * 
+ * @param {type} ascii
+ * @returns {@exp;String@call;fromCharCode}
+ */
 		function chr( ascii ) {
 		    return String.fromCharCode(ascii);
 			}
+/**
+ * 
+ * @param {type} val
+ * @returns {unresolved}
+ */      
 		function to_char(val) {
 			return(chr(ord("A")+val));
 			}
@@ -174,14 +202,21 @@ function get_icon_legend (){			// returns legend string
 		var hop = ((instr - lop)==0)? "" : to_char(((instr - lop)/26)-1) ;		// high-order portion, a string
 		return hop+to_char(lop);
 		}
-
+/**
+ * 
+ * @param {type} val
+ * @returns {Boolean}
+ */
 	function isNull(val) {								// checks var stuff = null;
 		return val === null;
 		}
 
 	var type;					// Global variable - identifies browser family
 	BrowserSniffer();
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function BrowserSniffer() {													//detects the capabilities of the browser
 		if (navigator.userAgent.indexOf("Opera")!=-1 && $) type="OP";	//Opera
 		else if (document.all) type="IE";										//Internet Explorer e.g. IE4 upwards
@@ -191,7 +226,10 @@ function get_icon_legend (){			// returns legend string
 		}
 
 	var starting = false;
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	function do_mail_win() {
 		if(starting) {return;}					
 		starting=true;	
@@ -205,7 +243,11 @@ function get_icon_legend (){			// returns legend string
 		newwindow_um.focus();
 		starting = false;
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @returns {unresolved}
+ */
 	function do_mail_in_win(id) {			// individual email
 		if(starting) {return;}					
 		starting=true;	
@@ -219,30 +261,54 @@ function get_icon_legend (){			// returns legend string
 		starting = false;
 		}
 
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 	function to_routes(id) {
 		document.routes_Form.ticket_id.value=id;
 		document.routes_Form.submit();
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function whatBrows() {									//Displays the generic browser type
 		window.alert("Browser is : " + type);
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @param {type} action
+ * @returns {undefined}
+ */
 	function ShowLayer(id, action){							// Show and hide a span/layer -- Seems to work with all versions NN4 plus other browsers
 		if (type=="IE") 				eval("document.all." + id + ".style.display='" + action + "'");  	// id is the span/layer, action is either hidden or visible
 		if (type=="NN") 				eval("document." + id + ".display='" + action + "'");
 		if (type=="MO" || type=="OP") 	eval("$('" + id + "').style.display='" + action + "'");
 		}
-
+/**
+ * 
+ * @param {type} elid
+ * @returns {undefined}
+ */
 	function hideit (elid) {
 		ShowLayer(elid, "none");
 		}
-
+/**
+ * 
+ * @param {type} elid
+ * @returns {undefined}
+ */
 	function showit (elid) {
 		ShowLayer(elid, "block");
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function validate(theForm) {						// Facility form contents validation
 		if (theForm.frm_remove) {
 			if (theForm.frm_remove.checked) {
@@ -273,16 +339,25 @@ function get_icon_legend (){			// returns legend string
 			}
 		}				// end function va lidate(theForm)
 
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function add_res () {		// turns on add responder form
 		showit('res_add_form');
 		hideit('tbl_facilities');
 		hideIcons();			// hides responder icons
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function hideIcons() {
 		}				// end function hideicons()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function collect(){				// constructs a string of id's for deletion
 		var str = sep = "";
 		for (i=0; i< document.del_Form.elements.length; i++) {
@@ -293,7 +368,11 @@ function get_icon_legend (){			// returns legend string
 			}
 		document.del_Form.idstr.value=str;
 		}
-
+/**
+ * 
+ * @param {type} bool_val
+ * @returns {undefined}
+ */
 	function all_ticks(bool_val) {									// set checkbox = true/false
 		for (i=0; i< document.del_Form.elements.length; i++) {
 			if (document.del_Form.elements[i].type == 'checkbox') {
@@ -301,26 +380,46 @@ function get_icon_legend (){			// returns legend string
 				}
 			}			// end for (...)
 		}				// end function all ticks()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_disp(){											// show incidents for dispatch
 		$('incidents').style.display='block';
 		$('view_unit').style.display='none';
 		}
-
+/**
+ * 
+ * @param {type} the_form
+ * @returns {undefined}
+ */
 	function do_add_reset(the_form) {
 		the_form.reset();
 		}
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */		
 	function do_hover (the_id) {
 		CngClass(the_id, 'hover');
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_plain (the_id) {				// 8/21/10
 		CngClass(the_id, 'plain');
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
@@ -367,7 +466,13 @@ function list_facilities($addon = '', $start) {
 
 var color=0;
 	var colors = new Array ('odd', 'even');
-
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */
 	function hideDiv(div_area, hide_cont, show_cont) {	//	3/15/11
 		if (div_area == "buttons_sh") {
 			var controlarea = "hide_controls";
@@ -396,7 +501,13 @@ var color=0;
 		var url = "persist2.php";
 		sendRequest (url, gb_handleResult, params);			
 		} 
-
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */
 	function showDiv(div_area, hide_cont, show_cont) {	//	3/15/11
 		if (div_area == "buttons_sh") {
 			var controlarea = "hide_controls";
@@ -425,12 +536,24 @@ var color=0;
 		var url = "persist2.php";
 		sendRequest (url, gb_handleResult, params);					
 		} 	
-	
+/**
+ * 
+ * @param {type} sidebar
+ * @param {type} id
+ * @param {type} the_class
+ * @param {type} fac_id
+ * @param {type} fac_index
+ * @returns {undefined}
+ */	
 	function do_sidebar (sidebar, id, the_class, fac_id, fac_index) {
 		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"' onClick = 'myclick(" + fac_index + ");'>";
 		side_bar_html += sidebar + "</TR>\n";	//10/29/09 removed period
 		}
-
+/**
+ * 
+ * @param {type} fac_index
+ * @returns {undefined}
+ */
 	function myclick(fac_index) {				// Responds to sidebar click - view facility data
 		document.view_form.id.value=fac_index;
 		document.view_form.submit();

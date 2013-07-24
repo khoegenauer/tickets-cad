@@ -48,17 +48,30 @@ var randomnumber;
 var the_string;
 var theClass = "background-color: #CECECE";
 var the_onclick;
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function ck_frames() {		// onLoad = "ck_frames()"
 	if(self.location.href==parent.location.href) {
 		self.location.href = 'index.php';
 		}
 	}		// end function ck_frames()
-	
+/**
+ * 
+ * @param {type} the_id
+ * @param {type} the_val
+ * @returns {undefined}
+ */	
 function do_sel_update (the_id, the_val) {							// 12/17/09
 	status_update(the_id, the_val);
 	}
-	
+/**
+ * 
+ * @param {type} the_id
+ * @param {type} the_val
+ * @returns {Boolean}
+ */	
 function status_update(the_id, the_val) {									// write unit status data via ajax xfer
 	var querystr = "the_id=" + the_id;
 	querystr += "&status=" + the_val
@@ -75,7 +88,10 @@ function status_update(the_id, the_val) {									// write unit status data via 
 		return true;
 		}
 	}		// end function status_update()
-		
+/**
+ * 
+ * @returns {Array}
+ */		
 function $() {									// 1/21/09
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -86,27 +102,51 @@ function $() {									// 1/21/09
 		}
 	return elements;
 	}
-		
+/**
+ * 
+ * @param {type} where
+ * @param {type} the_id
+ * @returns {undefined}
+ */		
 function go_there (where, the_id) {		//
 	document.go.action = where;
 	document.go.submit();
 	}				// end function go there ()	
-	
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */	
 function CngClass(obj, the_class){
 	$(obj).className=the_class;
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_hover (the_id) {
 	CngClass(the_id, 'hover');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_plain (the_id) {
 	CngClass(the_id, 'plain');
 	return true;
 	}
-	
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */	
 function sendRequest(url,callback,postData) {
 	var req = createXMLHTTPObject();
 	if (!req) return;
@@ -125,14 +165,20 @@ function sendRequest(url,callback,postData) {
 	if (req.readyState == 4) return;
 	req.send(postData);
 	}
-
+/**
+ * 
+ * @type Array
+ */
 var XMLHttpFactories = [
 	function () {return new XMLHttpRequest()	},
 	function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 	function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 	function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 	];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 function createXMLHTTPObject() {
 	var xmlhttp = false;
 	for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -146,7 +192,11 @@ function createXMLHTTPObject() {
 		}
 	return xmlhttp;
 	}
-
+/**
+ * 
+ * @param {type} strURL
+ * @returns {Boolean|@exp;AJAX@pro;responseText}
+ */
 function syncAjax(strURL) {
 	if (window.XMLHttpRequest) {						 
 		AJAX=new XMLHttpRequest();						 
@@ -164,7 +214,10 @@ function syncAjax(strURL) {
 		return false;
 		}																						 
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function get_requests() {
 	the_string = "<TABLE cellspacing='0' cellpadding='1' style='width: 100%; table-layout: fixed; color: #FFFFFF;'>";
 	the_string += "<TR class='heading' style='font-weight: bold; font-size: 12px;'>";
@@ -229,17 +282,27 @@ function get_requests() {
 			requests_get();			
 		}
 	}		
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function requests_get() {
 	msgs_interval = window.setInterval('do_requests_loop()', 10000);
 	}	
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function do_requests_loop() {
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./ajax/list_requests.php?version=" + randomnumber;
 	sendRequest (url, requests_cb2, "");
 	}
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 function requests_cb2(req) {
 	the_string = "<TABLE cellspacing='0' cellpadding='1' style='width: 100%; table-layout: fixed;'>";
 	the_string += "<TR class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>";
@@ -298,7 +361,10 @@ function requests_cb2(req) {
 		the_string += "</TABLE>";
 		$('all_requests').innerHTML = the_string;
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function do_logout() {
 	// clearInterval(mu_interval);
 	// mu_interval = null;

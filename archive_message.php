@@ -59,6 +59,10 @@ $now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
 <SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
 <SCRIPT>
 var sep = "";
+/**
+ * 
+ * @returns {reply_button}
+ */
 function reply_button() {
 	$("print_but").style.display="none";
 	$("next_but").style.display="none";
@@ -72,7 +76,10 @@ function reply_button() {
 	$("send_but").style.display="inline-block";		
 	$("send_but").onclick=function() {send_button('reply_frm')};
 	}
-	
+/**
+ * 
+ * @returns {forward_button}
+ */	
 function forward_button() {
 	$("print_but").style.display="none";
 	$("next_but").style.display="none";
@@ -86,7 +93,10 @@ function forward_button() {
 	$("send_but").style.display="inline-block";	
 	$("send_but").onclick=function() {send_button('forward_frm')};	
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function cancel_button() {
 	$("reply").style.display="none"; 
 	$("view").style.display="block";
@@ -96,7 +106,11 @@ function cancel_button() {
 	$("can_but").style.display="none";		
 	$("send_but").style.display="none";			
 	}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 function send_button(theForm) {
 	$("print_but").style.display="none";
 	$("next_but").style.display="none";
@@ -114,7 +128,11 @@ function send_button(theForm) {
 //	cancel_button();
 	refresh_opener("opener");
 	}
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 function pop_address(id) {
 	if(document.reply_frm.frm_addrs) {
 		if(document.reply_frm.frm_addrs.value == "") {
@@ -133,14 +151,24 @@ function pop_address(id) {
 		document.forward_frm.frm_addrs.value = document.forward_frm.frm_addrs.value + sep + id;
 		}		
 	}
-
+/**
+ * 
+ * @param {type} id
+ * @param {type} screen
+ * @returns {undefined}
+ */
 function go_to(id, screen) {
 	var thescreen = screen;
 	document.go_frm.id.value = id;
 	document.go_frm.screen.value = thescreen;	
 	document.go_frm.submit();
 	}
-
+/**
+ * 
+ * @param {type} therow
+ * @param {type} thefile
+ * @returns {undefined}
+ */
 function get_themessage(therow, thefile) {
 	$('progress').style.display = 'inline'; 
 	var randomnumber=Math.floor(Math.random()*99999999);

@@ -43,6 +43,10 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
 <SCRIPT src="./js/multiSelect.js"></SCRIPT>
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */  
 	function ck_window() {		//  onLoad = "ck_window()"
 		if (window.opener == null) { alert ("<?php print __LINE__;?>")}
 		}		// end function ck_window()
@@ -60,7 +64,10 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		}
 	catch(e) {
 		}
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {									// 2/11/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -73,7 +80,12 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 			}
 		return elements;
 		}
-		
+/**
+ * 
+ * @param {type} theForm
+ * @param {type} theBool
+ * @returns {undefined}
+ */		
 	function do_asof(theForm, theBool) {							// 8/10/08
 //		alert(56);
 //		alert(theForm.name);
@@ -83,29 +95,54 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		theForm.frm_hour_asof.disabled = theBool;
 		theForm.frm_minute_asof.disabled = theBool;
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_unlock(theForm) {									// 8/10/08
 		document.getElementById("lock").style.visibility = "hidden";		
 		do_asof(theForm, false)
 		}
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */		
 	function do_lock(theForm) {										// 8/10/08
 		do_asof(theForm, true)
 		document.getElementById("lock").style.visibility = "visible";
 		}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @param {type} str
+ * @returns {Boolean}
+ */
 	function chknum(str) {
 		var nums = str.trim().replace(/\D/g, "" );							// strip all non-digits
 		return (nums == str.trim());
 		}
-
+/**
+ * 
+ * @param {type} val
+ * @param {type} lo
+ * @param {type} hi
+ * @returns {@exp;@call;chknum}
+ */
 	function chkval(val, lo, hi) { 
 		return  (chknum(val) && !((val> hi) || (val < lo)));}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function datechk_r(theForm) {		// as-of vs now
 		var start = new Date();
 		start.setFullYear(theForm.frm_year_asof.value, theForm.frm_month_asof.value-1, theForm.frm_day_asof.value);
@@ -114,7 +151,11 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		var end = new Date();
 		return (start.valueOf() <= end.valueOf());	
 		}
-	
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */	
 	function validate(theForm) {
 		var errmsg="";
 		if (theForm.frm_description.value == "")		{errmsg+= "\tDescription is required\n";}
@@ -211,7 +252,10 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 			if ($addrs) {
 ?>			
 <SCRIPT>
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	function do_notify() {
 		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
 		var theText= "TICKET - ACTION: ";
@@ -222,10 +266,20 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId +"&text_sel=1";		// ($to_str, $text, $ticket_id)   10/15/08
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 		}			// end function do notify()
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 	function handleResult(req) {				// the 'called-back' function
 		}
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -247,14 +301,20 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -276,6 +336,10 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		else {
 ?>		
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	function do_notify() {
 		return;
 		}			// end function do notify()
@@ -485,7 +549,10 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 ?>
 <SCRIPT LANGUAGE="Javascript">
 init();
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function init () {
 	do_unlock(document.forms[0])
 	var now = new Date();

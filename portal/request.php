@@ -130,7 +130,10 @@ function get_facilityname($value) {
 	var randomnumber;
 	var the_string;
 	var theClass = "background-color: #CECECE";
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {									// 1/21/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -141,27 +144,51 @@ function get_facilityname($value) {
 			}
 		return elements;
 		}
-			
+/**
+ * 
+ * @param {type} where
+ * @param {type} the_id
+ * @returns {undefined}
+ */			
 	function go_there (where, the_id) {		//
 		document.go.action = where;
 		document.go.submit();
 		}				// end function go there ()	
-		
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */		
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_hover (the_id) {
 		CngClass(the_id, 'hover');
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_plain (the_id) {
 		CngClass(the_id, 'plain');
 		return true;
 		}
-		
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */		
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -180,14 +207,20 @@ function get_facilityname($value) {
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-
+/**
+ * 
+ * @type Array
+ */
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -201,7 +234,11 @@ function get_facilityname($value) {
 			}
 		return xmlhttp;
 		}
-
+/**
+ * 
+ * @param {type} strURL
+ * @returns {@exp;AJAX@pro;responseText|Boolean}
+ */
 	function syncAjax(strURL) {
 		if (window.XMLHttpRequest) {						 
 			AJAX=new XMLHttpRequest();						 
@@ -219,12 +256,19 @@ function get_facilityname($value) {
 			return false;
 			}																						 
 		}
-		
+/**
+ *  
+ * @returns {undefined}
+ */		
 	function do_edit() {
 		$('view').style.display = 'none';
 		$('edit').style.display = 'inline';
 		}
-		
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */		
 	function accept(id) {
 		randomnumber=Math.floor(Math.random()*99999999);
 		var url ="./ajax/insert_ticket.php?id=" + id + "&version=" + randomnumber;
@@ -244,7 +288,12 @@ function get_facilityname($value) {
 				}
 			}
 		}
-
+/**
+ * 
+ * @param {type} the_id
+ * @param {type} the_val
+ * @returns {Boolean}
+ */
 	function status_update(the_id, the_val) {									// write unit status data via ajax xfer
 		var querystr = "the_id=" + the_id;
 		querystr += "&status=" + the_val;
@@ -263,7 +312,11 @@ function get_facilityname($value) {
 			$('done').innerHTML = the_link;
 			}
 		}		// end function status_update()
-		
+/**
+ *  
+ * @param {type} id
+ * @returns {undefined}
+ */		
 	function tentative(id) {
 		randomnumber=Math.floor(Math.random()*99999999);
 		var url ="./ajax/insert_ticket_tentative.php?id=" + id + "&version=" + randomnumber;
@@ -283,7 +336,11 @@ function get_facilityname($value) {
 				}
 			}
 		}
-	
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */	
 	function decline(id) {
 		randomnumber=Math.floor(Math.random()*99999999);
 		var url ="./ajax/decline.php?id=" + id + "&version=" + randomnumber;
@@ -302,7 +359,10 @@ function get_facilityname($value) {
 				}
 			}
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function startup() {
 		$('edit').style.display = 'none';
 		$('result').style.display = 'none';

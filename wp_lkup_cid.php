@@ -31,7 +31,7 @@ $phone = (empty($_POST))? "4108498721": $_POST['phone'];
  * @since
  */
 	function cid_lookup($phone )  {
-		$aptStr = " Apt:";															
+		$aptStr = gettext("Apt:");															
 /**
  * do_the_row
  * Insert description here
@@ -49,7 +49,7 @@ $phone = (empty($_POST))? "4108498721": $_POST['phone'];
 			global $apartment, $misc;
 			$outStr = $inRow['contact']	. ";";		// phone
 			$outStr .= $inRow['phone']	. ";";			// phone
-			$outStr .= $inRow['street'] . (stripos($inRow['street'], " Apt:"))? "" : $apartment;		// street and apartment - 3/13/10
+			$outStr .= $inRow['street'] . (stripos($inRow['street'], gettext("Apt:")))? "" : $apartment;		// street and apartment - 3/13/10
 			
 			$outStr .= $inRow['street']	. $apartment . ";";			// street and apartment - 3/13/10
 			$outStr .= $inRow['city']	. ";";			// city 

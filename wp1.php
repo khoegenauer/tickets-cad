@@ -90,7 +90,7 @@ if($apiresponse != false) {
 	// There is only one row in these array entries.
 	echo "Result Type: " . $jsonresp["result"]["type"] . " <BR>";
 	echo "Linkexpires: " . $jsonresp["meta"]["linkexpiration"] . " <BR>";
-	echo "Home URl: " . $jsonresp["meta"]["searchlinks"]["homepage"]["url"] . " <BR>";
+	echo "Home URL: " . $jsonresp["meta"]["searchlinks"]["homepage"]["url"] . " <BR>";
 	
 	// But there may be multiple rows, hence need to iterate
 	foreach ($jsonresp["listings"] as $listing) {
@@ -100,12 +100,12 @@ if($apiresponse != false) {
 		echo "Longitude: " . $listing["geodata"]["longitude"] . "<BR>";
 		echo "Latitude: " . $listing["geodata"]["latitude"] . "<BR>";
 		echo "Phone Owner: " . $listing["displayname"] . "<BR>";
-		echo "Address : " . $listing["address"]["house"] . " " . $listing["address"]["street"] . " <BR>";
-		echo "City/State : " . $listing["address"]["city"] . ", " . $listing["address"]["state"] . $listing["address"]["zip"] . "<BR><BR>";
+		echo "Address: " . $listing["address"]["house"] . " " . $listing["address"]["street"] . " <BR>";
+		echo "City/State: " . $listing["address"]["city"] . ", " . $listing["address"]["state"] . $listing["address"]["zip"] . "<BR><BR>";
 		}
 
 	} else {			// failed. show friendly error message.
-		echo "<H2>json error</H2><BR>";
+		echo "<H2>" . gettext('JSON Error') . "</H2><BR>";
 		}
 
 ?>

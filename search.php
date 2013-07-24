@@ -40,7 +40,10 @@ $evenodd = array ("even", "odd");
 <SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 4/23/13 -->
 <SCRIPT TYPE="text/javascript" SRC="./js/misc_function.js"></SCRIPT>	<!-- 5/3/11 -->	
 <SCRIPT>
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function ck_frames() {		//  onLoad = "ck_frames()"
 	if(self.location.href==parent.location.href) {
 		self.location.href = 'index.php';
@@ -57,12 +60,18 @@ try {
 	}
 catch(e) {
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function get_new_colors() {								// 4/5/11
 	window.location.href = '<?php print basename(__FILE__);?>';
 	}
 
-
+/**
+ * 
+ * @returns {Array}
+ */
 function $() {									// 2/11/09
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -75,7 +84,11 @@ function $() {									// 2/11/09
 		}
 	return elements;
 	}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 function validate(theForm) {
 	function TrimString(sInString) {
 		sInString = sInString.replace( /^\s+/g, "" );// strip leading

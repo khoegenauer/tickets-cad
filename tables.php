@@ -448,13 +448,22 @@ if (($func == "c")||($func == "u")) {			// not required for all functions
 	if(self.location.href==parent.location.href) {				// 1/6/2013
 		self.location.href = 'index.php';
 		}
-
+/**
+ * 
+ * @param {type} value
+ * @returns {Boolean}
+ */
 	Array.prototype.inArray = function (value) {	// Returns true if argument value exists in array, else false - 12/31/08
 		for (i=0; i < this.length; i++) {
 			if (this[i] == value) {	return true;}
 			}
 		return false;
 		};
+/**
+ * 
+ * @param {type} argvalue
+ * @returns {unresolved}
+ */    
 	function JSfnTrim(argvalue) {					// drops leading and trailing spaces and cr's
 		var tmpstr = ltrim(argvalue);
 		return rtrim(tmpstr);
@@ -504,6 +513,11 @@ if (($func == "c")||($func == "u")) {			// not required for all functions
 			}				// end while ()
 		}				// end if()
 ?>	
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */  
 	function validate_u_t(theForm) {			// unit type entry validation - c and u
 		var errmsg="";
 		if (theForm.frm_name.value == "")				{errmsg+= "\tType name is required\n";}
@@ -525,6 +539,11 @@ if (($func == "c")||($func == "u")) {			// not required for all functions
 			}
 		}				// end function validate_u_t(theForm)
 														// 12/29/08 'which' is now a string, e.g, 'red.png'
+/**
+ * 
+ * @param {type} the_index
+ * @returns {unresolved}
+ */                            
 	function icon_to_form(the_index) {						// 12/31/08
 		var the_img = $('ID3');
 		the_img.src = icons_dir+sm_icons[the_index];		// display small icon
@@ -532,7 +551,11 @@ if (($func == "c")||($func == "u")) {			// not required for all functions
 		$('ID3').style.visibility = "visible";				// initially hidden for 'create'
 		return;
 		}			
-
+/**
+ * 
+ * @param {type} the_index
+ * @returns {String}
+ */
 	function gen_img_str(the_index) {						// returns image string for nth icon
 		var the_sm_image = icons_dir + sm_icons[the_index];
 //		alert(the_sm_image);
@@ -576,6 +599,11 @@ if (($func == "c")||($func == "u")) {			// not required for all functions
 			}				// end while ()
 		}				// end if()
 ?>	
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */  
 	function validate_f_t(theForm) {			// unit type entry validation - c and u
 		var errmsg="";
 		if (theForm.frm_name.value == "")				{errmsg+= "\tType name is required\n";}
@@ -596,7 +624,11 @@ if (($func == "c")||($func == "u")) {			// not required for all functions
 			theForm.submit();
 			}
 		}				// end function validate_f_t(theForm)
-
+/**
+ * 
+ * @param {type} the_index
+ * @returns {unresolved}
+ */
 	function icon_to_form(the_index) {	
 		var the_img = $('ID3');
 		the_img.src = icons_dir+sm_icons[the_index];		// display small icon
@@ -604,7 +636,11 @@ if (($func == "c")||($func == "u")) {			// not required for all functions
 		$('ID3').style.visibility = "visible";				// initially hidden for 'create'
 		return;
 		}			
-
+/**
+ * 
+ * @param {type} the_index
+ * @returns {String}
+ */
 	function gen_img_str(the_index) {						// returns image string for nth icon
 		var the_sm_image = icons_dir + sm_icons[the_index];
 //		alert(the_sm_image);
@@ -627,7 +663,10 @@ if (($func == "c")||($func == "u")) {			// not required for all functions
 
 // End of code for capabilities for Facilities Icons 10/6/09-----------------------------------------------
 ?>
-
+/**
+ * 
+ * @returns {Array}
+ */
 function $() {									// 12/20/08
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -640,12 +679,20 @@ function $() {									// 12/20/08
 		}
 	return elements;
 	}
-
+/**
+ * 
+ * @param {type} aID
+ * @returns {@exp;document@pro;getElementById|@exp;document@pro;getElementById@exp;d@call;ocument@pro;getElementById}
+ */
 function getElement(aID){ 
 	return (document.getElementById) ? document.getElementById(aID) : document.all[aID];
 	} 
 
 JSfnBrowserSniffer();
+/**
+ * 
+ * @returns {undefined}
+ */
 function JSfnBrowserSniffer() {													//detects the capabilities of the browser
 		if (navigator.userAgent.indexOf("Opera")!=-1 && document.getElementById) type="OP";	//Opera
 		else if (document.all) type="IE";										//Internet Explorer e.g. IE4 upwards
@@ -653,32 +700,59 @@ function JSfnBrowserSniffer() {													//detects the capabilities of the br
 		else if (!document.all && document.getElementById) type="MO";			//Mozila e.g. Netscape 6 upwards
 		else type = "IE";														//????????????
 		}
-	
-	
+/**
+ * 
+ * @param {type} id
+ * @param {type} action
+ * @returns {undefined}
+ */		
 	function JSfnShowLayer(id, action){												// Show and hide a span/layer -- Seems to work with all versions NN4 plus other browsers
 		if (type=="IE") 				eval("document.all." + id + ".style.visibility='" + action + "'");  	// id is the name of the span/layer, action is either hidden or visible
 		if (type=="NN") 				eval("document." + id + ".visibility='" + action + "'");
 		if (type=="MO" || type=="OP") 	eval("document.getElementById('" + id + "').style.visibility='" + action + "'");
 		}
-	
+/**
+ * 
+ * @param {type} spanid
+ * @returns {undefined}
+ */	
 	function JSfnHideit (spanid) {
 		JSfnShowLayer(spanid, "hidden");
 		}
-	
+/**
+ * 
+ * @param {type} spanid
+ * @returns {undefined}
+ */	
 	function JSfnShowit (spanid) {
 		JSfnShowLayer(spanid, "visible");
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @param {type} newClass
+ * @returns {undefined}
+ */
 	function JSfnChangeClass(id, newClass) {	// ex: onBlur="JSfnChangeClass(this.id, 'dirty');"
 		identity=document.getElementById(id);
 		identity.className=newClass;
 		}
-
+/**
+ * 
+ * @param {type} thefunc
+ * @param {type} theid
+ * @returns {Boolean}
+ */
 	function JSfnDisallow (thefunc, theid) {		// 10/20/09
 		alert("Disallowed");
 		return false;	
 		}
-		
+/**
+ * 
+ * @param {type} thefunc
+ * @param {type} theid
+ * @returns {unresolved}
+ */		
 	function JSfnToFunc (thefunc, theid) {
 		if (thefunc == "d" ) {
 			if (!confirm ("Please confirm item deletion?\n\n" )) {
@@ -690,13 +764,21 @@ function JSfnBrowserSniffer() {													//detects the capabilities of the br
 		document.detail.tablename.value="<?php print $tablename; ?>";
 		document.detail.submit();
 		}
-
+/**
+ * 
+ * @param {type} pageno
+ * @returns {undefined}
+ */
 	function JSfnToNav(pageno) {				// paging function
 		document.r.page.value=pageno;
 		document.r.func.value="r";
 		document.r.submit();
 		}				// end function JSfnToNav()
-
+/**
+ * 
+ * @param {type} thevalue
+ * @returns {undefined}
+ */
 	function JSfnToSort(thevalue) {				// column name
 		var currsort = '<?php print $sortby; ?>';
 		if (thevalue == currsort) 	{
@@ -715,6 +797,10 @@ function JSfnBrowserSniffer() {													//detects the capabilities of the br
 <?php
 if (($func == "c")||($func == "u")) {			// Create and Update funcs only
 ?>
+/**
+ * 
+ * @returns {String}
+ */  
 	function JSfnMyDate() {							// returns local date/time string per MySQL date format
 		var curdate = new Date();
 		var year = curdate.getYear();
@@ -729,41 +815,84 @@ if (($func == "c")||($func == "u")) {			// Create and Update funcs only
 		if (minutes<10) {minutes= "0"+minutes;}
 		return year + "-" + month + "-" + mday + " " + hours + ":" + minutes;
 		}
-
+/**
+ * 
+ * @param {type} strin
+ * @returns {Boolean}
+ */
 	function ck_blob(strin) {						// check non-empty
 		if (((strin.length)==0) || (strin==null)) {
 			return false;
 			}
 		else { return true; }
 		}					// end blob()
+/**
+ * 
+ * @param {type} strin
+ * @returns {Boolean}
+ */    
 	function ck_string(strin) {						// check non-empty
 		if (((strin.length)==0) || (strin==null)) 	{return false;}
 		else 										{return true;}
 		}					// end blob()
+/**
+ * 
+ * @param {type} strin
+ * @returns {Boolean}
+ */    
 	function ck_real (strin) {					// use JS function
 		if (parseFloat(strin)== strin) 	{return true;}
 		else 							{return false;}
 		}
+/**
+ * 
+ * @param {type} realin
+ * @returns {Boolean}
+ */    
 	function Ck_Range(realin) {					// 
 		if ((parseFloat(realin) >= 180.0 ) || (parseFloat(realin) <= -180.0 ) || (parseFloat(realin) == 0.0 )) {
 			return false;}
 		else {
 			return true;}
 		}
+/**
+ * 
+ * @param {type} strin
+ * @returns {Boolean}
+ */    
 	function ck_int(strin){						// positive integers only - use JS function
 		if ((parseInt(strin, 10) == strin)  && (parseInt(strin, 10) >= 0)) 	{return true;}
 		else 																{return false;}
 		}
+/**
+ * 
+ * @param {type} strin
+ * @returns {Boolean}
+ */    
 	function ck_timestamp (strin) {				// false if fails ************
 		return true;
 		}
+/**
+ * 
+ * @param {type} strin
+ * @returns {Boolean}
+ */    
 	function ck_datetime (strin) {				// false if fails ************
 		return true;
 		}
-	function ck_date (strin) {					// false if fails ************
+/**
+ * 
+ * @param {type} strin
+ * @returns {Boolean}
+ */
+  function ck_date (strin) {					// false if fails ************
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} strin
+ * @returns {Boolean}
+ */
 	function ck_time (strin) {					// false if fails ************
 		var thearray = strin.split(":");
 		if ((thearray.length)!=2) 																		{return false;}
@@ -771,7 +900,12 @@ if (($func == "c")||($func == "u")) {			// Create and Update funcs only
 		if ((thearray[0]>23)||(thearray[0]>59)) 														{return false;}
 		return true;
 		}
-		
+/**
+ * 
+ * @param {type} myform
+ * @param {type} mybutton
+ * @returns {undefined}
+ */		
 	function JSfnCheckInput(myform, mybutton) {	// reject empty form elements
 		function JSfnAddError() {
 			errmsg +=  "'" + displayname +  "' format error\n" ;
@@ -851,14 +985,21 @@ if (($func == "c")||($func == "u")) {			// Create and Update funcs only
 <?php
 	}			// end if (($func == ...
 ?>
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 function do_onload() {
 	if		(document.c){do_focus(document.c)}
 	else if (document.u){do_focus(document.u)}
 	else if (document.s){do_focus(document.s)}
 	return;
 	}
-
+/**
+ * 
+ * @param {type} in_form
+ * @returns {unresolved}
+ */
 function do_focus(in_form) {
 	for (i=0; i<in_form.elements.length; i++) {
 		if (in_form.elements[i].type == 'text') {
@@ -1855,7 +1996,11 @@ case "u":	// =======================================  Update 	==================
 ?>
 	<SCRIPT>
 		var str = sep = "";
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 		function validate_s(theForm) {			// search values test
 			for (i=0; i< theForm.elements.length; i++) {
 				if (theForm.elements[i].type == 'checkbox' && (theForm.elements[i].checked==true)) {
@@ -1941,6 +2086,11 @@ case "u":	// =======================================  Update 	==================
 ?>
 
 <SCRIPT>
+/**
+ * 
+ * @param {type} the_bool
+ * @returns {undefined}
+ */                  
 function do_check(the_bool) {
 	for(i=0;i<document.s.elements.length;i++) {
 		if (document.s.elements[i].type =='checkbox') {document.s.elements[i].checked=the_bool;}

@@ -152,7 +152,10 @@ $the_url = "http://www.google.com/latitude/apps/badge/api?user={$frm_badge}&type
     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=<?php print $api_key;?>"
             type="text/javascript"></script>
     <script type="text/javascript">
-
+/**
+ * 
+ * @returns {undefined}
+ */
     function initialize() {
       if (GBrowserIsCompatible()) {
         var map = new GMap2(document.getElementById("map_canvas"));

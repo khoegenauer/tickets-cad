@@ -113,11 +113,17 @@ if(file_exists("./incs/modules.inc.php")) {
 	?>
 
 	var NOT_STR = '<?php echo NOT_STR;?>';			// value if not logged-in, defined in functions.inc.php
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {									// 1/21/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -128,11 +134,18 @@ if(file_exists("./incs/modules.inc.php")) {
 			}
 		return elements;
 		}
-
+/**
+ * 
+ * @param {type} val
+ * @returns {Boolean}
+ */
 	function isNull(val) {								// checks var stuff = null;
 		return val === null;
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_time() {		//4/5/10
 		var today=new Date();
 		today.setDate(today.getSeconds()+7.5);		// half-adjust
@@ -159,7 +172,10 @@ if(file_exists("./incs/modules.inc.php")) {
 	var updated;					// 'moved' unit date/time
 	var dispatch;					// latest dispatch status change - date-time
 	var new_msg = 0;				// New messages, 10/23/12
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_msgs_loop() {		//	10/23/12
 		var randomnumber=Math.floor(Math.random()*99999999);	
 		if (window.XMLHttpRequest) {
@@ -169,7 +185,10 @@ if(file_exists("./incs/modules.inc.php")) {
 			xmlHttp.send(null);
 			}
 		}			// end function do_msgs_loop()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function handleRequestStateChange2() {	//	10/23/12
 		var the_resp;
 		var the_val;
@@ -192,17 +211,28 @@ if(file_exists("./incs/modules.inc.php")) {
 				}
 			}
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function do_loop() {								// monitor for changes - 4/10/10, 6/10/11
 		var randomnumber=Math.floor(Math.random()*99999999);		
 		sendRequest ('get_latest_id.php?version=' + randomnumber,get_latest_id_cb, "");	
 		}			// end function do_loop()	
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_latest_msgs_loop() {	//	10/23/12
 		var randomnumber=Math.floor(Math.random()*99999999);		
 		sendRequest ('./ajax/get_latest_messages.php?version=' + randomnumber,get_latest_messages_cb, "");	
 		}
-		
+/**
+ * 
+ * @param {type} unit_id
+ * @param {type} the_stat_id
+ * @returns {undefined}
+ */		
 	function un_stat_chg(unit_id, the_stat_id) {	//	10/23/12
 		var the_stat_control = "frm_status_id_u_" + unit_id;
 		if(typeof parent.frames["main"].change_status_sel == 'function') { 
@@ -211,7 +241,11 @@ if(file_exists("./incs/modules.inc.php")) {
 		}	
 
 	var arr_lgth_good = 9;								// size of a valid returned array - 2/25/12, 10/23/12
-
+/**
+ * 
+ * @param {type} req
+ * @returns {unresolved}
+ */
 	function get_latest_id_cb(req) {					// get_latest_id callback() - 8/16/10
 		try {
 			var the_id_arr=JSON.decode(req.responseText);	// 1/7/11
@@ -284,7 +318,11 @@ if(file_exists("./incs/modules.inc.php")) {
 				}
 			}
 		}			// end function get_latest_id_cb()		
-		
+/**
+ * 
+ * @param {type} req
+ * @returns {unresolved}
+ */		
 	function get_latest_messages_cb(req) {					// get_latest_messages callback(), 10/23/12
 		try {
 			var the_msg_arr=JSON.decode(req.responseText);	// 1/7/11
@@ -301,7 +339,11 @@ if(file_exists("./incs/modules.inc.php")) {
 			msg_signal_r();								// light the msg button
 			}
 		}			// end function get_latest_messages_cb()		
-		
+/**
+ * 
+ * @param {type} x
+ * @returns {String}
+ */		
 	function toHex(x) {
 		hex="0123456789ABCDEF";almostAscii=' !"#$%&'+"'"+'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ['+'\\'+']^_`abcdefghijklmnopqrstuvwxyz{|}';r="";
 		for(i=0;i<x.length;i++){
@@ -310,22 +352,34 @@ if(file_exists("./incs/modules.inc.php")) {
 			};
 		return r;
 		};
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	function mu_get() {								// set cycle
 		if (mu_interval!=null) {return;}			// ????
 		mu_interval = window.setInterval('do_loop()', <?php print $poll_cycle_time;?>);		// 4/7/10 
 		}			// end function mu get()
-		
+/**
+ * 
+ * @returns {unresolved}
+ */		
 	function new_msgs_get() {								// set cycle, 10/23/12
 		if (nm_interval!=null) {return;}			// ????
 		nm_interval = window.setInterval('do_latest_msgs_loop()', 180000); 
 		}			// end function mu get()
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	function messages_get() {								// set cycle, 10/23/12
 		if (msgs_interval!=null) {return;}			// ????
 		msgs_interval = window.setInterval('do_msgs_loop()', 180000);
 		}			// end function mu get()		
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	function mu_init() {								// get initial values from server -  4/7/10
 		var randomnumber=Math.floor(Math.random()*99999999);	
 		if (is_initialized) { return; }
@@ -360,7 +414,10 @@ if(file_exists("./incs/modules.inc.php")) {
 				get_msgs();
 				}				// end function init_cb()
 		}				// end function mu_init()
-		
+/**
+ * 
+ * @returns {unresolved}
+ */		
 	function nm_init() {								// get initial values from server -  10/23/12
 		var randomnumber=Math.floor(Math.random()*99999999);		
 		if (nmis_initialized) { return; }
@@ -377,6 +434,10 @@ if(file_exists("./incs/modules.inc.php")) {
 		}				// end function nm_init()		
 				
 // for messages
+/**
+ * 
+ * @returns {undefined}
+ */
 	function get_msgs() {	//	10/23/12
 		var randomnumber=Math.floor(Math.random()*99999999);		
 	  	// call the server to execute the server side operation
@@ -387,7 +448,10 @@ if(file_exists("./incs/modules.inc.php")) {
 			xmlHttp.send(null);
 			}
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function handleRequestStateChange() {	//	10/23/12
 		var the_resp;
 		var the_val;
@@ -411,15 +475,27 @@ if(file_exists("./incs/modules.inc.php")) {
 			}
 		messages_get();		
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function do_set_sess_exp() {			// set session expiration  - 1/11/10
 		var randomnumber=Math.floor(Math.random()*99999999);		
 		sendRequest ('set_cook_exp.php?version=' + randomnumber,set_cook_exp_handleResult, "");	
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function set_cook_exp_handleResult() {
 		}	
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -438,14 +514,20 @@ if(file_exists("./incs/modules.inc.php")) {
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -459,7 +541,11 @@ if(file_exists("./incs/modules.inc.php")) {
 			}
 		return xmlhttp;
 		}
-
+/**
+ * 
+ * @param {type} strURL
+ * @returns {Boolean|@exp;AJAX@pro;responseText}
+ */
 	function syncAjax(strURL) {							// synchronous ajax function - 4/5/10
 		if (window.XMLHttpRequest) {						 
 			AJAX=new XMLHttpRequest();						 
@@ -478,90 +564,153 @@ if(file_exists("./incs/modules.inc.php")) {
 			}																						 
 		}		// end function sync Ajax()
 	
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_audible() {	// 6/12/10
 		try 		{document.getElementsByTagName('audio')[0].play();}
 		catch (e) 	{}		// ignore	
 		}				// end function do_audible()
-		
+/**
+ * 
+ * @returns {Boolean}
+ */		
 	function get_line_count() {							// 4/5/10
 		var url = "do_get_line_ct.php";
 		var payload = syncAjax(url);						// does the work
 		return payload;
 		}		// end function get line_count()
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 	function chat_signal() {									// light the button
 		CngClass("chat", "signal_r");
 		lit["chat"] = true;
 		do_audible();				// 6/12/10
 		}
-		
+/**
+ * 
+ * @returns {unresolved}
+ */		
 	function unit_signal() {										// light the units button and - if not already lit red - the situation button
 //		CngClass("resp", "signal_b");								//  
 		if (lit["main"]) {return; }									// already lit - possibly red
 		CngClass("main", "signal_b");
 		lit["main"] = true;
 		}
-		
+/**
+ * 
+ * @returns {unresolved}
+ */		
 	function msg_signal() {										// light the msg button, 10/23/12
 		if (lit["msg"]) {return; }									// already lit - possibly red
 		CngClass("msg", "signal_b");
 		lit["msg"] = true;
 		}
-		
+/**
+ * 
+ * @returns {unresolved}
+ */		
 	function msg_signal_r() {										// light the msg button, 10/23/12
 		if (lit["msg"]) {return; }									// already lit - possibly red
 		CngClass("msg", "signal_r");
 		lit["msg"] = true;
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function tick_signal() {										// red light the button
 		CngClass("main", "signal_r");
 		lit["main"] = true;
 		do_audible();				// 6/12/10
 		}
 																	// 2/25/12
+/**
+ * 
+ * @returns {unresolved}
+ */                                  
 	function misc_signal() {										// blue light to situation button if not already lit 
 		if (lit["main"]) {return; }									// already lit - possibly red
 		CngClass("main", "signal_b");
 		lit["main"] = true;
 		}
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_hover (the_id) {
 		if (the_id == current_butt_id) {return true;}				// 8/21/10
 		if (lit[the_id]) {return true;}
 		CngClass(the_id, 'hover');
 		return true;
 		}
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */    
 	function do_lo_hover (the_id) {
 		CngClass(the_id, 'lo_hover');
 		return true;
 		}
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */    
 	function do_plain (the_id) {				// 8/21/10
 		if (the_id == current_butt_id) {return true;}
 		if (lit[the_id] ) {return true;}
 		CngClass(the_id, 'plain');
 		return true;
 		}
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */    
 	function do_lo_plain (the_id) {
 		CngClass(the_id, 'lo_plain');
 		return true;
 		}
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */    
 	function do_signal (the_id) {		// lights the light
 		lit[the_id] = true;
 		CngClass(the_id, 'signal');
 		return true;
 		}
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */    
 	function do_off_signal (the_id) {
 		CngClass(the_id, 'plain')
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} btn_id
+ * @returns {undefined}
+ */
 	function light_butt(btn_id) {				// 8/24/10 -     
 		CngClass(btn_id, 'signal_w')			// highlight this button
 		if(!(current_butt_id == btn_id)) {	
@@ -569,7 +718,12 @@ if(file_exists("./incs/modules.inc.php")) {
 			}
 		current_butt_id = btn_id;				// 
 		}				// end function light_butt()
-
+/**
+ * 
+ * @param {type} where
+ * @param {type} the_id
+ * @returns {undefined}
+ */
 	function go_there (where, the_id) {		//
 		CngClass(the_id, 'signal_w')			// highlight this button
 		if(!(current_butt_id == the_id)) {	
@@ -580,17 +734,27 @@ if(file_exists("./incs/modules.inc.php")) {
 		document.go.action = where;
 		document.go.submit();
 		}				// end function go there ()
-
+/**
+ * 
+ * @param {type} msg
+ * @returns {undefined}
+ */
 	function show_msg (msg) {	
 		$('msg_span').innerHTML = msg;			
 		setTimeout("$('msg_span').innerHTML =''", 3000);	// show for 3 seconds
 		}
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function logged_in() {								// returns boolean
 		var temp = $("whom").innerHTML==NOT_STR;
 		return !temp;
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_logout() {						// 10/27/08
 		$("user_id").innerHTML  = 0;
 		$('time_of_day').innerHTML="";
@@ -652,7 +816,10 @@ if(file_exists("./incs/modules.inc.php")) {
 		$('gout').style.display = 'none';		// hide the logout button
 		document.gout_form.submit();			// send logout 
 		}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 	function hide_butts() {						// 10/27/08, 3/15/11
 		setTimeout(" $('buttons').style.display = 'none';" , 500);
 		$("daynight").style.display = "none";				// 5/2/11
@@ -675,20 +842,25 @@ if(file_exists("./incs/modules.inc.php")) {
 		catch(e) {
 			}
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function show_butts() {						// 10/27/08
 		$("buttons").style.display = "inline";
 		$("daynight").style.display = "inline";
 		$("has_form_row").style.display = "none";		// 5/26/2013
-		$("has_message_row").style.display = "none";
-		
+		$("has_message_row").style.display = "none";		
 		}
 
 //	============== module window openers ===========================================
 
 	var newwindow_sl = null;
 	var starting;
-	
+/**
+ * 
+ * @returns {unresolved}
+ */	
 	function do_sta_log() {				// 1/19/09
 		light_butt('log') ;
 		if ((newwindow_sl) && (!(newwindow_sl.closed))) {newwindow_sl.focus(); return;}		// 7/28/10	
@@ -707,7 +879,10 @@ if(file_exists("./incs/modules.inc.php")) {
 		}		// end function do sta_log()
 	
 	var newwindow_msg = null;		
-		
+/**
+ * 
+ * @returns {unresolved}
+ */		
 	function do_mess() {				// 10/23/12
 		light_butt('msg') ;
 		if ((newwindow_msg) && (!(newwindow_msg.closed))) {newwindow_msg.focus(); return;}		// 10/23/12
@@ -726,7 +901,10 @@ if(file_exists("./incs/modules.inc.php")) {
 		}		// end function do sta_log()		
 	
 	var newwindow_cb = null;
-	
+/**
+ * 
+ * @returns {unresolved}
+ */	
 	function do_callBoard() {
 		light_butt('call');
 		if ((newwindow_cb) && (!(newwindow_cb.closed))) {newwindow_cb.focus(); return;}		// 7/28/10
@@ -749,11 +927,17 @@ if(file_exists("./incs/modules.inc.php")) {
 		}		// end function do callBoard()
 	
 	var newwindow_c = null;
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function chat_win_close() {				// called from chat.pgp
 		newwindow_c = null;
 		}
-		
+/**
+ * 
+ * @returns {unresolved}
+ */		
 	function do_chat() {
 		light_butt('chat') ;
 		if ((newwindow_c) && (!(newwindow_c.closed))) {newwindow_c.focus(); return;}		// 7/28/10
@@ -776,12 +960,14 @@ if(file_exists("./incs/modules.inc.php")) {
 			newwindow_c.focus();
 			starting = false;
 			CngClass("chat", "plain");
-
 			}
 		}
 	
 	var newwindow_fs = null;
-	
+/**
+ * 
+ * @returns {unresolved}
+ */	
 	function do_full_scr() {                            //9/7/09
 		light_butt('full');
 		if ((newwindow_fs) && (!(newwindow_fs.closed))) {newwindow_fs.focus(); return;}		// 7/28/10
@@ -806,7 +992,11 @@ if(file_exists("./incs/modules.inc.php")) {
 			starting = false;
 			}
 		}        // end function do full_scr()
-
+/**
+ * 
+ * @param {type} filename
+ * @returns {unresolved}
+ */
 	function do_emd_card(filename) {
 		light_butt('card') ;
 		try {
@@ -853,6 +1043,11 @@ function get_daynight() {
 	return $day_night;
 	}
 ?>
+/**
+ * 
+ * @param {type} which
+ * @returns {undefined}
+ */  
 	function do_day_night(which){
 		for (i=0;i<document.day_night_form.elements.length;i++) {
 			if ((document.day_night_form.elements[i].type=='radio') && (document.day_night_form.elements[i].name=='frm_daynight')) {
@@ -867,9 +1062,10 @@ function get_daynight() {
 				}				// end if (type=='radio')
 			}
 		}		// end function do_day_night()
-	
-
-
+/**
+ * 
+ * @returns {undefined}
+ */	
 	function top_init() {					// initialize display
 		CngClass('main', 'signal_w');		// light up 'sit' button - 8/21/10
 		$("whom").innerHTML  =	the_whom;
@@ -910,15 +1106,26 @@ function get_daynight() {
 			}				// end if/else (empty($_SESSION))
 ?>		
 		}		// end function top_init() 
-
+/**
+ * 
+ * @param {type} instr
+ * @returns {undefined}
+ */
 	function do_log (instr) {
 		$('log_div').innerHTML += instr + "<br />";
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function get_new_colors() {										// 5/4/11 - a simple refresh
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
-
+/**
+ * 
+ * @param {type} which
+ * @returns {undefined}
+ */
 	function set_day_night(which) {			// 5/2/11
 		sendRequest ('./ajax/do_day_night_swap.php', day_night_callback, "");			
 			function day_night_callback(req) {
@@ -935,7 +1142,11 @@ function get_daynight() {
 				get_new_colors();								// reloads top				
 				}									// end function day_night_callback()				
 		}
-
+/**
+ * 
+ * @param {type} filename
+ * @returns {undefined}
+ */
 	function do_manual(filename){							// launches Tickets manual page -  5/27/11
 		try {
 			newwindow_em=window.open(filename, "Manual",  "titlebar, resizable=1, scrollbars, height=640,width=800,status=0,toolbar=0,menubar=0,location=0, left=20,top=20,screenX=20,screenY=20");
@@ -948,12 +1159,18 @@ function get_daynight() {
 		catch (e) {
 			}
 		}		// end do_manual()
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 		function can_has () {							// cancel HAS function - return to normal display
 			$("has_form_row").style.display = "none";
 			show_butts();								// show buttons		
 			}
-			
+/**
+ * 
+ * @returns {undefined}
+ */			
 		function end_message_show() {
 			setTimeout(function(){
 				$("has_message_row").style.display = $("has_form_row").style.display = "none";
@@ -965,13 +1182,21 @@ function get_daynight() {
 <?php				// 7/2/2013
 		if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 		// 
 ?>
+/**
+ * 
+ * @returns {undefined}
+ */  
 		function do_broadcast () {
 			hide_butts();								// hide buttons
 			$("has_form_row").style.display = "inline-block";
 			$("has_message_row").style.display = "none";
 			document.has_form.has_text.focus()
 			}
-
+/**
+ * 
+ * @param {type} inStr
+ * @returns {unresolved}
+ */
 		function has_check(inStr) {
 			if (inStr.trim().length == 0) { alert("Value required - try again."); return;}
 			else { 
@@ -990,12 +1215,19 @@ function get_daynight() {
 					}, 1000);
 				}		// end else{}
 			}		// end function has_check()		
-
+/**
+ * 
+ * @returns {undefined}
+ */
 		function hide_has_message_row() {
 			$("msg_span").style.display = "none";
 			show_butts();								// show buttons		
 			}
-
+/**
+ * 
+ * @param {type} in_message
+ * @returns {undefined}
+ */
 		function show_has_message(in_message) {
 			hide_butts();											// make room
 			$("has_message_text").innerHTML = in_message;			// the message text

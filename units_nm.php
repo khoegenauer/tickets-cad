@@ -76,7 +76,10 @@ unset($result);
 	parent.upper.light_butt('resp');										// light the button - 8/25/10
 
 	var lat_lng_frmt = <?php print get_variable('lat_lng'); ?>;				// 9/9/08
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function set_regions_control() {
 		var reg_control = "<?php print get_variable('regions_control');?>";
 		var regions_showing = "<?php print get_num_groups();?>";
@@ -90,7 +93,10 @@ unset($result);
 				}
 			}
 		}
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {															// 12/20/08
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -103,57 +109,107 @@ unset($result);
 			}
 		return elements;
 		}
-		
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */		
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_hover (the_id) {
 		CngClass(the_id, 'hover');
 		return true;
 		}
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */    
 	function do_lo_hover (the_id) {
 		CngClass(the_id, 'lo_hover');
 		return true;
 		}
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */    
 	function do_plain (the_id) {				// 8/21/10
 		CngClass(the_id, 'plain');
 		return true;
 		}
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */    
 	function do_lo_plain (the_id) {
 		CngClass(the_id, 'lo_plain');
 		return true;
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function get_new_colors() {
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {									// added 6/10/08
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
 			}
 		}		// end function ck_frames()
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 	function open_tick_window (id) {										// 4/29/10
 		var url = "single.php?ticket_id="+ id;
 		var tickWindow = window.open(url, 'mailWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100');
 		tickWindow.focus();
 		}
-
+/**
+ * 
+ * @param {type} instr
+ * @returns {String|@exp;@call;to_char}
+ */
 	function to_str(instr) {			// 0-based conversion - 2/13/09
 		function ord( string ) {
 		    return (string+'').charCodeAt(0);
 			}
-
+/**
+ * 
+ * @param {type} ascii
+ * @returns {@exp;String@call;fromCharCode}
+ */
 		function chr( ascii ) {
 		    return String.fromCharCode(ascii);
 			}
+/**
+ * 
+ * @param {type} val
+ * @returns {unresolved}
+ */      
 		function to_char(val) {
 			return(chr(ord("A")+val));
 			}
@@ -162,14 +218,21 @@ unset($result);
 		var hop = ((instr - lop)==0)? "" : to_char(((instr - lop)/26)-1) ;		// high-order portion, a string
 		return hop+to_char(lop);
 		}
-
+/**
+ * 
+ * @param {type} val
+ * @returns {Boolean}
+ */
 	function isNull(val) {								// checks var stuff = null;
 		return val === null;
 		}
 
 	var type;					// Global variable - identifies browser family
 	BrowserSniffer();
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function BrowserSniffer() {													//detects the capabilities of the browser
 		if (navigator.userAgent.indexOf("Opera")!=-1 && $) type="OP";	//Opera
 		else if (document.all) type="IE";										//Internet Explorer e.g. IE4 upwards
@@ -179,7 +242,10 @@ unset($result);
 		}
 
 	var starting = false;
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	function do_mail_win() {			// 6/13/09
 		if(starting) {return;}					
 		starting=true;	
@@ -191,7 +257,11 @@ unset($result);
 		newwindow_um.focus();
 		starting = false;
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @returns {unresolved}
+ */
 	function do_mail_in_win(id) {			// individual email 8/17/09
 		if(starting) {return;}					
 		starting=true;	
@@ -205,40 +275,72 @@ unset($result);
 		starting = false;
 		}
 
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 	function to_routes(id) {
 		document.routes_Form.ticket_id.value=id;			// 10/16/08, 10/25/08
 		document.routes_Form.submit();
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 	function to_fac_routes(id) {
 		document.fac_routes_Form.fac_id.value=id;			// 10/6/09
 		document.fac_routes_Form.submit();
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function whatBrows() {									//Displays the generic browser type
 		window.alert("Browser is : " + type);
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @param {type} action
+ * @returns {undefined}
+ */
 	function ShowLayer(id, action){							// Show and hide a span/layer -- Seems to work with all versions NN4 plus other browsers
 		if (type=="IE") 				eval("document.all." + id + ".style.display='" + action + "'");  	// id is the span/layer, action is either hidden or visible
 		if (type=="NN") 				eval("document." + id + ".display='" + action + "'");
 		if (type=="MO" || type=="OP") 	eval("$('" + id + "').style.display='" + action + "'");
 		}
-
+/**
+ * 
+ * @param {type} elid
+ * @returns {undefined}
+ */
 	function hideit (elid) {
 		ShowLayer(elid, "none");
 		}
-
+/**
+ * 
+ * @param {type} elid
+ * @returns {undefined}
+ */
 	function showit (elid) {
 		ShowLayer(elid, "block");
 		}
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */		
 	function any_track(theForm) {					// returns boolean 8/8/09, 5/11/11, 3/24/12 
 //		return ((theForm.frm_aprs.value.trim()==1)||(theForm.frm_instam.value.trim()==1)||(theForm.frm_locatea.value.trim()==1)||(theForm.frm_gtrack.value.trim()==1)||(theForm.frm_glat.value.trim()==1)||(theForm.frm_t_tracker.value.trim()==1));
 		return (theForm.frm_track_disp.selectedIndex > 0);
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function validate(theForm) {						// Responder form contents validation	8/11/09
 		if (theForm.frm_remove) {
 			if (theForm.frm_remove.checked) {
@@ -251,7 +353,6 @@ unset($result);
 			}
 		theForm.frm_mobile.value = (theForm.frm_mob_disp.checked)? 1:0;
 		theForm.frm_multi.value =  (theForm.frm_multi_disp.checked)? 1:0;		// 4/27/09
-
 		theForm.frm_direcs.value = (theForm.frm_direcs_disp.checked)? 1:0;
 		var errmsg="";
 								// 2/24/09, 3/24/10
@@ -279,16 +380,25 @@ unset($result);
 //			return true;
 			}
 		}				// end function va lidate(theForm)
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function add_res () {		// turns on add responder form
 		showit('res_add_form');
 		hideit('tbl_responders');
 		hideIcons();			// hides responder icons
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function hideIcons() {
 		}				// end function hideicons()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function collect(){				// constructs a string of id's for deletion
 		var str = sep = "";
 		for (i=0; i< document.del_Form.elements.length; i++) {
@@ -299,7 +409,11 @@ unset($result);
 			}
 		document.del_Form.idstr.value=str;
 		}
-
+/**
+ * 
+ * @param {type} bool_val
+ * @returns {undefined}
+ */
 	function all_ticks(bool_val) {									// set checkbox = true/false
 		for (i=0; i< document.del_Form.elements.length; i++) {
 			if (document.del_Form.elements[i].type == 'checkbox') {
@@ -307,22 +421,38 @@ unset($result);
 				}
 			}			// end for (...)
 		}				// end function all ticks()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_disp(){												// show incidents for dispatch - added 6/7/08
 		$('incidents').style.display='block';
 		$('view_unit').style.display='none';
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_dispfac(){												// show incidents for dispatch - added 6/7/08
 		$('facilities').style.display='block';
 		$('view_unit').style.display='none';
 		}
-
+/**
+ * 
+ * @param {type} the_form
+ * @returns {undefined}
+ */
 	function do_add_reset(the_form) {								// 1/22/09
 		the_form.reset();
 		}
 
 	var track_captions = ["", "Callsign", "Device key", "Userid ", "Userid ", "Badge", "Device", "Userid"];
+/**
+ * 
+ * @param {type} theForm
+ * @param {type} theVal
+ * @returns {undefined}
+ */  
 	function do_tracking(theForm, theVal) {							// 7/10/09, 7/24/09 added specific code to switch off unselected
 		theForm.frm_aprs.value=theForm.frm_instam.value=theForm.frm_locatea.value=theForm.frm_gtrack.value= theForm.frm_glat.value= theForm.frm_ogts.value = theForm.frm_t_tracker.value = 0;	
 		switch(parseInt(theVal)) {
@@ -382,7 +512,13 @@ function list_responders($addon = '', $start) {
 
 var color=0;
 	var colors = new Array ('odd', 'even');
-
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */
 	function hideDiv(div_area, hide_cont, show_cont) {	//	3/15/11
 		if (div_area == "buttons_sh") {
 			var controlarea = "hide_controls";
@@ -411,7 +547,13 @@ var color=0;
 		var url = "persist2.php";
 		sendRequest (url, gb_handleResult, params);			
 		} 
-
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */
 	function showDiv(div_area, hide_cont, show_cont) {	//	3/15/11
 		if (div_area == "buttons_sh") {
 			var controlarea = "hide_controls";
@@ -440,7 +582,12 @@ var color=0;
 		var url = "persist2.php";
 		sendRequest (url, gb_handleResult, params);					
 		} 	
-
+/**
+ * 
+ * @param {type} form
+ * @param {type} arrayName
+ * @returns {Array}
+ */
 	function checkArray(form, arrayName)	{	//	5/3/11
 		var retval = new Array();
 		for(var i=0; i < form.elements.length; i++) {
@@ -451,7 +598,11 @@ var color=0;
 		}
 	return retval;
 	}		
-		
+/**
+ * 
+ * @param {type} form
+ * @returns {Boolean}
+ */		
 	function checkForm(form)	{	//	6/10/11
 		var errmsg="";
 		var itemsChecked = checkArray(form, "frm_group[]");
@@ -468,27 +619,51 @@ var color=0;
 			}
 		}
 	}
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 	function fvg_handleResult(req) {	// 6/10/11	The persist callback function for viewed groups.
 		document.region_form.submit();
 		}
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */		
 	function form_validate(theForm) {	//	5/3/11
 //		alert("Validating");
 		checkForm(theForm);
 		}				// end function validate(theForm)			
-
+/**
+ * 
+ * @param {type} sidebar
+ * @param {type} id
+ * @param {type} the_class
+ * @param {type} unit_id
+ * @param {type} index
+ * @returns {undefined}
+ */
 	function do_sidebar (sidebar, id, the_class, unit_id, index) {
 		var unit_id = unit_id;
 		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"' >";		
 		side_bar_html += "<TD CLASS='" + the_class + "' onClick = 'myclick(" + unit_id + ");'>" + index + "</TD>" + sidebar +"</TD></TR>\n";	// 1/5/09, 3/4/09, 10/29/09 removed period
 		}
-
+/**
+ * 
+ * @param {type} unit_id
+ * @returns {undefined}
+ */
 	function myclick(unit_id) {				// Responds to sidebar click - view responder data
 		document.view_form.id.value=unit_id;
 		document.view_form.submit();
 		}
-		
+/**
+ * 
+ * @param {type} v_id
+ * @returns {undefined}
+ */		
 	function myclick_nm(v_id) {				// Responds to sidebar click - view responder data
 		document.view_form.id.value=v_id;
 		document.view_form.submit();
@@ -1168,6 +1343,11 @@ if(get_num_groups() > 1) {
 		$track_type = get_remote_type ($row); 
 ?>
 		<SCRIPT>		
+/**
+ * 
+ * @param {type} the_Form
+ * @returns {undefined}
+ */                        
 		function track_reset(the_Form) {		// reset to original as-loaded values
 			the_Form.frm_aprs.value = <?php echo $row['aprs'];?>;
 			the_Form.frm_instam.value = <?php echo $row['instam'];?>;

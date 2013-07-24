@@ -46,7 +46,16 @@
 // version 1.7      fix .supportsHide()
 // version 1.8      remove the old GMarkerManager support due to clashes with v2.143
 
-
+/**
+ * 
+ * @param {type} point
+ * @param {type} html
+ * @param {type} classname
+ * @param {type} pixelOffset
+ * @param {type} percentOpacity
+ * @param {type} overlap
+ * @returns {ELabel}
+ */
       function ELabel(point, html, classname, pixelOffset, percentOpacity, overlap) {
         // Mandatory parameters
         this.point = point;
@@ -65,7 +74,11 @@
       } 
       
       ELabel.prototype = new GOverlay();
-
+/**
+ * 
+ * @param {type} map
+ * @returns {undefined}
+ */
       ELabel.prototype.initialize = function(map) {
         var div = document.createElement("div");
         div.style.position = "absolute";
@@ -87,22 +100,35 @@
           this.hide();
         }
       }
-
+/**
+ * 
+ * @returns {undefined}
+ */
       ELabel.prototype.remove = function() {
         this.div_.parentNode.removeChild(this.div_);
       }
-
+/**
+ * 
+ * @returns {ELabel}
+ */
       ELabel.prototype.copy = function() {
         return new ELabel(this.point, this.html, this.classname, this.pixelOffset, this.percentOpacity, this.overlap);
       }
-
+/**
+ * 
+ * @param {type} force
+ * @returns {undefined}
+ */
       ELabel.prototype.redraw = function(force) {
         var p = this.map_.fromLatLngToDivPixel(this.point);
         var h = parseInt(this.div_.clientHeight);
         this.div_.style.left = (p.x + this.pixelOffset.width) + "px";
         this.div_.style.top = (p.y +this.pixelOffset.height - h) + "px";
       }
-
+/**
+ * 
+ * @returns {undefined}
+ */
       ELabel.prototype.show = function() {
         if (this.div_) {
           this.div_.style.display="";
@@ -110,28 +136,45 @@
         }
         this.hidden = false;
       }
-      
+/**
+ * 
+ * @returns {undefined}
+ */      
       ELabel.prototype.hide = function() {
         if (this.div_) {
           this.div_.style.display="none";
         }
         this.hidden = true;
       }
-      
+/**
+ * 
+ * @returns {unresolved}
+ */      
       ELabel.prototype.isHidden = function() {
         return this.hidden;
       }
-      
+/**
+ * 
+ * @returns {Boolean}
+ */      
       ELabel.prototype.supportsHide = function() {
         return true;
       }
-
+/**
+ * 
+ * @param {type} html
+ * @returns {undefined}
+ */
       ELabel.prototype.setContents = function(html) {
         this.html = html;
         this.div_.innerHTML = '<div class="' + this.classname + '">' + this.html + '</div>' ;
         this.redraw(true);
       }
-      
+/**
+ * 
+ * @param {type} point
+ * @returns {undefined}
+ */      
       ELabel.prototype.setPoint = function(point) {
         this.point = point;
         if (this.overlap) {
@@ -140,7 +183,11 @@
         }
         this.redraw(true);
       }
-      
+/**
+ * 
+ * @param {type} percentOpacity
+ * @returns {undefined}
+ */      
       ELabel.prototype.setOpacity = function(percentOpacity) {
         if (percentOpacity) {
           if(percentOpacity<0){percentOpacity=0;}
@@ -154,7 +201,10 @@
           if(typeof(this.div_.style.opacity)=='string'){this.div_.style.opacity=this.percentOpacity/100;}
         }
       }
-
+/**
+ * 
+ * @returns {unresolved}
+ */
       ELabel.prototype.getPoint = function() {
         return this.point;
       }
@@ -170,7 +220,13 @@
 
       // Custom icon is identical to the default icon, except that its invisible
       var invisibleIcon = new GIcon(G_DEFAULT_ICON, "http://www.google.com/intl/en_ALL/mapfiles/markerTransparent.png");
-
+/**
+ * 
+ * @param {type} point
+ * @param {type} html
+ * @param {type} text
+ * @returns {undefined}
+ */
       function createMarkeredLabel(point,html,text) {
         // Create the Label
         var contents = '<div>  <div class="style1">'+text+'<\/div><img src="http://maps.google.com/intl/en_ALL/mapfiles/markerie.gif" width=20 height=34><\/div>';
@@ -215,10 +271,7 @@
       var marker = createMarkeredLabel(point,'Some stuff to display in the Mississauga Info Window','Mississauga')
 */
       var point = new GLatLng(37.46619, -79.68957);
-      var marker = createMarkeredLabel(point,'Some Italic partially opaque text to place on a map','Some  partially opaque text')
-
-
-      
+      var marker = createMarkeredLabel(point,'Some Italic partially opaque text to place on a map','Some  partially opaque text')      
     }
     
     // display a warning if the browser was not compatible

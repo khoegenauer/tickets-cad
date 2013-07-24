@@ -53,7 +53,9 @@ function list_tracks($addon = '', $start) {
 <SCRIPT>
 	var direcs=new Array("north.png","north_east.png","east.png","south_east.png","south.png","south_west.png","west.png","north_west.png", "north.png");	// 4/8/09
 	var colors = new Array ('odd', 'even');
-
+/**
+ * 
+ */
 	function hideGroup(color) {
 		for (var i = 0; i < gmarkers.length; i++) {
 			if (gmarkers[i]) {
@@ -68,7 +70,9 @@ function list_tracks($addon = '', $start) {
 		elem = document.getElementById("allIcons");
 		elem.style.visibility = "visible";
 		}			// end function
-
+/**
+ * 
+ */
 	function showAll() {
 		for (var i = 0; i < gmarkers.length; i++) {
 			if (gmarkers[i]) {
@@ -80,6 +84,9 @@ function list_tracks($addon = '', $start) {
 
 		}			// end function
 //								(point, html, node_type, heading)
+/**
+ * 
+ */
 	function create_track_Marker(point, html, node_type, heading) {
 //		alert(node_type);
 		switch (node_type){
@@ -112,6 +119,9 @@ function list_tracks($addon = '', $start) {
 				}
 		return marker;
 		}
+/**
+ * 
+ */    
 	function createMarker(point,tabs, color, id) {				// Creates marker and sets up click event infowindow
 //		alert(69);
 
@@ -138,35 +148,50 @@ function list_tracks($addon = '', $start) {
 //		bounds.extend(point);									// extend the bounding box - removed 5/26/08
 		return marker;
 		}				// end function create Marker()
-		
+/**
+ * 
+ */		
 	function do_sidebar (sidebar, id) {
 		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"' onClick = myclick(" + id + ");>";
 		side_bar_html += "<TD CLASS='td_label'>" + sidebar +"</TD></TR>\n";
 		}
-
+/**
+ * 
+ */
 	function do_sidebar_nm (sidebar, line_no, rcd_id) {							// no map - view responder // view_Form
 		side_bar_html += "<TR CLASS='" + colors[(line_no)%2] +"' onClick = myclick_nm(" + rcd_id + ");>";
 		side_bar_html += "<TD CLASS='td_label'>" + (line_no+1) + ". "+ sidebar +"</TD></TR>\n";
 		}
-
+/**
+ * 
+ */
 	function myclick_nm(v_id) {				// Responds to sidebar click - view responder data
 		document.view_form.id.value=v_id;
 		document.view_form.submit();
 		}
-
+/**
+ * 
+ */
 	function myclick(id) {					// Responds to sidebar click, then triggers listener above -  note [id]
 		GEvent.trigger(gmarkers[id], "click");
 		}
-
+/**
+ * 
+ */
 	function doGrid() {
 		map.addOverlay(new LatLonGraticule());
 		}
-
+/**
+ * 
+ */
 	function do_lat (lat) {
 		document.forms[0].frm_lat.disabled=false;
 		document.forms[0].frm_lat.value=lat.toFixed(6);
 		document.forms[0].frm_lat.disabled=true;
 		}
+/**
+ * 
+ */    
 	function do_lng (lng) {
 		document.forms[0].frm_lng.disabled=false;
 		document.forms[0].frm_lng.value=lng.toFixed(6);

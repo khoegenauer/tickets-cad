@@ -96,7 +96,10 @@ else {
 	parent.frames["upper"].document.getElementById("whom").innerHTML  = "<?php print $_SESSION['user'];?>";
 	parent.frames["upper"].document.getElementById("level").innerHTML = "<?php print get_level_text($_SESSION['level']);?>";
 	parent.frames["upper"].document.getElementById("script").innerHTML  = "<?php print LessExtension(basename( __FILE__));?>";
-
+/**
+ * 
+ * @returns {String.prototype.parseDeg.deg}
+ */
 	String.prototype.parseDeg = function() {
 		if (!isNaN(this)) return Number(this);								// signed decimal degrees without NSEW
 		
@@ -116,16 +119,35 @@ else {
 		if (/^-/.test(this) || /[WS]/i.test(this)) deg = -deg; // take '-', west and south as -ve
 		return deg;
 		}
+/**
+ * 
+ * @returns {Number|Number.prototype|@exp;Math@pro;PI}
+ */    
 	Number.prototype.toRad = function() {  // convert degrees to radians
 		return this * Math.PI / 180;
 		}
-
+/**
+ * 
+ * @returns {Number|@exp;Math@pro;PI|Number.prototype}
+ */
 	Number.prototype.toDeg = function() {  // convert radians to degrees (signed)
 		return this * 180 / Math.PI;
 		}
+/**
+ * 
+ * @returns {Number}
+ */    
 	Number.prototype.toBrng = function() {  // convert radians to degrees (as bearing: 0...360)
 		return (this.toDeg()+360) % 360;
 		}
+/**
+ * 
+ * @param {type} lat1
+ * @param {type} lon1
+ * @param {type} lat2
+ * @param {type} lon2
+ * @returns {@exp;Math@pro;atan2@call;@call;toBrng|@exp;@exp;Math@pro;atan2@call;@call;toBrng}
+ */    
 	function brng(lat1, lon1, lat2, lon2) {
 		lat1 = lat1.toRad(); lat2 = lat2.toRad();
 		var dLon = (lon2-lon1).toRad();
@@ -135,7 +157,14 @@ else {
 						Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
 		return Math.atan2(y, x).toBrng();
 		}
-
+/**
+ * 
+ * @param {type} lat1
+ * @param {type} lon1
+ * @param {type} lat2
+ * @param {type} lon2
+ * @returns {unresolved}
+ */
 	distCosineLaw = function(lat1, lon1, lat2, lon2) {
 		var R = 6371; // earth's mean radius in km
 		var d = Math.acos(Math.sin(lat1.toRad())*Math.sin(lat2.toRad()) +
@@ -143,7 +172,11 @@ else {
 		return d;
 		}
     var km2feet = 3280.83;
-
+/**
+ * 
+ * @param {type} instr
+ * @returns {String}
+ */
 	function extr_num (instr) {						// extracts the ho number
 		outstr="";
 		var OKchars = '0123456789,.';
@@ -157,7 +190,11 @@ else {
 			}				// end for ()
 		return outstr;
 		}				// end function extr_num ()
-	
+/**
+ * 
+ * @param {type} inArray
+ * @returns {Number}
+ */	
 	function min(inArray) {				// returns index of least float value in inArray
 		var minsofar =  40076.0;		// initialize to earth circumference (km)
 		var j=-1;
@@ -169,7 +206,10 @@ else {
 			}
 		return j;
 		}		// end function min()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {		// onLoad = "ck_frames()"
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
@@ -178,6 +218,10 @@ else {
 			parent.upper.show_butts();										// 1/21/09
 			}
 		}		// end function ck_frames()
+/**
+ * 
+ * @returns {undefined}
+ */    
 function doReset() {
 	document.reLoad_Form.submit();
 	}	// end function doReset()
@@ -271,7 +315,15 @@ function do_list($unit_id ="") {
 	    	gdir.load("from: " + fromAddress + " to: " + toAddress, { "locale": locale });
 //	    	alert (235);
 	    	}		// end function set Directions()
-	
+/**
+ * 
+ * @param {type} point
+ * @param {type} sidebar
+ * @param {type} tabs
+ * @param {type} color
+ * @param {type} id
+ * @returns {GMarker}
+ */	
 		function createMarker(point,sidebar,tabs, color, id) {		// Creates marker and sets up click event infowindow
 			var icon = new GIcon(listIcon);
 			icon.image = icons[color] + (id % 100) + ".png";		//e.g.,marker9.png, 100 icons limit
@@ -300,7 +352,11 @@ function do_list($unit_id ="") {
 	
 			return marker;
 			}				// end function create Marker()
-	
+/**
+ * 
+ * @param {type} id
+ * @returns {Boolean}
+ */	
 		function myclick(id) {								// Responds to sidebar click
 			if (!(lats[id])) {
 				alert("Cannot route -  no position data currently available");
@@ -317,11 +373,17 @@ function do_list($unit_id ="") {
 				setDirections(lats[id] + " " + lngs[id], thelat + " " + thelng, "en_US");
 				}
 			}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 		function doGrid() {
 			map.addOverlay(new LatLonGraticule());
 			}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 		function handleErrors(){		//G_GEO_UNKNOWN_DIRECTIONS 
 			if (gdir.getStatus().code == G_GEO_UNKNOWN_DIRECTIONS )
 				alert("290: No driving directions are available to/from this location.\nError code: " + gdir.getStatus().code);
@@ -339,7 +401,10 @@ function do_list($unit_id ="") {
 				alert("302: A directions request could not be successfully parsed.\n Error code: " + gdir.getStatus().code);
 			else alert("303: An unknown error occurred.");
 			}		// end function handleErrors()
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 		function onGDirectionsLoad(){ 
 			var temp = gdir.getSummaryHtml();
 //			alert(extr_num(temp));
@@ -348,11 +413,17 @@ function do_list($unit_id ="") {
 //	 		document.getElementById("getStatus").innerHTML = gdir.getStatus().code;
 //	 		and yada yada yada...
 			}		// function onGDirectionsLoad()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 		function guest () {
 			alert ("Demonstration only.  Guests may not commit dispatch!");
 			}
-			
+/**
+ * 
+ * @returns {Boolean}
+ */			
 		function validate(){		// frm_id_str
 			msgstr="";
 			for (var i =0;i<unit_sets.length;i++) {
@@ -377,9 +448,13 @@ function do_list($unit_id ="") {
 					return false;
 					}
 				}
-
 			}		// end function validate()
-	
+/**
+ * 
+ * @param {type} myarray
+ * @param {type} myid
+ * @returns {Boolean}
+ */	
 		function ifexists(myarray,myid) {
 			var str_key = " " + myid;		// force associative
 			return ((typeof myarray[str_key])!="undefined");		// exists if not undefined

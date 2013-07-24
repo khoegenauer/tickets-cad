@@ -256,11 +256,17 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 	var lat_lng_frmt = <?php print get_variable('lat_lng'); ?>;				// 9/9/08
 	var check_initialized = false;
 	var check_interval = null;	
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function get_new_colors() {
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function set_regions_control() {
 		var reg_control = "<?php print get_variable('regions_control');?>";
 		var regions_showing = "<?php print get_num_groups();?>";
@@ -274,7 +280,10 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 				}
 			}
 		}
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {															// 12/20/08
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -287,53 +296,100 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			}
 		return elements;
 		}
-		
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */		
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_hover (the_id) {
 		CngClass(the_id, 'hover');
 		return true;
 		}
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */    
 	function do_lo_hover (the_id) {
 		CngClass(the_id, 'lo_hover');
 		return true;
 		}
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */    
 	function do_plain (the_id) {				// 8/21/10
 		CngClass(the_id, 'plain');
 		return true;
 		}
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */    
 	function do_lo_plain (the_id) {
 		CngClass(the_id, 'lo_plain');
 		return true;
 		}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {									// added 6/10/08
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
 			}
 		}		// end function ck_frames()
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 	function open_tick_window (id) {										// 4/29/10
 		var url = "single.php?ticket_id="+ id;
 		var tickWindow = window.open(url, 'mailWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100');
 		tickWindow.focus();
 		}
-
+/**
+ * 
+ * @param {type} instr
+ * @returns {String|@exp;@call;to_char}
+ */
 	function to_str(instr) {			// 0-based conversion - 2/13/09
 		function ord( string ) {
 		    return (string+'').charCodeAt(0);
 			}
-
+/**
+ * 
+ * @param {type} ascii
+ * @returns {@exp;String@call;fromCharCode}
+ */
 		function chr( ascii ) {
 		    return String.fromCharCode(ascii);
 			}
+/**
+ * 
+ * @param {type} val
+ * @returns {unresolved}
+ */      
 		function to_char(val) {
 			return(chr(ord("A")+val));
 			}
@@ -344,7 +400,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		}
 
 	var starting = false;					// 4/10/09
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {unresolved}
+ */
 	function sv_win(theForm) {				// 2/11/09
 		if(starting) {return;}				// dbl-click proof
 		starting = true;
@@ -361,7 +421,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		starting = false;
 		}		// end function sv win()
 
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_usng_conv(theForm){						// usng to LL array			- 12/4/08
 		tolatlng = new Array();
 		USNGtoLL(theForm.frm_ngs.value, tolatlng);
@@ -375,14 +439,23 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		do_ngs(theForm);
 		domap();			// show it
 		}				// end function
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_unlock_pos(theForm) {				// 12/20/08
 		theForm.frm_ngs.disabled=false;
 		$("lock_p").style.visibility = "hidden";
 		$("usng_link").style.textDecoration = "underline";
 		$("osgb_link").style.textDecoration = "underline";		
 		}
-
+/**
+ * 
+ * @param {type} inlat
+ * @param {type} inlng
+ * @returns {unresolved}
+ */
 	function do_coords(inlat, inlng) { 										// 9/14/08
 		if(inlat.toString().length==0) return;								// 10/15/08
 		var str = inlat + ", " + inlng + "\n";
@@ -390,7 +463,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		str += lat2ddm(inlat) + ", " +lng2ddm(inlng);
 		alert(str);
 		}
-
+/**
+ * 
+ * @param {type} inval
+ * @returns {String}
+ */
 	function ll2dms(inval) {				// lat/lng to degr, mins, sec's - 9/9/08
 		var d = new Number(inval);
 		d  = (inval>0)?  Math.floor(d):Math.round(d);
@@ -400,7 +477,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		var s = si.toFixed(1);
 		return d + '\260 ' + Math.abs(m) +"' " + Math.abs(s) + '"';
 		}
-
+/**
+ * 
+ * @param {type} inlat
+ * @returns {String}
+ */
 	function lat2ddm(inlat) {				// lat to degr, dec min's  9/7/08
 		var x = new Number(inlat);
 		var y  = (inlat>0)?  Math.floor(x):Math.round(x);
@@ -408,7 +489,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		var nors = (inlat>0.0)? " N":" S";
 		return Math.abs(y) + '\260 ' + z +"'" + nors;
 		}
-
+/**
+ * 
+ * @param {type} inlng
+ * @returns {String}
+ */
 	function lng2ddm(inlng) {				// lng to degr, dec min's
 		var x = new Number(inlng);
 		var y  = (inlng>0)?  Math.floor(x):Math.round(x);
@@ -416,7 +501,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		var eorw = (inlng>0.0)? " E":" W";
 		return Math.abs(y) + '\260 ' + z +"'" + eorw;
 		}
-
+/**
+ * 
+ * @param {type} inlat
+ * @returns {String}
+ */
 	function do_lat_fmt(inlat) {				// 9/9/08
 		switch(lat_lng_frmt) {
 		case 0:
@@ -432,7 +521,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			alert ("invalid LL format selector");
 			}
 		}
-
+/**
+ * 
+ * @param {type} inlng
+ * @returns {String}
+ */
 	function do_lng_fmt(inlng) {
 		switch(lat_lng_frmt) {
 		case 0:
@@ -450,12 +543,19 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		}
 
 	var grid_bool = false;		
+  /**
+   * 
+   * @returns {undefined}
+   */
 	function toglGrid() {						// toggle
 		grid_bool = !grid_bool;
 		if (grid_bool)	{ grid = new Graticule(map); }
 		else 			{ grid.setMap(null); }
 		}		// end function toglGrid()
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function doTraffic() {				// 10/16/08
 		return true;
 		}
@@ -475,13 +575,21 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 	    }				// end function doTraffic()
 
 */
+/**
+ * 
+ * @param {type} val
+ * @returns {Boolean}
+ */
 	function isNull(val) {								// checks var stuff = null;
 		return val === null;
 		}
 
 	var type;					// Global variable - identifies browser family
 	BrowserSniffer();
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function BrowserSniffer() {													//detects the capabilities of the browser
 		if (navigator.userAgent.indexOf("Opera")!=-1 && $) type="OP";	//Opera
 		else if (document.all) type="IE";										//Internet Explorer e.g. IE4 upwards
@@ -491,7 +599,10 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		}
 
 	var starting = false;
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	function do_aprs_window() {				// 6/25/08
 		var url = "http://www.openaprs.net/?center=" + <?php print get_variable('def_lat');?> + "," + <?php print get_variable('def_lng');?>;
 		var spec ="titlebar, resizable=1, scrollbars, height=640,width=640,status=0,toolbar=0,menubar=0,location=0, left=50,top=250,screenX=50,screenY=250";
@@ -502,7 +613,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			}
 		newwindow.focus();
 		}				// end function
-
+/**
+ * 
+ * @param {type} callsign
+ * @returns {unresolved}
+ */
 	function do_track(callsign) {
 		if (parent.frames["upper"].logged_in()) {
 			try  {open_iw.close()} catch (e) {;}
@@ -518,12 +633,18 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			newwindow.focus();
 			}
 		}				// end function
-		
+/**
+ * 
+ * @returns {unresolved}
+ */		
 	function fence_get() {								// set cycle
 		if (check_interval!=null) {return;}			// ????
 		check_interval = window.setInterval('check_fence_loop()', 60000);		// 4/7/10 
 		}			// end function mu get()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function fence_init() {								// get initial values from server -  4/7/10
 //		if (check_initialized) { return; }
 		check_initialized = true;
@@ -531,12 +652,23 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			exclude();				
 			fence_get();				// start loop
 		}				// end function mu_init()		
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function check_fence_loop() {								// monitor for changes - 4/10/10, 6/10/11	
 			ring_fence();
 			exclude();			
 		}			// end function do_loop()	
-	
+/**
+ * 
+ * @param {type} id
+ * @param {type} bgcol
+ * @param {type} bgcol2
+ * @param {type} maincol
+ * @param {type} seccol
+ * @returns {undefined}
+ */	
 	function blink_text_rf(id, bgcol, bgcol2, maincol, seccol) {	//	6/10/11
 		if($('fence_flag')) {
 			$('fence_flag').style.fontSize = '14px';
@@ -545,6 +677,10 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			$('fence_flag').style.fontWeight = 'bold';				
 			$('fence_flag').innerHTML = "This unit is outside a ring fence";
 			}		
+/**
+ * 
+ * @returns {undefined}
+ */      
 		function BlinkIt () {
 			if(document.getElementById (id)) {
 				var blink = document.getElementById (id);
@@ -561,7 +697,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		var color = maincol;
 		var back = bgcol;				
 		}
-			
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */			
 	function unblink_text_rf(id) {	//	6/10/11
 		if(!document.getElementById(id)) {
 		} else {	
@@ -572,7 +712,15 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 				}
 			}
 		}	
-
+/**
+ * 
+ * @param {type} id
+ * @param {type} bgcol
+ * @param {type} bgcol2
+ * @param {type} maincol
+ * @param {type} seccol
+ * @returns {undefined}
+ */
 	function blink_text2_rf(id, bgcol, bgcol2, maincol, seccol) {	//	6/10/11
 		if($('fence_flag')) {
 			$('fence_flag').style.fontSize = '14px';
@@ -581,6 +729,10 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			$('fence_flag').style.fontWeight = 'bold';			
 			$('fence_flag').innerHTML = "This unit is inside an exclusion zone";
 			}		
+/**
+ * 
+ * @returns {undefined}
+ */      
 		function BlinkIt () {
 			if(document.getElementById (id)) {
 				var blink = document.getElementById (id);
@@ -598,7 +750,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		var color = maincol;
 		var back = bgcol;				
 		}
-		
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */		
 	function unblink_text2_rf(id) {	//	6/10/11
 		if(!document.getElementById(id)) {
 		} else {	
@@ -609,7 +765,10 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 				}
 			}
 		}					
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ring_fence() {	//	run when new tracked data is received	6/10/11
 		if (!google.maps.Polygon.prototype.Contains) {   						// 3/29/2013
 				google.maps.Polygon.prototype.Contains = function(latLng) {
@@ -641,17 +800,12 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 										inPath = !inPath;
 									}
 								}
-
-								j = i;
-									   
+								j = i;	   
 								}
-							   
 								if (inPath) {
 										return true;
-								}
-							   
-						}
-					   
+								}	   
+						}					   
 						return false;
 				}				// end function()
 			}			// end if (!google.maps.Polygon.prototype.Contains)	
@@ -728,7 +882,10 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			}
 ?>
 		}	// end function ring_fence	
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function exclude() {	//	run when new tracked data is received	6/10/11
 		if (!google.maps.Polygon.prototype.Contains) {   						// 3/29/2013
 				google.maps.Polygon.prototype.Contains = function(latLng) {
@@ -842,7 +999,10 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			}
 ?>
 		}	// end function exclude		
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	function do_mail_win() {			// 6/13/09
 		if(starting) {return;}					
 		starting=true;	
@@ -856,7 +1016,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		newwindow_um.focus();
 		starting = false;
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @returns {unresolved}
+ */
 	function do_mail_in_win(id) {			// individual email 8/17/09
 		if(starting) {return;}					
 		starting=true;	
@@ -869,40 +1033,72 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		newwindow_in.focus();
 		starting = false;
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 	function to_routes(id) {
 		document.routes_Form.ticket_id.value=id;			// 10/16/08, 10/25/08
 		document.routes_Form.submit();
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 	function to_fac_routes(id) {
 		document.fac_routes_Form.fac_id.value=id;			// 10/6/09
 		document.fac_routes_Form.submit();
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function whatBrows() {									//Displays the generic browser type
 		window.alert("Browser is : " + type);
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @param {type} action
+ * @returns {undefined}
+ */
 	function ShowLayer(id, action){							// Show and hide a span/layer -- Seems to work with all versions NN4 plus other browsers
 		if (type=="IE") 				eval("document.all." + id + ".style.display='" + action + "'");  	// id is the span/layer, action is either hidden or visible
 		if (type=="NN") 				eval("document." + id + ".display='" + action + "'");
 		if (type=="MO" || type=="OP") 	eval("$('" + id + "').style.display='" + action + "'");
 		}
-
+/**
+ * 
+ * @param {type} elid
+ * @returns {undefined}
+ */
 	function hideit (elid) {
 		ShowLayer(elid, "none");
 		}
-
+/**
+ * 
+ * @param {type} elid
+ * @returns {undefined}
+ */
 	function showit (elid) {
 		ShowLayer(elid, "block");
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function any_track(theForm) {					// returns boolean  - 3/24/12 
 		return (theForm.frm_track_disp.selectedIndex > 0);
 //		return ((theForm.frm_aprs.value.trim()==1)||(theForm.frm_instam.value.trim()==1)||(theForm.frm_locatea.value.trim()==1)||(theForm.frm_gtrack.value.trim()==1)||(theForm.frm_glat.value.trim()==1)||(theForm.frm_t_tracker.value.trim()==1));
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function validate(theForm) {						// Responder form contents validation	8/11/09
 		if (theForm.frm_remove) {
 			if (theForm.frm_remove.checked) {
@@ -931,7 +1127,6 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			if (!(theForm.frm_callsign.value.trim()==""))										{errmsg+="License information used ONLY with Tracking.\n";}
 			}
 
-
 		if (theForm.frm_un_status_id.options[theForm.frm_un_status_id.selectedIndex].value==0)	{errmsg+="Unit STATUS selection is required.\n";}
 		
 		if (theForm.frm_descr.value.trim()=="")													{errmsg+="Unit DESCRIPTION is required with Tracking.\n";}
@@ -947,7 +1142,10 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 //			return true;
 			}
 		}				// end function validate(theForm)
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function add_res () {		// turns on add responder form
 		showit('res_add_form');
 		hideit('tbl_responders');
@@ -956,6 +1154,13 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		}
 
 // *********************************************************************
+/**
+ * 
+ * @param {type} my_form
+ * @param {type} lat
+ * @param {type} lng
+ * @returns {undefined}
+ */
 	function pt_to_map (my_form, lat, lng) {						// 7/5/10
 		myMarker.setMap(null);			// destroy predecessor
 		my_form.frm_lat.value=lat;	
@@ -986,7 +1191,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		myMarker.setMap(map);		// add marker with icon
 
 		}				// end function pt_to_map ()
-
+/**
+ * 
+ * @param {type} my_form
+ * @returns {Boolean}
+ */
 	function loc_lkup(my_form) {		   						// 7/5/10
 		if ((my_form.frm_city.value.trim()==""  || my_form.frm_state.value.trim()=="")) {
 			alert ("City and State are required for location lookup.");
@@ -1001,7 +1210,12 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			});				// end geocoder.geocode()
 
 		}				// end function loc_lkup()
-
+/**
+ * 
+ * @param {type} latlng
+ * @param {type} currform
+ * @returns {undefined}
+ */
 	function getAddress_old(latlng, currform) {		//7/5/10
 		var rev_coding_on = '<?php print get_variable('reverse_geo');?>';		// 7/5/10	
 		if (rev_coding_on == 1) {	
@@ -1042,20 +1256,33 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 				}
 			}
 		}				// end function getAddress()
-		
+/**
+ * 
+ * @param {type} array
+ * @param {type} item
+ * @returns {Boolean}
+ */		
 	function contains(array, item) {
 		for (var i = 0, I = array.length; i < I; ++i) {
 			if (array[i] == item) return true;
 			}
 		return false;
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function clearOverlays() {
 		for (var i = 0; i < markersArray.length; i++ ) {
 			markersArray[i].setMap(null);
 			}
 		}
-		
+/**
+ * 
+ * @param {type} latlng
+ * @param {type} currform
+ * @returns {undefined}
+ */		
 	function getAddress(latlng, currform) {
 		if(markersArray.length > 1) {
 			clearOverlays(); 
@@ -1143,7 +1370,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 				}
 			});
 		}
-
+/**
+ * 
+ * @param {type} str
+ * @returns {@exp;words@call;join}
+ */
 	function capWords(str){ 											// 7/5/10
 		var words = str.split(" "); 
 		for (var i=0 ; i < words.length ; i++){ 
@@ -1154,24 +1385,39 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 	  	 	} 
 		return( words.join(" ")); 
 		} 
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function hideIcons() {
 		map.clearOverlays();
 		}				// end function hideicons()
-
+/**
+ * 
+ * @param {type} lat
+ * @returns {undefined}
+ */
 	function do_lat (lat) {							// 9/14/08
 		document.forms[0].frm_lat.value=lat.toFixed(6);			// 9/9/08
 		document.forms[0].show_lat.disabled=false;
 		document.forms[0].show_lat.value=do_lat_fmt(document.forms[0].frm_lat.value);
 		document.forms[0].show_lat.disabled=true;
 		}
+/**
+ * 
+ * @param {type} lng
+ * @returns {undefined}
+ */    
 	function do_lng (lng) {
 		document.forms[0].frm_lng.value=lng.toFixed(6);			// 9/9/08
 		document.forms[0].show_lng.disabled=false;
 		document.forms[0].show_lng.value=do_lng_fmt(document.forms[0].frm_lng.value);
 		document.forms[0].show_lng.disabled=true;
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_ngs() {											// LL to USNG
 		var loc = <?php print get_variable('locale');?>;
 		document.forms[0].frm_ngs.disabled=false;
@@ -1186,7 +1432,10 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			}			
 		document.forms[0].frm_ngs.disabled=true;
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function collect(){				// constructs a string of id's for deletion
 		var str = sep = "";
 		for (i=0; i< document.del_Form.elements.length; i++) {
@@ -1197,7 +1446,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			}
 		document.del_Form.idstr.value=str;
 		}
-
+/**
+ * 
+ * @param {type} bool_val
+ * @returns {undefined}
+ */
 	function all_ticks(bool_val) {									// set checkbox = true/false
 		for (i=0; i< document.del_Form.elements.length; i++) {
 			if (document.del_Form.elements[i].type == 'checkbox') {
@@ -1205,12 +1458,18 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 				}
 			}			// end for (...)
 		}				// end function all ticks()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_disp(){												// show incidents for dispatch - added 6/7/08
 		$('incidents').style.display='block';
 		$('view_unit').style.display='none';
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_dispfac(){												// show incidents for dispatch - added 6/7/08
 		$('facilities').style.display='block';
 		$('view_unit').style.display='none';
@@ -1227,6 +1486,12 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 //		}
 
 	var track_captions = ["", "Callsign", "Device key", "Userid ", "Userid ", "Badge", "Device", "Userid"];
+/**
+ * 
+ * @param {type} theForm
+ * @param {type} theVal
+ * @returns {undefined}
+ */  
 	function do_tracking(theForm, theVal) {							// 7/10/09, 7/24/09 added specific code to switch off unselected
 		theForm.frm_aprs.value=theForm.frm_instam.value=theForm.frm_locatea.value=theForm.frm_gtrack.value= theForm.frm_glat.value= theForm.frm_ogts.value = theForm.frm_t_tracker.value = 0;	
 		switch(parseInt(theVal)) {
@@ -1241,11 +1506,26 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			default:  alert("error <?php print __LINE__;?>");
 			}		// end switch()
 		}				// end function do tracking()
-		
+/**
+ * 
+ * @param {type} in_str
+ * @returns {String|add_hash.in_str}
+ */		
 	function add_hash(in_str) { // prepend # if absent
 		return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
 		}
-
+/**
+ * 
+ * @param {type} lat
+ * @param {type} lng
+ * @param {type} radius
+ * @param {type} strokeColor
+ * @param {type} strokeWidth
+ * @param {type} strokeOpacity
+ * @param {type} fillColor
+ * @param {type} fillOpacity
+ * @returns {undefined}
+ */
 	function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity) {		// 8/19/09, 2/26/2013
 
 		var circle = new google.maps.Circle({
@@ -1260,7 +1540,16 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		circle.setRadius(radius*5000); 
 
 		}
-		
+/**
+ * 
+ * @param {type} point
+ * @param {type} html
+ * @param {type} text
+ * @param {type} font_size
+ * @param {type} color
+ * @param {type} name
+ * @returns {undefined}
+ */		
 	function drawBanner(point, html, text, font_size, color, name) {        // Create the banner - 6/5/2013
 		var invisibleIcon = new google.maps.MarkerImage("./markers/markerTransparent.png");
 		map.setCenter(point, 8);
@@ -1280,7 +1569,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		var marker = new google.maps.Marker(point,invisibleIcon);	        // Create an invisible google.maps.Marker
 		marker.setMap(map);				
 		}				// end function draw Banner()
-
+/**
+ * 
+ * @returns {undefined}
+ * 
+ */
 	function do_landb() {				// JS function - 8/1/11
 		var points = new Array();
 <?php
@@ -1359,8 +1652,6 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		}		// end function do_landb()
 
 	</SCRIPT>
-
-
 <?php
 
 /**
@@ -1420,7 +1711,13 @@ function list_responders($addon = '', $start) {
 
 var color=0;
 	var colors = new Array ('odd', 'even');
-
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */
 	function hideDiv(div_area, hide_cont, show_cont) {	//	3/15/11
 		if (div_area == "buttons_sh") {
 			var controlarea = "hide_controls";
@@ -1449,7 +1746,13 @@ var color=0;
 		var url = "persist2.php";
 		sendRequest (url, gb_handleResult, params);			
 		} 
-
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */
 	function showDiv(div_area, hide_cont, show_cont) {	//	3/15/11
 		if (div_area == "buttons_sh") {
 			var controlarea = "hide_controls";
@@ -1478,10 +1781,18 @@ var color=0;
 		var url = "persist2.php";
 		sendRequest (url, gb_handleResult, params);					
 		} 	
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 	function gb_handleResult(req) {							// 12/03/10	The persist callback function
 		}		
-
+/**
+ * 
+ * @param {type} color
+ * @returns {undefined}
+ */
 	function hideGroup(color) {
 		for (var i = 0; i < gmarkers.length; i++) {
 			if (gmarkers[i]) {
@@ -1496,7 +1807,10 @@ var color=0;
 		elem = $("allIcons");
 		elem.style.visibility = "visible";
 		}			// end function
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function showAll() {
 		for (var i = 0; i < gmarkers.length; i++) {
 			if (gmarkers[i]) {
@@ -1505,9 +1819,13 @@ var color=0;
 			} 	// end for ()
 		elem = $("allIcons");
 		elem.style.visibility = "hidden";
-
 		}			// end function
-
+/**
+ * 
+ * @param {type} form
+ * @param {type} arrayName
+ * @returns {Array}
+ */
 	function checkArray(form, arrayName)	{	//	5/3/11
 		var retval = new Array();
 		for(var i=0; i < form.elements.length; i++) {
@@ -1518,7 +1836,11 @@ var color=0;
 		}
 	return retval;
 	}		
-		
+/**
+ * 
+ * @param {type} form
+ * @returns {Boolean}
+ */		
 	function checkForm(form)	{	//	6/10/11
 		var errmsg="";
 		var itemsChecked = checkArray(form, "frm_group[]");
@@ -1535,16 +1857,30 @@ var color=0;
 			}
 		}
 	}
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 	function fvg_handleResult(req) {	// 6/10/11	The persist callback function for viewed groups.
 		document.region_form.submit();
 		}
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */		
 	function form_validate(theForm) {	//	5/3/11
 //		alert("Validating");
 		checkForm(theForm);
 		}				// end function validate(theForm)			
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {								// 2/14/09
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -1563,14 +1899,20 @@ var color=0;
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-
+/**
+ * 
+ * @type Array
+ */
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -1585,7 +1927,14 @@ var color=0;
 		return xmlhttp;
 		}		
 //				<?php echo __LINE__;?>
-
+/**
+ * 
+ * @param {type} point
+ * @param {type} tabs
+ * @param {type} color
+ * @param {type} id
+ * @param {type} unit_id
+ */
 	function createMarker(point, tabs, color, id, unit_id) {		// (point, myinfoTabs,<?php print $row['type'];?>, i)
 		got_points = true;													// at least one
 		var image_file = "./our_icons/gen_icon.php?blank=" + color + "&text=" + unit_id;		// 4/1/2013
@@ -1609,7 +1958,15 @@ var color=0;
 			}
 		return marker;
 		}				// end function create Marker()
-
+/**
+ * 
+ * @param {type} point
+ * @param {type} tabs
+ * @param {type} color
+ * @param {type} id
+ * @param {type} unit_id
+ * @returns {unresolved}
+ */
 	function createdummyMarker(point, tabs, color, id, unit_id) {
 		got_points = true;											// 6/18/12
 		var image_file = "./our_icons/question1.png";
@@ -1633,36 +1990,70 @@ var color=0;
 			}
 		return dummymarker;
 		}				// end function create dummy Marker()
-
+/**
+ * 
+ * @param {type} sidebar
+ * @param {type} id
+ * @param {type} the_class
+ * @param {type} sidebar_id
+ * @returns {undefined}
+ */
 	function do_sidebar (sidebar, id, the_class, sidebar_id) {
 		var sidebar_id = sidebar_id;
 		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"'>";
 		side_bar_html += "<TD WIDTH='5%' CLASS='" + the_class + "' onClick = myclick(" + id + "); >" + sidebar_id + sidebar +"</TD></TR>\n";		// 1/5/09, 3/4/09, 10/29/09 removed period
 		}
-
+/**
+ * 
+ * @param {type} sidebar
+ * @param {type} line_no
+ * @param {type} id
+ * @param {type} sidebar_id
+ * @returns {undefined}
+ */
 	function do_sidebar_nm (sidebar, line_no, id, sidebar_id) {	
 		var sidebar_id = sidebar_id;		
 		side_bar_html += "<TR CLASS='" + colors[(line_no)%2] +"'>";
 		side_bar_html += "<TD WIDTH='5%' onClick = myclick_nm(" + sidebar_id + "); >" + sidebar_id + sidebar +"</TD></TR>\n";		// 1/23/09, 10/29/09 removed period, 11/11/09
 		}
-
+/**
+ * 
+ * @param {type} v_id
+ * @returns {undefined}
+ */
 	function myclick_nm(v_id) {				// Responds to sidebar click - view responder data
 		document.view_form.id.value=v_id;
 		document.view_form.submit();
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 	function myclick(id) {					// Responds to sidebar click, then triggers listener above -  note [id]
 		google.maps.event.trigger(gmarkers[id], "click");
 		location.href = '#top';				// 11/11/09
 		}
-
+/**
+ * 
+ * @param {type} lat
+ * @returns {undefined}
+ */
 	function do_lat (lat) {
 		document.forms[0].frm_lat.value=lat.toFixed(6);
 		}
+/**
+ * 
+ * @param {type} lng
+ * @returns {undefined}
+ */    
 	function do_lng (lng) {
 		document.forms[0].frm_lng.value=lng.toFixed(6);
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function do_ngs() {											// LL to USNG
 		var loc = <?php print get_variable('locale');?>;
 		document.forms[0].frm_ngs.disabled=false;
@@ -2400,7 +2791,11 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 9/2/1
 
 <?php 	}	// end of check of Tickets entered in "no maps" mode 7/28/10		
 ?>	
-
+/**
+ * 
+ * @param {type} in_obj
+ * @returns {undefined}
+ */
 	function call_back (in_obj){				// callback function - from gmaps_v3_init()
 		do_lat(parseFloat(in_obj.lat));			// set form values
 		do_lng(parseFloat(in_obj.lng));
@@ -2419,7 +2814,11 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 9/2/1
 
 	var mode = "<?php print $mode; ?>";	
 	var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
-
+/**
+ * 
+ * @param {type} content
+ * @returns {undefined}
+ */
 	function writeConsole(content) {
 		top.consoleRef=window.open('','myconsole',
 			'width=800,height=250' +',menubar=0' +',toolbar=0' +',status=0' +',scrollbars=0' +',resizable=1')
@@ -2428,7 +2827,10 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 9/2/1
 			)				// end top.consoleRef.document.writeln()
 	 	top.consoleRef.document.close();
 		}				// end function writeConsole(content)
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function map_reset() {		// frame.location.href = frame.location.href;
 		map.clearOverlays();
 		var point = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
@@ -2436,11 +2838,17 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 9/2/1
 		marker = new google.maps.Marker({position: point, map: map, icon: icon_file});	
 		marker.setMap(map);
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function map_cen_reset() {				// reset map center icon
 		map.clearOverlays();
 		}
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 	function ReadOnlyCheckBox() {
 		alert("You can't change this value");
 		return false;
@@ -2474,6 +2882,10 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 9/2/1
 		}							// end else
 		if ($mode=="v") {				// only in view mode
 ?>
+/**
+ * 
+ * @returns {undefined}
+ */                                                  
 		function handleErrors(){
 			if (gdir.getStatus().code == G_GEO_UNKNOWN_DIRECTIONS ) {
 				alert("501: directions unavailable\n\nClick map point for directions.");
@@ -2492,12 +2904,21 @@ function map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 9/2/1
 				alert("450: A directions request could not be successfully parsed.\n Error code: " + gdir.getStatus().code);
 			else alert("451: An unknown error occurred.");
 			}		// end function handleErrors()
-
+/**
+ * 
+ * @param {type} fromAddress
+ * @param {type} toAddress
+ * @param {type} locale
+ * @returns {undefined}
+ */
 	    function setDirections(fromAddress, toAddress, locale) {				// 12/15/08
 	    	var Direcs = gdir.load("from: " + fromAddress + " to: " + toAddress, { "locale": locale, preserveViewport : true  });
 			google.maps.event.addListener(Direcs, "addoverlay", google.maps.event.callback(Direcs, cb()));
 	    	}		// end function set Directions()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	    function cb() {
 //			alert(847);	    							// onto floor ??
 	    	}
@@ -2601,6 +3022,11 @@ function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 
 ?>
 <SCRIPT>
 	var mode = "<?php print $mode; ?>";
+/**
+ * 
+ * @param {type} content
+ * @returns {undefined}
+ */  
 	function writeConsole(content) {
 		top.consoleRef=window.open('','myconsole',
 			'width=800,height=250' +',menubar=0' +',toolbar=0' +',status=0' +',scrollbars=0' +',resizable=1')
@@ -2609,17 +3035,27 @@ function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 
 			)				// end top.consoleRef.document.writeln()
 	 	top.consoleRef.document.close();
 		}				// end function writeConsole(content)
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function map_reset() {		// frame.location.href = frame.location.href;
 		map.clearOverlays();
 		var point = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
 		map.setCenter(point, <?php print get_variable('def_zoom');?>);
 		map.addOverlay(new GMarker(point, myIcon));
 		}
+/**
+ * 
+ * @returns {undefined}
+ */    
 	function map_cen_reset() {				// reset map center icon
 		map.clearOverlays();
 		}
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 	function ReadOnlyCheckBox() {
 		alert("You can't change this value");
 		return false;
@@ -2771,6 +3207,10 @@ function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 
 			}							// end else
 		if ($mode=="v") {				// only in view mode
 ?>
+/**
+ * 
+ * @returns {undefined}
+ */                                                        
 		function handleErrors(){
 			if (gdir.getStatus().code == G_GEO_UNKNOWN_DIRECTIONS ) {
 				alert("501: directions unavailable\n\nClick map point for directions.");
@@ -2789,12 +3229,21 @@ function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 
 				alert("450: A directions request could not be successfully parsed.\n Error code: " + gdir.getStatus().code);
 			else alert("451: An unknown error occurred.");
 			}		// end function handleErrors()
-
+/**
+ * 
+ * @param {type} fromAddress
+ * @param {type} toAddress
+ * @param {type} locale
+ * @returns {undefined}
+ */
 	    function setDirections(fromAddress, toAddress, locale) {				// 12/15/08
 	    	var Direcs = gdir.load("from: " + fromAddress + " to: " + toAddress, { "locale": locale, preserveViewport : true  });
 			google.maps.event.addListener(Direcs, "addoverlay", google.maps.event.callback(Direcs, cb()));
 	    	}		// end function set Directions()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	    function cb() {
 //			alert(847);	    							// onto floor ??
 	    	}
@@ -3360,6 +3809,11 @@ function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 
 //-----------------------UNIT RING FENCE STUFF--------------------6/10/11
 ?>
 <SCRIPT>
+/**
+ * 
+ * @param {type} the_Form
+ * @returns {undefined}
+ */                                                              
 		function track_reset(the_Form) {		// reset to original as-loaded values
 			the_Form.frm_aprs.value = <?php echo $row['aprs'];?>;
 			the_Form.frm_instam.value = <?php echo $row['instam'];?>;
@@ -4356,7 +4810,11 @@ fence_init();
 
 //			var fac_positions = new Array();		// associative array - indexed by responder id
 //			var unit_ids = new Array();				// parallel to gmarkers array
-			
+/**
+ * 
+ * @param {type} marker_index
+ * @returns {undefined}
+ */			
 			function go_home (marker_index)  {			// sets associated icon at facility location, etc. 
 				gmarkers[0].setLatLng(new google.maps.LatLng(48.25, 21));
  				map.setCenter(new google.maps.LatLng(0, 0), 4);

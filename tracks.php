@@ -115,7 +115,10 @@ global $u_types;
 	var color=0;
 	var colors = new Array ('odd', 'even');
 	var starting = false;
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {								// 1/23/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -128,10 +131,18 @@ global $u_types;
 			}
 		return elements;
 		}
-
+/**
+ * 
+ * @param {type} val
+ * @returns {Boolean}
+ */
 	function isNull(val) {								// checks var stuff = null;
 		return val === null;
 		}
+/**
+ * 
+ * @returns {unresolved}
+ */    
 	function do_aprs_window() {				// 6/25/08
 //				echo '<a href="mycgi?foo=', urlencode($userinput), '">';
 	
@@ -145,7 +156,11 @@ global $u_types;
 			}
 		newwindow.focus();
 		}				// end function
-
+/**
+ * 
+ * @param {type} callsign
+ * @returns {unresolved}
+ */
 	function do_track(callsign) {
 		if (parent.frames["upper"].logged_in()) {
 			try  {open_iw.close()} catch (e) {;}
@@ -161,7 +176,11 @@ global $u_types;
 			newwindow.focus();
 			}
 		}				// end function
-
+/**
+ * 
+ * @param {type} color
+ * @returns {undefined}
+ */
 	function hideGroup(color) {
 		for (var i = 0; i < gmarkers.length; i++) {
 			if (gmarkers[i]) {
@@ -176,7 +195,10 @@ global $u_types;
 		elem = document.getElementById("allIcons");
 		elem.style.visibility = "visible";
 		}			// end function
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function showAll() {
 		for (var i = 0; i < gmarkers.length; i++) {
 			if (gmarkers[i]) {
@@ -187,7 +209,15 @@ global $u_types;
 		elem.style.visibility = "hidden";
 
 		}			// end function
-
+/**
+ * 
+ * @param {type} point
+ * @param {type} html
+ * @param {type} mytype
+ * @param {type} ender
+ * @param {type} heading
+ * @returns {unresolved}
+ */
 	function create_track_Marker(point,html, mytype, ender, heading) {	//	5/1/13
 		switch (mytype){
 			case 1:
@@ -226,6 +256,14 @@ global $u_types;
 		return marker;
 		}
 																// 1/24/09
+/**
+ * 
+ * @param {type} point
+ * @param {type} tabs
+ * @param {type} color
+ * @param {type} id
+ * @returns {unresolved}
+ */                                
 	function createMarker(point,tabs, color, id) {				// Creates marker and sets up click event infowindow 
 		points = true;											// at least one
 		var letter = String.fromCharCode("A".charCodeAt(0) + id);		// start with A - 1/5/09
@@ -269,30 +307,55 @@ global $u_types;
 //		bounds.extend(point);									// extend the bounding box - removed 5/26/08
 		return marker;
 		}				// end function create Marker()
-		
+/**
+ * 
+ * @param {type} sidebar
+ * @param {type} id
+ * @param {type} call
+ * @returns {undefined}
+ */		
 	function do_sidebar (sidebar, id, call) {
 		var letter = String.fromCharCode("A".charCodeAt(0) + id);								// start with A - 1/5/09
 		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"' onClick = myclick(" + id + ");>";
 		side_bar_html += "<TD CLASS='td_label'>" + letter + ". "+ sidebar +"</TD></TR>\n";		// 1/5/09
 		}
-
+/**
+ * 
+ * @param {type} sidebar
+ * @param {type} line_no
+ * @param {type} rcd_id
+ * @returns {undefined}
+ */
 	function do_sidebar_nm (sidebar, line_no, rcd_id) {							// no map - view responder // view_Form
 		var letter = String.fromCharCode("A".charCodeAt(0) + line_no);							// start with A - 1/5/09
 //		side_bar_html += "<TR CLASS='" + colors[(line_no)%2] +"' onClick = myclick_nm(" + id + ");>";
 		side_bar_html += "<TR CLASS='" + colors[(line_no)%2] +"' onClick = myclick_nm(" + rcd_id + ");>";
 		side_bar_html += "<TD CLASS='td_label'>" + letter + ". "+ sidebar +"</TD></TR>\n";		// 1/23/09
 		}
-
+/**
+ * 
+ * @param {type} v_id
+ * @returns {undefined}
+ */
 	function myclick_nm(v_id) {				// Responds to sidebar click - view responder data
 		alert("No track data");
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @param {type} call
+ * @returns {undefined}
+ */
 	function myclick(id, call) {					// Responds to sidebar click, then triggers listener above -  note [id]
 //		GEvent.trigger(gmarkers[id], "click");
 		google.maps.event.trigger(gmarkers[id], 'click');		
 		}
 		
 	var grid_bool = false;	
+/**
+ * 
+ * @returns {undefined}
+ */  
 	function doGrid() {
 		map.addOverlay(new LatLonGraticule());
 		grid_bool = !grid_bool;
@@ -375,7 +438,11 @@ unset($result);
 		origin: new google.maps.Point(0,0),
 		anchor: new google.maps.Point(18, 25)
 		};
-
+/**
+ * 
+ * @param {type} in_obj
+ * @returns {undefined}
+ */
 	function call_back (in_obj){				// callback function - from gmaps_v3_init()
 //		do_lat(parseFloat(in_obj.lat));			// set form values
 //		do_lng(parseFloat(in_obj.lng));
@@ -662,7 +729,10 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 	parent.frames["upper"].document.getElementById("whom").innerHTML  = user;
 	parent.frames["upper"].document.getElementById("level").innerHTML  = level;
 	parent.frames["upper"].document.getElementById("script").innerHTML  = "<?php print basename( __FILE__);?>";
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {		// ck_frames()
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';

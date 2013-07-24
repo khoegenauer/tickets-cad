@@ -194,10 +194,20 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 		</STYLE>	
 	<SCRIPT SRC="./js/misc_function.js" type="text/javascript"></SCRIPT>
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */  
 	function out_frames() {		//  onLoad = "out_frames()"
 		if (top.location != location) top.location.href = document.location.href;
 		}		// end function out_frames()
-		
+/**
+ * 
+ * @param {type} form
+ * @param {type} selbox
+ * @param {type} hint_loc
+ * @returns {undefined}
+ */		
 	function set_hint(form, selbox, hint_loc){
 		for (var i = 0; i < form.elements[selbox].options.length; i++) {
 			if (form.elements[selbox].options[i].selected){
@@ -216,7 +226,10 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 				}
 			}
 		}
-	
+/**
+ * 
+ * @returns {unresolved}
+ */	
 	Number.prototype.timeLeft = function(){ 
 		var days = Math.floor(this / 86400); 
 		var hours = Math.floor((this - (days * 86400)) / 3600); 
@@ -235,7 +248,13 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 		result = result.slice(0, -1); 
 		return result; 
 	}
-	
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */	
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -254,14 +273,20 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -275,7 +300,11 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 			}
 		return xmlhttp;
 		}
-
+/**
+ * 
+ * @param {type} strURL
+ * @returns {Boolean|@exp;AJAX@pro;responseText}
+ */
 	function syncAjax(strURL) {							// synchronous ajax function
 		if (window.XMLHttpRequest) {						 
 			AJAX=new XMLHttpRequest();						 
@@ -293,7 +322,10 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 			return false;
 			}																						 
 		}		// end function sync Ajax()
-		
+/**
+ * 
+ * @returns {Array}
+ */		
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -304,7 +336,10 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 			}
 		return elements;
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function do_logout() {
 		clearInterval(mu_interval);
 		mu_interval = null;
@@ -559,8 +594,6 @@ if((isset($_GET['fm_sub'])) && ($_GET['fm_sub'])) {
 if ((isset($_GET['stats'])) && ($_GET['stats'] == "stats") && (!isset($_GET['frm_sub']))) {
 ?>
 <SCRIPT>
-
-
 	var is_initialized = false;
 	var mu_interval = null;
 <?php
@@ -669,11 +702,23 @@ if ((isset($_GET['stats'])) && ($_GET['stats'] == "stats") && (!isset($_GET['frm
 		var type6 = "<?php print $type6;?>";
 		var type7 = "<?php print $type7;?>";
 		var type8 = "<?php print $type8;?>";
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 		function do_loop() {								// monitor for changes
 			sendRequest ('./ajax/statistics.php?user=<?php print $userid;?>',get_statistics_cb, "");
 			}			// end function do_loop()	
-
+/**
+ * 
+ * @param {type} val
+ * @param {type} stat
+ * @param {type} threshold
+ * @param {type} threshold_warn
+ * @param {type} threshold_flag
+ * @param {type} threshold_type
+ * @returns {undefined}
+ */
 		function out_threshold(val, stat, threshold, threshold_warn, threshold_flag, threshold_type) {	//	Checks whether statistic fails threshold test or not.
 			if(threshold_type == "Less") {
 				if(threshold != 0) {
@@ -756,7 +801,11 @@ if ((isset($_GET['stats'])) && ($_GET['stats'] == "stats") && (!isset($_GET['frm
 					}
 				}
 			}	
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 		function get_statistics_cb(req) {
 			var the_id_arr=JSON.decode(req.responseText);
 			if (the_id_arr.length != 9)  {
@@ -844,7 +893,11 @@ if ((isset($_GET['stats'])) && ($_GET['stats'] == "stats") && (!isset($_GET['frm
 					}
 				if($('stats8_inner')) {$('stats8_inner').innerHTML = "Current date and time: " + the_id_arr[8]};				
 			}			// end function get_statistics_cb()		
-
+/**
+ * 
+ * @param {type} x
+ * @returns {String}
+ */
 		function toHex(x) {
 			hex="0123456789ABCDEF";almostAscii=' !"#$%&'+"'"+'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ['+'\\'+']^_`abcdefghijklmnopqrstuvwxyz{|}';r="";
 			for(i=0;i<x.length;i++){
@@ -853,13 +906,19 @@ if ((isset($_GET['stats'])) && ($_GET['stats'] == "stats") && (!isset($_GET['frm
 				};
 			return r;
 			};
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 		function mu_get() {								// set cycle
 			if (mu_interval!=null) {return;}			// ????
 			mu_interval = window.setInterval('do_loop()', <?php print $refresh_time;?>);		// 4/7/10
 			}			// end function mu get()
 
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 		function mu_init() {								// get initial values from server -  4/7/10
 			if (is_initialized) { return; }
 			is_initialized = true;
@@ -1115,7 +1174,10 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 	var type6 = "<?php print $type6;?>";
 	var type7 = "<?php print $type7;?>";
 	var type8 = "<?php print $type8;?>";
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 	function set_init_cfg() {
 		if(type1 == "int") {
 			if($('hint1')) {$('hint1').innerHTML = "Integer - input a number";}				

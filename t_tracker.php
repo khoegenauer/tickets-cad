@@ -29,6 +29,10 @@ $api_key = get_variable('gmaps_api_key');
 <SCRIPT SRC="../js/graticule.js" type="text/javascript"></SCRIPT>
 
 <SCRIPT>
+/**
+ * 
+ * @returns {Array}
+ */  
 	function $() {								// 1/23/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -41,7 +45,11 @@ $api_key = get_variable('gmaps_api_key');
 			}
 		return elements;
 		}
-
+/**
+ * 
+ * @param {type} val
+ * @returns {Boolean}
+ */
 	function isNull(val) {								// checks var stuff = null;
 		return val === null;
 		}

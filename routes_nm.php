@@ -139,7 +139,11 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 		}
 	
 //	var url = "do_session.php?the_name=the_value";
-
+/**
+ * 
+ * @param {type} strURL
+ * @returns {@exp;AJAX@pro;responseText|Boolean}
+ */
 	function syncAjax(strURL) {							// synchronous ajax function
 		if (window.XMLHttpRequest) {						 
 			AJAX=new XMLHttpRequest();						 
@@ -159,21 +163,35 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 			return false;
 			}																						 
 		}		// end function sync Ajax(strURL)
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function get_new_colors() {								// 5/4/11
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
-
+/**
+ * 
+ * @param {type} in_val
+ * @returns {undefined}
+ */
 	function docheck(in_val){				// JS boolean  - true/false
 		document.routes_Form.frm_allow_dirs.value = in_val;	
 		url = "do_session.php?the_name=allow_dirs&the_value=" + in_val.trim();
 		syncAjax(url);			// note asynch call
 		}
-		
+/**
+ * 
+ * @param {type} arg
+ * @returns {Boolean}
+ */		
 	function isNull(arg) {
 		return arg===null;
 		}
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {									// 2/11/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -186,7 +204,10 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 			}
 		return elements;
 		}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {									// added 6/10/08
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
@@ -199,6 +220,10 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 // See http://www.brainjar.com for terms of use.
 //*****************************************************************************
 // Determine browser and version.
+/**
+ * 
+ * @returns {unresolved}
+ */
 function Browser() {
 	var ua, s, i;
 	this.isIE		= false;
@@ -228,6 +253,12 @@ function Browser() {
 var browser = new Browser();
 var dragObj = new Object();		// Global object to hold drag information.
 dragObj.zIndex = 0;
+/**
+ * 
+ * @param {type} event
+ * @param {type} id
+ * @returns {undefined}
+ */
 function dragStart(event, id) {
 	var el;
 	var x, y;
@@ -270,6 +301,11 @@ function dragStart(event, id) {
 		event.preventDefault();
 		}
 	}
+/**
+ * 
+ * @param {type} event
+ * @returns {undefined}
+ */  
 function dragGo(event) {
 	var x, y;
 	if (browser.isIE) {	// Get cursor position with respect to the page.
@@ -291,6 +327,11 @@ function dragGo(event) {
 	if (browser.isNS)
 		event.preventDefault();
 	}
+/**
+ * 
+ * @param {type} event
+ * @returns {undefined}
+ */  
 function dragStop(event) {
 	if (browser.isIE) {	// Stop capturing mousemove and mouseup events.
 		document.detachEvent("onmousemove", dragGo);
@@ -301,7 +342,13 @@ function dragStop(event) {
 		document.removeEventListener("mouseup",	 dragStop, true);
 		}
 	}
-	
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */	
 function hideDiv(div_area, hide_cont, show_cont) {	//	3/15/11
 	if (div_area == "buttons_sh") {
 		var controlarea = "hide_controls";
@@ -330,7 +377,13 @@ function hideDiv(div_area, hide_cont, show_cont) {	//	3/15/11
 	var url = "persist2.php";
 	sendRequest (url, gb_handleResult, params);			
 	} 
-
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */
 function showDiv(div_area, hide_cont, show_cont) {	//	3/15/11
 	if (div_area == "buttons_sh") {
 		var controlarea = "hide_controls";
@@ -403,6 +456,13 @@ if (!empty($_POST)) {				// 77-200
 //	dump($addrs);				// array of addresses
 ?>	
 <SCRIPT>
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */  
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -422,14 +482,20 @@ if (!empty($_POST)) {				// 77-200
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array|Array|Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -443,14 +509,22 @@ if (!empty($_POST)) {				// 77-200
 			}
 		return xmlhttp;
 		}
-	
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */		
 	function handleResult(req) {				// the 'called-back' function
 												// onto floor!
 		}
 
 	var starting = false;						// 2/15/09
-
+/**
+ * 
+ * @param {type} addrs
+ * @param {type} ticket_id
+ * @returns {unresolved}
+ */
 	function do_mail_win(addrs, ticket_id) {	
 		if(starting) {return;}					// dbl-click catcher
 //		alert("174 " +addrs);
@@ -512,7 +586,10 @@ else {		// 201-439
 	parent.frames["upper"].document.getElementById("whom").innerHTML  = "<?php print $_SESSION['user'];?>";
 	parent.frames["upper"].document.getElementById("level").innerHTML = "<?php print get_level_text($_SESSION['level']);?>";
 	parent.frames["upper"].document.getElementById("script").innerHTML  = "<?php print LessExtension(basename( __FILE__));?>";
-
+/**
+ * 
+ * @returns {String.prototype.parseDeg.deg}
+ */
 	String.prototype.parseDeg = function() {
 		if (!isNaN(this)) return Number(this);								// signed decimal degrees without NSEW
 		
@@ -532,16 +609,35 @@ else {		// 201-439
 		if (/^-/.test(this) || /[WS]/i.test(this)) deg = -deg; // take '-', west and south as -ve
 		return deg;
 		}
+/**
+ * 
+ * @returns {@exp;Math@pro;PI|Number|Number.prototype}
+ */    
 	Number.prototype.toRad = function() {  // convert degrees to radians
 		return this * Math.PI / 180;
 		}
-
+/**
+ * 
+ * @returns {Number|Number.prototype|@exp;Math@pro;PI}
+ */
 	Number.prototype.toDeg = function() {  // convert radians to degrees (signed)
 		return this * 180 / Math.PI;
 		}
+/**
+ * 
+ * @returns {Number}
+ */    
 	Number.prototype.toBrng = function() {  // convert radians to degrees (as bearing: 0...360)
 		return (this.toDeg()+360) % 360;
 		}
+/**
+ * 
+ * @param {type} lat1
+ * @param {type} lon1
+ * @param {type} lat2
+ * @param {type} lon2
+ * @returns {@exp;Math@pro;atan2@call;@call;toBrng|@exp;@exp;Math@pro;atan2@call;@call;toBrng}
+ */    
 	function brng(lat1, lon1, lat2, lon2) {
 		lat1 = lat1.toRad(); lat2 = lat2.toRad();
 		var dLon = (lon2-lon1).toRad();
@@ -551,7 +647,14 @@ else {		// 201-439
 						Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
 		return Math.atan2(y, x).toBrng();
 		}
-
+/**
+ * 
+ * @param {type} lat1
+ * @param {type} lon1
+ * @param {type} lat2
+ * @param {type} lon2
+ * @returns {unresolved}
+ */
 	distCosineLaw = function(lat1, lon1, lat2, lon2) {
 		var R = 6371; // earth's mean radius in km
 		var d = Math.acos(Math.sin(lat1.toRad())*Math.sin(lat2.toRad()) +
@@ -559,7 +662,11 @@ else {		// 201-439
 		return d;
 		}
     var km2feet = 3280.83;
-
+/**
+ * 
+ * @param {type} inArray
+ * @returns {Number|Boolean}
+ */
 	function min(inArray) {				// returns index of least float value in inArray
 		var minsofar =  40076.0;		// initialize to earth circumference (km)
 		var j=-1;
@@ -571,7 +678,10 @@ else {		// 201-439
 			}
 		return (j>0) ? j: false;
 		}		// end function min()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {		// onLoad = "ck_frames()"
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
@@ -580,6 +690,10 @@ else {		// 201-439
 			parent.upper.show_butts();										// 1/21/09
 			}
 		}		// end function ck_frames()
+/**
+ * 
+ * @returns {undefined}
+ */    
 function doReset() {
 	document.reLoad_Form.submit();
 	}	// end function doReset()
@@ -675,14 +789,27 @@ function doReset() {
 
 $the_width = 480;
 ?>
+/**
+ * 
+ * @returns {undefined}
+ */          
 function filterSubmit() {		//	11/18/10
 	document.filter_Form.submit();
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function filterReset() {		//	11/18/10
 	document.filter_Form.capabilities.value="";
 	document.filter_Form.submit();
 	}
+/**
+ * 
+ * @param {type} form
+ * @param {type} arrayName
+ * @returns {Array}
+ */  
 function checkArray(form, arrayName)	{	//	6/10/11
 	var retval = new Array();
 	for(var i=0; i < form.elements.length; i++) {
@@ -693,7 +820,11 @@ function checkArray(form, arrayName)	{	//	6/10/11
 	}
 return retval;
 }	
-	
+/**
+ * 
+ * @param {type} form
+ * @returns {Boolean}
+ */	
 function checkForm(form)	{	//	5/4/11
 	var errmsg="";
 	var itemsChecked = checkArray(form, "frm_group[]");
@@ -710,16 +841,30 @@ function checkForm(form)	{	//	5/4/11
 		}
 	}
 }
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 function fvg_handleResult(req) {	// 5/4/11	The persist callback function for viewed groups.
 	document.region_form.submit();
 	}
-	
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */	
 function form_validate(theForm) {	//	5/4/11
 //		alert("Validating");
 	checkForm(theForm);
 	}				// end function validate(theForm)
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 function sendRequest(url,callback,postData) {	//	5/4/11
 	var req = createXMLHTTPObject();
 	if (!req) return;
@@ -738,14 +883,20 @@ function sendRequest(url,callback,postData) {	//	5/4/11
 	if (req.readyState == 4) return;
 	req.send(postData);
 	}
-
+/**
+ * 
+ * @type Array|Array|Array|Array|Array|Array
+ */
 var XMLHttpFactories = [
 	function () {return new XMLHttpRequest()	},
 	function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 	function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 	function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 	];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 function createXMLHTTPObject() {	//	5/4/11
 	var xmlhttp = false;
 	for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -908,6 +1059,10 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 			if ($addrs) {				// 10/21/08
 ?>			
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */          
 	function do_notify() {
 //		alert(352);
 		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
@@ -918,10 +1073,20 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 		var params = "frm_to="+ theAddresses + "&frm_text=" + theText + "&frm_ticket_id=" + theId ;		// ($to_str, $text, $ticket_id)   10/15/08
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 		}			// end function do notify()
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 	function handleResult(req) {				// the 'called-back' function  - ignore returned data
 		}
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -941,14 +1106,20 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array|Array|Array|Array|Array|Array|Array|Array|Array|Array|Array|Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -970,6 +1141,10 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 		else {
 ?>		
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */          
 	function do_notify() {
 //		alert(414);
 		return;
@@ -1062,7 +1237,14 @@ function do_list($unit_id ="", $capabilities ="", $searchtype) {
 		var Now;
 		var mystart;
 		var myend;
-
+/**
+ * 
+ * @param {type} sidebar
+ * @param {type} color
+ * @param {type} id
+ * @param {type} unit_id
+ * @returns {unresolved}
+ */
 		function do_sidebar(sidebar, color, id, unit_id) {						// No map
 			var letter = ""+ id;										// start with 1 - 1/5/09 - 1/29/09
 			marker = null;
@@ -1079,7 +1261,12 @@ function do_list($unit_id ="", $capabilities ="", $searchtype) {
 			return null;
 			}				// end function create Marker()
 
-
+/**
+ * 
+ * @param {type} id
+ * @param {type} unit_id
+ * @returns {undefined}
+ */
 		function myclick(id, unit_id) {								// responds to side bar click
 //			alert (821);
 			var norecfac = "";
@@ -1090,7 +1277,10 @@ function do_list($unit_id ="", $capabilities ="", $searchtype) {
 			document.getElementById(current_id).style.visibility = "visible";			// show newest
 
 			}					// end function my click(id)
-
+/**
+ * 
+ * @returns {undefined}
+ */
 		function handleErrors(){		//G_GEO_UNKNOWN_DIRECTIONS 
 			if (gdir.getStatus().code == G_GEO_UNKNOWN_DIRECTIONS ) {
 				alert("501: directions unavailable\n\nClick map point for directions.");
@@ -1107,15 +1297,24 @@ function do_list($unit_id ="", $capabilities ="", $searchtype) {
 				alert("450: A directions request could not be successfully parsed.\n Error code: " + gdir.getStatus().code);
 			else alert("451: An unknown error occurred.");
 			}		// end function handleErrors()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 		function onGDirectionsLoad(){ 
 //			var temp = gdir.getSummaryHtml();
 			}		// function onGDirectionsLoad()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 		function guest () {
 			alert ("Demonstration only.  Guests may not commit dispatch!");
 			}
-			
+/**
+ * 
+ * @returns {Boolean}
+ */			
 		function validate(){		// frm_id_str
 			msgstr="";
 			for (var i =1;i<unit_sets.length;i++) {				// 3/30
@@ -1148,7 +1347,12 @@ function do_list($unit_id ="", $capabilities ="", $searchtype) {
 				}
 
 			}		// end function validate()
-	
+/**
+ * 
+ * @param {type} myarray
+ * @param {type} myid
+ * @returns {Boolean}
+ */	
 		function exists(myarray,myid) {
 			var str_key = " " + myid;		// force associative
 			return ((typeof myarray[str_key])!="undefined");		// exists if not undefined

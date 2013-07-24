@@ -38,6 +38,11 @@ $temp = get_variable('smtp_acct');
 BODY { BACKGROUND-COLOR: #EFEFEF; FONT-WEIGHT: normal; FONT-SIZE: 10px; COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none }
 </STYLE>
 <SCRIPT>
+/**
+ * 
+ * @param {type} field
+ * @returns {unresolved}
+ */  
 	function validate_email(field) {
 		apos=field.indexOf("@");
 		dotpos=field.lastIndexOf(".");
@@ -46,8 +51,10 @@ BODY { BACKGROUND-COLOR: #EFEFEF; FONT-WEIGHT: normal; FONT-SIZE: 10px; COLOR: #
 	String.prototype.trim = function () {				// 10/19/08
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-     
-		
+/**
+ * 
+ * @returns {Boolean}
+ */     		
 	function validate() {
 	//	alert(38);
 		errormsg="";

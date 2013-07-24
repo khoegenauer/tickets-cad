@@ -56,6 +56,11 @@ TEXTAREA {width: 100%;}
 SELECT {width: 100%;}
 </STYLE>
 <SCRIPT>
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */  
 function validate(theForm) {
 	var errmsg="";
 	if (theForm.frm_db_host.value == "")			{errmsg+= "\tMySQL HOST name is required\n";}
@@ -69,22 +74,38 @@ function validate(theForm) {
 		return true;
 		}
 	}				// end function validate(theForm)
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 function CngClass(obj, the_class){
 	$(obj).className=the_class;
 	return true;
 	}		
-	
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */	
 function do_hover (the_id) {
 	CngClass(the_id, 'hover');
 	return true;
 	}
-	
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */	
 function do_plain (the_id) {				// 8/21/10
 	CngClass(the_id, 'plain');
 	return true;
 	}
-
+/**
+ * 
+ * @returns {Array}
+ */
 function $() {															// 12/20/08
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -97,7 +118,10 @@ function $() {															// 12/20/08
 		}
 	return elements;
 	}	
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function det_time() {
 	var d = new Date();
 	var servDateArray ="<?php print date("Y/n/d/H/i/s", time())?>".split('/');	
@@ -113,7 +137,10 @@ function det_time() {
 var ct = 1;
 var dt = 1;
 var et = 1;
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function new_line() {
 	ct++;
 	var div1 = document.createElement('div');
@@ -132,14 +159,21 @@ function new_line() {
 	div1.innerHTML = the_text;
 	document.getElementById('formline').appendChild(div1);
 	}
-
+/**
+ * 
+ * @param {type} eleId
+ * @returns {undefined}
+ */
 function delIt(eleId) {	// function to delete the newly added set of elements
 	d = document;
 	var ele = d.getElementById(eleId);
 	var parentEle = d.getElementById('formline');
 	parentEle.removeChild(ele);
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function new_line2() {
 	dt++;
 	var div2 = document.createElement('div');
@@ -170,14 +204,21 @@ function new_line2() {
 	div2.innerHTML = the_text;
 	document.getElementById('formline2').appendChild(div2);
 	}
-
+/**
+ * 
+ * @param {type} eleId
+ * @returns {undefined}
+ */
 function delIt2(eleId) {	// function to delete the newly added set of elements
 	d = document;
 	var ele = d.getElementById(eleId);
 	var parentEle = d.getElementById('formline2');
 	parentEle.removeChild(ele);
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function new_line3() {
 	et++;
 	var div3 = document.createElement('div');
@@ -198,14 +239,22 @@ function new_line3() {
 	document.getElementById('formline3').appendChild(div3);
 	jscolor.init()	
 	}
-
+/**
+ * 
+ * @param {type} eleId
+ * @returns {undefined}
+ */
 function delIt3(eleId) {	// function to delete the newly added set of elements
 	d = document;
 	var ele = d.getElementById(eleId);
 	var parentEle = d.getElementById('formline3');
 	parentEle.removeChild(ele);
 	}
-
+/**
+ * 
+ * @param {type} divid
+ * @returns {Boolean}
+ */
 function page_changer(divid) {
 	var theID = divid;
 	var the_help = "";
@@ -262,7 +311,11 @@ function page_changer(divid) {
 	if($('resp_stats')) {$('resp_stats').style.display = 'none';}	
 	if($(theID)) {$(theID).style.display = 'block';}
 	}
-	
+/**
+ * 
+ * @param {type} the_arr
+ * @returns {undefined}
+ */	
 function get_cntr(the_arr) {
 	var myArray = the_arr.split(','); 
 	var lat = myArray[0];
@@ -288,13 +341,22 @@ var sm_icons = new Array();
 var icons = new Array();
 var type_names = new Array();
 var icons_dir = "./our_icons/";	
-
+/**
+ * 
+ * @param {type} the_index
+ * @returns {String}
+ */
 function gen_img_str(the_index) {						// returns image string for nth icon
 	var the_sm_image = icons_dir + sm_icons[the_index];
 	var the_title = icons[the_index].substr (0, icons[the_index].length-4).toUpperCase();	// extract color name
 	return "<IMG SRC='" + the_sm_image + "'>";
 	}
-
+/**
+ * 
+ * @param {type} val
+ * @param {type} thediv
+ * @returns {undefined}
+ */
 function do_icon_view(val, thediv) {
 	$(thediv).innerHTML = gen_img_str(val);
 	}

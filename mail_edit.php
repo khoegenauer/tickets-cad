@@ -36,15 +36,26 @@ $title = (isset($row)) ? substr(stripslashes($row['scope']), 0, 60): $_POST['frm
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
 <SCRIPT>
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 String.prototype.trim = function () {
 	return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 	};
-
+/**
+ * 
+ * @param {type} lines
+ * @returns {undefined}
+ */
 function reSizeScr(lines) {
 	window.resizeTo(640,((lines * 18)+260));		// derived via trial/error (more of the latter, mostly)
 	}
-
+/**
+ * 
+ * @param {type} str
+ * @returns {Boolean}
+ */
 function addrcheck(str) {
 	var at="@"
 	var dot="."
@@ -62,7 +73,11 @@ function addrcheck(str) {
 	}
 var temp;
 var lines;
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 function do_val(theForm) {										// 2/28/09, 10/23/12
 	if((theForm.frm_use_smsg) && (theForm.frm_use_smsg == 0)) {
 		if(theForm.frm_addrs.value == "") {
@@ -101,7 +116,11 @@ function do_val(theForm) {										// 2/28/09, 10/23/12
 		}
 	theForm.submit();
 	}
-	
+/**
+ * 
+ * @param {type} message
+ * @returns {undefined}
+ */	
 	function set_message(message) {	//	10/23/12
 		var randomnumber=Math.floor(Math.random()*99999999);	
 		var tick_id = <?php print $tick_id;?>;

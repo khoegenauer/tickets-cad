@@ -39,6 +39,10 @@ require_once($_SESSION['fip']);		//7/28/10
 <SCRIPT SRC="./js/misc_function.js" type="text/javascript"></SCRIPT>
 
 <SCRIPT>
+/**
+ * 
+ * @returns {Boolean}
+ */  
 function validate_del() {
 	if (document.del_form.frm_days_val.value==0) { 
 		alert("check days value");
@@ -48,7 +52,10 @@ function validate_del() {
 		return true;
 		}
 	}			// end function
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function get_new_colors() {								// 4/5/11
 	window.location.href = '<?php print basename(__FILE__);?>';
 	}

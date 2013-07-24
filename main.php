@@ -174,7 +174,12 @@ if (is_guest()) {													// 8/25/10
 	var NOT_STR = '<?php echo NOT_STR;?>';			// value if not logged-in, defined in functions.inc.php
 	var check_initialized = false;
 	var check_interval = null;
-
+/**
+ * 
+ * @param {type} the_control
+ * @param {type} the_val
+ * @returns {undefined}
+ */
 	function change_status_sel(the_control, the_val) {
 		var oldval = false;
 		var newval = the_val;
@@ -194,12 +199,18 @@ if (is_guest()) {													// 8/25/10
 				}
 			}
 		}
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function logged_in() {								// returns boolean
 		var temp = parent.frames["upper"].$("whom").innerHTML==NOT_STR;
 		return !temp;
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function set_regions_control() {
 		var reg_control = "<?php print get_variable('regions_control');?>";
 		var regions_showing = "<?php print get_num_groups();?>";
@@ -213,12 +224,18 @@ if (is_guest()) {													// 8/25/10
 				}
 			}
 		}
-		
+/**
+ * 
+ * @returns {unresolved}
+ */		
 	function fence_get() {								// set cycle
 		if (check_interval!=null) {return;}			// ????
 		check_interval = window.setInterval('check_fence_loop()', 60000);		// 4/7/10 
 		}			// end function mu get()
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	function fence_init() {								// get initial values from server -  4/7/10
 		if (check_initialized) { return; }
 		check_initialized = true;
@@ -226,12 +243,23 @@ if (is_guest()) {													// 8/25/10
 			exclude();				
 			fence_get();				// start loop
 		}				// end function mu_init()		
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function check_fence_loop() {								// monitor for changes - 4/10/10, 6/10/11	
 			ring_fence();
 			exclude();			
 		}			// end function do_loop()			
-	
+/**
+ * 
+ * @param {type} id
+ * @param {type} bgcol
+ * @param {type} bgcol2
+ * @param {type} maincol
+ * @param {type} seccol
+ * @returns {undefined}
+ */	
 	function blink_text(id, bgcol, bgcol2, maincol, seccol) {	//	6/10/11
 		if(!document.getElementById(id)) {
 			alert("A unit in your group is\noutside a ring fence\nhowever you aren't currently\nviewing the group it is allocated to");
@@ -255,7 +283,11 @@ if (is_guest()) {													// 8/25/10
 			var back = bgcol;				
 			}
 		}
-		
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */		
 	function unblink_text(id) {	//	6/10/11
 		if(!document.getElementById(id)) {
 		} else {	
@@ -266,7 +298,15 @@ if (is_guest()) {													// 8/25/10
 				}
 			}
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @param {type} bgcol
+ * @param {type} bgcol2
+ * @param {type} maincol
+ * @param {type} seccol
+ * @returns {undefined}
+ */
 	function blink_text2(id, bgcol, bgcol2, maincol, seccol) {	//	6/10/11
 		if(!document.getElementById(id)) {
 			alert("A unit in your group is\ninside an exclusion zone\nhowever you aren't currently\nviewing the group it is allocated to");
@@ -290,7 +330,11 @@ if (is_guest()) {													// 8/25/10
 			var back = bgcol;				
 			}
 		}			
-		
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */		
 	function unblink_text2(id) {	//	6/10/11
 		if(!document.getElementById(id)) {
 		} else {	
@@ -348,11 +392,17 @@ if (is_guest()) {													// 8/25/10
 		}
 	catch(e) {
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function get_new_colors() {													// 5/3/11
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {		//  onLoad = "ck_frames()"
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
@@ -362,7 +412,10 @@ if (is_guest()) {													// 8/25/10
 			parent.upper.do_day_night("<?php print $_SESSION['day_night'];?>")
 			}
 		}		// end function ck_frames()
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function ring_fence() {	//	run when new tracked data is received	6/10/11
 		if (!google.maps.Polygon.prototype.Contains) {   						// 3/29/2013
 				google.maps.Polygon.prototype.Contains = function(latLng) {
@@ -482,7 +535,10 @@ if (is_guest()) {													// 8/25/10
 			}
 ?>
 		}	// end function ring_fence		
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function exclude() {	//	run when new tracked data is received	6/10/11
 		if (!google.maps.Polygon.prototype.Contains) {   						// 3/29/2013
 				google.maps.Polygon.prototype.Contains = function(latLng) {
@@ -654,25 +710,47 @@ if (is_guest()) {													// 8/25/10
 		return r;
 		};
 //	var_dump = print_r;
+/**
+ * 
+ * @returns {undefined}
+ */
 	function show_btns_closed() {						// 4/30/10
 		$('btn_go').style.display = 'inline';
 		$('btn_can').style.display = 'inline';
 		}
+/**
+ * 
+ * @returns {undefined}
+ */    
 	function hide_btns_closed() {
 		$('btn_go').style.display = 'none';
 		$('btn_can').style.display = 'none';
 		document.frm_interval_sel.frm_interval.selectedIndex=0;
 		}
+/**
+ * 
+ * @returns {undefined}
+ */    
 	function show_btns_scheduled() {						// 4/30/10
 		$('btn_scheduled').style.display = 'inline';
 		$('btn_can').style.display = 'inline';
 		}
+/**
+ * 
+ * @returns {undefined}
+ */    
 	function hide_btns_scheduled() {
 		$('btn_scheduled').style.display = 'none';
 		$('btn_can').style.display = 'none';
 		document.frm_interval_sel.frm_sched.selectedIndex=0;
 		}
-		
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */		
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -691,14 +769,20 @@ if (is_guest()) {													// 8/25/10
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -712,7 +796,11 @@ if (is_guest()) {													// 8/25/10
 			}
 		return xmlhttp;
 		}
-
+/**
+ * 
+ * @param {type} strURL
+ * @returns {@exp;AJAX@pro;responseText|Boolean}
+ */
 	function syncAjax(strURL) {							// synchronous ajax function - 4/5/10
 		if (window.XMLHttpRequest) {						 
 			AJAX=new XMLHttpRequest();						 
@@ -730,7 +818,11 @@ if (is_guest()) {													// 8/25/10
 			return false;
 			}																						 
 		}		// end function sync Ajax()
-		
+/**
+ * 
+ * @param {type} the_ticket
+ * @returns {unresolved}
+ */		
 	function do_mail_all_win(the_ticket) {			// 6/16/09
 		if(starting) {return;}					
 		starting=true;	
@@ -863,6 +955,10 @@ if (is_guest()) {													// 8/25/10
 </STYLE>
 <SCRIPT>
 	var watch_val;
+/**
+ * 
+ * @returns {undefined}
+ */  
 	function start_watch() {							// get initial values from top - 3/23/12
 //		alert(681 + parent.frames["upper"].$("div_assign_id").innerHTML);
 		parent.frames['upper'].mu_init();				// start the polling
@@ -880,14 +976,20 @@ if (is_guest()) {													// 8/25/10
 		}
 ?>
 		}				// end function start watch()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function end_watch(){
 		if (watch_val) {						// possible null
 			window.clearInterval(watch_val);
 			window.location.reload();
 			}
 		}				// end function end_watch()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_watch() {								// monitor for changes
 //		alert(697);
 		if (							// any change?
@@ -902,7 +1004,10 @@ if (is_guest()) {													// 8/25/10
 			}
 		}			// end function do_watch()		
 
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 	function do_blink() {																// 3/23/12 - 4/5/12
 		$("hdr_td_str").innerHTML = ($("hdr_td_str").innerHTML == "&nbsp;")? the_info  : "&nbsp;" ;
 		blink_count--;								// limit blink duration
@@ -913,40 +1018,60 @@ if (is_guest()) {													// 8/25/10
 	var blink_count;												// duration of blink
 	var orig_head_str;												// header string value at start of blink
 	var the_info = "<?php echo $info_str; ?>";
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function start_blink () {
 		orig_head_str = $("hdr_td_str").innerHTML;
 		blink_var = setInterval('do_blink()',500);					// on/off cycle is once per second
 		blink_count = 30;											// = 30 seconds
 		}
+/**
+ * 
+ * @returns {undefined}
+ */    
 	function end_blink() {
 		if (blink_var) {
 			$("hdr_td_str").innerHTML = orig_head_str; 					// restore original value		
 			clearInterval(blink_var);
 			}
 		}		// end function
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function get_wastebin() {	//	10/23/12
 		$(waste_but).style.display = "none";
 		$(inbox_but).style.display = "inline";	
 		get_wastelist('','',sortby, 'DESC','');
 		$('the_box').innerHTML = "Showing Wastebasket";		
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function get_inbox() {	//	10/23/12
 		$(waste_but).style.display = "inline";
 		$(inbox_but).style.display = "none";	
 		$('the_box').innerHTML = "Showing Inbox";	
 /*		get_main_messagelist(ticket_id,'',sortby, 'DESC','', 'ticket');  3/26/2013  */
 		get_all_messagelist(ticket_id,'',sortby, 'DESC','', 'ticket');
-
 		}			
-		
+/**
+ * 
+ * @param {type} ticket_id
+ * @param {type} responder_id
+ * @param {type} sortby
+ * @param {type} sort
+ * @param {type} filter
+ * @param {type} thescreen
+ * @returns {undefined}
+ */		
 	function get_mainmessages(ticket_id, responder_id, sortby, sort, filter, thescreen) {	//	10/23/12
 		ticket_id = ticket_id;
 /*		get_main_messagelist(ticket_id,'',sortby, sort, filter, 'ticket');	3/26/2013  */
 		get_all_messagelist(ticket_id,'',sortby, sort, filter, 'ticket');
-
 		}
 <?php
 	$do_blink_str = ($do_blink)? "start_blink()" : "";

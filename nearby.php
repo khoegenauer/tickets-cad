@@ -33,6 +33,11 @@ $evenodd = array ("even", "odd");
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
 <SCRIPT>
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */  
 	function do_popup(id) {
 		document.popup.id.value = id;
 		document.popup.submit();	

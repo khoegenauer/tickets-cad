@@ -66,6 +66,10 @@ $facilitycontact = 	get_text("Facility contact");
 		}
 	?>	
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */  
 function ck_frames() {		//  onLoad = "ck_frames()"
 <?php	if (array_key_exists('in_win', $_GET)) {echo "\n return;\n";} ?>	// 6/10/11
 
@@ -90,7 +94,10 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		}
 	catch(e) {
 		}
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {									// 2/11/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -103,26 +110,46 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			}
 		return elements;
 		}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_cancel () {				// 6/10/11
 <?php	
 	$can_str = (array_key_exists('in_win', $_GET))? "window.close()" : "history.back()";
 	echo $can_str;
 ?>	
 		}				// end function do_cancel ()
-
+/**
+ * 
+ * @param {type} str
+ * @returns {Boolean}
+ */
 	function chknum(str) {
 		var nums = str.trim().replace(/\D/g, "" );							// strip all non-digits
 		return (nums == str.trim());
 		}
-	
+/**
+ * 
+ * @param {type} val
+ * @param {type} lo
+ * @param {type} hi
+ * @returns {@exp;@call;chknum}
+ */	
 	function chkval(val, lo, hi) { 
 		return  (chknum(val) && !((val> hi) || (val < lo)));}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function datechk_r(theForm) {		// as-of vs now
 		var yr = theForm.frm_year_asof.options[theForm.frm_year_asof.selectedIndex].value;
 		var mo = theForm.frm_month_asof.options[theForm.frm_month_asof.selectedIndex].value;
@@ -135,7 +162,11 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		var end = new Date();
 		return (start.valueOf() <= end.valueOf());	
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function validate(theForm) {
 		var errmsg="";
 		if (theForm.frm_name.value == "")						{errmsg+= "\tName is required\n";}
@@ -164,7 +195,11 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			theForm.submit();
 			}
 		}				// end function validate(theForm)
-
+/**
+ * 
+ * @param {type} inval
+ * @returns {undefined}
+ */
 	function set_signal(inval) {
 		var temp_ary = inval.split("|", 2);		// inserted separator
 		if (document.patientAdd) {
@@ -178,26 +213,42 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			document.patientEd.frm_description.focus();		
 			}
 		}		// end function set_signal()
-
+/**
+ * 
+ * @param {type} theForm
+ * @param {type} theBool
+ * @returns {undefined}
+ */
 	function do_asof(theForm, theBool) {							// 8/10/08
 		theForm.frm_year_asof.disabled = theBool;
 		theForm.frm_month_asof.disabled = theBool;
 		theForm.frm_day_asof.disabled = theBool;
 		theForm.frm_hour_asof.disabled = theBool;
 		theForm.frm_minute_asof.disabled = theBool;
-
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_unlock(theForm) {									// 8/10/08
 		do_asof(theForm, false)
 		document.getElementById("lock").style.visibility = "hidden";		
 		}
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */		
 	function do_lock(theForm) {										// 8/10/08
 		do_asof(theForm, true)
 		document.getElementById("lock").style.visibility = "visible";
 		}
-		
+/**
+ * 
+ * @param {type} the_form
+ * @returns {undefined}
+ */		
 	function do_reset (the_form) {
 		do_lock(the_form);
 		the_form.reset();
@@ -275,7 +326,10 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			if ($addrs) {
 ?>			
 <SCRIPT>
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	function do_notify() {
 		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
 		var theText= "TICKET - PATIENT: ";
@@ -285,10 +339,20 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + escape(theId) + "&text_sel=1";		// ($to_str, $text, $ticket_id)   10/15/08
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 		}			// end function do notify()
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 	function handleResult(req) {				// the 'called-back' function
 		}
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -310,14 +374,20 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -339,6 +409,10 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		else {
 ?>		
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	function do_notify() {
 		return;
 		}			// end function do notify()

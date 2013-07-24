@@ -85,6 +85,9 @@ function template_213 ($do_form = TRUE) {
 	-->
 	</STYLE>
 <SCRIPT type=\"text/javascript\">
+/**
+ * 
+ */
 	function validate(theForm) {						// form contents validation	
 		var errmsg='';
 		if (theForm.f1.value.trim()=='')	{errmsg+=\"TO is required.\\n\";}
@@ -281,11 +284,17 @@ switch ($step) {
 <META HTTP-EQUIV="Script-date" CONTENT="6/13/09">
 <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
 <SCRIPT>
- 
+/**
+ * 
+ * @returns {unresolved}
+ */ 
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -298,7 +307,10 @@ switch ($step) {
 			}
 		return elements;
 		}
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function do_step_2() {
 		sep = "";
 		for (i=0;i<document.mail_form.elements.length; i++) {
@@ -313,7 +325,10 @@ switch ($step) {
 			}
 		document.mail_form.submit();	
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_clear(){
 		for (i=0;i<document.mail_form.elements.length; i++) {
 			if(document.mail_form.elements[i].type =='checkbox'){
@@ -323,7 +338,10 @@ switch ($step) {
 		$('clr_spn').style.display = "none";
 		$('chk_spn').style.display = "block";
 		}		// end function do_clear
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_check(){
 		for (i=0;i<document.mail_form.elements.length; i++) {
 			if(document.mail_form.elements[i].type =='checkbox'){

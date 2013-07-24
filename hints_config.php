@@ -48,6 +48,10 @@
 	<SCRIPT SRC="./js/jscolor/jscolor.js"></SCRIPT>				<!-- 01/24/11 -->
 
 	<SCRIPT>
+/**
+ * 
+ * @returns {Array}
+ */    
 	function $() {									// 7/11/10
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -73,6 +77,10 @@
 		// print "\t parent.frames['upper'].document.getElementById('call').style.display = 'none';";
 		// }
 ?>		
+/**
+ * 
+ * @returns {undefined}
+ */  
 	function ck_frames() {
 <?php
 	// if ($mode==1) {											// 9/8/10
@@ -90,15 +98,27 @@
 //		}
 ?>		
 		}		// end function ck_frames()
-	
+/**
+ * 
+ * @param {type} val
+ * @returns {Boolean}
+ */	
 	function isNull(val) {								// checks var stuff = null;
 		return val === null;
 		}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {				// 10/19/08
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-     
+/**
+ * 
+ * @param {type} ary
+ * @param {type} val
+ * @returns {Boolean}
+ */     
 	function in_array (ary, val) {						// 12/2/08
 		for (var i = 0; i<ary.length; i++) {
 			if(ary[i] == val) {
@@ -110,7 +130,10 @@
 
 	var type;					// Global variable - identifies browser family
 	BrowserSniffer();
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function BrowserSniffer() {													//detects the capabilities of the browser
 		if (navigator.userAgent.indexOf("Opera")!=-1 && document.getElementById) type="OP";	//Opera
 		else if (document.all) type="IE";										//Internet Explorer e.g. IE4 upwards
@@ -118,25 +141,45 @@
 		else if (!document.all && document.getElementById) type="MO";			//Mozila e.g. Netscape 6 upwards
 		else type = "IE";														//????????????
 		}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 	function whatBrows() {					//Displays the generic browser type
 		window.alert("Browser is : " + type);
 		}
-	
+/**
+ * 
+ * @param {type} id
+ * @param {type} action
+ * @returns {undefined}
+ */	
 	function ShowLayer(id, action){												// Show and hide a span/layer -- Seems to work with all versions NN4 plus other browsers
 		if (type=="IE") 				eval("document.all." + id + ".style.display='" + action + "'");  	// id is the span/layer, action is either hidden or visible
 		if (type=="NN") 				eval("document." + id + ".display='" + action + "'");
 		if (type=="MO" || type=="OP") 	eval("document.getElementById('" + id + "').style.display='" + action + "'");
 		}
-	
+/**
+ * 
+ * @param {type} elid
+ * @returns {undefined}
+ */	
 	function hideit (elid) {
 		ShowLayer(elid, "none");
 		}
-	
+/**
+ * 
+ * @param {type} elid
+ * @returns {undefined}
+ */	
 	function showit (elid) {
 		ShowLayer(elid, "block");
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function validate_set(theForm) {			// limited form contents validation  
 		var errmsg="";
 		if (theForm.gmaps_api_key.value.length!=86)			{errmsg+= "\tInvalid GMaps API key\n";}

@@ -52,6 +52,10 @@ if ($get_action == 'add') {
 ?>
 
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */  
 function ck_frames() {		//  onLoad = "ck_frames()"
 	if(self.location.href==parent.location.href) {
 		self.location.href = 'index.php';
@@ -74,7 +78,10 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		}
 	catch(e) {
 		}
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {									// 2/11/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -87,19 +94,36 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			}
 		return elements;
 		}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @param {type} str
+ * @returns {Boolean}
+ */
 	function chknum(str) {
 		var nums = str.trim().replace(/\D/g, "" );							// strip all non-digits
 		return (nums == str.trim());
 		}
-	
+/**
+ * 
+ * @param {type} val
+ * @param {type} lo
+ * @param {type} hi
+ * @returns {@exp;@call;chknum}
+ */	
 	function chkval(val, lo, hi) { 
 		return  (chknum(val) && !((val> hi) || (val < lo)));}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function datechk_r(theForm) {		// as-of vs now
 		var yr = theForm.frm_year_asof.options[theForm.frm_year_asof.selectedIndex].value;
 		var mo = theForm.frm_month_asof.options[theForm.frm_month_asof.selectedIndex].value;
@@ -112,7 +136,11 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		var end = new Date();
 		return (start.valueOf() <= end.valueOf());	
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function validate(theForm) {
 		var errmsg="";
 		if (theForm.frm_name.value == "")						{errmsg+= "\tNAME is required\n";}
@@ -128,7 +156,12 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			return false;
 			}
 		}				// end function validate(theForm)
-
+/**
+ * 
+ * @param {type} theForm
+ * @param {type} theBool
+ * @returns {undefined}
+ */
 	function do_asof(theForm, theBool) {							// 8/10/08
 		theForm.frm_year_asof.disabled = theBool;
 		theForm.frm_month_asof.disabled = theBool;
@@ -142,15 +175,21 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 <?php
 		}
 ?>		
-
-
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_unlock(theForm) {									// 8/10/08
 		do_asof(theForm, false)
 		document.getElementById("lock").style.visibility = "hidden";		
 		}
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */		
 	function do_lock(theForm) {										// 8/10/08
 		do_asof(theForm, true)
 		document.getElementById("lock").style.visibility = "visible";
@@ -204,7 +243,10 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			if ($addrs) {
 ?>			
 <SCRIPT>
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	function do_notify() {
 		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
 		var theText= "TICKET - PATIENT: ";
@@ -214,10 +256,20 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + escape(theId) + "&text_sel=1";		// ($to_str, $text, $ticket_id)   10/15/08
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 		}			// end function do notify()
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 	function handleResult(req) {				// the 'called-back' function
 		}
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -239,14 +291,20 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -263,11 +321,14 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 	
 </SCRIPT>
 <?php
-
 			}		// end if($addrs) 
 		else {
 ?>		
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	function do_notify() {
 		return;
 		}			// end function do notify()

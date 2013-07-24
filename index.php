@@ -1855,7 +1855,8 @@ if (get_variable('call_board') == 2) {
 ?>
 	<FRAMESET ID = 'the_frames' ROWS="<?php print (get_variable('framesize') + 25);?>, 0 ,*" BORDER="<?php print get_variable('frameborder');?>" BORDERCOLOR="#ff0000">
 	<FRAME SRC="top.php?stuff=<?php print $buster;?>" NAME="upper" SCROLLING="no" />
-	<FRAME SRC='board.php?stuff=<?php print $buster;?>' ID = 'what' NAME='calls' SCROLLING='AUTO' />	<FRAME SRC="main.php?stuff=<?php print $buster;?>" NAME="main" />
+	<FRAME SRC='board.php?stuff=<?php print $buster;?>' ID = 'what' NAME='calls' SCROLLING='AUTO' />	
+  <FRAME SRC="main.php?stuff=<?php print $buster;?>" NAME="main" />
 	<FRAME SRC="main.php?stuff=<?php print $buster;?>" NAME="main" />
 <?php 
 	}

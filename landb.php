@@ -133,7 +133,10 @@ var base_icon = new google.maps.MarkerImage(
 	new google.maps.Point(0,0),
 	new google.maps.Point(8, 28)
 	);
-			
+/**
+ * 
+ * @returns {Array}
+ */			
 function $() {									// 12/20/08
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -146,33 +149,63 @@ function $() {									// 12/20/08
 		}
 	return elements;
 	}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 String.prototype.trim = function () {
 	return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 	};
-	
+/**
+ * 
+ * @param {type} in_str
+ * @returns {String|add_hash.in_str}
+ */	
 function add_hash(in_str) { // prepend # if absent
 	return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
 	}
-
+/**
+ * 
+ * @param {type} instr
+ * @returns {RegExp}
+ */
 function hex_OK (instr) {
 	return (/^(#[A-F0-9]{6})$/i.test(instr));
 	}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 function do_checked(theForm) {								// 126
 	$('fill_tr').style.display = '';
 	theForm.frm_filled.value = 1;
 	theForm.frm_filled_n.checked = false;
 	theForm.frm_filled_y.checked = true;
 	}
-	
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */	
 function do_un_checked(theForm) {
 	$('fill_tr').style.display = "none";					// hide input row
 	theForm.frm_filled.value = 0;
 	theForm.frm_filled_n.checked = true;
 	theForm.frm_filled_y.checked = false;
 	}
-
+/**
+ * 
+ * @param {type} lat
+ * @param {type} lng
+ * @param {type} radius
+ * @param {type} strokeColor
+ * @param {type} strokeWidth
+ * @param {type} strokeOpacity
+ * @param {type} fillColor
+ * @param {type} fillOpacity
+ * @returns {undefined}
+ */
 function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity) {
 	draw_circle = new google.maps.Circle({
 		center: new google.maps.LatLng(lat,lng),
@@ -187,7 +220,16 @@ function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, f
 	draw_circle.setRadius(radius*5000); 	
 	draw_circle.setMap(map);	
 	}
-
+/**
+ * 
+ * @param {type} point
+ * @param {type} html
+ * @param {type} text
+ * @param {type} font_size
+ * @param {type} color
+ * @param {type} name
+ * @returns {undefined}
+ */
 function drawBanner(point, html, text, font_size, color, name) {        // Create the banner
 	var invisibleIcon = new google.maps.MarkerImage("./markers/markerTransparent.png");
 	var the_color = (typeof color == 'undefined')? "000000" : color ;	// default to black
@@ -207,7 +249,11 @@ function drawBanner(point, html, text, font_size, color, name) {        // Creat
 	}				// end function draw Banner()
 
 var circle_OK = false;	
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {unresolved}
+ */
 function chk_circle(theForm) {
 	var err_msg = "";
 	if (!(count == 1)) 									{err_msg += "Click map for circle center\n";}
@@ -232,7 +278,11 @@ function chk_circle(theForm) {
 
 		}
 	}
-
+/**
+ * 
+ * @param {type} instr
+ * @returns {Boolean}
+ */
 function is_ok_radius (instr) {
 	if(instr.trim() == "") 								{return false;}
 	if(instr.trim() == "0.0") 							{return false;}
@@ -245,6 +295,11 @@ function is_ok_radius (instr) {
 <?php
 if (!(empty($_POST))) {
 ?>
+/**
+ * 
+ * @param {type} the_type
+ * @returns {undefined}
+ */  
 	function do_display(the_type) {
 		theForm  = (document.u)? document.u : document.c ;
 		switch (the_type) {
@@ -305,7 +360,13 @@ if (!(empty($_POST))) {
 			break;		
 			}		// end switch()
 		}		// end function do_display() 
-
+/**
+ * 
+ * @param {type} myform
+ * @param {type} mybutton
+ * @param {type} test
+ * @returns {Boolean}
+ */
 	function JSfnCheckInput(myform, mybutton, test) {		// reject empty form elements
 		var errmsg = "";
 		if (myform.frm_name.value.trim()=="") 			{errmsg+= "\tDescription is required\n";}
@@ -353,7 +414,11 @@ if (!(empty($_POST))) {
 <?php
 	}			// end if (!(empty($_POST)))
 ?>	
-
+/**
+ * 
+ * @param {type} in_array
+ * @returns {undefined}
+ */
 function to_string (in_array) {
 	var sep = "";					// separator
 	var out_str = "";
@@ -363,11 +428,17 @@ function to_string (in_array) {
 		sep="\t";							// tab-separate the points
 		}
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function toggleMode() {
 	if(markers.length > 1) drawOverlay();
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function drawOverlay(){				// edit function - input is markers array
 	var lineMode = true;	 											// Check mode
 	if (poly) { poly.setMap(null); }
@@ -396,19 +467,29 @@ function drawOverlay(){				// edit function - input is markers array
 		}
 	poly.setMap(map);
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function clearMap() { // Clear current map and reset globals
 	map.clearOverlays();
 	points.length = 0;
 	markers.length = 0;
 	count = 0;
 	}
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 function to_view(id) {						// invoke switch case 'u' for selected id
 	document.to_view_form.id.value = id;
 	document.to_view_form.submit();
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function buildMap_l() {				// 'list' version	
 	var container = document.getElementById("map_canvas");
 	var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
@@ -517,27 +598,46 @@ function buildMap_l() {				// 'list' version
 <?php
 	$func = (has_admin())? "u": "v";
 ?>
+/**
+ * 
+ * @param {type} the_id
+ * @returns {undefined}
+ */        
 function to_p(the_id) {		// poly
 	document.navform.id.value = the_id;
 	document.navform._func.value = "<?php echo $func;?>";
 	document.navform.action = "<?php echo basename(__FILE__);?>";
 	document.navform.submit();
-
 	}
+/**
+ * 
+ * @param {type} the_id
+ * @param {type} the_func
+ * @returns {undefined}
+ */  
 function to_c(the_id, the_func) {		// circle
 	document.navform.id.value = the_id;
 	document.navform._func.value = the_func;
 	document.navform.action = "circle.php";
 	document.navform.submit();
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @param {type} the_func
+ * @returns {undefined}
+ */
 function to_t(the_id, the_func) {		// text/banner
 	document.navform.id.value = the_id;
 	document.navform._func.value = the_func;
 	document.navform.action = "banner.php";
 	document.navform.submit();
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {undefined}
+ */
 function to_k(the_id) {		// kml
 	document.navform.id.value = the_id;
 	document.navform._func.value = "<?php echo $func;?>";
@@ -627,6 +727,10 @@ switch ($_func) {
 	case "c":			// create 
 ?>
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */        
 function buildMap_c() {															// 'create' version - 691
 	var container = document.getElementById("map_canvas");
 	var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
@@ -833,6 +937,11 @@ function buildMap_c() {															// 'create' version - 691
 		$capt = ($_func == "r") ? "View" : "Revise";
 ?>			
 <SCRIPT>
+/**
+ * 
+ * @param {type} id_val
+ * @returns {Boolean}
+ */        
 	function do_delete(id_val) {
 		if (confirm("Really, really DELETE this?")) {
 			document.navform._func.value="dp";
@@ -843,7 +952,11 @@ function buildMap_c() {															// 'create' version - 691
 			return false;
 			}
 		}		// end function do delete()
-
+/**
+ * 
+ * @param {type} point
+ * @returns {undefined}
+ */
 	function add_marker( point) {
 		semic = ";";			// separator
 		count++;
@@ -886,7 +999,10 @@ function buildMap_c() {															// 'create' version - 691
 <?php }	?>			
 		drawOverlay();
 		}				// end function add marker()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function buildMap_r() {				// 'view' version
 		var container = document.getElementById("map_canvas");
 		var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
@@ -942,7 +1058,10 @@ function buildMap_c() {															// 'create' version - 691
 				polyline.setMap(map);	
 		map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo (get_variable('def_zoom')-4); ?>);
 		}				// end function buildMap r()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function fillmap() {
 		var bounds = new google.maps.LatLngBounds();		// Initialize bounds for the map	
 <?php
@@ -961,7 +1080,10 @@ function buildMap_c() {															// 'create' version - 691
 		map.setZoom(zoom);
 		}				// end function fillmap()
 
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function buildMap_u() {				// 'update' version
 		var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
 		var mapOptions = {
@@ -980,7 +1102,12 @@ function buildMap_c() {															// 'create' version - 691
 		google.maps.event.addListener(map, "click", function() {	
 			});		// end google.maps.event.add Listener()
 		}				// end function buildMap u()
-		
+/**
+ * 
+ * @param {type} in_lat
+ * @param {type} in_lng
+ * @returns {undefined}
+ */		
 	function do_point(in_lat, in_lng) {
 		var point = new google.maps.LatLng( in_lat, in_lng);
 		count++;
@@ -1029,7 +1156,11 @@ function buildMap_c() {															// 'create' version - 691
 ?>
 		drawOverlay();
 		}				// end function do_point()
-
+/**
+ * 
+ * @param {type} the_value
+ * @returns {Number}
+ */
 	function toggle(the_value) {
 		return (the_value==0)? 1 : 0 ;
 		}
@@ -1213,6 +1344,10 @@ else {
 
 ?>
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */        
 function waiter() {
 	document.navform._func.value="r";
 	document.navform.id.value=<?php echo $_POST['frm_id'];?>
@@ -1239,7 +1374,10 @@ function waiter() {
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"><HTML><HEAD><TITLE><?php print basename(__FILE__);?></TITLE>
 <SCRIPT>
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function waiter() {
 	document.navform._func.value="l";					// view the new entry
 	setTimeout("document.navform.submit()",1500);

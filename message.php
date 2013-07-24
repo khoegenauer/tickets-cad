@@ -229,6 +229,10 @@ function get_tickname($theid) {	//	Gets responder ID from SMS Gateway ID
 <SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
 <SCRIPT>
 var sep = "";
+/**
+ * 
+ * @returns {reply_button}
+ */
 function reply_button() {
 	$("print_but").style.display="none";
 	$("next_but").style.display="none";
@@ -243,7 +247,10 @@ function reply_button() {
 	$("disp_but").style.display="none";	
 	$("send_but").onclick=function() {send_button('reply_frm')};
 	}
-	
+/**
+ * 
+ * @returns {forward_button}
+ */	
 function forward_button() {
 	$("print_but").style.display="none";
 	$("next_but").style.display="none";
@@ -258,7 +265,10 @@ function forward_button() {
 	$("disp_but").style.display="none";	
 	$("send_but").onclick=function() {send_button('forward_frm')};	
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function cancel_button() {
 	$("print_but").style.display="inline-block";
 	$("next_but").style.display="inline-block";
@@ -272,7 +282,11 @@ function cancel_button() {
 	$("send_but").style.display="none";
 	$("disp_but").style.display="inline-block";	
 	}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 function send_button(theForm) {
 	$("print_but").style.display="none";
 	$("next_but").style.display="none";
@@ -290,7 +304,11 @@ function send_button(theForm) {
 	document.forms[theForm].submit();
 //	refresh_opener("opener");
 	}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 function disp_button(theForm) {
 	$("print_but").style.display="none";
 	$("next_but").style.display="none";
@@ -306,9 +324,11 @@ function disp_button(theForm) {
 	$("disp_but").style.display="none";
 	document.forms["disp_frm"].submit();
 	}	
-	
-	
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 function pop_address(id) {
 	if(document.reply_frm.frm_addrs) {
 		if(document.reply_frm.frm_addrs.value == "") {
@@ -327,7 +347,12 @@ function pop_address(id) {
 		document.forward_frm.frm_addrs.value = document.forward_frm.frm_addrs.value + sep + id;
 		}		
 	}
-
+/**
+ * 
+ * @param {type} id
+ * @param {type} screen
+ * @returns {undefined}
+ */
 function go_to(id, screen) {
 	var thescreen = screen;
 	document.go_frm.id.value = id;
@@ -335,7 +360,6 @@ function go_to(id, screen) {
 	document.go_frm.submit();
 	}
 	
-
 </SCRIPT>
 </HEAD>
 

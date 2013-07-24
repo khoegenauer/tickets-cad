@@ -17,6 +17,10 @@ $disposition = get_text("Disposition");				// 12/1/10
 <HEAD>
 <LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */  
 function ck_frames() {		//  onLoad = "ck_frames()"
 	if(self.location.href==parent.location.href) {
 		self.location.href = 'index.php';
@@ -33,7 +37,10 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		}
 	catch(e) {
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function get_new_colors() {								// 5/4/11
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}

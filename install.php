@@ -88,6 +88,11 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 </HEAD><BODY>
 <FONT CLASS="header">Installing <?php print $version; ?> </FONT><BR /><BR />
 <SCRIPT>
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */  
 	function validate(theForm) {
 		var errmsg="";
 		if (theForm.frm_db_host.value == "")			{errmsg+= "\tMySQL HOST name is required\n";}

@@ -93,21 +93,35 @@ var archive;
 var folder = "inbox";
 var the_sentstring = "";
 var thebutton;	
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 function open_tick_window (id) {				// 5/2/10
 	var url = "single.php?ticket_id="+ id;
 	var tickWindow = window.open(url, 'mailWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100');
 	tickWindow.focus();
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function get_mainmessages() {
 	get_main_messagelist('','',sortby, 'DESC','', 'msg_win');
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function get_sentmessages() {
 	get_sent_messagelist('','',sortby, 'DESC','', 'msg_win');
 	}
-	
+/**
+ * 
+ * @param {type} btn_id
+ * @returns {undefined}
+ */	
 function light_butt(btn_id) {				// 8/24/10 -     
 	CngClass(btn_id, 'signal_w')			// highlight this button
 	if(!(current_butt_id == btn_id)) {
@@ -115,24 +129,41 @@ function light_butt(btn_id) {				// 8/24/10 -
 		}
 	current_butt_id = btn_id;				// 
 	}				// end function light_butt()
-	
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */	
 function do_off_signal (the_id) {
 	CngClass(the_id, 'plain')
 	return true;
 	}
-	
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */	
 function do_hover (the_id) {
 	if (the_id == current_butt_id) {return true;}				// 8/21/10
 	CngClass(the_id, 'hover');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_plain (the_id) {				// 8/21/10
 	if (the_id == current_butt_id) {return true;}
 	CngClass(the_id, 'plain');
 	return true;
 	}
-		
+/**
+ * 
+ * @param {type} thearchive
+ * @param {type} button
+ * @returns {undefined}
+ */		
 function get_archive(thearchive, button) {
 	if($('all_read_but')) { $('all_read_but').style.display = "none"; }
 	if($('all_unread_but')) { $('all_unread_but').style.display = "none"; }
@@ -146,7 +177,10 @@ function get_archive(thearchive, button) {
 	archive = thearchive;
 	get_arch_messagelist('','',sortby, 'DESC','', 'msg_win', thearchive);
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function get_wastebin() {
 	if($('all_read_but')) { $('all_read_but').style.display = "none"; }
 	if($('all_unread_but')) { $('all_unread_but').style.display = "none"; }
@@ -158,7 +192,10 @@ function get_wastebin() {
 	archive = "";	
 	get_wastelist('','',sortby, 'DESC','');
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function get_inbox() {
 	if($('all_read_but')) { $('all_read_but').style.display = "inline-block"; }
 	if($('all_unread_but')) { $('all_unread_but').style.display = "inline-block"; }
@@ -170,7 +207,10 @@ function get_inbox() {
 	archive = "";	
 	get_mainmessages();
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function get_sent() {
 	if($('all_read_but')) { $('all_read_but').style.display = "inline-block"; }
 	if($('all_unread_but')) { $('all_unread_but').style.display = "inline-block"; }

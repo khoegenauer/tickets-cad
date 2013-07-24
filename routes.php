@@ -207,7 +207,11 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 		}
 	catch(e) {
 		}
-	
+/**
+ * 
+ * @param {type} strURL
+ * @returns {@exp;AJAX@pro;responseText|Boolean}
+ */	
 	function syncAjax(strURL) {							// synchronous ajax function
 		if (window.XMLHttpRequest) {						 
 			AJAX=new XMLHttpRequest();						 
@@ -227,21 +231,35 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 			return false;
 			}																						 
 		}		// end function sync Ajax(strURL)
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function get_new_colors() {								// 5/4/11
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
-
+/**
+ * 
+ * @param {type} in_val
+ * @returns {undefined}
+ */
 	function docheck(in_val){				// JS boolean  - true/false
 		document.routes_Form.frm_allow_dirs.value = in_val;	
 		url = "do_session_get.php?the_name=allow_dirs&the_value=" + in_val.trim();
 		syncAjax(url);			// note asynch call
 		}
-		
+/**
+ * 
+ * @param {type} arg
+ * @returns {Boolean}
+ */		
 	function isNull(arg) {
 		return arg===null;
 		}
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {									// 2/11/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -254,25 +272,53 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 			}
 		return elements;
 		}
-		
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */		
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
 		}	
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */		
 	function do_hover (the_id) {
 		CngClass(the_id, 'hover');
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_plain (the_id) {				// 8/21/10
 		CngClass(the_id, 'plain');
 		return true;
 		}
+/**
+ * 
+ * @returns {unresolved}
+ */    
 	String.prototype.trim = function () {									// added 6/10/08
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @param {type} lat
+ * @param {type} lng
+ * @param {type} radius
+ * @param {type} strokeColor
+ * @param {type} strokeWidth
+ * @param {type} strokeOpacity
+ * @param {type} fillColor
+ * @param {type} fillOpacity
+ * @returns {undefined}
+ */
 	function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity) {		// 8/19/09
 
 		var circle = new google.maps.Circle({
@@ -287,7 +333,16 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 		circle.setRadius(radius*5000); 
 
 		}		// end drawCircle 
-		
+/**
+ * 
+ * @param {type} point
+ * @param {type} html
+ * @param {type} text
+ * @param {type} font_size
+ * @param {type} color
+ * @param {type} name
+ * @returns {undefined}
+ */		
 	function drawBanner(point, html, text, font_size, color, name) {        // Create the banner - 6/5/2013
 		var invisibleIcon = new google.maps.MarkerImage("./markers/markerTransparent.png");
 		map.setCenter(point, 8);
@@ -307,13 +362,20 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 		var marker = new google.maps.Marker(point,invisibleIcon);	        // Create an invisible google.maps.Marker
 		marker.setMap(map);				
 		}				// end function draw Banner()
-
+/**
+ * 
+ * @param {type} in_str
+ * @returns {String|add_hash.in_str}
+ */
 	function add_hash(in_str) { // prepend # if absent
 		return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
 		}			
 			
 //	$query = "SELECT * FROM `{$GLOBALS['mysql_prefix']}mmarkup` WHERE `line_status` = 0 AND (`use_with_bm` = 1 OR `use_with_r` = 1)";
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_landb() {				// JS function - 8/1/11
 //		alert(347);
 		var points = new Array();
@@ -327,7 +389,6 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 			switch ($row['line_type']) {
 				case "p":				// poly
 					$points = explode (";", $line_data);
-
 					$sep = "";
 					echo "\n\t var points = [\n";
 					for ($i = 0; $i<count($points); $i++) {
@@ -372,8 +433,7 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 					$coords = explode (",", $temp[0]);
 					$lat = $coords[0];
 					$lng = $coords[1];
-					$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
-					
+					$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;					
 					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}, {$name}); // 513\n";
 					break;
 				case "t":		// text banner
@@ -394,13 +454,24 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 
 	var to_visible = "visible";
 	var to_hidden = "hidden";
+/**
+ * 
+ * @param {type} strValue
+ * @returns {undefined}
+ */  
 	function show_butts(strValue) {								// 3/15/11
 		$('mail_dir_but').style.visibility = strValue;
 		$('reset_but').style.visibility = strValue;
 		$('can_but').style.visibility = strValue;
 		if ($('disp_but')) {$('disp_but').style.visibility = strValue;}
 		}
-
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */
 	function hideDiv(div_area, hide_cont, show_cont) {	//	3/15/11
 		if (div_area == "buttons_sh") {
 			var controlarea = "hide_controls";
@@ -429,7 +500,13 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 		var url = "persist2.php";
 		sendRequest (url, gb_handleResult, params);			
 		} 
-
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */
 	function showDiv(div_area, hide_cont, show_cont) {	//	3/15/11
 		if (div_area == "buttons_sh") {
 			var controlarea = "hide_controls";
@@ -467,6 +544,10 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 // See http://www.brainjar.com for terms of use.
 //*****************************************************************************
 // Determine browser and version.
+/**
+ * 
+ * @returns {unresolved}
+ */
 function Browser() {
 	var ua, s, i;
 	this.isIE		= false;
@@ -496,6 +577,12 @@ function Browser() {
 var browser = new Browser();
 var dragObj = new Object();		// Global object to hold drag information.
 dragObj.zIndex = 0;
+/**
+ * 
+ * @param {type} event
+ * @param {type} id
+ * @returns {undefined}
+ */
 function dragStart(event, id) {
 	var el;
 	var x, y;
@@ -538,6 +625,11 @@ function dragStart(event, id) {
 		event.preventDefault();
 		}
 	}
+/**
+ * 
+ * @param {type} event
+ * @returns {undefined}
+ */  
 function dragGo(event) {
 	var x, y;
 	if (browser.isIE) {	// Get cursor position with respect to the page.
@@ -559,6 +651,11 @@ function dragGo(event) {
 	if (browser.isNS)
 		event.preventDefault();
 	}
+/**
+ * 
+ * @param {type} event
+ * @returns {undefined}
+ */
 function dragStop(event) {
 	if (browser.isIE) {	// Stop capturing mousemove and mouseup events.
 		document.detachEvent("onmousemove", dragGo);
@@ -613,6 +710,13 @@ if((array_key_exists('func', $_REQUEST)) && ($_REQUEST['func'] == "do_db")) {	//
 		}
 ?>	
 <SCRIPT>
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */  
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -632,14 +736,20 @@ if((array_key_exists('func', $_REQUEST)) && ($_REQUEST['func'] == "do_db")) {	//
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array|Array|Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -653,14 +763,23 @@ if((array_key_exists('func', $_REQUEST)) && ($_REQUEST['func'] == "do_db")) {	//
 			}
 		return xmlhttp;
 		}
-	
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 	function handleResult(req) {				// the 'called-back' function
 												// onto floor!
 		}
 
 	var starting = false;						// 2/15/09
-
+/**
+ * 
+ * @param {type} addrs
+ * @param {type} smsgaddrs
+ * @param {type} ticket_id
+ * @returns {unresolved}
+ */
 	function do_mail_win(addrs, smsgaddrs, ticket_id) {	
 		if(starting) {return;}					// dbl-click catcher
 //		alert(" <?php print __LINE__; ?> " +addrs);
@@ -754,7 +873,10 @@ else {
 	parent.frames["upper"].document.getElementById("whom").innerHTML  = "<?php print $_SESSION['user'];?>";
 	parent.frames["upper"].document.getElementById("level").innerHTML = "<?php print get_level_text($_SESSION['level']);?>";
 	parent.frames["upper"].document.getElementById("script").innerHTML  = "<?php print LessExtension(basename( __FILE__));?>";
-
+/**
+ * 
+ * @returns {String.prototype.parseDeg.deg}
+ */
 	String.prototype.parseDeg = function() {
 		if (!isNaN(this)) return Number(this);								// signed decimal degrees without NSEW
 		
@@ -774,16 +896,35 @@ else {
 		if (/^-/.test(this) || /[WS]/i.test(this)) deg = -deg; // take '-', west and south as -ve
 		return deg;
 		}
+/**
+ * 
+ * @returns {@exp;Math@pro;PI|Number|Number.prototype}
+ */    
 	Number.prototype.toRad = function() {  // convert degrees to radians
 		return this * Math.PI / 180;
 		}
-
+/**
+ * 
+ * @returns {Number|@exp;Math@pro;PI|Number.prototype}
+ */
 	Number.prototype.toDeg = function() {  // convert radians to degrees (signed)
 		return this * 180 / Math.PI;
 		}
+/**
+ * 
+ * @returns {Number}
+ */    
 	Number.prototype.toBrng = function() {  // convert radians to degrees (as bearing: 0...360)
 		return (this.toDeg()+360) % 360;
 		}
+/**
+ * 
+ * @param {type} lat1
+ * @param {type} lon1
+ * @param {type} lat2
+ * @param {type} lon2
+ * @returns {@exp;@exp;Math@pro;atan2@call;@call;toBrng|@exp;Math@pro;atan2@call;@call;toBrng}
+ */    
 	function brng(lat1, lon1, lat2, lon2) {
 		lat1 = lat1.toRad(); lat2 = lat2.toRad();
 		var dLon = (lon2-lon1).toRad();
@@ -793,7 +934,14 @@ else {
 						Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
 		return Math.atan2(y, x).toBrng();
 		}
-
+/**
+ * 
+ * @param {type} lat1
+ * @param {type} lon1
+ * @param {type} lat2
+ * @param {type} lon2
+ * @returns {unresolved}
+ */
 	distCosineLaw = function(lat1, lon1, lat2, lon2) {
 		var R = 6371; // earth's mean radius in km
 		var d = Math.acos(Math.sin(lat1.toRad())*Math.sin(lat2.toRad()) +
@@ -801,7 +949,11 @@ else {
 		return d;
 		}
     var km2feet = 3280.83;
-
+/**
+ * 
+ * @param {type} inArray
+ * @returns {Number|Boolean}
+ */
 	function min(inArray) {				// returns index of least float value in inArray
 		var minsofar =  40076.0;		// initialize to earth circumference (km)
 		var j=-1;
@@ -813,7 +965,10 @@ else {
 			}
 		return (j>0) ? j: false;
 		}		// end function min()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {		// onLoad = "ck_frames()"
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
@@ -822,6 +977,10 @@ else {
 			parent.upper.show_butts();										// 1/21/09
 			}
 		}		// end function ck_frames()
+/**
+ * 
+ * @returns {undefined}
+ */    
 function doReset() {
 	document.reLoad_Form.submit();
 	}	// end function doReset()
@@ -840,9 +999,7 @@ function doReset() {
 		FROM `$GLOBALS[mysql_prefix]assigns` 
 		LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` 	ON (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`)
 		LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON (`$GLOBALS[mysql_prefix]assigns`.`responder_id` = `r`.`id`)
-		AND ((`clear` IS NULL) OR (DATE_FORMAT(`clear`,'%y') = '00')) ";				// 6/25/10
-
-	
+		AND ((`clear` IS NULL) OR (DATE_FORMAT(`clear`,'%y') = '00')) ";				// 6/25/10	
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
@@ -912,6 +1069,10 @@ function doReset() {
 
 ?>
 var the_position;
+/**
+ * 
+ * @returns {undefined}
+ */
 function get_position () {
 	var myDiv = document.getElementById('side_bar');
 	var side_bar_width = myDiv.offsetWidth; 		
@@ -919,17 +1080,27 @@ function get_position () {
 	var map_width = myDiv.offsetWidth; 		
 	the_position = side_bar_width + map_width + 10;
 	}
-
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function filterSubmit() {		//	11/18/10
 	document.filter_Form.submit();
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function filterReset() {		//	11/18/10
 	document.filter_Form.capabilities.value="";
 	document.filter_Form.submit();
 	}
-
+/**
+ * 
+ * @param {type} form
+ * @param {type} arrayName
+ * @returns {Array}
+ */
 function checkArray(form, arrayName)	{	//	5/3/11
 	var retval = new Array();
 	for(var i=0; i < form.elements.length; i++) {
@@ -940,7 +1111,11 @@ function checkArray(form, arrayName)	{	//	5/3/11
 	}
 return retval;
 }	
-	
+/**
+ * 
+ * @param {type} form
+ * @returns {Boolean}
+ */	
 function checkForm(form)	{	//	6/10/11
 	var errmsg="";
 	var itemsChecked = checkArray(form, "frm_group[]");
@@ -957,16 +1132,30 @@ function checkForm(form)	{	//	6/10/11
 		}
 	}
 }
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 function fvg_handleResult(req) {	// 6/10/11	The persist callback function for viewed groups.
 	document.region_form.submit();
 	}
-	
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */	
 function form_validate(theForm) {	//	6/10/11
 //		alert("Validating");
 	checkForm(theForm);
 	}				// end function validate(theForm)
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 function sendRequest(url,callback,postData) {	//	6/10/11
 	var req = createXMLHTTPObject();
 	if (!req) return;
@@ -985,14 +1174,20 @@ function sendRequest(url,callback,postData) {	//	6/10/11
 	if (req.readyState == 4) return;
 	req.send(postData);
 	}
-
+/**
+ * 
+ * @type Array|Array|Array|Array|Array|Array
+ */
 var XMLHttpFactories = [
 	function () {return new XMLHttpRequest()	},
 	function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 	function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 	function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 	];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 function createXMLHTTPObject() {
 	var xmlhttp = false;
 	for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -1006,7 +1201,13 @@ function createXMLHTTPObject() {
 		}
 	return xmlhttp;
 	}	
-
+/**
+ * 
+ * @param {type} theDiv
+ * @param {type} theButton
+ * @param {type} theText
+ * @returns {undefined}
+ */
 function toggle_div(theDiv, theButton, theText) {
 	if($(theDiv).style.display == 'block') {
 			$(theDiv).style.display = 'none';
@@ -1047,7 +1248,6 @@ function toggle_div(theDiv, theButton, theText) {
 		}
 	}
 		
-
 </SCRIPT>
 </HEAD>
 <BODY onLoad = "get_position(); do_notify(); ck_frames()" >
@@ -1262,6 +1462,10 @@ function toggle_div(theDiv, theButton, theText) {
 			if ($addrs) {				// 10/21/08
 ?>			
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */          
 	function do_notify() {
 //		alert(352);
 		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
@@ -1272,10 +1476,20 @@ function toggle_div(theDiv, theButton, theText) {
 		var params = "frm_to="+ theAddresses + "&frm_text=" + theText + "&frm_ticket_id=" + theId ;		// ($to_str, $text, $ticket_id)   10/15/08
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 		}			// end function do notify()
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 	function handleResult(req) {				// the 'called-back' function  - ignore returned data
 		}
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -1295,14 +1509,20 @@ function toggle_div(theDiv, theButton, theText) {
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array|Array|Array|Array|Array|Array|Array|Array|Array|Array|Array|Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -1324,6 +1544,10 @@ function toggle_div(theDiv, theButton, theText) {
 		else {
 ?>		
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */          
 	function do_notify() {
 //		alert(414);
 		return;

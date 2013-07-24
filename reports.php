@@ -195,7 +195,10 @@ p.page { page-break-after: always; }
 		}
 
 	var which='<?php print $group;?>';					// global - which report default
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {										// 2/24/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -217,32 +220,55 @@ p.page { page-break-after: always; }
 	  var elements = $('a','b','c',obj1,obj2,'d','e');
 	  for ( i=0;i
 	*/
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {					// 3/24/10
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function get_new_colors() {								// 4/5/11
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
-
+/**
+ * 
+ * @param {type} the_form
+ * @returns {undefined}
+ */
 	function do_full_w (the_form) {							// 4/24/11
 		var the_val = (the_form.full.checked)? 1:0;
 		document.sel_form.frm_full_w.value=document.udr_form.frm_full_w.value=document.ugr_form.frm_full_w.value=document.log_form.frm_full_w.value=the_val;
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @returns {unresolved}
+ */
 	function viewT(id) {			// view ticket
 		return;
 //		document.T_nav_form.id.value=id;
 //		document.T_nav_form.action='main.php';
 //		document.T_nav_form.submit();
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @returns {unresolved}
+ */
 	function viewU(id) {			// view unit
 		return;
 //		document.U_nav_form.id.value=id;
 //		document.U_nav_form.submit();
 		}
+/**
+ * 
+ * @param {type} date_in
+ * @returns {undefined}
+ */    
 	function toUDRnav(date_in) {					// daily report
 		document.udr_form.frm_date.value=date_in;	// set date params
 		document.udr_form.frm_group.value=which;
@@ -250,10 +276,13 @@ p.page { page-break-after: always; }
 //		document.udr_form.frm_tick_sel.value=document.sel_form.frm_unit_id.options[document.sel_form.frm_unit_id.selectedIndex].value;
 		document.udr_form.frm_resp_sel.value=document.sel_form.frm_unit_id.options[document.sel_form.frm_unit_id.selectedIndex].value;	// 2/8/09
 		document.udr_form.frm_tick_sel.value=document.sel_form.frm_ticket_id.options[document.sel_form.frm_ticket_id.selectedIndex].value;
-
 		document.udr_form.submit();
 		}
-
+/**
+ * 
+ * @param {type} instr
+ * @returns {undefined}
+ */
 	function do_ugr(instr) {						// select for generic
 		document.ugr_form.frm_func.value=instr;
 		document.ugr_form.frm_group.value=which;
@@ -261,10 +290,12 @@ p.page { page-break-after: always; }
 //		document.ugr_form.frm_tick_sel.value=document.sel_form.frm_unit_id.options[document.sel_form.frm_unit_id.selectedIndex].value;
 		document.ugr_form.frm_resp_sel.value=document.sel_form.frm_unit_id.options[document.sel_form.frm_unit_id.selectedIndex].value;	// 2/8/09
 		document.ugr_form.frm_tick_sel.value=document.sel_form.frm_ticket_id.options[document.sel_form.frm_ticket_id.selectedIndex].value;
-
 		document.ugr_form.submit();
 		}		// end do_ugr()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {		// ck_frames()
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
@@ -273,7 +304,11 @@ p.page { page-break-after: always; }
 			parent.upper.show_butts();										// 1/21/09
 			}
 		}		// end function ck_frames()
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 	function open_tick_window (id) {				// 4/14/11
 		var url = "single.php?ticket_id="+ id;
 		var tickWindow = window.open(url, 'mailWindow', 'resizable=1, scrollbars, height=600, width=720, left=100,top=100,screenX=100,screenY=100');

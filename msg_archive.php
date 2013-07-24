@@ -48,6 +48,10 @@ if(mysql_num_rows($result) != 0) {
 <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
 <SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
 <SCRIPT>
+/**
+ * 
+ * @returns {Array}
+ */  
 function $() {									// 1/21/09
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -58,7 +62,10 @@ function $() {									// 1/21/09
 		}
 	return elements;
 	}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 function ck_frames() {		//  onLoad = "ck_frames()"
 	if(self.location.href==parent.location.href) {
 		self.location.href = 'index.php';
@@ -68,27 +75,48 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		parent.upper.do_day_night("<?php print $_SESSION['day_night'];?>")
 		}
 	}		// end function ck_frames()
-	
+/**
+ * 
+ * @param {type} where
+ * @param {type} the_id
+ * @returns {undefined}
+ */	
 function go_there (where, the_id) {		//
 	document.go.action = where;
 	document.go.submit();
 	}				// end function go there ()	
-	
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */	
 function CngClass(obj, the_class){
 	$(obj).className=the_class;
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_hover (the_id) {
 	CngClass(the_id, 'hover');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_plain (the_id) {
 	CngClass(the_id, 'plain');
 	return true;
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function submit_archive() {
 	if(document.forms['archive_form'].del_messages.checked == true) {
 		if (confirm("Are you sure you want to remove the messages after archiving them?")) { 

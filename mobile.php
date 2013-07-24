@@ -7,7 +7,6 @@ $button_width = 160;		// width in pixels
 $button_spacing = 4;		// spacing in pixels
 $map_size = .75;			// map size multiplier - as a percent of full size
 $butts_width = 0;
-
 $units_side_bar_height = .6;		// max height of units sidebar as decimal fraction of screen height - default is 0.6 (60%)
 /*
 7/13/10 initial release
@@ -168,10 +167,18 @@ function adj_time($time_stamp) {
 	<SCRIPT TYPE="text/javascript" src="./js/misc_function.js"></SCRIPT>
 	<script language="JavaScript">
 	<!--
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 function do_save_handleResult(req) {			// the called-back function
 	}			// end function handle Result()
-
+/**
+ * 
+ * @param {type} in_val
+ * @returns {undefined}
+ */
 function do_save(in_val) {
 	var params = "f_n=show_hide_upper&v_n=" + in_val + "&sess_id=<?php print get_sess_key(__LINE__); ?>";
 	var url = "persist2.php";								//	3/15/11
@@ -183,8 +190,12 @@ function do_save(in_val) {
 	rows_arr = frames_obj.rows.split(",", 4);
 	if (parseInt(rows_arr[0]) > 0) { 							// save as the normalizing string
 		row_str = window.top.document.getElementsByTagName("frameset")[0].rows;}
-
-	function showhideFrame(btn) {
+/**
+ * 
+ * @param {type} btn
+ * @returns {undefined}
+ */
+  function showhideFrame(btn) {
 		frames_obj = window.top.document.getElementsByTagName("frameset")[0];
 		rows_arr = frames_obj.rows.split(",", 4);		
 		if (parseInt(rows_arr[0]) > 0){ 
@@ -198,7 +209,10 @@ function do_save(in_val) {
 			btn.value = "Hide Menu";			
 		}
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */  
 	function checkUpper() {
 		var upperVis = "<?php print $_SESSION['show_hide_upper'];?>";
 		if (upperVis == "h") {
@@ -210,8 +224,6 @@ function do_save(in_val) {
 			$('b1').value = "Hide Menu";
 		}
 	}	
-
-
 	-->
 	</script>	
 	<SCRIPT>
@@ -241,6 +253,10 @@ parent.calls.location.href = 'board.php';							// 7/21/10
 	}		// end if ( get_variable('call_board') == 2) 
 ?>	
 //	- 3/19/11	
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {									// 1/21/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -289,9 +305,7 @@ $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_ni
 		parent.frames["upper"].$("perms_txt").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
 		parent.frames["upper"].$("modules_txt").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
 		parent.frames["upper"].$("time_txt").style.color  = "<?php print get_css('titlebar_text', $day_night);?>";	//	3/15/11
-
 		parent.frames["upper"].$("term").innerHTML  = "<?php print $term_str;?>";				// responder or 'Mobile' name - 3/19/11
-
 		}
 	catch(e) {
 		}
@@ -300,7 +314,10 @@ $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_ni
 	parent.upper.light_butt('term');								// light it up
 	parent.frames["upper"].document.getElementById("gout").style.display  = "inline";
 
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function get_new_colors() {								// 4/5/11
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
@@ -318,6 +335,10 @@ $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_ni
 <?php
 		}		// end if ((intval(get_variable('call_board')) == 2)&& (is_unit()))
 ?>
+/**
+ * 
+ * @returns {undefined}
+ */  
 	function ck_frames() {		//  onLoad = "ck_frames()"
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
@@ -331,7 +352,12 @@ $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_ni
 		print "\t parent.frames['upper'].$('call').style.display = 'none';";
 		}
 ?>		
-
+/**
+ * 
+ * @param {type} buttonId
+ * @param {type} text
+ * @returns {undefined}
+ */
 function replaceButtonText(buttonId, text) {
 	if (document.getElementById) {
 		var button=document.getElementById(buttonId);
@@ -348,17 +374,30 @@ function replaceButtonText(buttonId, text) {
 			}
 		}
 	}		// end function replaceButtonText()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function show_btns_closed() {						// 4/30/10
 		$('btn_go').style.display = 'inline';
 		$('btn_can').style.display = 'inline';
 		}
+/**
+ * 
+ * @returns {undefined}
+ */    
 	function hide_btns_closed() {
 		$('btn_go').style.display = 'none';
 		$('btn_can').style.display = 'none';
 		document.frm_interval_sel.frm_interval.selectedIndex=0;
 		}
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {		// ajax function set - 1/15/09
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -381,14 +420,20 @@ function replaceButtonText(buttonId, text) {
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
-	
+/**
+ * 
+ * @type Array
+ */	
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest()	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -404,21 +449,36 @@ function replaceButtonText(buttonId, text) {
 		}
 
 	var announce = true;
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */  
 	function handleResult(req) {			// the called-back function
 		if (announce) {alert('<?php echo __LINE__; ?>');}
 		}			// end function handle Result(
 
-	
 	var announce = true;
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */  
 	function handleResult(req) {			// the called-back function
 		}			// end function handle Result()
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	function toss() {				// ignores button click
 		return;
 		}
 
 	var watch_val;										// interval var - for clearInterval() - 2/19/12
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function start_watch() {							// get initial values from top
 		parent.frames['upper'].mu_init();				// start the polling
 		$("div_ticket_id").innerHTML = parent.frames["upper"].$("div_ticket_id").innerHTML;		// copy for monitoring
@@ -428,12 +488,18 @@ function replaceButtonText(buttonId, text) {
 		
 		watch_val = window.setInterval("do_watch()",5000);		// 4/7/10 - 5 seconds
 		}				// end function start watch()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function end_watch(){
 		window.clearInterval(watch_val);
 		do_reload();			// 6/3/2013
 		}				// end function end_watch()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_watch() {								// monitor for changes - 4/10/10, 6/10/11
 		if (							// any change?
 			($("div_ticket_id").innerHTML != parent.frames["upper"].$("div_ticket_id").innerHTML) ||
@@ -446,7 +512,10 @@ function replaceButtonText(buttonId, text) {
 				do_reload();			
 			}
 		}			// end function do_watch()		
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_reload() {
 <?php														// 6/3/2013
 	$temp =  explode("/", get_variable('auto_refresh'));
@@ -605,6 +674,11 @@ else {						// set up $assigns_stack, $selected_indx - 2/14/12, 2/17/12
 		}
 	else  {
 ?>		
+/**
+ * 
+ * @param {type} which
+ * @returns {undefined}
+ */  
 	function set_assign(which) {						// values; d r s c a e
 		var params = "frm_id=" +<?php print $assign_id;?>;				// 1/20/09
 		params += "&frm_tick=" +<?php print $ticket_id;?>;
@@ -632,6 +706,11 @@ else {
 
 ?>
 		}		// end function set_assign()
+/**
+ * 
+ * @param {type} which
+ * @returns {undefined}
+ */    
 	function set_rec_fac(which) {	//	10/18/11 function to update receiving facility
 		var params = "rec_fac=" +which;
 		params += "&unit=" +<?php print $unit_id;?>;
@@ -659,6 +738,10 @@ else {
 <?php
 		}		// end if/else (!(intval($assign_id) > 0))
 ?>			
+/**
+ * 
+ * @returns {undefined}
+ */  
 	function do_blink() {																// 2/27/12
 		for(i=0; i<document.getElementsByTagName("blink").length; i++){					// each element
 			s=document.getElementsByTagName("blink")[i];
@@ -670,7 +753,10 @@ else {
 
 	var blink_var = false;
 	var blink_count;									// duration of blink
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function start_blink () {
 		var temp = document.getElementsByTagName("blink").length;
 		if (document.getElementsByTagName("blink").length > 0){			// don't bother if non set
@@ -678,6 +764,10 @@ else {
 			blink_count = 60;											// = 60 seconds
 			}
 		}
+/**
+ * 
+ * @returns {undefined}
+ */    
 	function end_blink() {
 		for(i=0; i<document.getElementsByTagName("blink").length; i++){		//  force visibility each element
 			s=document.getElementsByTagName("blink")[i];

@@ -19,11 +19,20 @@ if (empty($_POST)) {
 ?>
 
 <SCRIPT>
+/**
+ * 
+ * @param {type} theEmail
+ * @returns {@exp;re@call;test}
+ */  
 function validateEmail(theEmail) {		// allows almost anything
     var re = /\S+@\S+\.\S+/;
     return re.test(theEmail);
 	}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 function validateForm (theForm) {
 	var errstr = "";
 	if ( ! ( validateEmail (theForm.frm_from.value ) ) )		{errstr += "From-addr error\n"}
@@ -31,7 +40,6 @@ function validateForm (theForm) {
 	if ( ! ( validateEmail (theForm.frm_reply_to.value ) ) )	{errstr += "Reply-to-addr error\n"}
 	if ( theForm.frm_subject.value.trim().length == 0 ) 		{errstr += "Message subject error\n"}
 	if ( theForm.frm_message.value.trim().length == 0 ) 		{errstr += "Message text error\n"}
-
 	if (errstr.length > 0) {alert ("Errors needing correction:\n\n" + errstr); return false;}
 
 	else {mail_form.submit()}

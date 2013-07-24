@@ -74,12 +74,18 @@ var fac_city = [];
 var fac_state = [];
 var showall = "yes";
 var point;
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function out_frames() {		//  onLoad = "out_frames()"
 	if (top.location != location) top.location.href = document.location.href;
 	}		// end function out_frames()
 	
-
+/**
+ * 
+ * @returns {Array}
+ */
 function $() {									// 1/21/09
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -90,27 +96,51 @@ function $() {									// 1/21/09
 		}
 	return elements;
 	}
-		
+/**
+ * 
+ * @param {type} where
+ * @param {type} the_id
+ * @returns {undefined}
+ */		
 function go_there (where, the_id) {		//
 	document.go.action = where;
 	document.go.submit();
 	}				// end function go there ()	
-	
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */	
 function CngClass(obj, the_class){
 	$(obj).className=the_class;
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_hover (the_id) {
 	CngClass(the_id, 'hover');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_plain (the_id) {
 	CngClass(the_id, 'plain');
 	return true;
 	}
-	
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */	
 function sendRequest(url,callback,postData) {
 	var req = createXMLHTTPObject();
 	if (!req) return;
@@ -129,14 +159,20 @@ function sendRequest(url,callback,postData) {
 	if (req.readyState == 4) return;
 	req.send(postData);
 	}
-
+/**
+ * 
+ * @type Array
+ */
 var XMLHttpFactories = [
 	function () {return new XMLHttpRequest()	},
 	function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
 	function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
 	function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
 	];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 function createXMLHTTPObject() {
 	var xmlhttp = false;
 	for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -150,7 +186,11 @@ function createXMLHTTPObject() {
 		}
 	return xmlhttp;
 	}
-
+/**
+ * 
+ * @param {type} strURL
+ * @returns {@exp;AJAX@pro;responseText|Boolean}
+ */
 function syncAjax(strURL) {
 	if (window.XMLHttpRequest) {						 
 		AJAX=new XMLHttpRequest();						 
@@ -168,19 +208,30 @@ function syncAjax(strURL) {
 		return false;
 		}																						 
 	}
-	
+/**
+ * 
+ * @param {type} showall
+ * @returns {undefined}
+ */	
 function requests_get(showall) {
 	showall = showall;
 	msgs_interval = window.setInterval('do_requests_loop("' + showall + '")', 60000);
 	}
-	
+/**
+ * 
+ * @param {type} showall
+ * @returns {undefined}
+ */	
 function do_requests_loop(showall) {
 	showall == showall;
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./portal/ajax/list_requests.php?id=<?php print $_SESSION['user_id'];?>&showall=" + showall + "&version=" + randomnumber;
 	sendRequest (url, requests_cb2, "");
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function logged_in() {								// returns boolean
 	var temp = <?php print $logged_in;?>;
 	return temp;
@@ -188,6 +239,11 @@ function logged_in() {								// returns boolean
 	
 var newwindow = null;
 var starting;
+/**
+ * 
+ * @param {type} id
+ * @returns {unresolved}
+ */
 function do_window(id) {				// 1/19/09
 	if ((newwindow) && (!(newwindow.closed))) {newwindow.focus(); return;}		// 7/28/10	
 	if (logged_in()) {
@@ -202,7 +258,11 @@ function do_window(id) {				// 1/19/09
 		starting = false;
 		}
 	}		// end function do_window()
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 function requests_cb2(req) {
 	var the_requests=JSON.decode(req.responseText);
 	if(the_requests[0][0] == "No Current Requests") {
@@ -278,7 +338,11 @@ function requests_cb2(req) {
 		the_string += "</TABLE>";
 		$('all_requests').innerHTML = the_string;
 	}
-
+/**
+ * 
+ * @param {type} showall
+ * @returns {undefined}
+ */
 function get_requests(showall) {
 	var width = "";	
 	randomnumber=Math.floor(Math.random()*99999999);
@@ -361,17 +425,27 @@ function get_requests(showall) {
 			requests_get(showall);
 		}
 	}		
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function markers_get() {
 	msgs_interval = window.setInterval('do_markers_loop()', 60000);
 	}	
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function do_markers_loop() {
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./portal/ajax/list_ticketsandresponders.php?id=<?php print $_SESSION['user_id'];?>&version=" + randomnumber;
 	sendRequest (url, markers_cb2, "");
 	}
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 function markers_cb2(req) {
 	var the_markers=JSON.decode(req.responseText);
 	for (var key in the_markers) {
@@ -380,7 +454,6 @@ function markers_cb2(req) {
 		point = new google.maps.LatLng(the_lat, the_lng);			
 		createMarker(point, 2, "T");
 
-
 		for(var elements in the_markers[key].responders) {
 			var r_lat = the_markers[key].responders[elements].lat;
 			var r_lng = the_markers[key].responders[elements].lng;		
@@ -388,7 +461,10 @@ function markers_cb2(req) {
 			}
 		} 	
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function get_the_markers() {
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./portal/ajax/list_ticketsandresponders.php?id=<?php print $_SESSION['user_id'];?>&version=" + randomnumber;
@@ -412,14 +488,23 @@ function get_the_markers() {
 		}
 	markers_get();
 	}	
-	
+/**
+ * 
+ * @param {type} inlat
+ * @param {type} inlng
+ * @returns {unresolved}
+ */	
 function do_coords(inlat, inlng) { 										 //9/14/08
 	if((inlat.length==0)||(inlng.length==0)) {return;}
 	var str = inlat + ", " + inlng + "\n";
 	str += ll2dms(inlat) + ", " +ll2dms(inlng) + "\n";
 	str += lat2ddm(inlat) + ", " +lng2ddm(inlng);		
 	}
-
+/**
+ * 
+ * @param {type} inval
+ * @returns {String}
+ */
 function ll2dms(inval) {				// lat/lng to degr, mins, sec's - 9/9/08
 	var d = new Number(Math.abs(inval));
 	d  = Math.floor(d);
@@ -429,7 +514,11 @@ function ll2dms(inval) {				// lat/lng to degr, mins, sec's - 9/9/08
 	var s = si.toFixed(1);
 	return d + '\260 ' + Math.abs(m) +"' " + Math.abs(s) + '"';
 	}
-
+/**
+ * 
+ * @param {type} inlat
+ * @returns {String}
+ */
 function lat2ddm(inlat) {				//  lat to degr, dec.min's - 9/9/089/7/08
 	var x = new Number(Math.abs(inlat));
 	var degs  = Math.floor(x);				// degrees
@@ -437,7 +526,11 @@ function lat2ddm(inlat) {				//  lat to degr, dec.min's - 9/9/089/7/08
 	var nors = (inlat>0.0)? " N":" S";
 	return degs + '\260'  + mins +"'" + nors;
 	}
-
+/**
+ * 
+ * @param {type} inlng
+ * @returns {String}
+ */
 function lng2ddm(inlng) {				//  lng to degr, dec.min's - 9/9/089/7/08
 	var x = new Number(Math.abs(inlng));
 	var degs  = Math.floor(x);				// degrees
@@ -445,7 +538,11 @@ function lng2ddm(inlng) {				//  lng to degr, dec.min's - 9/9/089/7/08
 	var eorw = (inlng>0.0)? " E":" W";
 	return degs + '\260' + mins +"'" + eorw;
 	}
-
+/**
+ * 
+ * @param {type} inlat
+ * @returns {String}
+ */
 function do_lat_fmt(inlat) {				// 9/9/08
 	switch(lat_lng_frmt) {
 		case 0:
@@ -461,7 +558,11 @@ function do_lat_fmt(inlat) {				// 9/9/08
 			alert ( "error <?php print __LINE__;?>");
 		}	
 	}
-
+/**
+ * 
+ * @param {type} inlng
+ * @returns {String}
+ */
 function do_lng_fmt(inlng) {
 	switch(lat_lng_frmt) {
 		case 0:
@@ -477,14 +578,27 @@ function do_lng_fmt(inlng) {
 			alert ("error <?php print __LINE__;?>");
 		}	
 	}
-	
+/**
+ * 
+ * @param {type} lat
+ * @returns {undefined}
+ */	
 function do_lat (lat) {
 	document.add.frm_lat.value=lat;			// 9/9/08
 	}
+/**
+ * 
+ * @param {type} lng
+ * @returns {undefined}
+ */  
 function do_lng (lng) {
 	document.add.frm_lng.value=lng;
 	}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 function do_grids(theForm) {								// 12/13/10
 <?php															// 1/24/11
 		$locale = intval(trim(get_variable("locale"))); 
@@ -503,7 +617,12 @@ function do_grids(theForm) {								// 12/13/10
 			}		// end switch
 ?>
 	}
-	
+/**
+ * 
+ * @param {type} text
+ * @param {type} index
+ * @returns {undefined}
+ */	
 function do_fac_to_loc(text, index){			// 9/22/09
 	var curr_lat = fac_lat[index];
 	var curr_lng = fac_lng[index];
@@ -517,25 +636,42 @@ function do_fac_to_loc(text, index){			// 9/22/09
 	document.add.fac_city.value = curr_city;
 	document.add.fac_state.value = curr_state;	
 	}					// end function do_fac_to_loc
-	
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */	
 function do_usng(theForm) {								// 8/23/08, 12/5/10
 	theForm.frm_grid.value = LLtoUSNG(theForm.frm_lat.value, theForm.frm_lng.value, 5);	// US NG
 	}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 function do_utm (theForm) {
 	var ll_in = new LatLng(parseFloat(theForm.frm_lat.value), parseFloat(theForm.frm_lng.value));
 	var utm_out = ll_in.toUTMRef().toString();
 	temp_ary = utm_out.split(" ");
 	theForm.frm_grid.value = (temp_ary.length == 3)? temp_ary[0] + " " +  parseInt(temp_ary[1]) + " " + parseInt(temp_ary[2]) : "";
 	}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 function do_osgb (theForm) {
 	theForm.frm_grid.value = LLtoOSGB(theForm.frm_lat.value, theForm.frm_lng.value);
 	}
-	
+/**
+ * 
+ * @param {type} my_form
+ * @param {type} lat
+ * @param {type} lng
+ * @returns {undefined}
+ */	
 function pt_to_map (my_form, lat, lng) {						// 7/5/10
 	myMarker.setMap(null);			// destroy predecessor
-
 
 	my_form.frm_lat.value=lat;	
 	my_form.frm_lng.value=lng;		
@@ -556,13 +692,12 @@ function pt_to_map (my_form, lat, lng) {						// 7/5/10
 		});
 	myMarker.setMap(map);		// add marker with icon
 
-
-
-
-
 	}				// end function pt_to_map ()
-
-
+/**
+ * 
+ * @param {type} my_form
+ * @returns {Boolean}
+ */
 function loc_lkup(my_form) {		   						// 7/5/10
 	if ((my_form.frm_city.value.trim()==""  || my_form.frm_state.value.trim()=="")) {
 		alert ("City and State are required for location lookup.");
@@ -572,39 +707,11 @@ function loc_lkup(my_form) {		   						// 7/5/10
 
 	var myAddress = my_form.frm_street.value.trim() + ", " +my_form.frm_city.value.trim() + " "  +my_form.frm_state.value.trim();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	geocoder.geocode( { 'address': myAddress}, function(results, status) {		
 		if (status == google.maps.GeocoderStatus.OK)	{ pt_to_map (my_form, results[0].geometry.location.lat(), results[0].geometry.location.lng());}					
 		else 											{ alert("Geocode lookup failed: " + status);}
 		});				// end geocoder.geocode()
-
 	}				// end function loc_lkup()
-
-
-
-
-
-
-
-
-
-
-
-
 
 // maps v3 stuff
 var map;
@@ -613,20 +720,20 @@ var lat_var;
 var lng_var;
 var zoom_var;
 
-
 var icon_file = "./markers/crosshair.png";
-
-
-
-
+/**
+ * 
+ * @param {type} the_lat
+ * @param {type} the_lng
+ * @param {type} the_zoom
+ * @returns {undefined}
+ */
 function load(the_lat, the_lng, the_zoom) {	
 	function call_back (in_obj){
 		do_lat(in_obj.lat);
 		do_lng(in_obj.lng);
 		}
-
-
-
+    
 	map = gmaps_v3_init(call_back, 'map_canvas', 
 		<?php echo get_variable('def_lat');?>, 
 		<?php echo get_variable('def_lng');?>, 
@@ -638,14 +745,6 @@ function load(the_lat, the_lng, the_zoom) {
 	doWeather();
 	}			// end function load()
 
-
-
-
-
-
-
-
-
 var icons=[];	
 icons[0] = "white.png";		// white
 icons[1] = "red.png";	// red
@@ -653,65 +752,13 @@ icons[2] = "blue.png";	// blue
 icons[3] = "yellow.png";	// yellow
 icons[4] = "black.png";	// black
 var bounds = new google.maps.LatLngBounds();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * 
+ * @param {type} point
+ * @param {type} color
+ * @param {type} sym
+ * @returns {unresolved}
+ */
 function createMarker(point, color, sym) {
 	var iconStr = sym;
 	var image_file = "./portal/markers/gen_icon.php?blank=" + color + "&text=" + iconStr;
@@ -719,45 +766,15 @@ function createMarker(point, color, sym) {
 	bounds.extend(point);
 	return marker;
 	}				// end function create Marker()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	
 var trafficInfo = new google.maps.TrafficLayer();
 trafficInfo.setMap(map);
 
-
-
-
-
-
-
-
-
-
-
-
-
 var toggleState = true;
-
-
-
-
-
-
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function doTraffic() {
 	if (toggleState) {
 		trafficInfo.setMap(null);
@@ -766,59 +783,19 @@ function doTraffic() {
 		trafficInfo.setMap(map);		
 		}
 	toggleState = !toggleState;
-
-
-
-
-
-
 	}				// end function doTraffic()
 
-
-
-
-
-
-
-var weatherLayer = new google.maps.weather.WeatherLayer({
+  var weatherLayer = new google.maps.weather.WeatherLayer({
   temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
 });
 
-
-
-
 var cloudLayer = new google.maps.weather.CloudLayer();	
 
-
-
-
-
-
-
-
-
-
-
-
 var toggleWeather = true
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function doWeather() {
 	if (toggleWeather) {
 		weatherLayer.setMap(null);
@@ -830,15 +807,18 @@ function doWeather() {
 		}
 	toggleWeather = !toggleWeather;
 	}				// end function doWeather()		
-		
+/**
+ * 
+ * @returns {unresolved}
+ */		
 function GUnload(){
 	return;
 	}		
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function do_logout() {
-
-
-
 	document.gout_form.submit();
 	}		
 
@@ -1079,5 +1059,4 @@ if((!isset($_SESSION)) && (empty($_POST))) {
 } else {
 }
 ?> 
-
 </HTML>

@@ -27,10 +27,17 @@ td { background-color: inherit; FONT-WEIGHT: normal; FONT-SIZE: x-small; COLOR: 
 
 </STYLE>
 <SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_focus() {
 <?php
 $the_key = trim(get_variable('aprs_fi_key'));

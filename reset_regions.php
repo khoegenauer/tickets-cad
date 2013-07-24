@@ -26,6 +26,10 @@ require_once('./incs/functions.inc.php');
 			  padding: 4px 0.5em; text-decoration: none; color: black; background-color: #DEE3E7; font-weight: bolder; cursor: pointer;}
 </STYLE>		
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */  
 function ck_frames() {
 	if(self.location.href==parent.location.href) {
 		self.location.href = 'index.php';
@@ -34,7 +38,10 @@ function ck_frames() {
 		parent.upper.show_butts();
 		}
 	}		// end function ck_frames()	
-	
+/**
+ * 
+ * @returns {Array}
+ */	
 function $() {
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -45,17 +52,30 @@ function $() {
 		}
 	return elements;
 	}
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 function CngClass(obj, the_class){
 	$(obj).className=the_class;
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_hover (the_id) {
 	CngClass(the_id, 'hover');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_plain (the_id) {
 	CngClass(the_id, 'plain');
 	return true;

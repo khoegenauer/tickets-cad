@@ -50,11 +50,17 @@ if (empty($_POST)) {
 		}
 ?>
 <SCRIPT>
- 
+/**
+ * 
+ * @returns {unresolved}
+ */ 
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -67,11 +73,17 @@ if (empty($_POST)) {
 			}
 		return elements;
 		}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 	function do_step_1() {
 		document.mail_form.submit();
 		}
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 	function do_step_2() {
 		if (document.mail_form.frm_text.value.trim()=="") {
 			alert ("Message text is required");
@@ -91,13 +103,20 @@ if (empty($_POST)) {
 			}
 		document.mail_form.submit();	
 		}
-
+/**
+ * 
+ * @param {type} lines
+ * @returns {undefined}
+ */
 	function reSizeScr(lines){
 		var the_width = 600;
 		var the_height = ((lines * 23)+380);			// values derived via trial/error (more of the latter, mostly)
 		window.resizeTo(the_width,the_height);	
 		}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 	function do_clear(){
 		for (i=0;i<document.mail_form.elements.length; i++) {
 			if(document.mail_form.elements[i].type =='checkbox'){
@@ -107,7 +126,10 @@ if (empty($_POST)) {
 		$('clr_spn').style.display = "none";
 		$('chk_spn').style.display = "block";
 		}		// end function do_clear
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_check(){
 		for (i=0;i<document.mail_form.elements.length; i++) {
 			if(document.mail_form.elements[i].type =='checkbox'){

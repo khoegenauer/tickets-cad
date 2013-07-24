@@ -51,10 +51,18 @@ if (empty ($_POST)) {
 	<SCRIPT src="./js/multiSelect.js"></SCRIPT>
 
 	<SCRIPT>
+/**
+ * 
+ * @returns {unresolved}
+ */    
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @param {type} theStr
+ * @returns {@exp;filter@call;test}
+ */
 	function OKaddr(theStr) {
 		var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 		return filter.test(theStr);
@@ -62,6 +70,10 @@ if (empty ($_POST)) {
 
 	var line = 1;
 	var max=19;
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	function do_more () {
 		if (line==max) {return;}
 		else {
@@ -70,7 +82,11 @@ if (empty ($_POST)) {
 			line++;
 			}
 		}		// end function do_more ()
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */		
 	function do_val(theForm) {
 //		for (i=0;i<document.forms[0].elements.length; i++) {
 //			alert("72 " + document.forms[0].elements[i].name + " " +document.forms[0].elements[i].type);

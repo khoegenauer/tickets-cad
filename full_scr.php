@@ -91,6 +91,10 @@ else {
 			return document.all[id];							
 			}							
 		}
+/**
+ * 
+ * @returns {Array}
+ */    
 	function $() {									// 1/19/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -103,25 +107,39 @@ else {
 			}
 		return elements;
 		}
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 	function CngMenuClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
 		}		
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function maxWindow() {
 		window.moveTo(0,0); 		// reset origin
 		window.resizeTo(window.screen.width,  window.screen.height);		// fill screen
 		history.go(0);
 		}		// end function maxWindow()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_reload() {
 		window.location.reload();				// do the deed!
 		}		// end function do reload()
 
 
 	var watch_val;										// interval var - for clearInterval() - 6/3/2013
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function start_watch() {							// get initial values from top
 		window.opener.parent.frames['upper'].mu_init();				// start the polling
 		$("div_ticket_id").innerHTML = window.opener.parent.frames["upper"].$("div_ticket_id").innerHTML;		// copy for monitoring
@@ -131,12 +149,18 @@ else {
 		
 		watch_val = window.setInterval("do_watch()",5000);		// 4/7/10 - 5 seconds
 		}				// end function start watch()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function end_watch(){
 		window.clearInterval(watch_val);
 		do_reload();			// 6/3/2013
 		}				// end function end_watch()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_watch() {								// monitor for changes - 4/10/10, 6/10/11
 		if (							// any change?
 			($("div_ticket_id").innerHTML != window.opener.parent.frames["upper"].$("div_ticket_id").innerHTML) ||
@@ -151,10 +175,6 @@ else {
 				}
 		}			// end function do_watch()		
 
-
-
-
-
 	//*****************************************************************************
 	// Do not remove this notice.
 	//
@@ -162,6 +182,10 @@ else {
 	// See http://www.brainjar.com for terms of use.
 	//*****************************************************************************
 	// Determine browser and version.
+/**
+ * 
+ * @returns {unresolved}
+ */  
 	function Browser() {
 		var ua, s, i;
 		this.isIE		= false;
@@ -191,6 +215,12 @@ else {
 	var browser = new Browser();
 	var dragObj = new Object();		// Global object to hold drag information.
 	dragObj.zIndex = 0;
+/**
+ * 
+ * @param {type} event
+ * @param {type} id
+ * @returns {undefined}
+ */  
 	function dragStart(event, id) {
 		var el;
 		var x, y;
@@ -233,6 +263,11 @@ else {
 			event.preventDefault();
 			}
 		}
+/**
+ * 
+ * @param {type} event
+ * @returns {undefined}
+ */    
 	function dragGo(event) {
 		var x, y;
 		if (browser.isIE) {	// Get cursor position with respect to the page.
@@ -254,6 +289,11 @@ else {
 		if (browser.isNS)
 			event.preventDefault();
 		}
+/**
+ * 
+ * @param {type} event
+ * @returns {undefined}
+ */    
 	function dragStop(event) {
 		if (browser.isIE) {	// Stop capturing mousemove and mouseup events.
 			document.detachEvent("onmousemove", dragGo);

@@ -68,9 +68,16 @@ $ticket_start_str = format_date($row['problemstart']);		//
 	<SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 4/23/13 -->
 	<SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 4/23/13 -->
 	<SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */    
 	function ck_frames() {
 		}
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -93,17 +100,30 @@ $ticket_start_str = format_date($row['problemstart']);		//
 	  for ( i=0;i
 	  }
 	*/
-	
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */	
 	function do_hover (the_id) {
 		CngClass(the_id, 'hover');
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_plain (the_id) {
 		CngClass(the_id, 'plain');
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;

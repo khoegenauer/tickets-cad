@@ -1,0 +1,753 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TicketsCAD-2.40A\n"
+"POT-Creation-Date: 2013-06-06 18:48-0600\n"
+"PO-Revision-Date: 2013-06-06 19:12-0600\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;get_text\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Language: pt\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: ./ajax\n"
+"X-Poedit-SearchPath-2: ./DEV\n"
+"X-Poedit-SearchPath-3: ./incs\n"
+"X-Poedit-SearchPath-4: ./portal\n"
+
+#: add.php:411 add.php:568 add.php:1874 config.php:2531 do_unit_mail.php:499
+#: edit.php:274 edit.php:1956 edit_nm.php:53 index.php:738 main.php:840
+#: message.php:8 nearby.php:72 nearby.php:73 reports.php:78 reports.php:468
+#: DEV/dead_code/add_nm.php:450 incs/functions.inc.php:3272
+#: incs/functions_mail.php:61 incs/functions_major.inc.php:158
+#: incs/functions_major_nm.inc.php:26 incs/functions_nm.inc.php:2229
+#: incs/log_codes.inc.php:16
+msgid "Incident"
+msgstr ""
+
+#: add.php:565 edit.php:271 edit_nm.php:50 index.php:735 message.php:5
+#: reports.php:75 DEV/dead_code/add_nm.php:447 incs/functions.inc.php:3280
+#: incs/functions_mail.php:69 incs/functions_major.inc.php:155
+#: incs/functions_major_nm.inc.php:23 incs/functions_nm.inc.php:2237
+msgid "Nature"
+msgstr ""
+
+#: add.php:566 add_note.php:23 close_in.php:24 edit.php:272 edit_nm.php:51
+#: help.php:13 index.php:736 message.php:6 reports.php:76
+#: DEV/dead_code/add_nm.php:448 incs/full_scr.inc.php:1945
+#: incs/full_scr.inc.php:1954 incs/functions.inc.php:3317
+#: incs/functions_mail.php:106 incs/functions_major.inc.php:156
+#: incs/functions_major_nm.inc.php:24 incs/functions_nm.inc.php:2274
+msgid "Disposition"
+msgstr ""
+
+#: add.php:567 add.php:1761 config.php:107 edit.php:273 edit_nm.php:52
+#: help.php:12 index.php:737 message.php:7 mobile.php:57 patient.php:54
+#: patient.php:349 patient.php:407 patient.php:415 patient.php:456
+#: patient.php:466 patient.php:606 patient_w.php:63 portal.php:924
+#: reports.php:77 DEV/dead_code/add_nm.php:449 DEV/dead_code/patient_JF.php:35
+#: DEV/dead_code/patient_JF.php:310 DEV/dead_code/patient_JF.php:317
+#: DEV/dead_code/patient_JF.php:332 DEV/dead_code/patient_JF.php:342
+#: DEV/dead_code/patient_JF.php:361 incs/functions.inc.php:786
+#: incs/functions.inc.php:2330 incs/functions.inc.php:2332
+#: incs/functions.inc.php:3342 incs/functions_mail.php:131
+#: incs/functions_major.inc.php:157 incs/functions_major_nm.inc.php:25
+#: incs/functions_nm.inc.php:167 incs/functions_nm.inc.php:588
+#: incs/functions_nm.inc.php:1335 incs/functions_nm.inc.php:1337
+#: incs/functions_nm.inc.php:2299 incs/functions_nm.inc.php:2451
+#: incs/log_codes.inc.php:13 portal/request.php:497 portal/request.php:577
+msgid "Patient"
+msgstr ""
+
+#: add.php:569 edit.php:275 edit_nm.php:54 index.php:739 message.php:9
+#: reports.php:79 DEV/dead_code/add_nm.php:451 incs/full_scr.inc.php:137
+#: incs/full_scr.inc.php:171 incs/functions_major.inc.php:159
+#: incs/functions_major_nm.inc.php:27
+msgid "Incidents"
+msgstr ""
+
+#: add.php:1756 edit.php:1456 facilities.php:2816 facilities.php:3096
+#: facilities.php:3298 facilities_nm.php:687 facilities_nm.php:862
+#: facilities_nm.php:968 units.php:3302 units.php:3654 units.php:3990
+#: units.php:4090 units.php:4117 DEV/dead_code/add_nm.php:1882
+#: portal/import_requests.php:350
+msgid "Cancel"
+msgstr ""
+
+#: add.php:1757 edit.php:1460 facilities.php:2817 facilities.php:3097
+#: facilities_nm.php:688 facilities_nm.php:863 units.php:3303 units.php:3655
+#: DEV/dead_code/add_nm.php:1883
+msgid "Reset"
+msgstr ""
+
+#: add.php:1758 edit.php:1464 facilities.php:2818 facilities.php:3098
+#: facilities_nm.php:689 facilities_nm.php:864 units.php:3304 units.php:3657
+#: units_nm.php:1112 units_nm.php:1376 DEV/dead_code/add_nm.php:1884
+msgid "Next"
+msgstr ""
+
+#: add.php:1760
+msgid "Action"
+msgstr ""
+
+#: add.php:1859 add.php:1983 add.php:2001 add.php:2019 banner.php:928
+#: banner.php:1426 board.php:1862 circle.php:954 circle.php:1443
+#: config.php:2851 config.php:2853 facilities.php:2955 facilities_nm.php:1047
+#: landb.php:687 landb.php:1083 patient.php:573 units.php:3119 units.php:3134
+#: units.php:3152 units.php:3415 units.php:3430 units.php:3445
+#: units_nm.php:969 units_nm.php:987 units_nm.php:1205 units_nm.php:1220
+#: units_nm.php:1235 incs/functions_major.inc.php:264
+#: incs/functions_major_nm.inc.php:257
+msgid "Regions"
+msgstr ""
+
+#: add.php:1874 add.php:1898 edit.php:1015 edit.php:1956 edit_nm.php:686
+#: facilities.php:2768 facilities.php:3233 facilities_nm.php:669
+#: facilities_nm.php:934 DEV/dead_code/add_nm.php:1589
+msgid "Location"
+msgstr ""
+
+#: add.php:1903 edit.php:1017 edit_nm.php:687 facilities.php:2769
+#: facilities.php:3035 facilities.php:3234 facilities_nm.php:670
+#: facilities_nm.php:841 facilities_nm.php:935 message.php:106 portal.php:931
+#: DEV/dead_code/add_nm.php:1594 DEV/dead_code/tables/c_places.php:124
+#: DEV/dead_code/tables/u_places.php:135 incs/functions_major.inc.php:4718
+#: incs/functions_major.inc.php:5523 incs/functions_major.inc.php:5618
+#: incs/functions_major.inc.php:6292 incs/functions_major_nm.inc.php:1690
+#: incs/functions_major_nm.inc.php:1857 incs/functions_major_nm.inc.php:1956
+#: incs/functions_major_nm.inc.php:2055 portal/request.php:503
+#: portal/request.php:583
+msgid "City"
+msgstr ""
+
+#: add.php:1923 edit.php:1022 DEV/dead_code/add_nm.php:1598
+#: DEV/dead_code/tables/c_places.php:125 DEV/dead_code/tables/u_places.php:136
+msgid "St"
+msgstr ""
+
+#: add.php:1927 edit.php:1028 edit_nm.php:694 message.php:116 portal.php:937
+#: DEV/dead_code/add_nm.php:1602 incs/functions.inc.php:3300
+#: incs/functions_mail.php:89 incs/functions_major.inc.php:4734
+#: incs/functions_major.inc.php:5533 incs/functions_major.inc.php:5628
+#: incs/functions_major.inc.php:6302 incs/functions_major_nm.inc.php:1706
+#: incs/functions_major_nm.inc.php:1867 incs/functions_major_nm.inc.php:1966
+#: incs/functions_major_nm.inc.php:2065 incs/functions_nm.inc.php:2257
+#: portal/request.php:509 portal/request.php:589
+msgid "Phone"
+msgstr ""
+
+#: add.php:1962 edit.php:1079 edit_nm.php:646 message.php:108
+#: DEV/dead_code/add_nm.php:1637 incs/functions.inc.php:3276
+#: incs/functions_mail.php:65 incs/functions_major.inc.php:4710
+#: incs/functions_major.inc.php:5525 incs/functions_major.inc.php:5620
+#: incs/functions_major.inc.php:6294 incs/functions_major_nm.inc.php:1682
+#: incs/functions_major_nm.inc.php:1859 incs/functions_major_nm.inc.php:1958
+#: incs/functions_major_nm.inc.php:2057 incs/functions_nm.inc.php:2233
+msgid "Priority"
+msgstr ""
+
+#: add.php:1974 edit.php:1091 edit_nm.php:682 message.php:113
+#: DEV/dead_code/add_nm.php:1649 incs/functions_major.inc.php:4715
+#: incs/functions_major.inc.php:5530 incs/functions_major.inc.php:5625
+#: incs/functions_major.inc.php:6299 incs/functions_major_nm.inc.php:1687
+#: incs/functions_major_nm.inc.php:1864 incs/functions_major_nm.inc.php:1963
+#: incs/functions_major_nm.inc.php:2062
+msgid "Protocol"
+msgstr ""
+
+#: add.php:2043 edit.php:1128 edit_nm.php:778 message.php:112
+#: DEV/dead_code/add_nm.php:1669 incs/functions_major.inc.php:4721
+#: incs/functions_major.inc.php:5529 incs/functions_major.inc.php:5624
+#: incs/functions_major.inc.php:6298 incs/functions_major_nm.inc.php:1693
+#: incs/functions_major_nm.inc.php:1863 incs/functions_major_nm.inc.php:1962
+#: incs/functions_major_nm.inc.php:2061
+msgid "Synopsis"
+msgstr ""
+
+#: add.php:2094 edit.php:1186 edit_nm.php:828 message.php:114
+#: DEV/dead_code/add_nm.php:1695 incs/functions.inc.php:3374
+#: incs/functions_mail.php:163 incs/functions_major.inc.php:4724
+#: incs/functions_major.inc.php:5531 incs/functions_major.inc.php:5626
+#: incs/functions_major.inc.php:6300 incs/functions_major_nm.inc.php:1696
+#: incs/functions_major_nm.inc.php:1865 incs/functions_major_nm.inc.php:1964
+#: incs/functions_major_nm.inc.php:2063 incs/functions_nm.inc.php:2331
+msgid "911 Contacted"
+msgstr ""
+
+#: add.php:2100 edit.php:1190 edit_nm.php:693 message.php:115
+#: DEV/dead_code/add_nm.php:1701 incs/functions.inc.php:3296
+#: incs/functions_mail.php:85 incs/functions_major.inc.php:4732
+#: incs/functions_major.inc.php:5532 incs/functions_major.inc.php:5627
+#: incs/functions_major.inc.php:6301 incs/functions_major_nm.inc.php:1704
+#: incs/functions_major_nm.inc.php:1866 incs/functions_major_nm.inc.php:1965
+#: incs/functions_major_nm.inc.php:2064 incs/functions_nm.inc.php:2253
+msgid "Reported by"
+msgstr ""
+
+#: add.php:2134 edit.php:1194 edit_nm.php:55 DEV/dead_code/add_nm.php:1735
+msgid "Incident name"
+msgstr ""
+
+#: add.php:2156 edit.php:1318 edit_nm.php:836 DEV/dead_code/add_nm.php:1757
+msgid "Scheduled Date"
+msgstr ""
+
+#: add.php:2195 edit.php:1330 edit_nm.php:863 message.php:129
+#: DEV/dead_code/add_nm.php:1796 incs/functions.inc.php:3322
+#: incs/functions_mail.php:111 incs/functions_major.inc.php:4750
+#: incs/functions_major.inc.php:5546 incs/functions_major.inc.php:5641
+#: incs/functions_major.inc.php:6315 incs/functions_major_nm.inc.php:1722
+#: incs/functions_major_nm.inc.php:1882 incs/functions_major_nm.inc.php:1979
+#: incs/functions_major_nm.inc.php:2078 incs/functions_nm.inc.php:2279
+msgid "Run Start"
+msgstr ""
+
+#: add.php:2199 edit.php:1207 edit_nm.php:716 facilities.php:1987
+#: facilities.php:2746 facilities.php:3243 facilities_nm.php:222
+#: facilities_nm.php:647 facilities_nm.php:944 message.php:10 message.php:120
+#: mobile.php:1003 units.php:157 DEV/dead_code/add_nm.php:1800
+#: incs/functions.inc.php:3313 incs/functions_mail.php:102
+#: incs/functions_major.inc.php:160 incs/functions_major.inc.php:4234
+#: incs/functions_major.inc.php:4730 incs/functions_major.inc.php:5537
+#: incs/functions_major.inc.php:5632 incs/functions_major.inc.php:6306
+#: incs/functions_major_nm.inc.php:1502 incs/functions_major_nm.inc.php:1702
+#: incs/functions_major_nm.inc.php:1871 incs/functions_major_nm.inc.php:1970
+#: incs/functions_major_nm.inc.php:2069 incs/functions_nm.inc.php:2270
+#: portal/request.php:494 portal/request.php:574
+msgid "Status"
+msgstr ""
+
+#: add.php:2207 edit.php:1339 edit_nm.php:871 DEV/dead_code/add_nm.php:1808
+msgid "Run End"
+msgstr ""
+
+#: board.php:1027 board.php:1036 board.php:1886 board.php:2281 board.php:2284
+#: board.php:2397 board.php:2402 board.php:2501 board.php:2522 board.php:3047
+#: config.php:704 config.php:1740 config.php:1766 config.php:1982
+#: config.php:2009 config.php:2914 config.php:2917 config.php:2918
+#: config.php:2919 config.php:3022 do_unit_mail.php:490 do_unit_mail.php:499
+#: do_unit_mail.php:597 reports.php:555 reports.php:556 reports.php:557
+#: reports.php:558 reports.php:559 reports.php:560 reports.php:561
+#: routes.php:1136 top.php:1088 units.php:3324 units.php:4234 units.php:4262
+#: units.php:4303 units.php:4328 units_nm.php:275 units_nm.php:278
+#: units_nm.php:281 units_nm.php:284 units_nm.php:286 units_nm.php:299
+#: units_nm.php:302 units_nm.php:538 units_nm.php:797 units_nm.php:866
+#: units_nm.php:920 units_nm.php:921 units_nm.php:941 units_nm.php:944
+#: units_nm.php:1010 units_nm.php:1019 units_nm.php:1020 units_nm.php:1046
+#: units_nm.php:1104 units_nm.php:1105 units_nm.php:1106 units_nm.php:1194
+#: units_nm.php:1255 units_nm.php:1266 units_nm.php:1267 units_nm.php:1296
+#: units_nm.php:1363 units_nm.php:1364 units_nm.php:1365 units_nm.php:1368
+#: units_nm.php:1486 units_nm.php:1737 units_nm.php:1750 units_nm.php:1761
+#: units_nm.php:1764 units_nm.php:1766 incs/full_scr.inc.php:184
+#: incs/functions.inc.php:3408 incs/functions_mail.php:197
+#: incs/functions_major.inc.php:318 incs/functions_major.inc.php:648
+#: incs/functions_major.inc.php:3737 incs/functions_major.inc.php:3742
+#: incs/functions_major.inc.php:3996 incs/functions_major.inc.php:4003
+#: incs/functions_major_nm.inc.php:299 incs/functions_major_nm.inc.php:396
+#: incs/functions_major_nm.inc.php:1270 incs/functions_major_nm.inc.php:1275
+#: incs/functions_major_nm.inc.php:1412 incs/functions_major_nm.inc.php:1419
+#: incs/functions_nm.inc.php:2365 incs/routes_inc.php:789
+#: incs/routes_inc.php:794 incs/routes_inc.php:1057
+msgid "Units"
+msgstr ""
+
+#: config.php:1752 config.php:2852 config.php:2854 facilities.php:2661
+#: facilities.php:2675 facilities.php:2692 facilities.php:2925
+#: facilities.php:2940 facilities_nm.php:582 facilities_nm.php:596
+#: facilities_nm.php:613 stats_scr.php:36 units_nm.php:955
+msgid "Region"
+msgstr ""
+
+#: config.php:1994 edit.php:1097 edit.php:1106 edit.php:1115
+#: facilities_nm.php:751 facilities_nm.php:766 facilities_nm.php:781
+msgid "Group"
+msgstr ""
+
+#: do_unit_mail.php:401
+msgid "mail_help"
+msgstr ""
+
+#: do_unit_mail.php:656
+msgid "messaging help"
+msgstr ""
+
+#: facilities.php:80 facilities_nm.php:45
+msgid "USNG"
+msgstr ""
+
+#: facilities.php:81
+msgid "OSGB"
+msgstr ""
+
+#: facilities.php:1987 facilities.php:2734 facilities.php:3240
+#: facilities_nm.php:222 facilities_nm.php:635 facilities_nm.php:941
+#: incs/functions_major.inc.php:4234 incs/functions_major_nm.inc.php:1502
+msgid "Type"
+msgstr ""
+
+#: facilities.php:1987 facilities_nm.php:222 units.php:155
+#: incs/functions_major.inc.php:4234 incs/functions_major_nm.inc.php:1502
+msgid "As of"
+msgstr ""
+
+#: facilities.php:2342 facilities.php:2781 facilities.php:3047
+#: facilities.php:3254 facilities_nm.php:682 facilities_nm.php:853
+#: facilities_nm.php:955
+msgid "Access rules"
+msgstr ""
+
+#: facilities.php:2646 facilities_nm.php:567
+msgid "Add Facility"
+msgstr ""
+
+#: facilities.php:2649 facilities.php:3232 facilities_nm.php:570
+#: facilities_nm.php:933
+msgid "Name"
+msgstr ""
+
+#: facilities.php:2651 facilities.php:3235 facilities_nm.php:572
+#: facilities_nm.php:936 units.php:153
+msgid "Handle"
+msgstr ""
+
+#: facilities.php:2719 facilities.php:2978
+msgid "Boundary"
+msgstr ""
+
+#: facilities.php:2773 facilities.php:3039 facilities.php:3246
+#: facilities_nm.php:674 facilities_nm.php:845 facilities_nm.php:947
+msgid "Capability"
+msgstr ""
+
+#: facilities.php:2774 facilities.php:3247 facilities_nm.php:675
+#: facilities_nm.php:948
+msgid "Contact name"
+msgstr ""
+
+#: facilities.php:2775 facilities.php:3041 facilities.php:3248
+#: facilities_nm.php:676 facilities_nm.php:847 facilities_nm.php:949
+msgid "Contact email"
+msgstr ""
+
+#: facilities.php:2776 facilities.php:3249 facilities_nm.php:677
+#: facilities_nm.php:950
+msgid "Contact phone"
+msgstr ""
+
+#: facilities.php:2777 facilities.php:3250 facilities_nm.php:678
+#: facilities_nm.php:951
+msgid "Security contact"
+msgstr ""
+
+#: facilities.php:2778 facilities.php:3251 facilities_nm.php:679
+#: facilities_nm.php:952
+msgid "Security email"
+msgstr ""
+
+#: facilities.php:2779 facilities.php:3252 facilities_nm.php:680
+#: facilities_nm.php:953
+msgid "Security phone"
+msgstr ""
+
+#: facilities.php:2780 facilities.php:3253 facilities_nm.php:681
+#: facilities_nm.php:954
+msgid "Opening hours"
+msgstr ""
+
+#: facilities.php:2782 facilities.php:3255 facilities_nm.php:683
+#: facilities_nm.php:956
+msgid "Security reqs"
+msgstr ""
+
+#: facilities.php:2783 facilities.php:3256 facilities_nm.php:684
+#: facilities_nm.php:957
+msgid "Primary pager"
+msgstr ""
+
+#: facilities.php:2784 facilities.php:3257 facilities_nm.php:685
+#: facilities_nm.php:958
+msgid "Secondary pager"
+msgstr ""
+
+#: facilities.php:2787
+msgid "Lat/Lng"
+msgstr ""
+
+#: facilities.php:3245 facilities_nm.php:946 portal.php:949
+#: incs/functions.inc.php:3292 incs/functions_mail.php:81
+#: incs/functions_nm.inc.php:2249 portal/request.php:524
+#: portal/request.php:601
+msgid "Description"
+msgstr ""
+
+#: facilities_nm.php:222 incs/functions_major.inc.php:4234
+#: incs/functions_major.inc.php:4314 incs/functions_major_nm.inc.php:1502
+msgid "Beds"
+msgstr ""
+
+#: main.php:839 top.php:1086
+msgid "New"
+msgstr ""
+
+#: main.php:841 incs/functions.inc.php:1851 incs/functions_nm.inc.php:1034
+msgid "Add Action"
+msgstr ""
+
+#: main.php:842 incs/functions.inc.php:1852 incs/functions_nm.inc.php:1035
+msgid "Add Patient"
+msgstr ""
+
+#: main.php:843 reports.php:467 reports.php:573 reports.php:675
+#: reports.php:737 reports.php:1108 reports.php:1441 reports.php:1591
+#: reports.php:1669 units.php:154 incs/log_codes.inc.php:15
+msgid "Unit"
+msgstr ""
+
+#: message.php:105 nearby.php:72 incs/functions.inc.php:3284
+#: incs/functions_mail.php:73 incs/functions_major.inc.php:4716
+#: incs/functions_major.inc.php:5522 incs/functions_major.inc.php:5617
+#: incs/functions_major.inc.php:6291 incs/functions_major_nm.inc.php:1688
+#: incs/functions_major_nm.inc.php:1856 incs/functions_major_nm.inc.php:1955
+#: incs/functions_major_nm.inc.php:2054 incs/functions_nm.inc.php:2241
+msgid "Addr"
+msgstr ""
+
+#: message.php:122 incs/functions.inc.php:3304 incs/functions_mail.php:93
+#: incs/functions_major.inc.php:4737 incs/functions_major.inc.php:5539
+#: incs/functions_major.inc.php:5634 incs/functions_major.inc.php:6308
+#: incs/functions_major_nm.inc.php:1709 incs/functions_major_nm.inc.php:1873
+#: incs/functions_major_nm.inc.php:1972 incs/functions_major_nm.inc.php:2071
+#: incs/functions_nm.inc.php:2261
+msgid "Written"
+msgstr ""
+
+#: message.php:151 incs/functions.inc.php:3326 incs/functions_mail.php:115
+#: incs/functions_major.inc.php:4775 incs/functions_major.inc.php:5568
+#: incs/functions_major.inc.php:5663 incs/functions_major.inc.php:6337
+#: incs/functions_major_nm.inc.php:1746 incs/functions_major_nm.inc.php:1905
+#: incs/functions_major_nm.inc.php:2001 incs/functions_major_nm.inc.php:2100
+#: incs/functions_nm.inc.php:2283
+msgid "Position"
+msgstr ""
+
+#: mobile.php:628
+msgid "Disp"
+msgstr ""
+
+#: mobile.php:629
+msgid "Resp"
+msgstr ""
+
+#: mobile.php:630
+msgid "Onsc"
+msgstr ""
+
+#: mobile.php:631 mobile.php:639
+msgid "Clear"
+msgstr ""
+
+#: mobile.php:636 units.php:156 incs/functions.inc.php:512
+msgid "Dispatched"
+msgstr ""
+
+#: mobile.php:637
+msgid "Responding"
+msgstr ""
+
+#: mobile.php:638
+msgid "On-scene"
+msgstr ""
+
+#: mobile.php:1004 portal.php:943 portal/request.php:515
+#: portal/request.php:518 portal/request.php:592 portal/request.php:595
+msgid "Receiving Facility"
+msgstr ""
+
+#: patient.php:46 patient_w.php:64
+msgid "Full name"
+msgstr ""
+
+#: patient.php:47 patient_w.php:65
+msgid "Date of birth"
+msgstr ""
+
+#: patient.php:48 patient_w.php:66
+msgid "Gender"
+msgstr ""
+
+#: patient.php:49 patient_w.php:67
+msgid "Insurance"
+msgstr ""
+
+#: patient.php:50 patient_w.php:68
+msgid "Facility contact"
+msgstr ""
+
+#: patient.php:469 patient.php:609 patient_w.php:516 patient_w.php:652
+msgid "Patient ID"
+msgstr ""
+
+#: portal.php:927 portal/request.php:500 portal/request.php:580
+msgid "Street"
+msgstr ""
+
+#: portal.php:934 portal/request.php:506 portal/request.php:586
+msgid "State"
+msgstr ""
+
+#: portal.php:940
+msgid "Originating Facility"
+msgstr ""
+
+#: portal.php:946 portal/request.php:521 portal/request.php:598
+msgid "Scope"
+msgstr ""
+
+#: portal.php:952 portal/request.php:527 portal/request.php:604
+msgid "Comments"
+msgstr ""
+
+#: portal.php:955
+msgid "Lat"
+msgstr ""
+
+#: portal.php:955
+msgid "Lng"
+msgstr ""
+
+#: portal.php:961
+msgid "Facility Street"
+msgstr ""
+
+#: portal.php:964
+msgid "Facility City"
+msgstr ""
+
+#: portal.php:967
+msgid "Facility State"
+msgstr ""
+
+#: portal.php:1083 portal/import_requests.php:226
+msgid "Service User"
+msgstr ""
+
+#: top.php:1015
+msgid "Logged in"
+msgstr ""
+
+#: top.php:1038
+msgid "Module"
+msgstr ""
+
+#: top.php:1047
+msgid "Time"
+msgstr ""
+
+#: top.php:1071
+msgid "Logout"
+msgstr ""
+
+#: top.php:1084
+msgid "Situation"
+msgstr ""
+
+#: top.php:1090
+msgid "Fac's"
+msgstr ""
+
+#: top.php:1096
+msgid "Msgs"
+msgstr ""
+
+#: top.php:1101
+msgid "Search"
+msgstr ""
+
+#: top.php:1103
+msgid "Reports"
+msgstr ""
+
+#: top.php:1105
+msgid "Config"
+msgstr ""
+
+#: top.php:1111
+msgid "SOP's"
+msgstr ""
+
+#: top.php:1118
+msgid "Chat"
+msgstr ""
+
+#: top.php:1124
+msgid "Help"
+msgstr ""
+
+#: top.php:1126
+msgid "Log"
+msgstr ""
+
+#: top.php:1129
+msgid "Full scr"
+msgstr ""
+
+#: top.php:1132 incs/functions.inc.php:3379 incs/functions_mail.php:168
+#: incs/functions_nm.inc.php:2336
+msgid "Links"
+msgstr ""
+
+#: top.php:1135
+msgid "Board"
+msgstr ""
+
+#: top.php:1138
+msgid "Mobile"
+msgstr ""
+
+#: units.php:3176 units_nm.php:1072
+msgid "Boundaries"
+msgstr ""
+
+#: units.php:3177 units.php:3510 units_nm.php:1073 units_nm.php:1322
+msgid "Ringfence"
+msgstr ""
+
+#: units.php:3188 units.php:3523 units_nm.php:1084 units_nm.php:1335
+msgid "Exclusion Zone"
+msgstr ""
+
+#: units_nm.php:32 incs/functions.inc.php:3388 incs/functions_mail.php:177
+#: incs/functions_major.inc.php:4234 incs/functions_major_nm.inc.php:1502
+#: incs/functions_nm.inc.php:2345 incs/log_codes.inc.php:14
+msgid "Facility"
+msgstr ""
+
+#: incs/full_scr.inc.php:144
+msgid "Assignments"
+msgstr ""
+
+#: incs/full_scr.inc.php:188
+msgid "Facilities"
+msgstr ""
+
+#: incs/functions.inc.php:607
+msgid "Patients"
+msgstr ""
+
+#: incs/functions.inc.php:649 incs/functions.inc.php:3355
+#: incs/functions_mail.php:144 incs/functions_nm.inc.php:2312
+msgid "Actions"
+msgstr ""
+
+#: incs/functions.inc.php:1845 incs/functions_nm.inc.php:1028
+msgid "Popup"
+msgstr ""
+
+#: incs/functions.inc.php:1848 incs/functions_nm.inc.php:1031
+msgid "Edit"
+msgstr ""
+
+#: incs/functions.inc.php:1854 incs/functions_nm.inc.php:1037
+msgid "Notify"
+msgstr ""
+
+#: incs/functions.inc.php:1856 incs/functions_nm.inc.php:1039
+msgid "Print"
+msgstr ""
+
+#: incs/functions.inc.php:1858 incs/functions_nm.inc.php:1041
+msgid "E-mail"
+msgstr ""
+
+#: incs/functions.inc.php:1859 incs/functions_nm.inc.php:1042
+msgid "Add note"
+msgstr ""
+
+#: incs/functions.inc.php:1861 incs/functions_major.inc.php:3350
+#: incs/functions_nm.inc.php:1044
+msgid "Close incident"
+msgstr ""
+
+#: incs/functions.inc.php:1864 incs/functions_nm.inc.php:1047
+msgid "Dispatch Unit"
+msgstr ""
+
+#: incs/functions.inc.php:3309 incs/functions_mail.php:98
+#: incs/functions_nm.inc.php:2266
+msgid "Updated"
+msgstr ""
+
+#: incs/functions.inc.php:3369 incs/functions_mail.php:158
+#: incs/functions_nm.inc.php:2326
+msgid "Tickets host"
+msgstr ""
+
+#: incs/functions.inc.php:3420 incs/functions_mail.php:209
+#: incs/functions_nm.inc.php:2377
+msgid "Scheduled For"
+msgstr ""
+
+#: incs/functions_major.inc.php:202 incs/functions_major.inc.php:887
+#: incs/functions_major_nm.inc.php:560
+msgid "Current situation"
+msgstr ""
+
+#: incs/functions_major.inc.php:886 incs/functions_major_nm.inc.php:559
+msgid "Change display"
+msgstr ""
+
+#: incs/functions_major.inc.php:3488
+msgid "Severities"
+msgstr ""
+
+#: incs/functions_major.inc.php:3488
+msgid "Normal"
+msgstr ""
+
+#: incs/functions_major.inc.php:3488
+msgid "Medium"
+msgstr ""
+
+#: incs/functions_major.inc.php:3488
+msgid "High"
+msgstr ""
+
+#: incs/functions_major.inc.php:4314
+msgid "Available"
+msgstr ""
+
+#: incs/functions_major.inc.php:4314
+msgid "Occupied"
+msgstr ""
+
+#: incs/functions_major.inc.php:4315
+msgid "Beds information"
+msgstr ""
+
+#: incs/login.inc.php:574
+msgid "User"
+msgstr ""
+
+#: incs/login.inc.php:576
+msgid "Password"
+msgstr ""
+
+#: incs/login.inc.php:582
+msgid "Log In"
+msgstr ""
+
+#: incs/log_codes.inc.php:17
+msgid "to quarters"
+msgstr ""
+
+#: portal/import_requests.php:128 portal/import_requests.php:351
+msgid "Submit"
+msgstr ""
+
+#: portal/request.php:512
+msgid "Email"
+msgstr ""

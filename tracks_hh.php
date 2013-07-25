@@ -128,7 +128,7 @@ global $u_types;
 		var spec ="titlebar, resizable=1, scrollbars, height=640,width=640,status=0,toolbar=0,menubar=0,location=0, left=50,top=250,screenX=50,screenY=250";
 		newwindow=window.open(url, 'openaprs',  spec);
 		if (isNull(newwindow)) {
-			alert ("APRS display requires popups to be enabled. Please adjust your browser options.");
+			alert ("<?php print gettext('APRS display requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 		newwindow.focus();
@@ -146,7 +146,7 @@ global $u_types;
 			var url = "track_u.php?source="+callsign;
 			newwindow=window.open(url, callsign,  spec);
 			if (isNull(newwindow)) {
-				alert ("Track display requires popups to be enabled. Please adjust your browser options.");
+				alert ("<?php print gettext('Track display requires popups to be enabled. Please adjust your browser options.');?>");
 				return;
 				}
 //			starting = false;
@@ -311,7 +311,7 @@ global $u_types;
  * @returns {undefined}
  */
 	function myclick_nm(v_id) {				// Responds to sidebar click - view responder data
-		alert("No track data");
+		alert("<?php print gettext('No track data');?>");
 		}
 /**
  * 
@@ -380,9 +380,9 @@ unset($result);
 
 	var map;
 	var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_responders'>";
-	side_bar_html += "<TR class='even'>	<TD colspan=99 ALIGN='center'><B>Mobile Units</B></TD></TR>";
-	side_bar_html += "<TR class='odd'>	<TD colspan=99 ALIGN='center'>Click line or icon for information</TD></TR>";
-	side_bar_html += "<TR class='even'>	<TD></TD><TD ALIGN='center'>Name</TD><TD ALIGN='center'>Description</TD><TD ALIGN='center'>Status</TD><TD>M</TD><TD ALIGN='center'>#</TD><TD ALIGN='center'>As of</TD></TR>";
+	side_bar_html += "<TR class='even'>	<TD colspan=99 ALIGN='center'><B><?php print gettext('Mobile Units');?></B></TD></TR>";
+	side_bar_html += "<TR class='odd'>	<TD colspan=99 ALIGN='center'><?php print gettext('Click line or icon for information');?></TD></TR>";
+	side_bar_html += "<TR class='even'>	<TD></TD><TD ALIGN='center'><?php print gettext('Name');?></TD><TD ALIGN='center'><?php print gettext('Description');?></TD><TD ALIGN='center'><?php print gettext('Status');?></TD><TD>M</TD><TD ALIGN='center'>#</TD><TD ALIGN='center'><?php print gettext('As of');?></TD></TR>";
 	var gmarkers = [];
 	var infoTabs = [];
 	var which;
@@ -455,8 +455,8 @@ unset($result);
 
 	$aprs = FALSE;													// legend show/not boolean
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
-		$toedit = (is_guest())? "" : "<A HREF='units.php?func=responder&edit=true&id=" . $row['id'] . "'><U>Edit</U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ;
-		$totrack  = (empty($row['callsign']))? "" : "&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = do_track('" .$row['callsign']  . "');><U>Tracks</U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ;
+		$toedit = (is_guest())? "" : "<A HREF='units.php?func=responder&edit=true&id=" . $row['id'] . "'><U>" . gettext('Edit') . "</U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ;
+		$totrack  = (empty($row['callsign']))? "" : "&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = do_track('" .$row['callsign']  . "');><U>" . gettext('Tracks') . "</U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ;
 
 		$temp = $row['un_status_id'] ;		// 2/24/09
 		$the_status = (array_key_exists($temp, $status_vals))? $status_vals[$temp] : "??";				// 2/2/09
@@ -544,11 +544,11 @@ unset($result);
 		$tab_1 = "<TABLE CLASS='infowin' width='" . $_SESSION['scr_width']/4 . "'>";
 //		$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . shorten($row['name'], 48) . "</B> - " . $types[$row['type']] . "</TD></TR>";
 		$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . shorten($row['name'], 48) . "</B> - " . $the_type . "</TD></TR>";
-		$tab_1 .= "<TR CLASS='odd'><TD>Description:</TD><TD>" . shorten(str_replace($eols, " ", $row['description']), 32) . "</TD></TR>";
-//		$tab_1 .= "<TR CLASS='even'><TD>Status:</TD><TD>" . $status_vals[$row['un_status_id']] . " </TD></TR>";
-		$tab_1 .= "<TR CLASS='odd'><TD>Contact:</TD><TD>" . $row['contact_name']. " Via: " . $row['contact_via'] . "</TD></TR>";
-		$tab_1 .= "<TR CLASS='even'><TD>As of:</TD><TD>" . format_date($row['updated']) . "</TD></TR>";
-		$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>Details:" . $totrack . "&nbsp;&nbsp;&nbsp;&nbsp;". $toedit . "<A HREF='units.php?func=responder&view=true&id=" . $row['id'] . "'><U>View</U></A></TD></TR>";
+		$tab_1 .= "<TR CLASS='odd'><TD>" . gettext('Description') . ":</TD><TD>" . shorten(str_replace($eols, " ", $row['description']), 32) . "</TD></TR>";
+//		$tab_1 .= "<TR CLASS='even'><TD>" . gettext('Status') . ":</TD><TD>" . $status_vals[$row['un_status_id']] . " </TD></TR>";
+		$tab_1 .= "<TR CLASS='odd'><TD>" . gettext('Contact') . ":</TD><TD>" . $row['contact_name']. " " . gettext('Via') . ": " . $row['contact_via'] . "</TD></TR>";
+		$tab_1 .= "<TR CLASS='even'><TD>" . gettext('As of') . ":</TD><TD>" . format_date($row['updated']) . "</TD></TR>";
+		$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . gettext('Details') . ":" . $totrack . "&nbsp;&nbsp;&nbsp;&nbsp;". $toedit . "<A HREF='units.php?func=responder&view=true&id=" . $row['id'] . "'><U>" . gettext('View') . "</U></A></TD></TR>";
 		$tab_1 .= "</TABLE>";
 //		dump($row['callsign']);
 		switch ($mode) {
@@ -569,10 +569,10 @@ unset($result);
 <?php			
 				$tab_2 = "<TABLE CLASS='infowin' width='" . $_SESSION['scr_width']/4 . "'>";
 				$tab_2 .="<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . $last['source'] . "</B></TD></TR>";
-				$tab_2 .= "<TR CLASS='odd'><TD>Course: </TD><TD>" . $last['course'] . ", Speed:  " . $last['speed'] . ", Alt: " . $last['altitude'] . "</TD></TR>";
-				$tab_2 .= "<TR CLASS='even'><TD>Closest city: </TD><TD>" . $last['closest_city'] . "</TD></TR>";
-				$tab_2 .= "<TR CLASS='odd'><TD>Status: </TD><TD>" . $last['status'] . "</TD></TR>";
-				$tab_2 .= "<TR CLASS='even'><TD>As of: </TD><TD>" . format_date($last['packet_date']) . "(UTC)</TD></TR>";	//	6/16/08 
+				$tab_2 .= "<TR CLASS='odd'><TD>" . gettext('Course') . ": </TD><TD>" . $last['course'] . ", " . gettext('Speed') . ":  " . $last['speed'] . ", " . gettext('Alt') . ": " . $last['altitude'] . "</TD></TR>";
+				$tab_2 .= "<TR CLASS='even'><TD>" . gettext('Closest city') . ": </TD><TD>" . $last['closest_city'] . "</TD></TR>";
+				$tab_2 .= "<TR CLASS='odd'><TD>" . gettext('Status') . ": </TD><TD>" . $last['status'] . "</TD></TR>";
+				$tab_2 .= "<TR CLASS='even'><TD>" . gettext('As of') . ": </TD><TD>" . format_date($last['packet_date']) . "(UTC)</TD></TR>";	//	6/16/08 
 				$tab_2 .= "</TABLE>";
 ?>
 
@@ -614,13 +614,13 @@ unset($result);
 		map.setCenter(center,zoom);
 		}
 	side_bar_html+= "<TR CLASS='" + colors[i%2] +"'><TD COLSPAN=6>&nbsp;</TD></TR>";
-	side_bar_html+= "<TR CLASS='" + colors[(i+1)%2] +"'><TD COLSPAN=6 ALIGN='center'><B>M</B>obility:&nbsp;&nbsp; stopped: <FONT COLOR='red'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;moving: <FONT COLOR='green'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;fast: <FONT COLOR='white'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;silent: <FONT COLOR='black'><B>&bull;</B></FONT></TD><?php print $aprs_legend;?></TR>";
+	side_bar_html+= "<TR CLASS='" + colors[(i+1)%2] +"'><TD COLSPAN=6 ALIGN='center'><?php print gettext('<B>M</B>obility');?>:&nbsp;&nbsp; <?php print gettext('stopped');?>: <FONT COLOR='red'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('moving');?>: <FONT COLOR='green'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('fast');?>: <FONT COLOR='white'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('silent');?>: <FONT COLOR='black'><B>&bull;</B></FONT></TD><?php print $aprs_legend;?></TR>";
 <?php
 	if(!empty($addon)) {
 		print "\n\tside_bar_html +=\"" . $addon . "\"\n";
 		}
 //	$temp = get_variable('auto_poll');
-//	$aprs_but = (intval($temp>0))? "<TR><TD COLSPAN=99 ALIGN='center'><INPUT TYPE='button' value= 'APRS'  onClick ='do_aprs_window();'></TD></TR>": "";
+//	$aprs_but = (intval($temp>0))? "<TR><TD COLSPAN=99 ALIGN='center'><INPUT TYPE='button' value= '" . gettext('APRS') . "'  onClick ='do_aprs_window();'></TD></TR>": "";
 	$aprs_but = "";		
 ?>
 	side_bar_html += "<?php print $aprs_but;?>";
@@ -642,7 +642,7 @@ $refresh = ($interval>0)? "\t<META HTTP-EQUIV='REFRESH' CONTENT='" . intval($int
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Tracks Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Tracks Module');?></TITLE>
 	<?php print $refresh; ?>	<!-- 10/4/08 -->
 
 <?php
@@ -678,11 +678,11 @@ $refresh = ($interval>0)? "\t<META HTTP-EQUIV='REFRESH' CONTENT='" . intval($int
 </SCRIPT>
 	</HEAD>
 	<BODY onLoad = "ck_frames()" onUnload="GUnload()">
-		<TABLE ID='outer'><TR CLASS='even'><TD ALIGN='center' colspan=2><B><FONT SIZE='+1'>Mobile Unit Tracks</FONT></B></TD></TR><TR><TD>
+		<TABLE ID='outer'><TR CLASS='even'><TD ALIGN='center' colspan=2><B><FONT SIZE='+1'><?php print gettext('Mobile Unit Tracks');?></FONT></B></TD></TR><TR><TD>
 			<DIV ID='side_bar'></DIV>
 			</TD><TD ALIGN='center'>
 			<DIV ID='map' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
-			<BR /><BR />Units:&nbsp;&nbsp;&nbsp;&nbsp;
+			<BR /><BR /><?php print gettext('Units');?>:&nbsp;&nbsp;&nbsp;&nbsp;
 <?php
 		print get_icon_legend ();				// 1/24/09
 ?>

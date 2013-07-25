@@ -204,7 +204,7 @@ if(file_exists("./incs/modules.inc.php")) {
 					var the_mess = response[1][0];
 					var the_stored = response[1][1];
 					if(the_stored != 0) {
-						show_msg("There are " + the_stored + " new messages");
+						show_msg("<?php gettext('There are');?> " + the_stored + " <?php gettext('new messages');?>");
 						msg_signal_r();								// light the msg button
 						}	
 					}
@@ -407,7 +407,7 @@ if(file_exists("./incs/modules.inc.php")) {
 					if(the_id_arr[7] != "0") {	//	10/23/12
 						$("div_requests_id").innerHTML = the_id_arr[7];	
 						$("reqs").style.display = "inline-block";
-						$("reqs").innerHTML = "Open Requests = " + the_id_arr[7];
+						$("reqs").innerHTML = "<?php print gettext('Open Requests');?> = " + the_id_arr[7];
 						}
 					}
 				mu_get();				// start loop
@@ -467,7 +467,7 @@ if(file_exists("./incs/modules.inc.php")) {
 					var the_mess = response[1][0];
 					var the_stored = response[1][1];
 					if(the_stored != 0) {
-						show_msg("There are " + the_stored + " new messages");
+						show_msg("<?php print gettext('There are');?> " + the_stored + " <?php print gettext('new messages');?>");
 						msg_signal_r();								// light the msg button
 						}	
 					}
@@ -870,7 +870,7 @@ if(file_exists("./incs/modules.inc.php")) {
 			do_set_sess_exp();		// session expiration update
 			newwindow_sl=window.open("log.php", "sta_log",  "titlebar, location=0, resizable=1, scrollbars, height=240,width=960,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 			if (isNull(newwindow_sl)) {
-				alert ("Station log operation requires popups to be enabled. Please adjust your browser options.");
+				alert ("<?php print gettext('Station log operation requires popups to be enabled. Please adjust your browser options.');?>");
 				return;
 				}
 			newwindow_sl.focus();
@@ -892,7 +892,7 @@ if(file_exists("./incs/modules.inc.php")) {
 			do_set_sess_exp();		// session expiration update
 			newwindow_msg=window.open("messages.php", "messages",  "titlebar, location=0, resizable=1, scrollbars=no, height=600,width=950,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300");
 			if (isNull(newwindow_msg)) {
-				alert ("Viewing messages requires popups to be enabled. Please adjust your browser options.");
+				alert ("<?php print gettext('Viewing messages requires popups to be enabled. Please adjust your browser options.');?>");
 				return;
 				}
 			newwindow_msg.focus();
@@ -918,7 +918,7 @@ if(file_exists("./incs/modules.inc.php")) {
 			newwindow_cb=window.open("board.php", "callBoard",  "titlebar, location=0, resizable=1, scrollbars, height="+the_height+", width="+the_width+", status=0,toolbar=0,menubar=0,location=0, left=20,top=300,screenX=20,screenY=300");
 
 			if (isNull(newwindow_cb)) {
-				alert ("Call Board operation requires popups to be enabled. Please adjust your browser options.");
+				alert ("<?php print gettext('Call Board operation requires popups to be enabled. Please adjust your browser options.');?>");
 				return;
 				}
 			newwindow_cb.focus();
@@ -954,7 +954,7 @@ if(file_exists("./incs/modules.inc.php")) {
 
 			newwindow_c=window.open("chat.php", "chatBoard",  "titlebar, resizable=1, scrollbars, height=480,width=800,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 			if (isNull(newwindow_c)) {
-				alert ("Chat operation requires popups to be enabled. Please adjust your browser options - or else turn off the Chat option setting.");
+				alert ("<?php print gettext('Chat operation requires popups to be enabled. Please adjust your browser options - or else turn off the Chat option setting.');?>");
 				return;
 				}
 			newwindow_c.focus();
@@ -985,7 +985,7 @@ if(file_exists("./incs/modules.inc.php")) {
 			params += ', fullscreen=no';
 			newwindow_fs=window.open("full_scr.php", "full_scr", params);
 			if (isNull(newwindow_fs)) {
-				alert ("This operation requires popups to be enabled. Please adjust your browser options.");
+				alert ("<?php print gettext('This operation requires popups to be enabled. Please adjust your browser options.');?>");
 				return;
 				}
 			newwindow_fs.focus();
@@ -1010,7 +1010,7 @@ if(file_exists("./incs/modules.inc.php")) {
 		catch (e) {
 			}
 		if (isNull(newwindow_em)) {
-			alert ("SOP Doc's operation requires popups to be enabled. Please adjust your browser options.");
+			alert ("<?php print gettext('SOP Doc\'s operation requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 		starting = false;
@@ -1198,7 +1198,7 @@ function get_daynight() {
  * @returns {unresolved}
  */
 		function has_check(inStr) {
-			if (inStr.trim().length == 0) { alert("Value required - try again."); return;}
+			if (inStr.trim().length == 0) { alert("<?php print gettext('Value required - try again.');?>"); return;}
 			else { 
 				var msg =  $("whom").innerHTML + " sends: " + inStr.trim(); // identify sender
 				
@@ -1263,7 +1263,7 @@ function get_daynight() {
 	$temp = get_variable('_version');				// 8/8/10
 	$version_ary = explode ( "-", $temp, 2);
 	if(get_variable('title_string')=="") {
-		$title_string = "<FONT SIZE='3'>ickets " . trim($version_ary[0]) . " on <B>" . get_variable('host') . "</B></FONT>";
+		$title_string = "<FONT SIZE='3'>ickets " . trim($version_ary[0]) . " " . gettext('on') . " <B>" . get_variable('host') . "</B></FONT>";
 		} else {
 		$title_string = "<FONT SIZE='3'><B>" .get_variable('title_string') . "</B></FONT>";
 		}
@@ -1293,12 +1293,12 @@ function get_daynight() {
 ?>
 				<SPAN ID='user_id' STYLE="display:none" CLASS="titlebar_text">0</SPAN><!-- default value - 5/29/10, 3/15/11 -->
 				<SPAN ID='unit_id' STYLE="display:none" CLASS="titlebar_text"></SPAN><!-- unit that has just moved - 4/7/10, 3/15/11 -->
-				<SPAN ID='modules_txt' CLASS="titlebar_text"><?php print get_text("Module"); ?>: </SPAN><SPAN ID="script" CLASS="titlebar_text">login</FONT></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->
+				<SPAN ID='modules_txt' CLASS="titlebar_text"><?php print get_text("Module"); ?>: </SPAN><SPAN ID="script" CLASS="titlebar_text"><?php print gettext('login');?></FONT></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->
 				<SPAN ID='daynight' CLASS="titlebar_text"  STYLE = 'display:none'>
 					<FORM NAME = 'day_night_form' STYLE = 'display: inline-block'>
 											<!-- set in  above -->
-					<INPUT TYPE="radio" NAME="frm_daynight" VALUE="Day" <?php print "{$day_disabled} {$day_checked}" ;?> 		onclick = ' set_day_night(this.value);'>Day&nbsp;&nbsp;&nbsp;&nbsp;
-					<INPUT TYPE="radio" NAME="frm_daynight" value="Night" <?php print "{$night_disabled}  {$night_checked}" ;?> onclick = 'set_day_night(this.value);' >Night&nbsp;&nbsp;&nbsp;&nbsp;
+					<INPUT TYPE="radio" NAME="frm_daynight" VALUE="Day" <?php print "{$day_disabled} {$day_checked}" ;?> 		onclick = ' set_day_night(this.value);'><?php print gettext('Day');?>&nbsp;&nbsp;&nbsp;&nbsp;
+					<INPUT TYPE="radio" NAME="frm_daynight" value="Night" <?php print "{$night_disabled}  {$night_checked}" ;?> onclick = 'set_day_night(this.value);' ><?php print gettext('Night');?>&nbsp;&nbsp;&nbsp;&nbsp;
 					
 					</FORM>
 				</SPAN>
@@ -1321,7 +1321,7 @@ function get_daynight() {
 	if (!(empty($manual_addr))) {
 ?>
 
-				<SPAN ID='manual' CLASS="titlebar_text" onClick = "do_manual('<?php echo $manual_addr;?>');" STYLE="display:none;"  ><U>Manual</U></SPAN>
+				<SPAN ID='manual' CLASS="titlebar_text" onClick = "do_manual('<?php echo $manual_addr;?>');" STYLE="display:none;"  ><U><?php print gettext('Manual');?></U></SPAN>
 <?php
 			}
 ?>
@@ -1412,9 +1412,9 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 			<TD ALIGN=CENTER>				
 				<SPAN ID = "has_span" >
 				<FORM NAME = 'has_form' METHOD = post ACTION = "javascript: void(0)">
-				<INPUT TYPE = 'text' NAME = 'has_text' ID = 'has_text' CLASS = '' size=90 value = "" STYLE = "margin-left:6px;" placeholder="enter your broadcast message" />
-				<BUTTON VALUE="Send" onclick = "has_check ( this.form.has_text.value.trim() )" STYLE = "margin-left:16px;">Send</BUTTON>
-				<BUTTON VALUE="Cancel" onclick = "can_has ();" STYLE = "margin-left:24px;">Cancel</BUTTON>
+				<INPUT TYPE = 'text' NAME = 'has_text' ID = 'has_text' CLASS = '' size=90 value = "" STYLE = "margin-left:6px;" placeholder="<?php print gettext('enter your broadcast message');?>" />
+				<BUTTON VALUE="Send" onclick = "has_check ( this.form.has_text.value.trim() )" STYLE = "margin-left:16px;"><?php print gettext('Send');?></BUTTON>
+				<BUTTON VALUE="Cancel" onclick = "can_has ();" STYLE = "margin-left:24px;"><?php print gettext('Cancel');?></BUTTON>
 				</FORM>
 				</SPAN>			
 			</TD>
@@ -1424,7 +1424,7 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 			<TD ALIGN=CENTER>				
 				<SPAN ID = "msg_span" STYLE = "margin-left:50px; " >
 					<SPAN ID = "has_message_text"></SPAN>
-					<BUTTON VALUE="OK" onclick = "end_message_show();"  STYLE = "margin-left:20px">OK</BUTTON>
+					<BUTTON VALUE="OK" onclick = "end_message_show();"  STYLE = "margin-left:20px"><?php print gettext('OK');?></BUTTON>
 				</SPAN>			
 			</TD>
 			</TR>		

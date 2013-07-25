@@ -27,7 +27,7 @@ dump ($_POST);
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Tom's test</TITLE>
+<TITLE><?php print gettext('Tom\'s test');?></TITLE>
 <META NAME="Author" CONTENT="">
 <META NAME="Keywords" CONTENT="">
 <META NAME="Description" CONTENT="">
@@ -41,11 +41,11 @@ dump ($_POST);
 </HEAD>
 <BODY>
 <?php if (empty($_POST)) { ?>
-<h3>First pass</h3>
+<h3><?php print gettext('First pass');?></h3>
 <?php 
 	}
 else {	?>
-<h1>Second pass</h1>
+<h1><?php print gettext('Second pass');?></h1>
 <?php } ?>
 
 <form name="my_form"  method = post action = '<?php print basename(__FILE__); ?>'> <br />
@@ -58,7 +58,7 @@ field 2 <input type = text name = 'my_field_2'  value = "<?php print $the_value;
 <?php $the_value = (empty($_POST))? "" : $_POST['my_field_3']; ?>
 field 3 <input type = text name = 'my_field_3'  value = "<?php print $the_value; ?>"  size = 12 /> <br />
 
-<input type = hidden name = 'my_field_4'  value =  'any old stuff here' />
+<input type = hidden name = 'my_field_4'  value =  '<?php print gettext('Any old stuff here');?>' />
 <input type = submit>
 <input type = reset>
 </form>

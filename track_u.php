@@ -217,7 +217,7 @@ function list_tracks($addon = '', $start) {
 
 	var map;
 	var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_responders'>";
-	side_bar_html +="<TR><TD ALIGN='center' COLSPAN=99>Mouseover for details</TD></TR>";
+	side_bar_html +="<TR><TD ALIGN='center' COLSPAN=99><?php print gettext('Mouseover for details');?></TD></TR>";
 
 	var gmarkers = [];
 	var infoTabs = [];
@@ -398,7 +398,7 @@ $name = ($row_callsign['name']);				// 7/29/09
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - <?php print $name; ?> : <?php print $handle; ?> Tracks</TITLE>
+	<HEAD><TITLE>Tickets - <?php print $name; ?> : <?php print $handle; ?> <?php print gettext('Tracks');?></TITLE>
 
 <?php print $refresh; ?>	<!-- 10/4/08 -->
 	
@@ -427,13 +427,13 @@ $name = ($row_callsign['name']);				// 7/29/09
 	</HEAD>
 	<BODY onLoad = "ck_frames()" onUnload="GUnload()">
 	<A NAME='top'>
-		<TABLE ID='outer'><TR CLASS='even'><TD ALIGN='center' colspan=2><B><FONT SIZE='+1'>Mobile Unit <?php print $handle;?> : <?php print $name;?> - Tracks</FONT></B></TD></TR><TR><TD>
+		<TABLE ID='outer'><TR CLASS='even'><TD ALIGN='center' colspan=2><B><FONT SIZE='+1'><?php print gettext('Mobile Unit');?> <?php print $handle;?> : <?php print $name;?> - <?php print gettext('Tracks');?></FONT></B></TD></TR><TR><TD>
 			<DIV ID='side_bar'></DIV>
 			</TD><TD ALIGN='center'>
 			<DIV ID='map' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
 			<BR><BR>
-			<CENTER><SPAN onClick = 'self.close()'><B><U>Close</U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href="javascript:location.reload(true)"><B><U>Refresh</U>
+			<CENTER><SPAN onClick = 'self.close()'><B><U><?php print gettext('Close');?></U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="javascript:location.reload(true)"><B><U><?php print gettext('Refresh');?></U>
 			</TD></TR>
 			</TABLE><!-- end outer -->
 			
@@ -458,7 +458,7 @@ $name = ($row_callsign['name']);				// 7/29/09
 <BR /><HR ALIGN='center' SIZE=1 COLOR='blue' WIDTH='75%'><BR />
 <CENTER><img src="<?php print $alt_urlstr;?>" border=0 />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <br><br>
-<CENTER><A HREF='#top'><U>to top</U></A>
+<CENTER><A HREF='#top'><U><?php print gettext('to top');?></U></A>
 <?php
 
 		print "\n</BODY></HTML>\n";

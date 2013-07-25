@@ -14,7 +14,7 @@ if($debug == 1) {
 	write_track_log();
 	}
 if(!((isset($_GET['user'])) || (isset($_GET['username'])))) {
-	print "Invalid Data String<br />Goodbye";
+	print gettext('Invalid Data String') . "<br />" . gettext('Goodbye');
 	exit;
 	}
 	
@@ -34,7 +34,7 @@ if(!((isset($_GET['user'])) || (isset($_GET['username'])))) {
  */
 function write_track_log() {
 	if (!$fp = fopen('tracker_log.txt', 'a'))
-		print '<LI> <FONT CLASS="warn">Cannot open Tracker Log for writing</FONT>';
+		print '<LI> <FONT CLASS="warn">' . gettext("Cannot open Tracker Log for writing") . '</FONT>';
 	else {
 		$iclog = "";
         $iclog = "<pre>"; 
@@ -163,7 +163,7 @@ if(isset($_GET['pw'])) {	// is the client GPSGate
 		}	
 	
 } else {	//	not GPSGate
-	print "Client is BT747 or uTrack<br />";
+	print gettext("Client is BT747 or uTrack") . "<br />";
 	if (isset($_GET['longitude_raw'])) {
 		$myLongitude_raw = $_GET['longitude_raw'];
 		if ($myLongitude_raw != "") {
@@ -234,11 +234,11 @@ $result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_
 $response_code = ($result) ? 100 : 99;
 
 $return_code="";	
-$return_code .= (($response_code) && ($response_code == 100 )) ? "Data Received and Inserted into database<BR />" : "Data Not received<BR />";
+$return_code .= (($response_code) && ($response_code == 100 )) ? gettext("Data Received and Inserted into database") . "<BR />" : gettext("Data Not received") . "<BR />";
 
 if($return_code != "") {
 	print $return_code;
 	} else {
-	print "Mysql Error";
+	print gettext("Mysql Error");
 	}
 ?>

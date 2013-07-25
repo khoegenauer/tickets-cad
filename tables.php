@@ -270,11 +270,11 @@ function get_digs($str_in) {		// returns extracted digits
  * @since
  */
 function myerror($script,$line,$custom_err='', $query = '')	{	/* raise an error event */
-	print "<BR><FONT CLASS=\"warn\">Error in '<B>$script</B>', line '<B>$line</B>'</FONT><BR>";
-	if ($custom_err != '') 	print "Additional info: '<B>$custom_err</B>'<BR>";
-	if ($query != '') 	print "Query: '<B>$query</B>'<BR>";
-	print '<BR>Please contact the <A HREF="help.php?q=credits">author</A> with these details.<BR>';
-	die('<B>Execution stopped.</B></FONT>');
+	print "<BR><FONT CLASS=\"warn\">" . gettext('Error in') . " '<B>$script</B>', " . gettext('line') . " '<B>$line</B>'</FONT><BR>";
+	if ($custom_err != '') 	print gettext('Additional info') . ": '<B>$custom_err</B>'<BR>";
+	if ($query != '') 	print gettext('Query') . ": '<B>$query</B>'<BR>";
+	print "<BR>" . gettext('Please contact the') . ' <A HREF="help.php?q=credits">' . gettext('author') . "</A> " . gettext('with these details') . ".<BR>";
+	die("<B>" . gettext('Execution stopped') . ".</B></FONT>");
 	}
 /**
  * get_file
@@ -383,7 +383,7 @@ function fnDoCal($id) {
  * @since
  */
 function fnCalButt ($id) {									// displays the calendar gif button
-	print "<img src='./markers/img.gif' id='ft$id' style='cursor: pointer; border: 1px solid red;' title='Date selector'";
+	print "<img src='./markers/img.gif' id='ft$id' style='cursor: pointer; border: 1px solid red;' title='" . gettext('Date selector') . "'";
     print " onmouseover=\"this.style.background='red';\" onmouseout=\"this.style.background=''\" />";
 	}
 
@@ -391,10 +391,10 @@ $calstuff="";						// JS calendar string gets built here
 
 $ctrp = $ctrs = 0;
 $sql = "SHOW TABLES ";													// populate array of table names
-$result = mysql_query($sql) or die ("DB Error: " . $mysql_db . " inaccessible\n");	// $mysql_db  
+$result = mysql_query($sql) or die (gettext('DB Error') . ": " . $mysql_db . " " . gettext('inaccessible') . "\n");	// $mysql_db  
 while ($row = mysql_fetch_row($result)) {
 	$sql ="SELECT * FROM `$row[0]` LIMIT 1";
-	$result2 = mysql_query($sql) or die ("DB Error: " . $mysql_db . " inaccessible\n");	// $mysql_db  
+	$result2 = mysql_query($sql) or die (gettext('DB Error') . ": " . $mysql_db . " " . gettext('inaccessible') . "\n");	// $mysql_db  
 	$row2 = mysql_fetch_array($result2);
 	$gotit = FALSE;
 	for ($i = 0; $i < mysql_num_fields($result2); $i++) {			// look at each field
@@ -417,7 +417,7 @@ unset ($result2);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<HEAD><TITLE>Single - A Generic MySQL Table Processor</TITLE>
+<HEAD><TITLE><?php print gettext('Single - A Generic MySQL Table Processor');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"/>
 <META HTTP-EQUIV="Expires" CONTENT="0"/>
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE"/>
@@ -520,18 +520,18 @@ if (($func == "c")||($func == "u")) {			// not required for all functions
  */  
 	function validate_u_t(theForm) {			// unit type entry validation - c and u
 		var errmsg="";
-		if (theForm.frm_name.value == "")				{errmsg+= "\tType name is required\n";}
-		if (theForm.frm_description.value == "")		{errmsg+= "\tType description is required\n" ;}
-		if (theForm.frm_icon.value == "")				{errmsg+= "\tIcon selection is required\n" ;}
+		if (theForm.frm_name.value == "")				{errmsg+= "\t<?php print gettext('Type name is required');?>\n";}
+		if (theForm.frm_description.value == "")		{errmsg+= "\t<?php print gettext('Type description is required');?>\n" ;}
+		if (theForm.frm_icon.value == "")				{errmsg+= "\t<?php print gettext('Icon selection is required');?>\n" ;}
 <?php
 	if ($func =="c")  {										//check existence
 ?>
-		if (type_names.inArray(theForm.frm_name.value))	{errmsg+= "\tDuplicated Type name\n";}
+		if (type_names.inArray(theForm.frm_name.value))	{errmsg+= "\t<?php print gettext('Duplicated Type name');?>\n";}
 <?php
 		}			// end if ($func =="c") 
 ?>		
 		if (errmsg!="") {
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
@@ -606,18 +606,18 @@ if (($func == "c")||($func == "u")) {			// not required for all functions
  */  
 	function validate_f_t(theForm) {			// unit type entry validation - c and u
 		var errmsg="";
-		if (theForm.frm_name.value == "")				{errmsg+= "\tType name is required\n";}
-		if (theForm.frm_description.value == "")		{errmsg+= "\tType description is required\n" ;}
-		if (theForm.frm_icon.value == "")				{errmsg+= "\tIcon selection is required\n" ;}
+		if (theForm.frm_name.value == "")				{errmsg+= "\t<?php print gettext('Type name is required');?>\n";}
+		if (theForm.frm_description.value == "")		{errmsg+= "\t<?php print gettext('Type description is required');?>\n" ;}
+		if (theForm.frm_icon.value == "")				{errmsg+= "\t<?php print gettext('Icon selection is required');?>\n" ;}
 <?php
 	if ($func =="c")  {										//check existence
 ?>
-		if (type_names.inArray(theForm.frm_name.value))	{errmsg+= "\tDuplicated Type name\n";}
+		if (type_names.inArray(theForm.frm_name.value))	{errmsg+= "\t<?php print gettext('Duplicated Type name');?>\n";}
 <?php
 		}			// end if ($func =="c") 
 ?>		
 		if (errmsg!="") {
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
@@ -755,7 +755,7 @@ function JSfnBrowserSniffer() {													//detects the capabilities of the br
  */		
 	function JSfnToFunc (thefunc, theid) {
 		if (thefunc == "d" ) {
-			if (!confirm ("Please confirm item deletion?\n\n" )) {
+			if (!confirm ("<?php print gettext('Please confirm item deletion.');?>\n\n" )) {
 				return;
 				}
 			}
@@ -915,8 +915,8 @@ if (($func == "c")||($func == "u")) {			// Create and Update funcs only
 <?php
 		if (isset($tablename)){					// go column-by-column 
 		
-			print "\n\t\tmands = new Array();\t\t\t// array of mandatory fieldnames\n ";			
-			print "\t\ttypes = new Array();\t\t\t// array of fieldname types\n ";			
+			print "\n\t\tmands = new Array();\t\t\t// " . gettext('array of mandatory fieldnames') . "\n ";			
+			print "\t\ttypes = new Array();\t\t\t// " . gettext('array of fieldname types') . "\n ";			
 			$query ="SELECT * FROM `$mysql_prefix$tablename` LIMIT 1";			// check value where possible - by mysql_field_type
 			$result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);		// check presence/absence
 			while ($property = mysql_fetch_field($result)) {
@@ -977,7 +977,7 @@ if (($func == "c")||($func == "u")) {			// Create and Update funcs only
 			}									// end for (i=0 ...
 		if (errmsg!= "") {
 			mybutton.disabled=false;			// allow clicks
-			alert ("Input errors - please correct the following:\n\n" + errmsg)
+			alert ("<?php print gettext('Input errors - please correct the following');?>:\n\n" + errmsg)
 			}
 		else {myform.submit(); }
 		
@@ -1081,7 +1081,7 @@ switch ($func) {		// ================================== case "c" ===============
 		
 	
 		<TABLE BORDER="0" ALIGN="center">
-		<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1">Table '<?php print $tablename?>' - Add New Entry</FONT></TD></TR>
+		<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext('Table');?> '<?php print $tablename?>' - <?php print gettext('Add New Entry');?></FONT></TD></TR>
 		<TR><TD>&nbsp;</TD></TR>
 	<?php
 	
@@ -1153,7 +1153,7 @@ switch ($func) {		// ================================== case "c" ===============
 									
 									$query ="SELECT * FROM `$mysql_prefix$thetable` ORDER BY `$thecolumn` ASC";
 									$temp_result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);
-									print "\t\t<TD><SELECT NAME='frm_" . mysql_field_name($result, $i) . "'>\n\t\t<OPTION VALUE='0' selected>Select one</OPTION>\n";
+									print "\t\t<TD><SELECT NAME='frm_" . mysql_field_name($result, $i) . "'>\n\t\t<OPTION VALUE='0' selected>" . gettext('Select one') . "</OPTION>\n";
 									while ($temp_row = mysql_fetch_array($temp_result))  {							// each row
 										print "\t\t<OPTION VALUE='" . trim($temp_row[0]) . "'>" . trim($temp_row[1]) . "</OPTION>\n";	
 										}
@@ -1222,9 +1222,9 @@ switch ($func) {		// ================================== case "c" ===============
 	?>
 		<TR><TD COLSPAN="99" ALIGN="center">
 		<BR />
-		<INPUT TYPE="button"	VALUE="Cancel" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="reset"		VALUE="Reset"/>&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="button" NAME="sub_but" VALUE="               Submit                " onclick="this.disabled=true; JSfnCheckInput(this.form, this);"/> 
+		<INPUT TYPE="button"	VALUE="<?php print gettext('Cancel');?>" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE="reset"		VALUE="<?php print gettext('Reset');?>"/>&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE="button" NAME="sub_but" VALUE="               <?php print gettext('Submit');?>                " onclick="this.disabled=true; JSfnCheckInput(this.form, this);"/> 
 		
 		</TD></TR>
 		</FORM>
@@ -1258,7 +1258,7 @@ switch ($func) {		// ================================== case "c" ===============
 		$the_js_func = ($disallow)? "JSfnDisallow" : "JSfnToFunc" ;		// 10/20/09
 
 		if ($the_in_use) {																	// 10/13/09
-			$on_click = "onclick = \"alert('DELETE disallowed for this item');\"";
+			$on_click = "onclick = \"alert('" . gettext('DELETE disallowed for this item') . "');\"";
 			}
 		else {
 			$on_click = "onclick = \"{$the_js_func}('d', '" . $theid. "');\"";
@@ -1269,28 +1269,28 @@ switch ($func) {		// ================================== case "c" ===============
 			$return = " CLASS='" . $theclass . "' onmouseover =\"document.getElementById('b" . $theid . "').style.visibility='hidden' ; document.getElementById('c" . $theid . "').style.visibility='visible';\" onmouseout = \"document.getElementById('c" . $theid . "').style.visibility='hidden'; document.getElementById('b" . $theid . "').style.visibility='visible' ; \" >\n";
 			$return .= substr($thestring, 0, $breakat) . "<SPAN id=\"b" . $theid . "\" style=\"visibility:visible\">" ;
 			$return .= substr($thestring, $breakat) . "</SPAN><SPAN id=\"c" . $theid . "\" style=\"visibility: hidden\">\n";
-			$return .= ". . . <IMG SRC='markers/view.png' BORDER=0 TITLE = 'click to view this' onclick = \"JSfnToFunc('v', '" . $theid . "');\">";
+			$return .= ". . . <IMG SRC='markers/view.png' BORDER=0 TITLE = '" . gettext('click to view this') . "' onclick = \"JSfnToFunc('v', '" . $theid . "');\">";
 			$return .= " | ";
 			if($can_edit) {										// 3/19/11
-				$return .= " <IMG SRC='markers/edit.png' BORDER=0 TITLE = 'click to edit this' onclick = \"{$the_js_func}('u', '" . $theid . "');\">";
+				$return .= " <IMG SRC='markers/edit.png' BORDER=0 TITLE = '" . gettext('click to edit this') . "' onclick = \"{$the_js_func}('u', '" . $theid . "');\">";
 				}
 			$return .= " | ";
 			if ((!($the_in_use)) &&($can_edit)) {																	// 11/2/09
-				$return .= "<IMG SRC='markers/del.png' BORDER=0 TITLE = 'click to delete this' $on_click> | ";
+				$return .= "<IMG SRC='markers/del.png' BORDER=0 TITLE = '" . gettext('click to delete this') . "' $on_click> | ";
 				}
 			$return .= "</SPAN>\n";
 			}
 		else {
 			$return = " CLASS='" . $theclass . "' onmouseover =\"document.getElementById('c" . $theid . "').style.visibility='visible';\" onmouseout = \"document.getElementById('c" . $theid . "').style.visibility='hidden'; \" >\n";
 			$return .= "<SPAN id=\"c" . $theid . "\" style=\"visibility: hidden\">\n";
-			$return .= " <IMG SRC='markers/view.png' BORDER=0 TITLE = 'click to view this' onclick = \"JSfnToFunc('v', '" . $theid . "');\">";
+			$return .= " <IMG SRC='markers/view.png' BORDER=0 TITLE = '" . gettext('click to view this') . "' onclick = \"JSfnToFunc('v', '" . $theid . "');\">";
 			$return .= " | ";
 			if($can_edit) {										// 3/19/11			
-				$return .= "<IMG SRC='markers/edit.png' BORDER=0 TITLE = 'click to edit this' onclick = \"{$the_js_func}('u', '" . $theid . "');\">";
+				$return .= "<IMG SRC='markers/edit.png' BORDER=0 TITLE = '" . gettext('click to edit this') . "' onclick = \"{$the_js_func}('u', '" . $theid . "');\">";
 				}
 			$return .= " | ";
 			if ((!($the_in_use)) && ($can_edit)) {																	// 11/2/09
-				$return .= "<IMG SRC='markers/del.png' BORDER=0 TITLE = 'click to delete this' $on_click> | ";
+				$return .= "<IMG SRC='markers/del.png' BORDER=0 TITLE = '" . gettext('click to delete this') . "' $on_click> | ";
 				}
 			$return .= "</SPAN>\n";
 			}
@@ -1343,8 +1343,8 @@ switch ($func) {		// ================================== case "c" ===============
 
 	if (mysql_affected_rows() == 0) {
 		$page="";
-		$message = (empty($where))? "Table '" . str_replace( "_", " ", ucfirst($tablename))  . "' is empty!" :
-		"No matches in '{$tablename}' search for '{$ary_srch[0]}' ";
+		$message = (empty($where))? '"' . gettext('Table') . " '" . str_replace( "_", " ", ucfirst($tablename))  . "' " . gettext('is empty') . "!" . '"' :
+		'"'. gettext('No matches in') . " '{$tablename}' " . gettext('search for') . " '{$ary_srch[0]}' " . '"';
 		print "<TR VALIGN='top'><TD ALIGN='center' CLASS='header'><BR /><BR /><BR />{$message}<BR /><BR /><BR /><BR /><BR /></TD></TR>";
 		}
 	else {				// we got rows
@@ -1379,7 +1379,7 @@ switch ($func) {		// ================================== case "c" ===============
 			$head2 .= "<TH VALIGN='top'$theclass onClick =\"JSfnToSort('" . mysql_field_name($result, $i) . "')\" >" . str_replace( "_", " ", ucfirst(mysql_field_name($result, $i))) . " $arrow</TH>\n";
 			}
 		$head2 .= "</TR>\n";										// end table heading
-		print $head1 . "<U>" . str_replace( "_", " ", ucfirst($thecolumn)) . "</U> data for functions)</FONT></TH></TR>\n" . $head2;
+		print $head1 . "<U>" . str_replace( "_", " ", ucfirst($thecolumn)) . "</U> " . gettext('data for functions') . ")</FONT></TH></TR>\n" . $head2;
 		$lineno = 0;
 		$srch_term = isset($ary_srch) ? array_shift ($ary_srch): "";
 
@@ -1476,21 +1476,21 @@ switch ($func) {		// ================================== case "c" ===============
 //dump($row_count);
 if (($row_count > 0) || (array_key_exists('srch_str', $_POST))) {
 ?>
-	<INPUT TYPE="button" VALUE="Search <?php print ucfirst($tablename); ?>" 								onClick = "Javascript: document.retform.func.value='s'; document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp; <!-- 9/12/10 -->
+	<INPUT TYPE="button" VALUE="<?php print gettext('Search');?> <?php print ucfirst($tablename); ?>" 								onClick = "Javascript: document.retform.func.value='s'; document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp; <!-- 9/12/10 -->
 <?php
 	}		// end if ($row_count > 0)
 ?>	
 
-	<INPUT TYPE="button" VALUE="<?php print ucfirst($tablename); ?> Properties" 							onClick = "Javascript: document.retform.func.value='p'; document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE="button" VALUE="<?php print ucfirst($tablename); ?> <?php print gettext('Properties');?>" 							onClick = "Javascript: document.retform.func.value='p'; document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
 <?php				// 3/19/11
 		if ($can_edit) {
 ?>		
-	<INPUT TYPE="button" VALUE="Add new <?php print str_replace( "_", " ", ucfirst($tablename)); ?> entry" 	onclick= "this.form.func.value='c'; this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE="button" VALUE="<?php print gettext('Add new');?> <?php print str_replace( "_", " ", ucfirst($tablename)); ?> entry" 	onclick= "this.form.func.value='c'; this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php				// 3/19/11
 		}
 ?>	
 	
-<!--	<INPUT TYPE="button"	VALUE="Cancel" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/> 1/28/09 -->
+<!--	<INPUT TYPE="button"	VALUE="<?php print gettext('Cancel');?>" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/> 1/28/09 -->
 	</FORM>
 	</TD></TR></TABLE>
 <?php
@@ -1534,7 +1534,7 @@ case "u":	// =======================================  Update 	==================
 	
 
 	<TABLE BORDER="0" ALIGN="center">
-	<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1">Table '<?php print $tablename?>' - Update/Delete Entry</FONT></TD></TR>
+	<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext('Table');?> '<?php print $tablename?>' - <?php print gettext('Update/Delete Entry');?></FONT></TD></TR>
 	<TR><TD>&nbsp;</TD></TR>
 <?php
 	for ($i = 0; $i < mysql_num_fields($result); $i++) {
@@ -1602,7 +1602,7 @@ case "u":	// =======================================  Update 	==================
 							$query ="SELECT * FROM `$mysql_prefix$thetable` ORDER BY `$thecolumn` ASC";	// get option values
 							$temp_result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);
 							print "\t\t<TD><SELECT NAME='frm_" . mysql_field_name($result, $i) . "'>\n";
-							if ($row[mysql_field_name($result, $i)]=='0') {print "\t\t<OPTION VALUE='0' selected>Select</OPTION>\n" ;}				// no selection made
+							if ($row[mysql_field_name($result, $i)]=='0') {print "\t\t<OPTION VALUE='0' selected>" . gettext('Select') . "</OPTION>\n" ;}				// no selection made
 							while ($sel_row = mysql_fetch_array($temp_result))  {								// each row - assume 2nd column has values
 								$selected = ($sel_row['id'] == $row[mysql_field_name($result, $i)])? " selected" : "";
 								print "\t\t<OPTION VALUE='" . $sel_row[0] . "'" . $selected  . " >" . $sel_row[1] . "</OPTION>\n";		// *************
@@ -1674,10 +1674,10 @@ case "u":	// =======================================  Update 	==================
 ?>
 	<TR><TD COLSPAN="99" ALIGN="center">
 	<BR />
-	<INPUT TYPE="button" 	VALUE="Cancel" onClick = "Javascript: document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE="reset" 	VALUE="Reset"/>&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE="button" 	NAME="sub_but" VALUE="               Submit                " onclick="this.disabled=true; JSfnCheckInput(this.form, this )"/>&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE="button" 	NAME="del_but" VALUE="Delete this entry" onclick="if (confirm('Please confirm DELETE action')) {this.form.func.value='d'; this.form.submit();}"/></TD></TR>
+	<INPUT TYPE="button" 	VALUE="<?php print gettext('Cancel');?>" onClick = "Javascript: document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE="reset" 	VALUE="<?php print gettext('Reset');?>"/>&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE="button" 	NAME="sub_but" VALUE="               <?php print gettext('Submit');?>                " onclick="this.disabled=true; JSfnCheckInput(this.form, this )"/>&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE="button" 	NAME="del_but" VALUE="<?php print gettext('Delete this entry');?>" onclick="if (confirm('Please confirm DELETE action')) {this.form.func.value='d'; this.form.submit();}"/></TD></TR>
 	</FORM>
 	</TD></TR></TABLE>
 <?php
@@ -1761,8 +1761,8 @@ case "u":	// =======================================  Update 	==================
 	
 <?php
 	print "<TABLE BORDER=\"0\" ALIGN=\"center\" >";
-	if ($func == "pc") 	{print "<TR CLASS=\"even\" VALIGN=\"top\"><TD COLSPAN=\"2\"  ALIGN=\"CENTER\"><FONT SIZE=\"+1\">New '$tablename' entry accepted.</FONT></TD></TR>";}
-	else				{print "<TR CLASS=\"even\" VALIGN=\"top\"><TD COLSPAN=\"2\" ALIGN=\"CENTER\"><FONT SIZE=\"+1\">Table '$tablename' - View Entry</FONT></TD></TR>";}
+	if ($func == "pc") 	{print "<TR CLASS=\"even\" VALIGN=\"top\"><TD COLSPAN=\"2\"  ALIGN=\"CENTER\"><FONT SIZE=\"+1\">" . gettext('New') . " '$tablename' " . gettext('entry accepted') . ".</FONT></TD></TR>";}
+	else				{print "<TR CLASS=\"even\" VALIGN=\"top\"><TD COLSPAN=\"2\" ALIGN=\"CENTER\"><FONT SIZE=\"+1\">Table '$tablename' - " . gettext('View Entry') . "</FONT></TD></TR>";}
 	print "<TR><TD>&nbsp;</TD></TR>";
 	for ($i = 0; $i < mysql_num_fields($result); $i++) {
 		$lineno++;
@@ -1813,24 +1813,24 @@ case "u":	// =======================================  Update 	==================
 		} 			// end for ($i = ... )
 	unset ($result);
 	if ($func == "pc") 	{
-		print "<TR><TD COLSPAN=\"2\" ALIGN=\"CENTER\"><BR /><INPUT TYPE=\"button\" VALUE=\"Another\" onclick=\"document.pc.func.value='c';document.pc.submit()\";/></TD></TR>";
+		print "<TR><TD COLSPAN=\"2\" ALIGN=\"CENTER\"><BR /><INPUT TYPE=\"button\" VALUE=\"" . gettext('Another') . "\" onclick=\"document.pc.func.value='c';document.pc.submit()\";/></TD></TR>";
 		}
 	}			// end else ... 
 ?>
 
 	<TR><TD COLSPAN="2" ALIGN="center">
 	<BR />
-	<INPUT TYPE="button" VALUE="Continue" onClick = "Javascript: document.retform.submit();"/>
+	<INPUT TYPE="button" VALUE="<?php print gettext('Continue');?>" onClick = "Javascript: document.retform.submit();"/>
 <?php
 	$disallow = is_in_use($row['id']);				// 10/20/09	- 2/25/10 - 11/9/10
 	if ((!($disallow) && ($can_edit))) {			// 3/19/11
 ?>	
-	<INPUT TYPE="button" STYLE = 'margin-left:10px' NAME="el_but" VALUE="Delete this entry" onclick="JSfnToFunc ('d', '<?php print $id ?>');"/>
+	<INPUT TYPE="button" STYLE = 'margin-left:10px' NAME="el_but" VALUE="<?php print gettext('Delete this entry');?>" onclick="JSfnToFunc ('d', '<?php print $id ?>');"/>
 <?php
 		}
 	if ($can_edit) {							// 3/19/11
 ?>	
-	<INPUT TYPE="button" STYLE = 'margin-left:10px' NAME="edl_but" VALUE="Edit this entry" onclick="JSfnToFunc('u', '<?php print $id ?>');"/></TD>
+	<INPUT TYPE="button" STYLE = 'margin-left:10px' NAME="edl_but" VALUE="<?php print gettext('Edit this entry');?>" onclick="JSfnToFunc('u', '<?php print $id ?>');"/></TD>
 <?php
 		}
 ?>		
@@ -1868,7 +1868,7 @@ case "u":	// =======================================  Update 	==================
 //	dump ($query);
 ?>
 	<TABLE BORDER="0" ALIGN="center">
-	<TR CLASS="even" VALIGN="top"><TD ALIGN="CENTER"><FONT SIZE="+1">Update complete</TD></TR>
+	<TR CLASS="even" VALIGN="top"><TD ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext('Update complete');?></TD></TR>
 	<TR><TD>&nbsp;</TD></TR></TABLE>
 	<CENTER>
 	<FORM NAME="pu" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF'] ?>"/>
@@ -1877,7 +1877,7 @@ case "u":	// =======================================  Update 	==================
 	<INPUT TYPE="hidden" NAME="sortby" 		VALUE="<?php print $sortby; ?>"/>
 	<INPUT TYPE="hidden" NAME="sortdir"		VALUE=0 />
 	<INPUT TYPE="hidden" NAME="func" 		VALUE="r"/>  <!-- retrieve -->
-	<INPUT TYPE="button" VALUE="Continue" onclick="this.form.submit();"/>
+	<INPUT TYPE="button" VALUE="<?php print gettext('Continue');?>" onclick="this.form.submit();"/>
 	<INPUT TYPE="hidden" NAME="srch_str"  	VALUE=""/> <!-- 9/12/10 -->
 	
 	</FORM>
@@ -1891,7 +1891,7 @@ case "u":	// =======================================  Update 	==================
 ?>
 	<TABLE BORDER="0" ALIGN="center">
 	<TR><TD>&nbsp;</TD></TR>
-	<TR CLASS="even" VALIGN="top"><TD ALIGN="CENTER"><FONT SIZE="+1">&nbsp;&nbsp;Item Deleted&nbsp;&nbsp;</TD></TR>
+	<TR CLASS="even" VALIGN="top"><TD ALIGN="CENTER"><FONT SIZE="+1">&nbsp;&nbsp;<?php print gettext('Item Deleted');?>&nbsp;&nbsp;</TD></TR>
 	<TR><TD>&nbsp;</TD></TR></TABLE><CENTER>
 
 	<FORM NAME="d" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF'] ?>"/>
@@ -1902,7 +1902,7 @@ case "u":	// =======================================  Update 	==================
 	<INPUT TYPE="hidden" NAME="func" 		VALUE="r"/>  <!-- retrieve -->
 	<INPUT TYPE="hidden" NAME="srch_str"  	VALUE=""/> <!-- 9/12/10 -->
 	
-	<INPUT TYPE="button" VALUE="Continue" onclick="this.form.submit();"/>
+	<INPUT TYPE="button" VALUE="<?php print gettext('Continue');?>" onclick="this.form.submit();"/>
 	</FORM>
 <?php
 	break;		// end Delete ======================
@@ -1920,13 +1920,13 @@ case "u":	// =======================================  Update 	==================
 ?>
 	<TABLE BORDER="0" ALIGN="center">
 	<TR><TD>&nbsp;</TD></TR>
-	<TR CLASS="even" VALIGN="top"><TD ALIGN="CENTER" COLSPAN = "2"><FONT SIZE="+1">&nbsp;&nbsp;Field Properties - Table  '<?php print str_replace( "_", " ", ucfirst($tablename)) ; ?>'&nbsp;&nbsp;</TD></TR></TABLE>
+	<TR CLASS="even" VALIGN="top"><TD ALIGN="CENTER" COLSPAN = "2"><FONT SIZE="+1">&nbsp;&nbsp;<?php print gettext('Field Properties - Table');?>  '<?php print str_replace( "_", " ", ucfirst($tablename)) ; ?>'&nbsp;&nbsp;</TD></TR></TABLE>
 <?php
 	$query ="SELECT * FROM `$mysql_prefix$tablename` LIMIT 1";
 
 	$result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);
 	print "\n<table align=\"CENTER\" BORDER=\"0\">";
-	print "<TR VALIGN=\"top\" CLASS = \"even\"><TH>Field name</TH><TH>Field Type</TH><TH>Default value</TH><TH>Max length</TH><TH>Not NULL</TH><TH>Numeric Field</TH><TH>BLOB</TH><TH>Primary Key</TH><TH>Unique Key</TH><TH>Mutliple Key</TH><TH>Unsigned</TH><TH>Zero-filled</TH></TR>";
+	print "<TR VALIGN=\"top\" CLASS = \"even\"><TH>" . gettext('Field name') . "</TH><TH>" . gettext('Field Type') . "</TH><TH>" . gettext('Default value') . "</TH><TH>" . gettext('Max length') . "</TH><TH>" . gettext('Not NULL') . "</TH><TH>" . gettext('Numeric Field') . "</TH><TH>" . gettext('BLOB') . "</TH><TH>" . gettext('Primary Key') . "</TH><TH>" . gettext('Unique Key') . "</TH><TH>" . gettext('Mutliple Key') . "</TH><TH>" . gettext('Unsigned') . "</TH><TH>" . gettext('Zero-filled') . "</TH></TR>";
 	$lineno = 0;
 
 	while ($property = mysql_fetch_field($result)) {
@@ -1953,7 +1953,7 @@ case "u":	// =======================================  Update 	==================
 	$query ="SHOW FULL COLUMNS FROM `$mysql_prefix$tablename`";
 	$result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);
 	print "\n<table align=\"CENTER\" BORDER=\"0\">";
-	print "\n<TR><TH>Field</TH><TH>Type</TH><TH>Null</TH><TH>Key</TH><TH COLSPAN=3>Default/Extra</TH></TR>";
+	print "\n<TR><TH>" . gettext('Field') . "</TH><TH>" . gettext('Type') . "</TH><TH>" . gettext('Null') . "</TH><TH>" . gettext('Key') . "</TH><TH COLSPAN=3>" . gettext('Default/Extra') . "</TH></TR>";
 	$lineno = 0;
 	while ($row = mysql_fetch_array($result))  {									// write each data row
 		$lineno++;
@@ -1977,11 +1977,11 @@ case "u":	// =======================================  Update 	==================
 	<INPUT TYPE="hidden" NAME="func" 		VALUE="r"/>  <!-- retrieve -->
 	<INPUT TYPE="hidden" NAME="srch_str"  	VALUE=""/> <!-- 9/12/10 -->
 	
-	<CENTER><BR><INPUT TYPE="button" 	VALUE="Continue" onClick = "Javascript: document.retform.func.value='r'; document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+	<CENTER><BR><INPUT TYPE="button" 	VALUE="<?php print gettext('Continue');?>" onClick = "Javascript: document.retform.func.value='r'; document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
 <?php				// 3/19/11
 		if ($can_edit) {
 ?>	
-	<INPUT TYPE="button" VALUE="Add new <?php print str_replace( "_", " ", ucfirst($tablename)); ?> entry" onclick= "this.form.func.value='c'; this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE="button" VALUE="<?php print gettext('Add new');?> <?php print str_replace( "_", " ", ucfirst($tablename)); ?> entry" onclick= "this.form.func.value='c'; this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php			
 		}
 ?>	
@@ -2053,13 +2053,13 @@ case "u":	// =======================================  Update 	==================
 	echo "<TABLE ID='outer' ALIGN='center' CELLSPACING = 0 BORDER=0>";
 ?>
 <TR CLASS='even' COLSPAN=99 >
-	<TD CLASS='td_label'>Search for:</TD><TD COLSPAN= <?php print ($cols-1);?>>
+	<TD CLASS='td_label'><?php print gettext('Search for');?>:</TD><TD COLSPAN= <?php print ($cols-1);?>>
 		<FORM NAME='s' METHOD = 'post' ACTION = '<?php print basename(__FILE__); ?>'>
 		<INPUT TYPE='text' 		NAME = 'argument' SIZE = 32 VALUE=''>
 		<INPUT TYPE='hidden' 	NAME = 'fields' VALUE=''> <!-- slash-separated list of names -->
 		</TD></TR>
 <?php
-	echo "<TR CLASS='odd'><TD COLSPAN=99 ALIGN='left'><H3>In:</H3></TD></TR>\n";
+	echo "<TR CLASS='odd'><TD COLSPAN=99 ALIGN='left'><H3>" . gettext('In') . ":</H3></TD></TR>\n";
 	echo "<TR VALIGN='top'><TD COLSPAN=2>";
 	
 	$out_str = "<TABLE ALIGN='left' CELLSPACING = 0  border=0 width=100%>\n";
@@ -2098,14 +2098,14 @@ function do_check(the_bool) {
 	}
 </SCRIPT>
 	<TR CLASS= "<?php print $evenodd[($i+1) % 2];?>"><TD COLSPAN=99 ALIGN='center'><B>
-	<SPAN ID="check_on"		STYLE = 'display:inline;text-decoration:underline;'	onclick = "$('check_on').style.display='none'; 	 $('check_off').style.display='inline'; do_check(true)">Check all</SPAN>
-	<SPAN ID="check_off"  	STYLE = 'display:none;text-decoration:underline;'	onclick = "$('check_on').style.display='inline'; $('check_off').style.display='none'; 	do_check(false)">Un-check all</SPAN>
+	<SPAN ID="check_on"		STYLE = 'display:inline;text-decoration:underline;'	onclick = "$('check_on').style.display='none'; 	 $('check_off').style.display='inline'; do_check(true)"><?php print gettext('Check all');?></SPAN>
+	<SPAN ID="check_off"  	STYLE = 'display:none;text-decoration:underline;'	onclick = "$('check_on').style.display='inline'; $('check_off').style.display='none'; 	do_check(false)"><?php print gettext('Un-check all');?></SPAN>
 	</B><BR /><BR /></TD></TR>
 <?php
 	print "<TR CLASS='{$evenodd[($i) % 2]}'><TD COLSPAN=99 ALIGN='center'><BR />
-			<INPUT TYPE='button' VALUE='Reset' 	onClick = 'this.form.reset()' >
-			<INPUT TYPE='button' VALUE='Next' 	onClick = 'validate_s(this.form)' STYLE='margin-left:40PX;'>
-			<INPUT TYPE='button' VALUE='Cancel' onClick = \"Javascript: document.retform.func.value='r'; document.retform.submit();\" STYLE='margin-left:40PX;'>	
+			<INPUT TYPE='button' VALUE='" . gettext('Reset') . "' 	onClick = 'this.form.reset()' >
+			<INPUT TYPE='button' VALUE='" . gettext('Next') . "' 	onClick = 'validate_s(this.form)' STYLE='margin-left:40PX;'>
+			<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "' onClick = \"Javascript: document.retform.func.value='r'; document.retform.submit();\" STYLE='margin-left:40PX;'>	
 		</TD></TR>";
 		
 	print "</TABLE></TABLE></FORM>\n";		
@@ -2143,10 +2143,10 @@ function fnTables () {							/// displays tables comprising db $mysql_db
 	$pref_lgth = strlen($mysql_prefix);
 	
 	$sql = "SHOW TABLES ";
-	$result = mysql_query($sql) or die ("DB Error: " . $mysql_db . " inaccessible\n");	// $mysql_db  
+	$result = mysql_query($sql) or die ('"'. gettext('DB Error') . ": " . $mysql_db . " " . gettext('inaccessible') . "\n" . '"');	// $mysql_db  
 	while ($row = mysql_fetch_row($result)) {
 		$sql ="SELECT * FROM `$row[0]` LIMIT 1";
-		$result2 = mysql_query($sql) or die ("DB Error: " . $mysql_db . " inaccessible\n");	// $mysql_db  
+		$result2 = mysql_query($sql) or die ('"'. gettext('DB Error') . ": " . $mysql_db . " " . gettext('inaccessible') . "\n" . '"');	// $mysql_db  
 		$row2 = mysql_fetch_array($result2);
 		$gotit = FALSE;
 		for ($i = 0; $i < mysql_num_fields($result2); $i++) {			// look at each field - substr ( string, start, 999)
@@ -2166,17 +2166,17 @@ function fnTables () {							/// displays tables comprising db $mysql_db
 			}				
 		}
 	mysql_free_result($result);
-	print "<BR /><BR /><BR /><TABLE ALIGN=\"center\" BORDER=0><TR CLASS=\"even\"><TD ALIGN=\"center\" CLASS=\"td_link\" COLSPAN=\"2\"><FONT SIZE=\"+1\">Available '$mysql_db ' tables</FONT></TD></TR>";
+	print "<BR /><BR /><BR /><TABLE ALIGN=\"center\" BORDER=0><TR CLASS=\"even\"><TD ALIGN=\"center\" CLASS=\"td_link\" COLSPAN=\"2\"><FONT SIZE=\"+1\">" . gettext('Available') . " '$mysql_db ' " . gettext('tables') . "</FONT></TD></TR>";
 
-	print "<TR VALIGN=\"top\"><TD><B><nobr>Primary Tables:</nobr></B></TD><TD ALIGN='center'>";
+	print "<TR VALIGN=\"top\"><TD><B><nobr>" . gettext('Primary Tables') . ":</nobr></B></TD><TD ALIGN='center'>";
 	for($i = 0; $i < $ctrp; $i++) {
 		print "<A HREF=\"#\" ONCLICK=\"Javascript: document.l.tablename.value='$primaries[$i]'; document.l.indexname.value='id'; document.l.submit();\"> $primaries[$i] </A>&nbsp;&nbsp;&nbsp;\n";
 		}
-	print "</TD></TR>\n\n<TR>\n<TD>&nbsp;</TD></TR>\n\n<TR VALIGN=\"top\">\n<TD><A HREF='#'onclick = \"Javascript:JSfnShowit('support')\"> <B>Support:</A>&nbsp;&nbsp;</B></TD>\n<TD ALIGN='center'><SPAN ID='support' STYLE = 'visibility: hidden'>";
+	print "</TD></TR>\n\n<TR>\n<TD>&nbsp;</TD></TR>\n\n<TR VALIGN=\"top\">\n<TD><A HREF='#'onclick = \"Javascript:JSfnShowit('support')\"> <B>" . gettext('Support') . ":</A>&nbsp;&nbsp;</B></TD>\n<TD ALIGN='center'><SPAN ID='support' STYLE = 'visibility: hidden'>";
 	for($i = 0; $i < $ctrs; $i++) {
 		print "<A HREF=\"#\" ONCLICK=\"Javascript: document.l.tablename.value='$secondaries[$i]'; document.l.indexname.value='id'; document.l.submit();\"> $secondaries[$i] </A>&nbsp;&nbsp;&nbsp;\n";
 		}
-	print "<A HREF='#'onclick = \"Javascript:JSfnHideit('support')\"> <B>:Hide</A></SPAN></TD></TR></TABLE>";
+	print "<A HREF='#'onclick = \"Javascript:JSfnHideit('support')\"> <B>:" . gettext('Hide') . "</A></SPAN></TD></TR></TABLE>";
 	}
 ?>
 <!-- ----------Common--------------- -->
@@ -2217,7 +2217,7 @@ if ($calstuff!="") {
 ?>
 <CENTER>
 <FORM NAME = 'finform' METHOD = 'post' ACTION = 'config.php'>
-<INPUT TYPE='button' VALUE = 'Finished' onClick = 'this.form.submit()'>
+<INPUT TYPE='button' VALUE = '<?php print gettext('Finished');?>' onClick = 'this.form.submit()'>
 </FORM>
 </BODY>
 </HTML>

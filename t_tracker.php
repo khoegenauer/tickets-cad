@@ -13,7 +13,7 @@ $api_key = get_variable('gmaps_api_key');
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Test Tickets Tracker</TITLE>
+<TITLE><?php print gettext('Test Tickets Tracker');?></TITLE>
 <META NAME="Author" CONTENT="">
 <META NAME="Keywords" CONTENT="">
 <META NAME="Description" CONTENT="">
@@ -111,23 +111,23 @@ if (!(isset($usr_id))) {
 	<BR />
 	<FORM NAME= 'frm_locatea' METHOD='get' ACTION = '<?php print basename(__FILE__);?>'>
 	<TABLE ALIGN='center'>
-	<TR CLASS  = 'even'><TH COLSPAN=2>Tickets Tracker Test Fails for User: <?php print $_POST['dev_key'];?></TH></TR>
+	<TR CLASS  = 'even'><TH COLSPAN=2><?php print gettext('Tickets Tracker Test Fails for User');?>: <?php print $_POST['dev_key'];?></TH></TR>
 
 	<TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR /><BR />
-		<INPUT TYPE='button' VALUE = 'Another' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE='button' VALUE = 'Cancel' onClick = 'window.close();' />
+		<INPUT TYPE='button' VALUE = '<?php print gettext('Another');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
 	</TD></TR></TABLE>
 <?php
 	} else {
 ?>
 	<FORM NAME= 'frm_t_tracker' METHOD='get' ACTION = '<?php print basename(__FILE__);?>'>
 	<TABLE ALIGN='center'>
-	<TR><TH COLSPAN=2>Tickets Tracker Test Succeeds for User ID: <?php print $_POST['dev_key'];?></TH></TR>
+	<TR><TH COLSPAN=2><?php print gettext('Tickets Tracker Test Succeeds for User ID');?>: <?php print $_POST['dev_key'];?></TH></TR>
 	<TR><TD COLSPAN = '2' align='center'><DIV ID='map_canvas' style='width: 400px; height: 400px;'></DIV></TD></TR>
-	<TR CLASS='odd'><TD class='td_label'>User ID:</TD><TD class='td_data'><?php print $usr_id;?></TD></TR>
-	<TR CLASS='even'><TD class='td_label'>lat</TD><TD class='td_data'><?php print $usr_lat;?></TD></TR>
-	<TR CLASS='odd'><TD class='td_label'>Lng:</TD><TD class='td_data'><?php print $usr_lng;?></TD></TR>
-	<TR CLASS='even'><TD class='td_label'>Time:</TD><TD class='td_data'><?php print $up_time;?></TD></TR>
+	<TR CLASS='odd'><TD class='td_label'><?php print gettext('User ID');?>:</TD><TD class='td_data'><?php print $usr_id;?></TD></TR>
+	<TR CLASS='even'><TD class='td_label'><?php print gettext('Lat');?></TD><TD class='td_data'><?php print $usr_lat;?></TD></TR>
+	<TR CLASS='odd'><TD class='td_label'><?php print gettext('Lng');?>:</TD><TD class='td_data'><?php print $usr_lng;?></TD></TR>
+	<TR CLASS='even'><TD class='td_label'><?php print gettext('Time');?>:</TD><TD class='td_data'><?php print $up_time;?></TD></TR>
 	<TR><TD COLSPAN = '2' ALIGN='center'><HR SIZE=1 COLOR='blue' WIDTH='75%'></TD></TR>
 	<SCRIPT>
 		
@@ -150,8 +150,8 @@ if (!(isset($usr_id))) {
 
 	</SCRIPT>
 	<TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR /><BR />
-		<INPUT TYPE='button' VALUE = 'Another' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE='button' VALUE = 'Cancel' onClick = 'window.close();' />
+		<INPUT TYPE='button' VALUE = '<?php print gettext('Another');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
 	</TD></TR></TABLE></FORM>
 <?php
 	}
@@ -159,13 +159,13 @@ if (!(isset($usr_id))) {
 ?>
 <BR /><BR />
 <TABLE ALIGN = 'center' BORDER = 0>
-	<TR CLASS  = 'even'><TH COLSPAN=2>Tickets Tracker Test</TH></TR>
+	<TR CLASS  = 'even'><TH COLSPAN=2><?php print gettext('Tickets Tracker Test');?></TH></TR>
 	<FORM NAME= 'frm_t_tracker' METHOD='post' ACTION = '<?php print basename(__FILE__);?>'>
 	</TD></TR>
-	<TR CLASS  = 'odd'><TD>User ID:</TD><TD><INPUT NAME = 'dev_key' TYPE = 'text' SIZE = '30' VALUE=''>	<BR /><BR /></TD></TR>
+	<TR CLASS  = 'odd'><TD><?php print gettext('User ID');?>:</TD><TD><INPUT NAME = 'dev_key' TYPE = 'text' SIZE = '30' VALUE=''>	<BR /><BR /></TD></TR>
 	<TR CLASS  = 'even'><TD COLSPAN=2 ALIGN='center'>
-		<INPUT TYPE='button' VALUE = 'Test' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE='button' VALUE = 'Cancel' onClick = 'window.close();' />
+		<INPUT TYPE='button' VALUE = '<?php print gettext('Test');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
 	</TD></TR>
 </TABLE>
 <?php

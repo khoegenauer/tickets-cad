@@ -13,7 +13,7 @@ require_once($_SESSION['fip']);		//7/28/10
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Test Instamapper</TITLE>
+<TITLE><?php print gettext('Test Instamapper');?></TITLE>
 <META NAME="Author" CONTENT="">
 <META NAME="Keywords" CONTENT="">
 <META NAME="Description" CONTENT="">
@@ -86,11 +86,11 @@ if (!(empty($_POST))) {
 
 <FORM NAME= 'frm_instam' METHOD='get' ACTION = '<?php print basename(__FILE__);?>'>
 <TABLE ALIGN='center'>
-<TR CLASS  = 'even'><TH COLSPAN=2>Instamapper Test Fails for key: <?php print $_POST['dev_key'];?></TH></TR>
+<TR CLASS  = 'even'><TH COLSPAN=2><?php print gettext('Instamapper Test Fails for key');?>: <?php print $_POST['dev_key'];?></TH></TR>
 
 <TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR /><BR />
-	<INPUT TYPE='button' VALUE = 'Another' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE = 'Cancel' onClick = 'window.close();' />
+	<INPUT TYPE='button' VALUE = '<?php print gettext("Another");?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE='button' VALUE = '<?php print gettext("Cancel");?>' onClick = 'window.close();' />
 </TD></TR></TABLE>
 
 <?php
@@ -99,20 +99,20 @@ if (!(empty($_POST))) {
 ?>
 <FORM NAME= 'frm_instam' METHOD='get' ACTION = '<?php print basename(__FILE__);?>'>
 <TABLE ALIGN='center'>
-<TR CLASS  = 'even'><TH COLSPAN=2>Instamapper Test Succeeds for key: <?php print $_POST['dev_key'];?></TH></TR>
+<TR CLASS  = 'even'><TH COLSPAN=2><?php print gettext('Instamapper Test Succeeds for key');?>: <?php print $_POST['dev_key'];?></TH></TR>
 <TR><TD>&nbsp;</TD></TR>
 <?php
 for ($i = 1; $i<(count($ary) - 2); $i++) {
 	$tmp_ary = explode (",", $ary[$i]);
 ?>
-<TR CLASS='odd'><TD>Device key:</TD><TD><?php print $tmp_ary[0];?></TD></TR>
-<TR CLASS='even'><TD>Name</TD><TD><?php print $tmp_ary[1];?></TD></TR>
-<TR CLASS='odd'><TD>Time</TD><TD><?php print format_date($tmp_ary[2]);?></TD></TR>
-<TR CLASS='even'><TD>lat</TD><TD><?php print $tmp_ary[3];?></TD></TR>
-<TR CLASS='odd'><TD>Lng:</TD><TD><?php print $tmp_ary[4];?></TD></TR>
-<TR CLASS='even'><TD>Course:</TD><TD><?php print $tmp_ary[5];?></TD></TR>
-<TR CLASS='odd'><TD>Speed:</TD><TD><?php print $tmp_ary[6];?></TD></TR>
-<TR CLASS='even'><TD>Alt:</TD><TD><?php print $tmp_ary[7];?></TD></TR>
+<TR CLASS='odd'><TD><?php print gettext('Device key');?>:</TD><TD><?php print $tmp_ary[0];?></TD></TR>
+<TR CLASS='even'><TD><?php print gettext('Name');?></TD><TD><?php print $tmp_ary[1];?></TD></TR>
+<TR CLASS='odd'><TD><?php print gettext('Time');?></TD><TD><?php print format_date($tmp_ary[2]);?></TD></TR>
+<TR CLASS='even'><TD><?php print gettext('Lat');?></TD><TD><?php print $tmp_ary[3];?></TD></TR>
+<TR CLASS='odd'><TD><?php print gettext('Lng');?>:</TD><TD><?php print $tmp_ary[4];?></TD></TR>
+<TR CLASS='even'><TD><?php print gettext('Course');?>:</TD><TD><?php print $tmp_ary[5];?></TD></TR>
+<TR CLASS='odd'><TD><?php print gettext('Speed');?>:</TD><TD><?php print $tmp_ary[6];?></TD></TR>
+<TR CLASS='even'><TD><?php print gettext('Alt');?>:</TD><TD><?php print $tmp_ary[7];?></TD></TR>
 <TR ><TD COLSPAN = 2 ALIGN='center'><HR SIZE=1 COLOR='blue'WIDTH='75%'></TD</TR>
 
 <?php
@@ -120,8 +120,8 @@ for ($i = 1; $i<(count($ary) - 2); $i++) {
 ?>
 
 <TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR /><BR />
-	<INPUT TYPE='button' VALUE = 'Another' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE = 'Cancel' onClick = 'window.close();' />
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Another');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
 </TD></TR></TABLE>
 
 <?php	
@@ -132,17 +132,17 @@ for ($i = 1; $i<(count($ary) - 2); $i++) {
 else {
 ?>
 <TABLE ALIGN = 'center' cellpadding = 4 BORDER = 0>
-<TR CLASS  = 'even'><TH COLSPAN=2>Instamapper Test</TH></TR>
+<TR CLASS  = 'even'><TH COLSPAN=2><?php print gettext('Instamapper Test');?></TH></TR>
 <FORM NAME= 'frm_instam' METHOD='post' ACTION = '<?php print basename(__FILE__);?>'>
 </TD></TR>
 <TR CLASS  = 'odd'><TD>
-Master API key:
+<?php print gettext('Master API key');?>:
 </TD><TD>
 	<INPUT NAME = 'dev_key' TYPE = 'text' SIZE = '30' VALUE=''>	<BR /><BR />
 </TD></TR>
 <TR CLASS  = 'even'><TD COLSPAN=2 ALIGN='center'>
-	<INPUT TYPE='button' VALUE = 'Test' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE = 'Cancel' onClick = 'window.close();' />
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Test');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
 </TD></TR></TABLE>
 <?php
 	}		// end else {}

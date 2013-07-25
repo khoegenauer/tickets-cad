@@ -97,7 +97,7 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" />
 	<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">	
-	<HEAD><TITLE>Tickets - Routes Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Routes Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"/>
 	<META HTTP-EQUIV="Expires" CONTENT="0" />
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -532,7 +532,7 @@ if (!empty($_POST)) {				// 77-200
 		var url = "mail_edit.php?ticket_id=" + ticket_id + "&addrs=" + addrs + "&text=";	// no text
 		newwindow_mail=window.open(url, "mail_edit",  "titlebar, location=0, resizable=1, scrollbars, height=360,width=600,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 		if (isNull(newwindow_mail)) {
-			alert ("Email edit operation requires popups to be enabled -- please adjust your browser options.");
+			alert ("<?php print gettext('Email edit operation requires popups to be enabled -- please adjust your browser options.');?>");
 			return;
 			}
 		newwindow_mail.focus();
@@ -558,19 +558,19 @@ if (!empty($_POST)) {				// 77-200
 		print "\n<BODY onLoad = \"do_mail_win('" . $addr_str . "', '" . $_POST['frm_ticket_id'] . "')$next \">\n";
 		}
 ?>
-	<CENTER><BR><BR><BR><BR><H3>Call Assignments made to:<BR /><?php print substr((str_replace ( "\n", ", ", $_POST['frm_name_str'])) , 0, -2);?><BR><BR> <!-- 11/8/08 -->
+	<CENTER><BR><BR><BR><BR><H3><?php print gettext('Call Assignments made to');?>:<BR /><?php print substr((str_replace ( "\n", ", ", $_POST['frm_name_str'])) , 0, -2);?><BR><BR> <!-- 11/8/08 -->
 <?php print (intval(get_variable("call_board")) == 1)? "See Call Board": "";?>	
 	</H3>
 	<FORM NAME='cont_form' METHOD = 'get' ACTION = "main.php">
 <?php
 	if ((array_key_exists('frm_mode', $_POST)) && ($_POST['frm_mode']==1)) {
 ?>	
-	<INPUT TYPE='button' VALUE='Finished' onClick = "window.close()">
+	<INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = "window.close()">
 <?php
 		}
 	else {
 ?>
-	<INPUT TYPE='button' VALUE='Continue' onClick = "document.cont_form.submit()">
+	<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>' onClick = "document.cont_form.submit()">
 
 <?php	
 		}
@@ -836,7 +836,7 @@ function checkForm(form)	{	//	5/4/11
 	} else {
 		errmsg+= "\tYou cannot Hide all the regions\n";
 		if (errmsg!="") {
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 		}
 	}
@@ -855,7 +855,7 @@ function fvg_handleResult(req) {	// 5/4/11	The persist callback function for vie
  * @returns {undefined}
  */	
 function form_validate(theForm) {	//	5/4/11
-//		alert("Validating");
+//		alert("<?php print gettext('Validating');?>");
 	checkForm(theForm);
 	}				// end function validate(theForm)
 /**
@@ -931,13 +931,13 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 		?>
 		<DIV ID='theform' style='position: relative; top: 10px; background-color: transparent; border-color: #000000;'><!-- 11/18/10 -->	
 		<TABLE ALIGN='center' BORDER='0'>
-		<TR class='heading'><TH class='heading'>FILTER BY CAPABILITIES</TH></TR>	<!-- 3/15/11 -->
+		<TR class='heading'><TH class='heading'><?php print gettext('FILTER BY CAPABILITIES');?></TH></TR>	<!-- 3/15/11 -->
 		<FORM NAME='filter_Form' METHOD="GET" ACTION="routes_nm.php">
-		<TR class='odd'><TD ALIGN='center'>Filter Type: <b>OR </b><INPUT TYPE='radio' NAME='searchtype' VALUE='OR' checked><b>AND </b><INPUT TYPE='radio' NAME='searchtype' VALUE='AND'></TD></TR>	<!-- 3/15/11 -->
+		<TR class='odd'><TD ALIGN='center'><?php print gettext('Filter Type');?>: <b><?php print gettext('OR');?> </b><INPUT TYPE='radio' NAME='searchtype' VALUE='OR' checked><b><?php print gettext('AND');?> </b><INPUT TYPE='radio' NAME='searchtype' VALUE='AND'></TD></TR>	<!-- 3/15/11 -->
 		<TR class='even'><TD><INPUT SIZE='48' TYPE='text' NAME='capabilities' VALUE='<?php print $capabilities;?>' MAXLENGTH='64'></TD></TR>	<!-- 3/15/11 -->
 		<INPUT TYPE='hidden' NAME='ticket_id' 	VALUE='<?php print $_GET['ticket_id']; ?>' />
 		<INPUT TYPE='hidden' NAME='unit_id' 	VALUE='<?php print $unit_id; ?>' />
-		<TR class='odd'><TD align="center"><input type="button" OnClick="filterSubmit();" VALUE="Filter"/>&nbsp;&nbsp;<input type="button" OnClick="filterReset();" VALUE="Reset Filter" <?php print $disabled;?>/></TD></TR>	<!-- 3/15/11 -->	
+		<TR class='odd'><TD align="center"><input type="button" OnClick="filterSubmit();" VALUE="<?php print gettext('Filter');?>"/>&nbsp;&nbsp;<input type="button" OnClick="filterReset();" VALUE="<?php print gettext('Reset Filter');?>" <?php print $disabled;?>/></TD></TR>	<!-- 3/15/11 -->	
 		</FORM></TABLE></DIV></TD>
 	<?php }
 	?>
@@ -997,7 +997,7 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 ?>
 		<div id='boxB' class='box' style='left:<?php print $from_left;?>px;top:<?php print $from_top;?>px; position:fixed;' > <!-- 9/23/10 -->
 		<div class="bar" style="width:12em;"
-			 onmousedown="dragStart(event, 'boxB')">Drag me</div><!-- drag bar -->
+			 onmousedown="dragStart(event, 'boxB')"><?php print gettext('Drag me');?></div><!-- drag bar -->
 		<div style = "margin-top:10px;">
 		<IMG SRC="markers/down.png" BORDER=0  onclick = "location.href = '#page_bottom';" STYLE = 'margin-left:2px;' />		
 		<IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#page_top';" STYLE = 'margin-left:40px;'/><br />
@@ -1013,13 +1013,13 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 			print "<INPUT TYPE='hidden' NAME='frm_mail_subject' VALUE='Directions to Incident'>";	//10/6/09
 			print "<INPUT TYPE='hidden' NAME='frm_scope' VALUE=''>"; // 10/29/09
 			print "</FORM>";	
-			print "<INPUT TYPE='button' VALUE='Reset' onClick = 'doReset()' />";
+			print "<INPUT TYPE='button' VALUE='" . gettext('Reset') . "' onClick = 'doReset()' />";
 			print "</SPAN>";			
-			print "<INPUT TYPE='button' VALUE='Cancel'  onClick='history.back();' />";
+			print "<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "'  onClick='history.back();' />";
 			if ($nr_units>0) {			
-				print "<BR /><INPUT TYPE='button' value='DISPATCH\nUNITS' onClick = '" . $thefunc . "' />\n";	// 6/14/09
+				print "<BR /><INPUT TYPE='button' value='" . gettext('DISPATCH\nUNITS') . "' onClick = '" . $thefunc . "' />\n";	// 6/14/09
 				}
-			print "<BR /><BR /><SPAN STYLE='display: inline-block;' class='normal_text'><NOBR><H3>to:<BR /><I>{$addr}</I></H3></NOBR></SPAN>\n";
+			print "<BR /><BR /><SPAN STYLE='display: inline-block;' class='normal_text'><NOBR><H3>" . gettext('to') . ":<BR /><I>{$addr}</I></H3></NOBR></SPAN>\n";
 			print "<SPAN ID=\"loading\" STYLE=\"display: 'inline-block'\">";
 			print "</SPAN>";
 
@@ -1283,19 +1283,19 @@ function do_list($unit_id ="", $capabilities ="", $searchtype) {
  */
 		function handleErrors(){		//G_GEO_UNKNOWN_DIRECTIONS 
 			if (gdir.getStatus().code == G_GEO_UNKNOWN_DIRECTIONS ) {
-				alert("501: directions unavailable\n\nClick map point for directions.");
+				alert("501: <?php print getttext('directions unavailable.') . "\n\n" . gettext('Click map point for directions.');?>");
 				}
 			else if (gdir.getStatus().code == G_GEO_UNKNOWN_ADDRESS)
-				alert("440: No corresponding geographic location could be found for one of the specified addresses. This may be due to the fact that the address is relatively new, or it may be incorrect.\nError code: " + gdir.getStatus().code);
+				alert("440: <?php print getttext('No corresponding geographic location could be found for one of the specified addresses. This may be due to the fact that the address is relatively new, or it may be incorrect.') . "\n" . gettext('Error code');?>: " + gdir.getStatus().code);
 			else if (gdir.getStatus().code == G_GEO_SERVER_ERROR)
-				alert("442: A map request could not be processed, reason unknown.\n Error code: " + gdir.getStatus().code);
+				alert("442: <?php print getttext('A map request could not be processed, reason unknown.') . "\n " . gettext('Error code');?>: " + gdir.getStatus().code);
 			else if (gdir.getStatus().code == G_GEO_MISSING_QUERY)
-				alert("444: Technical error.\n Error code: " + gdir.getStatus().code);
+				alert("444: <?php print getttext('Technical error.') . "\n " . gettext('Error code');?>: " + gdir.getStatus().code);
 			else if (gdir.getStatus().code == G_GEO_BAD_KEY)
-				alert("448: The given key is either invalid or does not match the domain for which it was given. \n Error code: " + gdir.getStatus().code);
+				alert("448: <?php print getttext('The given key is either invalid or does not match the domain for which it was given.') . " \n " . gettext('Error code');?>: " + gdir.getStatus().code);
 			else if (gdir.getStatus().code == G_GEO_BAD_REQUEST)
-				alert("450: A directions request could not be successfully parsed.\n Error code: " + gdir.getStatus().code);
-			else alert("451: An unknown error occurred.");
+				alert("450: <?php print getttext('A directions request could not be successfully parsed.') . "\n " . gettext('Error code');?>: " + gdir.getStatus().code);
+			else alert("451: <?php print getttext('An unknown error occurred.');?>");
 			}		// end function handleErrors()
 /**
  * 
@@ -1331,8 +1331,8 @@ function do_list($unit_id ="", $capabilities ="", $searchtype) {
 			else {
 				var quick = <?php print (intval(get_variable("quick")==1))? "true;\n" : "false;\n";?>
 			
-//				if (confirm ("Please confirm Unit dispatch as follows\n\n" + msgstr)) {
-				if ((quick) || (confirm ("Please confirm unit dispatch\n\n" + msgstr))) {		// 11/23/09
+//				if (confirm ("<?php print gettext('Please confirm Unit dispatch as follows');?>\n\n" + msgstr)) {
+				if ((quick) || (confirm ("<?php print gettext('Please confirm unit dispatch');?>\n\n" + msgstr))) {		// 11/23/09
 
 					document.routes_Form.frm_id_str.value = document.routes_Form.frm_id_str.value.substring(0, document.routes_Form.frm_id_str.value.length - 1);	// drop trailing separator
 					document.routes_Form.frm_name_str.value = msgstr;	// for re-use
@@ -1557,8 +1557,8 @@ $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `r
 			$elapsed = my_date_diff($problemstart, $end_date);		// 5/13/10
 
 ?>
-		side_bar_html += "<TR class='even'>	<TD CLASS='<?php print $severityclass; ?>' COLSPAN=99 ALIGN='center'><B>To Incident: <I><?php print shorten($row_ticket['scope'], 20) . "</I>&nbsp;&nbsp;(" .  $elapsed; ?>)</B></TD></TR>\n";
-		side_bar_html += "<TR class='odd' STYLE = 'white-space:nowrap;'><TD COLSPAN=3></TD><TD ALIGN='center'>Unit</TD><TD ALIGN='center'>Call</TD><TD ALIGN='center'>Status</TD><TD ALIGN='center'>As of</TD></TR>\n";
+		side_bar_html += "<TR class='even'>	<TD CLASS='<?php print $severityclass; ?>' COLSPAN=99 ALIGN='center'><B><?php print gettext('To Incident');?>: <I><?php print shorten($row_ticket['scope'], 20) . "</I>&nbsp;&nbsp;(" .  $elapsed; ?>)</B></TD></TR>\n";
+		side_bar_html += "<TR class='odd' STYLE = 'white-space:nowrap;'><TD COLSPAN=3></TD><TD ALIGN='center'><?php print gettext('Unit');?></TD><TD ALIGN='center'><?php print gettext('Call');?></TD><TD ALIGN='center'><?php print gettext('Status');?></TD><TD ALIGN='center'><?php print gettext('As of');?></TD></TR>\n";
 
 <?php
 													// major while ... for RESPONDER data starts here
@@ -1620,11 +1620,11 @@ $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `r
 ?>
 
 		if (nr_units==0) {
-			side_bar_html +="<TR CLASS='odd'><TD ALIGN='center' COLSPAN=99><BR /><BR /><H3>No Units!</H3></TD></TR>";	
+			side_bar_html +="<TR CLASS='odd'><TD ALIGN='center' COLSPAN=99><BR /><BR /><H3><?php print gettext('No Units');?>!</H3></TD></TR>";	
 			}
 		else {
 			side_bar_html+= "<TR CLASS='" + colors[i%2] +"'><TD COLSPAN=99>&nbsp;</TD></TR>\n";
-			side_bar_html+= "<TR CLASS='" + colors[(i+1)%2] +"'><TD COLSPAN=99 ALIGN='center'><B>M</B>obility:&nbsp;&nbsp; stopped: <FONT COLOR='red'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;moving: <FONT COLOR='green'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;fast: <FONT COLOR='white'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;silent: <FONT COLOR='black'><B>&bull;</B></FONT></TD></TR>\n";
+			side_bar_html+= "<TR CLASS='" + colors[(i+1)%2] +"'><TD COLSPAN=99 ALIGN='center'><?php print gettext('<B>M</B>obility');?>:&nbsp;&nbsp; <?php print gettext('stopped');?>: <FONT COLOR='red'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('moving');?>: <FONT COLOR='green'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('fast');?>: <FONT COLOR='white'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('silent');?>: <FONT COLOR='black'><B>&bull;</B></FONT></TD></TR>\n";
 			side_bar_html+= "<TR><TD>&nbsp;</TD></TR>\n";
 			}
 				

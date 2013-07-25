@@ -50,9 +50,9 @@ if(!empty($_POST)) {
 	$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET `un_status_id`= " . quote_smart($_POST['frm_status']);			
 	$result = mysql_query($query);	
 	if($result) {
-		$caption = "Responder Status Values set to " . get_status_name($_POST['frm_status']);
+		$caption = gettext("Responder Status Values set to") . " " . get_status_name($_POST['frm_status']);
 		} else {
-		$caption = "Could not set Responder Status Values to " . get_status_name($_POST['frm_status']);	
+		$caption = gettext("Could not set Responder Status Values to") . " " . get_status_name($_POST['frm_status']);	
 		}
 	
 ?>
@@ -67,7 +67,7 @@ if(!empty($_POST)) {
 		<META HTTP-EQUIV="expires" CONTENT="Wed, 26 Feb 1997 08:21:57 GMT" />
 		<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 		<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" />
-		<TITLE>Tickets</TITLE>
+		<TITLE><?php print gettext('Tickets');?></TITLE>
 		<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
 		<link rel="shortcut icon" href="favicon.ico" />
 	<SCRIPT>
@@ -88,7 +88,7 @@ if(!empty($_POST)) {
 	<BODY onLoad='ck_frames();'>
 	<DIV style='font-size: 14px; position: fixed; top: 150px; left: 100px;'>
 	<?php print $caption;?><br /><br />
-	<A style='font-size: 14px;' href="config.php">Return to Config</A>		
+	<A style='font-size: 14px;' href="config.php"><?php print gettext('Return to Config');?></A>		
 	</DIV>
 	</BODY>
 	</HTML>
@@ -106,7 +106,7 @@ if(!empty($_POST)) {
 		<META HTTP-EQUIV="expires" CONTENT="Wed, 26 Feb 1997 08:21:57 GMT" />
 		<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 		<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" />
-		<TITLE>Tickets</TITLE>
+		<TITLE><?php print gettickets('Tickets');?></TITLE>
 		<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
 		<link rel="shortcut icon" href="favicon.ico" />
 		<STYLE>
@@ -153,7 +153,7 @@ if(!empty($_POST)) {
 	<BODY onLoad='ck_frames();'>
 
 	<DIV id='outer' style='position: absolute; top: 5%; width: 100%; height: 75%; border: 1px solid #FFFFFF;'>
-		<DIV class='heading' style='width: 100%; position: absolute; text-align: center;'>Reset Responders to a common Status</DIV>
+		<DIV class='heading' style='width: 100%; position: absolute; text-align: center;'><?php print gettext('Reset Responders to a common Status');?></DIV>
 		<DIV id='left_col' style='width: 45%; position: absolute; top: 60px; left: 2%; border: 3px outset #CECECE;'>
 			<FORM NAME='frm_def_status' METHOD="post" ACTION="<?php print basename(__FILE__);?>">
 			<TABLE style='width: 100%;'>
@@ -163,14 +163,14 @@ if(!empty($_POST)) {
 					<TD class='spacer' COLSPAN=99>&nbsp;</TH>
 				</TR>				
 				<TR class='odd'>
-					<TD class='td_label'>Select Status Value to set Responders to</TD>
+					<TD class='td_label'><?php print gettext('Select Status Value to set Responders to');?></TD>
 					<TD class='td_data'><FONT COLOR='blue'><?php print $the_status_sel;?></TD>
 				</TR>
 				<TR class='spacer'>
 					<TD class='spacer' COLSPAN=99>&nbsp;</TH>
 				</TR>	
 				<TR class='odd'>
-					<TD ALIGN='center' COLSPAN=99><INPUT TYPE='SUBMIT' NAME='SUBMIT' VALUE='Submit'></TH>
+					<TD ALIGN='center' COLSPAN=99><INPUT TYPE='SUBMIT' NAME='SUBMIT' VALUE='<?php print gettext('Submit');?>'></TH>
 				</TR>				
 			</TABLE>
 		</DIV>

@@ -37,7 +37,7 @@ include('baaChart.php');
 $width = isset($img_width)? $img_width: $severity_diam;		// 3/21/10
 $mygraph = new baaChart($width);
 //$mygraph->setTitle($from, $to);
-$mygraph->setTitle("Incidents by Severity", "");
+$mygraph->setTitle('"' . gettext('Incidents by Severity') . '"', "");
 
 foreach($severities as $key => $val) {
 	if ((strlen($key)>0)) {

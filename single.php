@@ -46,7 +46,7 @@ require_once($_SESSION['fmp']);		// 7/28/10, 8/10/10
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<HEAD><TITLE>Tickets - Incident Module</TITLE>
+<HEAD><TITLE><?php print gettext('Tickets - Incident Module');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 <META HTTP-EQUIV="Expires" CONTENT="0" />
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -61,13 +61,13 @@ require_once($_SESSION['fmp']);		// 7/28/10, 8/10/10
 		print do_ticket($row_ticket, $the_width, FALSE, FALSE);
 		}
 	else {
-		print "<CENTER><H3>No data for Ticket # {$_GET['ticket_id']} </H3>";
+		print "<CENTER><H3>" . gettext('No data for Ticket #') . "{$_GET['ticket_id']} </H3>";
 		}
 ?>
 <BR /><CENTER>
-<INPUT TYPE = 'button' VALUE = 'Finished' onClick = 'self.close();' />
+<INPUT TYPE = 'button' VALUE = '<?php print gettext('Finished');?>' onClick = 'self.close();' />
 <?php if (!(is_guest())) { ?>
-	<INPUT TYPE = 'button' STYLE = 'margin-left: 200px;' VALUE = 'Edit' onClick = 'window.opener.parent.frames["main"].location="edit.php?id=<?php print $_GET['ticket_id'];?>"' />
+	<INPUT TYPE = 'button' STYLE = 'margin-left: 200px;' VALUE = '<?php print gettext('Edit');?>' onClick = 'window.opener.parent.frames["main"].location="edit.php?id=<?php print $_GET['ticket_id'];?>"' />
 <?php } ?>
 </CENTER>
 </BODY></HTML>

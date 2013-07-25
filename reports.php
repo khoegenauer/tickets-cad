@@ -158,7 +158,7 @@ else {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Reports Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Reports Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" 		CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="Expires" 				CONTENT="0">
 	<META HTTP-EQUIV="Cache-Control" 		CONTENT="NO-CACHE">
@@ -624,7 +624,7 @@ p.page { page-break-after: always; }
 				}
 			}		// end if (mysql_affected_rows()>0)
 		else {
-			echo "<TR><TH><BR/>No data this period<BR/></TH></TR>";
+			echo "<TR><TH><BR/>" . gettext('No data this period.') . "<BR/></TH></TR>";
 			}
 		echo "</TABLE><BR/><BR/>";
 		}		// end function do_dispreport()
@@ -814,7 +814,7 @@ p.page { page-break-after: always; }
 			print "</TR>\n";
 			}		// end if (mysql_affected_rows()>0)
 		else {
-			print "\n<TR CLASS='odd'><TD COLSPAN='99' ALIGN='center'><br /><I>No " . get_text("Unit") . " data for this period</I><BR /></TD></TR>\n";
+			print "\n<TR CLASS='odd'><TD COLSPAN='99' ALIGN='center'><br /><I>" . gettext('No') . " " . get_text("Unit") . " " . gettext('data for this period') . "</I><BR /></TD></TR>\n";
 			}
 		print "<TR><TD ALIGN='center' COLSPAN=99>";
 		$m = date("m"); $d = date("d"); $y = date("Y");
@@ -883,15 +883,15 @@ p.page { page-break-after: always; }
 //		print "<TR CLASS='even'><TH COLSPAN=99 ALIGN = 'center'>" . $titles[$func_in] . $from_to[2] . " to " . $from_to[3] . "</TH></TR>\n";
 		if (mysql_affected_rows()>0) {
 				print "<TR CLASS='odd'>";
-				print "<TH ALIGN='left'>Date</TH>";		// 4/4/10
-				print "<TH ALIGN='left'>Time</TH>";
-				print "<TH ALIGN='left'>Code</TH>";
-				print "<TH ALIGN='left'>Call</TH>";
+				print "<TH ALIGN='left'>" . gettext('Date') . "</TH>";		// 4/4/10
+				print "<TH ALIGN='left'>" . gettext('Time') . "</TH>";
+				print "<TH ALIGN='left'>" . gettext('Code') . "</TH>";
+				print "<TH ALIGN='left'>" . gettext('Call') . "</TH>";
 				print "<TH ALIGN='left'>" . get_text("Unit") . "</TH>";
-				print "<TH ALIGN='left'>Info</TH>";
-				print "<TH ALIGN='left'>User</TH>";
-				print "<TH ALIGN='left'>From</TH>";
-				if ($istest) {print "<TH ALIGN='left'>ID</TH>";}
+				print "<TH ALIGN='left'>" . gettext('Info') . "</TH>";
+				print "<TH ALIGN='left'>" . gettext('User') . "</TH>";
+				print "<TH ALIGN='left'>" . gettext('From') . "</TH>";
+				if ($istest) {print "<TH ALIGN='left'>" . gettext('ID') . "</TH>";}
 				print "</TR>\n";
 
 			while($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)){			// main loop - top
@@ -932,7 +932,7 @@ p.page { page-break-after: always; }
 				}		// end while($row = ...)
 			}		// end if (mysql_affected_rows() ...
 		else {
-			print "<TR CLASS='odd'><TD COLSPAN='99' ALIGN='center'><br /><I>No data for this period</I><BR /></TD></TR>\n";
+			print "<TR CLASS='odd'><TD COLSPAN='99' ALIGN='center'><br /><I>" . gettext('No data for this period') . "</I><BR /></TD></TR>\n";
 			}
 		print "<TR><TD COLSPAN=99 ALIGN='center'><HR STYLE = 'color: blue; size: 1; width: 50%'></TD></TR>";
 		print "</TABLE>\n";
@@ -988,13 +988,13 @@ p.page { page-break-after: always; }
 //		dump ($query);
 
 		$titles = array ();
-		$titles['dr'] = "<B>Incidents</B> Daily Report - ";
-		$titles['cm'] = "<B>Incidents</B> Report - Current Month-to-date - ";
-		$titles['lm'] = "<B>Incidents</B> Report - Last Month - ";
-		$titles['cy'] = "<B>Incidents</B> Report - Current Year-to-date - ";
-		$titles['ly'] = "<B>Incidents</B> Report - Last Year - ";
-		$titles['cw'] = "<B>Incidents</B> Report - Current Week-to-date - ";
-		$titles['lw'] = "<B>Incidents</B> Report - Last Week - ";
+		$titles['dr'] = "<B>" . gettext('Incidents') . "</B> Daily Report - ";
+		$titles['cm'] = "<B>" . gettext('Incidents') . "</B> Report - Current Month-to-date - ";
+		$titles['lm'] = "<B>" . gettext('Incidents') . "</B> Report - Last Month - ";
+		$titles['cy'] = "<B>" . gettext('Incidents') . "</B> Report - Current Year-to-date - ";
+		$titles['ly'] = "<B>" . gettext('Incidents') . "</B> Report - Last Year - ";
+		$titles['cw'] = "<B>" . gettext('Incidents') . "</B> Report - Current Week-to-date - ";
+		$titles['lw'] = "<B>" . gettext('Incidents') . "</B> Report - Last Week - ";
 
 		$i = 0;
 		print "\n<TABLE ALIGN='left' BORDER = 0 width=800>\n";
@@ -1004,12 +1004,12 @@ p.page { page-break-after: always; }
 		if (mysql_affected_rows()>0) {
 
 			print "<TR CLASS='odd'>";
-			print "<TH>Date</TH>";
-			print "<TH>Time</TH>";
-			print "<TH>Code</TH>";
+			print "<TH>" . gettext('Date') . "</TH>";
+			print "<TH>" . gettext('Time') . "</TH>";
+			print "<TH>" . gettext('Code') . "</TH>";
 			print "<TH>{$incident}</TH>";
-			print "<TH>User</TH>";
-			print "<TH>From</TH>";
+			print "<TH>" . gettext('User') . "</TH>";
+			print "<TH>" . gettext('From') . "</TH>";
 			print "</TR>\n";
 			$inc_types = array();
 
@@ -1079,7 +1079,7 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 <?php
 			}
 		else {
-			print "\n<TR CLASS='odd'><TH COLSPAN='99' ALIGN='center'><br /><I>No data for this period!</I><BR /><BR /></TH></TR>\n";
+			print "\n<TR CLASS='odd'><TH COLSPAN='99' ALIGN='center'><br /><I>" . gettext('No data for this period!') . "</I><BR /><BR /></TH></TR>\n";
 			}
 		echo "<TR><TD COLSPAN=99 ALIGN='center'><HR STYLE = 'color: blue; size: 1; width: 50%'></TD></TR>";
 		print "</TABLE>\n";
@@ -1196,51 +1196,51 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 			}
 		$print = "<TABLE BORDER='0' STYLE = 'width:800px'>\n";		//
 		$print .= "<TR CLASS='even'><TD ALIGN='left' CLASS='td_data' COLSPAN=2 ALIGN='center'><B>{$incident}: <I>{$theRow['scope']}</B>{$tickno}</TD></TR>\n";
-		$print .= "<TR CLASS='odd' ><TD ALIGN='left'>Priority:</TD> <TD ALIGN='left' CLASS='" . $severityclass . "'>" . get_severity($theRow['severity']);
+		$print .= "<TR CLASS='odd' ><TD ALIGN='left'>" . gettext('Priority') . ":</TD> <TD ALIGN='left' CLASS='" . $severityclass . "'>" . get_severity($theRow['severity']);
 		$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$nature}:&nbsp;&nbsp;" . get_type($theRow['in_types_id']);
 		$print .= "</TD></TR>\n";
 	
-		$print .= "<TR CLASS='even' ><TD ALIGN='left'>Protocol:</TD> <TD ALIGN='left' CLASS='{$severityclass}'>{$theRow['protocol']}</TD></TR>\n";		// 7/16/09
-		$print .= "<TR CLASS='odd' ><TD ALIGN='left'>Address:</TD>		<TD ALIGN='left'>{$theRow['street']}";
+		$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . gettext('Protocol') . ":</TD> <TD ALIGN='left' CLASS='{$severityclass}'>{$theRow['protocol']}</TD></TR>\n";		// 7/16/09
+		$print .= "<TR CLASS='odd' ><TD ALIGN='left'>" . gettext('Address') . ":</TD>		<TD ALIGN='left'>{$theRow['street']}";
 		$print .= "&nbsp;&nbsp;{$theRow['city']}&nbsp;&nbsp;{$theRow['state']}</TD></TR>\n";
-		$print .= "<TR CLASS='even'  VALIGN='top'><TD ALIGN='left'>Description:</TD>	<TD ALIGN='left'>" .  nl2br($theRow['tick_descr']) . "</TD></TR>\n";	//	8/12/09
+		$print .= "<TR CLASS='even'  VALIGN='top'><TD ALIGN='left'>" . gettext('Description') . ":</TD>	<TD ALIGN='left'>" .  nl2br($theRow['tick_descr']) . "</TD></TR>\n";	//	8/12/09
 		$end_date = (intval($theRow['problemend'])> 1)? $theRow['problemend']:  (time() - (get_variable('delta_mins')*60));	
 		$elapsed = my_date_diff($theRow['problemstart'], $end_date);		// 5/13/10
-		$print .= "<TR CLASS='odd'><TD ALIGN='left'>Status:</TD>		<TD ALIGN='left'>" . get_status($theRow['status']) . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;({$elapsed})</TD></TR>\n";
-		$print .= "<TR CLASS='even'><TD ALIGN='left'>Reported by:</TD>	<TD ALIGN='left'>{$theRow['contact']}";
-		$print .= "&nbsp;&nbsp;&nbsp;&nbsp;Phone:&nbsp;&nbsp;" . format_phone ($theRow['phone']) . "</TD></TR>\n";
+		$print .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Status') . ":</TD>		<TD ALIGN='left'>" . get_status($theRow['status']) . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;({$elapsed})</TD></TR>\n";
+		$print .= "<TR CLASS='even'><TD ALIGN='left'>" . gettext('Reported by') . ":</TD>	<TD ALIGN='left'>{$theRow['contact']}";
+		$print .= "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('Phone') . ":&nbsp;&nbsp;" . format_phone ($theRow['phone']) . "</TD></TR>\n";
 		$by_str = ($theRow['call_taker'] ==0)?	"" : "&nbsp;&nbsp;by " . get_owner($theRow['call_taker']) . "&nbsp;&nbsp;";		// 1/7/10
-		$print .= "<TR CLASS='odd'><TD ALIGN='left'>Written:</TD>		<TD ALIGN='left'>" . format_date_2($theRow['date']) . $by_str;
-		$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Updated:&nbsp;&nbsp;" . format_date_2($theRow['updated']) . "</TD></TR>\n";
-		$print .= (empty($theRow['booked_date']))? "" : "<TR CLASS='odd'><TD ALIGN='left'>Scheduled date:</TD>		<TD ALIGN='left'>" . format_date_2($theRow['booked_date']) . "</TD></TR>\n";	// 10/6/09
-		$print .= (!(is_int($theRow['facility'])))? 		"" : "<TR CLASS='odd' ><TD ALIGN='left'>{$incident} at Facility:</TD>		<TD ALIGN='left'>{$theRow['fac_name']}</TD></TR>\n";	// 8/1/09
-		$print .= (!(is_int($theRow['rec_facility'])))? 	"" : "<TR CLASS='even' ><TD ALIGN='left'>Receiving Facility:</TD>		<TD ALIGN='left'>{$theRow['rec_fac_name']}</TD></TR>\n";	// 10/6/09
+		$print .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Written') . ":</TD>		<TD ALIGN='left'>" . format_date_2($theRow['date']) . $by_str;
+		$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('Updated') . ":&nbsp;&nbsp;" . format_date_2($theRow['updated']) . "</TD></TR>\n";
+		$print .= (empty($theRow['booked_date']))? "" : "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Scheduled date') . ":</TD>		<TD ALIGN='left'>" . format_date_2($theRow['booked_date']) . "</TD></TR>\n";	// 10/6/09
+		$print .= (!(is_int($theRow['facility'])))? 		"" : "<TR CLASS='odd' ><TD ALIGN='left'>{$incident} " . gettext('at Facility') . ":</TD>		<TD ALIGN='left'>{$theRow['fac_name']}</TD></TR>\n";	// 8/1/09
+		$print .= (!(is_int($theRow['rec_facility'])))? 	"" : "<TR CLASS='even' ><TD ALIGN='left'>" . gettext('Receiving Facility') . ":</TD>		<TD ALIGN='left'>{$theRow['rec_fac_name']}</TD></TR>\n";	// 10/6/09
 	
 		$print .= (empty($theRow['comments']))? "" : "<TR CLASS='odd'  VALIGN='top'><TD ALIGN='left'>{$disposition}:</TD>	<TD ALIGN='left'>" . nl2br($theRow['comments']) . "</TD></TR>\n";
 	
-		$print .= "<TR CLASS='even' ><TD ALIGN='left'>Run Start:</TD><TD ALIGN='left'>" . format_date_2($theRow['problemstart']);
-		$print .= 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End:&nbsp;&nbsp;" . format_date_2($theRow['problemend']) . "&nbsp;&nbsp;&nbsp;&nbsp;Elapsed:&nbsp;&nbsp;{$elapsed}
+		$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . gettext('Run Start') . ":</TD><TD ALIGN='left'>" . format_date_2($theRow['problemstart']);
+		$print .= 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('End') . ":&nbsp;&nbsp;" . format_date_2($theRow['problemend']) . "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('Elapsed') . ":&nbsp;&nbsp;{$elapsed}
 			</TD></TR>\n";
 	
 		$locale = get_variable('locale');	// 08/03/09
 		switch($locale) { 
 			case "0":
-			$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;USNG&nbsp;&nbsp;" . LLtoUSNG($theRow['lat'], $theRow['lng']);
+			$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('USNG') . "&nbsp;&nbsp;" . LLtoUSNG($theRow['lat'], $theRow['lng']);
 			break;
 	
 			case "1":
-			$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;OSGB&nbsp;&nbsp;" . LLtoOSGB($theRow['lat'], $theRow['lng']);	// 8/23/08, 10/15/08, 8/3/09
+			$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('OSGB') . "&nbsp;&nbsp;" . LLtoOSGB($theRow['lat'], $theRow['lng']);	// 8/23/08, 10/15/08, 8/3/09
 			break;
 		
 			case "2":
 			$coords =  $theRow['lat'] . "," . $theRow['lng'];									// 8/12/09
-			$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;UTM&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
+			$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('UTM') . "&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
 			break;
 	
 			default:
 			print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";
 			}
-		$print .= "<TR CLASS='odd'><TD ALIGN='left'>Position: </TD><TD ALIGN='left'>" . 
+		$print .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Position') . ": </TD><TD ALIGN='left'>" . 
 				get_lat($theRow['lat']) . "&nbsp;&nbsp;&nbsp;" . get_lng($theRow['lng']) . $grid_type . 
 				"</TD></TR>\n";																				// 9/13/08
 		$print .= "<TR><TD>&nbsp;</TD></TR></TABLE>\n";
@@ -1276,15 +1276,15 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 				$last_id = $row['log_id'] ;			// dupe preventer
 				if ($do_hdr) {
 					echo "<TR CLASS='odd'><TD>&nbsp;</TD></TR>";
-					echo "<TR CLASS='even'><TH COLSPAN=99> {$incident} Log</TH></TR>";
+					echo "<TR CLASS='even'><TH COLSPAN=99> {$incident} " . gettext('Log') . "</TH></TR>";
 					echo "<TR CLASS='odd'>
 						<TD></TD>
-						<TD ALIGN='left'><b>&nbsp;Time</b></TD>
-						<TD ALIGN='left'><b>&nbsp;Log code</b></TD>
-						<TD ALIGN='left'><b>&nbsp;" . get_text("Unit") . "/Fac'y</b></TD>
-						<TD ALIGN='left'><b>&nbsp;Data</b></TD>
-						<TD ALIGN='left'><b>&nbsp;By</b></TD>
-						<TD ALIGN='left'><b>&nbsp;From</b></TD>
+						<TD ALIGN='left'><b>&nbsp;" . gettext('Time') . "</b></TD>
+						<TD ALIGN='left'><b>&nbsp;" . gettext('Log code') . "</b></TD>
+						<TD ALIGN='left'><b>&nbsp;" . get_text("Unit") . "/" . gettext('Facility') . "</b></TD>
+						<TD ALIGN='left'><b>&nbsp;" . gettext('Data') . "</b></TD>
+						<TD ALIGN='left'><b>&nbsp;" . gettext('By') . "</b></TD>
+						<TD ALIGN='left'><b>&nbsp;" . gettext('From') . "</b></TD>
 						</TR>";
 					$do_hdr = FALSE;
 					}
@@ -1419,19 +1419,19 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 	
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		if (mysql_affected_rows()==0) {
-			print "<BR /><BR /><SPAN STYLE='margin-left:300px;'><B>No incident data for this period</B></SPAN>";
+			print "<BR /><BR /><SPAN STYLE='margin-left:300px;'><B>" . gettext('No incident data for this period') . "</B></SPAN>";
 			}
 		else {
 			$numrows = mysql_num_rows($result);
 			$to_str = ($func_in=="dr")? "": " to {$from_to[3]} " . substr($from_to[1] ,0 , 4) ;
-			print "<BR /><SPAN STYLE='margin-left:160px;'><B>" . mysql_affected_rows() . " Incidents: " . $from_to[2] . $to_str .  "</B></SPAN><BR /><BR />";
+			print "<BR /><SPAN STYLE='margin-left:160px;'><B>" . mysql_affected_rows() . " " . gettext('Incidents') . ": " . $from_to[2] . $to_str .  "</B></SPAN><BR /><BR />";
 			$page_num = 1;
 //			print "<TABLE ALIGN='left' CELLSPACING = 2 CELLPADDING = 2  BORDER=0 width='800px'><TR><TD>";	
 			while ($row_ticket = stripslashes_deep(mysql_fetch_array($result))){
 				print do_ticket_wm($row_ticket, $the_width, FALSE, FALSE);	//	2/4/13
 		//		print "<TR><TD ALIGN='center'><HR COLOR='blue'><BR /></TD></TR>";
 				print "<BR />";
-				print "<p class='page'>Page " . $page_num . " of " . $numrows . "</p>";
+				print "<p class='page'>" . gettext('Page') . " " . $page_num . " " . gettext('of') . " " . $numrows . "</p>";
 				$page_num++;
 				}			// end while ()
 //			print "</TD></TR></TABLE>";		
@@ -1604,7 +1604,7 @@ function my_stripslashes_deep($value) {
 				$when_sh = short_ts($when);
 				print "<TD onMouseover=\"Tip('{$when}');\" onmouseout='UnTip();'>{$when_sh}</TD>\n";						//		start
 				print "<TD  COLSPAN=3></TD>\n";							//		end	Ending time	
-				print "<TD><I>Log entry:</I></TD>\n";					//		Call type
+				print "<TD><I>" . gettext('Log entry') . ":</I></TD>\n";					//		Call type
 				$info = $ary_in['info'];
 				$sh_info = shorten ( $ary_in['info'] , $w_large);
 				print "<TD onMouseover=\"Tip('{$info}');\" onMouseout='UnTip();'>{$sh_info}</TD>\n";			//		Comments/Disposition
@@ -1683,20 +1683,20 @@ function my_stripslashes_deep($value) {
 //dump($query);			
 			print "<TABLE BORDER=0 ALIGN='center' cellspacing = 1 CELLPADDING = 4  ID='IM' STYLE='display:block'>";
 			$to_str = ($func_in=="dr")? "": " to {$from_to[3]} " . substr($from_to[1] ,0 , 4) ;
-			print "<TR CLASS='even'><TH COLSPAN=99 ALIGN = 'center'>" . "{$incident} Management Report - " . $from_to[2] . $to_str . "</TH></TR>\n";
+			print "<TR CLASS='even'><TH COLSPAN=99 ALIGN = 'center'>" . "{$incident} " . gettext('Management Report') . " - " . $from_to[2] . $to_str . "</TH></TR>\n";
 
 
 			print "<TR CLASS='odd'>
-					<TD><B>Date</B></TD>
-					<TD><B>Opened</B></TD>
-					<TD><B>Closed</B></TD>
-					<TD><B>Elapsed</B></TD>
-					<TD><B>Severity</B></TD>
-					<TD><B>Call type</B></TD>
-					<TD><B>Comments/{$disposition}</B></TD>
-					<TD><B>Facility</B></TD>
-					<TD><B>Address</B></TD>
-					<TD><B>" .  get_text("Unit") . " responding</B></TD>
+					<TD><B>" . gettext('Date') . "</B></TD>
+					<TD><B>" . gettext('Opened') . "</B></TD>
+					<TD><B>" . gettext('Closed') . "</B></TD>
+					<TD><B>" . gettext('Elapsed') . "</B></TD>
+					<TD><B>" . gettext('Severity') . "</B></TD>
+					<TD><B>" . gettext('Call type') . "</B></TD>
+					<TD><B>" . gettext('Comments') . "/{$disposition}</B></TD>
+					<TD><B>" . gettext('Facility') . "</B></TD>
+					<TD><B>" . gettext('Address') . "</B></TD>
+					<TD><B>" .  get_text("Unit") . " " . gettext('responding') . "</B></TD>
 					</TR>";
 		
 			if (mysql_num_rows ($result) == 0) {												// empty?			
@@ -1768,9 +1768,9 @@ function my_stripslashes_deep($value) {
 				ORDER BY `problemstart` ASC";
 //		dump($query);
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-			print "<TR><TD COLSPAN=99 ALIGN='center'><B>Not dispatched</B></TD></TR>";
+			print "<TR><TD COLSPAN=99 ALIGN='center'><B>" . gettext('Not dispatched') . "</B></TD></TR>";
 			if (mysql_num_rows($result)==0) {
-				print "<TR CLASS='even'><TD COLSPAN=99 ALIGN='center'><B>none</B></TD></TR>";
+				print "<TR CLASS='even'><TD COLSPAN=99 ALIGN='center'><B>" . gettext('none') . "</B></TD></TR>";
 				}
 			else {
 				$units_str = "";
@@ -1781,7 +1781,7 @@ function my_stripslashes_deep($value) {
 				}
 			
 			if ($counts[3]>0) {						// any stats?
-				print "<TR><TD COLSPAN=99 ALIGN='center'><B><BR />Mean incident close times by severity:&nbsp;&nbsp;&nbsp;";
+				print "<TR><TD COLSPAN=99 ALIGN='center'><B><BR />" . gettext('Mean incident close times by severity') . ":&nbsp;&nbsp;&nbsp;";
 				for ($i = 0; $i<3; $i++) {					// each severity level
 					if ($counts[$i]>0) {
 						$mean = round($deltas[$i] / $counts[$i]);
@@ -1850,7 +1850,7 @@ function my_stripslashes_deep($value) {
 			$unit_types[$row['id']] = $row['name'];
 			}
 
-		print "Select " . get_text("Unit") . ": <SELECT NAME='frm_unit_id'>\n\t<OPTION VALUE=0 SELECTED>All</OPTION>\n";
+		print "Select " . get_text("Unit") . ": <SELECT NAME='frm_unit_id'>\n\t<OPTION VALUE=0 SELECTED>" . gettext('All') . "</OPTION>\n";
 		$query = "SELECT * , COUNT( `responder_id` ) FROM `$GLOBALS[mysql_prefix]log` 
 			LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON ( `$GLOBALS[mysql_prefix]log`.responder_id = r.id ) 
 			GROUP BY `responder_id` HAVING COUNT( `responder_id` ) >=1 
@@ -1891,7 +1891,7 @@ function my_stripslashes_deep($value) {
 
 		print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select {$incident}: 
 			<SELECT NAME='frm_ticket_id'  onChange = \" $('inc_log_btn').style.display = ''; document.log_form.frm_tick_sel.value = this.value.trim(); \">\n\t" ;
-		print "<OPTION VALUE=0 SELECTED>All</OPTION>\n";
+		print "<OPTION VALUE=0 SELECTED>" . gettext('All') . "</OPTION>\n";
 		$query = "SELECT *, COUNT(`ticket_id`) FROM `$GLOBALS[mysql_prefix]log` `l` 
 			LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` ON (`t`.`id` = `l`.`ticket_id`) 
 			GROUP BY `ticket_id` HAVING COUNT(`ticket_id`)>=1
@@ -1925,13 +1925,13 @@ function my_stripslashes_deep($value) {
 	</B></TD></TR>
 
 	<TR CLASS='odd'><TD COLSPAN=8 ALIGN='center'><B>
-		<SPAN STYLE='margin-left:10px;'><?php print get_text("Unit"); ?> Log <INPUT TYPE='radio' <?php print $checked['u']; ?> NAME= 'frm_which' onClick ="Javascript: which='u';"></SPAN>
-		<SPAN STYLE='margin-left:10px;'>Dispatch Log <INPUT TYPE='radio' <?php print $checked['d']; ?> NAME= 'frm_which' onClick ="Javascript: which='d';"></SPAN> <!-- 1/29/09, 8/3/09 fixed default changed $checked to ['d'] -->
-		<SPAN STYLE='margin-left:10px;'>Station Log <INPUT TYPE='radio' <?php print $checked['s']; ?> NAME= 'frm_which' onClick ="Javascript: which = 's';"></SPAN>
-		<SPAN STYLE='margin-left:10px;'><?php print $incident;?> Summary <INPUT TYPE='radio' <?php print $checked['i']; ?> NAME= 'frm_which' onClick ="Javascript: which = 'i';"></SPAN>
-		<SPAN STYLE='margin-left:10px;'>After-action Report <INPUT TYPE='radio' <?php print $checked['a']; ?> NAME= 'frm_which' onClick ="Javascript: which = 'a';">
-		<SPAN STYLE='margin-left:10px;'><?php print $incident;?> mgmt Report <INPUT TYPE='radio' <?php print $checked['a']; ?> NAME= 'frm_which' onClick ="Javascript: which = 'm';">
-		<SPAN ID = "inc_log_btn"  STYLE = 'margin-left: 20px; display: none'><?php print $incident;?> Log <INPUT TYPE = 'radio' onClick = 'document.log_form.submit();'></SPAN>
+		<SPAN STYLE='margin-left:10px;'><?php print get_text("Unit"); ?> <?php print gettext('Log');?> <INPUT TYPE='radio' <?php print $checked['u']; ?> NAME= 'frm_which' onClick ="Javascript: which='u';"></SPAN>
+		<SPAN STYLE='margin-left:10px;'><?php print gettext('Dispatch Log');?> <INPUT TYPE='radio' <?php print $checked['d']; ?> NAME= 'frm_which' onClick ="Javascript: which='d';"></SPAN> <!-- 1/29/09, 8/3/09 fixed default changed $checked to ['d'] -->
+		<SPAN STYLE='margin-left:10px;'><?php print gettext('Station Log');?> <INPUT TYPE='radio' <?php print $checked['s']; ?> NAME= 'frm_which' onClick ="Javascript: which = 's';"></SPAN>
+		<SPAN STYLE='margin-left:10px;'><?php print $incident;?> <?php print gettext('Summary');?> <INPUT TYPE='radio' <?php print $checked['i']; ?> NAME= 'frm_which' onClick ="Javascript: which = 'i';"></SPAN>
+		<SPAN STYLE='margin-left:10px;'><?php print gettext('After-action Report');?> <INPUT TYPE='radio' <?php print $checked['a']; ?> NAME= 'frm_which' onClick ="Javascript: which = 'a';">
+		<SPAN STYLE='margin-left:10px;'><?php print $incident;?><?php print gettext(' mgmt Report');?> <INPUT TYPE='radio' <?php print $checked['a']; ?> NAME= 'frm_which' onClick ="Javascript: which = 'm';">
+		<SPAN ID = "inc_log_btn"  STYLE = 'margin-left: 20px; display: none'><?php print $incident;?> <?php print gettext('Log');?> <INPUT TYPE = 'radio' onClick = 'document.log_form.submit();'></SPAN>
 		</B></TD>
 		</TR>
 
@@ -1940,13 +1940,13 @@ function my_stripslashes_deep($value) {
 	<TR CLASS='even'>
 	<TD COLSPAN=99 ALIGN='center'>
 	<SPAN STYLE='WIDTH:100px; FLOAT:left;'>&nbsp;</SPAN>
-	<FONT SIZE="-1"><I>Mouseover for buttons</I><SPAN STYLE='WIDTH:100px; FLOAT:right;'>
-		<INPUT TYPE='checkbox' NAME='full' onclick = 'do_full_w (this.form)' />full width</SPAN></FONT><BR />
+	<FONT SIZE="-1"><I><?php print gettext('Mouseover for buttons');?></I><SPAN STYLE='WIDTH:100px; FLOAT:right;'>
+		<INPUT TYPE='checkbox' NAME='full' onclick = 'do_full_w (this.form)' /><?php print gettext('full width');?></SPAN></FONT><BR />
 
 <?php
 
 	print "\n<span class='hovermenu' style='background-color:#DEE3E7'><ul>\n";
-	print "<nobr><li onClick= \"do_ugr('lw')\">Last Week</li>";
+	print "<nobr><li onClick= \"do_ugr('lw')\">" . gettext('Last Week') . "</li>";
 	for ($j = -13; $j < 1; $j++)  {
 		$temp = mktime(0,0,0,date('m'), date('d')+$j, date('Y'));
 		print "<LI onClick = \"toUDRnav('" . date ('m,d,Y', $temp) . "')\">";
@@ -1971,11 +1971,11 @@ $locale = get_variable('locale');	// 08/03/09
 //		break;
 
 		default:
-		    print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";				
+		    print gettext("ERROR in") . " " . basename(__FILE__) . " " . __LINE__ . "<BR />";				
 	}
 
 		if ($j== -7) {
-			print "<BR /><BR /><nobr><li onClick= \"do_ugr('cw')\">This Week</li><nobr>";
+			print "<BR /><BR /><nobr><li onClick= \"do_ugr('cw')\">" . gettext('This Week') . "</li><nobr>";
 			$i++;
 			}
 		}				// end for ($j...)

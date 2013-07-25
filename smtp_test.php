@@ -25,9 +25,7 @@ $temp = get_variable('smtp_acct');
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>SMTP Mail Transfer Test
-
-</TITLE>
+<TITLE><?php print gettext('SMTP Mail Transfer Test');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -64,7 +62,7 @@ BODY { BACKGROUND-COLOR: #EFEFEF; FONT-WEIGHT: normal; FONT-SIZE: 10px; COLOR: #
 		if (!(validate_email(document.test.to_addr.value)))		{errormsg += "\t\'To address\' is invalid\n";}
 		if (errormsg=="") {document.test.submit(); }
 		else {
-			alert ("Please correct the following errors\n"+ errormsg);
+			alert ("<?php print gettext('Please correct the following errors');?>\n"+ errormsg);
 			return false;
 			}
 		}
@@ -81,28 +79,28 @@ if (empty($_POST)) {
 <FORM NAME = "test" METHOD = 'post' ACTION = '<?php print basename(__FILE__);?>'>
 
 <TABLE ALIGN = 'center' WIDTH='640px'>
-<TR CLASS="even"><TD COLSPAN=2 ALIGN='center'><BR /><H3>SMTP Mail Test</H3><?php print $caption;?></TD></TR>
-<TR CLASS="odd"><TD></TD><TD><BR /><H4>Enter values  from your email account</H4></TD></TR>
-<TR CLASS="even"><TD>Server name: </TD>			<TD><INPUT TYPE = 'text' NAME='server' 		VALUE='<?php print $server;?>' SIZE= 24><I> ex: outgoing.verizon.net</TD></TR>
-<TR CLASS="odd"><TD>Port:  </TD>				<TD><INPUT TYPE = 'text' NAME='port'  		VALUE='<?php print $port;?>' SIZE= 4><I> ex:587</TD></TR>
-<TR CLASS="even"><TD>Security: </TD>	<TD>
-						<SPAN STYLE = 'margin-left: 24px;'>None &raquo; <INPUT TYPE = 'radio' NAME = 'security' VALUE = 'none' CHECKED></SPAN>
-						<SPAN STYLE = 'margin-left: 24px;'>SSL &raquo; <INPUT TYPE = 'radio' NAME = 'security' VALUE = 'ssl' ></SPAN>
-						<SPAN STYLE = 'margin-left: 24px;'>TLS &raquo; <INPUT TYPE = 'radio' NAME = 'security' VALUE = 'tls' ></SPAN>
-		<SPAN STYLE = 'margin-left: 24px;'><I> ISP dependent (Gmail requires a secure transport)</SPAN></TD></TR> <!-- 7/5/10 -->
+<TR CLASS="even"><TD COLSPAN=2 ALIGN='center'><BR /><H3><?php print gettext('SMTP Mail Test');?></H3><?php print $caption;?></TD></TR>
+<TR CLASS="odd"><TD></TD><TD><BR /><H4><?php print gettext('Enter values  from your email account');?></H4></TD></TR>
+<TR CLASS="even"><TD><?php print gettext('Server name');?>: </TD>			<TD><INPUT TYPE = 'text' NAME='server' 		VALUE='<?php print $server;?>' SIZE= 24><I> ex: outgoing.verizon.net</TD></TR>
+<TR CLASS="odd"><TD><?php print gettext('Port');?>:  </TD>				<TD><INPUT TYPE = 'text' NAME='port'  		VALUE='<?php print $port;?>' SIZE= 4><I> ex:587</TD></TR>
+<TR CLASS="even"><TD><?php print gettext('Security');?>: </TD>	<TD>
+						<SPAN STYLE = 'margin-left: 24px;'><?php print gettext('None');?> &raquo; <INPUT TYPE = 'radio' NAME = 'security' VALUE = 'none' CHECKED></SPAN>
+						<SPAN STYLE = 'margin-left: 24px;'><?php print gettext('SSL');?> &raquo; <INPUT TYPE = 'radio' NAME = 'security' VALUE = 'ssl' ></SPAN>
+						<SPAN STYLE = 'margin-left: 24px;'><?php print gettext('TLS');?> &raquo; <INPUT TYPE = 'radio' NAME = 'security' VALUE = 'tls' ></SPAN>
+		<SPAN STYLE = 'margin-left: 24px;'><I> <?php print gettext('ISP dependent (Gmail requires a secure transport)');?></SPAN></TD></TR> <!-- 7/5/10 -->
 
-<TR CLASS="odd"><TD>User account: </TD>			<TD><INPUT TYPE = 'text' NAME='user_acct'  	VALUE='<?php print $user_acct;?>' SIZE= 24><I> ex:ashore3</TD></TR>
-<TR CLASS="even"><TD>Password:  </TD>			<TD><INPUT TYPE = 'text' NAME='pass'  		VALUE='<?php print $pass;?>' SIZE= 12><I> ex:whatever</TD></TR>
+<TR CLASS="odd"><TD><?php print gettext('User account');?>: </TD>			<TD><INPUT TYPE = 'text' NAME='user_acct'  	VALUE='<?php print $user_acct;?>' SIZE= 24><I> ex:ashore3</TD></TR>
+<TR CLASS="even"><TD><?php print gettext('Password');?>:  </TD>			<TD><INPUT TYPE = 'text' NAME='pass'  		VALUE='<?php print $pass;?>' SIZE= 12><I> ex:whatever</TD></TR>
 </TABLE>
 <BR />
 <TABLE ALIGN = 'center' WIDTH='640px'>
-<TR CLASS="odd"><TD></TD><TD><H4>Enter your test message</H4></TD></TR>
-<TR CLASS="even"><TD>From name: </TD>			<TD><INPUT TYPE = 'text' NAME='from_user'	VALUE='' SIZE= 24><I> anything</I></TD></TR>
-<TR CLASS="odd"><TD>From address: </TD>			<TD><INPUT TYPE = 'text' NAME='from_addr'	VALUE='' SIZE= 24><I> a <B>valid</B> email address (your ISP's restriction may apply)</I></TD></TR>
-<TR CLASS="even"><TD>To address: </TD>			<TD><INPUT TYPE = 'text' NAME='to_addr'		VALUE='' SIZE= 24><I> a <B>valid</B> email address</I></TD></TR>
-<TR CLASS="odd"><TD>Subject:  </TD>				<TD><INPUT TYPE = 'text' NAME='subj'		VALUE='' SIZE= 24></TD></TR>
-<TR CLASS="even" VALIGN='top'><TD>Message:  	</TD><TD><TEXTAREA NAME='msg' cols=40 rows=2></TEXTAREA><BR /></TD></TR>
-<TR CLASS="odd"><TD></TD><TD><BR /><INPUT TYPE = reset VALUE='Reset' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE = 'button' VALUE='Send' onClick = "validate()" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE = 'button' VALUE='Cancel' onClick = "self.close();"/></TD></TR>
+<TR CLASS="odd"><TD></TD><TD><H4><?php print gettext('Enter your test message');?></H4></TD></TR>
+<TR CLASS="even"><TD><?php print gettext('From name');?>: </TD>			<TD><INPUT TYPE = 'text' NAME='from_user'	VALUE='' SIZE= 24><I> <?php print gettext('anything');?></I></TD></TR>
+<TR CLASS="odd"><TD><?php print gettext('From address');?>: </TD>			<TD><INPUT TYPE = 'text' NAME='from_addr'	VALUE='' SIZE= 24><I> <?php print gettext('a <B>valid</B> email address (your ISP\'s restriction may apply)');?></I></TD></TR>
+<TR CLASS="even"><TD><?php print gettext('To address');?>: </TD>			<TD><INPUT TYPE = 'text' NAME='to_addr'		VALUE='' SIZE= 24><I> <?php print gettext('a <B>valid</B> email address');?></I></TD></TR>
+<TR CLASS="odd"><TD><?php print gettext('Subject');?>:  </TD>				<TD><INPUT TYPE = 'text' NAME='subj'		VALUE='' SIZE= 24></TD></TR>
+<TR CLASS="even" VALIGN='top'><TD><?php print gettext('Message');?>:  	</TD><TD><TEXTAREA NAME='msg' cols=40 rows=2></TEXTAREA><BR /></TD></TR>
+<TR CLASS="odd"><TD></TD><TD><BR /><INPUT TYPE = reset VALUE='<?php print gettext('Reset');?>' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE = 'button' VALUE='<?php print gettext('Send');?>' onClick = "validate()" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE = 'button' VALUE='<?php print gettext('Cancel');?>' onClick = "self.close();"/></TD></TR>
 </TABLE>
 </FORM>
 </BODY>
@@ -183,11 +181,11 @@ else {
 			foreach ($failures as $value){
 			    $errs .= $value . " ";
 			    }
-			$caption = "Mail to '$errs' failed";
+			$caption = '"' . gettext('Mail to') . " '$errs' " . gettext('failed') . '"';
 			}
 		else {
 			if ($errors) {
-				$caption = "Mail delivery failed";
+				$caption = '"' . gettext('Mail delivery failed') . '"';
 				}
 			}
 		}
@@ -196,7 +194,7 @@ else {
 			dump($server);
 			dump($fp);
 			}
-		$caption = "Failed - server name error";
+		$caption = '"' . gettext('Failed - server name error') . '"';
 		}
 
 ?>
@@ -206,8 +204,8 @@ else {
 <BR />
 <BR />
 <FORM NAME='mail' METHOD = 'post' ACTION = '<?php print basename(__FILE__);?>'>
-<INPUT TYPE='button' VALUE = "Again" onClick = "this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE='button' VALUE = "Close" onClick = "self.close();" />
+<INPUT TYPE='button' VALUE = "<?php print gettext('Again');?>" onClick = "this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE='button' VALUE = "<?php print gettext('Close');?>" onClick = "self.close();" />
 </FORM>
 </CENTER>
 </BODY>

@@ -30,7 +30,7 @@ $_GET = stripslashes_deep($_GET);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 	<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">	
-	<HEAD><TITLE>Tickets - Routes to Incident Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Routes to Incident Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="Expires" CONTENT="0">
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -80,10 +80,10 @@ catch(e) {
 </SCRIPT>
 </HEAD>
 <BODY>
-	<CENTER><BR><BR><BR><BR><H3>Call Assignments made to:<BR /><?php print $_POST['frm_name_str'];?><BR><BR>
-	See call Board</H3>
+	<CENTER><BR><BR><BR><BR><H3><?php print gettext('Call Assignments made to');?>:<BR /><?php print $_POST['frm_name_str'];?><BR><BR>
+	<?php print gettext('See call Board');?></H3>
 	<FORM NAME='cont_form' METHOD = 'get' ACTION = "main.php">
-	<INPUT TYPE='button' VALUE='Continue' onClick = "document.cont_form.submit()">
+	<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>' onClick = "document.cont_form.submit()">
 	</FORM></BODY></HTML>
 <?php		
 	}		// end if (!empty($_POST))
@@ -250,7 +250,7 @@ function doReset() {
 		<TD VALIGN="top" ALIGN='center'>
 			<DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
 			<BR />
-			<BR /><BR />Units:&nbsp;&nbsp;&nbsp;&nbsp;
+			<BR /><BR /><?php print gettext('Units');?>:&nbsp;&nbsp;&nbsp;&nbsp;
 				EMS: 	<IMG SRC = './markers/sm_yellow.png' 	BORDER=0>&nbsp;&nbsp;&nbsp;
 				Fire: 		<IMG SRC = './markers/sm_red.png' 		BORDER=0>&nbsp;&nbsp;&nbsp;
 				Police: 	<IMG SRC = './markers/sm_blue.png' 		BORDER=0>&nbsp;&nbsp;&nbsp;
@@ -359,7 +359,7 @@ function do_list($unit_id ="") {
  */	
 		function myclick(id) {								// Responds to sidebar click
 			if (!(lats[id])) {
-				alert("Cannot route -  no position data currently available");
+				alert("<?php print gettext('Cannot route -  no position data currently available');?>");
 				return false;
 				}
 			else {
@@ -386,20 +386,20 @@ function do_list($unit_id ="") {
  */	
 		function handleErrors(){		//G_GEO_UNKNOWN_DIRECTIONS 
 			if (gdir.getStatus().code == G_GEO_UNKNOWN_DIRECTIONS )
-				alert("290: No driving directions are available to/from this location.\nError code: " + gdir.getStatus().code);
+				alert("290: <?php print gettext('No driving directions are available to/from this location.') . "\n" . gettext('Error code');?>: " + gdir.getStatus().code);
 			else if (gdir.getStatus().code == G_GEO_UNKNOWN_ADDRESS)
-				alert("292: No corresponding geographic location could be found for one of the specified addresses. This may be due to the fact that the address is relatively new, or it may be incorrect.\nError code: " + gdir.getStatus().code);
+				alert("292: <?php print gettext('No corresponding geographic location could be found for one of the specified addresses. This may be due to the fact that the address is relatively new, or it may be incorrect.') . "\n" . gettext('Error code');?>: " + gdir.getStatus().code);
 			else if (gdir.getStatus().code == G_GEO_SERVER_ERROR)
-				alert("294: A geocoding or directions request could not be successfully processed, yet the exact reason for the failure is not known.\n Error code: " + gdir.getStatus().code);
+				alert("294: <?php print gettext('A geocoding or directions request could not be successfully processed, yet the exact reason for the failure is not known.') . "\n " . gettext('Error code');?>: " + gdir.getStatus().code);
 			else if (gdir.getStatus().code == G_GEO_MISSING_QUERY)
-				alert("296: The HTTP q parameter was either missing or had no value. For geocoder requests, this means that an empty address was specified as input. For directions requests, this means that no query was specified in the input.\n Error code: " + gdir.getStatus().code);
+				alert("296: <?php print gettext('The HTTP q parameter was either missing or had no value. For geocoder requests, this means that an empty address was specified as input. For directions requests, this means that no query was specified in the input.') . "\n " . gettext('Error code');?>: " + gdir.getStatus().code);
 	//		else if (gdir.getStatus().code == G_UNAVAILABLE_ADDRESS)  <--- Doc bug... this is either not defined, or Doc is wrong
-	//			alert("296: The geocode for the given address or the route for the given directions query cannot be returned due to legal or contractual reasons.\n Error code: " + gdir.getStatus().code);
+	//			alert("296: <?php print gettext('The geocode for the given address or the route for the given directions query cannot be returned due to legal or contractual reasons.') . "\n " . gettext('Error code');?>: " + gdir.getStatus().code);
 			else if (gdir.getStatus().code == G_GEO_BAD_KEY)
-				alert("300: The given key is either invalid or does not match the domain for which it was given. \n Error code: " + gdir.getStatus().code);
+				alert("300: <?php print gettext('The given key is either invalid or does not match the domain for which it was given.') . " \n " . gettext('Error code');?>: " + gdir.getStatus().code);
 			else if (gdir.getStatus().code == G_GEO_BAD_REQUEST)
-				alert("302: A directions request could not be successfully parsed.\n Error code: " + gdir.getStatus().code);
-			else alert("303: An unknown error occurred.");
+				alert("302: <?php print gettext('A directions request could not be successfully parsed.') . "\n " . gettext('Error code');?>: " + gdir.getStatus().code);
+			else alert("303: <?php print gettext('An unknown error occurred.');?>");
 			}		// end function handleErrors()
 /**
  * 
@@ -418,7 +418,7 @@ function do_list($unit_id ="") {
  * @returns {undefined}
  */
 		function guest () {
-			alert ("Demonstration only.  Guests may not commit dispatch!");
+			alert ("<?php print gettext('Demonstration only.  Guests may not commit dispatch!');?>");
 			}
 /**
  * 
@@ -434,11 +434,11 @@ function do_list($unit_id ="") {
 				}
 			if (msgstr.length==0) {
 				var more = (nr_units>1)? "s": ""
-				alert ("Please select unit" + more + ", or cancel");
+				alert ("<?php print gettext('Please select unit');?>" + more + ", <?php print gettext('or cancel');?>");
 				return false;
 				}
 			else {
-				if (confirm ("Please confirm Unit dispatch as follows\n\n" + msgstr)) {
+				if (confirm ("<?php print gettext('Please confirm Unit dispatch as follows');?>\n\n" + msgstr)) {
 					document.routes_Form.frm_id_str.value = document.routes_Form.frm_id_str.value.substring(0, document.routes_Form.frm_id_str.value.length - 1);	// drop trailing separator
 					document.routes_Form.frm_name_str.value = msgstr;	// for re-use
 					document.routes_Form.submit();
@@ -476,9 +476,9 @@ function do_list($unit_id ="") {
 	    var addressMarker;
 		
 		var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_responders'>";
-		side_bar_html += "<TR class='even'>	<TD colspan=99 ALIGN='center'><B>Routes to Incident <I><?php print shorten($row_unit['scope'], 20); ?></I></B></TD></TR>";
-		side_bar_html += "<TR class='odd'>	<TD colspan=99 ALIGN='center'>Click line or icon for route</TD></TR>";
-		side_bar_html += "<TR class='even'>	<TD COLSPAN=2></TD><TD ALIGN='center'>Unit</TD><TD ALIGN='center'>SLD</TD><TD ALIGN='center'>Status</TD><TD>M</TD><TD ALIGN='center'>As of</TD><TD>Assign</TD></TR>";
+		side_bar_html += "<TR class='even'>	<TD colspan=99 ALIGN='center'><B><?php print gettext('Routes to Incident');?> <I><?php print shorten($row_unit['scope'], 20); ?></I></B></TD></TR>";
+		side_bar_html += "<TR class='odd'>	<TD colspan=99 ALIGN='center'><?php print gettext('Click line or icon for route');?></TD></TR>";
+		side_bar_html += "<TR class='even'>	<TD COLSPAN=2></TD><TD ALIGN='center'><?php print gettext('Unit');?></TD><TD ALIGN='center'><?php print gettext('SLD');?></TD><TD ALIGN='center'><?php print gettext('Status');?></TD><TD><?php print gettext('M');?></TD><TD ALIGN='center'><?php print gettext('As of');?></TD><TD><?php print gettext('Assign');?></TD></TR>";
 		var gmarkers = [];
 		var infoTabs = [];
 		var lats = [];
@@ -579,10 +579,10 @@ function do_list($unit_id ="") {
 <?php
 				$tab_1 = "<TABLE CLASS='infowin' width='" . $_SESSION['scr_width']/4 . "px'>";
 				$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . shorten($unit_row['name'], 48) . "</TD></TR>";
-				$tab_1 .= "<TR CLASS='even'><TD>Description:</TD><TD>" . shorten(str_replace($eols, " ", $unit_row['description']), 32) . "</TD></TR>";
-				$tab_1 .= "<TR CLASS='odd'><TD>Status:</TD><TD>" . $unit_row['unitstatus'] . " </TD></TR>";
-				$tab_1 .= "<TR CLASS='even'><TD>Contact:</TD><TD>" . $unit_row['contact_name']. " Via: " . $unit_row['contact_via'] . "</TD></TR>";
-				$tab_1 .= "<TR CLASS='odd'><TD>As of:</TD><TD>" . format_date($unit_row['updated']) . "</TD></TR>";
+				$tab_1 .= "<TR CLASS='even'><TD>" . gettext('Description') . ":</TD><TD>" . shorten(str_replace($eols, " ", $unit_row['description']), 32) . "</TD></TR>";
+				$tab_1 .= "<TR CLASS='odd'><TD>" . gettext('Status') . ":</TD><TD>" . $unit_row['unitstatus'] . " </TD></TR>";
+				$tab_1 .= "<TR CLASS='even'><TD>" . gettext('Contact') . ":</TD><TD>" . $unit_row['contact_name']. " " . gettext('Via') . ": " . $unit_row['contact_via'] . "</TD></TR>";
+				$tab_1 .= "<TR CLASS='odd'><TD>" . gettext('As of') . ":</TD><TD>" . format_date($unit_row['updated']) . "</TD></TR>";
 				$tab_1 .= "</TABLE>";
 ?>
 				new_element = document.createElement("input");								// please don't ask!
@@ -604,10 +604,10 @@ function do_list($unit_id ="") {
 			
 						$tab_2 = "<TABLE CLASS='infowin' width='" . $_SESSION['scr_width']/4 . "px'>";
 						$tab_2 .= "<TR><TH CLASS='even' COLSPAN=2>" . $track_row['source'] . "</TH></TR>";
-						$tab_2 .= "<TR CLASS='odd'><TD>Course: </TD><TD>" . $track_row['course'] . ", Speed:  " . $track_row['speed'] . ", Alt: " . $track_row['altitude'] . "</TD></TR>";
-						$tab_2 .= "<TR CLASS='even'><TD>Closest city: </TD><TD>" . $track_row['closest_city'] . "</TD></TR>";
-						$tab_2 .= "<TR CLASS='odd'><TD>Status: </TD><TD>" . $track_row['status'] . "</TD></TR>";
-						$tab_2 .= "<TR CLASS='even'><TD>As of: </TD><TD>" . format_date($track_row['packet_date']) . "</TD></TR>";
+						$tab_2 .= "<TR CLASS='odd'><TD>" . gettext('Course') . ": </TD><TD>" . $track_row['course'] . ", " . gettext('Speed') . ":  " . $track_row['speed'] . ", " . gettext('Alt') . ": " . $track_row['altitude'] . "</TD></TR>";
+						$tab_2 .= "<TR CLASS='even'><TD>" . gettext('Closest city') . ": </TD><TD>" . $track_row['closest_city'] . "</TD></TR>";
+						$tab_2 .= "<TR CLASS='odd'><TD>" . gettext('Status') . ": </TD><TD>" . $track_row['status'] . "</TD></TR>";
+						$tab_2 .= "<TR CLASS='even'><TD>" . gettext('As of') . ": </TD><TD>" . format_date($track_row['packet_date']) . "</TD></TR>";
 						$tab_2 .= "</TABLE>";
 ?>
 						var myinfoTabs = [
@@ -682,7 +682,7 @@ function do_list($unit_id ="") {
 //					responders complete
 ?>
 		if (nr_units==0) {
-			side_bar_html +="<TR CLASS='odd'><TD ALIGN='center' COLSPAN=99><BR /><B>No Units!</B></TD></TR>";;		
+			side_bar_html +="<TR CLASS='odd'><TD ALIGN='center' COLSPAN=99><BR /><B><?php print gettext('No Units!');?></B></TD></TR>";;		
 			map.setCenter(new GLatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
 			}
 		else {
@@ -690,14 +690,14 @@ function do_list($unit_id ="") {
 			zoom = map.getBoundsZoomLevel(bounds);		// -1 for further out	
 			map.setCenter(center,zoom);
 			side_bar_html+= "<TR CLASS='" + colors[i%2] +"'><TD COLSPAN=99>&nbsp;</TD></TR>";
-			side_bar_html+= "<TR CLASS='" + colors[(i+1)%2] +"'><TD COLSPAN=99 ALIGN='center'><B>M</B>obility:&nbsp;&nbsp; stopped: <FONT COLOR='red'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;moving: <FONT COLOR='green'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;fast: <FONT COLOR='white'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;silent: <FONT COLOR='black'><B>&bull;</B></FONT></TD></TR>";
+			side_bar_html+= "<TR CLASS='" + colors[(i+1)%2] +"'><TD COLSPAN=99 ALIGN='center'><?php print gettext('<B>M</B>obility');?>:&nbsp;&nbsp; <?php print gettext('stopped');?>: <FONT COLOR='red'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('moving');?>: <FONT COLOR='green'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('fast');?>: <FONT COLOR='white'><B>&bull;</B></FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('silent');?>: <FONT COLOR='black'><B>&bull;</B></FONT></TD></TR>";
 			side_bar_html+= "<TR><TD>&nbsp;</TD></TR>";
 <?php
 			$thefunc = (is_guest())? "guest()" : "validate()";		// reject guest attempts
 ?>
-			side_bar_html+= "<TR><TD COLSPAN=99 ALIGN='center'><INPUT TYPE='button' VALUE='Cancel'  onClick='history.back();'>";
-			side_bar_html+= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='button' value='DISPATCH SELECTED UNITS' onClick = '<?php print $thefunc;?>' />";
-			side_bar_html+= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='RESET' VALUE='Reset' onClick = 'doReset()'>";
+			side_bar_html+= "<TR><TD COLSPAN=99 ALIGN='center'><INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>'  onClick='history.back();'>";
+			side_bar_html+= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='button' value='<?php print gettext('DISPATCH SELECTED UNITS');?>' onClick = '<?php print $thefunc;?>' />";
+			side_bar_html+= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='RESET' VALUE='<?php print gettext('Reset');?>' onClick = 'doReset()'>";
 			side_bar_html+= "</TD></TR>";
 			}
 	
@@ -714,7 +714,7 @@ function do_list($unit_id ="") {
 		}		// end if (GBrowserIsCompatible())
 
 	else {
-		alert("Sorry,  browser compatibility problem. Contact your tech support group.");
+		alert("<?php print gettext('Sorry,  browser compatibility problem. Contact your tech support group.');?>");
 		}
 	</SCRIPT>
 	

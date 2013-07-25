@@ -167,7 +167,7 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-	<HEAD><TITLE>Tickets - Routes Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Routes Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 	<META HTTP-EQUIV="Expires" CONTENT="0" />
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -227,7 +227,7 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 			} 
 		else {
 //			alert ("158: failed");
-			alert("failed at line <?php print __LINE__;?>");
+			alert("<?php print gettext('failed at line') . __LINE__;?>");
 			return false;
 			}																						 
 		}		// end function sync Ajax(strURL)
@@ -787,7 +787,7 @@ if((array_key_exists('func', $_REQUEST)) && ($_REQUEST['func'] == "do_db")) {	//
 		var url = "mail_edit.php?ticket_id=" + ticket_id + "&addrs=" + addrs + "&smsgaddrs=" + smsgaddrs + "&text=";	// no text
 		newwindow_mail=window.open(url, "mail_edit",  "titlebar, location=0, resizable=1, scrollbars, height=360,width=600,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 		if (isNull(newwindow_mail)) {
-			alert ("Email edit operation requires popups to be enabled -- please adjust your browser options.");
+			alert ("<?php print gettext('Email edit operation requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 		newwindow_mail.focus();
@@ -833,16 +833,16 @@ else {
 	parent.frames['upper'].show_msg ('Email sent!');
 	}
 </SCRIPT>
-	<CENTER><BR><BR><BR><BR><H3>Call Assignments made to:<BR /><?php print substr((str_replace ( "\n", ", ", $_REQUEST['frm_name_str'])) , 0, -2);?><BR><BR> <!-- 11/8/08 -->
+	<CENTER><BR><BR><BR><BR><H3><?php print gettext('Call Assignments made to');?>:<BR /><?php print substr((str_replace ( "\n", ", ", $_REQUEST['frm_name_str'])) , 0, -2);?><BR><BR> <!-- 11/8/08 -->
 <?php print (intval(get_variable("call_board")) == 1)? "See Call Board": "";?>	
 	</H3>
 	<NOBR>
 	<FORM NAME='more_form' METHOD = 'get' ACTION = "<?php print basename(__FILE__); ?>" style="display: inline;"><!-- 7/9/10 -->
-	<INPUT TYPE='button' VALUE='More' onClick = "document.more_form.submit()" />
+	<INPUT TYPE='button' VALUE='<?php print gettext('More');?>' onClick = "document.more_form.submit()" />
 	<INPUT TYPE = 'hidden' NAME = 'ticket_id' VALUE="<?php print get_ticket_id ();?>">
 	</FORM>
 	<FORM NAME='cont_form' METHOD = 'get' ACTION = "main.php" STYLE = 'margin-left:20px; display: inline;'><!-- 8/30/10  -->
-	<INPUT TYPE='button' VALUE='Finished' onClick = "document.cont_form.submit()" />
+	<INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = "document.cont_form.submit()" />
 	</FORM>
 	</NOBR>
 	</BODY></HTML>
@@ -1125,9 +1125,9 @@ function checkForm(form)	{	//	6/10/11
 		sendRequest (url, fvg_handleResult, params);				
 //			form.submit();
 	} else {
-		errmsg+= "\tYou cannot Hide all the regions\n";
+		errmsg+= "\t<?php print gettext('You cannot Hide all the regions');?>\n";
 		if (errmsg!="") {
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 		}
 	}
@@ -1217,34 +1217,34 @@ function toggle_div(theDiv, theButton, theText) {
 			$('the_ticket').style.display = 'none';
 			$('disp_details').style.display = 'none';	
 			$('the_messages').style.display = 'none';				
-			$('toggle_tkt').innerHTML = "Show Ticket";	
-			$('toggle_dispatch').innerHTML = "Show Disp Details";
-			$('toggle_msgs').innerHTML = "Show Messages";			
+			$('toggle_tkt').innerHTML = "<?php print gettext('Show Ticket');?>";	
+			$('toggle_dispatch').innerHTML = "<?php print gettext('Show Disp Details');?>";
+			$('toggle_msgs').innerHTML = "<?php print gettext('Show Messages');?>";			
 			} else if(theButton == "toggle_tkt") {
 			$('directions').style.display = 'none';
 			$('disp_details').style.display = 'none';
 			$('the_messages').style.display = 'none';				
-			$('toggle_dirs').innerHTML = "Show Directions";	
-			$('toggle_dispatch').innerHTML = "Show Disp Details";
-			$('toggle_msgs').innerHTML = "Show Messages";				
+			$('toggle_dirs').innerHTML = "<?php print gettext('Show Directions');?>";	
+			$('toggle_dispatch').innerHTML = "<?php print gettext('Show Disp Details');?>";
+			$('toggle_msgs').innerHTML = "<?php print gettext('Show Messages');?>";				
 			} else if(theButton == "toggle_dispatch") {
 			$('directions').style.display = 'none';
 			$('disp_details').style.display = 'none';	
 			$('the_messages').style.display = 'none';	
-			$('toggle_dirs').innerHTML = "Show Directions";	
-			$('toggle_dispatch').innerHTML = "Show Disp Details";
-			$('toggle_msgs').innerHTML = "Show Messages";				
+			$('toggle_dirs').innerHTML = "<?php print gettext('Show Directions');?>";	
+			$('toggle_dispatch').innerHTML = "<?php print gettext('Show Disp Details');?>";
+			$('toggle_msgs').innerHTML = "<?php print gettext('Show Messages');?>";				
 			} else if(theButton == "toggle_msgs") {
 			$('the_ticket').style.display = 'none';			
 			$('directions').style.display = 'none';
 			$('disp_details').style.display = 'none';	
-			$('toggle_tkt').innerHTML = "Show Ticket";				
-			$('toggle_dirs').innerHTML = "Show Directions";	
-			$('toggle_dispatch').innerHTML = "Show Disp Details";
+			$('toggle_tkt').innerHTML = "<?php print gettext('Show Ticket');?>";				
+			$('toggle_dirs').innerHTML = "<?php print gettext('Show Directions');?>";	
+			$('toggle_dispatch').innerHTML = "<?php print gettext('Show Disp Details');?>";
 			}
-		$(theButton).innerHTML = "Hide " + theText;				
+		$(theButton).innerHTML = "<?php  print gettext('Hide');?> " + theText;				
 		$(theDiv).style.display = 'block';
-		$(theButton).innerHTML = "Hide " + theText;
+		$(theButton).innerHTML = "<?php  print gettext('Hide');?> " + theText;
 		}
 	}
 		
@@ -1274,13 +1274,13 @@ function toggle_div(theDiv, theButton, theText) {
 ?>
 			<DIV ID='theform' style='position: relative; top: 10px; background-color: transparent; border-color: #000000;'><!-- 11/18/10 -->	
 			<TABLE ALIGN='center' BORDER='0'>
-			<TR class='heading'><TH class='heading'>FILTER BY CAPABILITIES</TH></TR>	<!-- 3/15/11 -->
+			<TR class='heading'><TH class='heading'><?php  print gettext('FILTER BY CAPABILITIES');?></TH></TR>	<!-- 3/15/11 -->
 			<FORM NAME='filter_Form' METHOD="GET" ACTION="routes.php">
-			<TR class='odd'><TD ALIGN='center'>Filter Type: <b>OR </b><INPUT TYPE='radio' NAME='searchtype' VALUE='OR' checked><b>AND </b><INPUT TYPE='radio' NAME='searchtype' VALUE='AND'></TD></TR>	<!-- 3/15/11 -->
+			<TR class='odd'><TD ALIGN='center'><?php  print gettext('Filter Type');?>: <b><?php  print gettext('OR');?> </b><INPUT TYPE='radio' NAME='searchtype' VALUE='OR' checked><b><?php  print gettext('AND');?> </b><INPUT TYPE='radio' NAME='searchtype' VALUE='AND'></TD></TR>	<!-- 3/15/11 -->
 			<TR class='even'><TD><INPUT SIZE='48' TYPE='text' NAME='capabilities' VALUE='<?php print $capabilities;?>' MAXLENGTH='64'></TD></TR>	<!-- 3/15/11 -->
 			<INPUT TYPE='hidden' NAME='ticket_id' 	VALUE='<?php print get_ticket_id (); ?>' />
 			<INPUT TYPE='hidden' NAME='unit_id' 	VALUE='<?php print $unit_id; ?>' />
-			<TR class='odd'><TD align="center"><input type="button" OnClick="filterSubmit();" VALUE="Filter"/>&nbsp;&nbsp;<input type="button" OnClick="filterReset();" VALUE="Reset Filter" <?php print $disabled;?>/></TD></TR>	<!-- 3/15/11 -->	
+			<TR class='odd'><TD align="center"><input type="button" OnClick="filterSubmit();" VALUE="<?php  print gettext('Filter');?>"/>&nbsp;&nbsp;<input type="button" OnClick="filterReset();" VALUE="Reset Filter" <?php print $disabled;?>/></TD></TR>	<!-- 3/15/11 -->	
 			</FORM></TABLE></DIV></TD>
 		<?php }
 	?>
@@ -1299,10 +1299,10 @@ function toggle_div(theDiv, theButton, theText) {
 		</TD>
 		<TD VALIGN="top" ALIGN='center'>
 			<DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset; display: inline-block;'></DIV>
-			<span id='toggle_dirs' class='plain' style='position: fixed; top: 0px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('directions', 'toggle_dirs', 'Directions')">Show Directions</span><BR />
-			<span id='toggle_tkt' class='plain' style='position: fixed; top: 25px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('the_ticket', 'toggle_tkt', 'Ticket')">Show Ticket</span><BR />
-			<span id='toggle_msgs' class='plain' style='position: fixed; top: 50px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('the_messages', 'toggle_msgs', 'Messages')">Show Messages</span><BR />
-			<span id='toggle_dispatch' class='plain' style='position: fixed; top: 75px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('disp_details', 'toggle_dispatch', 'Disp details')">Show Disp Details</span><BR />
+			<span id='toggle_dirs' class='plain' style='position: fixed; top: 0px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('directions', 'toggle_dirs', 'Directions')"><?php  print gettext('Show Directions');?></span><BR />
+			<span id='toggle_tkt' class='plain' style='position: fixed; top: 25px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('the_ticket', 'toggle_tkt', 'Ticket')"><?php  print gettext('Show Ticket');?></span><BR />
+			<span id='toggle_msgs' class='plain' style='position: fixed; top: 50px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('the_messages', 'toggle_msgs', 'Messages')"><?php  print gettext('Show Messages');?></span><BR />
+			<span id='toggle_dispatch' class='plain' style='position: fixed; top: 75px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('disp_details', 'toggle_dispatch', 'Disp details')"><?php  print gettext('Show Disp Details');?></span><BR />
 			<DIV ID="directions" STYLE="position: fixed; top: 125px; right: 0px; width: <?php print get_variable('map_width') * .35;?>px; height: <?php print get_variable('map_height');?>px; text-align: left; font-weight: bold; display: none; border: 2px outset #707070; overflow-y: auto; overflow-x: auto;"></DIV>
 			<DIV ID="disp_details" STYLE="position: fixed; top: 125px; right: 0px; width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; text-align: left; font-weight: bold; display: none; border: 2px outset #707070; overflow-y: scroll;">
 			<?php print do_ticket_extras($row_ticket, $the_width, FALSE, FALSE);?>
@@ -1311,23 +1311,23 @@ function toggle_div(theDiv, theButton, theText) {
 			<?php print	do_ticket_messages($row_ticket, $the_width, FALSE, FALSE);?>
 			</DIV>			
 			<BR />
-			<SPAN CLASS = "span_link" onClick ='toglGrid()'>Grid</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->
-			<SPAN CLASS = "span_link" onClick ='doTraffic()'>Traffic</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->
-			<SPAN CLASS = "span_link" onClick = "sv_win('<?php print $row_ticket['lat'];?>','<?php print $row_ticket['lng'];?>' );">Street view</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- 8/17/09, 3/15/11 -->
-			<SPAN CLASS = "warn" ID = "loading_2">Loading Directions, Please wait........</SPAN>
+			<SPAN CLASS = "span_link" onClick ='toglGrid()'><?php  print gettext('Grid');?></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->
+			<SPAN CLASS = "span_link" onClick ='doTraffic()'><?php  print gettext('Traffic');?></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->
+			<SPAN CLASS = "span_link" onClick = "sv_win('<?php print $row_ticket['lat'];?>','<?php print $row_ticket['lng'];?>' );"><?php  print gettext('Street view');?></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- 8/17/09, 3/15/11 -->
+			<SPAN CLASS = "warn" ID = "loading_2"><?php  print gettext('Loading Directions. Please wait.');?>.......</SPAN>
 			<SPAN CLASS = "even" ID = "directions_ok_no">&nbsp;
-			<SPAN CLASS = "other_1">Directions&nbsp;&raquo;</SPAN>
+			<SPAN CLASS = "other_1"><?php  print gettext('Directions');?>&nbsp;&raquo;</SPAN>
 			<SPAN CLASS = "other_2">
 <?php
 		$checked_ok = ($_SESSION['allow_dirs'] =='true')? " CHECKED ": "";
 		$checked_no = ($_SESSION['allow_dirs'] =='true')? "": " CHECKED ";
 ?>
-				OK: <INPUT TYPE='radio' name='frm_dir' VALUE = true  <?php print $checked_ok; ?> onClick = "docheck(this.value);" />&nbsp;&nbsp;
-				No: <INPUT TYPE='radio' name='frm_dir' VALUE = false <?php print $checked_no; ?> onClick = "docheck(this.value);" /></SPAN>
+				<?php  print gettext('OK');?>: <INPUT TYPE='radio' name='frm_dir' VALUE = true  <?php print $checked_ok; ?> onClick = "docheck(this.value);" />&nbsp;&nbsp;
+				<?php  print gettext('No');?>: <INPUT TYPE='radio' name='frm_dir' VALUE = false <?php print $checked_no; ?> onClick = "docheck(this.value);" /></SPAN>
 				&nbsp;</SPAN>
 			<BR />
 			<BR />
-			<SPAN CLASS="legend" STYLE="text-align: center; vertical-align: middle;"><?php print get_text("Units");?> Legend:</SPAN><BR /><BR /><DIV CLASS="legend" ALIGN='center' VALIGN='middle' style='padding: 20px; text-align: center; vertical-align: middle; width: <?php print get_variable('map_width');?>px;'>	<!-- 3/15/11 -->
+			<SPAN CLASS="legend" STYLE="text-align: center; vertical-align: middle;"><?php print get_text("Units");?> <?php  print gettext('Legend');?>:</SPAN><BR /><BR /><DIV CLASS="legend" ALIGN='center' VALIGN='middle' style='padding: 20px; text-align: center; vertical-align: middle; width: <?php print get_variable('map_width');?>px;'>	<!-- 3/15/11 -->
 <?php
 		print get_icon_legend ();
 ?>
@@ -1344,7 +1344,7 @@ function toggle_div(theDiv, theButton, theText) {
 		</TD></TR></TABLE><!-- end outer -->
 	<DIV ID='bottom' STYLE='display:none'>
 	<CENTER>
-	<H3>Dispatching ... please wait ...</H3><BR /><BR /><BR />
+	<H3><?php  print gettext('Dispatching') . "..." . gettext('Please wait.');?>..</H3><BR /><BR /><BR />
 	</DIV>
 
 	
@@ -1395,7 +1395,7 @@ function toggle_div(theDiv, theButton, theText) {
 ?>
 		<div id='boxB' class='box' style='left:<?php print $from_left;?>px;top:<?php print $from_top;?>px; position:fixed;' > <!-- 9/23/10 -->
 		<div class="bar" STYLE="width:12em; color:red; background-color : transparent; text-align: center "
-			 onmousedown="dragStart(event, 'boxB')"><I>Drag me</I></div><!-- drag bar - 2/5/11 -->
+			 onmousedown="dragStart(event, 'boxB')"><I><?php  print gettext('Drag me');?></I></div><!-- drag bar - 2/5/11 -->
 		<div style = "margin-top:10px;">
 		<IMG SRC="markers/down.png" BORDER=0  onclick = "location.href = '#page_bottom';" STYLE = 'margin-left:2px;' />		
 		<IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#page_top';" STYLE = 'margin-left:40px;'/><br />
@@ -1408,23 +1408,23 @@ function toggle_div(theDiv, theButton, theText) {
 			print "<FORM NAME='email_form' METHOD = 'post' ACTION='do_direcs_mail.php' target='_blank' onsubmit='return mail_direcs(this);'>";	//10/6/09
 			print "<INPUT TYPE='hidden' NAME='frm_direcs' VALUE='' />";	//10/6/09
 			print "<INPUT TYPE='hidden' NAME='frm_u_id' VALUE='' />";	//10/6/09
-			print "<INPUT TYPE='hidden' NAME='frm_mail_subject' VALUE='Directions to Incident' />";	//10/6/09
+			print "<INPUT TYPE='hidden' NAME='frm_mail_subject' VALUE='" . gettext('Directions to Incident') . "' />";	//10/6/09
 			print "<INPUT TYPE='hidden' NAME='frm_scope' VALUE='' />"; // 10/29/09
 			print "<INPUT TYPE='hidden' NAME='frm_tick_id' VALUE='" . get_ticket_id() . "' />"; // 3/29/2013	
-			print "<INPUT TYPE='submit' value='Mail Direcs' ID = 'mail_dir_but' STYLE = 'visibility: hidden;' />";	//10/6/09
+			print "<INPUT TYPE='submit' value='" . gettext('Mail Directions') . "' ID = 'mail_dir_but' STYLE = 'visibility: hidden;' />";	//10/6/09
 			print "</FORM>";	
-			print "<INPUT TYPE='button' VALUE='Reset' onClick = 'show_butts(to_hidden) ; doReset()' ID = 'reset_but' STYLE = 'visibility: hidden;'  />";
+			print "<INPUT TYPE='button' VALUE='" . gettext('Reset') . ' onClick = 'show_butts(to_hidden) ; doReset()' ID = 'reset_but' STYLE = 'visibility: hidden;'  />";
 			print "</SPAN>";			
-			print "<INPUT TYPE='button' VALUE='Cancel'  onClick='history.back();'  ID = 'can_but'  STYLE = 'visibility: hidden;' />";
+			print "<INPUT TYPE='button' VALUE='" . gettext('Cancel') . '  onClick='history.back();'  ID = 'can_but'  STYLE = 'visibility: hidden;' />";
 			if ($nr_units>0) {			
-				print "<BR /><INPUT TYPE='button' value='DISPATCH\nUNITS' onClick = '" . $thefunc . "' ID = 'disp_but'  STYLE = 'visibility: hidden;' />\n";	// 6/14/09
+				print "<BR /><INPUT TYPE='button' value='" . gettext('DISPATCH\nUNITS') . ' onClick = '" . $thefunc . "' ID = 'disp_but'  STYLE = 'visibility: hidden;' />\n";	// 6/14/09
 				}
-			print "<BR /><BR /><SPAN STYLE='display: 'inline-block' class='normal_text'><NOBR><H3>to:<BR /><I>{$addr}</I></H3></NOBR></SPAN>\n";
+			print "<BR /><BR /><SPAN STYLE='display: 'inline-block' class='normal_text'><NOBR><H3><?php print gettext('to');?>:<BR /><I>{$addr}</I></H3></NOBR></SPAN>\n";
 ?>
 		</div>	 <!-- end of outer -->
 <?php
 			print "<SPAN ID=\"loading\" STYLE=\"display: 'inline-block'\">";
-			print "<TABLE BGCOLOR='red' WIDTH='80%'><TR><TD><FONT COLOR='white'><B>Loading Directions, Please wait........</B></FONT></TD></TR></TABLE>";		// 10/28/09
+			print "<TABLE BGCOLOR='red' WIDTH='80%'><TR><TD><FONT COLOR='white'><B>" . gettext('Loading Directions. Please wait.') . ".......</B></FONT></TD></TR></TABLE>";		// 10/28/09
 			print "</SPAN>";
 
 ?>
@@ -1454,7 +1454,7 @@ function toggle_div(theDiv, theButton, theText) {
 ?>				
 		<A NAME="page_bottom" /> <!-- 5/13/10 -->	
 		<FORM NAME='reLoad_Form' METHOD = 'get' ACTION="<?php print basename( __FILE__); ?>">
-		<INPUT TYPE='hidden' NAME='ticket_id' 	VALUE='<?php print get_ticket_id (); ?>' />	<!-- 10/25/08 -->
+		<INPUT TYPE='hidden' NAME='ticket_id' 	VALUE='<?php print get_ticket_id(); ?>' />	<!-- 10/25/08 -->
 		</FORM>
 	</BODY>
 
@@ -1469,8 +1469,8 @@ function toggle_div(theDiv, theButton, theText) {
 	function do_notify() {
 //		alert(352);
 		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
-		var theText= "ATTENTION - New Ticket: ";
-		var theId = '<?php print get_ticket_id ();?>';
+		var theText= "<?php print gettext('ATTENTION - New Ticket');?>: ";
+		var theId = '<?php print get_ticket_id();?>';
 		
 //		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + escape(theId);		// ($to_str, $text, $ticket_id)   10/15/08
 		var params = "frm_to="+ theAddresses + "&frm_text=" + theText + "&frm_ticket_id=" + theId ;		// ($to_str, $text, $ticket_id)   10/15/08

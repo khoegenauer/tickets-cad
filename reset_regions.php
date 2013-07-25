@@ -16,7 +16,7 @@ require_once('./incs/functions.inc.php');
 <META HTTP-EQUIV="expires" CONTENT="Wed, 26 Feb 1997 08:21:57 GMT" />
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" /> <!-- 7/7/09 -->
-<TITLE>Tickets <?php print $disp_version;?></TITLE>
+<TITLE><?php print gettext('Tickets') . $disp_version;?></TITLE>
 <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
 <link rel="shortcut icon" href="favicon.ico" />
 <STYLE type="text/css">
@@ -147,9 +147,9 @@ if((isset($_GET['func'])) && ($_GET['func']=='reset')) {
 		}		
 ?>
 	<DIV style='font-size: 14px; position: absolute; top: 20px; left: 30%;'>
-	<DIV class='heading' style='font-size: 24px; text-align: center;'>Reset Regions</DIV><BR /><BR />
+	<DIV class='heading' style='font-size: 24px; text-align: center;'><?php print gettext('Reset Regions');?></DIV><BR /><BR />
 	<DIV style='padding: 20px; border:1px outset #FFFFFF; position: relative; background-color: #F8F8F8;'>	
-	All Tickets Resources have been reset to Region 1.<BR /><BR /><BR /><CENTER>
+	<?php print gettext('All Tickets Resources have been reset to Region 1.');?><BR /><BR /><BR /><CENTER>
 	<SPAN id='can_but' class='plain' onMouseOver='do_hover(this);' onMouseOut='do_plain(this);' onClick="document.can_Form.submit();">Finish</SPAN></CENTER>
 	<BR />
 	<BR />	
@@ -162,14 +162,14 @@ if((isset($_GET['func'])) && ($_GET['func']=='reset')) {
 } else {
 ?>
 	<DIV style='font-size: 14px; position: absolute; top: 20px; left: 30%;'>
-	<DIV class='heading' style='font-size: 24px; text-align: center;'>Reset Regions</DIV><BR /><BR />
+	<DIV class='heading' style='font-size: 24px; text-align: center;'><?php print gettext('Reset Regions');?></DIV><BR /><BR />
 	<DIV style='padding: 20px; border:1px outset #FFFFFF; position: relative; background-color: #F8F8F8;'>
-	<B>Are you sure you want to reset all resources on the system back to Region 1 ?</B><BR />
+	<B><?php print gettext('Are you sure you want to reset all resources on the system back to Region 1 ?');?></B><BR />
 	<BR />
 	<BR />
 	<CENTER>
-	<A HREF='reset_regions.php?func=reset' id='go_but' class='plain' onMouseOver='do_hover(this);' onMouseOut='do_plain(this);'>Yes I'm Sure</A>
-	<SPAN id='can_but' class='plain' onMouseOver='do_hover(this);' onMouseOut='do_plain(this);' onClick="document.can_Form.submit();">No - forget it</SPAN></CENTER>
+	<A HREF='reset_regions.php?func=reset' id='go_but' class='plain' onMouseOver='do_hover(this);' onMouseOut='do_plain(this);'><?php print gettext('Yes, I\'m Sure');?></A>
+	<SPAN id='can_but' class='plain' onMouseOver='do_hover(this);' onMouseOut='do_plain(this);' onClick="document.can_Form.submit();"><?php print gettext('No. Forget it.');?></SPAN></CENTER>
 	<BR />
 	<BR />	
 	</DIV>

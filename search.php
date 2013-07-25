@@ -28,7 +28,7 @@ $evenodd = array ("even", "odd");
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<HEAD><TITLE>Tickets - Search Module</TITLE>
+<HEAD><TITLE><?php print gettext('Tickets - Search Module');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -109,7 +109,7 @@ function validate(theForm) {
 
 //		$query_str = quote_smart(trim($_POST['frm_query']));		// 7/20/10
 
-		print "<BR /><SPAN STYLE = 'margin-left:80px;'><FONT CLASS='header'>Search results for '$_POST[frm_query]'</FONT></SPAN><BR /><BR />\n";
+		print "<BR /><SPAN STYLE = 'margin-left:80px;'><FONT CLASS='header'>" . gettext('Search results for') . " '$_POST[frm_query]'</FONT></SPAN><BR /><BR />\n";
 		$_POST['frm_query'] = ereg_replace(' ', '|', $_POST['frm_query']);
 		$query_str = quote_smart(trim(ereg_replace(' ', '|', $_POST['frm_query'])));
 		if($_POST['frm_search_in'])	{								//what field are we searching?
@@ -160,7 +160,7 @@ function validate(theForm) {
 			}
 
 		if (empty($id_stack )){
-			print "<SPAN STYLE = 'margin-left:80px'><B>No matches found</B></SPAN><BR /><BR />";
+			print "<SPAN STYLE = 'margin-left:80px'><B>" . gettext('No matches found') . "</B></SPAN><BR /><BR />";
 			}		
 		else {
 			$id_stack = array_unique($id_stack);		// at least one
@@ -199,17 +199,17 @@ function validate(theForm) {
 
 				}
 			elseif (mysql_num_rows($result) == 0) {
-				print "<SPAN STYLE = 'margin-left:80px'><B>No matches found</B></SPAN><BR /><BR />";
+				print "<SPAN STYLE = 'margin-left:80px'><B>" . gettext('No matches found') . "</B></SPAN><BR /><BR />";
 			
 				}
 			else {		//  more than one, list them
-				print "<SPAN STYLE = 'margin-left:80px'><B>Matches</B>: tickets {$tick_hits}, actions {$act_hits}, persons {$per_hits}</SPAN><BR /><BR />";
+				print "<SPAN STYLE = 'margin-left:80px'><B>" . gettext('Matches') . "</B>: " . gettext('tickets') . " {$tick_hits}, " . gettext('actions') . " {$act_hits}, " . gettext('persons') . " {$per_hits}</SPAN><BR /><BR />";
 			
 				print "<TABLE BORDER='0'><TR CLASS='even'>
-					<TD CLASS='td_header'><SPAN STYLE = 'margin-left:2px;'>Ticket</SPAN></TD>
-					<TD CLASS='td_header'><SPAN STYLE = 'margin-left:20px;'>Opened</SPAN></TD>
-					<TD CLASS='td_header'><SPAN STYLE = 'margin-left:20px;'>Description</SPAN></TD>
-					<TD CLASS='td_header'><SPAN STYLE = 'margin-left:20px;'>Location</SPAN></TD></TR>";
+					<TD CLASS='td_header'><SPAN STYLE = 'margin-left:2px;'>" . gettext('Ticket') . "</SPAN></TD>
+					<TD CLASS='td_header'><SPAN STYLE = 'margin-left:20px;'>" . gettext('Opened') . "</SPAN></TD>
+					<TD CLASS='td_header'><SPAN STYLE = 'margin-left:20px;'>" . gettext('Description') . "</SPAN></TD>
+					<TD CLASS='td_header'><SPAN STYLE = 'margin-left:20px;'>" . gettext('Location') . "</SPAN></TD></TR>";
 				$counter = 0;
 					
 				while($row = stripslashes_deep(mysql_fetch_assoc($result))){				// 8/28/08
@@ -236,41 +236,41 @@ function validate(theForm) {
 			}			// end if/else (empty($id_stack ))
 		}				// end if ($_POST['frm_query'])
 	else {
-		print "<SPAN STYLE = 'margin-left:86px'><FONT CLASS='header'>Search</FONT></SPAN>";
+		print "<SPAN STYLE = 'margin-left:86px'><FONT CLASS='header'>" . gettext('Search') . "</FONT></SPAN>";
 		}
 ?>
 <BR /><BR />
 <FORM METHOD="post" NAME="queryForm" ACTION="search.php" onSubmit="return validate(document.queryForm)">
 <TABLE CELLPADDING="2" BORDER="0" STYLE = 'margin-left:80px;'>
-<TR CLASS = "even"><TD VALIGN="top" CLASS="td_label">Query: &nbsp;</TD><TD><INPUT TYPE="text" SIZE="40" MAXLENGTH="255" VALUE="<?php print $post_frm_query;?>" NAME="frm_query"></TD></TR>
-<TR CLASS = "odd"><TD VALIGN="top" CLASS="td_label">Search in: &nbsp;</TD><TD>
+<TR CLASS = "even"><TD VALIGN="top" CLASS="td_label"><?php print gettext('Query');?>: &nbsp;</TD><TD><INPUT TYPE="text" SIZE="40" MAXLENGTH="255" VALUE="<?php print $post_frm_query;?>" NAME="frm_query"></TD></TR>
+<TR CLASS = "odd"><TD VALIGN="top" CLASS="td_label"><?php print gettext('Search in');?>: &nbsp;</TD><TD>
 <SELECT NAME="frm_search_in">
-<OPTION VALUE="" checked>All</OPTION>
-<OPTION VALUE="contact">Reported by</OPTION>
-<OPTION VALUE="street">Address</OPTION>
-<OPTION VALUE="city">City</OPTION>
-<OPTION VALUE="state">State</OPTION>
-<OPTION VALUE="description">Description</OPTION>
-<OPTION VALUE="comments">Comments</OPTION>
-<OPTION VALUE="owner">Owner</OPTION>
-<OPTION VALUE="date">Issue Date</OPTION>
-<OPTION VALUE="problemstart">Problem Starts</OPTION>
-<OPTION VALUE="problemend">Problem Ends</OPTION>
+<OPTION VALUE="" checked><?php print gettext('All');?></OPTION>
+<OPTION VALUE="contact"><?php print gettext('Reported by');?></OPTION>
+<OPTION VALUE="street"><?php print gettext('Address');?></OPTION>
+<OPTION VALUE="city"><?php print gettext('City');?></OPTION>
+<OPTION VALUE="state"><?php print gettext('State');?></OPTION>
+<OPTION VALUE="description"><?php print gettext('Description');?></OPTION>
+<OPTION VALUE="comments"><?php print gettext('Comments');?></OPTION>
+<OPTION VALUE="owner"><?php print gettext('Owner');?></OPTION>
+<OPTION VALUE="date"><?php print gettext('Issue Date');?></OPTION>
+<OPTION VALUE="problemstart"><?php print gettext('Problem Starts');?></OPTION>
+<OPTION VALUE="problemend"><?php print gettext('Problem Ends');?></OPTION>
 </SELECT></TD></TR>
-<TR CLASS = "even"><TD VALIGN="top" CLASS="td_label">Order By: &nbsp;</TD><TD>
+<TR CLASS = "even"><TD VALIGN="top" CLASS="td_label"><?php print gettext('Order By');?>: &nbsp;</TD><TD>
 <SELECT NAME="frm_ordertype">
-<OPTION VALUE="date">Issue Date</OPTION>
-<OPTION VALUE="problemstart">Problem Starts</OPTION>
-<OPTION VALUE="problemend">Problem Ends</OPTION>
-<OPTION VALUE="affected">Affected</OPTION>
-<OPTION VALUE="scope">Incident</OPTION>
-<OPTION VALUE="owner">Owner</OPTION>
-</SELECT>&nbsp;Descending: <INPUT TYPE="checkbox" NAME="frm_order_desc" VALUE="DESC" CHECKED></TD></TR>
-<TR CLASS = "odd"><TD VALIGN="top" CLASS="td_label">Status: &nbsp;</TD><TD>
-<INPUT TYPE="radio" NAME="frm_querytype" VALUE="%" CHECKED> All<BR />
-<INPUT TYPE="radio" NAME="frm_querytype" VALUE="<?php print $STATUS_OPEN;?>"> Open<BR />
-<INPUT TYPE="radio" NAME="frm_querytype" VALUE="<?php print $STATUS_CLOSED;?>"> Closed<BR />
+<OPTION VALUE="date"><?php print gettext('Issue Date');?></OPTION>
+<OPTION VALUE="problemstart"><?php print gettext('Problem Starts');?></OPTION>
+<OPTION VALUE="problemend"><?php print gettext('Problem Ends');?></OPTION>
+<OPTION VALUE="affected"><?php print gettext('Affected');?></OPTION>
+<OPTION VALUE="scope"><?php print gettext('Incident');?></OPTION>
+<OPTION VALUE="owner"><?php print gettext('Owner');?></OPTION>
+</SELECT>&nbsp;<?php print gettext('Descending');?>: <INPUT TYPE="checkbox" NAME="frm_order_desc" VALUE="DESC" CHECKED></TD></TR>
+<TR CLASS = "odd"><TD VALIGN="top" CLASS="td_label"><?php print gettext('Status');?>: &nbsp;</TD><TD>
+<INPUT TYPE="radio" NAME="frm_querytype" VALUE="%" CHECKED> <?php print gettext('All');?><BR />
+<INPUT TYPE="radio" NAME="frm_querytype" VALUE="<?php print $STATUS_OPEN;?>"> <?php print gettext('Open');?><BR />
+<INPUT TYPE="radio" NAME="frm_querytype" VALUE="<?php print $STATUS_CLOSED;?>"> <?php print gettext('Closed');?><BR />
 </TD></TR>
-<TR CLASS = "even"><TD></TD><TD ALIGN = "left"><INPUT TYPE="button" VALUE="Cancel"  onClick="history.back()" / ><INPUT TYPE="reset" VALUE="Reset" STYLE ="margin-left:20px" /><INPUT TYPE="submit" VALUE="Next"  STYLE ="margin-left:20px" /></TD></TR>
+<TR CLASS = "even"><TD></TD><TD ALIGN = "left"><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="history.back()" / ><INPUT TYPE="reset" VALUE="<?php print gettext('Reset');?>" STYLE ="margin-left:20px" /><INPUT TYPE="submit" VALUE="<?php print gettext('Next');?>"  STYLE ="margin-left:20px" /></TD></TR>
 </TABLE></FORM>
 </BODY></HTML>

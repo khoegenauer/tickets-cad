@@ -12,7 +12,7 @@ require_once($_SESSION['fip']);		//7/28/10
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Test Instamapper</TITLE>
+<TITLE><?php print gettext('Test Instamapper');?></TITLE>
 <META NAME="Author" CONTENT="">
 <META NAME="Keywords" CONTENT="">
 <META NAME="Description" CONTENT="">
@@ -97,11 +97,11 @@ function do_gt($user, $url) {
 <BR />
 <FORM NAME= 'frm_locatea' METHOD='get' ACTION = '<?php print basename(__FILE__);?>'>
 <TABLE ALIGN='center'>
-<TR CLASS  = 'even'><TH COLSPAN=2>LocateA Test Fails for key: <?php print $_POST['dev_key'];?></TH></TR>
+<TR CLASS  = 'even'><TH COLSPAN=2><?php print gettext('LocateA Test Fails for key');?>: <?php print $_POST['dev_key'];?></TH></TR>
 
 <TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR /><BR />
-	<INPUT TYPE='button' VALUE = 'Another' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE = 'Cancel' onClick = 'window.close();' />
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Another');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
 </TD></TR></TABLE>
 
 <?php
@@ -110,21 +110,21 @@ function do_gt($user, $url) {
 ?>
 <FORM NAME= 'frm_locatea' METHOD='get' ACTION = '<?php print basename(__FILE__);?>'>
 <TABLE ALIGN='center'>
-<TR CLASS  = 'even'><TH COLSPAN=2>LocateA Test Succeeds for key: <?php print $_POST['dev_key'];?></TH></TR>
+<TR CLASS  = 'even'><TH COLSPAN=2><?php print gettext('LocateA Test Succeeds for key');?>: <?php print $_POST['dev_key'];?></TH></TR>
 <TR><TD>&nbsp;</TD></TR>
 
-<TR CLASS='odd'><TD>Device license:</TD><TD><?php print $user_id;?></TD></TR>
-<TR CLASS='even'><TD>lat</TD><TD><?php print $lat;?></TD></TR>
-<TR CLASS='odd'><TD>Lng:</TD><TD><?php print $lng;?></TD></TR>
-<TR CLASS='even'><TD>Course:</TD><TD><?php print $heading;?></TD></TR>
-<TR CLASS='odd'><TD>MPH:</TD><TD><?php print $mph;?></TD></TR>
-<TR CLASS='even'><TD>KPH:</TD><TD><?php print $kph;?></TD></TR>
-<TR CLASS='odd'><TD>Alt:</TD><TD><?php print $alt;?></TD></TR>
+<TR CLASS='odd'><TD><?php print gettext('Device license');?>:</TD><TD><?php print $user_id;?></TD></TR>
+<TR CLASS='even'><TD><?php print gettext('Lat');?></TD><TD><?php print $lat;?></TD></TR>
+<TR CLASS='odd'><TD><?php print gettext('Lng');?>:</TD><TD><?php print $lng;?></TD></TR>
+<TR CLASS='even'><TD><?php print gettext('Course');?>:</TD><TD><?php print $heading;?></TD></TR>
+<TR CLASS='odd'><TD><?php print gettext('MPH');?>:</TD><TD><?php print $mph;?></TD></TR>
+<TR CLASS='even'><TD><?php print gettext('KPH');?>:</TD><TD><?php print $kph;?></TD></TR>
+<TR CLASS='odd'><TD><?php print gettext('Alt');?>:</TD><TD><?php print $alt;?></TD></TR>
 <TR ><TD COLSPAN = 2 ALIGN='center'><HR SIZE=1 COLOR='blue'WIDTH='75%'></TD</TR>
 
 <TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR /><BR />
-	<INPUT TYPE='button' VALUE = 'Another' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE = 'Cancel' onClick = 'window.close();' />
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Another');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
 </TD></TR></TABLE>
 
 <?php	
@@ -136,17 +136,17 @@ else {
 ?>
 <BR /><BR />
 <TABLE ALIGN = 'center' cellpadding = 4 BORDER = 0>
-<TR CLASS  = 'even'><TH COLSPAN=2>LocateA Test</TH></TR>
+<TR CLASS  = 'even'><TH COLSPAN=2><?php print gettext('LocateA Test');?></TH></TR>
 <FORM NAME= 'frm_locatea' METHOD='post' ACTION = '<?php print basename(__FILE__);?>'>
 </TD></TR>
 <TR CLASS  = 'odd'><TD>
-License key:
+<?php print gettext('License key');?>:
 </TD><TD>
 	<INPUT NAME = 'dev_key' TYPE = 'text' SIZE = '30' VALUE=''>	<BR /><BR />
 </TD></TR>
 <TR CLASS  = 'even'><TD COLSPAN=2 ALIGN='center'>
-	<INPUT TYPE='button' VALUE = 'Test' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE = 'Cancel' onClick = 'window.close();' />
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Test');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
 	<INPUT TYPE='hidden' NAME = 'frm_locatea_url' SIZE = '40' value='www.locatea.net'>
 
 </TD></TR></TABLE>

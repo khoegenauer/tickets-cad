@@ -26,7 +26,7 @@
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Hints Configuration Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Hints Configuration Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="Expires" CONTENT="0">
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -182,10 +182,10 @@
  */
 	function validate_set(theForm) {			// limited form contents validation  
 		var errmsg="";
-		if (theForm.gmaps_api_key.value.length!=86)			{errmsg+= "\tInvalid GMaps API key\n";}
+		if (theForm.gmaps_api_key.value.length!=86)			{errmsg+= "\t<?php print gettext('Invalid GMaps API key');?>\n";}
 		
 		if (errmsg!="") {
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {										// good to go!
@@ -214,7 +214,7 @@ print "//" . date("n/j/y", filemtime(basename(__FILE__))) . "\n";
 //					$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 //					print $VarName;
 //					}
-				print '<FONT CLASS="header">Hints saved</FONT>.</FONT><BR /><BR />';
+				print '<FONT CLASS="header">' . gettext('Hints saved') . '</FONT>.</FONT><BR /><BR />';
 				}
 			else {
 				print "</HEAD>\n<BODY onLoad = 'ck_frames();'>\n";		// 9/21/08
@@ -240,7 +240,7 @@ print "//" . date("n/j/y", filemtime(basename(__FILE__))) . "\n";
 				print "\n<FORM NAME='hints_Form' METHOD = 'post' onSubmit='return validate_set(document.hints_Form);' ACTION='hints_config.php?func=hints&go=true'>
 					<table border=0 STYLE = 'MARGIN-LEFT:100PX'>\n";
 				print "\n<INPUT TYPE='hidden' NAME='func' VALUE='hints_update' />\n";
-				print "\n<TR><TH COLSPAN=2>Hover over hints - enter revisions</TH></TR>\n";
+				print "\n<TR><TH COLSPAN=2>" . gettext('Hover over hints - enter revisions') . "</TH></TR>\n";
 				$dis = ((is_administrator()) || (is_super()))? "": " DISABLED ";				// 3/19/11
 				while ($row =  stripslashes_deep(mysql_fetch_array($result))) {
 					print "<TR CLASS = {$colors[$i%2]} VALIGN='middle'><TD><INPUT SIZE='10' TYPE='text' NAME='{$row['group']}' VALUE='{$row['group']}' MAXLENGTH='24'></TD></TD><TD><BR />" . substr($row['tag'], 1) . "</TD>
@@ -295,10 +295,10 @@ ul {
 	<FORM NAME='hints_select' METHOD = 'post' ACTION='hints_config.php?func=hints'>
 	<BR /><BR /><BR />
 	<TABLE BORDER="0" ALIGN="center">
-	<TR CLASS='heading'><TH COLSPAN=99>Hints Grouping</TH></TR>	
-	<TR CLASS="odd"><TD>Select hints group to show</TD><TD>
+	<TR CLASS='heading'><TH COLSPAN=99><?php print gettext('Hints Grouping');?></TH></TR>	
+	<TR CLASS="odd"><TD><?php print gettext('Select hints group to show');?></TD><TD>
 	<SELECT NAME='hints_group'>	<!--  11/17/10 -->
-	<OPTION VALUE="All" SELECTED>All</OPTION>
+	<OPTION VALUE="All" SELECTED><?php print gettext('All');?></OPTION>
 <?php
 	$query = "SELECT DISTINCT `$GLOBALS[mysql_prefix]hints`.`group`	FROM `$GLOBALS[mysql_prefix]hints` ORDER BY `$GLOBALS[mysql_prefix]hints`.`group` ASC";	
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -307,7 +307,7 @@ ul {
 		}	?>
 	</SELECT></TD></TR>
 	<TR CLASS="spacer></TR>
-	<TR CLASS="even"><TD COLSPAN="2"><INPUT TYPE='button' VALUE='Submit'  onClick='document.hints_select.submit();'></TD></TR>
+	<TR CLASS="even"><TD COLSPAN="2"><INPUT TYPE='button' VALUE='<?php print gettext('Submit');?>'  onClick='document.hints_select.submit();'></TD></TR>
 	</TABLE>
 	<INPUT TYPE='hidden' NAME='func' VALUE='show_hints'>
 	</FORM>

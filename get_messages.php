@@ -40,7 +40,7 @@ function get_the_emails($url, $user, $password, $port, $ssl="", $timeout=10 ) {	
 		}
 	// STAT
 	if(!$c) {
-		do_log($GLOBALS['LOG_EMAIL_CONNECT'], 0, 0, "Cannot connect to IC Email server: ");		
+		do_log($GLOBALS['LOG_EMAIL_CONNECT'], 0, 0, '"' . gettext('Cannot connect to IC Email server') . ": ");		
 		}
 	$s = POP3::pStat($c);
 	// $i - total number of messages, $b - total bytes

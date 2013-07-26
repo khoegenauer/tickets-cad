@@ -12,7 +12,7 @@ require_once($_SESSION['fip']);
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Latitude</TITLE>
+<TITLE><?php print gettext('Latitude');?></TITLE>
 <META NAME="Author" CONTENT="">
 <META NAME="Keywords" CONTENT="">
 <META NAME="Description" CONTENT="">
@@ -32,15 +32,15 @@ if (empty($_POST)) {
 <BR />
 <BR />
 <BR />
-<CENTER><H3>Google Latitude test</H3>
+<CENTER><H3><?php print gettext('Google Latitude test');?></H3>
 <BR />
 <BR />
 <FORM NAME='glat_form' METHOD = 'post' ACTION = '<?php print basename(__FILE__);?>'>
-Badge: <INPUT TYPE='text' NAME = 'frm_badge' SIZE = '24' value='' />	<!-- ex: -681721551039318347 -->
+<?php print gettext('Badge');?>: <INPUT TYPE='text' NAME = 'frm_badge' SIZE = '24' value='' />	<!-- ex: -681721551039318347 -->
 <BR />
 <BR />
-<INPUT TYPE='submit' VALUE='Go' />&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE="button" VALUE = "Finished" onClick = "self.close()" /></FORM>
+<INPUT TYPE='submit' VALUE='<?php print gettext('Go');?>' />&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE="button" VALUE = "<?php print gettext('Finished');?>" onClick = "self.close()" /></FORM>
 </BODY>
 </HTML>
 
@@ -126,7 +126,7 @@ function do_glat_test($user) {				// given user id,  returns Google Latitude id,
 	$user = $_POST['frm_badge'];
 	$results = do_glat_test($user);
 	
-	$caption = ($results)? "Successful": "Fails";
+	$caption = ($results)? gettext("Successful"): gettext("Fails");
 	$api_key = get_variable('gmaps_api_key');		// empty($_GET)
 ?>	
 
@@ -135,7 +135,7 @@ function do_glat_test($user) {				// given user id,  returns Google Latitude id,
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <title>Google Maps JavaScript API Example: Simple Map</title>
+    <title><?php print gettext('Google Maps JavaScript API Example: Simple Map');?></title>
     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=<?php print $api_key;?>"
             type="text/javascript"></script>
     <script type="text/javascript">
@@ -157,10 +157,10 @@ function do_glat_test($user) {				// given user id,  returns Google Latitude id,
   </head>
   <body onload="initialize()" onunload="GUnload()">
   <CENTER>
-  <H3>Google Latitude Test <?php print $caption; ?><br />
-	with public location badge: <?php print $_POST['frm_badge']; ?></H3>
-	<input type='button' value="Again" onClick = 'location.href="<?php print basename(__FILE__); ?>"' />&nbsp;&nbsp;&nbsp;&nbsp;
-  </body><input type='button' value="Finished" onClick = "self.close()" /><br /><br />
+  <H3><?php print gettext('Google Latitude Test') . $caption; ?><br />
+	<?php print gettext('with public location badge');?>: <?php print $_POST['frm_badge']; ?></H3>
+	<input type='button' value="<?php print gettext('Again');?>" onClick = 'location.href="<?php print basename(__FILE__); ?>"' />&nbsp;&nbsp;&nbsp;&nbsp;
+  </body><input type='button' value="<?php print gettext('Finished');?>" onClick = "self.close()" /><br /><br />
 <?php	if ($results) { ?>	
     <div id="map_canvas" style="width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px"></div>
 <?php } ?>    

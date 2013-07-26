@@ -86,7 +86,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
 </HEAD><BODY>
-<FONT CLASS="header">Installing <?php print $version; ?> </FONT><BR /><BR />
+<FONT CLASS="header"><?php print gettext('Installing') . $version; ?> </FONT><BR /><BR />
 <SCRIPT>
 /**
  * 
@@ -95,11 +95,11 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
  */  
 	function validate(theForm) {
 		var errmsg="";
-		if (theForm.frm_db_host.value == "")			{errmsg+= "\tMySQL HOST name is required\n";}
-		if (theForm.frm_db_dbname.value == "")			{errmsg+= "\tMySQL DATABASE name is required\n";}
-//		if (theForm.frm_api_key.value.length != 86)		{errmsg+= "\tGMaps API key is required - 86 chars\n";} -- 1/9/2013
+		if (theForm.frm_db_host.value == "")			{errmsg+= "\t<?php print gettext('MySQL HOST name is required');?>\n";}
+		if (theForm.frm_db_dbname.value == "")			{errmsg+= "\t<?php print gettext('MySQL DATABASE name is required');?>\n";}
+//		if (theForm.frm_api_key.value.length != 86)		{errmsg+= "\t<?php print gettext('GMaps API key is required - 86 chars');?>\n";} -- 1/9/2013
 		if (errmsg!="") {
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
@@ -136,10 +136,10 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		if($num_rows) {
 			if($drop_tables) {
 				mysql_query("DROP TABLE $name");
-				print "<LI> Dropped table '<B>$name</B>'<BR />";
+				print "<LI> " . gettext('Dropped table') . " '<B>$name</B>'<BR />";
 				}
 			else {
-				print "<FONT CLASS=\"warn\">Table '$name' already exists, use Re-install option instead. Click back in your browser.</FONT></BODY></HTML>";
+				print "<FONT CLASS=\"warn\">" . gettext('Table') . " '$name' " . gettext('already exists, use Re-install option instead. Click back in your browser.') . "</FONT></BODY></HTML>";
 				exit();
 				}
 			}
@@ -167,7 +167,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 	function do_insert_settings($name,$value) {
 		$tablename = prefix("settings");
 		$query = "INSERT INTO `$tablename` (name,value) VALUES('$name','$value')";
-		$result = mysql_query($query) or die("DO_INSERT_SETTINGS($name,$value) failed, execution halted");
+		$result = mysql_query($query) or die("DO_INSERT_SETTINGS($name,$value) " . gettext('failed, execution halted') . "");
 		}
 	//create tables
 /**
@@ -277,7 +277,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 UNIQUE KEY `ID` (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables = $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -302,7 +302,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 UNIQUE KEY `ID` (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -321,7 +321,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -342,7 +342,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -362,7 +362,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 UNIQUE KEY `ID` (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -378,7 +378,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 UNIQUE KEY `ID` (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -398,7 +398,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -416,7 +416,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 UNIQUE KEY `ID` (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -438,7 +438,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 UNIQUE KEY `ID` (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -460,7 +460,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -481,7 +481,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -512,7 +512,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -533,7 +533,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -552,7 +552,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 UNIQUE KEY `ID` (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Incident types' AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 
 //		--
@@ -562,7 +562,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 			$query = "INSERT INTO `$table_name` (`id`, `type`, `description`, `group`, `sort`) VALUES
 				(NULL, 'examp1', 'Example one', 'grp 1', '1'),
 				(NULL, 'examp2', 'Example two', 'grp 2', '2');";
-			mysql_query($query) or die("INSERT INTO TABLE failed, execution halted at line ". __LINE__);
+			mysql_query($query) or die("INSERT INTO TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 
 // -- --------------------------------------------------------
 
@@ -584,7 +584,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 UNIQUE KEY `ID` (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Log of station actions' AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -601,7 +601,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='login authentication' AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -630,7 +630,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 UNIQUE KEY `ID` (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -658,7 +658,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 UNIQUE KEY `ID` (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -679,7 +679,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -714,7 +714,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		  UNIQUE KEY `ID` (`id`)
 		) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 
 // -- --------------------------------------------------------
@@ -732,7 +732,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 UNIQUE KEY `ID` (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -750,7 +750,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -771,7 +771,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -790,7 +790,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -814,7 +814,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -837,7 +837,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -871,7 +871,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 UNIQUE KEY `ID` (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -888,7 +888,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 // --
@@ -917,7 +917,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 UNIQUE KEY `packet_id` (`packet_id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 // --
@@ -938,7 +938,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		  PRIMARY KEY  (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 // -- --------------------------------------------------------
 
@@ -956,7 +956,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 UNIQUE KEY `ID` (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 
 //		--
 //		--  data for table `un_status`
@@ -968,7 +968,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 				(NULL, 'unavailable', 'Unavailable', 'unav', 3),
 				(NULL, 'in_service', 'In service', 'inserv', 0);
 				";
-			mysql_query($query) or die("INSERT INTO TABLE failed, execution halted at line ". __LINE__);
+			mysql_query($query) or die("INSERT INTO TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 
 
 // -- --------------------------------------------------------
@@ -990,7 +990,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 			) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Allows for variable unit types' AUTO_INCREMENT=6 ;";
 
 //		dump ($query);
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 		$tables .= $table_name . ", ";
 
 //		--
@@ -1001,7 +1001,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 				(1, 'example', 'An example unit type', 3, '2009-01-28 14:13:06', '127.0.0.1', 1);
 				";
 
-			mysql_query($query) or die("INSERT INTO TABLE failed, execution halted at line ". __LINE__);
+			mysql_query($query) or die("INSERT INTO TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 
 
 // -- --------------------------------------------------------
@@ -1045,9 +1045,9 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		 `db_prefix` text  default NULL COMMENT 'db clone to use',
 		 PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
-		mysql_query($query) or die("CREATE TABLE failed, execution halted at line ". __LINE__);$tables .= $table_name . ", ";
+		mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);$tables .= $table_name . ", ";
 
-		print "<LI> Created tables " . substr($tables, 0, -2) . "<BR />";
+		print "<LI> " . gettext('Created tables') . " " . substr($tables, 0, -2) . "<BR />";
 		}
 
 
@@ -1068,9 +1068,9 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		$tablename = prefix("user");
 		print "<P>";
 		mysql_query("INSERT INTO `$tablename` (`user`,`passwd`,`info`,`level`,`ticket_per_page`,`sort_desc`,`sortorder`,`reporting`,`db_prefix`) VALUES('admin',MD5('admin'),'Super-administrator',0,0,1,'date',0, '$db_prefix')") or die("INSERT INTO user failed, execution halted at line " . __LINE__);
-		print "<LI> Created user '<B>admin</B>'";
+		print "<LI> " . gettext('Created user') . " '<B>admin</B>'";
 		mysql_query("INSERT INTO `$tablename` (`user`,`passwd`,`info`,`level`,`ticket_per_page`,`sort_desc`,`sortorder`,`reporting`,`db_prefix`) VALUES('guest',MD5('guest'),'Guest',3,0,1,'date',0,'$db_prefix')") or die("INSERT INTO user failed, execution halted at line " . __LINE__);
-		print "<LI> Created user '<B>guest</B>'";
+		print "<LI> " . gettext('Created user') . " '<B>guest</B>'";
 		print "</P>";
 		}
 
@@ -1123,8 +1123,8 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		do_insert_settings('lat_lng','0');			// 9/13/08
 		do_insert_settings('link_capt','');
 		do_insert_settings('link_url','');
-		do_insert_settings('login_banner','Welcome to Tickets - an Open Source Dispatch System');
-		do_insert_settings('map_caption','Your area');
+		do_insert_settings('login_banner', "'" . gettext('Welcome to Tickets - an Open Source Dispatch System') . "'");
+		do_insert_settings('map_caption',"'" . gettext('Your area') . "'");
 		do_insert_settings('map_height','512');
 		do_insert_settings('map_width','512');
 		do_insert_settings('military_time','1');				// 7/16/08
@@ -1144,7 +1144,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		do_insert_settings('wp_key','729c1a751fd3d2428cfe2a7b43442c64');		// 9/13/08
 		do_insert_settings ('internet','1');		// 8/5/10
 
-		print "<LI> Inserted default settings";
+		print "<LI> " . gettext('Inserted default settings') . "";
 		}
 
 	//output mysql settings to mysql.inc.php
@@ -1167,11 +1167,11 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
  */
 	function write_conf($host,$db,$user,$password,$prefix) {
 		if (!$fp = fopen('./incs/mysql.inc.php', 'a'))
-        	print '<LI> <FONT CLASS="warn">Cannot open mysql.inc.php for writing</FONT>';
+        	print '<LI> <FONT CLASS="warn">' . gettext('Cannot open mysql.inc.php for writing') . '</FONT></LI>';
 		else {
 			ftruncate($fp,0);
 			fwrite($fp, "<?php\n");
-			fwrite($fp, "	/* generated by '" . basename( __FILE__) . "' " . date('r') . " */\n");
+			fwrite($fp, "	/* " . gettext('generated by') . " '" . basename( __FILE__) . "' " . date('r') . " */\n");
 			fwrite($fp, '	$mysql_host 	= '."'$host';\n");
 			fwrite($fp, '	$mysql_db 		= '."'$db';\n");
 			fwrite($fp, '	$mysql_user 	= '."'$user';\n");
@@ -1181,7 +1181,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 			}
 
 		fclose($fp);
-		print '<LI> Wrote configuration to \'<B>./incs/mysql.inc.php</B>\'';
+		print '<LI> ' . gettext('Wrote configuration to \'<B>./incs/mysql.inc.php</B>\'') . '</LI>';
 		}
 
 	//upgrade db from 0.65 to 0.7
@@ -1230,16 +1230,16 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 //			print __LINE__ . " " . $query . "<BR>";
 
 			if (!@mysql_connect($_POST['frm_db_host'], $_POST['frm_db_user'], $_POST['frm_db_password'])) {
-				$the_pw = (empty($_POST['frm_db_password']))? "<i>none entered</i>"  : $_POST['frm_db_password'] ;
-				print "<B>Connection to MySQL failed using the following entered values:</B><BR /><BR />\n";
+				$the_pw = (empty($_POST['frm_db_password']))? "<i>" . gettext('none entered') . "</i>"  : $_POST['frm_db_password'] ;
+				print "<B>" . gettext('Connection to MySQL failed using the following entered values') . ":</B><BR /><BR />\n";
 				print "MySQL Host:<B> " . $_POST['frm_db_host'] . "</B><BR />\n";
 				print "MySQL Username:<B> " . $_POST['frm_db_user'] . "</B><BR />\n";
 				print "MySQL Password:<B> " . $the_pw . "</B><BR /><BR />\n";
 				print "MySQL Database Name:<B> " . $_POST['frm_db_dbname'] . "</B><BR /><BR />\n";
-				print "Please correct these entries and try again.<BR /><BR />";
+				print "" . gettext('Please correct these entries and try again.') . "<BR /><BR />";
 ?>
 				<FORM NAME='db_error' METHOD='post' ACTION = 'install.php'>
-				<INPUT TYPE='submit' VALUE='Try again'>
+				<INPUT TYPE='submit' VALUE='<?php print gettext('Try again');?>'>
 				</FORM>
 				</BODY>
 				</HTML>
@@ -1248,7 +1248,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 				}		// end if (!$result)
 
 //			mysql_connect($_POST['frm_db_host'], $_POST['frm_db_user'], $_POST['frm_db_password']) or die("<FONT CLASS=\"warn\">Couldn't connect to database on '$_POST[frm_db_host]', make sure it is running and user has permissions. Click back in your browser.</FONT>");
-			mysql_select_db($_POST['frm_db_dbname']) or die("<FONT CLASS=\"warn\">Couldn't select database '$_POST[frm_db_dbname]', make sure it exists and user has permissions. Click back in your browser.</FONT>");
+			mysql_select_db($_POST['frm_db_dbname']) or die("<FONT CLASS=\"warn\">" . gettext('Couldn\'t select database') . " '$_POST[frm_db_dbname]', " . gettext('make sure it exists and user has permissions. Click back in your browser.') . "</FONT>");
 
 //			$query = "SET GLOBAL sql_mode='STRICT_ALL_TABLES'";					// 11/6/08
 //			mysql_query($query) or die("<FONT CLASS=\"warn\">SQL error at line " . __LINE__ . " </FONT>");
@@ -1263,7 +1263,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 				create_user();
 				insert_settings();
 				write_conf($_POST['frm_db_host'],$_POST['frm_db_dbname'],$_POST['frm_db_user'],$_POST['frm_db_password'],$_POST['frm_db_prefix']);
-				print "<LI> Tickets version $version installation complete!";
+				print "<LI> " . gettext('Tickets version $version installation complete!') . "</LI>";
 				break;
 				}
 			case 'install-drop':{
@@ -1271,7 +1271,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 				create_user();
 				insert_settings();
 				write_conf($_POST['frm_db_host'],$_POST['frm_db_dbname'],$_POST['frm_db_user'],$_POST['frm_db_password'],$_POST['frm_db_prefix']);
-				print "<LI> Re-Installation done!";
+				print "<LI> " . gettext('Re-Installation done!') . "</LI>";
 				break;
 				}
 //			case 'upgrade-0.65':{
@@ -1282,27 +1282,27 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 //				}
 			case 'writeconf':{
 				write_conf($_POST['frm_db_host'],$_POST['frm_db_dbname'],$_POST['frm_db_user'],$_POST['frm_db_password'],$_POST['frm_db_prefix']);
-				print "<LI> All done.";
+				print "<LI> " . gettext('All done.') . "</LI>";
 				break;
 				}
 			default:
-				print "<LI> <FONT CLASS=\"warn\">'$_POST[frm_option]' is not a valid option!</FONT>";
+				print "<LI> <FONT CLASS=\"warn\">'$_POST[frm_option]' " . gettext('is not a valid option!') . "</FONT>";
 			}
 
-		print '<BR /><BR /><FONT CLASS="warn">Your Tickets installation is now complete - the start page is \'index.php\' .</FONT>';
-		print '<BR /><BR /><FONT CLASS="warn">It is strongly recommended that you move/delete/change rights on install.php after this</FONT>';
-		print '<BR /><BR /><A HREF="index.php?first_start=yes"><< Start Tickets >></A>';	//	5/11/12 Changed link for quick start.		
+		print '<BR /><BR /><FONT CLASS="warn">' . gettext('Your Tickets installation is now complete - the start page is \'index.php\' .') . '</FONT>';
+		print '<BR /><BR /><FONT CLASS="warn">' . gettext('It is strongly recommended that you move/delete/change rights on install.php after this.') . '</FONT>';
+		print '<BR /><BR /><A HREF="index.php?first_start=yes"><< ' . gettext('Start Tickets') . ' >></A>';	//	5/11/12 Changed link for quick start.		
 		}
 //	else if ($_GET['help']) {		//
 	else if (array_key_exists('help', $_GET)) {		// 9/16/08
 ?>
-		<BLOCKQUOTE>
-		1.  Fill in the install form with your mysql server settings. The 'table prefix' option enables you to prefix the tables with
-		an optional name if you're only using one database or need multiple instances. Thus a prefix of <B>my_</B> would name the
+		<BLOCKQUOTE><?php print gettext('
+		1.  Fill in the install form with your mysql server settings. The \'table prefix\' option enables you to prefix the tables with
+		an optional name if you\'re only using one database or need multiple instances. Thus a prefix of <B>my_</B> would name the
 		tables <B>my_action</B>, <B>my_user</B> etc.<BR /><BR />
 
-		2.  The Google Maps API key is obtained from them at http://www.google.com/apis/maps/signup.html and is free.  There, you'll be asked
-		for the domain name to which the key applies, and that will be the Tickets server and directory address.  If you're planning multiple
+		2.  The Google Maps API key is obtained from them at http://www.google.com/apis/maps/signup.html and is free.  There, you\'ll be asked
+		for the domain name to which the key applies, and that will be the Tickets server and directory address.  If you\'re planning multiple
 		installations as many keys as you may need are available.  Please note:  That key is an 86-character string, which should be
 		copy/pasted from them into the form.  Hint: email that key to yourself, along with the other form entries.<BR /><BR />
 
@@ -1314,18 +1314,18 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		before proceeding with this upgrade. All the settings will be replaced.<BR /><BR />
 -->
 
-		4.  The <B>Write Configuration Only</B> option writes the specified mysql settings to the file <B>'mysql.inc.php'</B> in the <B>'incs'</B>
-		subdirectory but doesn't alter the database	in any way.<BR /><BR />
+		4.  The <B>Write Configuration Only</B> option writes the specified mysql settings to the file <B>\'mysql.inc.php\'</B> in the <B>\'incs\'</B>
+		subdirectory but doesn\'t alter the database	in any way.<BR /><BR />
 
-		5.  The file <B>'mysql.inc.php'</B> in the <B>'incs'</B> subdirectory <B>must be write-able in any install option</B>.
+		5.  The file <B>\'mysql.inc.php\'</B> in the <B>\'incs\'</B> subdirectory <B>must be write-able in any install option</B>.
 
-		<BR /><BR /><A HREF="install.php"><< back to the install script</A></BLOCKQUOTE>
+		<BR /><BR /><A HREF="install.php"><< back to the install script</A>');?></BLOCKQUOTE>
 <?php
 		}
 	else {
 		$filename = './incs';							// 12/18/10
 		if (!is_writable($filename)) {					// 8/8/10 - 
-		    die ("ERROR! Directory '{$filename}' is not writable. 'Write' permissions must be corrected for installation.");
+		    die (gettext('ERROR! Directory \'{$filename}\' is not writable. \'Write\' permissions must be corrected for installation.'));
 			}
 		$filename = './incs/mysql.inc.php';				// 2/21/09
 
@@ -1342,35 +1342,35 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		if (!in_array("markers", $files)) 	{$dirsOK=FALSE;}
 
 		if (!$dirsOK) {
-			print "<br><br><br><center><h3>At least one of the Tickets subdirectories is missing, and this needs to be corrected.<br /><br />You might check into how the Tickets zip file was unzipped or otherwise installed.<br><br><br><br><A HREF='mailto:info@TicketsCAD.org?subject=Tickets Install Problem'><u>Or click here to contact the developer.</u></A></h3></center>";
+			print "<br><br><br><center><h3>" . gettext('At least one of the Tickets subdirectories is missing, and this needs to be corrected.') . "<br /><br />You might check into how the Tickets zip file was unzipped or otherwise installed.<br><br><br><br><A HREF='mailto:info@TicketsCAD.org?subject=Tickets Install Problem'><u>Or click here to contact the developer.</u></A></h3></center>";
 			}
 		else {
 ?>
-			Complete this form to install Tickets version <?php print $version;?>. Make sure to read through the <A HREF="install.php?help=1"><U>help</U></A> information.<BR /><BR />
+			<?php print gettext('Complete this form to install Tickets version') . $version;?>. <?php print gettext('Make sure to read through the <A HREF="install.php?help=1"><U>help</U></A> information.');?><BR /><BR />
 			<FORM NAME = 'install_frm' METHOD="post" ACTION="install.php?go=1"  onSubmit='return validate(document.install_frm)' >
-			<FIELDSET style="width: 900px;"><LEGEND style="font-weight: bold; color: #000; font-family: verdana; font-size: 10pt;">&nbsp;&nbsp;&nbsp;&nbsp;From your MySQL installation&nbsp;&nbsp;&nbsp;&nbsp;</LEGEND>
+			<FIELDSET style="width: 900px;"><LEGEND style="font-weight: bold; color: #000; font-family: verdana; font-size: 10pt;">&nbsp;&nbsp;&nbsp;&nbsp;<?php print gettext('From your MySQL installation');?>&nbsp;&nbsp;&nbsp;&nbsp;</LEGEND>
 			<TABLE BORDER="0">
-			<TR CLASS="even"><TD width="200px">MySQL Host: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_host" VALUE=""></TD></TR>
-			<TR CLASS="odd"><TD>MySQL Username: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_user" VALUE=""></TD></TR>
-			<TR CLASS="even"><TD>MySQL Password: </TD><TD><INPUT TYPE="password" SIZE="45" MAXLENGTH="255" NAME="frm_db_password"  VALUE=""></TD></TR>
+			<TR CLASS="even"><TD width="200px"><?php print gettext('MySQL Host');?>: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_host" VALUE=""></TD></TR>
+			<TR CLASS="odd"><TD><?php print gettext('MySQL Username');?>: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_user" VALUE=""></TD></TR>
+			<TR CLASS="even"><TD><?php print gettext('MySQL Password');?>: </TD><TD><INPUT TYPE="password" SIZE="45" MAXLENGTH="255" NAME="frm_db_password"  VALUE=""></TD></TR>
 			</TABLE>
 			</FIELDSET>
 			<br />
 			<FIELDSET style="width: 900px;"><LEGEND style="font-weight: bold; color: #000; font-family: verdana; font-size: 10pt;">&nbsp;&nbsp;&nbsp;&nbsp;Tickets Stuff&nbsp;&nbsp;&nbsp;&nbsp;</LEGEND>
 			<TABLE BORDER="0">
-			<TR CLASS="even"><TD width="200px">MySQL Database: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_dbname" VALUE=""> your just-created MySQL database</TD></TR>
-			<TR CLASS="odd"><TD>MySQL Table Prefix (optional): </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_prefix" VALUE=""> your choice</TD></TR>
+			<TR CLASS="even"><TD width="200px"><?php print gettext('MySQL Database');?>: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_dbname" VALUE=""> <?php print gettext('your just-created MySQL database');?></TD></TR>
+			<TR CLASS="odd"><TD><?php print gettext('MySQL Table Prefix (optional)');?>: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_prefix" VALUE=""> <?php print gettext('your choice');?></TD></TR>
 			<!-- 4/2/2013 -->
-			<TR CLASS="even"><TD>Google API Key (optional):<BR /></TD><TD><INPUT TYPE="text" SIZE="70" MAXLENGTH="255" NAME="frm_api_key"  VALUE=""><BR>
-				&nbsp;&nbsp;&nbsp;&nbsp;Note: You may obtain your site's API key at https://code.google.com/apis/console/
+			<TR CLASS="even"><TD><?php print gettext('Google API Key (optional)');?>:<BR /></TD><TD><INPUT TYPE="text" SIZE="70" MAXLENGTH="255" NAME="frm_api_key"  VALUE=""><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<?php print gettext('Note: You may obtain your site\'s API key at');?> https://code.google.com/apis/console/
 				</TD></TR>
-			<TR CLASS="odd"><TD>Install Option: </TD><TD>
-			<INPUT TYPE="radio" VALUE="install" NAME="frm_option" checked> Install Database - new<BR />
-			<INPUT TYPE="radio" VALUE="install-drop" NAME="frm_option"> Re-install Database<BR />
-	<!--	<INPUT TYPE="radio" VALUE="upgrade-0.65" NAME="frm_option"> Upgrade 0.65 -> 0.7<BR />	-->
-			<INPUT TYPE="radio" VALUE="writeconf" NAME="frm_option"> Write Configuration File Only<BR /><BR>
+			<TR CLASS="odd"><TD><?php print gettext('Install Option');?>: </TD><TD>
+			<INPUT TYPE="radio" VALUE="install" NAME="frm_option" checked><?php print gettext('Install Database - new');?><BR />
+			<INPUT TYPE="radio" VALUE="install-drop" NAME="frm_option"><?php print gettext('Re-install Database');?><BR />
+	<!--	<INPUT TYPE="radio" VALUE="upgrade-0.65" NAME="frm_option"><?php print gettext('Upgrade');?> 0.65 -> 0.7<BR />	-->
+			<INPUT TYPE="radio" VALUE="writeconf" NAME="frm_option"><?php print gettext('Write Configuration File Only');?><BR /><BR>
 			</TD></TR>
-			<TR CLASS="even"><TD></TD><TD><INPUT TYPE="Reset" VALUE="Reset form">&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="Submit" VALUE="Do it"></TD></TR>
+			<TR CLASS="even"><TD></TD><TD><INPUT TYPE="Reset" VALUE="Reset form">&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="Submit" VALUE="<?php print gettext('Do it');?>"></TD></TR>
 			</TABLE>
 			</FORM>
 			<?php

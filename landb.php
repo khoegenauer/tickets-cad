@@ -66,7 +66,7 @@ if (array_key_exists("id", $_POST) && (!(empty($_POST['id'])))) {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<HEAD><TITLE>Tickets Map Markup Module</TITLE>
+<HEAD><TITLE><?php print gettext('Tickets Map Markup Module');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"/>
 <META HTTP-EQUIV="Expires" CONTENT="0"/>
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE"/>
@@ -260,7 +260,7 @@ function chk_circle(theForm) {
 	if (!(is_ok_radius (theForm.circ_radius.value))) 	{err_msg += "Valid circle radius is required\n";};
 
 	if (!(err_msg == "")) {
-		alert ("Please correct the following:\n\n" + err_msg);
+		alert ("<?php print gettext('Please correct the following');?>:\n\n" + err_msg);
 		return;
 		}
 	else {
@@ -369,22 +369,22 @@ if (!(empty($_POST))) {
  */
 	function JSfnCheckInput(myform, mybutton, test) {		// reject empty form elements
 		var errmsg = "";
-		if (myform.frm_name.value.trim()=="") 			{errmsg+= "\tDescription is required\n";}
-		if (myform.frm_ident.value.trim()=="") 			{errmsg+= "\tIdent is required\n";}
-		if (myform.frm_line_cat_id.value ==0) 			{errmsg+= "\tCategory selection is required\n";}
-		if (!(points.length>1))							{errmsg+= "\tAt least two map points are required\n";}
-		if (myform.frm_line_color.value.trim()=="") 	{errmsg+= "\tColor is required\n";}
-		if (myform.frm_line_opacity.value.trim()=="") 	{errmsg+= "\tOpacity is required\n";}
-		if (myform.frm_line_width.value.trim()=="") 	{errmsg+= "\tWidth is required\n";}
+		if (myform.frm_name.value.trim()=="") 			{errmsg+= "\t<?php print gettext('Description is required');?>\n";}
+		if (myform.frm_ident.value.trim()=="") 			{errmsg+= "\t<?php print gettext('Ident is required');?>\n";}
+		if (myform.frm_line_cat_id.value ==0) 			{errmsg+= "\t<?php print gettext('Category selection is required');?>\n";}
+		if (!(points.length>1))							{errmsg+= "\t<?php print gettext('At least two map points are required');?>\n";}
+		if (myform.frm_line_color.value.trim()=="") 	{errmsg+= "\t<?php print gettext('Color is required');?>\n";}
+		if (myform.frm_line_opacity.value.trim()=="") 	{errmsg+= "\t<?php print gettext('Opacity is required');?>\n";}
+		if (myform.frm_line_width.value.trim()=="") 	{errmsg+= "\t<?php print gettext('Width is required');?>\n";}
 		if (!((myform.box_use_with_bm.checked) ||
 			(myform.box_use_with_r.checked) ||
 			(myform.box_use_with_f.checked) ||
 			(myform.box_use_with_u_ex.checked) ||			
-			(myform.box_use_with_u_rf.checked) ))		 	{errmsg+= "\tAt least one 'Apply to ...' is required\n";}
+			(myform.box_use_with_u_rf.checked) ))		 	{errmsg+= "\t<?php print gettext('At least one \'Apply to ...\' is required');?>\n";}
 	
 		if (errmsg!="") {
 			$(mybutton).disabled = false;
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else { // test? 
@@ -656,7 +656,7 @@ switch ($_func) {
 <BODY onLoad = "buildMap_l()">			<!-- <?php echo basename(__FILE__); ?> -->
 <SCRIPT TYPE='text/javascript' src='./js/wz_tooltip.js'></SCRIPT>
 <TABLE ID = 'outer' ALIGN='center' BORDER = 0 STYLE = 'margin-left:20px;margin-top:20px;'>
-<TR CLASS='even'><TH colspan=2>Map Markup</TH></TR>
+<TR CLASS='even'><TH colspan=2><?php print gettext('Map Markup');?></TH></TR>
 <TR VALIGN='top'><TD>
 <TABLE ALIGN='center' ID = 'sidebar_tbl'>
 
@@ -665,19 +665,19 @@ switch ($_func) {
 	$query 	= "SELECT *, UNIX_TIMESTAMP(_on) AS `_on` FROM `{$tablename}`";				// 1/27/09
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 	if (mysql_num_rows($result)==0) {		
-		print "<TR CLASS = 'odd'><TH COLSPAN=99>No data</TH></TR>\n";
+		print "<TR CLASS = 'odd'><TH COLSPAN=99>" . gettext('No data') . "</TH></TR>\n";
 		}
 	else {	
-		print "<TR STYLE = 'height:8px;'><TD COLSPAN=99 ALIGN='center'><I>Click to view/edit</I></TD></TR>";
-		print "<TR CLASS = 'odd'  STYLE = 'height:16px;'><TD ALIGN='left'><B>&nbsp;Name</B></TD>
-			<TD><B>Type&nbsp;</B></TD>
-			<TD><B>&nbsp;Visible&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('Apply to base map');\"><B>&nbsp;BM&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('Apply to regions');\"><B>&nbsp;R&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('Apply to facilities');\"><B>&nbsp;F&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('Apply to units - Exclusion zone');\"><B>&nbsp;EX&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('Apply to units - Ringfence');\"><B>&nbsp;RF&nbsp;</B></TD>			
-			<TD><B>&nbsp;&nbsp;As of</B></TD></TR>\n";
+		print "<TR STYLE = 'height:8px;'><TD COLSPAN=99 ALIGN='center'><I>" . gettext('Click to view/edit') . "</I></TD></TR>";
+		print "<TR CLASS = 'odd'  STYLE = 'height:16px;'><TD ALIGN='left'><B>&nbsp;" . gettext('Name') . "</B></TD>
+			<TD><B>" . gettext('Type') . "&nbsp;</B></TD>
+			<TD><B>&nbsp;" . gettext('Visible') . "&nbsp;</B></TD>
+			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to base map') . "');\"><B>&nbsp;" . gettext('BM') . "&nbsp;</B></TD>
+			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to regions') . "');\"><B>&nbsp;" . gettext('R') . "&nbsp;</B></TD>
+			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to facilities') . "');\"><B>&nbsp;" . gettext('F') . "&nbsp;</B></TD>
+			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to units - Exclusion zone') . "');\"><B>&nbsp;" . gettext('EX') . "&nbsp;</B></TD>
+			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to units - Ringfence') . "');\"><B>&nbsp;" . gettext('RF') . "&nbsp;</B></TD>			
+			<TD><B>&nbsp;&nbsp;" . gettext('As of') . "</B></TD></TR>\n";
 
 		$i = 0;
 		$targets = array( "p" =>"to_p",	"c" => "to_c", "t" => "to_t",  "k" => "to_k");
@@ -701,10 +701,10 @@ switch ($_func) {
 		}		// end if/else (mysql_num_rows($result)==0)
 ?>		
 		<TR CLASS = 'odd'><TD COLSPAN=99 ALIGN='center'  STYLE = 'white-space:nowrap;'><BR />	
-		  	<INPUT TYPE="button" VALUE="Add new &raquo;" STYLE = 'border:none; background-color:transparent;'>
-		  	<INPUT TYPE = 'button' VALUE = "Polygon" onClick = "document.new_form._type.value='p'; document.new_form.submit();"/>
-		  	<INPUT TYPE = 'button' VALUE = "Circle" onClick = "to_c('', 'c');"/>	<!-- id, func -->
-		  	<INPUT TYPE = 'button' VALUE = "Banner" onClick = "to_t('', 'c');"/>
+		  	<INPUT TYPE="button" VALUE="<?php print gettext('Add new');?> &raquo;" STYLE = 'border:none; background-color:transparent;'>
+		  	<INPUT TYPE = 'button' VALUE = "<?php print gettext('Polygon');?>" onClick = "document.new_form._type.value='p'; document.new_form.submit();"/>
+		  	<INPUT TYPE = 'button' VALUE = "<?php print gettext('Circle');?>" onClick = "to_c('', 'c');"/>	<!-- id, func -->
+		  	<INPUT TYPE = 'button' VALUE = "<?php print gettext('Banner');?>" onClick = "to_t('', 'c');"/>
 		  	</TD>
 			</TR></TABLE>
 			</TD>
@@ -784,14 +784,14 @@ function buildMap_c() {															// 'create' version - 691
 <?php
 	print (array_key_exists("caption", $_POST))? "<H3>{$_POST['caption']}</H3>" : "";
 
-	$type_ary = array( "p" =>"Polygon",					"c" => "Circle", "t" => "Banner", "k" => "kml");
-	$capt_ary = array( "p" =>"click map - drag icons",	"c" => "Click map and enter form values", "t" => "Click map and enter form values",  "k" => "kml");
-	$line_ary = array( "p" =>"Line", 					"c" =>"Circle", "t" =>"Banner", "k" => "kml");
+	$type_ary = array( '"p" =>"' . gettext('Polygon') . '",	"c" => "' gettext('Circle') . '", "t" => "' . gettext('Banner') . '", "k" => "' . gettext('kml') . '"');
+	$capt_ary = array( '"p" =>"' . gettext('click map - drag icons') . '",	"c" => "' . gettext('Click map and enter form values') . '", "t" => "' . gettext('Click map and enter form values') . '",  "k" => "' . gettext('kml') . '"');
+	$line_ary = array( '"p" =>"' . gettext('Line') . '", "c" =>"' . gettext('Circle') . '", "t" =>"' . gettext('Banner') . '", "k" => "' . gettext('kml') . '"');
 
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup_cats` ORDER BY `category` ASC";		
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 	$cats_sel = "<SELECT NAME = 'frm_cat_list' onChange = 'this.form.frm_line_cat_id.value = this.options[this.selectedIndex].value;'>\n";
-	$cats_sel .= "<OPTION VALUE=0 SELECTED >Select</OPTION>\n";
+	$cats_sel .= "<OPTION VALUE=0 SELECTED >" . gettext('Select') . "</OPTION>\n";
 	while ($row = mysql_fetch_assoc($result)) {
 		$cats_sel .= "<OPTION VALUE=\"{$row['id']}\">" . shorten($row['category'], 30) . "</OPTION>\n";
 		}
@@ -803,57 +803,57 @@ function buildMap_c() {															// 'create' version - 691
 		<TABLE BORDER="0" ALIGN="center" ID = 'outer'  STYLE = 'margin-left:20px;margin-top:20px;'><TR VALIGN='top'><TD>
 		<TABLE BORDER="0" ALIGN="center">
 		<TR CLASS="even" VALIGN="top" >
-			<TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1">New <?php echo $type_ary[$_POST['_type']];?></FONT><BR /><BR />
+			<TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext('New');?> <?php echo $type_ary[$_POST['_type']];?></FONT><BR /><BR />
 			<FONT SIZE = 'normal'><EM><?php echo $capt_ary[$_POST['_type']];?></EM></FONT></TD>
 			</TR>
 		<TR CLASS="odd" VALIGN="top" >
 			<TD COLSPAN="2" ALIGN="CENTER">&nbsp;</TD>
 			</TR>
 		<TR VALIGN="baseline" CLASS="odd">
-			<TD CLASS="td_label" ALIGN="left">Description:</TD>
+			<TD CLASS="td_label" ALIGN="left"><?php print gettext('Description');?>:</TD>
 			<TD><INPUT MAXLENGTH="32" SIZE="32" type="text" NAME="frm_name" VALUE="" onChange = "this.value.trim();" />
-				<SPAN STYLE = 'margin-left:20px' CLASS="td_label" >Visible&nbsp;&raquo;&nbsp;</SPAN>
-				<SPAN STYLE = 'margin-left:10px'>Yes&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'rb_line_is_vis' onClick = "document.c.rb_line_not_vis.checked = false;document.c.frm_line_status.value=0" CHECKED /></SPAN>
-				<SPAN STYLE = 'margin-left:20px'>No&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'rb_line_not_vis' onClick = "document.c.rb_line_is_vis.checked = false;document.c.frm_line_status.value=1" /></SPAN>
+				<SPAN STYLE = 'margin-left:20px' CLASS="td_label" ><?php print gettext('Visible');?>&nbsp;&raquo;&nbsp;</SPAN>
+				<SPAN STYLE = 'margin-left:10px'><?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'rb_line_is_vis' onClick = "document.c.rb_line_not_vis.checked = false;document.c.frm_line_status.value=0" CHECKED /></SPAN>
+				<SPAN STYLE = 'margin-left:20px'><?php print gettext('No');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'rb_line_not_vis' onClick = "document.c.rb_line_is_vis.checked = false;document.c.frm_line_status.value=1" /></SPAN>
 			
 			</TD></TR>
 
 		<TR VALIGN="baseline" CLASS="even">
-			<TD CLASS="td_label" ALIGN="left">Ident:</TD>
+			<TD CLASS="td_label" ALIGN="left"><?php print gettext('Ident');?>:</TD>
 			<TD ALIGN="left"><INPUT MAXLENGTH="10" SIZE="10" type="text" NAME="frm_ident" VALUE="" onChange = "this.value.trim();" />
-				<SPAN STYLE = 'margin-left:20px'  CLASS="td_label">Category:&nbsp;&raquo;&nbsp;</SPAN><?php echo $cats_sel;?></TD>
+				<SPAN STYLE = 'margin-left:20px'  CLASS="td_label"><?php print gettext('Category');?>:&nbsp;&raquo;&nbsp;</SPAN><?php echo $cats_sel;?></TD>
 			</TR>
 
 
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="left">Apply to:</TD>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="left"><?php print gettext('Apply to');?>:</TD>
 			<TD ALIGN='left' CLASS="td_label"  STYLE = 'white-space:nowrap;' >
-				<SPAN STYLE="margin-left: 20px;border:1px; width:20%">Base Map&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_bm" onClick = "this.form.frm_use_with_bm.value=1"/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print get_text("Regions");?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_r"  onClick = 	"this.form.frm_use_with_r.value=1"/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;Facilities&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_f"  onClick = "this.form.frm_use_with_f.value=1"/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;Unit Exclusion Zone&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" NAME="box_use_with_u_ex"  onClick = "this.form.frm_use_with_u_ex.value=1"/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;Unit Ringfence&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" NAME="box_use_with_u_rf"  onClick = "this.form.frm_use_with_u_rf.value=1"/></SPAN>
+				<SPAN STYLE="margin-left: 20px;border:1px; width:20%"><?php print gettext('Base Map');?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_bm" onClick = "this.form.frm_use_with_bm.value=1"/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print get_text("Regions');?>");?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_r"  onClick = 	"this.form.frm_use_with_r.value=1"/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Facilities');?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_f"  onClick = "this.form.frm_use_with_f.value=1"/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Unit Exclusion Zone');?>&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" NAME="box_use_with_u_ex"  onClick = "this.form.frm_use_with_u_ex.value=1"/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Unit Ringfence');?>&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" NAME="box_use_with_u_rf"  onClick = "this.form.frm_use_with_u_rf.value=1"/></SPAN>
 				</TD>
 			</TR>
 		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="left"><?php echo $line_ary[$_POST['_type']];?>:</TD>
 				<TD ALIGN="left"><SPAN CLASS="td_label" STYLE= "margin-left:20px" >
-					Color &raquo;&nbsp;<INPUT MAXLENGTH="8" SIZE="8" type="text" NAME="frm_line_color" VALUE="#FF0000"  class="color" />&nbsp;&nbsp;&nbsp;&nbsp;
-					Opacity &raquo;&nbsp;<INPUT MAXLENGTH=3 SIZE=3 TYPE= "text" NAME="frm_line_opacity" VALUE="0.5" />&nbsp;&nbsp;&nbsp;&nbsp;
-					Width &raquo;&nbsp;<INPUT MAXLENGTH=2 SIZE=2 TYPE= "text" NAME="frm_line_width" VALUE="2" /> (px)
+					<?php print gettext('Color');?> &raquo;&nbsp;<INPUT MAXLENGTH="8" SIZE="8" type="text" NAME="frm_line_color" VALUE="#FF0000"  class="color" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<?php print gettext('Opacity');?> &raquo;&nbsp;<INPUT MAXLENGTH=3 SIZE=3 TYPE= "text" NAME="frm_line_opacity" VALUE="0.5" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<?php print gettext('Width');?> &raquo;&nbsp;<INPUT MAXLENGTH=2 SIZE=2 TYPE= "text" NAME="frm_line_width" VALUE="2" /> (px)
 					</SPAN></TD>
 			</TR>
 
 		<TR VALIGN="baseline" CLASS="odd" ID = 'fill_cb_tr'  >
-			<TD CLASS="td_label" ALIGN="left">Filled:&nbsp;&nbsp;&nbsp;</TD>
+			<TD CLASS="td_label" ALIGN="left"><?php print gettext('Filled');?>:&nbsp;&nbsp;&nbsp;</TD>
 			<TD ALIGN="left"><SPAN CLASS="td_label" STYLE = "margin-left: 20px;" >
-				No&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_n' value = 'n'	onClick = 'do_un_checked(this.form)' CHECKED  />&nbsp;&nbsp;&nbsp;&nbsp;
-				Yes&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_y' value = 'y'  onClick = 'do_checked(this.form);'/>				
+				<?php print gettext('No');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_n' value = 'n'	onClick = 'do_un_checked(this.form)' CHECKED  />&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_y' value = 'y'  onClick = 'do_checked(this.form);'/>				
 				</SPAN></TD>
 			</TR>
 		<TR VALIGN="baseline" CLASS="even" ID = 'fill_tr' STYLE = 'display:none'>
-			<TD CLASS="td_label" ALIGN="left">Fill:</TD>
+			<TD CLASS="td_label" ALIGN="left"><?php print gettext('Fill');?>:</TD>
 			<TD ALIGN="left"><SPAN CLASS="td_label" STYLE= "margin-left:20px" >
-					Color &raquo;&nbsp;<INPUT MAXLENGTH="8" SIZE="8" type="text" NAME="frm_fill_color" VALUE="#FF0000"  class="color" />&nbsp;&nbsp;&nbsp;&nbsp;
-					Opacity &raquo;&nbsp;<INPUT MAXLENGTH=3 SIZE=3 TYPE= "text" NAME="frm_fill_opacity" VALUE="0.5" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<?php print gettext('Color');?> &raquo;&nbsp;<INPUT MAXLENGTH="8" SIZE="8" type="text" NAME="frm_fill_color" VALUE="#FF0000"  class="color" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<?php print gettext('Opacity');?> &raquo;&nbsp;<INPUT MAXLENGTH=3 SIZE=3 TYPE= "text" NAME="frm_fill_opacity" VALUE="0.5" />&nbsp;&nbsp;&nbsp;&nbsp;
 					</SPAN>
 					</TD>
 			</TR>
@@ -870,9 +870,9 @@ function buildMap_c() {															// 'create' version - 691
 			<INPUT TYPE='hidden' NAME = 'frm_use_with_f' VALUE='0' />
 			<INPUT TYPE='hidden' NAME = 'frm_use_with_u_ex' VALUE='0' />
 			<INPUT TYPE='hidden' NAME = 'frm_use_with_u_rf' VALUE='0' />
-			<INPUT TYPE="button" VALUE="Cancel" STYLE = 'width:auto;'  onClick = "location.href='<?php echo basename(__FILE__);?>'"/>
-			<INPUT TYPE="button" VALUE="Reset"  STYLE = 'width:auto; margin-left:40px;' onClick = "do_un_checked();this.form.reset(); clearMap();buildMap_c();"/>
-			<INPUT TYPE="button" NAME="sub_but" VALUE="Next" STYLE = 'width:120px; margin-left:40px;' onclick="this.disabled=true; JSfnCheckInput(this.form, this);"/> 			
+			<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" STYLE = 'width:auto;'  onClick = "location.href='<?php echo basename(__FILE__);?>'"/>
+			<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>"  STYLE = 'width:auto; margin-left:40px;' onClick = "do_un_checked();this.form.reset(); clearMap();buildMap_c();"/>
+			<INPUT TYPE="button" NAME="sub_but" VALUE="<?php print gettext('Next');?>" STYLE = 'width:120px; margin-left:40px;' onclick="this.disabled=true; JSfnCheckInput(this.form, this);"/> 			
 			</TD></TR>
 			<TR><TD COLSPAN=3>&nbsp;</TD></TR>
 			</FORM>
@@ -1202,40 +1202,40 @@ else {
 			</TR>
 		<TR><TD>&nbsp;</TD></TR>
 		<TR CLASS="odd" VALIGN = baseline >
-			<TD CLASS="td_label" ALIGN="left">Description:</TD>
+			<TD CLASS="td_label" ALIGN="left"><?php print gettext('Description');?>:</TD>
 			<TD><INPUT MAXLENGTH="32" SIZE="32" type="text" NAME="frm_name" VALUE="<?php print $row['line_name'];?>" <?php print $dis;?> onChange = "this.value.trim();">
-			<SPAN CLASS = 'td_label' STYLE = 'margin-left:20px;'>Visible: <?php if ($_func == "r") {?>
+			<SPAN CLASS = 'td_label' STYLE = 'margin-left:20px;'><?php print gettext('Visible');?>: <?php if ($_func == "r") {?>
 			
-							<SPAN STYLE = 'margin-left:10px'>Yes&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_is_vis' <?php echo $visible_true;?> DISABLED /></SPAN>
-							<SPAN STYLE = 'margin-left:20px'>No&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_not_vis' <?php echo $visible_false;?> DISABLED /></SPAN>
+							<SPAN STYLE = 'margin-left:10px'><?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_is_vis' <?php echo $visible_true;?> DISABLED /></SPAN>
+							<SPAN STYLE = 'margin-left:20px'><?php print gettext('No');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_not_vis' <?php echo $visible_false;?> DISABLED /></SPAN>
 			<?php			} else {?>		
-							<SPAN STYLE = 'margin-left:10px'>Yes&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_is_vis' <?php echo $visible_true;?> onClick = "document.u.frm_line_not_vis.checked = false;document.u.frm_line_status.value=0" /></SPAN>
-							<SPAN STYLE = 'margin-left:20px'>No&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_not_vis' <?php echo $visible_false;?> onClick = "document.u.frm_line_is_vis.checked = false;document.u.frm_line_status.value=1" /></SPAN>
+							<SPAN STYLE = 'margin-left:10px'><?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_is_vis' <?php echo $visible_true;?> onClick = "document.u.frm_line_not_vis.checked = false;document.u.frm_line_status.value=0" /></SPAN>
+							<SPAN STYLE = 'margin-left:20px'><?php print gettext('No');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_not_vis' <?php echo $visible_false;?> onClick = "document.u.frm_line_is_vis.checked = false;document.u.frm_line_status.value=1" /></SPAN>
 			<?php }?>	
 			</SPAN></TD></TR>
 
 		<TR VALIGN="baseline" CLASS="even">
-			<TD CLASS="td_label" ALIGN="left">Ident:</TD>
+			<TD CLASS="td_label" ALIGN="left"><?php print gettext('Ident');?>:</TD>
 			<TD ALIGN="left"><INPUT MAXLENGTH="10" SIZE="10" type="text" NAME="frm_ident" VALUE="<?php echo $line_ident;?>" onChange = "this.value.trim();" <?php echo $dis;?> />
-				<SPAN STYLE = 'margin-left:20px'  CLASS="td_label">Category:&nbsp;&raquo;&nbsp;</SPAN><?php echo $cats_sel;?></TD>
+				<SPAN STYLE = 'margin-left:20px'  CLASS="td_label"><?php print gettext('Category');?>:&nbsp;&raquo;&nbsp;</SPAN><?php echo $cats_sel;?></TD>
 			</TR>
 
 
-		<TR CLASS="odd" VALIGN = baseline ><TD CLASS="td_label" ALIGN="left">Apply to:</TD>
+		<TR CLASS="odd" VALIGN = baseline ><TD CLASS="td_label" ALIGN="left"><?php print gettext('Apply to');?>:</TD>
 			<TD ALIGN='left' CLASS="td_label" >
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;Base Map&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" 	NAME="box_use_with_bm" 	<?php print $use_w_bm;?> onClick = "this.form.frm_use_with_bm.value=toggle(this.value)" <?php print $dis;?>/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Base Map');?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" 	NAME="box_use_with_bm" 	<?php print $use_w_bm;?> onClick = "this.form.frm_use_with_bm.value=toggle(this.value)" <?php print $dis;?>/></SPAN>
 				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print get_text("Regions");?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" 		NAME="box_use_with_r"	<?php print $use_w_r;?> onClick = "this.form.frm_use_with_r.value=toggle(this.value)" <?php print $dis;?>/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;Facilities&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox"	NAME="box_use_with_f"	<?php print $use_w_f;?> onClick = "this.form.frm_use_with_f.value=toggle(this.value)" <?php print $dis;?>/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;Unit Exclusion Zone&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" 		NAME="box_use_with_u_ex"	<?php print $use_w_u_ex;?> onClick = "this.form.frm_use_with_u_ex.value=toggle(this.value)" <?php print $dis;?>/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;Unit Ringfence&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" 		NAME="box_use_with_u_rf"	<?php print $use_w_u_rf;?> onClick = "this.form.frm_use_with_u_rf.value=toggle(this.value)" <?php print $dis;?>/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Facilities');?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox"	NAME="box_use_with_f"	<?php print $use_w_f;?> onClick = "this.form.frm_use_with_f.value=toggle(this.value)" <?php print $dis;?>/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Unit Exclusion Zone');?>&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" 		NAME="box_use_with_u_ex"	<?php print $use_w_u_ex;?> onClick = "this.form.frm_use_with_u_ex.value=toggle(this.value)" <?php print $dis;?>/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Unit Ringfence');?>&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" 		NAME="box_use_with_u_rf"	<?php print $use_w_u_rf;?> onClick = "this.form.frm_use_with_u_rf.value=toggle(this.value)" <?php print $dis;?>/></SPAN>
 				</TD>
 			</TR>
 
-		<TR CLASS="even" VALIGN = baseline  ><TD CLASS="td_label" ALIGN="left">Line:</TD>
+		<TR CLASS="even" VALIGN = baseline  ><TD CLASS="td_label" ALIGN="left"><?php print gettext('Line');?>:</TD>
 				<TD ALIGN="left"><SPAN CLASS="td_label" >
-				Color &raquo;&nbsp;<INPUT MAXLENGTH="8" SIZE="8" type="text" NAME="frm_line_color" VALUE="<?php print $row['line_color'];?>"  class="color" <?php print $dis;?> />&nbsp;&nbsp;&nbsp;&nbsp;
-				Opacity &raquo;&nbsp;<INPUT MAXLENGTH=3 SIZE=3 TYPE= "text" NAME="frm_line_opacity" VALUE="<?php print $row['line_opacity'];?>" <?php print $dis;?>/>&nbsp;&nbsp;&nbsp;&nbsp;
-				Width &raquo;&nbsp;<INPUT MAXLENGTH=2 SIZE=2 TYPE= "text" NAME="frm_line_width" VALUE="<?php print $row['line_width'];?>" <?php print $dis;?> /> (px)
+				<?php print gettext('Color');?> &raquo;&nbsp;<INPUT MAXLENGTH="8" SIZE="8" type="text" NAME="frm_line_color" VALUE="<?php print $row['line_color'];?>"  class="color" <?php print $dis;?> />&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php print gettext('Opacity');?> &raquo;&nbsp;<INPUT MAXLENGTH=3 SIZE=3 TYPE= "text" NAME="frm_line_opacity" VALUE="<?php print $row['line_opacity'];?>" <?php print $dis;?>/>&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php print gettext('Width');?> &raquo;&nbsp;<INPUT MAXLENGTH=2 SIZE=2 TYPE= "text" NAME="frm_line_width" VALUE="<?php print $row['line_width'];?>" <?php print $dis;?> /> (px)
 			</SPAN></TD>
 			</TR>
 
@@ -1251,19 +1251,19 @@ else {
 		$tr_display = "none";
 	}
 ?>
-		<TR VALIGN="baseline" CLASS="odd" ID = 'fill_cb_tr'  ><TD CLASS="td_label" ALIGN="left">Filled:&nbsp;&nbsp;&nbsp;</TD>
+		<TR VALIGN="baseline" CLASS="odd" ID = 'fill_cb_tr'  ><TD CLASS="td_label" ALIGN="left"><?php print gettext('Filled');?>:&nbsp;&nbsp;&nbsp;</TD>
 				<TD ALIGN="left"><SPAN CLASS="td_label" STYLE = "margin-left: 20px;" >
-				No&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_n' value = 'n' 	onClick = 'do_un_checked(this.form)' <?php echo $cb_n_checked . " " . $dis;?>  />&nbsp;&nbsp;&nbsp;&nbsp;
-				Yes&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_y' value = 'y'	onClick = 'do_checked(this.form);'  <?php echo $cb_y_checked . " " . $dis;?> />				
+				<?php print gettext('No');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_n' value = 'n' 	onClick = 'do_un_checked(this.form)' <?php echo $cb_n_checked . " " . $dis;?>  />&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_y' value = 'y'	onClick = 'do_checked(this.form);'  <?php echo $cb_y_checked . " " . $dis;?> />				
 				</SPAN></TD>
 			</TR>
 
 
 		<TR CLASS="even" ID = 'fill_tr'  VALIGN = baseline STYLE = 'display:<?php echo $tr_display;?>' >
-			<TD CLASS="td_label" ALIGN="left">Fill: &nbsp; &nbsp; &nbsp;</TD>
+			<TD CLASS="td_label" ALIGN="left"><?php print gettext('Fill');?>: &nbsp; &nbsp; &nbsp;</TD>
 			<TD ALIGN="left"><SPAN CLASS="td_label" >
-					Color &raquo;&nbsp;<INPUT MAXLENGTH="8" SIZE="8" type="text" NAME="frm_fill_color" VALUE="<?php print $row['fill_color'];?>"  class="color" <?php print $dis;?> />&nbsp;&nbsp;&nbsp;&nbsp;
-					Opacity &raquo;&nbsp;<INPUT MAXLENGTH=3 SIZE=3 TYPE= "text" NAME="frm_fill_opacity" VALUE="<?php print $row['fill_opacity'];?>" <?php print $dis;?> />&nbsp;&nbsp;&nbsp;&nbsp;
+					<?php print gettext('Color');?> &raquo;&nbsp;<INPUT MAXLENGTH="8" SIZE="8" type="text" NAME="frm_fill_color" VALUE="<?php print $row['fill_color'];?>"  class="color" <?php print $dis;?> />&nbsp;&nbsp;&nbsp;&nbsp;
+					<?php print gettext('Opacity');?> &raquo;&nbsp;<INPUT MAXLENGTH=3 SIZE=3 TYPE= "text" NAME="frm_fill_opacity" VALUE="<?php print $row['fill_opacity'];?>" <?php print $dis;?> />&nbsp;&nbsp;&nbsp;&nbsp;
 					</SPAN></TD>
 			</TR>
 		<TR  CLASS="odd"  ><TD COLSPAN="2" ALIGN="center" STYLE = 'white-space:nowrap;'>
@@ -1283,21 +1283,21 @@ else {
 			<INPUT TYPE='hidden' NAME = 'frm_use_with_u_rf' VALUE='<?php print $row['use_with_u_rf'];?>' />			
 			<BR />
 <?php if (is_administrator() || is_super()) { ?>	
-			<INPUT TYPE="button" VALUE="Delete" STYLE = 'width:auto;'  onClick = "do_delete(<?php echo $row['id'];?>)"/>
+			<INPUT TYPE="button" VALUE="<?php print gettext('Delete');?>" STYLE = 'width:auto;'  onClick = "do_delete(<?php echo $row['id'];?>)"/>
 <?php	} ?>			
-			&nbsp;&nbsp;<INPUT TYPE="button" VALUE="Cancel" STYLE = 'width:auto;'  onClick = "location.href='<?php echo basename(__FILE__);?>'"/>
+			&nbsp;&nbsp;<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" STYLE = 'width:auto;'  onClick = "location.href='<?php echo basename(__FILE__);?>'"/>
 <?php
 		if ($_func == "r") {
 ?>
-			<INPUT TYPE="button" NAME="sub_but" VALUE="Edit" STYLE = 'width:120px; margin-left:20px;' onclick="this.disabled=true; document.navform._func.value='u'; document.navform.submit();"/> 			
+			<INPUT TYPE="button" NAME="sub_but" VALUE="<?php print gettext('Edit');?>" STYLE = 'width:120px; margin-left:20px;' onclick="this.disabled=true; document.navform._func.value='u'; document.navform.submit();"/> 			
 <?php
 			}
 		else {
 ?>
 <!-- 1169 -->
-			<INPUT TYPE="button" VALUE="Reset"  STYLE = 'width:auto; margin-left:20px;' onClick = "to_p(<?php echo $id;?>);"/>
-			<INPUT TYPE="button" NAME="sub_but" VALUE="Next" STYLE = 'width:100px; margin-left:20px;' onclick=" JSfnCheckInput(this.form, this);" /> 			
-<!-- 		<INPUT TYPE="button" VALUE="Test" onClick = "JSfnCheckInput(this.form, this, true);" STYLE = 'margin-left:20px' />  -->
+			<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>"  STYLE = 'width:auto; margin-left:20px;' onClick = "to_p(<?php echo $id;?>);"/>
+			<INPUT TYPE="button" NAME="sub_but" VALUE="<?php print gettext('Next');?>" STYLE = 'width:100px; margin-left:20px;' onclick=" JSfnCheckInput(this.form, this);" /> 			
+<!-- 		<INPUT TYPE="button" VALUE="<?php print gettext('Test');?>" onClick = "JSfnCheckInput(this.form, this, true);" STYLE = 'margin-left:20px' />  -->
 <?php
 			}
 ?>
@@ -1356,7 +1356,7 @@ function waiter() {
 </SCRIPT>
 </HEAD>
 <BODY onLoad = "waiter();">
-<DIV align="center" ID = 'up_id'><BR /><BR /><BR/><H3>'<?php echo $_POST['frm_name'];?>' update complete</H3></DIV>
+<DIV align="center" ID = 'up_id'><BR /><BR /><BR/><H3>'<?php echo $_POST['frm_name'];?>' <?php print gettext('update complete');?></H3></DIV>
 </BODY>
 </HTML>
 <?php
@@ -1385,7 +1385,7 @@ function waiter() {
 </SCRIPT>
 </HEAD>
 <BODY onLoad = "waiter();">
-<DIV align="center" ID = 'dp_id'><BR /><BR /><BR/><H3>'<?php echo $row['line_name'];?>' deleted</H3></DIV>
+<DIV align="center" ID = 'dp_id'><BR /><BR /><BR/><H3>'<?php echo $row['line_name'];?>' <?php print gettext('deleted');?></H3></DIV>
 </BODY></HTML>
 <?php
 	break;			// end case "dp"

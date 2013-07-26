@@ -65,7 +65,7 @@ function template_213 ($do_form = TRUE) {
 <HTML>
 <HEAD>
 	<META HTTP-EQUIV=\"CONTENT-TYPE\" CONTENT=\"text/html; charset=windows-1252\">
-	<TITLE>ICS-213 GENERAL MESSAGE</TITLE>
+	<TITLE>ICS-213 " . gettext('GENERAL MESSAGE') . "</TITLE>
 	<META NAME=\"CHANGEDBY\" CONTENT=\"Arnie Shore\">
 	<META NAME=\"CHANGED\" CONTENT=\"20071223;14270000\">
 	<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=UTF-8\">
@@ -90,12 +90,12 @@ function template_213 ($do_form = TRUE) {
  */
 	function validate(theForm) {						// form contents validation	
 		var errmsg='';
-		if (theForm.f1.value.trim()=='')	{errmsg+=\"TO is required.\\n\";}
-		if (theForm.f3.value.trim()=='')	{errmsg+=\"FROM is required.\\n\";}
-		if (theForm.f5.value.trim()=='')	{errmsg+=\"SUBJECT is required.\\n\";}
-		if (theForm.f8.value.trim()=='')	{errmsg+=\"MESSAGE is required.\\n\";}
+		if (theForm.f1.value.trim()=='')	{errmsg+=\"" . gettext('TO is required.') . "\\n\";}
+		if (theForm.f3.value.trim()=='')	{errmsg+=\"" . gettext('FROM is required.') . "\\n\";}
+		if (theForm.f5.value.trim()=='')	{errmsg+=\"" . gettext('SUBJECT is required.') . "\\n\";}
+		if (theForm.f8.value.trim()=='')	{errmsg+=\"" . gettext('MESSAGE is required.') . "\\n\";}
 		if (errmsg!='') {
-			alert ('Please correct the following and re-submit:\\n\\n' + errmsg);
+			alert ('" . gettext('Please correct the following and re-submit') . ":\\n\\n' + errmsg);
 			return false;
 			}
 		else {			// good to go!
@@ -127,49 +127,49 @@ function template_213 ($do_form = TRUE) {
 		<COL WIDTH=79*>
 		<TR>
 			<TD COLSPAN=6 WIDTH=100% VALIGN=TOP BGCOLOR=\"#f2f2f2\">
-				<P CLASS=\"western\" ALIGN=CENTER >&nbsp;GENERAL MESSAGE</FONT></P>
+				<P CLASS=\"western\" ALIGN=CENTER >&nbsp;" . gettext('GENERAL MESSAGE') . "</FONT></P>
 			</TD>
 		</TR>
 		<TR VALIGN=TOP>
 			<TD COLSPAN=3 WIDTH=48% HEIGHT=30>
 				<P CLASS=\"western\" >
-				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;<B>TO</B></FONT></FONT><FONT SIZE=1 STYLE=\"font-size: 8pt\">:&nbsp;{$item[1]}</FONT></FONT></P>
+				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;<B>" . gettext('TO') . "</B></FONT></FONT><FONT SIZE=1 STYLE=\"font-size: 8pt\">:&nbsp;{$item[1]}</FONT></FONT></P>
 			</TD>
 			<TD COLSPAN=3 WIDTH=52%>
 				<P CLASS=\"western\" >
-				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;POSITION:&nbsp;{$item[2]}</FONT></FONT></P>
+				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;" . gettext('POSITION') . ":&nbsp;{$item[2]}</FONT></FONT></P>
 			</TD>
 		</TR>
 		<TR VALIGN=TOP>
 			<TD COLSPAN=3 WIDTH=48% HEIGHT=30>
 				<P CLASS=\"western\" >
-				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;FROM:&nbsp;{$item[3]}
+				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;" . gettext('FROM') . ":&nbsp;{$item[3]}
 					</FONT></FONT></P>
 			</TD>
 			<TD COLSPAN=3 WIDTH=52%>
 				<P CLASS=\"western\" >
-				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;POSITION:&nbsp;{$item[4]}</FONT></FONT></P>
+				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;" . gettext('POSITION') . ":&nbsp;{$item[4]}</FONT></FONT></P>
 			</TD>
 		</TR>
 		<TR VALIGN=TOP>
 			<TD COLSPAN=3 WIDTH=48% HEIGHT=30>
 				<P CLASS=\"western\" >
-				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;SUBJECT:&nbsp;{$item[5]}
+				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;" . gettext('SUBJECT') . ":&nbsp;{$item[5]}
 					</FONT></FONT></P>
 			</TD>
 			<TD COLSPAN=2 WIDTH=28%>
 				<P CLASS=\"western\" >
-				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;DATE:&nbsp;{$item[6]}</FONT></FONT></P>
+				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;" . gettext('DATE') . ":&nbsp;{$item[6]}</FONT></FONT></P>
 			</TD>
 			<TD WIDTH=24%>
 				<P CLASS=\"western\" >
-				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;TIME:&nbsp;{$item[7]}</FONT></FONT></P>
+				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;" . gettext('TIME') . ":&nbsp;{$item[7]}</FONT></FONT></P>
 			</TD>
 		</TR>
 		<TR>
 			<TD COLSPAN=6 WIDTH=100% VALIGN=TOP BGCOLOR=\"#e5e5e5\">
 				<P CLASS=\"western\" >
-				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;MESSAGE:</FONT></FONT></P>
+				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;" . gettext('MESSAGE') . ":</FONT></FONT></P>
 			</TD>
 		</TR>
 		<TR>
@@ -183,13 +183,13 @@ function template_213 ($do_form = TRUE) {
 		<TR VALIGN=TOP>
 			<TD COLSPAN=4 WIDTH=52% HEIGHT=27>
 				<P CLASS=\"western\" STYLE=\"margin-left: 0.01in; margin-top: 0.04in; margin-bottom: 0.04in\">
-				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;SIGNATURE:&nbsp;{$item[9]}</FONT></FONT></P>
+				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;" . gettext('SIGNATURE') . ":&nbsp;{$item[9]}</FONT></FONT></P>
 				<P CLASS=\"western\" >
 				</P>
 			</TD>
 			<TD COLSPAN=2 WIDTH=48%>
 				<P CLASS=\"western\" STYLE=\"margin-left: 0.01in; margin-top: 0.04in; margin-bottom: 0.04in\">
-				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;POSITION:&nbsp;{$item[10]}</FONT></FONT></P>
+				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;" . gettext('POSITION') . ":&nbsp;{$item[10]}</FONT></FONT></P>
 				<P CLASS=\"western\" >
 				</P>
 			</TD>
@@ -197,7 +197,7 @@ function template_213 ($do_form = TRUE) {
 		<TR>
 			<TD COLSPAN=6 WIDTH=100% VALIGN=TOP BGCOLOR=\"#e5e5e5\">
 				<P CLASS=\"western\" >
-				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;REPLY:</FONT></FONT></P>
+				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;" . gettext('REPLY') . ":</FONT></FONT></P>
 			</TD>
 		</TR>
 		<TR>
@@ -210,19 +210,19 @@ function template_213 ($do_form = TRUE) {
 		<TR VALIGN=TOP>
 			<TD WIDTH=30%>
 				<P CLASS=\"western\" STYLE=\"margin-left: 0.01in; margin-top: 0.04in; margin-bottom: 0.04in\">
-				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;DATE:&nbsp;{$item[12]}</FONT></FONT></P>
+				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;" . gettext('DATE') . ":&nbsp;{$item[12]}</FONT></FONT></P>
 				<P CLASS=\"western\" >
 				</P>
 			</TD>
 			<TD WIDTH=20%>
 				<P CLASS=\"western\" STYLE=\"margin-left: 0.01in; margin-top: 0.04in; margin-bottom: 0.04in\">
-				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;TIME:&nbsp;{$item[13]}</FONT></FONT></P>
+				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;" . gettext('TIME') . ":&nbsp;{$item[13]}</FONT></FONT></P>
 				<P CLASS=\"western\" >
 				</P>
 			</TD>
 			<TD COLSPAN=4 WIDTH=50%>
 				<P CLASS=\"western\" STYLE=\"margin-left: 0.01in; margin-top: 0.04in; margin-bottom: 0.04in\">
-				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;SIGNATURE/POSITION:&nbsp;{$item[14]}</FONT></FONT></P>
+				<FONT SIZE=1 STYLE=\"font-size: 8pt\">&nbsp;" . gettext('SIGNATURE/POSITION') . ":&nbsp;{$item[14]}</FONT></FONT></P>
 				<P CLASS=\"western\" >
 				</P>
 			</TD>
@@ -231,8 +231,8 @@ function template_213 ($do_form = TRUE) {
 
 	if ($do_form) {
 		$out_str .= "<SPAN ID = 'do_form' ALIGN='center' STYLE = 'MARGIN-LEFT:250px;'>
-			<INPUT TYPE = 'button' VALUE= 'Submit' onclick = \"if(validate(document.ics213_form)) {document.ics213_form.submit();}\" />
-			<INPUT TYPE = 'reset' VALUE= 'Reset' STYLE = 'MARGIN-LEFT:40px;' onclick = \"document.ics213_form.reset();\"></SPAN><BR /><BR />";
+			<INPUT TYPE = 'button' VALUE= '" . gettext('Submit') . "' onclick = \"if(validate(document.ics213_form)) {document.ics213_form.submit();}\" />
+			<INPUT TYPE = 'reset' VALUE= '" . gettext('Reset') . "' STYLE = 'MARGIN-LEFT:40px;' onclick = \"document.ics213_form.reset();\"></SPAN><BR /><BR />";
 		}				// end if ($do_form)
 	$out_str .=  "</BODY></HTML>";
 	return $out_str;
@@ -393,8 +393,8 @@ switch ($step) {
 		<TABLE ALIGN='center'>
 		<TR CLASS = 'even'><TH>ICS Form to Contacts</TH></TR>
 		<TR CLASS = 'odd'><TD ALIGN = 'center'><BR />
-			<SPAN ID='clr_spn' STYLE = 'display:block' onClick = 'do_clear()'>&raquo; <U>Un-check all</U></SPAN>
-			<SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check()'>&raquo; <U>Check all</U></SPAN><BR />
+			<SPAN ID='clr_spn' STYLE = 'display:block' onClick = 'do_clear()'>&raquo; <U><?php print gettext('Un-check all');?></U></SPAN>
+			<SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check()'>&raquo; <U><?php print gettext('Check all');?></U></SPAN><BR />
 		</TD></TR>
 
 		
@@ -412,9 +412,9 @@ switch ($step) {
 
 ?>
 		<TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD ALIGN='center' COLSPAN=3><BR /><BR />&nbsp;
-			<INPUT TYPE='button' 	VALUE='Next' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='reset' 	VALUE='Reset'>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='button' 	VALUE='Cancel' onClick = 'window.close();'>&nbsp;<BR /><BR />
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'>&nbsp;<BR /><BR />
 			</TD></TR>
 			</TABLE></FORM>
 		  
@@ -422,8 +422,8 @@ switch ($step) {
 			}		// end if(mysql_affected_rows()>0)
 		if (($i==0) || (mysql_affected_rows()==0)){
 ?>
-	<H3>No Contact addresses!</H3><BR /><BR />
-	<INPUT TYPE='button' VALUE='Cancel' onClick = 'window.close();'><BR /><BR />
+	<H3><?php print gettext('No Contact addresses!');?></H3><BR /><BR />
+	<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
 <?php
 			}
 		else {
@@ -569,7 +569,7 @@ addresses: $Result = preg_replace("/([\w\s]+)<([\S@._-]*)>/", "$2", $Input);
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>ICS-213 Mail sent</TITLE>
+<TITLE>ICS-213 <?php print gettext('Mail sent');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -579,7 +579,7 @@ addresses: $Result = preg_replace("/([\w\s]+)<([\S@._-]*)>/", "$2", $Input);
 </SCRIPT>
 </HEAD>
 <BODY onLoad = "setTimeout('window.close()',5000);">
-<DIV style = 'margin-left:400px; margin-top100px;'><H2>ICS-213 MAIL SENT - window closing ... </H2></DIV>
+<DIV style = 'margin-left:400px; margin-top100px;'><H2>ICS-213 <?php print gettext('MAIL SENT - window closing');?> ... </H2></DIV>
 </BODY>
 </HTML>
 

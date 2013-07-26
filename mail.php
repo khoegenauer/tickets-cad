@@ -27,7 +27,7 @@ extract ($_GET);
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-<HEAD><TITLE>Tickets - Mail Module</TITLE>
+<HEAD><TITLE><?php print gettext('Tickets - Mail Module');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -103,9 +103,9 @@ if (empty ($_POST)) {
 			}
 //		alert("84 " + theForm.frm_to_str.value);
 		var errmsg="";
-		if (j==0) 				{errmsg+= "\tAt least one address is required\n";}
+		if (j==0) 				{errmsg+= "\t<?php print gettext('At least one address is required');?>\n";}
 		if (errmsg!="") {
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
@@ -121,9 +121,9 @@ if (empty ($_POST)) {
 	<FORM METHOD="post" ACTION="<?php print basename( __FILE__); ?>" NAME="mail_Form" >
 	<INPUT TYPE='hidden' NAME = 'frm_ticket_id' VALUE='<?php print $ticket_id; ?>'>
 	<TABLE>
-	<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><BR /><B>Edit Message<BR /><BR /></TD></TR>
-	<TR CLASS='odd'><TD>Ticket:</TD><TD><B><?php print shorten($t_row['scope'], 48); ?></B></TD></TR>
-	<TR CLASS='even'><TD>Message:</TD>		<TD><TEXTAREA ROWS = <?php print $nr_lines; ?> COLS=60 NAME='frm_text' WRAP="virtual"><?php print $text; ?></TEXTAREA></TD></TR>
+	<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><BR /><B><?php print gettext('Edit Message');?><BR /><BR /></TD></TR>
+	<TR CLASS='odd'><TD><?php print gettext('Ticket');?>:</TD><TD><B><?php print shorten($t_row['scope'], 48); ?></B></TD></TR>
+	<TR CLASS='even'><TD><?php print gettext('Message');?>:</TD>		<TD><TEXTAREA ROWS = <?php print $nr_lines; ?> COLS=60 NAME='frm_text' WRAP="virtual"><?php print $text; ?></TEXTAREA></TD></TR>
 <?php														//			generate dropdown menu of contacts
 
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]contacts` ORDER BY `name` ASC";
@@ -135,19 +135,19 @@ if (empty ($_POST)) {
 			print "<TD><SELECT NAME='frm_to[]' style='width: 250px; height: " . $height ."px;' multiple >\n";
 	    	while ($row = stripslashes_deep(mysql_fetch_array($result))) {
 	    		if ((!((trim($row['email']))) == "") && (is_email(trim($row['email'])))) {
-					print "\t<OPTION VALUE='" . $row['email'] . "'>" . $row['name'] . "/" .$row['organization'] . " <I>(email)</I></OPTION>\n";
+					print "\t<OPTION VALUE='" . $row['email'] . "'>" . $row['name'] . "/" .$row['organization'] . " <I>(" . gettext('email') . ")</I></OPTION>\n";
 					}
 	    		if ((!((trim($row['mobile']))) == "") && (is_email(trim($row['mobile'])))) {
-					print "\t<OPTION VALUE='" . $row['mobile'] . "'>" . $row['name'] . "/" .$row['organization'] . " <I>(mobile)</I></OPTION>\n";
+					print "\t<OPTION VALUE='" . $row['mobile'] . "'>" . $row['name'] . "/" .$row['organization'] . " <I>(" . gettext('mobile') . ")</I></OPTION>\n";
 					}
 	    		if ((!((trim($row['other']))) == "") && (is_email(trim($row['other'])))) {
-					print "\t<OPTION VALUE='" . $row['other'] . "'>" . $row['name'] . "/" .$row['organization'] . " <I>(other)</I></OPTION>\n";
+					print "\t<OPTION VALUE='" . $row['other'] . "'>" . $row['name'] . "/" .$row['organization'] . " <I>(" . gettext('other') . ")</I></OPTION>\n";
 					}
 				}
 			print "\t</SELECT>\n</TD></TR>";
 			}				// end (mysql_affected_rows()>0)
 		else {
-			print "<TR CLASS='even'><TD COLSPAN=2 align='CENTER'><B>No addresses.<BR /> Populate 'Contacts' table via Configuration link.</TD></TR>";
+			print "<TR CLASS='even'><TD COLSPAN=2 align='CENTER'><B>" . gettext('No addresses.') . "<BR /> " . gettext('Populate \'Contacts\' table via Configuration link.') . "</TD></TR>";
 			$got_addr = FALSE;
 			}
 		
@@ -159,13 +159,13 @@ if (empty ($_POST)) {
 	<TR CLASS='even'><TD COLSPAN=2 ALIGN="center"><BR />
 <?php if ($got_addr) { ?>
 
-		<INPUT TYPE="button" VALUE="Reset" onClick = "document.mail_Form.reset();">
+		<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>" onClick = "document.mail_Form.reset();">
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="button" VALUE="Send" onClick="do_val(document.mail_Form);">
+		<INPUT TYPE="button" VALUE="<?php print gettext('Send');?>" onClick="do_val(document.mail_Form);">
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php	} ?>
 
-		<INPUT TYPE="button" VALUE="Cancel"  onClick="self.close();" >
+		<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="self.close();" >
 		</FORM>
 		</TD></TR>
 	</TABLE>
@@ -173,7 +173,7 @@ if (empty ($_POST)) {
 	
 	<DIV ID='second' STYLE='display:none'>
 	<CENTER>
-	<H3>Sending mail ...</H3><BR /><BR /><BR />
+	<H3><?php print gettext('Sending mail');?> ...</H3><BR /><BR /><BR />
 	<IMG SRC="./markers/spinner.gif" BORDER=0>
 	</DIV>
 	
@@ -270,9 +270,9 @@ function sendRequest(url,callback,postData) {		// 10/15/08
 
 	</HEAD>
 	<BODY>
-	<CENTER><BR /><BR /><BR /><BR /><BR /><h3>Sent!</h3><BR /><BR />
+	<CENTER><BR /><BR /><BR /><BR /><BR /><h3><?php print gettext('Sent!');?></h3><BR /><BR />
 	<FORM NAME='can_Form' METHOD="get" ACTION = "<?php print basename( __FILE__); ?>" >
-	<INPUT TYPE="button" VALUE = "Close" onClick = "self.close()"></CENTER>
+	<INPUT TYPE="button" VALUE = "<?php print gettext('Close');?>" onClick = "self.close()"></CENTER>
 	</FORM>		
 	</BODY></HTML>
 <?php

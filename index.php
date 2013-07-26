@@ -1,7 +1,7 @@
 <?php 
 error_reporting(E_ALL);		// 10/1/08
 if(!(file_exists("./incs/mysql.inc.php"))) {
-	print "This appears to be a new Tickets installation; file 'mysql.inc.inc' absent. Please run <a href=\"install.php\">install.php</a> with valid database configuration information.";
+	print gettext('This appears to be a new Tickets installation; file 'mysql.inc.inc' is absent. Please run <a href=\"install.php\">install.php</a> with valid database configuration information.');
 	exit();
 	}
 
@@ -165,7 +165,7 @@ function table_exists($name) {			//	3/15/11
  */
 function do_insert_day_colors($name,$value) {			//	3/15/11
 	$query = "INSERT INTO `$GLOBALS[mysql_prefix]css_day` (name,value) VALUES('$name','$value')";
-	$result = mysql_query($query) or die("DO_INSERT_DAY_COLORS($name,$value) failed, execution halted");
+	$result = mysql_query($query) or die("DO_INSERT_DAY_COLORS($name,$value) " . gettext('failed, execution halted'));
 	}
 
 /**
@@ -184,7 +184,7 @@ function do_insert_day_colors($name,$value) {			//	3/15/11
  */
 function do_insert_night_colors($name,$value) {			//	3/15/11
 	$query = "INSERT INTO `$GLOBALS[mysql_prefix]css_night` (name,value) VALUES('$name','$value')";
-	$result = mysql_query($query) or die("DO_INSERT_NIGHT_COLORS($name,$value) failed, execution halted");
+	$result = mysql_query($query) or die("DO_INSERT_NIGHT_COLORS($name,$value) " . gettext('failed, execution halted'));
 	}
 
 if (!table_exists("css_day")) {			//	3/15/11
@@ -794,25 +794,25 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 				$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 			
 				$query = "INSERT INTO `$GLOBALS[mysql_prefix]hints` (`tag`, `hint`) VALUES
-					('_loca', 'Location - type in location in fields, click location on map or use *Located at Facility* menu below '),
-					('_city', 'City - defaults to default city set in configuration. Enter City if required'),
-					('_state', 'State - US State or non-US Country code - e.g. UK for United Kingdom'),
-					('_phone', 'Phone number - for US only, you can use the lookup button to get the callers name and location using the White Pages'),
-					('_nature', 'Incident  nature or Type - Available types are set in in_types table in the configuration'),
-					('_prio', 'Incident priority - Normal, Medium or High. Affects order and coloring of incidents on Situation display'),
-					('_proto', 'Incident Protocol - this will show automatically if a protocol is set for the Incident Enter the configuration'),
-					('_synop', 'Synopsis - Details about the incident, ensure as much detail as possible is completed'),
-					('_911', '911 contact information'),
-					('_caller', 'Caller reporting the incident'),
-					('_name', 'Incident Name - Partially completed and prepend or append incident ID depending on setting. Enter an easily identifiable name.'),
-					('_booked', 'Scheduled Date. Must be set if incident Status is *Scheduled*. Sets date and time for a future booked Incident, mainly used for non immediate patient transport. Click on Radio button to show date field'),
-					('_facy', 'Use the first dropdown menu to select the Facility where the incident is located at, use the second dropdown menu to select the facility where persons from the Incident will be received'),
-					('_start', 'Run-start, Incident start time. Defaults to current date and time or edit by clicking padlock icon to enable date & time fields'),
-					('_status', 'Incident  Status - Open or Closed or set to Scheduled for future booked calls'),
-					('_end', 'Run-end - incident  end time. When incident is closed, click on radio button which will enable date & time fields'),
-					('_disp', 'Disposition - additional comments about incident, particularly closing it'),
-					('_coords', 'Incident Lat/Lng - set by clicking on the map for the location or by selecting location with the address fields.'),
-					('_asof', 'Date/time of most recent incident data update');";
+					('_loca', '" . gettext('Location - type in location in fields, click location on map or use *Located at Facility* menu below') . " '),
+					('_city', '" . gettext('City - defaults to default city set in configuration. Enter City if required') . "'),
+					('_state', '" . gettext('State - US State or non-US Country code - e.g. UK for United Kingdom') . "'),
+					('_phone', '" . gettext('Phone number - for US only, you can use the lookup button to get the callers name and location using the White Pages') . "'),
+					('_nature', '" . gettext('Incident  nature or Type - Available types are set in in_types table in the configuration') . "'),
+					('_prio', '" . gettext('Incident priority - Normal, Medium or High. Affects order and coloring of incidents on Situation display') . "'),
+					('_proto', '" . gettext('Incident Protocol - this will show automatically if a protocol is set for the Incident Enter the configuration') . "'),
+					('_synop', '" . gettext('Synopsis - Details about the incident, ensure as much detail as possible is completed') . "'),
+					('_911', '" . gettext('911 contact information') . "'),
+					('_caller', '" . gettext('Caller reporting the incident') . "'),
+					('_name', '" . gettext('Incident Name - Partially completed and prepend or append incident ID depending on setting. Enter an easily identifiable name.') . "'),
+					('_booked', '" . gettext('Scheduled Date. Must be set if incident Status is *Scheduled*. Sets date and time for a future booked Incident, mainly used for non immediate patient transport. Click on Radio button to show date field') . "'),
+					('_facy', '" . gettext('Use the first dropdown menu to select the Facility where the incident is located at, use the second dropdown menu to select the facility where persons from the Incident will be received') . "'),
+					('_start', '" . gettext('Run-start, Incident start time. Defaults to current date and time or edit by clicking padlock icon to enable date & time fields') . "'),
+					('_status', '" . gettext('Incident  Status - Open or Closed or set to Scheduled for future booked calls') . "'),
+					('_end', '" . gettext('Run-end - incident  end time. When incident is closed, click on radio button which will enable date & time fields') . "'),
+					('_disp', '" . gettext('Disposition - additional comments about incident, particularly closing it') . "'),
+					('_coords', '" . gettext('Incident Lat/Lng - set by clicking on the map for the location or by selecting location with the address fields.') . "'),
+					('_asof', '" . gettext('Date/time of most recent incident data update') . "');";
 			
 				$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 				}				// end if (!(mysql_table_exists()))
@@ -1525,7 +1525,7 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `miles` INT( 8 ) NULL DEFAULT NULL AFTER `end_miles`;";
 			$result = mysql_query($query);		//	10/23/12				
 
-			do_caption("messaging help", "Messaging Help Goes Here");	
+			do_caption("messaging help", '"' . gettext('Messaging Help Goes Here') . '"');	
 			do_msg_setting ('email_del','1');			// 5/25/13  				
 
 //																	6/7/2013
@@ -1731,8 +1731,8 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 	// }
 	
 if((count_responders()== 0) && (get_variable('title_string') == "") && ((!empty($_GET)) && ($_GET['first_start'] == "yes"))) {	//	5/11/12 For quick start routine
-	print '<BR /><BR /><BR /><B>Do you wish to use the Tickets Quick start routine?';
-	print '<BR /><BR /><A style="cursor: pointer;" onClick="document.quick.submit()"><< Yes Please >></A>&nbsp;&nbsp;&nbsp;<A style="cursor: pointer;" HREF="index.php"><< No just start Tickets >></A>';
+	print '<BR /><BR /><BR /><B>' . gettext('Do you wish to use the Tickets Quick start routine?');
+	print '<BR /><BR /><A style="cursor: pointer;" onClick="document.quick.submit()"><< ' . gettext('Yes Please') . ' >></A>&nbsp;&nbsp;&nbsp;<A style="cursor: pointer;" HREF="index.php"><< No just start Tickets >></A>';
 	print "<FORM NAME='quick' METHOD='POST' ACTION='quick_start.php'>";
 	print "<INPUT TYPE='hidden' NAME='run_quick' VALUE='yes'></FORM>";
 	}
@@ -1749,7 +1749,7 @@ if((count_responders()== 0) && (get_variable('title_string') == "") && ((!empty(
 	<META HTTP-EQUIV="expires" CONTENT="Wed, 26 Feb 1997 08:21:57 GMT" />
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" /> <!-- 7/7/09 -->
-	<TITLE>Tickets <?php print $disp_version;?></TITLE>
+	<TITLE><?php print gettext('Tickets') . $disp_version;?></TITLE>
 	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
 	<link rel="shortcut icon" href="favicon.ico" />
 </HEAD>
@@ -1870,7 +1870,7 @@ else  {
 ?>
 	<NOFRAMES>
 	<BODY>
-		Tickets requires a frames-capable browser.
+		<?php print gettext('Tickets requires a frames-capable browser.');?>
 	</BODY>
 	</NOFRAMES>
 </FRAMESET>

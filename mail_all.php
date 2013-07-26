@@ -86,7 +86,7 @@ if (empty($_POST)) {
  */
 	function do_step_2() {
 		if (document.mail_form.frm_text.value.trim()=="") {
-			alert ("Message text is required");
+			alert ("<?php print gettext('Message text is required');?>");
 			document.mail_form.frm_text.focus();
 			return false;
 			}
@@ -98,7 +98,7 @@ if (empty($_POST)) {
 				}
 			}
 		if (document.mail_form.frm_add_str.value.trim()=="") {
-			alert ("Addressees required");
+			alert ("<?php print gettext('Addressees required');?>");
 			return false;
 			}
 		document.mail_form.submit();	
@@ -147,12 +147,12 @@ if (empty($_POST)) {
 	if(count($rows)>0) {
 ?>
 	<BODY onLoad = "reSizeScr(<?php print count($rows);?>)"><CENTER>		<!-- 1/12/09 -->
-	<CENTER><H3>Mail to Users</H3>
+	<CENTER><H3><?php print gettext('Mail to Users');?></H3>
 <?php
 	if(count($rows)>2) {
 ?>
-		<SPAN ID='clr_spn' STYLE = 'display:block' onClick = 'do_clear()'>&raquo; <U>Un-check all</U></SPAN>
-		<SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check()'>&raquo; <U>Check all</U></SPAN>
+		<SPAN ID='clr_spn' STYLE = 'display:block' onClick = 'do_clear()'>&raquo; <U><?php print gettext('Un-check all');?></U></SPAN>
+		<SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check()'>&raquo; <U><?php print gettext('Check all');?></U></SPAN>
 <?php
 		}
 ?>		
@@ -172,12 +172,12 @@ if (empty($_POST)) {
 			}		// end for()
 
 ?>	
-		<TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD>Subject: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
-		<TR CLASS='<?php print $evenodd[($i+1)%2]; ?>'><TD>Message:</TD><TD COLSPAN=2> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
+		<TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
+		<TR CLASS='<?php print $evenodd[($i+1)%2]; ?>'><TD><?php print gettext('Message');?>:</TD><TD COLSPAN=2> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
 		<TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD ALIGN='center' COLSPAN=3><BR /><BR />
-			<INPUT TYPE='button' 	VALUE='Next' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='reset' 	VALUE='Reset'>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='button' 	VALUE='Cancel' onClick = 'window.close();'><BR /><BR />
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
 			</TD></TR>
 			</TABLE></FORM>
 
@@ -186,10 +186,10 @@ if (empty($_POST)) {
 		else {
 ?>
 	<BODY onLoad = "reSizeScr(2)"><CENTER>		<!-- 1/12/09 -->
-	<CENTER><H3>Mail to Users</H3>
+	<CENTER><H3><?php print gettext('Mail to Users');?></H3>
 	<BR /><BR />
-	<H3>No addresses available!</H3><BR /><BR />
-	<INPUT TYPE='button' VALUE='Cancel' onClick = 'window.close();'><BR /><BR />
+	<H3><?php print gettext('No addresses available!');?></H3><BR /><BR />
+	<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
 
 <?php
 			}
@@ -200,19 +200,19 @@ if (empty($_POST)) {
 			do_send ($_POST['frm_add_str'], $_POST['frm_subj'], $_POST['frm_text'], 0, 0);	// ($to_str, $subject_str, $text_str )
 ?>
 	<BODY onLoad = "reSizeScr(2)"><CENTER>		<!-- 1/12/09 -->
-	<CENTER><BR /><BR /><BR /><H3>Mail sent</H3>
-	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='Finished' onClick = 'window.close();'><BR /><BR />
+	<CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
+	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'><BR /><BR />
 
 <?php
 
 	}		// end else
 ?>Levels: 
-<SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_SUPER']];?>'>Super</SPAN>&nbsp;&nbsp;
-<SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_ADMINISTRATOR']];?>'>Admin</SPAN>&nbsp;&nbsp;
-<SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_USER']];?>'>Operator</SPAN>&nbsp;&nbsp;
-<SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_GUEST']];?>'>Guest</SPAN>&nbsp;&nbsp;
-<SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_MEMBER']];?>'>Member</SPAN>&nbsp;&nbsp;
-<SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_UNIT']];?>'>Unit</SPAN>
+<SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_SUPER']];?>'><?php print gettext('Super');?></SPAN>&nbsp;&nbsp;
+<SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_ADMINISTRATOR']];?>'><?php print gettext('Admin');?></SPAN>&nbsp;&nbsp;
+<SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_USER']];?>'><?php print gettext('Operator');?></SPAN>&nbsp;&nbsp;
+<SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_GUEST']];?>'><?php print gettext('Guest');?></SPAN>&nbsp;&nbsp;
+<SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_MEMBER']];?>'><?php print gettext('Member');?></SPAN>&nbsp;&nbsp;
+<SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_UNIT']];?>'><?php print gettext('Unit');?></SPAN>
   
  </BODY>
 </HTML>

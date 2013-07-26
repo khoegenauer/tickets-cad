@@ -88,7 +88,7 @@ $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_ni
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <HTML>
 
-	<HEAD><TITLE>Tickets - Main Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Main Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 	<META HTTP-EQUIV="Expires" CONTENT="0" />
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -262,7 +262,7 @@ if (is_guest()) {													// 8/25/10
  */	
 	function blink_text(id, bgcol, bgcol2, maincol, seccol) {	//	6/10/11
 		if(!document.getElementById(id)) {
-			alert("A unit in your group is\noutside a ring fence\nhowever you aren't currently\nviewing the group it is allocated to");
+			alert("<?php print gettext('A unit in your group is \n outside a ring fence \n however you aren\'t currently \n viewing the group it is allocated to');?>");
 		} else {	
 			function BlinkIt () {
 				if(document.getElementById (id)) {
@@ -309,7 +309,7 @@ if (is_guest()) {													// 8/25/10
  */
 	function blink_text2(id, bgcol, bgcol2, maincol, seccol) {	//	6/10/11
 		if(!document.getElementById(id)) {
-			alert("A unit in your group is\ninside an exclusion zone\nhowever you aren't currently\nviewing the group it is allocated to");
+			alert("<?php print gettext('A unit in your group is \n inside an exclusion zone \n however you aren\'t currently \n viewing the group it is allocated to');?>");
 		} else {	
 			function BlinkIt () {
 				if(document.getElementById (id)) {
@@ -660,7 +660,7 @@ if (is_guest()) {													// 8/25/10
 ?>		
 /* *
  * Concatenates the values of a variable into an easily readable string
- * by Matt Hackett [scriptnode.com]
+ * @author Matt Hackett [scriptnode.com]
  * @param {Object} x The variable to debug
  * @param {Number} max The maximum number of recursions allowed (keep low, around 5 for HTML elements to prevent errors) [default: 10]
  * @param {String} sep The separator to use between [default: a single space ' ']
@@ -671,7 +671,7 @@ if (is_guest()) {													// 8/25/10
 		max = max || 10;
 		sep = sep || ' ';
 		if (l > max) {
-			return "[WARNING: Recursion limit exceeded]\n";
+			return "[<?php print gettext('WARNING: Recursion limit exceeded');?>]\n";
 			}
 		var
 			i,
@@ -828,7 +828,7 @@ if (is_guest()) {													// 8/25/10
 		starting=true;	
 		newwindow_um=window.open("do_unit_mail.php?the_ticket=" + the_ticket, "Email",  "titlebar, resizable=1, scrollbars, height=640,width=600,status=0,toolbar=0,menubar=0,location=0, left=50,top=150,screenX=100,screenY=300");
 		if (isNull(newwindow_um)) {
-			alert ("This requires popups to be enabled. Please adjust your browser options.");
+			alert ("<?php print gettext('This requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 		newwindow_um.focus();
@@ -1054,7 +1054,7 @@ if (is_guest()) {													// 8/25/10
 	function get_inbox() {	//	10/23/12
 		$(waste_but).style.display = "inline";
 		$(inbox_but).style.display = "none";	
-		$('the_box').innerHTML = "Showing Inbox";	
+		$('the_box').innerHTML = "<?php print gettext('Showing Inbox');?>";	
 /*		get_main_messagelist(ticket_id,'',sortby, 'DESC','', 'ticket');  3/26/2013  */
 		get_all_messagelist(ticket_id,'',sortby, 'DESC','', 'ticket');
 		}			
@@ -1131,15 +1131,15 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
 		<DIV id = 'regions_outer' style = "position: fixed; right: 20%; top: 10%; z-index: 1000;">
 			<DIV id="boxB" class="box" style="z-index:1000;">
 <!-- 3/26/2013
-				<DIV class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;">Viewed Regions
-				<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+				<DIV class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;"><?php print gettext('Viewed Regions');?>
+				<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';"><?php print gettext('Dock');?></DIV><BR /><BR />
 				<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
-					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
+					onmousedown="dragStart(event, 'boxB')"><i><?php print gettext('Drag me');?></i></DIV>
 -->					
- 				<DIV class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;">Viewed Regions
- 				<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';">Dock</DIV><BR /><BR />
+ 				<DIV class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;"><?php print gettext('Viewed Regions');?>
+ 				<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';"><?php print gettext('Dock');?></DIV><BR /><BR />
  				<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
- 					onmousedown="dragStart(event, 'boxB')"><i>Drag me</i></DIV>
+ 					onmousedown="dragStart(event, 'boxB')"><i><?php print gettext('Drag me');?></i></DIV>
 
 				<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV> 
 				</DIV>
@@ -1171,7 +1171,7 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
 ?>
 <SCRIPT>
 			var the_point = new google.maps.LatLng(<?php print $value[3];?>, <?php print $value[4];?>);		//	10/23/12
-			var the_header = "Traffic Alert";		//	10/23/12
+			var the_header = "<?php print gettext('Traffic Alert');?>";		//	10/23/12
 			var the_text = "<?php print $value[1];?>";		//	10/23/12
 			var the_id = "<?php print $value[0];?>";		//	10/23/12
 			var the_category = "<?php print $value[5];?>";		//	10/23/12
@@ -1208,11 +1208,11 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
 </FORM>
 
 <!--
-<span onclick = "parent.top.calls.location.reload(true)">Test1</span>
+<span onclick = "parent.top.calls.location.reload(true)"><?php print gettext('Test1');?></span>
 <br />
-<span onclick = "parent.top.calls.document.page_refresh_form.submit()">Test2</span>
+<span onclick = "parent.top.calls.document.page_refresh_form.submit()"><?php print gettext('Test2');?></span>
 <br />
-<span onclick = "alert(parent.$('what').rows)">Test3</span>
+<span onclick = "alert(parent.$('what').rows)"><?php print gettext('Test3');?></span>
 -->
 <br /><br />
 <DIV ID='to_top' style="position:fixed; bottom:50px; left:20px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png" ID = "up" BORDER=0></div>

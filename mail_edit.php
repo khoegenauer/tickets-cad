@@ -27,7 +27,7 @@ $title = (isset($row)) ? substr(stripslashes($row['scope']), 0, 60): $_POST['frm
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Email re:  <?php print $title; ?></TITLE>
+<TITLE><?php print gettext('Email re');?>:  <?php print $title; ?></TITLE>
 <META NAME="Description" CONTENT="">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
@@ -91,7 +91,7 @@ function do_val(theForm) {										// 2/28/09, 10/23/12
 		}
 		
 	if ((theForm.frm_addrs.value.trim() == "") && (theForm.frm_smsgaddrs.value.trim() == "")) {
-		alert("Addressee required");
+		alert("<?php print gettext('Addressee required');?>");
 		return false;
 		}
 
@@ -105,13 +105,13 @@ function do_val(theForm) {										// 2/28/09, 10/23/12
 			}
 
 		if (emerr) {
-			alert("Valid addressee email required");
+			alert("<?php print gettext('Valid addressee email required');?>");
 			return false;
 			}
 		}
 		
 	if (theForm.frm_text.value.trim() == "") {
-		alert("Message text required");
+		alert("<?php print gettext('Message text required');?>");
 		return false;
 		}
 	theForm.submit();
@@ -156,17 +156,17 @@ function do_val(theForm) {										// 2/28/09, 10/23/12
 $use_messaging = get_variable('use_messaging');
 $the_other = ((isset($_GET['other'])) && ($_GET['other'] != "")) ? $_GET['other'] : "";
 ?>
-<H3>Revise message to suit</H3>
+<H3><?php print gettext('Revise message to suit');?></H3>
 <FORM NAME="mail_frm" METHOD="post" ACTION = "<?php print basename( __FILE__); ?>">
 <TABLE ALIGN='center' BORDER=0>
 	<TR CLASS='even'>
 		<TD COLSPAN=2><TEXTAREA NAME="frm_text" COLS=60 ROWS=<?php print count($temp); ?>><?php print $text ;?></TEXTAREA></TD>
 	</TR>
 	<TR VALIGN = 'TOP' CLASS='even'> <!-- 10/23/12 -->
-		<TD ALIGN='right' CLASS="td_label">Standard Message: </TD><TD> <!-- 10/23/12 -->
+		<TD ALIGN='right' CLASS="td_label"><?php print gettext('Standard Message');?>: </TD><TD> <!-- 10/23/12 -->
 
 			<SELECT NAME='signals' onChange = 'set_message(this.options[this.selectedIndex].text);'>	<!--  11/17/10, 10/23/12 -->
-			<OPTION VALUE=0 SELECTED>Select</OPTION> <!-- 10/23/12 -->
+			<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION> <!-- 10/23/12 -->
 <?php
 //					dump(__LINE__);
 			$query1 = "SELECT * FROM `$GLOBALS[mysql_prefix]std_msgs` ORDER BY `id` ASC";
@@ -180,7 +180,7 @@ $the_other = ((isset($_GET['other'])) && ($_GET['other'] != "")) ? $_GET['other'
 		</TD>
 	</TR>	
 	<TR CLASS='even'>
-		<TD>Addressed to: </TD>
+		<TD><?php print gettext('Addressed to');?>: </TD>
 		<TD><INPUT TYPE='text' NAME='frm_addrs' size='60' VALUE='<?php print $_GET['addrs'];?>'></TD> <!-- 10/23/12 -->
 	</TR>
 <?php
@@ -188,10 +188,10 @@ $the_other = ((isset($_GET['other'])) && ($_GET['other'] != "")) ? $_GET['other'
 		$smsgaddrs = ((isset($_GET['smsgaddrs'])) && ($_GET['smsgaddrs'] != "")) ? $_GET['smsgaddrs'] : "";
 
 ?>
-		<TR CLASS='even'><TD><?php get_provider_name(get_msg_variable('smsg_provider'));?> Addresses: </TD>
+		<TR CLASS='even'><TD><?php get_provider_name(get_msg_variable('smsg_provider'));?> <?php print gettext('Addresses');?>: </TD>
 			<TD><INPUT TYPE='text' NAME='frm_smsgaddrs' size='60' VALUE='<?php print $smsgaddrs;?>'></TD>
 		</TR>	
-		<TR CLASS='even'><TD>Use <?php get_provider_name(get_msg_variable('smsg_provider'));?>?: </TD> <!-- 10/23/12 -->
+		<TR CLASS='even'><TD><?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?: </TD> <!-- 10/23/12 -->
 			<TD><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE="0"></TD> <!-- 10/23/12 -->
 		</TR>			
 		<INPUT TYPE="hidden" NAME = 'frm_theothers' VALUE="<?php print $the_other;?>"/> <!-- 10/23/12 -->
@@ -208,9 +208,9 @@ $the_other = ((isset($_GET['other'])) && ($_GET['other'] != "")) ? $_GET['other'
 		<TD COLSPAN=2 ALIGN = 'center'>
 			<INPUT TYPE="hidden" NAME = 'ticket_id' VALUE="<?php print $_GET['ticket_id'];?>"/> <!-- 10/23/12 -->
 			<INPUT TYPE="hidden" NAME = 'frm_title' VALUE="<?php print $row['scope'];?>"/>
-			<INPUT TYPE="button" VALUE="OK - mail this" onClick = "do_val(document.mail_frm);">&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="button" VALUE="Reset" onClick = "document.mail_frm.reset();">&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="button" VALUE="Dont send" onClick = "if(confirm('Confirm_do_not_send?')) {<?php print $finished_str;?>}">
+			<INPUT TYPE="button" VALUE="<?php print gettext('OK - mail this');?>" onClick = "do_val(document.mail_frm);">&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>" onClick = "document.mail_frm.reset();">&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="button" VALUE="<?php print gettext('Dont send');?>" onClick = "if(confirm('Confirm_do_not_send?')) {<?php print $finished_str;?>}">
 		</TD>
 	</TR>
 </TABLE>
@@ -240,8 +240,8 @@ else {
 </HEAD>
 
 <BODY onLoad = "setTimeout('window.close()',6000);"><CENTER>
-<BR /><BR /><H3>Emailing dispatch notifications</H3><BR /><BR />
-<P><?php print $count;?> Message(s) sent</P>
+<BR /><BR /><H3><?php print gettext('Emailing dispatch notifications');?></H3><BR /><BR />
+<P><?php print $count;?> <?php print gettext('Message(s) sent');?></P>
 
 <?php
 	}				// end else

@@ -15,7 +15,7 @@ require_once($_SESSION['fip']);
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Gtrack</TITLE>
+<TITLE><?php print gettext('Gtrack');?></TITLE>
 <META NAME="Author" CONTENT="">
 <META NAME="Keywords" CONTENT="">
 <META NAME="Description" CONTENT="">
@@ -35,19 +35,19 @@ if (empty($_POST)) {
 <BR />
 <BR />
 <BR />
-<CENTER><H3>Gtrack test</H3>
+<CENTER><H3><?php print gettext('Gtrack test');?></H3>
 <BR />
 <BR />
 <FORM NAME='glat_form' METHOD = 'post' ACTION = '<?php print basename(__FILE__);?>'>
-Gtrack ID : <INPUT TYPE='text' NAME = 'frm_gtrack_id' SIZE = '5'/>
+<?php print gettext('Gtrack ID');?> : <INPUT TYPE='text' NAME = 'frm_gtrack_id' SIZE = '5'/>
 <BR />
 <BR />
-Gtrack URL: <INPUT TYPE='text' NAME = 'frm_gtrack_url' SIZE = '40'/>
+<?php print gettext('Gtrack URL');?>: <INPUT TYPE='text' NAME = 'frm_gtrack_url' SIZE = '40'/>
 <BR />
 <BR />
 <BR />
-<INPUT TYPE='submit' VALUE='Go' />&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE="button" VALUE = "Finished" onClick = "self.close()" /></FORM>
+<INPUT TYPE='submit' VALUE='<?php print gettext('Go');?>' />&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE="button" VALUE = "<?php print gettext('Finished');?>" onClick = "self.close()" /></FORM>
 </BODY>
 </HTML>
 
@@ -118,7 +118,7 @@ function do_gt($user, $url) {
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <title>Google Maps JavaScript API Example: Simple Map</title>
+    <title><?php print gettext('Google Maps JavaScript API Example: Simple Map');?></title>
     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=<?php print $api_key;?>"
             type="text/javascript"></script>
     <script type="text/javascript">
@@ -141,11 +141,11 @@ function do_gt($user, $url) {
   <body onload="initialize()" onunload="GUnload()">
   <CENTER>
   <br /><br />
-  <H3>Gtrack Successful<br />
-	with public ID: <?php print $user_id; ?></H3><br /><br />
+  <H3><?php print gettext('Gtrack Successful<br />
+	with public ID');?>: <?php print $user_id; ?></H3><br /><br />
     <div id="map_canvas" style="width: 500px; height: 300px"></div>
-    <br /><br /><input type='button' value="Again" onClick = 'location.href="<?php print basename(__FILE__); ?>"' />&nbsp;&nbsp;&nbsp;&nbsp;
-  </body><input type='button' value="Finished" onClick = "self.close()" /><br /><br />
+    <br /><br /><input type='button' value="<?php print gettext('Again');?>" onClick = 'location.href="<?php print basename(__FILE__); ?>"' />&nbsp;&nbsp;&nbsp;&nbsp;
+  </body><input type='button' value="<?php print gettext('Finished');?>" onClick = "self.close()" /><br /><br />
   </body>
 </html><?php
 		}

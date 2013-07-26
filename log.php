@@ -21,7 +21,7 @@ require_once($_SESSION['fip']);		//7/28/10
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Tickets Log Processing</TITLE>
+<TITLE><?php print gettext('Tickets Log Processing');?></TITLE>
 <META NAME="Author" CONTENT="">
 <META NAME="Keywords" CONTENT="">
 <META NAME="Description" CONTENT="Tickets Log Entry"">
@@ -45,7 +45,7 @@ require_once($_SESSION['fip']);		//7/28/10
  */  
 function validate_del() {
 	if (document.del_form.frm_days_val.value==0) { 
-		alert("check days value");
+		alert("<?php print gettext('check days value');?>");
 		return false;
 		}
 	else {
@@ -69,25 +69,25 @@ if (empty($_POST)) {
 
 	if (is_guest()) {
 ?>
-<CENTER><BR /><BR /><BR /><BR /><BR /><H3>Guests not allowed Log access. </CENTER><BR /><BR />
+<CENTER><BR /><BR /><BR /><BR /><BR /><H3><?php print gettext('Guests not allowed Log access.');?> </CENTER><BR /><BR />
 
-<INPUT TYPE='button' value='Cancel' onClick = 'window.exit();'>
+<INPUT TYPE='button' value='<?php print gettext('Cancel');?>' onClick = 'window.exit();'>
 <?php } ?>
 
 
 <FORM NAME="log_form" METHOD = "post" ACTION="<?php print basename(__FILE__); ?>">
 <TABLE>
-<TR CLASS = 'even' ><TH COLSPAN=2>Station Log</TH></TR>
-<TR CLASS = 'odd'><TD>Log entry:</TD><TD><TEXTAREA NAME="frm_comment" COLS="45" ROWS="2" WRAP="virtual"></TEXTAREA></TD></TR>
+<TR CLASS = 'even' ><TH COLSPAN=2><?php print gettext('Station Log');?></TH></TR>
+<TR CLASS = 'odd'><TD><?php print gettext('Log entry');?>:</TD><TD><TEXTAREA NAME="frm_comment" COLS="45" ROWS="2" WRAP="virtual"></TEXTAREA></TD></TR>
 <TR CLASS = 'even'><TD COLSPAN=2 ALIGN='center'>
-<INPUT TYPE = 'button' VALUE='Submit' onClick="document.log_form.submit()" />&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE = 'button' VALUE='Reset' onClick="document.log_form.reset()" />&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE = 'button' VALUE='Review' onClick="document.log_form.func.value='view';document.log_form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE = 'button' VALUE='<?php print gettext('Submit');?>' onClick="document.log_form.submit()" />&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE = 'button' VALUE='<?php print gettext('Reset');?>' onClick="document.log_form.reset()" />&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE = 'button' VALUE='<?php print gettext('Review');?>' onClick="document.log_form.func.value='view';document.log_form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;
 <?php if (is_super()) { ?>
-	<INPUT TYPE = 'button' VALUE='Deletion' onClick="document.log_form.func.value='del';document.log_form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE = 'button' VALUE='<?php print gettext('Deletion');?>' onClick="document.log_form.func.value='del';document.log_form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;
 <?php 	} ?>
 </TD></TR>
-<TR><TD COLSPAN=2 ALIGN='center'><BR /><INPUT TYPE = 'button' VALUE='Cancel' onClick="window.close()" /></TD></TR>
+<TR><TD COLSPAN=2 ALIGN='center'><BR /><INPUT TYPE = 'button' VALUE='<?php print gettext('Cancel');?>' onClick="window.close()" /></TD></TR>
 </TABLE>
 <INPUT TYPE='hidden' NAME='func' VALUE='add'>
 </FORM>
@@ -126,9 +126,9 @@ else {										// not empty
 			if ($do_hdr) {
 				$print .= "<TR CLASS='even'><TH COLSPAN=99> Station Log</TH></TR>\n";
 				$print .= "<TR CLASS='odd'><TD ROWSPAN=10000 ALIGN='right'><BR /><BR /><BR /><BR />
-					<INPUT TYPE='button' VALUE='Finished' onClick = 'self.close()' STYLE = 'width:80px; margin-top:10px;margin-right:10px;' />&nbsp;&nbsp;<BR />
-					<INPUT TYPE='button' VALUE='Log entry' STYLE = 'width:80px; margin-top:10px;margin-right:10px;' onClick = 'document.dummy_form.submit();' />&nbsp;&nbsp;</TD>
-					<TH ALIGN='center'>When</TH><TH ALIGN='center'>Code</TH><TH ALIGN='center'>By</TH><TH ALIGN='center'>Info</TH><TH ALIGN='center'>From</TH></TR>\n";
+					<INPUT TYPE='button' VALUE='" . gettext('Finished') . "' onClick = 'self.close()' STYLE = 'width:80px; margin-top:10px;margin-right:10px;' />&nbsp;&nbsp;<BR />
+					<INPUT TYPE='button' VALUE='" . gettext('Log entry') . "' STYLE = 'width:80px; margin-top:10px;margin-right:10px;' onClick = 'document.dummy_form.submit();' />&nbsp;&nbsp;</TD>
+					<TH ALIGN='center'>" . gettext('When') . "</TH><TH ALIGN='center'>" . gettext('Code') . "</TH><TH ALIGN='center'>" . gettext('By') . "</TH><TH ALIGN='center'>" . gettext('Info') . "</TH><TH ALIGN='center'>" . gettext('From') . "</TH></TR>\n";
 				$do_hdr = FALSE;
 				}
 			switch ($row['code']):
@@ -156,7 +156,7 @@ else {										// not empty
 					endswitch;
 			
 			}
-		$print .= "<TR><TD COLSPAN=99 ALIGN='center'><BR /><B>End of Station Log Report</B><BR /><BR /><A HREF='#page_top'><U>to top</U></A></TD></TR>\n";
+		$print .= "<TR><TD COLSPAN=99 ALIGN='center'><BR /><B>" . gettext('End of Station Log Report') . "</B><BR /><BR /><A HREF='#page_top'><U>" . gettext('to top') . "</U></A></TD></TR>\n";
 		$print .= "</TABLE><BR /><BR /><CENTER></CENTER>";
 		return $print;
 		}		// end function my_show_log ()
@@ -181,8 +181,8 @@ else {										// not empty
 		one week&raquo;<INPUT TYPE="radio" NAME="frm_del" VALUE = "7"  onClick = "document.del_form.frm_days_val.value='this.value';" />&nbsp;&nbsp;&nbsp;&nbsp;
 		two weeks&raquo;<INPUT TYPE="radio" NAME="frm_del" VALUE = "14" onClick = "document.del_form.frm_days_val.value='this.value';"  />&nbsp;&nbsp;&nbsp;&nbsp;
 		one month&raquo;<INPUT TYPE="radio" NAME="frm_del" VALUE = "30" onClick = "document.del_form.frm_days_val.value='this.value';"  /><BR /><BR /><BR />
-		<INPUT TYPE='button' VALUE='OK - do it' onClick = "if ((validate_del()) && (confirm('Confirm deletion - CANNOT BE UNDONE!'))) {document.del_form.submit();}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE='button' VALUE='Cancel' onClick = "document.can_form.submit();" />
+		<INPUT TYPE='button' VALUE='<?php print gettext('OK - do it');?>' onClick = "if ((validate_del()) && (confirm('<?php print gettext('Confirm deletion - CANNOT BE UNDONE!');?>'))) {document.del_form.submit();}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = "document.can_form.submit();" />
 		<INPUT TYPE='hidden' NAME='frm_days_val' VALUE=0>
 		</FORM>
 
@@ -194,11 +194,11 @@ else {										// not empty
 				$the_date = mysql_format_date(time() - (get_variable('delta_mins')*60));
 				$query = "DELETE from `$GLOBALS[mysql_prefix]log` WHERE `when` < ('{$the_date}' - INTERVAL {$_POST['frm_del']} DAY)";
 				$result	= mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);	// 
-				print "<BR /> <BR /> " . mysql_affected_rows() . " Log entries deleted<BR /> <BR /> <BR /> ";
+				print "<BR /> <BR /> " . mysql_affected_rows() . gettext('Log entries deleted') . "<BR /> <BR /> <BR /> ";
 			break;
 	
 		default:
-		    echo "ERROR - ERROR";		
+		    echo gettext('ERROR') . " - " . gettext('ERROR');		
 	}
 
 ?>

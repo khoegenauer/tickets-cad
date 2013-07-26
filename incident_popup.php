@@ -56,7 +56,7 @@ $ticket_start_str = format_date($row['problemstart']);		//
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Incident Popup - Incident <?php print $title;?> <?php print $ticket_updated;?></TITLE>
+	<HEAD><TITLE><?php print gettext('Incident Popup') . " - " . gettext('Incident') .  $title . $ticket_updated;?></TITLE>
 	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
 	<STYLE type="text/css">
 	.hover 	{ text-align: center; margin-left: 4px; float: none; font: normal 12px Arial, Helvetica, sans-serif; color:#FF0000; border-width: 1px; border-STYLE: inset; border-color: #FFFFFF;
@@ -185,33 +185,33 @@ $result_cleared  = mysql_query($query) or do_error($query, 'mysql query failed',
 $num_rows_cleared = mysql_affected_rows();
 $ticket_end = ($ticket_end > 1)? $ticket_end:  (time() - (get_variable('delta_mins')*60));
 $elapsed = my_date_diff($ticket_start, $ticket_end);		// 5/13/10
-echo "<BR /><B>Ticket:&nbsp;{$title}<BR />Opened:&nbsp;{$ticket_start_str},&nbsp;&nbsp;&nbsp;&nbsp;Status: {$ticket_status}</B><BR />";
-$stats = "<B>Severity:&nbsp;{$ticket_severity}, <SPAN STYLE='background-color:white; color:black;'>&nbsp;age: $elapsed&nbsp;</SPAN>";
+echo "<BR /><B>" . gettext('Ticket') . ":&nbsp;{$title}<BR />" . gettext('Opened') . ":&nbsp;{$ticket_start_str},&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('Status') . ": {$ticket_status}</B><BR />";
+$stats = "<B>" . gettext('Severity') . ":&nbsp;{$ticket_severity}, <SPAN STYLE='background-color:white; color:black;'>&nbsp;" . gettext('Age') . ": $elapsed&nbsp;</SPAN>";
 
 echo $stats;
 
-echo "<BR>Units dispatched:&nbsp;({$num_rows_dispatched})&nbsp;";
+echo "<BR>" . gettext('Units dispatched') . ":&nbsp;({$num_rows_dispatched})&nbsp;";
 while ($row_base= mysql_fetch_array($result_dispatched, MYSQL_ASSOC)) {
 	$result = mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE id='{$row_base['responder_id']}'");
 	$row = mysql_fetch_assoc($result);
 	echo "{$row['name']}:&nbsp;{$row['handle']}&nbsp;&nbsp;";
 	}
 
-echo "<BR>Units responding: ($num_rows_responding)&nbsp;";
+echo "<BR>" . gettext('Units responding') . ": ($num_rows_responding)&nbsp;";
 while ($row_base= mysql_fetch_array($result_responding, MYSQL_ASSOC)) {
 	$result = mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE id='{$row_base['responder_id']}'");
 	$row = mysql_fetch_assoc($result);
 	echo "{$row['name']}:&nbsp;{$row['handle']}&nbsp;&nbsp;";
 	}
 
-echo "<BR>Units on scene: ($num_rows_on_scene)&nbsp;";
+echo "<BR>" . gettext('Units on scene') . ": ($num_rows_on_scene)&nbsp;";
 while ($row_base= mysql_fetch_array($result_on_scene, MYSQL_ASSOC)) {
 	$result = mysql_query("SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE id='{$row_base['responder_id']}'");
 	$row = mysql_fetch_assoc($result);
 	echo "{$row['name']}:&nbsp;{$row['handle']}&nbsp;&nbsp;";
 	}
 
-echo "<BR>Units clear:&nbsp;({$num_rows_cleared})&nbsp;";
+echo "<BR>" . gettext('Units clear') . ":&nbsp;({$num_rows_cleared})&nbsp;";
 while ($row_base= mysql_fetch_array($result_cleared, MYSQL_ASSOC)) {
 	echo "{$row_base['unit_name']}:&nbsp;{$row_base['handle']}&nbsp;&nbsp;";
 	}
@@ -230,7 +230,7 @@ echo "</B><BR><BR>";
 
 echo "<CENTER><BR /><BR clear=all/><BR /><SPAN STYLE='background-color:white; font-weight:bold; color:black;'>&nbsp;{$ticket_addr}&nbsp;</SPAN></CEMTER>";
 echo "<BR /><BR /><BR />";
-echo "<CENTER><SPAN id='fin_button' class='plain' style='text-align: center;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Finished</SPAN></CENTER>";
+echo "<CENTER><SPAN id='fin_button' class='plain' style='text-align: center;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>" . gettext('Finished') . "</SPAN></CENTER>";
 
 ?>
 <FORM NAME='to_closed' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'>

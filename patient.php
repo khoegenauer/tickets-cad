@@ -49,7 +49,7 @@ $facilitycontact = 	get_text("Facility contact");
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - <?php print get_text("Patient");?> Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets') . " - " . get_text("Patient") ." " . gettext('Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="Expires" CONTENT="0">
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -169,25 +169,25 @@ function ck_frames() {		//  onLoad = "ck_frames()"
  */
 	function validate(theForm) {
 		var errmsg="";
-		if (theForm.frm_name.value == "")						{errmsg+= "\tName is required\n";}
-		if (theForm.frm_gender_val.value==0) 					{errmsg+= "\t<?php echo $gender;?> required\n";}
-		if (theForm.frm_ins_id.value==0) 						{errmsg+= "\t<?php echo $insurance;?> selection required\n";}
-		if (theForm.frm_description.value == "")				{errmsg+= "\tDescription is required\n";}
+		if (theForm.frm_name.value == "")						{errmsg+= "\t<?php print gettext('Name is required');?>\n";}
+		if (theForm.frm_gender_val.value==0) 					{errmsg+= "\t<?php echo $gender;?> <?php print gettext('required');?>\n";}
+		if (theForm.frm_ins_id.value==0) 						{errmsg+= "\t<?php echo $insurance;?> <?php print gettext('selection required');?>\n";}
+		if (theForm.frm_description.value == "")				{errmsg+= "\t<?php print gettext('Description is required');?>\n";}
 		do_unlock(theForm) ;
-		if (!chkval(theForm.frm_hour_asof.value, 0,23)) 		{errmsg+= "\tAs-of time error - Hours\n";}
-		if (!chkval(theForm.frm_minute_asof.value, 0,59)) 		{errmsg+= "\tAs-of time error - Minutes\n";}
-		if (!datechk_r(theForm))								{errmsg+= "\tAs-of date/time error - future?\n" ;}
+		if (!chkval(theForm.frm_hour_asof.value, 0,23)) 		{errmsg+= "\t<?php print gettext('As-of time error - Hours');?>\n";}
+		if (!chkval(theForm.frm_minute_asof.value, 0,59)) 		{errmsg+= "\t<?php print gettext('As-of time error - Minutes');?>\n";}
+		if (!datechk_r(theForm))								{errmsg+= "\t<?php print gettext('As-of date/time error - future?');?>\n" ;}
 
 		if (errmsg!="") {
 			do_lock(theForm);
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit.');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
 <?php
 		if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 		// 7/2/2013
 ?>
-			var theMessage = "New  <?php print get_text('Patient');?> record by <?php echo $_SESSION['user'];?>";
+			var theMessage = "<?php print gettext('New') . " " . get_text('Patient') . " " . gettext('record by') . " " . $_SESSION['user'];?>";
 			broadcast(theMessage ) ;
 <?php
 	}			// end if (broadcast)
@@ -316,7 +316,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 	
 				$result = mysql_query("UPDATE `$GLOBALS[mysql_prefix]ticket` SET `updated` = '$frm_asof' WHERE id='$_GET[ticket_id]'  LIMIT 1") or do_error($query,mysql_error(), basename( __FILE__), __LINE__);
 				}
-			print "<BR><BR><FONT CLASS='header'>" . get_text("Patient") ." record has been added</FONT><BR /><BR />";
+			print "<BR><BR><FONT CLASS='header'>" . get_text("Patient") . " " . gettext('record has been added') . "</FONT><BR /><BR />";
 			add_header($_GET['ticket_id']);
 			show_ticket($_GET['ticket_id']);
 //			notify_user($_GET['ticket_id'],$NOTIFY_ACTION);
@@ -332,7 +332,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
  */
 	function do_notify() {
 		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
-		var theText= "TICKET - PATIENT: ";
+		var theText= "<?php print gettext('TICKET - PATIENT');?>: ";
 		var theId = '<?php print $_GET['ticket_id'];?>';
 //			 mail_it ($to_str, $text, $ticket_id, $text_sel=1;, $txt_only = FALSE)
 		
@@ -433,7 +433,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 //			($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, $rec_facility_id=0, $mileage=0) {		// generic log table writer - 5/31/08, 10/6/09
 			$query = "DELETE FROM `$GLOBALS[mysql_prefix]patient` WHERE `id`='$_GET[id]' LIMIT 1";
 			$result = mysql_query($query) or do_error('',$query,mysql_error(), basename( __FILE__), __LINE__);
-			print '<FONT CLASS="header">' . get_text("Patient") . ' record deleted</FONT><BR /><BR />';
+			print '<FONT CLASS="header">' . get_text("Patient") . ' ' . gettext('record deleted') . '</FONT><BR /><BR />';
 			$col_width= max(320, intval($_SESSION['scr_width']* 0.45));
 			add_header($_GET['ticket_id']);				// 8/16/08
 			show_ticket($_GET['ticket_id']);
@@ -442,9 +442,9 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]patient` WHERE `id`='$_GET[id]' LIMIT 1";
 			$result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
 			$row = stripslashes_deep(mysql_fetch_assoc($result));
-			print "<FONT CLASS='header'>Really delete " . get_text("Patient") . " record ' " .shorten($row['description'], 24) . "' ?</FONT><BR /><BR />";
-			print "<FORM METHOD='post' ACTION='patient.php?action=delete&id=$_GET[id]&ticket_id=$_GET[ticket_id]&confirm=1'><INPUT TYPE='Submit' VALUE='Yes'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-			print "<INPUT TYPE='button' VALUE='Cancel'  onClick='do_cancel();'></FORM>";
+			print "<FONT CLASS='header'>" . gettext('Really delete') . " " . get_text("Patient") . " " . gettext('record') . " ' " .shorten($row['description'], 24) . "' ?</FONT><BR /><BR />";
+			print "<FORM METHOD='post' ACTION='patient.php?action=delete&id=$_GET[id]&ticket_id=$_GET[ticket_id]&confirm=1'><INPUT TYPE='Submit' VALUE='" . gettext('Yes') . "'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			print "<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "'  onClick='do_cancel();'></FORM>";
 			}
 		}
 	else if ($get_action == 'update') {		//update patient record and show ticket
@@ -484,7 +484,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		$result = mysql_query("SELECT ticket_id FROM `$GLOBALS[mysql_prefix]patient` WHERE id='$_GET[id]'") or do_error('patient.php::update patient record','mysql_query',mysql_error(), basename( __FILE__), __LINE__);
 		$row = stripslashes_deep(mysql_fetch_assoc($result));
 		
-		print '<br><br><FONT CLASS="header">' . get_text("Patient") . ' record updated</FONT><BR /><BR />';
+		print '<br><br><FONT CLASS="header">' . get_text("Patient") . ' ' . gettext('record updated') . '</FONT><BR /><BR />';
 		add_header($_GET['ticket_id']);				// 8/16/08
 		show_ticket($row['ticket_id']);
 		}
@@ -495,7 +495,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 //		dump($row);
 //		dump(stripslashes($row['description']));
 ?>
-		<FONT CLASS="header">Edit <?php print get_text("Patient");?> Record</FONT><BR /><BR />
+		<FONT CLASS="header"><?php print gettext('Edit') . " " . get_text("Patient") . " " . gettext('Record');?></FONT><BR /><BR />
 		<FORM METHOD='post' NAME='patientEd' onSubmit='return validate(document.patientEd);' ACTION="patient.php?id=<?php print $_GET['id'];?>&ticket_id=<?php print $_GET['ticket_id'];?>&action=update"><TABLE BORDER="0">
 
 		<TR CLASS='even' ><TD><B><?php print get_text("Patient ID");?>: <font color='red' size='-1'>*</font></B></TD><TD><INPUT TYPE="text" NAME="frm_name" value="<?php print $row['name'];?>" size="32"></TD></TR>
@@ -522,10 +522,10 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		<TR CLASS='odd' VALIGN='bottom'><TD CLASS="td_label"><?php echo $gender;?>:  <font color='red' size='-1'>*</font></B>&nbsp;&nbsp;</TD>
 			<TD>			
 				&nbsp;&nbsp;
-				M&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_gender' value = 1 onClick = 'this.form.frm_gender_val.value=this.value;' <?php echo $checks[1];?> />
-				&nbsp;&nbsp;F&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_gender' value = 2 onClick = 'this.form.frm_gender_val.value=this.value;' <?php echo $checks[2];?> />
-				&nbsp;&nbsp;T&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_gender' value = 3 onClick = 'this.form.frm_gender_val.value=this.value;' <?php echo $checks[3];?>/>
-				&nbsp;&nbsp;U&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_gender' value = 4 onClick = 'this.form.frm_gender_val.value=this.value;' <?php echo $checks[4];?>/>
+				<?php print gettext('M');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_gender' value = 1 onClick = 'this.form.frm_gender_val.value=this.value;' <?php echo $checks[1];?> />
+				&nbsp;&nbsp;<?php print gettext('F');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_gender' value = 2 onClick = 'this.form.frm_gender_val.value=this.value;' <?php echo $checks[2];?> />
+				&nbsp;&nbsp;<?php print gettext('T');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_gender' value = 3 onClick = 'this.form.frm_gender_val.value=this.value;' <?php echo $checks[3];?>/>
+				&nbsp;&nbsp;<?php print gettext('U');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_gender' value = 4 onClick = 'this.form.frm_gender_val.value=this.value;' <?php echo $checks[4];?>/>
 			</TD></TR>
 		<TR CLASS='even' VALIGN='bottom'><TD CLASS="td_label"><?php echo $insurance;?>: <font color='red' size='-1'>*</font></B> &nbsp;&nbsp;</TD>
 			<TD><?php echo $ins_sel_str;?></TD></TR>
@@ -534,12 +534,12 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 <?php
 		}		// end 	if($num_rows>0) 
 ?>		
-		<TR CLASS='odd'  VALIGN='top'><TD><B>Description:</B> <font color='red' size='-1'>*</font></TD><TD><TEXTAREA ROWS="8" COLS="45" NAME="frm_description" WRAP="virtual"><?php print $row['description'];?></TEXTAREA></TD></TR>
+		<TR CLASS='odd'  VALIGN='top'><TD><B><?php print gettext('Description');?>:</B> <font color='red' size='-1'>*</font></TD><TD><TEXTAREA ROWS="8" COLS="45" NAME="frm_description" WRAP="virtual"><?php print $row['description'];?></TEXTAREA></TD></TR>
 		<TR VALIGN = 'TOP' CLASS='odd'>		<!-- 11/15/10 -->
-			<TD ALIGN='right' CLASS="td_label">Signal: </TD><TD>
+			<TD ALIGN='right' CLASS="td_label"><?php print gettext('Signal');?>: </TD><TD>
 
 				<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-				<OPTION VALUE=0 SELECTED>Select</OPTION>
+				<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -550,15 +550,15 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			</SELECT>
 			</TD></TR>
 <?php
-			print "\n<TR CLASS='even'><TD CLASS='td_label'>As of:</TD><TD>";
+			print "\n<TR CLASS='even'><TD CLASS='td_label'>" . gettext('As of') . ":</TD><TD>";
 			print  generate_date_dropdown("asof",$row['date'], TRUE);
 			print "&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.patientEd);'></TD></TR>\n";
 
 ?>
 
-		<TR CLASS='odd' ><TD></TD><TD ALIGN='center'><INPUT TYPE="button" VALUE="Cancel" onClick="do_cancel();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="Reset" VALUE="Reset"  onClick = "do_lock(this.form); this.form.reset();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="Submit" VALUE="Submit"></TD></TR>
+		<TR CLASS='odd' ><TD></TD><TD ALIGN='center'><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick="do_cancel();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE="Reset" VALUE="<?php print gettext('Reset');?>"  onClick = "do_lock(this.form); this.form.reset();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE="Submit" VALUE="<?php print gettext('Submit');?>"></TD></TR>
 		</TABLE><BR />
 			<INPUT TYPE = 'hidden' NAME = 'frm_gender_val' VALUE = <?php print $row['gender'];?> />
 			<INPUT TYPE = 'hidden' NAME = 'frm_ins_id' VALUE = <?php print $row['insurance_id'];?> />
@@ -645,7 +645,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 				}		
 ?>
 		<TABLE BORDER="0">
-		<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'>Add <?php print get_text("Patient");?> Record</FONT></TD></TR>	<!-- 5/4/11 -->
+		<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'><?php print gettext('Add') . " " . get_text("Patient") . gettext('Record');?></FONT></TD></TR>	<!-- 5/4/11 -->
 		<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR>				<!-- 5/4/11 -->			
 		<FORM METHOD="post" NAME='patientAdd' onSubmit='return validate(document.patientAdd);'  ACTION="patient.php?ticket_id=<?php print $_GET['ticket_id'];?>&action=add">
 		<TR CLASS='even'><TD class='td_label'><B><?php print get_text("Patient ID");?>:</B> <font color='red' size='-1'>*</font></TD><TD><INPUT TYPE="text" NAME="frm_name" value="" size="32"></TD></TR>
@@ -677,7 +677,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			<TD CLASS='td_data'><?php echo $ins_sel_str;?></TD></TR>
 			
 		<TR CLASS='odd'>
-			<TD CLASS="td_label">Facility:</TD><TD COLSPAN='2' class='td_label'>
+			<TD CLASS="td_label"><?php print gettext('Facility');?>:</TD><TD COLSPAN='2' class='td_label'>
 				<SELECT NAME="frm_facility_id"  tabindex=11 onChange="this.options[selectedIndex].value.trim())"><?php print $pulldown; ?></SELECT>&nbsp;&nbsp;&nbsp;
 			<?php echo $facilitycontact;?>:&nbsp;&nbsp;<INPUT TYPE = 'text' NAME = 'frm_fac_cont' VALUE='' SIZE = '32' /></TD></TR>
 <?php
@@ -685,10 +685,10 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 ?>		
 
 		<TR VALIGN = 'TOP' CLASS='even'>		<!-- 11/15/10 -->
-			<TD ALIGN='right' CLASS="td_label">Signal: </TD><TD>
+			<TD ALIGN='right' CLASS="td_label"><?php print gettext('Signal');?>: </TD><TD>
 
 				<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-				<OPTION VALUE=0 SELECTED>Select</OPTION>
+				<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -699,13 +699,13 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			</SELECT>
 			</TD></TR>
 
-		<TR CLASS='even' ><TD class='td_label'><B>Description: </B><font color='red' size='-1'>*</font></TD><TD><TEXTAREA ROWS="6" COLS="62" NAME="frm_description" WRAP="virtual"></TEXTAREA></TD></TR> <!-- 10/19/08 -->
+		<TR CLASS='even' ><TD class='td_label'><B><?php print gettext('Description');?>: </B><font color='red' size='-1'>*</font></TD><TD><TEXTAREA ROWS="6" COLS="62" NAME="frm_description" WRAP="virtual"></TEXTAREA></TD></TR> <!-- 10/19/08 -->
 
-		<TR CLASS='odd' VALIGN='bottom'><TD CLASS="td_label">As of: &nbsp;&nbsp;</TD><TD><?php print generate_date_dropdown('asof',0,TRUE);?>&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.patientAdd);'></TD></TR>
+		<TR CLASS='odd' VALIGN='bottom'><TD CLASS="td_label"><?php print gettext('As of');?>: &nbsp;&nbsp;</TD><TD><?php print generate_date_dropdown('asof',0,TRUE);?>&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.patientAdd);'></TD></TR>
 
-		<TR CLASS='odd'><TD></TD><TD><INPUT TYPE="button" VALUE="Cancel"  onClick="do_cancel();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="Reset" VALUE="Reset" onClick = "do_reset(this.form);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="button" VALUE="Next" onclick = "validate(this.form);"></TD></TR>
+		<TR CLASS='odd'><TD></TD><TD><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="do_cancel();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="Reset" VALUE="<?php print gettext('Reset');?>" onClick = "do_reset(this.form);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>" onclick = "validate(this.form);"></TD></TR>
 		</TABLE><BR />
 			<INPUT TYPE = 'hidden' NAME = 'frm_ins_id' VALUE = 0 />
 			<INPUT TYPE = 'hidden' NAME = 'frm_gender_val' VALUE = 0 />

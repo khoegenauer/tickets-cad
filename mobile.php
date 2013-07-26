@@ -94,27 +94,27 @@ function get_butts($ticket_id, $unit_id) {
 	$win_height =  get_variable('map_height') + 120;
 	$win_width = get_variable('map_width') + 10;
 	if ($_SESSION['internet']) {
-		print "<INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Map' onClick  = \"var popWindow = window.open('map_popup.php?id={$ticket_id}', 'PopWindow', 'resizable=1, scrollbars, height={$win_height}, width={$win_width}, left=250,top=50,screenX=250,screenY=50'); popWindow.focus();\" />\n"; // 7/3/10
+		print "<INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('Map') . "' onClick  = \"var popWindow = window.open('map_popup.php?id={$ticket_id}', 'PopWindow', 'resizable=1, scrollbars, height={$win_height}, width={$win_width}, left=250,top=50,screenX=250,screenY=50'); popWindow.focus();\" />\n"; // 7/3/10
 		}
 	if (can_edit()) {		// 5/23/11
-		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'New' onClick = \"var newWindow = window.open('add.php?mode=1', 'addWindow', 'resizable=1, scrollbars, height=640, width=800, left=100,top=100,screenX=100,screenY=100'); newWindow.focus();\" />\n"; // 8/9/10
-		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Edit' onClick = \"var newWindow = window.open('edit_nm.php?mode=1&id={$ticket_id}', 'editWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100'); newWindow.focus();\" />\n"; // 2/1/10
+		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('New') . "' onClick = \"var newWindow = window.open('add.php?mode=1', 'addWindow', 'resizable=1, scrollbars, height=640, width=800, left=100,top=100,screenX=100,screenY=100'); newWindow.focus();\" />\n"; // 8/9/10
+		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('Edit') . "' onClick = \"var newWindow = window.open('edit_nm.php?mode=1&id={$ticket_id}', 'editWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100'); newWindow.focus();\" />\n"; // 2/1/10
 
 		if (!is_closed($ticket_id)) {		// 10/5/09
-			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Close' onClick = \"var mailWindow = window.open('close_in.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=480, width=700, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\" />\n";  // 8/20/09
+			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('Close') . "' onClick = \"var mailWindow = window.open('close_in.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=480, width=700, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\" />\n";  // 8/20/09
 			}
 		} 		// end if ($can_edit())
 	if (is_administrator() || is_super() || is_unit()){
 		if (!is_closed($ticket_id)) {
-			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Action' onClick  = \"var actWindow = window.open('action_w.php?mode=1&ticket_id={$ticket_id}', 'ActWindow', 'resizable=1, scrollbars, height=480, width=900, left=250,top=50,screenX=250,screenY=50'); ActWindow.focus();\" />\n"; // 7/3/10
+			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('Action') . "' onClick  = \"var actWindow = window.open('action_w.php?mode=1&ticket_id={$ticket_id}', 'ActWindow', 'resizable=1, scrollbars, height=480, width=900, left=250,top=50,screenX=250,screenY=50'); ActWindow.focus();\" />\n"; // 7/3/10
 			print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '{$patient}' onClick  = \"var patWindow = window.open('patient_w.php?mode=1&ticket_id={$ticket_id}', 'patWindow', 'resizable=1, scrollbars, height=480,width=720, left=250,top=50,screenX=250,screenY=50'); patWindow.focus();\" />\n"; // 7/3/10
 			}
-		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Notify' onClick  = \"var notWindow = window.open('config.php?mode=1&func=notify&id={$ticket_id}', 'NotWindow', 'resizable=1, scrollbars, height=400, width=600, left=250,top=50,screenX=250,screenY=50'); notWindow.focus();\" />\n"; // 7/3/10
+		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('Notify') . "' onClick  = \"var notWindow = window.open('config.php?mode=1&func=notify&id={$ticket_id}', 'NotWindow', 'resizable=1, scrollbars, height=400, width=600, left=250,top=50,screenX=250,screenY=50'); notWindow.focus();\" />\n"; // 7/3/10
 		}
-	print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Note' onClick = \"var noteWindow = window.open('add_note.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=240, width=600, left=100,top=100,screenX=100,screenY=100'); noteWindow.focus();\" />\n"; // 10/8/08
-//	print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Print' onClick='main.php?print=true&id=$ticket_id;'>\n ";
-	print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'E-mail' onClick = \"var mailWindow = window.open('mail.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\" />\n"; // 2/1/10
-	print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = 'Dispatch' onClick = \"var dispWindow = window.open('routes_nm.php?frm_mode=1&ticket_id={$ticket_id}', 'dispWindow', 'resizable=1, scrollbars, height=480, width=" . round (0.8 * ($_SESSION['scr_width'])) . ", left=100,top=100,screenX=100,screenY=100'); dispWindow.focus();\" />\n"; // 2/1/10
+	print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('Note') . "' onClick = \"var noteWindow = window.open('add_note.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=240, width=600, left=100,top=100,screenX=100,screenY=100'); noteWindow.focus();\" />\n"; // 10/8/08
+//	print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('Print') . "' onClick='main.php?print=true&id=$ticket_id;'>\n ";
+	print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('E-mail') . "' onClick = \"var mailWindow = window.open('mail.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\" />\n"; // 2/1/10
+	print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('Dispatch') . "' onClick = \"var dispWindow = window.open('routes_nm.php?frm_mode=1&ticket_id={$ticket_id}', 'dispWindow', 'resizable=1, scrollbars, height=480, width=" . round (0.8 * ($_SESSION['scr_width'])) . ", left=100,top=100,screenX=100,screenY=100'); dispWindow.focus();\" />\n"; // 2/1/10
 	}				// end function get butts()
 
 /**
@@ -142,7 +142,7 @@ function adj_time($time_stamp) {
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <HTML>
 
-	<HEAD><TITLE>Tickets - Mobile Terminal Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Mobile Terminal Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 	<META HTTP-EQUIV="Expires" CONTENT="-1" />	<!-- 3/15/11 -->
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -202,11 +202,11 @@ function do_save(in_val) {
 			rows_arr[0] = 0;
 			frames_obj.rows = rows_arr.join(",");						// string to attribute - hide the top frame
 			do_save("h");
-			btn.value = "Show Menu";
+			btn.value = "<?php print gettext('Show Menu');?>";
 		} else {
 			frames_obj.rows = row_str;								// make top frame visible
 			do_save("s");
-			btn.value = "Hide Menu";			
+			btn.value = "<?php print gettext('Hide Menu');?>";			
 		}
 	}
 /**
@@ -218,10 +218,10 @@ function do_save(in_val) {
 		if (upperVis == "h") {
 			rows_arr[0] = 0;
 			frames_obj.rows = rows_arr.join(",");		// string to attribute - hide the top frame
-			$('b1').value = "Show Menu";
+			$('b1').value = "<?php print gettext('Show Menu');?>";
 			} else {
 			frames_obj.rows = row_str;				// make top frame visible
-			$('b1').value = "Hide Menu";
+			$('b1').value = "<?php print gettext('Hide Menu');?>";
 		}
 	}	
 	-->
@@ -590,13 +590,13 @@ if (mysql_affected_rows()==0) {
 <BR /><BR /><BR /><BR />
 <CENTER>
 <input id="b1" type="button" value="Hide Top Menu" CLASS='btn_not_chkd' onclick="showhideFrame(this)"><BR /><BR /> 
-<H2><?php print $for_str;?>: no current calls  as of <?php print substr($now, 11,5);?></H2>
+<H2><?php print $for_str;?>: <?php print gettext('no current calls as of');?> <?php print substr($now, 11,5);?></H2>
 <?php
 	if (can_edit()) {
 ?>
 			<FORM NAME = 'switch_form' METHOD = 'get' ACTION = '<?php print basename(__FILE__);?>'>
 			<INPUT TYPE='hidden' NAME = 'frm_mode' VALUE = '2' />	
-			<INPUT ID='chng_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE='All calls' onClick = 'document.switch_form.submit();' />
+			<INPUT ID='chng_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE='<?php print gettext('All calls');?>' onClick = 'document.switch_form.submit();' />
 			</FORM>
 <?php
 		}
@@ -717,7 +717,7 @@ else {
 		params += "&tick_id=" +<?php print $ticket_id;?>;
 		params += "&frm_id=" +<?php print $assign_id;?>;		
 		sendRequest ('rec_fac_t.php',handleResult, params);			// does the work	
-		parent.frames['upper'].show_msg ("Receiving Facility Updated");
+		parent.frames['upper'].show_msg ("<?php print gettext('Receiving Facility Updated');?>");
 <?php
 		if (array_key_exists('assign_id', ($_GET))) {
 ?>	
@@ -814,7 +814,7 @@ $unload_str = ($_SESSION['internet'])? "GUnload(); end_watch();"  : "end_watch()
 	</TD>
 	<TD ID = 'ctr top' ALIGN='center'>
 		<TABLE BORDER=0 >
-		<TR><TD ALIGN='center'><input id="b1" type="button" value="Hide Menu" CLASS='btn_not_chkd' onclick="showhideFrame(this)"></TD></TR>
+		<TR><TD ALIGN='center'><input id="b1" type="button" value="<?php print gettext('Hide Menu');?>" CLASS='btn_not_chkd' onclick="showhideFrame(this)"></TD></TR>
 		<TR CLASS='spacer'><TD class='spacer'>&nbsp;</TD></TR>
 		<TR><TD ALIGN='left'>	<!-- 3/15/11 -->	
 <?php
@@ -835,7 +835,7 @@ $unload_str = ($_SESSION['internet'])? "GUnload(); end_watch();"  : "end_watch()
 
 			$colors = array("even", "odd");
 			echo "<TABLE BORDER=0 CLASS='calls'>\n";		// 
-			echo "<TR CLASS = 'even'><TH COLSPAN=7 ALIGN='center'>Current calls {$unit_str}</TH></TR>";		// 
+			echo "<TR CLASS = 'even'><TH COLSPAN=7 ALIGN='center'>" . gettext('Current calls') . " {$unit_str}</TH></TR>";		// 
 			$the_ticket_id = (array_key_exists('ticket_id', $_GET))? $_GET['ticket_id'] : 0 ;				// possibly empty on initial etry
 
 			for ($i = 0; $i<count($assigns_stack); $i++) {
@@ -918,54 +918,54 @@ $unload_str = ($_SESSION['internet'])? "GUnload(); end_watch();"  : "end_watch()
 		<TABLE BORDER=0><TR><TD ID='buttons' style=" height: auto; width: 200px; overflow-y: scroll; overflow-x: hidden;">
 <?php	if (is_date($time_disp)) { 
 ?>
-		<INPUT ID='disp_btn' TYPE= 'button' CLASS='btn_chkd' VALUE='Disp @ <?php print adj_time($time_disp) ;?>' onClick = 'toss();'  STYLE = 'display:<?php echo $display_val;?>;' />
+		<INPUT ID='disp_btn' TYPE= 'button' CLASS='btn_chkd' VALUE='<?php print gettext('Disp @');?> <?php print adj_time($time_disp) ;?>' onClick = 'toss();'  STYLE = 'display:<?php echo $display_val;?>;' />
 <?php			}	
 			else  { 
 ?>
-		<INPUT ID='disp_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE='Dispatched' onClick = "set_assign('d');"   STYLE = 'display:<?php echo $display_val;?>;' />
+		<INPUT ID='disp_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE='<?php print gettext('Dispatched');?>' onClick = "set_assign('d');"   STYLE = 'display:<?php echo $display_val;?>;' />
 <?php			} 
 			if (is_date($time_resp)) { 
 ?>
-		<INPUT ID='resp_btn' TYPE= 'button' CLASS='btn_chkd' VALUE='Resp @ <?php print adj_time($time_resp) ;?>' onClick = 'toss();'  STYLE = 'display:<?php echo $display_val;?>;' />
+		<INPUT ID='resp_btn' TYPE= 'button' CLASS='btn_chkd' VALUE='<?php print gettext('Resp @');?> <?php print adj_time($time_resp) ;?>' onClick = 'toss();'  STYLE = 'display:<?php echo $display_val;?>;' />
 <?php			}	
 			else  { 
 ?>
-		<INPUT ID='resp_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE='Responding' onClick = "set_assign('r');"  STYLE = 'display:<?php echo $display_val;?>;' />
+		<INPUT ID='resp_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE='<?php print gettext('Responding');?>' onClick = "set_assign('r');"  STYLE = 'display:<?php echo $display_val;?>;' />
 <?php			} 
 			if (is_date($time_onsc)) { 
 ?>
-		<INPUT ID='onsc_btn' TYPE= 'button' CLASS='btn_chkd' VALUE='On-scene @ <?php print adj_time($time_onsc);?>' onClick = 'toss();'  STYLE = 'display:<?php echo $display_val;?>;' />
+		<INPUT ID='onsc_btn' TYPE= 'button' CLASS='btn_chkd' VALUE='<?php print gettext('On-scene @');?> <?php print adj_time($time_onsc);?>' onClick = 'toss();'  STYLE = 'display:<?php echo $display_val;?>;' />
 <?php			}	
 			else  { 
 ?>
-		<INPUT ID='onsc_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE='On-scene' onClick = "set_assign('s');"  STYLE = 'display:<?php echo $display_val;?>;' />
+		<INPUT ID='onsc_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE='<?php print gettext('On-scene');?>' onClick = "set_assign('s');"  STYLE = 'display:<?php echo $display_val;?>;' />
 <?php			} 
 			if ($assigns_stack[$selected_indx]['rec_facility_id']>0) {		//	10/18/11 changed to just check if receiving facility is set - Incident at facility is not valid for this function.
 				if (is_date($time_fenr)) { 
 ?>
-			<INPUT ID='f_enr_btn' TYPE= 'button' CLASS='btn_chkd' VALUE="Fac'y enr @ <?php print adj_time($time_fenr);?>" onClick = 'toss();'  STYLE = 'display:<?php echo $display_val;?>;' />
+			<INPUT ID='f_enr_btn' TYPE= 'button' CLASS='btn_chkd' VALUE="<?php print gettext('Facility En Route @');?> <?php print adj_time($time_fenr);?>" onClick = 'toss();'  STYLE = 'display:<?php echo $display_val;?>;' />
 <?php				}	
 				else  { 
 ?>
-			<INPUT ID='f_enr_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE="Fac'y enroute" onClick = "set_assign('e');"  STYLE = 'display:<?php echo $display_val;?>;' />
+			<INPUT ID='f_enr_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE="<?php print gettext('Facility en route');?>" onClick = "set_assign('e');"  STYLE = 'display:<?php echo $display_val;?>;' />
 <?php				} 	
 				if (is_date($time_farr)) { 		// 5/19/11
 ?>
-			<INPUT ID='f_arr_btn' TYPE= 'button' CLASS='btn_chkd' VALUE="Fac'y arr @ <?php print adj_time($time_farr);?>" onClick = 'toss();'  STYLE = 'display:<?php echo $display_val;?>;' />
+			<INPUT ID='f_arr_btn' TYPE= 'button' CLASS='btn_chkd' VALUE="<?php print gettext('Facility Arrived @');?> <?php print adj_time($time_farr);?>" onClick = 'toss();'  STYLE = 'display:<?php echo $display_val;?>;' />
 <?php			}	
 				else  { 
 ?>
-			<INPUT ID='f_arr_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE="Fac'y arrive" onClick = "set_assign('a');"  STYLE = 'display:<?php echo $display_val;?>;' />
+			<INPUT ID='f_arr_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE="<?php print gettext('Facility Arrive');?>" onClick = "set_assign('a');"  STYLE = 'display:<?php echo $display_val;?>;' />
 <?php				} 	
 				}		//  end if (facility ... )
 				
 			if (is_date($time_clear)) { 
 ?>
-		<INPUT ID='clear_btn' TYPE= 'button' CLASS='btn_chkd' VALUE='Clear @ <?php print adj_time($time_clear);?>' onClick = 'toss();'  STYLE = 'display:<?php echo $display_val;?>;' />
+		<INPUT ID='clear_btn' TYPE= 'button' CLASS='btn_chkd' VALUE='<?php print gettext('Clear @');?> <?php print adj_time($time_clear);?>' onClick = 'toss();'  STYLE = 'display:<?php echo $display_val;?>;' />
 <?php			}	
 				else  { 
 ?>
-		<INPUT ID='clear_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE='Clear' onClick = "set_assign('c');"   STYLE = 'display:<?php echo $display_val;?>;' />	
+		<INPUT ID='clear_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE='<?php print gettext('Clear');?>' onClick = "set_assign('c');"   STYLE = 'display:<?php echo $display_val;?>;' />	
 <?php
 					}		// end if (is_date($time_clear))
 
@@ -1002,7 +1002,7 @@ $unload_str = ($_SESSION['internet'])? "GUnload(); end_watch();"  : "end_watch()
 ?>
 			<FORM NAME = 'switch_form' METHOD = 'get' ACTION = '<?php print basename(__FILE__);?>'>
 			<INPUT TYPE='hidden' NAME = 'frm_mode' VALUE = '2' />	
-			<INPUT ID='chng_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE='All calls' onClick = 'document.switch_form.submit();' />
+			<INPUT ID='chng_btn' TYPE= 'button' CLASS='btn_not_chkd' VALUE='<?php print gettext('All calls');?>' onClick = 'document.switch_form.submit();' />
 			</FORM>
 <?php 
 				}		 	// end if (can_edit()

@@ -15,7 +15,7 @@ $call = (empty($_GET))? "": $_GET['frm_call'];				// 10/1/08
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<HEAD><TITLE>Tickets - Test APRS</TITLE>
+<HEAD><TITLE><?php print gettext('Tickets - Test APRS');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -50,8 +50,8 @@ if (empty($the_key)) {print "\n\tdocument.aprs_form.frm_key.focus();\n";}
 </HEAD>
 <BODY onLoad = "do_focus();">
 <CENTER><BR /><BR />
-<H3>APRS CALLSIGN TEST - <?php print $call;?></H3>
-(data via aprs.fi)<BR /><BR />
+<H3><?php print gettext('APRS CALLSIGN TEST');?> - <?php print $call;?></H3>
+(<?php print gettext('data via');?> aprs.fi)<BR /><BR />
 <?php
 if (!empty($_GET)) {
 	$call_str = $_GET['frm_call'];
@@ -61,13 +61,13 @@ if (!empty($_GET)) {
 	$data=get_remote($the_url, TRUE);				// returns JSON-decoded values, ($url, $json=TRUE) {				// 11/26/10	, 4/23/11
 	$temp = $data->result;
 	if (strtoupper($temp) != "OK"){
-		print "<BR /><H3>Test fails!  \"{$data->{'description'}}\"</H3><BR /><BR />";
+		print "<BR /><H3>" . gettext('Test fails!') . "  \"{$data->{'description'}}\"</H3><BR /><BR />";
 		}
 	else {
-		print "<BR /><H3>Test with aprs.fi succeeds!</H3>";
+		print "<BR /><H3>" . gettext('Test with aprs.fi succeeds!') . "</H3>";
 		$temp = ($data->found );			// match count
 		if($temp==0) {
-			print "<BR /><H3>No data for '{$_GET['frm_call']}'</H3><BR />";		
+			print "<BR /><H3>" . gettext('No data for') . " '{$_GET['frm_call']}'</H3><BR />";		
 			}
 		else {			
 			$entry = (object) $data->entries[0];
@@ -80,7 +80,7 @@ if (!empty($_GET)) {
 			$callsign_in = 	(property_exists($entry, 'name')) ? 	$entry->name		: "na"; 			
 			$p_d_timestamp = (property_exists($entry, 'lasttime'))? mysql_format_date($entry->lasttime) : "na";		// to timestamp	
 
-			print "Lat: {$lat}, Long: {$lng}, Time: {$p_d_timestamp}, Course: {$course}, Speed: {$mph}<BR><BR><BR><BR>" ; 
+			print gettext('Lat') . ": {$lat}, " . gettext('Long') . ": {$lng}, " . gettext('Time') . ": {$p_d_timestamp}, " . gettext('Course') . ": {$course}, " . gettext('Speed') . ": {$mph}<BR><BR><BR><BR>" ; 
 			}
 		}			// end if/else OK
 	}	// end if (!empty($_GET))
@@ -90,6 +90,6 @@ $the_key = trim(get_variable('aprs_fi_key'));
 <FORM NAME = "aprs_form" METHOD="get" ACTION="<?php print basename(__FILE__); ?>">
 <B>aprs.fi key:&nbsp;&nbsp;</B><INPUT TYPE="text" NAME="frm_key" SIZE="30" VALUE="<?php print trim($the_key);?>" /><BR /><BR /><BR />
 <B>Callsign:&nbsp;&nbsp;</B> <INPUT TYPE="text" NAME="frm_call" SIZE="16" VALUE="" /><BR /><BR /><BR />
-<INPUT TYPE="button" VALUE = "Finished" onClick = "self.close()">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-<INPUT TYPE="submit" VALUE='Do test'> 
+<INPUT TYPE="button" VALUE = "<?php print gettext('Finished');?>" onClick = "self.close()">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<INPUT TYPE="submit" VALUE='<?php print gettext('Do test');?>'> 
 </BODY></HTML>

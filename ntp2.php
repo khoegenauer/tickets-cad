@@ -33,7 +33,7 @@ function ntp_time() {
 		fclose($fp);
 
 		if (strlen($data) != 4) {								// we have a response...is it valid? (4 char string -> 32 bits)
-			echo "NTP Server {$time_server	} returned an invalid response.\n";
+			echo gettext('NTP Server') . " {$time_server	} " . gettext('returned an invalid response') . ".\n";
 			return FALSE;
 			}
 		else {
@@ -45,6 +45,6 @@ function ntp_time() {
 		}
 	}		// end function ntp_time() 
 	
-print "NIST  date/time is " . date ("m/d/Y H:i:s",ntp_time());
-echo "\n<BR />System date and time is " . date("m/d/Y H:i:s");
+print gettext('NIST  date/time is') . " " . date ("m/d/Y H:i:s",ntp_time());
+echo "\n<BR />" . gettext('System date and time is') . " " . date("m/d/Y H:i:s");
 ?>

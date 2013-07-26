@@ -13,7 +13,7 @@ extract ($_POST);
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Test OpenGTS</TITLE>
+<TITLE><?php print gettext('Test OpenGTS');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -41,8 +41,8 @@ extract ($_POST);
  */
 function customError($errno, $errstr)
   {
-  echo "Error:</b> [$errno] $errstr<br /><br />";
-  echo "<b>Data format error - Ending Script</b><br /><br /><br /><br />";
+  echo gettext('Error') . ":</b> [$errno] $errstr<br /><br />";
+  echo "<b>" . gettext('Data format error - Ending Script') . "</b><br /><br /><br /><br />";
   die();
   } 
 set_error_handler("customError"); 
@@ -80,10 +80,10 @@ set_error_handler("customError");
 					fclose($fp);
 					}		
 				else {
-					return "- connect error";
+					return "- " . gettext('connect error') . '"';
 					}
 				}
-			if (strpos ( $data, "Invalid")) return "- Account/Password error";
+			if (strpos ( $data, "Invalid")) return "- " . gettext('Account/Password error') . '"';
 			
 			if (!($data)) return "- connect error " . __LINE__;
 //			dump($url);
@@ -94,7 +94,7 @@ set_error_handler("customError");
 //			dump($jsonresp);
 			$result = json_last_error();
 			if (($result != JSON_ERROR_NONE) || (!(is_array($jsonresp)))) {return " - data error " . __LINE__;}
-			if (strpos ( $data, "Invalid device")) return "- device error";
+			if (strpos ( $data, "Invalid device")) return "- " . gettext('device error') . '"';
 //			dump(gettype($jsonresp));
 			
 			foreach ($jsonresp["DeviceList"] as $device) {
@@ -123,7 +123,7 @@ switch ($_func) {
 <input type = hidden name = '_func' value = 'test'>
 <TABLE ALIGN='center' STYLE = 'margin-top:40px;'>
 <TR CLASS  = 'even'>
-	<TH COLSPAN=2><?php echo "OpenGTS Test Fails for<br /><br /> 
+	<TH COLSPAN=2><?php echo '"' . gettext('OpenGTS Test Fails for') . "<br /><br /> 
 	URL: '{$_POST['frm_url']}',  
 	Account:'{$_POST['frm_account']}',  
 	PW:'{$_POST['frm_pw']}'
@@ -132,8 +132,8 @@ switch ($_func) {
 	</TH></TR>
 
 <TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR /><BR />
-	<INPUT TYPE='button' VALUE = 'Another' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE = 'Finished' onClick = 'window.close();' />
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Another');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Finished');?>' onClick = 'window.close();' />
 </TD></TR></TABLE>
 </FORM>
 
@@ -149,9 +149,9 @@ switch ($_func) {
 	</TD></TR>
 <TR><TD>&nbsp;</TD></TR>
 <TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR /><BR />
-	<INPUT TYPE='button' VALUE = 'Save' onClick = 'document.frm_save.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE = 'Another' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE = 'Finished' onClick = 'window.close();' />
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Save');?>' onClick = 'document.frm_save.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Another');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Finished');?>' onClick = 'window.close();' />
 </TD></TR></TABLE>
 </FORM>
 <FORM NAME= 'frm_save' METHOD='post' ACTION = '<?php print basename(__FILE__);?>'>
@@ -174,25 +174,25 @@ case("form") :
 
 ?>
 <TABLE ALIGN = 'center' cellpadding = 4 BORDER = 0 STYLE = 'margin-top:40px;'>
-<TR CLASS  = 'even'><TD COLSPAN=2 align = 'center'><B>OpenGTS Test - enter/revise test values</B></TD></TR>
+<TR CLASS  = 'even'><TD COLSPAN=2 align = 'center'><B><?php print gettext('OpenGTS Test - enter/revise test values');?></B></TD></TR>
 <FORM NAME= 'frm_og' METHOD='post' ACTION = '<?php print basename(__FILE__);?>'>
 	</TD></TR>
 <TR CLASS  = 'odd'><TD>&nbsp;</TD></TR>	
 <TR CLASS  = 'odd'>
-	<TD>Server URL:</TD>
+	<TD><?php print gettext('Server URL');?>:</TD>
 	<TD><INPUT NAME = 'frm_url' TYPE = 'text' SIZE = '60' VALUE='<?php echo $init_url;?>'></TD>	
 	</TR>
 <TR CLASS = 'even'>
-	<TD>Account:</TD>
+	<TD><?php print gettext('Account');?>:</TD>
 	<TD><INPUT NAME = 'frm_account' TYPE = 'text' SIZE = '20' VALUE='<?php echo $init_acct;?>'></TD>	
 	</TR>
 <TR CLASS  = 'odd'>
-	<TD>Password:</TD>
+	<TD><?php print gettext('Password');?>:</TD>
 	<TD><INPUT NAME = 'frm_pw' TYPE = 'text' SIZE = '20' VALUE='<?php echo $init_pw;?>'></TD>	
 	</TR>
 <TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR />
-	<INPUT TYPE='button' VALUE = 'Run test' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE = 'Finished' onClick = 'window.close();' />
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Run test');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Finished');?>' onClick = 'window.close();' />
 	<INPUT TYPE='hidden' NAME = '_func' VALUE = 'test' />
 	</FORM>
 	
@@ -205,8 +205,8 @@ case("save") :
 	$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 ?>
 <CENTER><BR /><BR />
-	<H2>OpenGTS test values saved as settings</H2><BR><BR>
-	<INPUT TYPE='button' VALUE = 'Finished' onClick = 'window.close();' />
+	<H2><?php print gettext('OpenGTS test values saved as settings');?></H2><BR><BR>
+	<INPUT TYPE='button' VALUE = '<?php print gettext('Finished');?>' onClick = 'window.close();' />
 	</CENTER>	
 
 <?php
@@ -217,6 +217,5 @@ default :
 }		// END switch ($_POST['_func'])
 
 ?>	
-
 </BODY>
 </HTML>

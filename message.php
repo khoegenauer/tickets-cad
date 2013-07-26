@@ -65,7 +65,7 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
 $count_users = count($the_users);
 
 $the_addressbook = "<SELECT NAME='frm_addressbook' onChange='pop_address(this.options[this.selectedIndex].value);'>";
-$the_addressbook .= "<OPTION VALUE='0' SELECTED>Select Address from Contacts</OPTION>";
+$the_addressbook .= "<OPTION VALUE='0' SELECTED>" . gettext('Select Address from Contacts') . "</OPTION>";
 $z=1;
 foreach($the_contacts as $val) {
 	$the_addressbook .= "<OPTION VALUE=" . $the_contacts[$z][4] . ">" . $the_contacts[$z][0] . "  "  . $the_contacts[$z][4] . "</OPTION>";
@@ -131,16 +131,16 @@ function the_ticket($theRow, $theWidth=500, $search=FALSE, $dist=TRUE) {						//
 	$locale = get_variable('locale');	// 08/03/09
 	switch($locale) { 
 		case "0":
-		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;USNG&nbsp;&nbsp;" . LLtoUSNG($theRow['lat'], $theRow['lng']);
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('USNG') . "&nbsp;&nbsp;" . LLtoUSNG($theRow['lat'], $theRow['lng']);
 		break;
 
 		case "1":
-		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;OSGB&nbsp;&nbsp;" . LLtoOSGB($theRow['lat'], $theRow['lng']);	// 8/23/08, 10/15/08, 8/3/09
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('OSGB') . "&nbsp;&nbsp;" . LLtoOSGB($theRow['lat'], $theRow['lng']);	// 8/23/08, 10/15/08, 8/3/09
 		break;
 	
 		case "2":
 		$coords =  $theRow['lat'] . "," . $theRow['lng'];									// 8/12/09
-		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;UTM&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('UTM') . "&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
 		break;
 
 		default:
@@ -217,7 +217,7 @@ function get_tickname($theid) {	//	Gets responder ID from SMS Gateway ID
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Message</TITLE>
+<TITLE><?php print gettext('Message');?></TITLE>
 <META NAME="Description" CONTENT="">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
@@ -375,13 +375,13 @@ if(!empty($_POST)) {
 		$query  = "INSERT INTO `$GLOBALS[mysql_prefix]assigns` (`as_of` , `status_id`, `ticket_id`, `responder_id`, `comments`, `user_id`, `dispatched`) VALUES 
 				('$now', 1, $tick_id, $resp_id, 'Dispatched from Messages', $user_id, '$now')";
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-		$the_flag = "Responder " . $respname . " dispatched to " . $tickname;
+		$the_flag = gettext('Responder') . " " . $respname . " " . gettext('dispatched to') . " " . $tickname;
 ?>
 		<BODY>
 			<CENTER>
 			<DIV style='position: absolute; top: 50px; font-size: 20px; font-weight: bold;'><?php print $the_flag;?></DIV>
 			<DIV ID='controls' style='position: relative; top: 150px; left: 5%; display: block; text-align: center; width: 20%;'>
-				<SPAN id='close_but' class='plain' style='float: left; display: inline-block;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='window.close();'>CLOSE</SPAN>
+				<SPAN id='close_but' class='plain' style='float: left; display: inline-block;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='window.close();'><?php print gettext('CLOSE');?></SPAN>
 			</DIV>	
 			</CENTER>	
 		</BODY>
@@ -399,9 +399,9 @@ if(!empty($_POST)) {
 ?>
 		<BODY>
 			<CENTER>
-			<DIV style='position: absolute; top: 50px; left: 220px; font-size: 20px; font-weight: bold;'><?php print "Message Sent";?></DIV>
+			<DIV style='position: absolute; top: 50px; left: 220px; font-size: 20px; font-weight: bold;'><?php print gettext("Message Sent");?></DIV>
 			<DIV ID='controls' style='position: relative; top: 150px; left: 5%; display: block; text-align: center; width: 20%;'>
-				<SPAN id='close_but' class='plain' style='float: left; display: inline-block;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='window.close();'>CLOSE</SPAN>
+				<SPAN id='close_but' class='plain' style='float: left; display: inline-block;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='window.close();'><?php print gettext('CLOSE');?></SPAN>
 			</DIV>	
 			</CENTER>	
 		</BODY>
@@ -418,8 +418,8 @@ $this_msg = array_search($uid, $the_messages);
 $next_msg = (array_key_exists(($this_msg + 1), $the_messages)) ? $the_messages[($this_msg + 1)] : "Last";
 $prev_msg = (array_key_exists(($this_msg - 1), $the_messages)) ? $the_messages[($this_msg - 1)] : "First";
 
-$next_but = ($next_msg != "Last") ? "<SPAN class='plain' id='next_but' onMouseover='do_hover(this);' onMouseout='do_plain(this);'  style='float: right; color: #000000; display: inline-block; vertical-align: middle;' onClick=\"go_to(" . $next_msg . ", '" . $screen . "');\">Next</SPAN>" : "<SPAN class='plain' id='next_but' style='float: right; color: #707070; display: inline-block; vertical-align: middle;'>Next</SPAN>";
-$prev_but = ($prev_msg != "First") ? "<SPAN class='plain'  id='prev_but' onMouseover='do_hover(this);' onMouseout='do_plain(this);'  style='float: right; color: #000000; display: inline-block; vertical-align: middle;' onClick=\"go_to(" . $prev_msg . ", '" . $screen . "');\">Prev</SPAN>" : "<SPAN class='plain' id='prev_but' style='float: right; color: #707070; display: inline-block; vertical-align: middle;'>Prev</SPAN>";
+$next_but = ($next_msg != "Last") ? "<SPAN class='plain' id='next_but' onMouseover='do_hover(this);' onMouseout='do_plain(this);'  style='float: right; color: #000000; display: inline-block; vertical-align: middle;' onClick=\"go_to(" . $next_msg . ", '" . $screen . "');\">" . gettext('Next') . "</SPAN>" : "<SPAN class='plain' id='next_but' style='float: right; color: #707070; display: inline-block; vertical-align: middle;'>" . gettext('Next') . "</SPAN>";
+$prev_but = ($prev_msg != "First") ? "<SPAN class='plain'  id='prev_but' onMouseover='do_hover(this);' onMouseout='do_plain(this);'  style='float: right; color: #000000; display: inline-block; vertical-align: middle;' onClick=\"go_to(" . $prev_msg . ", '" . $screen . "');\">" . gettext('Prev') . "</SPAN>" : "<SPAN class='plain' id='prev_but' style='float: right; color: #707070; display: inline-block; vertical-align: middle;'>" . gettext('Prev') . "</SPAN>";
 
 /**
  * br2nl
@@ -515,20 +515,20 @@ $message = br2nl(html_entity_decode($message));
 $now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
 
 if ($row['msg_type'] == 1) {
-	$type_flag = "Outoging Email";
+	$type_flag = '"' . gettext('Outgoing Email') . '"';
 	$type = 1;
 	$color = "background-color: blue; color: white;";
 	} elseif ($row['msg_type'] ==2) {
-	$type_flag = "Incoming Email";
+	$type_flag = '"' . gettext('Incoming Email') . '"';
 	$type = 2;
 	$color = "background-color: white; color: blue;";			
 	} elseif ($row['msg_type'] ==3) {
 	$color = "background-color: orange; color: white;";			
-	$type_flag = "Outgoing SMS";
+	$type_flag = '"' . gettext('Outgoing SMS') . '"';
 	$type = 3;
 	} elseif (($row['msg_type'] ==4) || ($row['msg_type'] ==5) || ($row['msg_type'] ==6)) {
 	$color = "background-color: white; color: orange;";				
-	$type_flag = "Incoming SMS";	
+	$type_flag = '"' . gettext('Incoming SMS') . '"';	
 	$type = 4;
 	} else {
 	$color = "";				
@@ -567,7 +567,7 @@ if(empty($_POST)) {
 	$tick_result = mysql_query($tick_query) or do_error($tick_query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	if (!mysql_num_rows($tick_result)){	//no tickets? print "error" or "restricted user rights"
 		$num_tkts = 0;
-		$error_msg = "No Ticket details for this message";
+		$error_msg = '"' . gettext('No Ticket details for this message') . '"';
 		} else {
 		$num_tkts = mysql_num_rows($tick_result);
 		$error_msg = "";
@@ -581,32 +581,32 @@ if(empty($_POST)) {
 	<BODY onLoad='<?php print $the_refresh;?>;'>
 		<CENTER>	
 		<DIV ID='controls' style='position: absolute; top: 10px; left: 0%; padding: 2%; display: block; text-align: center; width: 96%; height: 5%; vertical-align: middle; background: #909090;'>
-			<SPAN id='print_but' class='plain' style='float: left; display: inline-block; vertical-align: middle; color: white; background: blue;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='window.print();'>Print</SPAN>			
-			<SPAN id='reply_but' class='plain' style='float: left; display: inline-block; vertical-align: middle;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='reply_button();'>Reply</SPAN>			
-			<SPAN id='forward_but' class='plain' style='float: left; display: inline-block; vertical-align: middle;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='forward_button();'>Forward</SPAN>			
+			<SPAN id='print_but' class='plain' style='float: left; display: inline-block; vertical-align: middle; color: white; background: blue;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='window.print();'><?php print gettext('Print');?></SPAN>			
+			<SPAN id='reply_but' class='plain' style='float: left; display: inline-block; vertical-align: middle;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='reply_button();'><?php print gettext('Reply');?></SPAN>			
+			<SPAN id='forward_but' class='plain' style='float: left; display: inline-block; vertical-align: middle;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='forward_button();'><?php print gettext('Forward');?></SPAN>			
 			<SPAN id='spacer' style='width: 30px'>&nbsp;</SPAN>	
-			<SPAN id='disp_but' class='plain' style='float: left; display: inline-block; vertical-align: middle; color: red; background: yellow;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='disp_button();'>Dispatch</SPAN>	
+			<SPAN id='disp_but' class='plain' style='float: left; display: inline-block; vertical-align: middle; color: red; background: yellow;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='disp_button();'><?php print gettext('Dispatch');?></SPAN>	
 			<SPAN id='spacer' style='width: 30px'>&nbsp;</SPAN>			
-			<SPAN id='send_but' class='plain' style='float: left; display: none; vertical-align: middle; color: white; background: blue;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='send_button();'>Send</SPAN>		
+			<SPAN id='send_but' class='plain' style='float: left; display: none; vertical-align: middle; color: white; background: blue;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='send_button();'><?php print gettext('Send');?></SPAN>		
 			<SPAN id='spacer' style='width: 30px'>&nbsp;</SPAN>	
 <?php
 			print $prev_but;
 			print $next_but;
 ?>
 			<SPAN id='spacer' style='width: 30px'>&nbsp;</SPAN>	
-			<SPAN id='close_but' class='plain' style='float: right; display: inline-block; vertical-align: middle; color: white; background: red;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='window.close();'>CLOSE</SPAN>
-			<SPAN id='can_but' class='plain' style='float: right; display: inline-block; vertical-align: middle; display: none; color: white; background: #707070;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='cancel_button();'>Cancel</SPAN>
+			<SPAN id='close_but' class='plain' style='float: right; display: inline-block; vertical-align: middle; color: white; background: red;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='window.close();'><?php print gettext('CLOSE');?></SPAN>
+			<SPAN id='can_but' class='plain' style='float: right; display: inline-block; vertical-align: middle; display: none; color: white; background: #707070;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='cancel_button();'><?php print gettext('Cancel');?></SPAN>
 		</DIV>	
 		</CENTER>		
 		<DIV id='outer' style='position: relative; top: 100px; height: 82%; display: block; border: 2px outset #707070; overflow-y: scroll;'>
 			<DIV id='view' style='padding: 1%; margin: 2%; position: absolute; width: 85%; height: 100%;'>
-					<DIV style='font-size: 24px; color: #000000; text-align: center;'>VIEW</DIV>
+					<DIV style='font-size: 24px; color: #000000; text-align: center;'><?php print gettext('VIEW');?></DIV>
 <?php
 					if($num_tkts > 0) {
 ?>
-						<DIV style='width: 100%; border: 2px outset #707070; min-height: 30px;'>TICKET DETAILS
-							<SPAN id='show_tick' class='plain' style='float: right;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick="$('the_tick').style.display = 'inline-block'; $('show_tick').style.display = 'none'; $('hide_tick').style.display = 'inline-block';">Show</SPAN>
-							<SPAN id='hide_tick' class='plain' style='display: none; float: right;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick="$('the_tick').style.display = 'none'; $('hide_tick').style.display = 'none'; $('show_tick').style.display = 'inline-block';">Hide</SPAN>						
+						<DIV style='width: 100%; border: 2px outset #707070; min-height: 30px;'><?php print gettext('TICKET DETAILS');?>
+							<SPAN id='show_tick' class='plain' style='float: right;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick="$('the_tick').style.display = 'inline-block'; $('show_tick').style.display = 'none'; $('hide_tick').style.display = 'inline-block';"><?php print gettext('Show');?></SPAN>
+							<SPAN id='hide_tick' class='plain' style='display: none; float: right;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick="$('the_tick').style.display = 'none'; $('hide_tick').style.display = 'none'; $('show_tick').style.display = 'inline-block';"><?php print gettext('Hide');?></SPAN>						
 							<DIV id='the_tick' style='display: none'>
 <?php 
 								print the_ticket($tick_row, 500);
@@ -619,22 +619,22 @@ if(empty($_POST)) {
 ?>
 					<DIV style='text-align: center; font-size: 16px; padding: 5px; <?php print $color;?>'><?php print $type_flag;?></DIV><BR /><BR />
 					
- 					<DIV style='background-color: #707070; color: #FFFFFF; width: 100%; font-weight: bold;'>Already Read by:</DIV>           
+ 					<DIV style='background-color: #707070; color: #FFFFFF; width: 100%; font-weight: bold;'><?php print gettext('Already Read by');?>:</DIV>           
 					<DIV style='background-color: #FFFFFF; color: #707070; width: 100%; height: 20px; border: 1px inset #707070;'><?php print $the_names; ?></DIV><BR /><BR /> 
 					
-					<DIV style='background-color: #707070; color: #FFFFFF; width: 100%; font-weight: bold;'>From:</DIV>           
+					<DIV style='background-color: #707070; color: #FFFFFF; width: 100%; font-weight: bold;'><?php print gettext('From');?>:</DIV>           
 					<DIV style='background-color: #FFFFFF; color: #707070; width: 100%; height: 20px; border: 1px inset #707070;'><?php print $fromAddress; ?></DIV><BR /><BR />      
 	
-					<DIV style='background-color: #707070; color: #FFFFFF; width: 100%; font-weight: bold;'>To:</DIV>           
+					<DIV style='background-color: #707070; color: #FFFFFF; width: 100%; font-weight: bold;'><?php print gettext('To');?>:</DIV>           
 					<DIV style='background-color: #FFFFFF; color: #707070; width: 100%; height: 20px; border: 1px inset #707070;'><?php print $recipients; ?></DIV><BR /><BR />      
 	
-					<DIV style='background-color: #707070; color: #FFFFFF; width: 100%; font-weight: bold;'>Date:</DIV>           
+					<DIV style='background-color: #707070; color: #FFFFFF; width: 100%; font-weight: bold;'><?php print gettext('Date');?>:</DIV>           
 					<DIV style='background-color: #FFFFFF; color: #707070; width: 100%; height: 20px; border: 1px inset #707070;'><?php print $row['date']; ?></DIV><BR /><BR />      
   
-					<DIV style='background-color: #707070; color: #FFFFFF; width: 100%; font-weight: bold;'>Subject:</DIV>           
+					<DIV style='background-color: #707070; color: #FFFFFF; width: 100%; font-weight: bold;'><?php print gettext('Subject');?>:</DIV>           
 					<DIV style='background-color: #FFFFFF; color: #707070; width: 100%; height: 20px; border: 1px inset #707070;'><?php print $row['subject']; ?></DIV><BR /><BR />      
 
-					<DIV style='background-color: #707070; color: #FFFFFF; width: 100%; font-weight: bold;'>Message:</DIV>   					
+					<DIV style='background-color: #707070; color: #FFFFFF; width: 100%; font-weight: bold;'><?php print gettext('Message');?>:</DIV>   					
 					<DIV style='background-color: #FFFFFF; color: #707070; width: 100%; min-height: 50px; overflow-y: auto; border: 1px inset #707070;'><?php print $message; ?></DIV>  
 
 					<DIV id='disp_form' style='background-color: #707070; color: #FFFFFF; width: 100%; font-weight: bold;'>
@@ -649,7 +649,7 @@ if(empty($_POST)) {
 				<table> 
 					<FORM NAME="reply_frm" METHOD="post" ACTION = "<?php print basename( __FILE__); ?>">
 					<tr>
-						<th COLSPAN=99>REPLY</th>
+						<th COLSPAN=99><?php print gettext('REPLY');?></th>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
@@ -660,30 +660,30 @@ if(empty($_POST)) {
 						<td><?php print $the_addressbook;?></td>           
 					</tr>   					
 					<tr>          
-						<td>To:</td>           
+						<td><?php print gettext('To');?>:</td>           
 						<td><INPUT TYPE='text' NAME='frm_addrs' size='60' VALUE="<?php print $fromAddress; ?>"></td>      
 					</tr>      
 					<tr>           
-						<td>Date:</td>           
+						<td><?php print gettext('Date');?>:</td>           
 						<td><INPUT TYPE='text' NAME='frm_date' size='60' VALUE="<?php print $now; ?>"></td>      
 					</tr>     
 					<tr>           
-						<td>Subject:</td>           
+						<td><?php print gettext('Subject');?>:</td>           
 						<td><INPUT TYPE='text' NAME='frm_subject' size='60' VALUE="<?php print $row['subject']; ?>"></td>      
 					</tr> 	
 					<tr>       
-						<td>Original Message:</td>   					
+						<td><?php print gettext('Original Message');?>:</td>   					
 						<td><TEXTAREA NAME="frm_message" readonly="readonly" COLS=58 ROWS=5 style='background-color: #F0F0F0 ; color: #707070; overflow-y: auto; overflow-x: hidden;'><?php print $message ;?></TEXTAREA></td>     
 					</tr> 					
 					<tr>       
-						<td>Response:</td>   					
+						<td><?php print gettext('Response');?>:</td>   					
 						<td><TEXTAREA NAME="frm_reply" COLS=58 ROWS=15></TEXTAREA></td>     
 					</tr> 
 <?php
 					if(($type == 3) || ($type == 4) || ($type == 5) || ($type == 6)) {
 ?>
 						<tr>
-							<td>Use <?php get_provider_name(get_msg_variable('smsg_provider'));?>?: </td>
+							<td><?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?: </td>
 							<td><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE=1></td>
 						</tr>		
 <?php			
@@ -699,7 +699,7 @@ if(empty($_POST)) {
 				<table> 
 					<FORM NAME="forward_frm" METHOD="post" ACTION = "<?php print basename( __FILE__); ?>">
 					<tr>
-						<th COLSPAN=99>FORWARD</th>
+						<th COLSPAN=99><?php print gettext('FORWARD');?></th>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>					
@@ -710,30 +710,30 @@ if(empty($_POST)) {
 						<td><?php print $the_addressbook;?></td>           
 					</tr>      					
 					<tr>          
-						<td>To:</td>           
+						<td><?php print gettext('To');?>:</td>           
 						<td><INPUT TYPE='text' NAME='frm_addrs' size='60' VALUE=""></td>      
 					</tr>      
 					<tr>           
-						<td>Date:</td>           
+						<td><?php print gettext('Date');?>:</td>           
 						<td><INPUT TYPE='text' NAME='frm_date' size='60' VALUE="<?php print $now; ?>"></td>      
 					</tr>     
 					<tr>           
-						<td>Subject:</td>           
+						<td><?php print gettext('Subject');?>:</td>           
 						<td><INPUT TYPE='text' NAME='frm_subject' size='60' VALUE="<?php print $row['subject']; ?>"></td>      
 					</tr> 	
 					<tr>   
-						<td>Original Message:</td>          					
+						<td><?php print gettext('Original Message');?>:</td>          					
 						<td><TEXTAREA NAME="frm_message" readonly="readonly" COLS=58 ROWS=5 style='background-color: #F0F0F0; color: #707070; overflow-y: auto; overflow-x: hidden;'><?php print $message ;?></TEXTAREA></td>      
 					</tr>
 					<tr>   
-						<td>Your Message:</td>          					
+						<td><?php print gettext('Your Message');?>:</td>          					
 						<td><TEXTAREA NAME="frm_reply" COLS=58 ROWS=15></TEXTAREA></td>      
 					</tr>					
 <?php
 					if(($type == 3) || ($type == 4)) {
 ?>
 						<tr>
-							<td>Use <?php get_provider_name(get_msg_variable('smsg_provider'));?>?: </td>
+							<td><?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?: </td>
 							<td><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE=1></td>
 						</tr>		
 <?php			
@@ -755,6 +755,6 @@ if(empty($_POST)) {
 }
 ?>	
 <BODY>
-<DIV id = 'the_sending' style='position: absolute; top: 50px; left: 220px; font-size: 20px; font-weight: bold; display: none;'><?php print "Please Wait";?><BR /><BR /><CENTER><img src="./images/pleasewait.gif" alt="Please Wait"/></CENTER></DIV>	
+<DIV id = 'the_sending' style='position: absolute; top: 50px; left: 220px; font-size: 20px; font-weight: bold; display: none;'><?php print "Please Wait";?><BR /><BR /><CENTER><img src="./images/pleasewait.gif" alt="<?php print gettext('Please Wait');?>"/></CENTER></DIV>	
 </BODY>
 </HTML>

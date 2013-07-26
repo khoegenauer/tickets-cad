@@ -50,7 +50,7 @@ $files = read_directory(getcwd().'/message_archives/');
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Messages</TITLE>
+<TITLE><?php print gettext('Messages');?></TITLE>
 <META NAME="Description" CONTENT="">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
@@ -230,12 +230,12 @@ thelevel = "<?php print can_delete_msg();?>";
 <BODY onLoad="get_inbox();light_butt('inbox');">
 <DIV style='background-color: #CECECE; height: 100%;'>
 	<DIV id='folderlist' style='position: absolute; left: 0px; top: 0px; width: 18%; height: 100%;'>
-		<SPAN id='folders_header' class='heading' style='margin-left: 2%; width: 96%; float: none; display: inline-block; font-size: 18px; border: 4px outset #FFFFFF;'>MESSAGE FOLDERS</SPAN><BR /><BR />	
-		<SPAN id='inbox_header' class='heading' style='margin-left: 2%; width: 97%; float: none; display: inline-block;'>Current Messages</SPAN><BR /><BR />	
-		<SPAN id='inbox' class='plain' style='margin-left: 5%; width: 80%; float: none; display: inline-block;' onMouseover='do_hover(this.id);' onMouseout='do_plain(this.id);' onClick='get_inbox();'>Inbox</SPAN><BR /><BR />
-		<SPAN id='sent' class='plain' style='margin-left: 5%; width: 80%; float: none; display: inline-block;' onMouseover='do_hover(this.id);' onMouseout='do_plain(this.id);' onClick='get_sent();'>Sent Messages</SPAN><BR /><BR />
-		<SPAN id='deleted' class='plain' style='margin-left: 5%; width: 80%; float: none; display: inline-block;' onMouseover='do_hover(this.id);' onMouseout='do_plain(this.id);' onClick='get_wastebin();'>Deleted Items</SPAN><BR /><BR />
-		<SPAN id='archive_header' class='heading' style='margin-left: 2%; width: 97%; float: none; display: inline-block;'>Archive</SPAN><BR /><BR />
+		<SPAN id='folders_header' class='heading' style='margin-left: 2%; width: 96%; float: none; display: inline-block; font-size: 18px; border: 4px outset #FFFFFF;'><?php print gettext('MESSAGE FOLDERS');?></SPAN><BR /><BR />	
+		<SPAN id='inbox_header' class='heading' style='margin-left: 2%; width: 97%; float: none; display: inline-block;'><?php print gettext('Current Messages');?></SPAN><BR /><BR />	
+		<SPAN id='inbox' class='plain' style='margin-left: 5%; width: 80%; float: none; display: inline-block;' onMouseover='do_hover(this.id);' onMouseout='do_plain(this.id);' onClick='get_inbox();'><?php print gettext('Inbox');?></SPAN><BR /><BR />
+		<SPAN id='sent' class='plain' style='margin-left: 5%; width: 80%; float: none; display: inline-block;' onMouseover='do_hover(this.id);' onMouseout='do_plain(this.id);' onClick='get_sent();'><?php print gettext('Sent Messages');?></SPAN><BR /><BR />
+		<SPAN id='deleted' class='plain' style='margin-left: 5%; width: 80%; float: none; display: inline-block;' onMouseover='do_hover(this.id);' onMouseout='do_plain(this.id);' onClick='get_wastebin();'><?php print gettext('Deleted Items');?></SPAN><BR /><BR />
+		<SPAN id='archive_header' class='heading' style='margin-left: 2%; width: 97%; float: none; display: inline-block;'><?php print gettext('Archive');?></SPAN><BR /><BR />
 		<DIV id='archivelist' style='position: relative; left: 0px; top: 0px; width: 95%; height: 75%; overflow-y: scroll;'>
 <?php
 			foreach($files AS $val) {
@@ -261,28 +261,28 @@ thelevel = "<?php print can_delete_msg();?>";
 	<DIV id='view_messages' style='position: absolute; right: 0px; top: 0px; width: 82%; height: 100%; border: 4px outset #FFFFFF;'>
 		<DIV id='header1' style='position: relative; width: 100%;'>
 			<DIV style='background-color: #707070; color: #FFFFFF; position: relative; text-align: center;'><BR />
-				<SPAN id='close_but' class='plain' style='float: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='window.close();'>Close</SPAN>
+				<SPAN id='close_but' class='plain' style='float: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='window.close();'><?php print gettext('Close');?></SPAN>
 <?php
 				if(is_super()) {
 ?>
-				<SPAN id='all_read_but' class='plain' style='float: none; display: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='read_status("read", 0, "messages");'>Mark All Read</SPAN>	
-				<SPAN id='all_unread_but' class='plain' style='float: none; display: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='read_status("unread", 0, "messages");'>Mark All Unread</SPAN>	
-				<SPAN id='del_all' class='plain' style='float: none; display: inline-block;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='del_all_messages();'>Delete All Messages</SPAN>	
-				<SPAN id='empty_waste' class='plain' style='float: none; display: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='empty_waste()'>Empty Wastebin</SPAN>	
+				<SPAN id='all_read_but' class='plain' style='float: none; display: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='read_status("read", 0, "messages");'><?php print gettext('Mark All Read');?></SPAN>	
+				<SPAN id='all_unread_but' class='plain' style='float: none; display: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='read_status("unread", 0, "messages");'><?php print gettext('Mark All Unread');?></SPAN>	
+				<SPAN id='del_all' class='plain' style='float: none; display: inline-block;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='del_all_messages();'><?php print gettext('Delete All Messages');?></SPAN>	
+				<SPAN id='empty_waste' class='plain' style='float: none; display: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='empty_waste()'><?php print gettext('Empty Wastebin');?></SPAN>	
 <?php
 }
 ?>
 			
 			</DIV>
 			<DIV style='background-color: #707070; color: #FFFFFF; position: relative; text-align: center;'>
-				<SPAN style='vertical-align: middle; text-align: center; font-size: 22px; color: #FFFFFF;'>Messages</SPAN>
-				<SPAN style='font-size: 10px;'>Click Column Heading to sort</SPAN><BR />
+				<SPAN style='vertical-align: middle; text-align: center; font-size: 22px; color: #FFFFFF;'><?php print gettext('Messages');?></SPAN>
+				<SPAN style='font-size: 10px;'><?php print gettext('Click Column Heading to sort');?></SPAN><BR />
 			</DIV>
 			<DIV style='background-color: #707070; color: #FFFFFF; position: relative; text-align: center;'>
 				<FORM NAME='the_filter'>			
-					<SPAN style='vertical-align: middle; text-align: center;'><B>FILTER: &nbsp;&nbsp;</B><INPUT TYPE='text' NAME='frm_filter' size='60' MAXLENGTH='128' VALUE=''>
-						<SPAN id = 'filter_box' class='plain' style='float: none; vertical-align: middle;' onMouseover = 'do_hover(this);' onMouseout='do_plain(this);' onClick='do_filter(folder);'>&nbsp;&nbsp;&#9654;&nbsp;&nbsp;GO</SPAN>
-						<SPAN id = 'the_clear' class='plain' style='float: none; display: none; vertical-align: middle;' onMouseover = 'do_hover(this);' onMouseout='do_plain(this);' onClick='clear_filter(folder);'>&nbsp;&nbsp;X&nbsp;&nbsp;Clear</SPAN>
+					<SPAN style='vertical-align: middle; text-align: center;'><B><?php print gettext('FILTER');?>: &nbsp;&nbsp;</B><INPUT TYPE='text' NAME='frm_filter' size='60' MAXLENGTH='128' VALUE=''>
+						<SPAN id = 'filter_box' class='plain' style='float: none; vertical-align: middle;' onMouseover = 'do_hover(this);' onMouseout='do_plain(this);' onClick='do_filter(folder);'>&nbsp;&nbsp;&#9654;&nbsp;&nbsp;<?php print gettext('GO');?></SPAN>
+						<SPAN id = 'the_clear' class='plain' style='float: none; display: none; vertical-align: middle;' onMouseover = 'do_hover(this);' onMouseout='do_plain(this);' onClick='clear_filter(folder);'>&nbsp;&nbsp;X&nbsp;&nbsp;<?php print gettext('Clear');?></SPAN>
 					</SPAN>
 				</FORM><BR />
 			</DIV>
@@ -290,15 +290,15 @@ thelevel = "<?php print can_delete_msg();?>";
 				<TR id='therow' style='padding-top: 3px; padding-bottom: 3px; background-color: #CECECE; color: #FFFFFF; width: 100%;'>
 <?php
 				$print = "";
-				$print .= (in_array('1', $columns_arr)) ? "<TD id='ticket' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`ticket_id`',filter)\">Tkt</TD>" : "";					
-				$print .= (in_array('2', $columns_arr)) ? "<TD id='type' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`msg_type`',filter)\">Typ</TD>" : "";				
-				$print .= (in_array('3', $columns_arr)) ? "<TD id='fromname' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`fromname`',filter)\">From</TD>" : "";				
-				$print .= (in_array('4', $columns_arr)) ? "<TD id='recipients' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`recipients`',filter)\">To</TD>" : "";
-				$print .= (in_array('5', $columns_arr)) ? "<TD id='subject' class='cols_h' NOWRAP style='width: 15.5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`subject`',filter)\">Subject</TD>" : "";					
-				$print .= (in_array('6', $columns_arr)) ? "<TD id='message' class='cols_h' NOWRAP style='width: 40%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`message`',filter)\">Message</TD>" : "";
-				$print .= (in_array('7', $columns_arr)) ? "<TD id='date' class='cols_h' style='width: 8%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`date`',filter)\">Date</TD>" : "";
-				$print .= (in_array('8', $columns_arr)) ? "<TD id='owner' class='cols_h' NOWRAP style='width:7%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`_by`',filter)\">Owner</TD>" : "";
-				$print .= "<TD id='del' class='cols_h' NOWRAP style='width: 3%; color: red;'>DEL</TD>";
+				$print .= (in_array('1', $columns_arr)) ? "<TD id='ticket' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`ticket_id`',filter)\">" . gettext('Tkt') . "</TD>" : "";					
+				$print .= (in_array('2', $columns_arr)) ? "<TD id='type' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`msg_type`',filter)\">" . gettext('Typ') . "</TD>" : "";				
+				$print .= (in_array('3', $columns_arr)) ? "<TD id='fromname' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`fromname`',filter)\">" . gettext('From') . "</TD>" : "";				
+				$print .= (in_array('4', $columns_arr)) ? "<TD id='recipients' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`recipients`',filter)\">" . gettext('To') . "</TD>" : "";
+				$print .= (in_array('5', $columns_arr)) ? "<TD id='subject' class='cols_h' NOWRAP style='width: 15.5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`subject`',filter)\">" . gettext('Subject') . "</TD>" : "";					
+				$print .= (in_array('6', $columns_arr)) ? "<TD id='message' class='cols_h' NOWRAP style='width: 40%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`message`',filter)\">" . gettext('Message') . "</TD>" : "";
+				$print .= (in_array('7', $columns_arr)) ? "<TD id='date' class='cols_h' style='width: 8%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`date`',filter)\">" . gettext('Date') . "</TD>" : "";
+				$print .= (in_array('8', $columns_arr)) ? "<TD id='owner' class='cols_h' NOWRAP style='width:7%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`_by`',filter)\">" . gettext('Owner') . "</TD>" : "";
+				$print .= "<TD id='del' class='cols_h' NOWRAP style='width: 3%; color: red;'>" . gettext('DEL') . "</TD>";
 				print $print;
 ?>			
 				</TR>

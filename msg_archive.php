@@ -39,7 +39,7 @@ if(mysql_num_rows($result) != 0) {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<HEAD><TITLE>Tickets - Message Archive</TITLE>
+<HEAD><TITLE><?php print gettext('Tickets - Message Archive');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 <META HTTP-EQUIV="Expires" CONTENT="0" />
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -119,7 +119,7 @@ function do_plain (the_id) {
  */
 function submit_archive() {
 	if(document.forms['archive_form'].del_messages.checked == true) {
-		if (confirm("Are you sure you want to remove the messages after archiving them?")) { 
+		if (confirm("<?php print gettext('Are you sure you want to remove the messages after archiving them?');?>")) { 
 		document.forms['archive_form'].submit();
 			}
 		} else {
@@ -137,7 +137,7 @@ if(empty($_POST)) {
 	$num_messages = mysql_num_rows($result);
 ?>
 	<DIV id='outer' style='position: absolute; width: 95%; text-align: center; margin: 10px;'>
-		<DIV id='banner' class='heading' style='font-size: 28px; position: relative: top: 5%; width: 100%; border: 1px outset #000000;'>MESSAGE ARCHIVING</DIV><BR /><BR />
+		<DIV id='banner' class='heading' style='font-size: 28px; position: relative: top: 5%; width: 100%; border: 1px outset #000000;'><?php print gettext('MESSAGE ARCHIVING');?></DIV><BR /><BR />
 		<DIV id='leftcol' style='position: relative; left: 2%; top: 5%; width: 45%; float: left; border: 1px outset #000000;'>
 <?php 
 		if($num_messages != 0) {
@@ -145,19 +145,19 @@ if(empty($_POST)) {
 			<FORM NAME='archive_form' METHOD='POST' ACTION = "<?php print basename( __FILE__); ?>">
 			<TABLE style='width: 100%;'>
 				<TR class='heading'>
-					<TH class='heading' COLSPAN=99 style='font-size: 18px;'>ARCHIVE MESSAGES (<?php print $num_messages;?> messages stored)</TH>
+					<TH class='heading' COLSPAN=99 style='font-size: 18px;'></php print gettext('ARCHIVE MESSAGES');?> (<?php print $num_messages;?> <?php print gettext('messages stored');?>)</TH>
 				</TR>
 				<TR class='spacer'>
 					<TD COLSPAN=99 class='spacer'>&nbsp;</TD>
 				</TR>			
 				<TR class='odd'>	
-					<TD class='td_label' style='text-align: left;'>&nbsp;&nbsp;Start Date</TD><TD class='td_data'><?php print generate_dateonly_dropdown('start',strtotime($oldest_date),FALSE);?></TD>
+					<TD class='td_label' style='text-align: left;'>&nbsp;&nbsp;<?php print gettext('Start Date');?></TD><TD class='td_data'><?php print generate_dateonly_dropdown('start',strtotime($oldest_date),FALSE);?></TD>
 				</TR>
 				<TR class='even'>	
-					<TD class='td_label' style='text-align: left;'>&nbsp;&nbsp;End Date</TD><TD class='td_data'><?php print generate_dateonly_dropdown('end',strtotime($newest_date),FALSE);?></TD>
+					<TD class='td_label' style='text-align: left;'>&nbsp;&nbsp;<?php print gettext('End Date');?></TD><TD class='td_data'><?php print generate_dateonly_dropdown('end',strtotime($newest_date),FALSE);?></TD>
 				</TR>
 				<TR class='odd'>	
-					<TD class='td_label' COLSPAN=99>DELETE MESSAGES<input type="checkbox" name="del_messages" value="yes"></TD>
+					<TD class='td_label' COLSPAN=99><?php print gettext('DELETE MESSAGES');?><input type="checkbox" name="del_messages" value="yes"></TD>
 				</TR>			
 				<TR class='spacer'>
 					<TD COLSPAN=99 class='spacer'>&nbsp;</TD>
@@ -168,11 +168,11 @@ if(empty($_POST)) {
 			</TABLE>
 			<INPUT NAME='table' TYPE='hidden' SIZE='24' VALUE='messages'>
 			</FORM><BR /><BR />
-			<SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "submit_archive();">Submit</SPAN><BR /><BR />	
+			<SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "submit_archive();"><?php print gettext('Submit');?></SPAN><BR /><BR />	
 <?php
 			} else {
 ?>
-			<SPAN CLASS='header' id='no_msgs_flag'>There are no messages currently stored</SPAN>
+			<SPAN CLASS='header' id='no_msgs_flag'><?php print gettext('There are no messages currently stored');?></SPAN>
 <?php
 			}
 ?>
@@ -181,14 +181,14 @@ if(empty($_POST)) {
 			<FORM NAME='manage_archives' METHOD='POST' ACTION = "<?php print basename( __FILE__); ?>">
 			<TABLE style='width: 100%; padding-left: 10px;'>
 				<TR class='heading'>
-					<TH class='heading' COLSPAN=99 style='font-size: 18px;'>MANAGE ARCHIVES (<?php print count($thefiles);?> files)</TH>
+					<TH class='heading' COLSPAN=99 style='font-size: 18px;'><?php print gettext('MANAGE ARCHIVES');?> (<?php print count($thefiles);?> <?php print gettext('files');?>)</TH>
 				</TR>
 				<TR class='spacer'>
 					<TD COLSPAN=99 class='spacer'>&nbsp;</TD>
 				</TR>			
 				<TR class='heading'>
-					<TD class='header' style='font-size: 12px; text-align: left;'>DELETE</TD>
-					<TD class='header' style='font-size: 12px; text-align: left;'>FILENAME</TD>				
+					<TD class='header' style='font-size: 12px; text-align: left;'><?php print gettext('DELETE');?></TD>
+					<TD class='header' style='font-size: 12px; text-align: left;'><?php print gettext('FILENAME');?></TD>				
 				</TR>	
 <?php
 					$class='odd';
@@ -208,7 +208,7 @@ if(empty($_POST)) {
 				</TR>
 			</TABLE>
 			</FORM><BR /><BR />
-			<SPAN id='sub2_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.forms['manage_archives'].submit();">Submit</SPAN><BR /><BR />		
+			<SPAN id='sub2_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.forms['manage_archives'].submit();"><?php print gettext('Submit');?></SPAN><BR /><BR />		
 		</DIV>
 	</DIV>
 <?php
@@ -228,9 +228,9 @@ if(empty($_POST)) {
 		$del = ((isset($_POST['del_messages'])) && ($_POST['del_messages'] == "yes")) ? TRUE : FALSE;
 		$the_return = exportMysqlToCsv($table, $filename, $start, $end, $del);
 		if($the_return == '100') {
-			$title = "Message Archiving Complete";
+			$title = '"' . gettext('Message Archiving Complete') . '"';
 			} else {
-			$title =  "Archive Already exists";
+			$title =  '"' . gettext('Archive Already exists') . '"';
 			}
 		$print = "";
 			
@@ -238,10 +238,10 @@ if(empty($_POST)) {
 		$dir = "./message_archives/";
 		$print = "";
 		foreach($_POST['files'] as $val) {
-			$print .=  "Deleted " . $val . "<BR />";
+			$print .=  '"' . gettext('Deleted') . " " . $val . "<BR />";
 			unlink($dir . $val);
 			}
-		$title = "Archive Deletion Complete";
+		$title = '"' . gettext('Archive Deletion Complete') . '"';
 	}
 ?>
 	<BR /><BR />
@@ -249,8 +249,8 @@ if(empty($_POST)) {
 		<DIV id='leftcol' style='position: relative; left: 20%; top: 5%; width: 48%; float: left; border: 1px outset #000000;'><BR /><BR /><?php print $print;?><BR />
 		<SPAN  class='heading' style='font-size: 24px;'><?php print $title;?></SPAN><BR /><BR /><BR />
 		<CENTER>
-		<SPAN ID='archive_back' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "go_there('msg_archive.php', this.id);">Back to Message Archiving</SPAN>
-		<SPAN ID='config_back' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "go_there('config.php', this.id);">Back to Config</SPAN></CENTER>
+		<SPAN ID='archive_back' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "go_there('msg_archive.php', this.id);"><?php print gettext('Back to Message Archiving');?></SPAN>
+		<SPAN ID='config_back' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "go_there('config.php', this.id);"><?php print gettext('Back to Config');?></SPAN></CENTER>
 		<BR /><BR />
 		</DIV>
 	</DIV>	

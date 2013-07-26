@@ -41,7 +41,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<HEAD><TITLE>Tickets - Service User Portal</TITLE>
+<HEAD><TITLE><?php print gettext('Tickets - Service User Portal');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 <META HTTP-EQUIV="Expires" CONTENT="0" />
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -251,7 +251,7 @@ function do_window(id) {				// 1/19/09
 		starting=true;	
 		newwindow=window.open("./portal/request.php?id=" + id, "view_request",  "titlebar, location=0, resizable=1, scrollbars=yes, height=600, width=600, status=0, toolbar=0, menubar=0, location=0, left=100, top=300, screenX=100, screenY=300");
 		if (isNull(newwindow)) {
-			alert ("Station log operation requires popups to be enabled. Please adjust your browser options.");
+			alert ("<?php print gettext('Station log operation requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 		newwindow.focus();
@@ -273,30 +273,30 @@ function requests_cb2(req) {
 	theClass = "background-color: #CECECE";
 	the_string = "<TABLE cellspacing='0' cellpadding='1' style='width: 100%; table-layout: fixed;'>";
 	the_string += "<TR class='list_heading'>";
-	the_string += "<TD class='list_heading' style='" + width + "'>ID</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>Patient</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>Phone</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>Contact</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>Scope</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>Description</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>Comments</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>Status</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>Requested</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>Tentative</TD>";	
-	the_string += "<TD class='list_heading' style='" + width + "'>Accepted</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>Declined</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>Resourced</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>Completed</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>Closed</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>Updated</TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'>By</TD>";			
-	the_string += "<TD class='list_heading' style='" + width + "'>Mileage</TD>";		
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('ID');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Patient');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Phone');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Contact');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Scope');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Description');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Comments');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Status');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Requested');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Tentative');?></TD>";	
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Accepted');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Declined');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Resourced');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Completed');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Closed');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Updated');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('By');?></TD>";			
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Mileage');?></TD>";		
 	the_string += "</TR>";			
 	for(var key in the_requests) {
 		if(the_requests[key][0] == "No Current Requests") {
 			$('export_but').style.display = "none";			
 			the_string += "<TR style='" + theClass + "; border-bottom: 2px solid #000000;'>";
-			the_string += "<TD COLSPAN=99 class='list_entry' width='100%'>No Current Requests</TD></TR>";
+			the_string += "<TD COLSPAN=99 class='list_entry' width='100%'><?php print gettext('No Current Requests');?></TD></TR>";
 			} else {
 			$('export_but').style.display = "inline-block";				
 			var the_request_id = the_requests[key][0];
@@ -358,30 +358,30 @@ function get_requests(showall) {
 		theClass = "background-color: #CECECE";
 		the_string = "<TABLE cellspacing='0' cellpadding='1' style='width: 100%; table-layout: fixed;'>";
 		the_string += "<TR class='list_heading'>";
-		the_string += "<TD class='list_heading' style='" + width + "'>ID</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>Patient</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>Phone</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>Contact</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>Scope</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>Description</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>Comments</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>Status</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>Requested</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>Tentative</TD>";	
-		the_string += "<TD class='list_heading' style='" + width + "'>Accepted</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>Declined</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>Resourced</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>Completed</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>Closed</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>Updated</TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'>By</TD>";			
-		the_string += "<TD class='list_heading' style='" + width + "'>Mileage</TD>";		
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('ID');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Patient');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Phone');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Contact');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Scope');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Description');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Comments');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Status');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Requested');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Tentative');?></TD>";	
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Accepted');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Declined');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Resourced');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Completed');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Closed');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Updated');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('By');?></TD>";			
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Mileage');?></TD>";		
 		the_string += "</TR>";			
 		for(var key in the_requests) {
 			if(the_requests[key][0] == "No Current Requests") {
 				$('export_but').style.display = "none";				
 				the_string += "<TR style='" + theClass + "; border-bottom: 2px solid #000000;'>";
-				the_string += "<TD COLSPAN=99 class='list_entry' width='100%'>No Current Requests</TD></TR>";
+				the_string += "<TD COLSPAN=99 class='list_entry' width='100%'><?php print gettext('No Current Requests');?></TD></TR>";
 				} else {
 				$('export_but').style.display = "inline-block";						
 				var the_request_id = the_requests[key][0];	
@@ -700,7 +700,7 @@ function pt_to_map (my_form, lat, lng) {						// 7/5/10
  */
 function loc_lkup(my_form) {		   						// 7/5/10
 	if ((my_form.frm_city.value.trim()==""  || my_form.frm_state.value.trim()=="")) {
-		alert ("City and State are required for location lookup.");
+		alert ("<?php print gettext('City and State are required for location lookup.');?>");
 		return false;
 		}
 	var geocoder = new google.maps.Geocoder();
@@ -709,7 +709,7 @@ function loc_lkup(my_form) {		   						// 7/5/10
 
 	geocoder.geocode( { 'address': myAddress}, function(results, status) {		
 		if (status == google.maps.GeocoderStatus.OK)	{ pt_to_map (my_form, results[0].geometry.location.lat(), results[0].geometry.location.lng());}					
-		else 											{ alert("Geocode lookup failed: " + status);}
+		else 											{ alert("<?php print gettext('Geocode lookup failed: " + status');?>");}
 		});				// end geocoder.geocode()
 	}				// end function loc_lkup()
 
@@ -826,7 +826,7 @@ function do_logout() {
 $query_fc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";
 $result_fc = mysql_query($query_fc) or do_error($query_fc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 $rec_fac_menu = "<SELECT NAME='frm_rec_fac'>";
-$rec_fac_menu .= "<OPTION VALUE=0 selected>Receiving Facility</OPTION>";
+$rec_fac_menu .= "<OPTION VALUE=0 selected>" . gettext('Receiving Facility') . "</OPTION>";
 while ($row_fc = mysql_fetch_array($result_fc, MYSQL_ASSOC)) {
 		$rec_fac_menu .= "<OPTION VALUE=" . $row_fc['id'] . ">" . shorten($row_fc['name'], 30) . "</OPTION>";
 		}
@@ -835,7 +835,7 @@ $rec_fac_menu .= "<SELECT>";
 $query_fc2 = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";
 $result_fc2 = mysql_query($query_fc2) or do_error($query_fc2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 $orig_fac_menu = "<SELECT NAME='frm_orig_fac' onChange='do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim())'>";
-$orig_fac_menu .= "<OPTION VALUE=0 selected>Originating Facility</OPTION>";
+$orig_fac_menu .= "<OPTION VALUE=0 selected>" . gettext('Originating Facility') . "</OPTION>";
 while ($row_fc2 = mysql_fetch_array($result_fc2, MYSQL_ASSOC)) {
 		$orig_fac_menu .= "<OPTION VALUE=" . $row_fc2['id'] . ">" . shorten($row_fc2['name'], 30) . "</OPTION>";
 		$street = ($row_fc2['street'] != "") ? $row_fc2['street'] : "Empty";
@@ -867,23 +867,23 @@ if((!isset($_SESSION)) && (empty($_POST))) {
 <BODY onLoad="out_frames(); location.href = '#top'; get_requests('yes'); get_the_markers(); <?php print $onload_str;?>;">
 	<FORM NAME="go" action="#" TARGET = "main"></FORM>
 	<DIV id='outer' style='position: absolute; width: 95%; text-align: center; margin: 10px;'>
-		<DIV id='banner' class='heading' style='font-size: 1.6em; position: relative: top: 5%; width: 100%; border: 1px outset #000000; height: 35px; vertical-align: middle;'>Tickets Service User Portal
-			<SPAN ID='gout' CLASS='plain' style='float: right; font-size: 0.6em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="do_logout()">Logout</SPAN>
-			<SPAN ID='upload_but' CLASS='plain' style='float: right; font-size: 0.6em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/import_requests.php','Import Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')" TITLE='Import Request from CSV File'>Import</SPAN>
-			<SPAN ID='export_but' CLASS='plain' style='float: right; display: none; font-size: 0.6em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/csv_export.php','Export Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')">Export Requests to CSV</SPAN>
+		<DIV id='banner' class='heading' style='font-size: 1.6em; position: relative: top: 5%; width: 100%; border: 1px outset #000000; height: 35px; vertical-align: middle;'><?php print gettext('Tickets Service User Portal');?>
+			<SPAN ID='gout' CLASS='plain' style='float: right; font-size: 0.6em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="do_logout()"><?php print gettext('Logout');?></SPAN>
+			<SPAN ID='upload_but' CLASS='plain' style='float: right; font-size: 0.6em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/import_requests.php','Import Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')" TITLE='Import Request from CSV File'><?php print gettext('Import');?></SPAN>
+			<SPAN ID='export_but' CLASS='plain' style='float: right; display: none; font-size: 0.6em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/csv_export.php','Export Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')"><?php print gettext('Export Requests to CSV');?></SPAN>
 		</DIV>
 		<DIV id='leftcol' style='position: fixed; left: 2%; top: 10%; width: 45%; height: 40%;'>
-			<DIV id='the_heading' class='heading' style='font-size: 1.25em; height: 30px;'>ADD A NEW REQUEST
-				<SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.add.submit();">Submit</SPAN>
+			<DIV id='the_heading' class='heading' style='font-size: 1.25em; height: 30px;'><?php print gettext('ADD A NEW REQUEST');?>
+				<SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.add.submit();"><?php print gettext('Submit');?></SPAN>
 			</DIV>		
 			<DIV id='left_scroller' style='height: 100%; overflow-y: auto; overflow-x: hidden; border: 1px outset #000000;'>
 				<FORM NAME='add' METHOD='POST' ACTION = "<?php print basename( __FILE__); ?>">
 				<TABLE style='width: 100%;'>
 					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;'>Requested By</TD><TD class='td_data' style='text-align: left;'><?php print get_user_name($_SESSION['user_id']);?></TD>
+						<TD class='td_label' style='text-align: left;'><?php print gettext('Requested By');?></TD><TD class='td_data' style='text-align: left;'><?php print get_user_name($_SESSION['user_id']);?></TD>
 					</TR>
 					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;'>Request Date and Time</TD><TD class='td_data' style='text-align: left;'><?php print generate_date_dropdown('request_date',0,FALSE);?></TD>
+						<TD class='td_label' style='text-align: left;'><?php print gettext('Request Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print generate_date_dropdown('request_date',0,FALSE);?></TD>
 					</TR>			
 					<TR class='odd'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Patient');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_patient' TYPE='TEXT' SIZE='24' MAXLENGTH='64' VALUE=""></TD>
@@ -919,7 +919,7 @@ if((!isset($_SESSION)) && (empty($_POST))) {
 						<TD COLSPAN='2' class='td_label' style='text-align: center;'><?php print get_text('Lat');?><INPUT NAME='frm_lat' TYPE='TEXT' SIZE='10' MAXLENGTH='10' VALUE="">&nbsp;&nbsp;<?php print get_text('Lng');?><INPUT NAME='frm_lng' TYPE='TEXT' SIZE='10' MAXLENGTH='10' VALUE=""></TD>
 					</TR>	
 					<TR class='odd'>	
-						<TD COLSPAN='2' class='heading' style='text-align: left;'>Originating Facility Details</TD>
+						<TD COLSPAN='2' class='heading' style='text-align: left;'><?php print gettext('Originating Facility Details');?></TD>
 					</TR>						
 					<TR class='odd'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Facility Street');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='fac_street' TYPE='TEXT' SIZE='48' MAXLENGTH='64' VALUE=""></TD>
@@ -939,9 +939,9 @@ if((!isset($_SESSION)) && (empty($_POST))) {
 			</DIV>
 		</DIV>
 		<DIV style='position: fixed; left: 2%; bottom: 2%; width: 95%; height: 30%; max-height: 30%;'>
-			<DIV class='heading' style='width: 100%; text-align: left;'>Current Requests
-				<SPAN id='hide_closed' style='float: right;' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="get_requests('no'); $('hide_closed').style.display ='none'; $('show_closed').style.display = 'inline-block';">Hide Closed</SPAN>
-				<SPAN id='show_closed' style='float: right; display: none;' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="get_requests('yes'); $('hide_closed').style.display ='inline-block'; $('show_closed').style.display = 'none';">Show All</SPAN>			
+			<DIV class='heading' style='width: 100%; text-align: left;'><?php print gettext('Current Requests');?>
+				<SPAN id='hide_closed' style='float: right;' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="get_requests('no'); $('hide_closed').style.display ='none'; $('show_closed').style.display = 'inline-block';"><?php print gettext('Hide Closed');?></SPAN>
+				<SPAN id='show_closed' style='float: right; display: none;' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="get_requests('yes'); $('hide_closed').style.display ='inline-block'; $('show_closed').style.display = 'none';"><?php print gettext('Show All');?></SPAN>			
 			</DIV>
 			<DIV id='the_bottom' style='width: 98%; height: 70%; border: 2px outset #CECECE; padding: 10px; overflow-y: scroll;'>
 				<DIV ID='all_requests' style='width: 100%;'></DIV>
@@ -955,7 +955,7 @@ if((!isset($_SESSION)) && (empty($_POST))) {
 					<DIV id='map_canvas' style='width: 500px; height: 450px;'></DIV>
 				</DIV>
 				<DIV id='map_controls'>
-					<CENTER><A HREF='#' onClick='doTraffic()'><U>Traffic</U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doWeather()'><U>Weather</U></A>
+					<CENTER><A HREF='#' onClick='doTraffic()'><U><?php print gettext('Traffic');?></U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doWeather()'><U><?php print gettext('Weather');?></U></A>
 				</DIV>					
 			</DIV>
 		
@@ -1040,8 +1040,8 @@ if((!isset($_SESSION)) && (empty($_POST))) {
 	if ($addrs) {				// any addresses?
 		$to_str = implode("|", $addrs);
 		$smsg_to_str = "";
-		$subject_str = "New " . get_text('Service User') . " Request";
-		$text_str = "A new request has been loaded by \n\n" . get_user_name($_SESSION['user_id']) . "\n\nDated " . $now . "\n\nPlease log on to Tickets and check"; 
+		$subject_str = '"'. gettext('New') . " " . get_text('Service User') . " " . gettext('Request') . '"';
+		$text_str = '"' . gettext('A new request has been loaded by') . " \n\n" . get_user_name($_SESSION['user_id']) . "\n\n" . gettext('Dated') . " " . $now . "\n\n" . gettext('Please log on to Tickets and check') . '"'; 
 		do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
 		}				// end if/else ($addrs)	
 	

@@ -64,7 +64,7 @@ $facilitycontact = 	get_text("Facility contact");
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - <?php print $patient; ?> Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets');?> - <?php print $patient; ?> <?php print gettext('Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="Expires" CONTENT="0">
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -161,18 +161,18 @@ $facilitycontact = 	get_text("Facility contact");
  */
 	function validate(theForm) {
 		var errmsg="";
-		if (theForm.frm_name.value == "")						{errmsg+= "\tName is required\n";}
-		if (theForm.frm_gender_val.value==0) 					{errmsg+= "\t<?php echo $gender;?> required\n";}
-		if (theForm.frm_ins_id.value==0) 						{errmsg+= "\t<?php echo $insurance;?> selection required\n";}
-		if (theForm.frm_description.value == "")				{errmsg+= "\tDescription is required\n";}
+		if (theForm.frm_name.value == "")						{errmsg+= "\t<?php print gettext('Name is required');?>\n";}
+		if (theForm.frm_gender_val.value==0) 					{errmsg+= "\t<?php echo $gender;?> required');?>\n";}
+		if (theForm.frm_ins_id.value==0) 						{errmsg+= "\t<?php echo $insurance;?> selection required');?>\n";}
+		if (theForm.frm_description.value == "")				{errmsg+= "\t<?php print gettext('Description is required');?>\n";}
 		do_unlock(theForm) ;
-		if (!chkval(theForm.frm_hour_asof.value, 0,23)) 		{errmsg+= "\tAs-of time error - Hours\n";}
-		if (!chkval(theForm.frm_minute_asof.value, 0,59)) 		{errmsg+= "\tAs-of time error - Minutes\n";}
-		if (!datechk_r(theForm))								{errmsg+= "\tAs-of date/time error - future?\n" ;}
+		if (!chkval(theForm.frm_hour_asof.value, 0,23)) 		{errmsg+= "\t<?php print gettext('As-of time error - Hours');?>\n";}
+		if (!chkval(theForm.frm_minute_asof.value, 0,59)) 		{errmsg+= "\t<?php print gettext('As-of time error - Minutes');?>\n";}
+		if (!datechk_r(theForm))								{errmsg+= "\t<?php print gettext('As-of date/time error - future?');?>\n" ;}
 
 		if (errmsg!="") {
 			do_lock(theForm);
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
@@ -252,9 +252,9 @@ $facilitycontact = 	get_text("Facility contact");
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));
 
 		if ($_GET['ticket_id'] == '' OR $_GET['ticket_id'] <= 0 OR !check_for_rows("SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE id='$_GET[ticket_id]' LIMIT 1"))
-			print "<FONT CLASS='warn'>Invalid Ticket ID: '$_GET[ticket_id]'</FONT>";
+			print "<FONT CLASS='warn'>" . gettext('Invalid Ticket ID') . ": '$_GET[ticket_id]'</FONT>";
 		elseif ($_POST['frm_description'] == '')
-			print '<FONT CLASS="warn">Please enter Description.</FONT><BR />';
+			print '<FONT CLASS="warn">" . gettext('Please enter Description.') . "</FONT><BR />';
 		else {
 			$_POST['frm_description'] = strip_html($_POST['frm_description']); 				//fix formatting, custom tags etc.
 
@@ -299,8 +299,8 @@ $facilitycontact = 	get_text("Facility contact");
 				$result = mysql_query("UPDATE `$GLOBALS[mysql_prefix]ticket` SET `updated` = '$frm_asof' WHERE id='$_GET[ticket_id]'  LIMIT 1") or do_error($query,mysql_error(), basename( __FILE__), __LINE__);
 				}
 
-			print "<BR /><BR /><BR /><BR /><FONT CLASS='header'  STYLE = 'margin-left:180px;'>{$patient} record has been added</FONT><BR /><BR />";
-			print "<BR /><BR /><INPUT TYPE='button' VALUE='Finished' onClick = 'window.close();' STYLE = 'margin-left:280px' /><BR /><BR /><BR />\n";
+			print "<BR /><BR /><BR /><BR /><FONT CLASS='header'  STYLE = 'margin-left:180px;'>{$patient} " . gettext('record has been added') . "</FONT><BR /><BR />";
+			print "<BR /><BR /><INPUT TYPE='button' VALUE='" . gettext('Finished') . "' onClick = 'window.close();' STYLE = 'margin-left:280px' /><BR /><BR /><BR />\n";
 
 			print "</BODY>";				// 10/19/08
 			
@@ -420,7 +420,7 @@ setTimeout("document.next_Form.submit()",1500);
 </script>
 <?php
 
-			print "<FONT CLASS='header'>{$patient} record deleted</FONT><BR /><BR />";
+			print "<FONT CLASS='header'>{$patient} " . gettext('record deleted') . "</FONT><BR /><BR />";
 			}
 		else {
 			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]patient` WHERE `id`='$_GET[id]' LIMIT 1";
@@ -428,8 +428,8 @@ setTimeout("document.next_Form.submit()",1500);
 			$row = stripslashes_deep(mysql_fetch_assoc($result));
 			print "<FONT CLASS='header'>Really delete {$patient} record ' " .shorten($row['description'], 24) . "' ?</FONT><BR /><BR />";
 			print "<FORM METHOD='post' ACTION='patient_w.php?action=delete&id=$_GET[id]&ticket_id=$_GET[ticket_id]&confirm=1'>
-				<INPUT TYPE='Submit' VALUE='Yes'>";
-			print "<INPUT TYPE = 'button' VALUE = 'Cancel' onClick = 'window.close();' STYLE = 'margin-left:40px' /></FORM>";
+				<INPUT TYPE='Submit' VALUE='" . gettext('Yes') . "'>";
+			print "<INPUT TYPE = 'button' VALUE = '" . gettext('Cancel') . "' onClick = 'window.close();' STYLE = 'margin-left:40px' /></FORM>";
 			}
 		}
 	else if ($get_action == 'update') {		//update patient record and show ticket
@@ -487,7 +487,7 @@ setTimeout("document.next_Form.submit()",1500);
 			}
 
 ?>
-		<SPAN STYLE = 'margin-top:10px; margin-left:50px;'><FONT CLASS="header"><?php print $hdr_str;?> <?php print $patient; ?> Record</FONT></SPAN><BR /><BR />
+		<SPAN STYLE = 'margin-top:10px; margin-left:50px;'><FONT CLASS="header"><?php print $hdr_str;?> <?php print $patient . gettext('Record'); ?></FONT></SPAN><BR /><BR />
 		<FORM METHOD='post' NAME='patientEd' onSubmit='return validate(document.patientEd);' ACTION="<?php echo basename(__FILE__);?>?id=<?php print $_GET['id'];?>&ticket_id=<?php print $_GET['ticket_id'];?>&action=update">
 		<TABLE BORDER="0" STYLE = 'margin-left:50px;'>
 
@@ -527,12 +527,12 @@ setTimeout("document.next_Form.submit()",1500);
 <?php
 		}		// end 	if($num_rows>0) 
 ?>		
-		<TR CLASS='even'  VALIGN='top'><TD><B>Description:</B> <font color='red' size='-1'>*</font></TD><TD><TEXTAREA ROWS="8" COLS="64" NAME="frm_description" WRAP="virtual" <?php print $dis;?>><?php print $row['description'];?></TEXTAREA></TD></TR>
+		<TR CLASS='even'  VALIGN='top'><TD><B><?php print gettext('Description');?>:</B> <font color='red' size='-1'>*</font></TD><TD><TEXTAREA ROWS="8" COLS="64" NAME="frm_description" WRAP="virtual" <?php print $dis;?>><?php print $row['description'];?></TEXTAREA></TD></TR>
 		<TR VALIGN = 'TOP' CLASS='even'>		<!-- 11/15/10 -->
-			<TD ALIGN='right' CLASS="td_label"></TD><TD  CLASS="td_label">Signal: 
+			<TD ALIGN='right' CLASS="td_label"></TD><TD  CLASS="td_label"><?php print gettext('Signal');?>: 
 
 				<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;' <?php print $dis;?>>	<!--  11/17/10 -->
-				<OPTION VALUE=0 SELECTED>Select</OPTION>
+				<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -632,7 +632,7 @@ document.list_form.submit();
 	$result = mysql_query($query);
 	if(@mysql_num_rows($result) > 0) {
 		$ins_sel_str = "<SELECT CLASS='sit' name='frm_insurance' onChange = 'this.form.frm_ins_id.value = this.options[this.selectedIndex].value;'>\n";
-		$ins_sel_str .= "\t\t\t<OPTION VALUE=0 SELECTED >Select</OPTION>\n";		// 7/27/11		
+		$ins_sel_str .= "\t\t\t<OPTION VALUE=0 SELECTED >" . gettext('Select') . "</OPTION>\n";		// 7/27/11		
 		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 			$ins_sel_str .= "\t\t\t<OPTION VALUE={$row['id']}>{$row['ins_value']}</OPTION>\n";		
 			}		// end while()
@@ -666,7 +666,7 @@ document.list_form.submit();
 			<TD ALIGN='right' CLASS="td_label"></TD><TD>
 				<SPAN CLASS="td_label">Signal: </SPAN>
 				<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-				<OPTION VALUE=0 SELECTED>Select</OPTION>
+				<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -678,9 +678,9 @@ document.list_form.submit();
 			</TD></TR>
 		<TR CLASS='odd' VALIGN='bottom'><TD CLASS="td_label">As of: &nbsp;&nbsp;</TD><TD><?php print generate_date_dropdown('asof',0,TRUE);?>&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.patientAdd);'></TD></TR>
 
-		<TR CLASS='odd'><TD></TD><TD><BR /><INPUT TYPE="button" VALUE="Cancel"  onClick="do_cancel();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="button" VALUE="Reset" onClick = 'do_asof(theForm, false) reset();do_asof(theForm, true); reset(); '>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="button" VALUE="Next" onclick = "validate(this.form);"></TD></TR>
+		<TR CLASS='odd'><TD></TD><TD><BR /><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="do_cancel();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>" onClick = 'do_asof(theForm, false) reset();do_asof(theForm, true); reset(); '>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>" onclick = "validate(this.form);"></TD></TR>
 		</TABLE><BR />
 			<INPUT TYPE = 'hidden' NAME = 'frm_ins_id' VALUE = 0 />
 			<INPUT TYPE = 'hidden' NAME = 'frm_gender_val' VALUE = 0 />

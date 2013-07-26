@@ -69,10 +69,10 @@ function rec_scandir($dir)
 		}
 
 echo "\n";
-echo " Searching ". $dir ." for matching files\n";
+echo '"' . gettext('Searching') . " " . $dir . " " . gettext('for matching files') . "\n";
 $files = rec_scandir($dir);
-echo " Found " . sizeof($files['file']) . " matching extensions<br />\n";
-echo " Scanning for orphaned files....<br />\n";
+echo '"' . gettext('Found') . " " . sizeof($files['file']) . " " . gettext('matching extensions') . "<br />\n";
+echo '"' . gettext('Scanning for orphaned files') . "....<br />\n";
 $findex['found'] = array();
 for ($i=0;$i<sizeof($findex['path']);$i++)
 	{
@@ -92,7 +92,7 @@ for ($i=0;$i<sizeof($findex['path']);$i++)
 	{
 	if (@$findex[found][$i] != 1)
 		{
-		echo  "<br /> " . $counter . ") " .  substr($findex['path'][$i],0,1000) . " is orphaned\n";
+		echo  "<br /> " . $counter . ") " .  substr($findex['path'][$i],0,1000) . " " . gettext('is orphaned') . "\n";
 		$counter++;
 		}
 	}

@@ -49,7 +49,7 @@ $evenodd = array ("even", "odd");
 <?php
 	if (mysql_num_rows($result)==0) {	
 ?>
-<BR/><BR/><BR/><BR/><H2>No closed incidents!</H2>
+<BR/><BR/><BR/><BR/><H2><?php print gettext('No closed incidents!');?></H2>
 <?php
 		}		// end if (mysql_num_rows($result)==0)
 	else {
@@ -61,7 +61,7 @@ $evenodd = array ("even", "odd");
 <TABLE cellpadding = 2 align='center'  STYLE = 'margin-top:32px;'>
 <?php
 	echo "<TR CLASS = 'even'><TH>{$caption}</TH><TH>" . get_text("Addr") . "</TH><TH>" . get_text("Incident") . "</TH><TH>Opened</TH></TR>";
- 	echo "<TR CLASS = 'odd'><TD COLSPAN=4 ALIGN='center'><I>Click line for " . get_text("Incident") . " detail</I></TD></TR>";
+ 	echo "<TR CLASS = 'odd'><TD COLSPAN=4 ALIGN='center'><I>" . gettext('Click line for') . " " . get_text("Incident") . " " . gettext('detail') . "</I></TD></TR>";
 	while ($in_row = stripslashes_deep(mysql_fetch_assoc($result))) {	
 		echo "<TR CLASS= '{$evenodd[($i)%2]}' onclick = 'do_popup({$in_row['id']});'>";
 		echo "<TD ALIGN='right'>" . round($in_row["miles"], 1) . "</TD>";
@@ -75,7 +75,7 @@ $evenodd = array ("even", "odd");
 	}				// end if/else
 ?>
 </FORM>
-<BUTTON onclick = 'window.close()' STYLE = 'margin-top:32px;'>Finished</BUTTON>
+<BUTTON onclick = 'window.close()' STYLE = 'margin-top:32px;'><?php print gettext('Finished');?></BUTTON>
 <script>
 //	document.write("<BUTTON onclick = 'javascript:history.go(-1)' STYLE = 'margin-top:32px;'>Back</BUTTON>");
 	</script>

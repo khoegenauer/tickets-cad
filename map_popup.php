@@ -43,7 +43,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Incident <?php print $title;?> <?php print $ticket_updated;?></TITLE>
+	<HEAD><TITLE><?php print gettext('Incident');?> <?php print $title;?> <?php print $ticket_updated;?></TITLE>
 	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
 	<STYLE type="text/css">
 	.hover 	{ text-align: center; margin-left: 4px; float: none; font: normal 12px Arial, Helvetica, sans-serif; color:#FF0000; border-width: 1px; border-STYLE: inset; border-color: #FFFFFF;
@@ -133,7 +133,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 
 echo "<CENTER><BR /><BR clear=all/><BR /><SPAN STYLE='background-color:white; font-weight:bold; color:black;'>&nbsp;{$ticket_addr}&nbsp;</SPAN></CEMTER>";
 echo "<BR /><BR /><BR />";
-echo "<CENTER><SPAN id='fin_button' class='plain' style='text-align: center;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Finished</SPAN></CENTER>";
+echo "<CENTER><SPAN id='fin_button' class='plain' style='text-align: center;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>" . gettext('Finished') . "</SPAN></CENTER>";
 ?>
 <FORM NAME='to_closed' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'>
 <INPUT TYPE='hidden' NAME='status' VALUE='<?php print $GLOBALS['STATUS_CLOSED'];?>'>

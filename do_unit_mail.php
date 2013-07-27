@@ -169,7 +169,7 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
  */
 	function do_step_2() {
 		if (document.mail_form.frm_text.value.trim()=="") {
-			alert ("Message text is required");
+			alert ("<?php print gettext('Message text is required');?>");
 			return false;
 			}
 		var sep = "";
@@ -199,7 +199,7 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 				}
 			}
 		if ((document.mail_form.frm_add_str.value.trim()=="") && (document.mail_form.frm_smsg_ids.value.trim()=="")) {	//	10/23/12
-			alert ("Addressees required");
+			alert ("<?php print gettext('Addressees required');?>");
 			return false;
 			}
 		document.mail_form.submit();	
@@ -345,22 +345,22 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 ?>
 			<BODY scroll='auto' onLoad = "reSizeScr(1); document.mail_form.frm_subj.focus();"><CENTER>		<!-- 1/12/09 -->
 			<TABLE ALIGN='center' BORDER = 0>
-				<TR CLASS='odd'><TH COLSPAN=2>Mail to: <?php print $row['name']; ?></TH></TR> <!-- 7/2/10 -->
+				<TR CLASS='odd'><TH COLSPAN=2><?php print gettext('Mail to');?>: <?php print $row['name']; ?></TH></TR> <!-- 7/2/10 -->
 				
 				<FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
 				<INPUT TYPE='hidden' NAME='frm_step' VALUE='3'>	
-				<TR VALIGN = 'TOP' CLASS='even'><TD ALIGN='right'  CLASS="td_label">To: </TD>
+				<TR VALIGN = 'TOP' CLASS='even'><TD ALIGN='right'  CLASS="td_label">To');?>: </TD>
 					<TD><INPUT TYPE='text' NAME='frm_add_str' VALUE='<?php print $row['contact_via']; ?>' SIZE = 36></TD></TR>	
 			
 				<TR VALIGN = 'TOP' CLASS='odd'>
-					<TD ALIGN='right' CLASS="td_label">Subject: </TD><TD><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>	
+					<TD ALIGN='right' CLASS="td_label"><?php print gettext('Subject');?>: </TD><TD><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>	
 				<TR VALIGN = 'TOP' CLASS='even'>
-					<TD ALIGN='right' CLASS="td_label">Message: </TD><TD><TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA><?php print get_text("mail_help"); ?></TD></TR>
+					<TD ALIGN='right' CLASS="td_label"><?php print gettext('Message');?>: </TD><TD><TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA><?php print get_text("mail_help"); ?></TD></TR>
 				<TR VALIGN = 'TOP' CLASS='odd'>		<!-- 11/15/10 -->
-					<TD ALIGN='right' CLASS="td_label">Signal: </TD><TD>
+					<TD ALIGN='right' CLASS="td_label"><?php print gettext('Signal');?>: </TD><TD>
 
 						<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-						<OPTION VALUE=0 SELECTED>Select</OPTION>
+						<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 						$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
 						$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -369,15 +369,15 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 							}
 ?>
 					</SELECT>
-						<SPAN STYLE='margin-left:20px;'>Apply to: Subject &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='0' CHECKED onClick = 'set_text = false;'></SPAN>
-						<SPAN STYLE='margin-left:20px;'>Text &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='1' CHECKED onClick = 'set_text = true;'>&nbsp;&nbsp;</SPAN>
+						<SPAN STYLE='margin-left:20px;'><?php print gettext('Apply to') . ": " . gettext('Subject');?> &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='0' CHECKED onClick = 'set_text = false;'></SPAN>
+						<SPAN STYLE='margin-left:20px;'><?php print gettext('Text');?> &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='1' CHECKED onClick = 'set_text = true;'>&nbsp;&nbsp;</SPAN>
 					</TD>
 				</TR>
 				<TR VALIGN = 'TOP' CLASS='even'>
-					<TD ALIGN='right' CLASS="td_label">Standard Message: </TD><TD>
+					<TD ALIGN='right' CLASS="td_label"><?php print gettext('Standard Message');?>: </TD><TD>
 
 						<SELECT NAME='signals' onChange = 'set_message(this.options[this.selectedIndex].text);'>	<!--  11/17/10 -->
-						<OPTION VALUE=0 SELECTED>Select</OPTION>
+						<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 //					dump(__LINE__);
 						$query = "SELECT * FROM `$GLOBALS[mysql_prefix]std_msgs` ORDER BY `id` ASC";	//	10/23/12
@@ -392,9 +392,9 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 				</TR>
 				<TR VALIGN = 'TOP' CLASS='even'>
 					<TD ALIGN='center' COLSPAN=2><BR /><BR />
-						<INPUT TYPE='button' 	VALUE='Next' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
-						<INPUT TYPE='reset' 	VALUE='Reset'>&nbsp;&nbsp;&nbsp;&nbsp;
-						<INPUT TYPE='button' 	VALUE='Cancel' onClick = 'window.close();'><BR /><BR />
+						<INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
+						<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'>&nbsp;&nbsp;&nbsp;&nbsp;
+						<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
 					</TD>
 				</TR>
 				<TR><TD>&nbsp;</TD></TR>	
@@ -403,8 +403,8 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 ?>				
 					<TR>
 						<TD ALIGN='left' COLSPAN=2>
-							<input type="radio" name="use_smsg" VALUE="0" checked> Use Email<br>	<!-- 10/23/12 -->
-							<input type="radio" name="use_smsg" VALUE="1"> Use <?php get_provider_name(get_msg_variable('smsg_provider'));?>?<br>	<!-- 10/23/12 -->
+							<input type="radio" name="use_smsg" VALUE="0" checked> <?php print gettext('Use Email');?><br>	<!-- 10/23/12 -->
+							<input type="radio" name="use_smsg" VALUE="1"> <?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?<br>	<!-- 10/23/12 -->
 						</TD>
 					</TR>
 <?php
@@ -467,8 +467,8 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 ?>
 	</SELECT></FORM></P>
 	<BR /><BR />
-	<INPUT TYPE='button' VALUE='Next' onClick = "do_step_1()">&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE='Cancel' onClick = 'window.close();'>
+	<INPUT TYPE='button' VALUE='<?php print gettext('Next');?>' onClick = "do_step_1()">&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'>
 	</CENTER>
 	
 <?php
@@ -545,15 +545,15 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 		<BODY scroll='auto' onLoad = "reSizeScr(<?php print $lines;?>); document.mail_form.frm_subj.focus();"><CENTER>		<!-- 1/12/09  -->
 		<TABLE ALIGN = 'center' border=0>
 			<TR><TD COLSPAN=99 ALIGN='center'>
-			<CENTER><H3>Mail to <?php print get_text("Units"); ?></H3>
+			<CENTER><H3><?php print gettext('Mail to') . get_text("Units"); ?></H3>
 		</TD></TR>
 <?php
 		if($no_rows>0) {
 ?>
 			<TR><TD COLSPAN=99 ALIGN='center'>
 
-			<SPAN ID='clr_spn' STYLE = 'display:none' onClick = 'do_clear()'>&raquo; <U>Un-check all</U></SPAN>
-			<SPAN ID='chk_spn' STYLE = 'display:block'  onClick = 'do_check()'>&raquo; <U>Check all</U></SPAN>
+			<SPAN ID='clr_spn' STYLE = 'display:none' onClick = 'do_clear()'>&raquo; <U><?php print gettext('Un-check all');?></U></SPAN>
+			<SPAN ID='chk_spn' STYLE = 'display:block'  onClick = 'do_check()'>&raquo; <U><?php print gettext('Check all');?></U></SPAN>
 			</TD></TR>
 <?php
 		}
@@ -603,14 +603,14 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 			</TABLE>
 			</TD><TD>
 			<TABLE BORDER=0>
-			<TR VALIGN='top' CLASS='even'><TD CLASS="td_label" ALIGN='right'>Subject: </TD><TD><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60 VALUE='<?php print $default_msg;?>'></TD></TR>	<!-- 10/23/12 -->
-			<TR VALIGN='top' CLASS='odd'><TD CLASS="td_label" ALIGN='right'>Message: </TD><TD><TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA><BR /><SPAN CLASS='warn'><?php print get_text("messaging help"); ?></SPAN></TD></TR>
+			<TR VALIGN='top' CLASS='even'><TD CLASS="td_label" ALIGN='right'><?php print gettext('Subject');?>: </TD><TD><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60 VALUE='<?php print $default_msg;?>'></TD></TR>	<!-- 10/23/12 -->
+			<TR VALIGN='top' CLASS='odd'><TD CLASS="td_label" ALIGN='right'><?php print gettext('Message');?>: </TD><TD><TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA><BR /><SPAN CLASS='warn'><?php print get_text("messaging help"); ?></SPAN></TD></TR>
 
 			<TR VALIGN = 'TOP' CLASS='even'>
-				<TD ALIGN='right' CLASS="td_label">Signal: </TD><TD>
+				<TD ALIGN='right' CLASS="td_label"><?php print gettext('Signal');?>: </TD><TD>
 
 					<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-					<OPTION VALUE=0 SELECTED>Select</OPTION>
+					<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 //					dump(__LINE__);
 					$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
@@ -622,15 +622,15 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 ?>
 					</SELECT>
 					<BR />
-					<SPAN STYLE='margin-left:20px;'>Apply to: Subject &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='0' CHECKED onClick = 'set_text = false;'></SPAN>
-					<SPAN STYLE='margin-left:20px;'>Text &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='1' CHECKED onClick = 'set_text = true;'></SPAN>
+					<SPAN STYLE='margin-left:20px;'><?php print gettext('Apply to') . ": " . gettext('Subject');?> &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='0' CHECKED onClick = 'set_text = false;'></SPAN>
+					<SPAN STYLE='margin-left:20px;'><?php print gettext('Text');?> &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='1' CHECKED onClick = 'set_text = true;'></SPAN>
 				</TD>
 			</TR>
 			<TR VALIGN = 'TOP' CLASS='even'>
-				<TD ALIGN='right' CLASS="td_label">Standard Message: </TD><TD>	<!-- 10/23/12 -->
+				<TD ALIGN='right' CLASS="td_label"><?php print gettext('Standard Message');?>: </TD><TD>	<!-- 10/23/12 -->
 
 					<SELECT NAME='signals' onChange = 'set_message(this.options[this.selectedIndex].text);'>	<!--  11/17/10 -->
-					<OPTION VALUE=0 SELECTED>Select</OPTION>
+					<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 //					dump(__LINE__);
 					$query = "SELECT * FROM `$GLOBALS[mysql_prefix]std_msgs` ORDER BY `id` ASC";
@@ -644,9 +644,9 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 				</TD>
 			</TR>
 			<TR VALIGN='top' CLASS='odd'><TD ALIGN='center' COLSPAN=2><BR /><BR />
-				<INPUT TYPE='button' 	VALUE='Next' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
-				<INPUT TYPE='reset' 	VALUE='Reset'>&nbsp;&nbsp;&nbsp;&nbsp;
-				<INPUT TYPE='button' 	VALUE='Cancel' onClick = 'window.close();'><BR /><BR />
+				<INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
+				<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'>&nbsp;&nbsp;&nbsp;&nbsp;
+				<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
 				</TD></TR>
 <?php	//	10/23/12
 				if((get_variable('use_messaging') == 2) || (get_variable('use_messaging') == 3)) {
@@ -654,8 +654,8 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 					<TR><TD>&nbsp;</TD></TR>				
 					<TR>
 						<TD ALIGN='left' COLSPAN=2>
-							<input type="radio" name="use_smsg" VALUE="0" checked> Use Email<br>
-							<input type="radio" name="use_smsg" VALUE="1"> Use <?php get_provider_name(get_msg_variable('smsg_provider'));?>?<br>						
+							<input type="radio" name="use_smsg" VALUE="0" checked> <?php print gettext('Use Email');?><br>
+							<input type="radio" name="use_smsg" VALUE="1"> <?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?<br>						
 						</TD>
 					</TR>
 <?php
@@ -674,8 +674,8 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 				
 				}		// end if(mysql_affected_rows()>0)
 			else {
-				print "<H3>No addresses available!</H3>\n";
-				print "<INPUT TYPE='button' 	VALUE='Cancel' onClick = 'window.close();'><BR /><BR />";
+				print "<H3>" . gettext('No addresses available!') . "</H3>\n";
+				print "<INPUT TYPE='button' 	VALUE='" . gettext('Cancel') . "' onClick = 'window.close();'><BR /><BR />";
 				}
 		
 			break;
@@ -690,7 +690,7 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 //			snap(__LINE__, $count);
 ?>
 <BODY scroll='auto' onLoad = "reSizeScr(2)"><CENTER>		<!-- 1/14/10 -->
-<CENTER><BR /><BR /><BR /><H3><?php print "Messages sent: {$count}";?></H3>
+<CENTER><BR /><BR /><BR /><H3><?php print gettext("Messages sent" . ": " . $count;?></H3>
 <BR /><BR /><BR /><INPUT TYPE='button' VALUE='Finished' onClick = 'window.close();'><BR /><BR />
 
 <?php

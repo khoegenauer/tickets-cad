@@ -152,7 +152,7 @@ function show_top() {				// generates the document introduction
 ?>
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 	<html xmlns="http://www.w3.org/1999/xhtml">
-		<HEAD><TITLE>Tickets - Call Board Module</TITLE>
+		<HEAD><TITLE><?php print gettext('Tickets - Call Board Module');?></TITLE>
 		<META HTTP-EQUIV="Content-Type" 		CONTENT="text/html; charset=UTF-8"/>
 		<META HTTP-EQUIV="Expires" 				CONTENT="0"/>
 		<META HTTP-EQUIV="Cache-Control" 		CONTENT="NO-CACHE"/>
@@ -299,7 +299,7 @@ function get_lines(){							// returns pixel count
 ?>	
 		newwindow_add = window.open("<?php print $url; ?>", "Email",  "titlebar, resizable=1, scrollbars=yes, height=480,width=800,status=no,toolbar=no,menubar=no,location=no, left=50,top=150,screenX=100,screenY=300");
 		if (isNull(newwindow_add)) {
-			alert ("This requires popups to be enabled. Please adjust your browser options.");
+			alert ("<?php print gettext('This requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 		newwindow_add.focus();
@@ -415,7 +415,7 @@ require_once('./incs/links.inc.php');
 $evenodd = array ("even", "odd");	// CLASS names for alternating table row colors
 
 ?>
-<CENTER><BR><SPAN ID='zzstart' onClick = "Javascript: self.location.href = '<?php print basename(__FILE__); ?>';"><H3>Call board loading ...</H3></span>
+<CENTER><BR><SPAN ID='zzstart' onClick = "Javascript: self.location.href = '<?php print basename(__FILE__); ?>';"><H3><?php print gettext('Call board loading.');?> ...</H3></span>
 </BODY><!-- <?php echo __LINE__;?> -->
 </HTML>
 
@@ -557,7 +557,7 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 		
 			newwindow_um=window.open("do_unit_mail.php?name=0", "Email",  "titlebar, resizable=1, scrollbars, height=640,width=600,status=0,toolbar=0,menubar=0,location=0, left=50,top=150,screenX=100,screenY=300");
 			if (isNull(newwindow_um)) {
-				alert ("This requires popups to be enabled. Please adjust your browser options.");
+				alert ("<?php print gettext('This requires popups to be enabled. Please adjust your browser options.');?>");
 				return;
 				}
 			newwindow_um.focus();
@@ -689,7 +689,7 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 
 			var resp = "";														// 5/28/09
 			while ((resp.toLowerCase() !="r") && (resp !="d")) {				// 6/19/09
-				resp = prompt("Enter 'r' to Reset dispatch times\nEnter 'd' to Delete this dispatch, or press Cancel.\n", "");
+				resp = prompt("<?php print gettext("Enter 'r' to Reset dispatch times\nEnter 'd' to Delete this dispatch, or press Cancel.\n");?>", "");
 				if (isNull(resp)) {the_form.res_times.checked = false; return;}		// 5/6/10
 				else {
 					switch(resp.toLowerCase()){			// process the input					
@@ -699,7 +699,7 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 							break;
 	
 						case "d":
-							if ( confirm ( "Delete this dispatch record?" ) ) {		// 7/16/2013
+							if ( confirm ( "<?php print gettext('Delete this dispatch record?');?>" ) ) {		// 7/16/2013
 								our_delete(id, the_form);
 								}
 							break;
@@ -787,12 +787,12 @@ setTimeout('do_post()', 1000);
 <BODY onLoad = "reSizeScr_add(<?php print $lines;?>)"><!-- <?php echo __LINE__ ;?> --><BR /><BR />
 			<TABLE BORDER=0 ALIGN='center'>
 			<FORM NAME="add_nav_form" ACTION = "<?php print basename(__FILE__); ?>" METHOD = "post">
-			<TR CLASS="even"><TH colspan=4 ALIGN="center">Select Incident for Dispatch</TH></TR>
+			<TR CLASS="even"><TH colspan=4 ALIGN="center"><?php print gettext('Select Incident for Dispatch');?></TH></TR>
 			<TR CLASS="odd" VALIGN="baseline">
-				<TD CLASS="td_label" ALIGN="right">Incident:&nbsp;</TD>
+				<TD CLASS="td_label" ALIGN="right"><?php print gettext('Incident');?>:&nbsp;</TD>
 				<TD ALIGN='left' COLSPAN=3>
 					<SELECT NAME="frm_ticket_sel" onChange = "if (!(this.value=='')) {this.form.frm_ticket_id.value=this.value;this.form.submit()}";>
-					<OPTION VALUE= '' SELECTED>Select</OPTION>
+					<OPTION VALUE= '' SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 					$inc_ctr = mysql_affected_rows();
 					while ($row = mysql_fetch_array($result))  {
@@ -807,7 +807,7 @@ setTimeout('do_post()', 1000);
 <?php									// 4/29/10
 	$the_onclick = (get_variable('call_board')==1)? "history.back()": "window.close()";
 ?>	
-			<TR><TD COLSPAN = 4 ALIGN = 'center'><BR /><BR /><INPUT TYPE = 'button' value = 'Cancel' onClick = '<?php print $the_onclick; ?>' /></TD></TR>
+			<TR><TD COLSPAN = 4 ALIGN = 'center'><BR /><BR /><INPUT TYPE = 'button' value = '<?php print gettext('Cancel');?>' onClick = '<?php print $the_onclick; ?>' /></TD></TR>
 				</TABLE>
 <?php			
 				}				// end if/else (mysql_affected_rows()==1)
@@ -900,26 +900,26 @@ setTimeout('do_post()', 1000);
  */            
 		function validate_ad(theForm) {
 			var errmsg="";
-			if (theForm.frm_unit_id_str.value == "")	{errmsg+= "\tSelect one or more units\n";}
-			if (theForm.frm_comments.value == "")		{errmsg+= "\tComments required\n";}
+			if (theForm.frm_unit_id_str.value == "")	{errmsg+= "\t<?php print gettext('Select one or more units');?>\n";}
+			if (theForm.frm_comments.value == "")		{errmsg+= "\t<?php print gettext('Comments required');?>\n";}
 			if (!(theForm.frm_miles_strt.value.trim()) =="") {							// 11/4/09
 				if (!(parseInt(theForm.frm_miles_strt.value.trim()) == theForm.frm_miles_strt.value.trim())) 
-														{errmsg+= "\tStart mileage error\n";}
+														{errmsg+= "\t<?php print gettext('Start mileage error');?>\n";}
 				}
 			if (!(theForm.frm_miles_onsc.value.trim()) =="") {							// 11/4/09
 				if (!(parseInt(theForm.frm_miles_onsc.value.trim()) == theForm.frm_miles_onsc.value.trim())) 
-														{errmsg+= "\tOn scene mileage error\n";}
+														{errmsg+= "\t<?php print gettext('On scene mileage error');?>\n";}
 				}
 			if (!(theForm.frm_miles_end.value.trim()) =="") {
 				if (!(parseInt(theForm.frm_miles_end.value.trim()) == theForm.frm_miles_end.value.trim())) 
-														{errmsg+= "\tEnd mileage error\n";}
+														{errmsg+= "\t<?php print gettext('End mileage error');?>\n";}
 				}
 			if (!(theForm.frm_miles_tot.value.trim()) =="") {	//	10/23/12
 				if (!(parseInt(theForm.frm_miles_tot.value.trim()) == theForm.frm_miles_tot.value.trim())) 
-														{errmsg+= "\tTotal mileage error\n";}
+														{errmsg+= "\t<?php print gettext('Total mileage error');?>\n";}
 				}					
 			if (errmsg!="") {
-				alert ("Please correct the following and re-submit:\n\n" + errmsg);
+				alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 				return false;
 				}
 			else {
@@ -949,26 +949,26 @@ setTimeout('do_post()', 1000);
 
 			<DIV ID='buttons' style="position:fixed; top:10px; right:2px; height: 150px; width: 150px; overflow-y: auto; overflow-x: auto;">
 			<TABLE>
-			<TR><TD ALIGN='left'><A HREF="#page_top">to top</A></TD></TR>
-			<TR><TD ALIGN='left'><A HREF="#page_bottom">to bottom</A></TD></TR>
+			<TR><TD ALIGN='left'><A HREF="#page_top"><?php print gettext('to top');?></A></TD></TR>
+			<TR><TD ALIGN='left'><A HREF="#page_bottom"><?php print gettext('to bottom');?></A></TD></TR>
 			<TR><TD>&nbsp;</TD></TR>
 <?php
 			if (get_variable('call_board')==1) {
-				print "\t<TR><TD ALIGN='left'><INPUT TYPE='button' VALUE='Cancel'  CLASS = 'btn' onClick='do_refresh();' STYLE = 'left: 0;' />\n";
+				print "\t<TR><TD ALIGN='left'><INPUT TYPE='button' VALUE='" . gettext('Cancel') . "'  CLASS = 'btn' onClick='do_refresh();' STYLE = 'left: 0;' />\n";
 				}
 			else {
-				print "\t<TR><TD ALIGN='left'><INPUT TYPE='button' VALUE='Cancel'  CLASS = 'btn' onClick='window.close();'  STYLE = 'left: 0;' />\n";
+				print "\t<TR><TD ALIGN='left'><INPUT TYPE='button' VALUE='" . gettext('Cancel') . "'  CLASS = 'btn' onClick='window.close();'  STYLE = 'left: 0;' />\n";
 				}
 ?>
-				&nbsp;<INPUT TYPE="button" VALUE="Reset" onclick="Javascript: document.add_Form.frm_unit_id_str.value = ''; document.add_Form.reset();"  CLASS = 'btn'  STYLE = 'left: 0;' /></TD></TR>
-				<TR><TD ALIGN='left'><INPUT TYPE="button" VALUE="           Next           " name="sub_but" onClick="validate_ad(document.add_Form)" CLASS = 'btn'  STYLE = 'left: 0;' ></TD></TR>
+				&nbsp;<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>" onclick="Javascript: document.add_Form.frm_unit_id_str.value = ''; document.add_Form.reset();"  CLASS = 'btn'  STYLE = 'left: 0;' /></TD></TR>
+				<TR><TD ALIGN='left'><INPUT TYPE="button" VALUE="           <?php print gettext('Next');?>           " name="sub_but" onClick="validate_ad(document.add_Form)" CLASS = 'btn'  STYLE = 'left: 0;' ></TD></TR>
 				</TABLE>
 
 			</DIV> <!-- 3/30/10 -->
 
 			<TABLE BORDER=0 STYLE = "border-collapse:collapse; margin-left:32px" CELLSPACING=0  CELLPADDING=0 >
 			<FORM NAME="add_Form"  ACTION = "<?php print basename(__FILE__); ?>" METHOD = "post">
-			<TR CLASS="even"><TH colspan=4 ALIGN="center">Assign <?php print get_text("Units");?> to Incident: <?php print $row['scope'];?></TH></TR>
+			<TR CLASS="even"><TH colspan=4 ALIGN="center"><?php print gettext('Assign Units to Incident') . ": " . $row['scope'];?></TH></TR>
 <?php
 			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns`
 						WHERE `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00'";				
@@ -1015,19 +1015,19 @@ setTimeout('do_post()', 1000);
 				</TD></TR>
 
 			<TR CLASS="<?php print $evenodd[($i+1)%2];?>">
-				<TD CLASS="td_label" ALIGN="right">Comments:&nbsp;</TD>
+				<TD CLASS="td_label" ALIGN="right"><?php print gettext('Comments');?>:&nbsp;</TD>
 				
-				<TD ALIGN='left' COLSPAN=3><TEXTAREA NAME="frm_comments" COLS="60" ROWS="3" onFocus="Javascript:if (this.value=='TBD') {this.value='';}">TBD</TEXTAREA></TD></TR> <!-- 10/05/09 -->
+				<TD ALIGN='left' COLSPAN=3><TEXTAREA NAME="frm_comments" COLS="60" ROWS="3" onFocus="Javascript:if (this.value=='TBD') {this.value='';}"><?php print gettext('TBD');?></TEXTAREA></TD></TR> <!-- 10/05/09 -->
 
-			<TR CLASS='<?php print $evenodd[($i)%2];?>'><TD CLASS="td_label" ALIGN="right">Mileage:</TD> <!--11/4/09-->
+			<TR CLASS='<?php print $evenodd[($i)%2];?>'><TD CLASS="td_label" ALIGN="right"><?php print gettext('Mileage');?>:</TD> <!--11/4/09-->
 				<TD colspan=4 ALIGN='center'>
-					<SPAN CLASS="td_label"> Start:</SPAN> <INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_strt" VALUE="" TYPE="text" />
+					<SPAN CLASS="td_label"> <?php print gettext('Start');?>:</SPAN> <INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_strt" VALUE="" TYPE="text" />
 					<SPAN STYLE = "WIDTH: 60PX; DISPLAY: inline-block"></SPAN>
-					<SPAN CLASS="td_label"> On scene:</SPAN> <INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_onsc" VALUE="" TYPE="text" />
+					<SPAN CLASS="td_label"> <?php print gettext('On scene');?>:</SPAN> <INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_onsc" VALUE="" TYPE="text" />
 					<SPAN STYLE = "WIDTH: 60PX; DISPLAY: inline-block"></SPAN>
-					<SPAN CLASS="td_label">End:</SPAN> <INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_end" VALUE="" TYPE="text" />
+					<SPAN CLASS="td_label"><?php print gettext('End');?>:</SPAN> <INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_end" VALUE="" TYPE="text" />
 					<SPAN STYLE = "WIDTH: 60PX; DISPLAY: inline-block"></SPAN>
-					<SPAN CLASS="td_label">Total:</SPAN> <INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_tot" VALUE="" TYPE="text" />
+					<SPAN CLASS="td_label"><?php print gettext('Total');?>:</SPAN> <INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_tot" VALUE="" TYPE="text" />
 				</TD>
 			</TR>	<!-- 10/23/12 -->
 			 </TABLE>
@@ -1108,18 +1108,18 @@ setTimeout('do_post()', 1000);
 								}
 							}		// end for ()
 						if (errstr.length>0)	{					// errors?
-							alert("Invalid addresses:\n" +errstr );
+							alert("<?php print gettext('Invalid addresses');?>:\n" +errstr );
 							return false;
 							}
 						if (outstr.length==0)	{					// empty?
-							alert("Valid addresses required\n");
+							alert("<?php print gettext('Valid addresses required');?>\n");
 							return false;
 							}
 						
 						var url = "do_send.php";		// ($to_str, $subject_str, $text_str )
 						
 						var the_to = addr;
-						var the_subj = escape("New Dispatch");
+						var the_subj = escape("<?php print gettext('New Dispatch');?>");
 						var the_msg = escape(msg);		// the variables
 						
 						var postData = "to_str=" + the_to +"&subject_str=" + the_subj + "&text_str=" + the_msg; // the post string
@@ -1166,10 +1166,10 @@ setTimeout('do_post()', 1000);
 <BODY><!-- <?php echo __LINE__; ?> -->
 
 			<TABLE ALIGN='center' BORDER=4><TR VALIGN='top'>
-			<TR><TH COLSPAN=3 ALIGN='center'>Dispatch record(s) written<BR /><BR /></TH></TR>
+			<TR><TH COLSPAN=3 ALIGN='center'><?php print gettext('Dispatch record(s) written');?><BR /><BR /></TH></TR>
 			<TR><TD ALIGN='right'>
-					<B>Notification:</B><BR/><BR/>
-					<I>edit message to suit</I>&nbsp;&nbsp;
+					<B><?php print gettext('Notification');?>:</B><BR/><BR/>
+					<I><?php print gettext('edit message to suit');?></I>&nbsp;&nbsp;
 				</TD>
 				<TD>&nbsp;</TD>
 				<TD ALIGN='left'>
@@ -1180,18 +1180,18 @@ setTimeout('do_post()', 1000);
 					<TEXTAREA NAME="frm_text" COLS=60 ROWS=<?php print $msg_lines+8; ?>><?php print $msg_str;?></TEXTAREA>
 					
 					</TD></TR>
-			<TR VALIGN='top'><TD ALIGN='right'><B>Email to:</B><BR /><I> (use comma separator)</I></TD><TD></TD>
+			<TR VALIGN='top'><TD ALIGN='right'><B><?php print gettext('Email to');?>:</B><BR /><I> (<?php print gettext('use comma separator');?>)</I></TD><TD></TD>
 				<TD><INPUT TYPE='text' name='frm_to' SIZE=96 VALUE='<?php print $to_str ;?>'/> <BR /><BR />
 					</TD>
 					</TR>
 				<TR VALIGN = 'bottom'>
 				<TD COLSPAN=2></TD>
 				<TD ALIGN='left' COLSPAN=2>
-					<INPUT TYPE='button' VALUE='    Reset    ' onClick = "document.add_mail_form.reset();"  CLASS = 'btn'>&nbsp;&nbsp;&nbsp;
-					<INPUT TYPE='button' VALUE='Send message' onClick = "do_send_it ();"  CLASS = 'btn'>&nbsp;&nbsp;&nbsp;
-					<INPUT TYPE='button' VALUE='Do NOT send' onClick = "window.close();"  CLASS = 'btn'> 	<!-- 6/16/09 - force refresh -->
+					<INPUT TYPE='button' VALUE='    <?php print gettext('Reset');?>    ' onClick = "document.add_mail_form.reset();"  CLASS = 'btn'>&nbsp;&nbsp;&nbsp;
+					<INPUT TYPE='button' VALUE='<?php print gettext('Send message');?>' onClick = "do_send_it ();"  CLASS = 'btn'>&nbsp;&nbsp;&nbsp;
+					<INPUT TYPE='button' VALUE='<?php print gettext('Do NOT send');?>' onClick = "window.close();"  CLASS = 'btn'> 	<!-- 6/16/09 - force refresh -->
 					<INPUT TYPE='hidden' NAME='func' VALUE='list'>&nbsp;&nbsp;&nbsp;&nbsp;
-					<SPAN ID = 'sending' CLASS = 'header' STYLE = 'display: none'>Sending!<SPAN>
+					<SPAN ID = 'sending' CLASS = 'header' STYLE = 'display: none'><?php print gettext('Sending!');?><SPAN>
 					</FORM>
 				</TD>
 				</TR></TABLE>
@@ -1245,7 +1245,7 @@ setTimeout('do_post()', 1000);
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Add Complete</TITLE>
+<TITLE><?php print gettext('Add Complete');?></TITLE>
 <META NAME="Author" CONTENT="">
 <META NAME="Keywords" CONTENT="">
 <META NAME="Description" CONTENT="">
@@ -1328,11 +1328,11 @@ setTimeout('do_post()', 1000);
 				} else {
 				    var charCode = ch.charCodeAt(0);
 					if (charCode > 255) {
-					    alert( "Unicode Character '"
+					    alert( "<?php print gettext('Unicode Character');?> '"
 		                        + ch
-		                        + "' cannot be encoded using standard URL encoding.\n" +
-						          "(URL encoding only supports 8-bit characters.)\n" +
-								  "A space (+) will be substituted." );
+		                        + "' <?php print gettext('cannot be encoded using standard URL encoding.');?>\n" +
+						          "(<?php print gettext('URL encoding only supports 8-bit characters.');?>)\n" +
+								  "<?php print gettext('A space (+) will be substituted.');?>" );
 						encoded += "+";
 					} else {
 						encoded += "%";
@@ -1364,7 +1364,7 @@ setTimeout('do_post()', 1000);
 						plaintext += unescape( encoded.substr(i,3) );
 						i += 3;
 					} else {
-						alert( '-- invalid escape combination near ...' + encoded.substr(i) );
+						alert( '-- <?php print gettext('invalid escape combination near');?> ...' + encoded.substr(i) );
 						plaintext += "%[ERROR]";
 						i++;
 					}
@@ -1384,7 +1384,7 @@ setTimeout('do_post()', 1000);
  */    
 		function show_but(id) {
 			if (button_live) {
-				alert ("Please complete button action.");
+				alert ("<?php print gettext('Please complete button action.');?>");
 				return false;
 				}
 			else {
@@ -1639,7 +1639,7 @@ setTimeout('do_post()', 1000);
 			var win_name = "mail_edit";
 			newwindow_mail=window.open(url, win_name,  "titlebar, location=0, resizable=1, scrollbars, height=360,width=600,status=0,toolbar=0,menubar=0,location=0, left=100, top=300,screenX=100,screenY=300");
 			if (isNull(win_name)) {
-				alert ("Email edit operation requires popups to be enabled -- please adjust your browser options.");
+				alert ("<?php print gettext('Email edit operation requires popups to be enabled -- please adjust your browser options.');?>");
 				return;
 				}
 
@@ -1652,20 +1652,20 @@ setTimeout('do_post()', 1000);
 	<P ALIGN='LEFT'>
 	<DIV ID="foo"'><DIV ID="bar">
 		<TABLE BORDER=0 STYLE = "border-collapse:collapse;" CELLSPACING=1>
-		<TR><TD COLSPAN=2><SPAN CLASS = "emph" ID = "done_id" STYLE="display:none"><B>&nbsp;Done!&nbsp;</B></SPAN></TD></TR>
-		<TR><TD COLSPAN=2><SPAN CLASS = "emph" ID = "del_id"  STYLE="display:none"><B>&nbsp;Deleted!&nbsp;</B></SPAN></TD></TR>
+		<TR><TD COLSPAN=2><SPAN CLASS = "emph" ID = "done_id" STYLE="display:none"><B>&nbsp;<?php print gettext('Done!');?>&nbsp;</B></SPAN></TD></TR>
+		<TR><TD COLSPAN=2><SPAN CLASS = "emph" ID = "del_id"  STYLE="display:none"><B>&nbsp;<?php print gettext('Deleted!');?>&nbsp;</B></SPAN></TD></TR>
 		
 <?php 
 	if (!($guest)) 		{ 
 		$disp = (is_unit())? "none": "inline";				// 7/27/10
 ?>			
-		<TR><TD ALIGN='left'><INPUT TYPE="button" CLASS="btn" VALUE = "Apply all" ID = "apply_btn" onClick = "apply_all_clicked ();" STYLE="display:none" />
+		<TR><TD ALIGN='left'><INPUT TYPE="button" CLASS="btn" VALUE = "<?php print gettext('Apply all');?>" ID = "apply_btn" onClick = "apply_all_clicked ();" STYLE="display:none" />
 			</TD>
-			<TD ALIGN='left'><INPUT TYPE="button" CLASS="btn" VALUE = "Cancel"    ID = "can_btn"   onClick = "cancel_clicked();"   STYLE="display:none" /> 
+			<TD ALIGN='left'><INPUT TYPE="button" CLASS="btn" VALUE = "<?php print gettext('Cancel');?>"    ID = "can_btn"   onClick = "cancel_clicked();"   STYLE="display:none" /> 
 			</TD></TR>
-		<TR><TD ALIGN='left'><INPUT TYPE="button" CLASS="btn" VALUE = "Add"       ID = "add_btn"   onClick = "do_add_btn()" STYLE="display: <?php print $disp;?>" />
+		<TR><TD ALIGN='left'><INPUT TYPE="button" CLASS="btn" VALUE = "<?php print gettext('Add');?>"       ID = "add_btn"   onClick = "do_add_btn()" STYLE="display: <?php print $disp;?>" />
 			</TD>
-			<TD ALIGN='left'><INPUT TYPE="button" CLASS="btn" VALUE = "Mail  "      ID = "mail_btn"  onClick = "do_mail_all_win();"  STYLE="display:inline" />
+			<TD ALIGN='left'><INPUT TYPE="button" CLASS="btn" VALUE = "<?php print gettext('Mail');?>  "      ID = "mail_btn"  onClick = "do_mail_all_win();"  STYLE="display:inline" />
 			</TD></TR>
 		
 <?php 
@@ -1677,14 +1677,14 @@ setTimeout('do_post()', 1000);
 	$frm_val =  ($_SESSION['show_hide_fac'] == "h")? "s": "h";
 ?>	
 		
-		<TR><TD ALIGN='left'><INPUT TYPE="button" CLASS="btn" VALUE = "List  "      ID = "list_btn"  onClick = "open_list_win();"    STYLE="display:inline" />		
+		<TR><TD ALIGN='left'><INPUT TYPE="button" CLASS="btn" VALUE = "<?php print gettext('List');?>  "      ID = "list_btn"  onClick = "open_list_win();"    STYLE="display:inline" />		
 			</TD>
-			<TD ALIGN='left'><INPUT TYPE="button" CLASS="btn" VALUE = "Close"     ID = "close_btn" onClick = "self.close()"        STYLE="display:inline" />
+			<TD ALIGN='left'><INPUT TYPE="button" CLASS="btn" VALUE = "<?php print gettext('Close');?>"     ID = "close_btn" onClick = "self.close()"        STYLE="display:inline" />
 			</TD></TR>
-		<TR><TD ALIGN='left' COLSPAN=2><INPUT TYPE="button" CLASS="btn" VALUE = "Refresh"   ID = "refr_btn"  onClick = "<?php print $refr_str; ?>" STYLE="display:inline" />
+		<TR><TD ALIGN='left' COLSPAN=2><INPUT TYPE="button" CLASS="btn" VALUE = "<?php print gettext('Refresh');?>"   ID = "refr_btn"  onClick = "<?php print $refr_str; ?>" STYLE="display:inline" />
 			</TD>
 			</TR>
-		<TR><TD ALIGN='left' COLSPAN=2>Cleared: <SPAN onClick = "do_hors('<?php print $frm_val ;?>')"><U><?php print $btn_text ;?></U></SPAN>
+		<TR><TD ALIGN='left' COLSPAN=2><?php print gettext('Cleared');?>: <SPAN onClick = "do_hors('<?php print $frm_val ;?>')"><U><?php print $btn_text ;?></U></SPAN>
 
 		</TD></TR>
 		</TABLE>
@@ -1828,8 +1828,8 @@ setTimeout('do_post()', 1000);
 		if ($lines == 0) {												// empty?
 			
 			print "<TABLE BORDER=0 ALIGN='left' WIDTH = '90%' cellspacing = 1 CELLPADDING = 1  ID='call_board' STYLE='display:block'>";
-			print "<TR CLASS='even'><TD ALIGN = 'center' WIDTH='80%'><B>Call Board</B>&nbsp;&nbsp;" . $regs_string . "<FONT SIZE='-3'><I> (mouseover/click for details)</I></FONT></TD><TD WIDTH=150px></TD></TR>\n";	//	6/10/11
-			print "<TR><TH ><BR /><BR /><BR />No Current Dispatches<BR /></TH><TH></TH></TR>\n";
+			print "<TR CLASS='even'><TD ALIGN = 'center' WIDTH='80%'><B>" . gettext('Call Board') . "</B>&nbsp;&nbsp;" . $regs_string . "<FONT SIZE='-3'><I> (mouseover/click for details)</I></FONT></TD><TD WIDTH=150px></TD></TR>\n";	//	6/10/11
+			print "<TR><TH ><BR /><BR /><BR />" . gettext('No Current Dispatches') . "<BR /></TH><TH></TH></TR>\n";
 			print "</TABLE>";
 			}
 		else {															// not empty
@@ -1837,7 +1837,7 @@ setTimeout('do_post()', 1000);
 			$i = 1;	
 	
 			print "<TABLE BORDER=0 ALIGN='left' WIDTH='88%'  cellspacing = 1 CELLPADDING = 1 ID='call_board' STYLE='display:block'>\n";	// 5/24/09
- 			print "<TR CLASS='even'><TD COLSPAN=18 ALIGN = 'center'><B>Call Board</B><FONT SIZE='-3'>&nbsp;&nbsp;&nbsp;&nbsp;" . $regs_string . "&nbsp;&nbsp;&nbsp;&nbsp;<I>(mouseover/click for details)</I></FONT></TD><TD WIDTH=150px></TD></TR>\n";	// 5/24/09
+ 			print "<TR CLASS='even'><TD COLSPAN=18 ALIGN = 'center'><B>" . gettext('Call Board') . "</B><FONT SIZE='-3'>&nbsp;&nbsp;&nbsp;&nbsp;" . $regs_string . "&nbsp;&nbsp;&nbsp;&nbsp;<I>(mouseover/click for details)</I></FONT></TD><TD WIDTH=150px></TD></TR>\n";	// 5/24/09
 			 
 			$doUnit = (($guest)||($user))? "viewU" : "editU";		// 5/11/10
 			$doTick = ($guest)? "viewT" : "editT";				// 06/26/08
@@ -1861,19 +1861,19 @@ setTimeout('do_post()', 1000);
 						<TD ALIGN='left'>" . cb_shorten("Addr", $COLS_ADDR) . "</TD>
 						<TD ALIGN='center'>&nbsp;</TD>
 						<TD ALIGN='left' CLASS='emph'> " . cb_shorten("Name", $COLS_UNIT) . "</TD>
-						<TD ALIGN='center' TITLE='E-mail'><IMG SRC='mail.png'></TD>
-						<TD ALIGN='center' TITLE= 'Dispatched'>{$tags_arr[0]}</TD>
-						<TD ALIGN='center' TITLE= 'Responding'>{$tags_arr[1]}</TD>
-						<TD ALIGN='center' TITLE= 'On scene'>{$tags_arr[2]}</TD>
-						<TD ALIGN='center' TITLE= 'Fac en-route'>{$tags_arr[3]}</TD>
-						<TD ALIGN='center' TITLE= 'Fac arr'>{$tags_arr[4]}</TD>
-						<TD ALIGN='left'   TITLE= 'Clear'>{$tags_arr[5]}</TD>
+						<TD ALIGN='center' TITLE='" . gettext('E-mail') . "'><IMG SRC='mail.png'></TD>
+						<TD ALIGN='center' TITLE= '" . gettext('Dispatched') . "'>{$tags_arr[0]}</TD>
+						<TD ALIGN='center' TITLE= '" . gettext('Responding') . "'>{$tags_arr[1]}</TD>
+						<TD ALIGN='center' TITLE= '" . gettext('On scene') . "'>{$tags_arr[2]}</TD>
+						<TD ALIGN='center' TITLE= '" . gettext('Fac en-route') . "'>{$tags_arr[3]}</TD>
+						<TD ALIGN='center' TITLE= '" . gettext('Fac arr') . "'>{$tags_arr[4]}</TD>
+						<TD ALIGN='left'   TITLE= '" . gettext('Clear') . "'>{$tags_arr[5]}</TD>
 						
-						<TD COLSPAN=2  ALIGN='left' >&nbsp;&nbsp;&nbsp;Status</TD>
+						<TD COLSPAN=2  ALIGN='left' >&nbsp;&nbsp;&nbsp;" . gettext('Status') . "</TD>
 						<TD ALIGN='left' CLASS='emph'> " . cb_shorten("As of", $COLS_ASOF) . "</TD>
 						<TD ALIGN='left'>" . cb_shorten("By", $COLS_USER) . "</TD>
 						<TD ALIGN='left'>" . cb_shorten("Comment", $COLS_COMMENTS) . " </TD>
-						<TD ALIGN='center' TITLE='Reset unit dispatch times or Delete dispatch' width='5%'>&nbsp;R/D </TD>";		// 5/28/09, 1/12/09, 2/10/11
+						<TD ALIGN='center' TITLE='" . gettext('Reset unit dispatch times or Delete dispatch') . "' width='5%'>&nbsp;R/D </TD>";		// 5/28/09, 1/12/09, 2/10/11
 			$header .= "</TR>\n";
 
 			$dis = $guest? " DISABLED ": "";				// 3/1/09
@@ -1980,8 +1980,8 @@ setTimeout('do_post()', 1000);
 								print "\t<TD ALIGN='left' onmouseover=\"Tip('{$unit_st_val}')\" TITLE= '$unit_st_val' onmouseout=\"UnTip()\">" .  get_un_stat_sel($row['un_status_id'], $i) . "</TD>\n";						// 4/4/10 status
 								}
 							
-							print "\t<TD>\n\t<SPAN ID='TD{$i}' STYLE='display:none'><INPUT TYPE='button' VALUE='Go'  CLASS = 'btn' onClick=\"to_server(F$i); do_refresh();\">\n"; 		// 9/28/08
-							print "\t<INPUT TYPE='button' VALUE='Cancel'   CLASS = 'btn' onClick=\"document.F$i.reset();hide_but($i)\"></SPAN></TD>\n";
+							print "\t<TD>\n\t<SPAN ID='TD{$i}' STYLE='display:none'><INPUT TYPE='button' VALUE='" . gettext('Go') . "'  CLASS = 'btn' onClick=\"to_server(F$i); do_refresh();\">\n"; 		// 9/28/08
+							print "\t<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "'   CLASS = 'btn' onClick=\"document.F$i.reset();hide_but($i)\"></SPAN></TD>\n";
 							array_push($unit_ids, $row['unit_id']);
 							}
 						else {
@@ -1989,7 +1989,7 @@ setTimeout('do_post()', 1000);
 							}
 						}			// end 'got a responder'
 					else {	
-						print "\t<TD COLSPAN=10 CLASS='$theClass' onClick = editA(" . $row['assign_id'] . ") ID='myDate$i' ALIGN='left'><B>&nbsp;&nbsp;&nbsp;&nbsp;NA</b></TD>\n";	
+						print "\t<TD COLSPAN=10 CLASS='$theClass' onClick = editA(" . $row['assign_id'] . ") ID='myDate$i' ALIGN='left'><B>&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('NA') . "</b></TD>\n";	
 						}		// end 'no responder'
 
 
@@ -2010,7 +2010,7 @@ setTimeout('do_post()', 1000);
 					print "\t<TD onmouseover=\"Tip('{$comment}')\" onmouseout=\"UnTip()\" CLASS='$theClass' onClick = 'editA(" . $row['assign_id'] . ")'; >" . $strike .  cb_shorten ($comment, $COLS_COMMENTS) . $strikend . "</TD>\n";	// comment
 
 					
-					print "\t<TD TITLE = 'Click to RESET R O FE FA C times' CLASS='mylink' ALIGN='center'>
+					print "\t<TD TITLE = '" . gettext('Click to RESET R O FE FA C times') . "' CLASS='mylink' ALIGN='center'>
 						<INPUT TYPE='radio' NAME = 'res_times' {$dis} onClick = \"do_assgn_reset({$row['assign_id']}, this.form)\" /></TD>\n";
 
 					print "\t<INPUT TYPE='hidden' NAME='frm_the_unit' VALUE='" . addslashes($row['unit_name']) . "'>\n";  
@@ -2052,7 +2052,7 @@ setTimeout('do_post()', 1000);
  * @returns {undefined}
  */
 	function handleResult(req) {			// the called-back function
-		if (announce) {alert('Update complete (no e-mail sent)');}
+		if (announce) {alert('<?php print gettext('Update complete (no e-mail sent)');?>');}
 		}			// end function handle Result(
 /**
  * 
@@ -2188,9 +2188,9 @@ setTimeout('do_post()', 1000);
 ?>
 			<TABLE BORDER=0 ALIGN='center'>
 			<FORM NAME="edit_Form" onSubmit="return validate_ed(document.edit_Form);" action = "<?php print basename(__FILE__); ?>" method = "post">
-			<TR CLASS="even"><TD colspan=2 ALIGN="center">Call Assignment (#<?php print $asgn_row['assign_id']; ?>)</TD></TR>
+			<TR CLASS="even"><TD colspan=2 ALIGN="center"><?php print gettext('Call Assignment');?> (#<?php print $asgn_row['assign_id']; ?>)</TD></TR>
 			<TR CLASS="odd" VALIGN="baseline" onClick = "viewT('<?php print $asgn_row['ticket_id'];?>')">
-				<TD CLASS="td_label" ALIGN="right">&raquo; <U>Incident</U>:</TD><TD>
+				<TD CLASS="td_label" ALIGN="right">&raquo; <U><?php print gettext('Incident');?></U>:</TD><TD>
 <?php
 			print $asgn_row['scope'] . "</TD></TR>\n";		
 	
@@ -2202,16 +2202,16 @@ setTimeout('do_post()', 1000);
 				}
 			else {
 				$highlight = "";
-				$unit_name = "<FONT COLOR='red'><B>UNASSIGNED</B></FONT>";
+				$unit_name = "<FONT COLOR='red'><B>" . gettext('UNASSIGNED') . "</B></FONT>";
 				$unit_link = "";
 				}
-			print "<TR CLASS='even' VALIGN='baseline'><TD CLASS='td_label' ALIGN='right'>As of:</TD><TD>" . format_date_2($asgn_row['as_of']) .
-				"&nbsp;&nbsp;&nbsp;&nbsp;By " . $asgn_row['user'] . "</TD></TR>\n";		
+			print "<TR CLASS='even' VALIGN='baseline'><TD CLASS='td_label' ALIGN='right'>" . gettext('As of') . ":</TD><TD>" . format_date_2($asgn_row['as_of']) .
+				"&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('By') . " " . $asgn_row['user'] . "</TD></TR>\n";		
 			print "<TR CLASS='odd' VALIGN='baseline' " . $unit_link . ">";
 			print "<TD CLASS='td_label' ALIGN='right'> " . $highlight . "<U>" . get_text("Units") . "</U>:</TD><TD>" . $unit_name ."</TD></TR>\n";
 	
 			print "<TR CLASS='even' VALIGN='baseline'>\n";
-			print "<TD CLASS='td_label' ALIGN='right'>&nbsp;&nbsp;" . get_text("Units") . " Status:</TD><TD>";
+			print "<TD CLASS='td_label' ALIGN='right'>&nbsp;&nbsp;" . get_text("Units") . " " . gettext('Status') . ":</TD><TD>";
 			if ($asgn_row['resp_id']!="0"){
 				print $asgn_row['status_val'];
 				}		// end if (!$asgn_row['resp_id']=="0")
@@ -2221,33 +2221,33 @@ setTimeout('do_post()', 1000);
 ?>
 			</TD></TR>
 			<!-- 1764 -->
-			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right">Incident start:</TD>	<TD><?php print (format_date_2($asgn_row['problemstart'])) ;?></TD></TR>
+			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right"><?php print gettext('Incident start');?>:</TD>	<TD><?php print (format_date_2($asgn_row['problemstart'])) ;?></TD></TR>
 <?php
 		$the_str = (!(good_date_time ($asgn_row['dispatched'])))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['dispatched']);
 ?>
-			<TR CLASS = 'odd'><TD CLASS="td_label" ALIGN="right">Dispatched:</TD>	<TD><?php print format_date_2($asgn_row['dispatched'])  . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
+			<TR CLASS = 'odd'><TD CLASS="td_label" ALIGN="right"><?php print gettext('Dispatched');?>:</TD>	<TD><?php print format_date_2($asgn_row['dispatched'])  . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
 <?php
 		$the_str = (!(good_date_time ($asgn_row['responding'])))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['responding']);
 ?>
-			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right">Responding:</TD>	<TD><?php print (format_date_2($asgn_row['responding']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
+			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right"><?php print gettext('Responding');?>:</TD>	<TD><?php print (format_date_2($asgn_row['responding']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
 <?php
 		$the_str = (!(good_date_time ($asgn_row['on_scene'])))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['on_scene']);
 ?>
-			<TR CLASS = 'odd'><TD CLASS="td_label" ALIGN="right">On scene:</TD>		<TD><?php print (format_date_2($asgn_row['on_scene']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
+			<TR CLASS = 'odd'><TD CLASS="td_label" ALIGN="right"><?php print gettext('On scene');?>:</TD>		<TD><?php print (format_date_2($asgn_row['on_scene']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
 <?php
 		$the_str = (!(good_date_time ($asgn_row['u2fenr'])))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['u2fenr']);
 ?>
-			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right">Fac en-route:</TD>	<TD><?php print (format_date_2($asgn_row['u2fenr']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR> <!--10/6/09-->
+			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right"><?php print gettext('Fac en-route');?>:</TD>	<TD><?php print (format_date_2($asgn_row['u2fenr']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR> <!--10/6/09-->
 <?php
 		$the_str = (!(good_date_time ($asgn_row['u2farr'])))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['u2farr']);
 ?>
-			<TR CLASS = 'odd'><TD CLASS="td_label" ALIGN="right">Fac arr:</TD>		<TD><?php print (format_date_2($asgn_row['u2farr']))  . "&nbsp;&nbsp;" . $the_str;?></TD></TR> <!--10/6/09-->
+			<TR CLASS = 'odd'><TD CLASS="td_label" ALIGN="right"><?php print gettext('Fac arr');?>:</TD>		<TD><?php print (format_date_2($asgn_row['u2farr']))  . "&nbsp;&nbsp;" . $the_str;?></TD></TR> <!--10/6/09-->
 <?php
 		$the_str = (!(good_date_time ($asgn_row['clear'])))? "": my_date_diff($asgn_row['problemstart'], $asgn_row['clear']);
 ?>
-			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right">Clear:</TD>		<TD><?php print (format_date_2($asgn_row['clear']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
+			<TR CLASS = 'even'><TD CLASS="td_label" ALIGN="right"><?php print gettext('Clear');?>:</TD>		<TD><?php print (format_date_2($asgn_row['clear']))   . "&nbsp;&nbsp;" . $the_str;?></TD></TR>
 			<TR CLASS = 'even'>
-				<TD CLASS="td_label" ALIGN="right">Mileage:</TD>		
+				<TD CLASS="td_label" ALIGN="right"><?php print gettext('Mileage');?>:</TD>		
 				<TD><?php print "
 						start &raquo;{$asgn_row['start_miles']}&nbsp;&nbsp; 
 						on-scene &raquo; {$asgn_row['on_scene_miles']}&nbsp;&nbsp; 
@@ -2257,15 +2257,15 @@ setTimeout('do_post()', 1000);
 			</TR>
 			
 			<TR CLASS="odd">
-				<TD CLASS="td_label" ALIGN="right">Comments:</TD>
+				<TD CLASS="td_label" ALIGN="right"><?php print gettext('Comments');?>:</TD>
 				<TD ALIGN='left'><?php print $asgn_row['assign_comments']; ?></TD></TR> <!-- 10/06/09 -->
 			
 			<TR CLASS="even" VALIGN="baseline"><TD colspan="99" ALIGN="center">
 				<br>
-				<INPUT TYPE="BUTTON" VALUE="Cancel"  onClick="history.back();"  CLASS = 'btn' />&nbsp;&nbsp;&nbsp;&nbsp;	
+				<INPUT TYPE="BUTTON" VALUE="<?php print gettext('Cancel');?>"  onClick="history.back();"  CLASS = 'btn' />&nbsp;&nbsp;&nbsp;&nbsp;	
 <?php
 			if(!($guest)){
-				print "<INPUT TYPE='BUTTON' VALUE='Edit' onClick='document.nav_form.func.value=\"edit\";document.nav_form.frm_id.value= $frm_id;document.nav_form.submit();'  CLASS = 'btn'>\n";
+				print "<INPUT TYPE='BUTTON' VALUE='" . gettext('Edit') . "' onClick='document.nav_form.func.value=\"edit\";document.nav_form.frm_id.value= $frm_id;document.nav_form.submit();'  CLASS = 'btn'>\n";
 				}
 ?>			
 				</TD></TR>
@@ -2288,7 +2288,7 @@ setTimeout('do_post()', 1000);
  * @returns {undefined}
  */
 		function do_del(the_Form) {
-			if (confirm("Delete this dispatch record?")) {the_Form.submit();}
+			if (confirm("<?php print gettext('Delete this dispatch record?');?>")) {the_Form.submit();}
 			}
 /**
  * 
@@ -2309,15 +2309,15 @@ setTimeout('do_post()', 1000);
 		function validate_ed(theForm) {
 			var errmsg="";
 			if (theForm.frm_unit_id) {						// defined?
-				if (theForm.frm_unit_id.value == 0)			{errmsg+= "\tSelect <?php print get_text("Units");?>\n";}
+				if (theForm.frm_unit_id.value == 0)			{errmsg+= "\t<?php print gettext('Select');?> <?php print get_text("Units");?>\n";}
 				}
 			if (theForm.frm_unit_status_id) {
-				if (theForm.frm_unit_status_id.value == 0)	{errmsg+= "\tSelect <?php print get_text("Units");?> Status\n";}
+				if (theForm.frm_unit_status_id.value == 0)	{errmsg+= "\t<?php print gettext('Select');?> <?php print get_text("Units");?> <?php print gettext('Status');?>\n";}
 				}
-			if (theForm.frm_comments.value == "")			{errmsg+= "\tComments required\n";}
+			if (theForm.frm_comments.value == "")			{errmsg+= "\t<?php print gettext('Comments required');?>\n";}
 	
 			if (errmsg!="") {
-				alert ("Please correct the following and re-submit:\n\n" + errmsg);
+				alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 				return false;
 				}
 			else {
@@ -2333,7 +2333,7 @@ setTimeout('do_post()', 1000);
  * @returns {undefined}
  */	
 		function confirmation() {
-			var answer = confirm("This dispatch run completed?")
+			var answer = confirm("<?php print gettext('This dispatch run completed?');?>")
 			if (answer){
 				document.edit_Form.frm_complete.value=1; 
 				document.edit_Form.submit();
@@ -2361,8 +2361,8 @@ setTimeout('do_post()', 1000);
 		</HEAD>
 		<BODY onLoad = "reSizeScr(13)"><CENTER>		<!-- <?php echo __LINE__; ?> -->
 			<DIV ID = 'edit_btns' STYLE="display:block; position:fixed; width:120px; height:auto; top:<?php print $from_top + 20;?>px; right: 150px; background-color:transparent; text-align:left;">	<!-- 5/17/09 -->				
-				<INPUT TYPE="button" VALUE="Cancel" onClick="history.back();" CLASS = 'btn' />	
-				<INPUT TYPE="button" VALUE="Reset" onclick="document.edit_Form.reset();"  CLASS = 'btn' />	
+				<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick="history.back();" CLASS = 'btn' />	
+				<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>" onclick="document.edit_Form.reset();"  CLASS = 'btn' />	
 				<INPUT TYPE="button" VALUE="           Next           " name="sub_but" onClick="document.edit_Form.submit();"  CLASS = 'btn' >  
 				</LEFT>
 			</DIV>
@@ -2378,26 +2378,26 @@ setTimeout('do_post()', 1000);
 	
 			$asgn_result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 			$asgn_row = stripslashes_deep(mysql_fetch_array($asgn_result));
-			$clear = (is_date($asgn_row['clear']))? "<FONT COLOR='red'><B>Cleared</B></FONT>": "";
+			$clear = (is_date($asgn_row['clear']))? "<FONT COLOR='red'><B>" . gettext('Cleared') . "</B></FONT>": "";
 			$disabled = "";
 	
 ?>
 			<TABLE BORDER=0 ALIGN='center'>
 			<FORM NAME="edit_Form" onSubmit="return validate_ed(document.edit_Form);" action = "<?php print basename(__FILE__); ?>" method = "post">
-			<TR CLASS="odd"><TD CLASS="td_label" colspan=99 ALIGN="center">Edit this Call Assignment (#<?php print $asgn_row['assign_id'] ?>) 
+			<TR CLASS="odd"><TD CLASS="td_label" colspan=99 ALIGN="center"><?php print gettext('Edit this Call Assignment');?> (#<?php print $asgn_row['assign_id'] ?>) 
 		<?php print $clear; ?></TD></TR>
 			<TR><TD>&nbsp;</TD></TR>
 	
 			<TR CLASS="even" VALIGN="bottom">
-				<TD CLASS="td_label" ALIGN="right">Incident:</TD>
+				<TD CLASS="td_label" ALIGN="right"><?php print gettext('Incident');?>:</TD>
 				<TD TITLE = "<?php print $asgn_row['scope']; ?>"><?php print shorten($asgn_row['scope'], 32); ?>&nbsp;&nbsp;&nbsp;&nbsp;
 <?php	
 					$selO = ($asgn_row['status']==$GLOBALS['STATUS_OPEN'])?   " SELECTED" :"";
 					$selC = ($asgn_row['status']==$GLOBALS['STATUS_CLOSED'])? " SELECTED" :"" ;
 ?>			
 					</TD><TD CLASS="td_label"> Status:&nbsp;</TD><TD><SELECT NAME='frm_inc_status_id' onChange="Javascript: incident_st = false;">
-					<OPTION VALUE= <?php print $GLOBALS['STATUS_OPEN'] .  $selO; ?> >Open</OPTION>
-					<OPTION VALUE= <?php print $GLOBALS['STATUS_CLOSED'] .  $selC; ?> >Closed</OPTION>
+					<OPTION VALUE= <?php print $GLOBALS['STATUS_OPEN'] .  $selO; ?> ><?php print gettext('Open');?></OPTION>
+					<OPTION VALUE= <?php print $GLOBALS['STATUS_CLOSED'] .  $selC; ?> ><?php print gettext('Closed');?></OPTION>
 					</SELECT>
 	
 				</TD></TR>
@@ -2407,7 +2407,7 @@ setTimeout('do_post()', 1000);
 				if ($asgn_row['resp_id']==0) {
 ?>			
 					<TD><SELECT name="frm_unit_id" onChange = "document.edit_Form.frm_log_it.value='1'" >
-						<OPTION value= '0' selected>Select</OPTION>
+						<OPTION value= '0' selected><?php print gettext('Select');?></OPTION>
 <?php
 					$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` ";	//  
 					$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
@@ -2424,7 +2424,7 @@ setTimeout('do_post()', 1000);
 					$do_unit = TRUE;
 					}
 ?>			
-				<TD CLASS="td_label"><?php print get_text("Units");?> Status:</TD><TD>
+				<TD CLASS="td_label"><?php print get_text("Units");?> <?php print gettext('Status');?>:</TD><TD>
 				<SELECT name="frm_unit_status_id"  onChange = "Javascript: unit_st=false; document.edit_Form.frm_log_it.value='1'" <?php print $disabled;?> > 
 <?php																// UNIT STATUS
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]un_status` ORDER BY `group` ASC, `sort` ASC, `status_val` ASC";	
@@ -2449,7 +2449,7 @@ setTimeout('do_post()', 1000);
 					}		// end while()
 				print "\t\t\t</OPTGROUP>\n";
 				
-				$the_option = (!($got_one))? "\t<OPTION VALUE=0 SELECTED>Select</OPTION>\n": "\n";				// 5/23/09
+				$the_option = (!($got_one))? "\t<OPTION VALUE=0 SELECTED>" . gettext('Select') . "</OPTION>\n": "\n";				// 5/23/09
 				print $the_option;
 
 				print "</SELECT>\n";
@@ -2457,19 +2457,19 @@ setTimeout('do_post()', 1000);
 ?>
 				</TD></TR>
 			<TR CLASS="even">
-				<TD CLASS="td_label" ALIGN="right">Comments:</TD>
+				<TD CLASS="td_label" ALIGN="right"><?php print gettext('Comments');?>:</TD>
 				<TD colspan=3><TEXTAREA NAME="frm_comments" COLS="45" ROWS="5" $disabled><?php print $asgn_row['assign_comments']; ?></TEXTAREA></TD></TR> <!-- 10/06/09 -->
 				<!-- <TD colspan=3><INPUT MAXLENGTH="64" SIZE="64" NAME="frm_comments" VALUE="<?php print $asgn_row['assign_comments']; ?>" TYPE="text" <?php print $disabled;?>></TD></TR>-->
 
-			<TR CLASS=''><TD CLASS="td_label" ALIGN="right">Mileage:</TD> <!--10/6/09-->
+			<TR CLASS=''><TD CLASS="td_label" ALIGN="right"><?php print gettext('Mileage');?>:</TD> <!--10/6/09-->
 				<TD colspan=3 ALIGN='center'>
-					<SPAN CLASS="td_label"> Start:</SPAN> 
+					<SPAN CLASS="td_label"> <?php print gettext('Start');?>:</SPAN> 
 						<INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_strt" VALUE="<?php print $asgn_row['start_miles']; ?>" TYPE="text" <?php print $disabled;?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<SPAN CLASS="td_label"> On scene:</SPAN> 
+					<SPAN CLASS="td_label"> <?php print gettext('On scene');?>:</SPAN> 
 						<INPUT MAXLENGTH="8" SIZE="8" NAME="frm_on_scene_miles" VALUE="<?php print $asgn_row['on_scene_miles']; ?>" TYPE="text" <?php print $disabled;?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<SPAN CLASS="td_label">End:</SPAN>
+					<SPAN CLASS="td_label"><?php print gettext('End');?>:</SPAN>
 						<INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_end" VALUE="<?php print $asgn_row['end_miles']; ?>" TYPE="text" <?php print $disabled;?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<SPAN CLASS="td_label">Total Miles:</SPAN>	<!-- 10/23/12 -->
+					<SPAN CLASS="td_label"><?php print gettext('Total Miles');?>:</SPAN>	<!-- 10/23/12 -->
 						<INPUT MAXLENGTH="8" SIZE="8" NAME="frm_miles_tot" VALUE="<?php print $asgn_row['miles']; ?>" TYPE="text" <?php print $disabled;?>></TD></TR>	<!-- 10/23/12 -->						
 <?php
 		 	$now = mysql_format_date(time() - (get_variable('delta_mins')*60)); 		// mysql format
@@ -2486,7 +2486,7 @@ setTimeout('do_post()', 1000);
 				$the_dis = TRUE;
 				}
 			$chekd = (is_date($asgn_row['dispatched']))? " CHECKED ": "";
-			print "\n<TR CLASS='even'><TD CLASS='td_label' ALIGN='right'>Dispatched:</TD>";
+			print "\n<TR CLASS='even'><TD CLASS='td_label' ALIGN='right'>" . gettext('Dispatched') . ":</TD>";
 			print "<TD COLSPAN=3><INPUT NAME='frm_db' TYPE='radio' onClick =  \"enable('dispatched')\" $chekd ><SPAN ID = 'dispatched' STYLE = 'visibility:" . $the_vis ."'>";
 			generate_date_dropdown("dispatched",totime($the_date), $the_dis);	// ($date_suffix,$default_date=0, $disabled=FALSE)
 			print "</SPAN></TD></TR>\n";
@@ -2504,7 +2504,7 @@ setTimeout('do_post()', 1000);
 				}
 			$chekd = (is_date($asgn_row['responding']))? " CHECKED ": "";
 			$the_date = (is_date($asgn_row['responding']))? $asgn_row['responding']	: $now ;
-			print "\n<TR CLASS='odd'><TD CLASS='td_label' ALIGN='right'>Responding:</TD>";
+			print "\n<TR CLASS='odd'><TD CLASS='td_label' ALIGN='right'>" . gettext('Responding') . ":</TD>";
 			print "<TD COLSPAN=3><INPUT NAME='frm_rb' TYPE='radio' onClick =  \"enable('responding')\" $chekd><SPAN ID = 'responding' STYLE = 'visibility:" . $the_vis ."'>";
 			generate_date_dropdown("responding",totime($the_date), $the_dis);
 			print "</SPAN></TD></TR>\n";
@@ -2522,7 +2522,7 @@ setTimeout('do_post()', 1000);
 				}
 			$chekd = (is_date($asgn_row['on_scene']))? " CHECKED ": "";
 			$the_date = (is_date($asgn_row['on_scene']))? $asgn_row['on_scene']	: $now ;
-			print "\n<TR CLASS='even'><TD CLASS='td_label' ALIGN='right'>On scene:</TD>";
+			print "\n<TR CLASS='even'><TD CLASS='td_label' ALIGN='right'>" . gettext('On scene') . ":</TD>";
 			print "<TD COLSPAN=3><INPUT NAME='frm_ob' TYPE='radio' onClick =  \"enable('on_scene')\" $chekd><SPAN ID = 'on_scene' STYLE = 'visibility:" . $the_vis ."'>";
 			generate_date_dropdown("on_scene",totime($the_date), $the_dis);
 			print "</SPAN></TD></TR>\n";
@@ -2540,7 +2540,7 @@ setTimeout('do_post()', 1000);
 				}
 			$chekd = (is_date($asgn_row['u2fenr']))? " CHECKED ": "";
 			$the_date = (is_date($asgn_row['u2fenr']))? $asgn_row['u2fenr']	: $now ;
-			print "\n<TR CLASS='odd'><TD CLASS='td_label' ALIGN='right'>Fac en-route:</TD>";
+			print "\n<TR CLASS='odd'><TD CLASS='td_label' ALIGN='right'>" . gettext('Fac en-route') . ":</TD>";
 			print "<TD COLSPAN=3><INPUT NAME='frm_fe' TYPE='radio' onClick =  \"enable('u2fenr')\" $chekd><SPAN ID = 'u2fenr' STYLE = 'visibility:" . $the_vis ."'>";
 			generate_date_dropdown("u2fenr",totime($the_date), $the_dis);
 			print "</SPAN></TD></TR>\n";
@@ -2558,7 +2558,7 @@ setTimeout('do_post()', 1000);
 				}
 			$chekd = (is_date($asgn_row['u2farr']))? " CHECKED ": "";
 			$the_date = (is_date($asgn_row['u2farr']))? $asgn_row['u2farr']	: $now ;
-			print "\n<TR CLASS='even'><TD CLASS='td_label' ALIGN='right'>Fac arr:</TD>";
+			print "\n<TR CLASS='even'><TD CLASS='td_label' ALIGN='right'>" . gettext('Fac arr') . ":</TD>";
 			print "<TD COLSPAN=3><INPUT NAME='frm_fa' TYPE='radio' onClick =  \"enable('u2farr')\" $chekd><SPAN ID = 'u2farr' STYLE = 'visibility:" . $the_vis ."'>";
 			generate_date_dropdown("u2farr",totime($the_date), $the_dis);
 			print "</SPAN></TD></TR>\n";
@@ -2576,25 +2576,25 @@ setTimeout('do_post()', 1000);
 				}
 			$chekd = (is_date($asgn_row['clear']))? " CHECKED ": "";
 			$the_date = (is_date($asgn_row['clear']))? $asgn_row['clear']	: $now ;
-			print "\n<TR CLASS='odd'><TD CLASS='td_label' ALIGN='right'>Clear:</TD>";
+			print "\n<TR CLASS='odd'><TD CLASS='td_label' ALIGN='right'>" . gettext('Clear') . ":</TD>";
 			print "<TD COLSPAN=3><INPUT NAME='frm_cb' TYPE='radio' onClick =  \"document.edit_Form.frm_complete.value=1; enable('clear')\" $chekd ><SPAN ID = 'clear' STYLE = 'visibility:" . $the_vis ."'>";
 			generate_date_dropdown("clear",totime($the_date), $the_dis);
 			print "</SPAN></TD></TR>\n";
 				
 ?>
-			<TR CLASS='even' VALIGN='baseline'><TD CLASS='td_label' ALIGN='right'>As of:</TD>
-				<TD colspan=2><?php print format_date_2($asgn_row['as_of']);?>&nbsp;&nbsp;&nbsp;&nbsp;By: <?php print $asgn_row['user'];?></TD>
+			<TR CLASS='even' VALIGN='baseline'><TD CLASS='td_label' ALIGN='right'><?php print gettext('As of');?>:</TD>
+				<TD colspan=2><?php print format_date_2($asgn_row['as_of']);?>&nbsp;&nbsp;&nbsp;&nbsp;<?php print gettext('By');?>: <?php print $asgn_row['user'];?></TD>
 				</TR>		
 	
 <!--		<TR CLASS="even" VALIGN="baseline"><TD colspan="99" ALIGN="center">
 				<br>
-				<INPUT TYPE="BUTTON" VALUE="Cancel"  onClick="history.back();"  CLASS = 'btn'>
+				<INPUT TYPE="BUTTON" VALUE="<?php print gettext('Cancel');?>"  onClick="history.back();"  CLASS = 'btn'>
 <?php
 				if (!$disabled) {
 ?>			
 				&nbsp;&nbsp;&nbsp;&nbsp;	
-				<INPUT TYPE="BUTTON" VALUE="Reset"  onclick="Javascript: do_reset(document.edit_Form)"  CLASS = 'btn'/>&nbsp;&nbsp;&nbsp;&nbsp;	
-				<INPUT TYPE="BUTTON" VALUE=" Next " name="sub_but" onClick = "validate_ed(document.edit_Form)"  CLASS = 'btn' />
+				<INPUT TYPE="BUTTON" VALUE="<?php print gettext('Reset');?>"  onclick="Javascript: do_reset(document.edit_Form)"  CLASS = 'btn'/>&nbsp;&nbsp;&nbsp;&nbsp;	
+				<INPUT TYPE="BUTTON" VALUE=" <?php print gettext('Next');?> " name="sub_but" onClick = "validate_ed(document.edit_Form)"  CLASS = 'btn' />
 				</TD></TR>
 -->				
 				<TR CLASS='odd'><TD>&nbsp;</TD></TR>
@@ -2602,12 +2602,12 @@ setTimeout('do_post()', 1000);
 <?php
 				if(!(is_date($asgn_row['clear']))){				// 6/4/08	// 6/26/08
 ?>		
-	<!--			<INPUT TYPE="BUTTON" VALUE="Run Complete" onClick="confirmation()"  CLASS = 'btn'/> -->
+	<!--			<INPUT TYPE="BUTTON" VALUE="<?php print gettext('Run Complete');?>" onClick="confirmation()"  CLASS = 'btn'/> -->
 <?php
 					}
 				else {
 ?>		
-					<INPUT TYPE="BUTTON" VALUE="Delete" onClick="do_del(document.del_Form);"  CLASS = 'btn'/>
+					<INPUT TYPE="BUTTON" VALUE="<?php print gettext('Delete');?>" onClick="do_del(document.del_Form);"  CLASS = 'btn'/>
 <?php
 					}
 				}
@@ -2707,7 +2707,7 @@ setTimeout('do_post()', 1000);
 	<BODY><!-- <?php echo __LINE__; ?> -->
 		<BR><CENTER><H3><?php print $message; ?></H3><BR>
 		<FORM NAME='ed_cont_form' METHOD = 'post' ACTION = "<?php print basename(__FILE__); ?>">
-		<INPUT TYPE='button' VALUE='Continue' onClick = "document.ed_cont_form.submit()"  CLASS = 'btn'/>
+		<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>' onClick = "document.ed_cont_form.submit()"  CLASS = 'btn'/>
 		<INPUT TYPE='hidden' NAME='func' VALUE='board'/>
 		<INPUT TYPE='hidden' NAME='lines' value='<?php print $lines; ?>'/>
 		</FORM></BODY></HTML><!-- <?php echo __LINE__;?> -->
@@ -2725,7 +2725,7 @@ setTimeout('do_post()', 1000);
 	<BODY><CENTER>		<!-- <?php echo __LINE__; ?> -->
 		<BR><BR><CENTER><H3><?php print $message; ?></H3><BR><BR><BR>
 		<FORM NAME='ed_cont_form' METHOD = 'post' ACTION = "<?php print basename(__FILE__); ?>">
-		<INPUT TYPE='button' VALUE='Continue' onClick = "document.ed_cont_form.submit()" CLASS = 'btn'/>
+		<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>' onClick = "document.ed_cont_form.submit()" CLASS = 'btn'/>
 		<INPUT TYPE='hidden' NAME='func' VALUE='board'/>
 		</FORM></BODY></HTML><!-- <?php echo __LINE__;?> -->
 <?php	
@@ -2911,7 +2911,7 @@ setTimeout('do_post()', 1000);
 <?php
 		if ($lines == 0) {												// empty?
 			
-			print "<BR /><BR /><EM>No Dispatches</EM><BR />";
+			print "<BR /><BR /><EM>" . gettext('No Dispatches') . "</EM><BR />";
 			}
 		else {															// not empty
 			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `facility_id` IS NOT NULL";
@@ -2927,7 +2927,7 @@ setTimeout('do_post()', 1000);
 			$i = 1;	
 	
 			print "<TABLE BORDER=0 ALIGN='left'  cellspacing = 1 CELLPADDING = 1 ID='call_board' STYLE='display:block'>\n";	// 5/24/09
- 			print "<TR CLASS='even'><TD COLSPAN=99 ALIGN = 'center'><B>Call Board</B> - {$lines } calls <FONT SIZE='-3'><I> &nbsp;&nbsp;&nbsp;&nbsp;(mouseover for details)</I></FONT></TD></TR>\n";	// 5/24/09
+ 			print "<TR CLASS='even'><TD COLSPAN=99 ALIGN = 'center'><B>" . gettext('Call Board') . "</B> - {$lines } calls <FONT SIZE='-3'><I> &nbsp;&nbsp;&nbsp;&nbsp;(mouseover for details)</I></FONT></TD></TR>\n";	// 5/24/09
 		
 			$doUnit = (($guest)||($user))? "viewU" : "editU";	// 5/11/10
 			$doTick = ($guest)? "viewT" : "editT";				// 06/26/08
@@ -2935,40 +2935,40 @@ setTimeout('do_post()', 1000);
 			$items = mysql_affected_rows();
 			$header = "<TR >";
 			
-			$header .= "<TD COLSPAN=3 ALIGN='center' CLASS='emph' >Incident</TD>";		// 9/27/08
+			$header .= "<TD COLSPAN=3 ALIGN='center' CLASS='emph' >" . gettext('Incident') . "</TD>";		// 9/27/08
 			$header .= "<TD>&nbsp;</TD>";
 			
-			$header .= ($facilities)? "<TD COLSPAN=2 ALIGN = 'center' CLASS='emph'>Facility</TD><TD>&nbsp;</TD>" : "";
+			$header .= ($facilities)? "<TD COLSPAN=2 ALIGN = 'center' CLASS='emph'>" . gettext('Facility') . "</TD><TD>&nbsp;</TD>" : "";
 			$header .= "<TD COLSPAN=1 ALIGN='center' CLASS='emph'>" . get_text("Units") . "</TD>";			// 3/27/09
 			$header .= "<TD>&nbsp;</TD>";
 
-			$header .= "<TD COLSPAN=99 ALIGN='center' CLASS='emph' >Dispatch</TD>";
+			$header .= "<TD COLSPAN=99 ALIGN='center' CLASS='emph' >" . gettext('Dispatch') . "</TD>";
 			$header .= "</TR>\n";
 
 			$header .= "<TR CLASS='capt_odd'>";												// 4/26/09, 10/6/09 (unit to facility status)
-			$header .= "<TD ALIGN='center' CLASS='emph'>Name</TD>
-						<TD ALIGN='center'>Synopsis</TD>
-						<TD ALIGN='center'>Addr</TD>
+			$header .= "<TD ALIGN='center' CLASS='emph'>" . gettext('Name') . "</TD>
+						<TD ALIGN='center'>" . gettext('Synopsis') . "</TD>
+						<TD ALIGN='center'>" . gettext('Addr') . "</TD>
 						<TD ALIGN='center'>&nbsp;</TD>";
 
-			$header .= ($facilities)? "<TD ALIGN = 'center'>From</TD><TD ALIGN = 'center'>To</TD><TD>&nbsp;</TD>" : "";						
+			$header .= ($facilities)? "<TD ALIGN = 'center'>" . gettext('From') . "</TD><TD ALIGN = 'center'>" . gettext('To') . "</TD><TD>&nbsp;</TD>" : "";						
 						
-			$header .= "<TD ALIGN='center' CLASS='emph'>Name</TD><TD>&nbsp;</TD>";
+			$header .= "<TD ALIGN='center' CLASS='emph'>" . gettext('Name') . "</TD><TD>&nbsp;</TD>";
 			
-			$header .= "<TD ALIGN='center' TITLE= 'Opened'>Opened</TD>
-						<TD ALIGN='center' TITLE= 'Dispatched'>D</TD>
-						<TD ALIGN='center' TITLE= 'Responding'>R</TD>
-						<TD ALIGN='center' TITLE= 'On scene'  >O</TD>";
+			$header .= "<TD ALIGN='center' TITLE= '" . gettext('Opened') . "'>" . gettext('Opened') . "</TD>
+						<TD ALIGN='center' TITLE= '" . gettext('Dispatched') . "'>" . gettext('D') . "</TD>
+						<TD ALIGN='center' TITLE= '" . gettext('Responding') . "'>" . gettext('R') . "</TD>
+						<TD ALIGN='center' TITLE= '" . gettext('On scene') . "'  >" . gettext('O') . "</TD>";
 						
 			if ($facilities) {						
-				$header .= "<TD ALIGN='center' TITLE= 'Fac en-route'>FE</TD>
-							<TD ALIGN='center' TITLE= 'Fac arr'>FA</TD>";
+				$header .= "<TD ALIGN='center' TITLE= '" . gettext('Fac en-route') . "'>" . gettext('FE') . "</TD>
+							<TD ALIGN='center' TITLE= '" . gettext('Fac arr') . "'>" . gettext('FA') . "</TD>";
 							}
-			$header .= "<TD ALIGN='center' TITLE= 'Dispatch cleared'>Clear</TD>						
-						<TD ALIGN='center' TITLE= 'Incident closed'>End</TD>						
-						<TD ALIGN='center'>By</TD>
-						<TD ALIGN='center'>&nbsp;Comment </TD>";
-			$header .=($miles)? "<TD ALIGN='center' COLSPAN=3>Mileage</TD>":"";
+			$header .= "<TD ALIGN='center' TITLE= '" . gettext('Dispatch cleared') . ">" . gettext('Clear') . "</TD>						
+						<TD ALIGN='center' TITLE= '" . gettext('Incident closed') . ">" . gettext('End') . "</TD>						
+						<TD ALIGN='center'>" . gettext('By') . "</TD>
+						<TD ALIGN='center'>&nbsp;" . gettext('Comment') . " </TD>";
+			$header .=($miles)? "<TD ALIGN='center' COLSPAN=3>" . gettext('Mileage') . "</TD>":"";
 						
 			$header .= "</TR>\n";
 
@@ -3045,7 +3045,7 @@ setTimeout('do_post()', 1000);
 							 onmouseover=\"Tip('{$unit_name}')\" ALIGN='left' onmouseout=\"UnTip()\"><B>{$short_name}</B></TD>\n";							// unit 8/24/08, 1/17/09
 						}			// end 'got a responder'
 					else {	
-						print "\t<TD ALIGN='left' CLASS='$theClass' onClick = editA(" . $row['assign_id'] . ") ID='myDate$i' ALIGN='left'><B>&nbsp;&nbsp;&nbsp;&nbsp;NA</b></TD>\n";	
+						print "\t<TD ALIGN='left' CLASS='$theClass' onClick = editA(" . $row['assign_id'] . ") ID='myDate$i' ALIGN='left'><B>&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('NA') . "</b></TD>\n";	
 						}		// end 'no responder'
 
 					print "<TD></TD>";
@@ -3053,16 +3053,16 @@ setTimeout('do_post()', 1000);
 					$deltas = get_deltas ($row);				// 11/1/09
 //					dump ($deltas);
 
-					print "<TD ALIGN='left' onmouseover=\"Tip('Opened: " . my_to_date($row['problemstart']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['problemstart']) . "</TD>\n";
-					print "<TD ALIGN='left' onmouseover=\"Tip('Dispatched: " . my_to_date($row['dispatched']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['dispatched']) . "{$deltas[0]}</TD>\n";
-					print "<TD ALIGN='left' onmouseover=\"Tip('Responding: " . my_to_date($row['responding']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['responding']) . "{$deltas[1]}</TD>\n";
-					print "<TD ALIGN='left' onmouseover=\"Tip('On-scene: " . my_to_date($row['on_scene']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['on_scene']) . "{$deltas[2]}</TD>\n";
+					print "<TD ALIGN='left' onmouseover=\"Tip('" . gettext('Opened') . ": " . my_to_date($row['problemstart']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['problemstart']) . "</TD>\n";
+					print "<TD ALIGN='left' onmouseover=\"Tip('" . gettext('Dispatched') . ": " . my_to_date($row['dispatched']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['dispatched']) . "{$deltas[0]}</TD>\n";
+					print "<TD ALIGN='left' onmouseover=\"Tip('" . gettext('Responding') . ": " . my_to_date($row['responding']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['responding']) . "{$deltas[1]}</TD>\n";
+					print "<TD ALIGN='left' onmouseover=\"Tip('" . gettext('On-scene') . ": " . my_to_date($row['on_scene']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['on_scene']) . "{$deltas[2]}</TD>\n";
 					if ($facilities) {
-						print "<TD ALIGN='left' onmouseover=\"Tip('En-route to facility: " . my_to_date($row['u2fenr']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['u2fenr']) . "{$deltas[3]}</TD>\n";
-						print "<TD ALIGN='left' onmouseover=\"Tip('At facility: " . my_to_date($row['u2farr']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['u2farr']) . "{$deltas[4]}</TD>\n";
+						print "<TD ALIGN='left' onmouseover=\"Tip('" . gettext('En-route to facility') . ": " . my_to_date($row['u2fenr']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['u2fenr']) . "{$deltas[3]}</TD>\n";
+						print "<TD ALIGN='left' onmouseover=\"Tip('" . gettext('At facility') . ": " . my_to_date($row['u2farr']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['u2farr']) . "{$deltas[4]}</TD>\n";
 						}
-					print "<TD ALIGN='left' onmouseover=\"Tip('Cleared: " . my_to_date($row['clear']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['clear']) . "{$deltas[5]}</TD>\n";
-					print "<TD ALIGN='left' onmouseover=\"Tip('Closed: " . my_to_date($row['problemend']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['problemend']) . "{$deltas[6]} </TD>\n";
+					print "<TD ALIGN='left' onmouseover=\"Tip('" . gettext('Cleared') . ": " . my_to_date($row['clear']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['clear']) . "{$deltas[5]}</TD>\n";
+					print "<TD ALIGN='left' onmouseover=\"Tip('" . gettext('Closed') . ": " . my_to_date($row['problemend']) . "')\"  onmouseout=\"UnTip()\"  >" . my_to_date_sh($row['problemend']) . "{$deltas[6]} </TD>\n";
 
 					$is_disabled = ($guest)? " DISABLED ": "";
 
@@ -3096,12 +3096,12 @@ setTimeout('do_post()', 1000);
 				
 				$lines = $i;
 //				snap(basename(__FILE__), __LINE__);
-				print "<TR><TD COLSPAN=99 ALIGN='center'><BR /><B>End</B><BR /></TD></TR>";
+				print "<TR><TD COLSPAN=99 ALIGN='center'><BR /><B>" . gettext('End') . "</B><BR /></TD></TR>";
 			}		// end if (mysql_affected_rows()>0) 
 ?>
 		</TABLE>
 		<DIV ID='foo'><DIV ID='bar'>		<!-- 12/13/09 -->
-		<INPUT TYPE='button' VALUE = 'Finished' onClick = 'window.close()'  CLASS = 'btn'>
+		<INPUT TYPE='button' VALUE = '<?php print gettext('Finished');?>' onClick = 'window.close()'  CLASS = 'btn'>
 		</DIV></DIV>
 		<FORM NAME='finform' METHOD='post' ACTION = '<?php print basename(__FILE__);?>'>
 		<INPUT TYPE = 'hidden' NAME='func' VALUE='board'>

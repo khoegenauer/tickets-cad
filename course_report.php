@@ -9,7 +9,7 @@ require_once('./incs/functions.inc.php');
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Classes Taken Report</TITLE>
+<TITLE><?php print gettext('Classes Taken Report');?></TITLE>
 <META NAME="Author" CONTENT="">
 <META NAME="Keywords" CONTENT="">
 <META NAME="Description" CONTENT="">
@@ -43,7 +43,7 @@ require_once('./incs/functions.inc.php');
 				$the_user_str = " for {$row['user']}";
 				}
 		
-			echo "<BR /><BR /><center><H2>No class data{$the_user_str}</H2><BR /><BR /><BR />";
+			echo "<BR /><BR /><center><H2>" . gettext('No class data') . "{$the_user_str}</H2><BR /><BR /><BR />";
 			}
 		else {
 			$evenodd = array ("even", "odd");	// CLASS names for alternating table row colors
@@ -51,7 +51,7 @@ require_once('./incs/functions.inc.php');
 			$cum_credits = 0;
 			$this_user= 0;
 			echo "<BR /><BR /><TABLE BORDER = 1 ALIGN=CENTER CELLPADDING = 2>
-				<TR CLASS = 'even'><TH COLSPAN=99>Classes Taken - <i><small>as of " . date('M j, y', time()) . "</small></i></TH></TR>";
+				<TR CLASS = 'even'><TH COLSPAN=99>" . gettext('Classes Taken - <i><small>as of') . " " . date('M j, y', time()) . "</small></i></TH></TR>";
 			
 			while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 				if ($row['user_id'] == $this_user ) {$cum_credits += $row['credits'];}
@@ -78,9 +78,9 @@ require_once('./incs/functions.inc.php');
 	<INPUT TYPE = 'hidden' NAME = 'user_id' VALUE = ''>
 	</FORM>
 	<SPAN STYLE='text-align: center; display: block;'><BR />
-	Another &raquo; <SELECT NAME='frm_user_id' onChange = "document.course_form.user_id.value=this.options[this.selectedIndex].value; document.course_form.submit();">
-				<OPTION VALUE='' selected>Select</OPTION>
-				<OPTION VALUE='0' >All users</OPTION>
+	<?php print gettext('Another');?> &raquo; <SELECT NAME='frm_user_id' onChange = "document.course_form.user_id.value=this.options[this.selectedIndex].value; document.course_form.submit();">
+				<OPTION VALUE='' selected><?php print gettext('Select');?></OPTION>
+				<OPTION VALUE='0' ><?php print gettext('All users');?></OPTION>
 <?php
 	$query 	= "SELECT * FROM  `$GLOBALS[mysql_prefix]user` WHERE ((`name_l` IS NOT NULL) AND (LENGTH(`name_l`) > 0)) ORDER BY `name_l` ASC, `name_f` ASC";    			
 	$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
@@ -91,7 +91,7 @@ require_once('./incs/functions.inc.php');
 ?>
 			</SELECT>
 
-<INPUT TYPE = 'button' VALUE= "Finished" onClick = "window.close();" STYLE = 'margin-left: 40px;'>
+<INPUT TYPE = 'button' VALUE= "<?php print gettext('Finished');?>" onClick = "window.close();" STYLE = 'margin-left: 40px;'>
 </span>
 </BODY>
 </HTML>

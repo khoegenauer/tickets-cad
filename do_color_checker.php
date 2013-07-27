@@ -37,7 +37,7 @@ if (!(empty($_GET))) {
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>CSS Color Checker</TITLE>
+<TITLE><?php print gettext('CSS Color Checker');?></TITLE>
 <META NAME="Description" CONTENT="Tickets CSS Color Checker">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
@@ -143,51 +143,51 @@ switch($func) {
 		<BODY style='background: <?php print $doc_bg;?>;'>
 		<CENTER>
 		<TABLE STYLE="width: 90%; border-bottom: #CECECE;">
-		<TR><TD CLASS="titlebar_text">Tickets 2.12 B Beta on www.yourdomain.com</TD><TD><SPAN CLASS="plain">Logout</SPAN></TD></TR>
-		<TR><TD COLSPAN=2 ><SPAN CLASS="plain">Situation</SPAN>
-				<SPAN CLASS="plain">New</SPAN>
-				<SPAN CLASS="plain">Units</SPAN>
-				<SPAN CLASS="plain">Facs</SPAN>
-				<SPAN CLASS="plain">Search</SPAN>
-				<SPAN CLASS="plain">Reports</SPAN>
-				<SPAN CLASS="plain">Confug</SPAN>
-				<SPAN CLASS="plain">SOPs</SPAN>
-				<SPAN CLASS="plain">Chat</SPAN>
-				<SPAN CLASS="plain">Help</SPAN>
-				<SPAN CLASS="plain">Log</SPAN>
-				<SPAN CLASS="plain">Full scr</SPAN>
-				<SPAN CLASS="plain">Links</SPAN>
-				<SPAN CLASS="plain">Board</SPAN>
-				<SPAN CLASS="plain">Mobile</SPAN></TD></TR>
+		<TR><TD CLASS="titlebar_text">Tickets 2.12 B Beta on www.yourdomain.com</TD><TD><SPAN CLASS="plain"><?php print gettext('Logout');?></SPAN></TD></TR>
+		<TR><TD COLSPAN=2 ><SPAN CLASS="plain"><?php print gettext('Situation');?></SPAN>
+				<SPAN CLASS="plain"><?php print gettext('New');?></SPAN>
+				<SPAN CLASS="plain"><?php print gettext('Units');?></SPAN>
+				<SPAN CLASS="plain"><?php print gettext('Facilities');?></SPAN>
+				<SPAN CLASS="plain"><?php print gettext('Search');?></SPAN>
+				<SPAN CLASS="plain"><?php print gettext('Reports');?></SPAN>
+				<SPAN CLASS="plain"><?php print gettext('Config');?></SPAN>
+				<SPAN CLASS="plain"><?php print gettext('SOPs');?></SPAN>
+				<SPAN CLASS="plain"><?php print gettext('Chat');?></SPAN>
+				<SPAN CLASS="plain"><?php print gettext('Help');?></SPAN>
+				<SPAN CLASS="plain"><?php print gettext('Log');?></SPAN>
+				<SPAN CLASS="plain"><?php print gettext('Full scr');?></SPAN>
+				<SPAN CLASS="plain"><?php print gettext('Links');?></SPAN>
+				<SPAN CLASS="plain"><?php print gettext('Board');?></SPAN>
+				<SPAN CLASS="plain"><?php print gettext('Mobile');?></SPAN></TD></TR>
 		</TABLE>
 		<BR />
 		<TABLE STYLE="width: 90%">
-		<TR CLASS="header"><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header'>Current Situation - Tickets User (This is the header text color)</FONT></TD></TR>
-		<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'><FONT STYLE="color: #505050">This is the Spacer bar</FONT></TD></TR>
+		<TR CLASS="header"><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header'><?php print gettext('Current Situation - Tickets User (This is the header text color)');?></FONT></TD></TR>
+		<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'><FONT STYLE="color: #505050"><?php print gettext('This is the Spacer bar');?></FONT></TD></TR>
 		<TR VALIGN="top">
 		<TD STYLE="width: 50%">
 		<TABLE STYLE="width: 100%">
-		<TR CLASS="even"><TD WIDTH='50%' CLASS="severity_high">Severity high with even row color</TD><TD WIDTH='50%' CLASS="td_data">Normal Table data</TD</TR>
-		<TR CLASS="odd"><TD WIDTH='50%' CLASS="severity_high">Severity high with odd row color</TD><TD WIDTH='50%' CLASS="td_data">Normal Table data</TD</TR>
-		<TR CLASS="even"><TD WIDTH='50%' CLASS="severity_medium">Severity medium with even row color</TD><TD WIDTH='50%' CLASS="td_data">Normal Table data</TD</TR>
-		<TR CLASS="odd"><TD WIDTH='50%' CLASS="severity_medium">Severity medium with odd row color</TD><TD WIDTH='50%' CLASS="td_data">Normal Table data</TD</TR>
-		<TR CLASS="even"><TD WIDTH='50%' CLASS="severity_normal">Severity normal with even row color</TD><TD WIDTH='50%' CLASS="td_data">Normal Table data</TD</TR>
-		<TR CLASS="odd"><TD WIDTH='50%' CLASS="severity_normal">Severity normal with odd row color</TD><TD WIDTH='50%' CLASS="td_data">Normal Table data</TD</TR>
+		<TR CLASS="even"><TD WIDTH='50%' CLASS="severity_high"><?php print gettext('Severity high with even row color');?></TD><TD WIDTH='50%' CLASS="td_data"><?php print gettext('Normal Table data');?></TD</TR>
+		<TR CLASS="odd"><TD WIDTH='50%' CLASS="severity_high"><?php print gettext('Severity high with odd row color');?></TD><TD WIDTH='50%' CLASS="td_data"><?php print gettext('Normal Table data');?></TD</TR>
+		<TR CLASS="even"><TD WIDTH='50%' CLASS="severity_medium"><?php print gettext('Severity medium with even row color');?></TD><TD WIDTH='50%' CLASS="td_data"><?php print gettext('Normal Table data');?></TD</TR>
+		<TR CLASS="odd"><TD WIDTH='50%' CLASS="severity_medium"><?php print gettext('Severity medium with odd row color');?></TD><TD WIDTH='50%' CLASS="td_data"><?php print gettext('Normal Table data');?></TD</TR>
+		<TR CLASS="even"><TD WIDTH='50%' CLASS="severity_normal"><?php print gettext('Severity normal with even row color');?></TD><TD WIDTH='50%' CLASS="td_data"><?php print gettext('Normal Table data');?></TD</TR>
+		<TR CLASS="odd"><TD WIDTH='50%' CLASS="severity_normal"><?php print gettext('Severity normal with odd row color');?></TD><TD WIDTH='50%' CLASS="td_data"><?php print gettext('Normal Table data');?></TD</TR>
 		<TR><TD COLSPAN="2">&nbsp;</TD></TR>
-		<TR CLASS="plain"><TD WIDTH='50%'>Plain row data</TD><TD WIDTH='50%' CLASS="td_data">Normal Table data</TD></TR>
+		<TR CLASS="plain"><TD WIDTH='50%'><?php print gettext('Plain row data');?></TD><TD WIDTH='50%' CLASS="td_data"><?php print gettext('Normal Table data');?></TD></TR>
 		<TR><TD COLSPAN="2">&nbsp;</TD></TR>
-		<TR><TD COLSPAN="2" CLASS="legend"><CENTER>Legend Text: <?php print get_icon_legend();?><CENTER></TD></TR>
+		<TR><TD COLSPAN="2" CLASS="legend"><CENTER><?php print gettext('Legend Text');?>: <?php print get_icon_legend();?><CENTER></TD></TR>
 		</TABLE>
-		<CENTER><A HREF="#">This is a Link</A></CENTER>
+		<CENTER><A HREF="#"><?php print gettext('This is a Link');?></A></CENTER>
 		<TD CLASS="td_label" STYLE="width: 50%; vertical-align: middle;">
 		<TABLE>
-		<TR><TD><IMG SRC="map.png" ALT="This is the Map"></TD></TR>
-		<TR><TD><CENTER><A HREF="#">Grid</A>&nbsp;&nbsp;<A HREF="#">Traffic</A></CENTER></TD></TR>
+		<TR><TD><IMG SRC="map.png" ALT="<?php print gettext('This is the Map');?>"></TD></TR>
+		<TR><TD><CENTER><A HREF="#"><?php print gettext('Grid');?></A>&nbsp;&nbsp;<A HREF="#"><?php print gettext('Traffic');?></A></CENTER></TD></TR>
 		</TABLE>
 		</TD></TR>
 		</TABLE>
-		<BR /><BR /><A HREF="do_color_checker.php?mode=<?php print $mode;?>&func=forms&bgc=<?php print str_replace("#","",$doc_bg);?>&txt=<?php print str_replace("#","",$doc_txt);?>&rl=<?php print str_replace("#","",$even);?>&rd=<?php print str_replace("#","",$odd);?>&plain=<?php print str_replace("#","",$plain);?>&hdgb=<?php print str_replace("#","",$hdgb);?>&hdgt=<?php print str_replace("#","",$hdgt);?>&spacer=<?php print str_replace("#","",$spacer);?>&links=<?php print str_replace("#","",$links);?>&header=<?php print str_replace("#","",$headings);?>&inpb=<?php print str_replace("#","",$inpb);?>&inpt=<?php print str_replace("#","",$inpt);?>&otxt=<?php print str_replace("#","",$other);?>&smb=<?php print str_replace("#","",$smb);?>&smt=<?php print str_replace("#","",$smt);?>&legend=<?php print str_replace("#","",$legend);?>&titlebar=<?php print str_replace("#","",$titlebar);?>" CLASS="button"/>Form Colors</A><BR /><BR />
-		<A HREF="#" CLASS="button" OnClick="window.close();"/>Close Window</A><BR /><BR />
+		<BR /><BR /><A HREF="do_color_checker.php?mode=<?php print $mode;?>&func=forms&bgc=<?php print str_replace("#","",$doc_bg);?>&txt=<?php print str_replace("#","",$doc_txt);?>&rl=<?php print str_replace("#","",$even);?>&rd=<?php print str_replace("#","",$odd);?>&plain=<?php print str_replace("#","",$plain);?>&hdgb=<?php print str_replace("#","",$hdgb);?>&hdgt=<?php print str_replace("#","",$hdgt);?>&spacer=<?php print str_replace("#","",$spacer);?>&links=<?php print str_replace("#","",$links);?>&header=<?php print str_replace("#","",$headings);?>&inpb=<?php print str_replace("#","",$inpb);?>&inpt=<?php print str_replace("#","",$inpt);?>&otxt=<?php print str_replace("#","",$other);?>&smb=<?php print str_replace("#","",$smb);?>&smt=<?php print str_replace("#","",$smt);?>&legend=<?php print str_replace("#","",$legend);?>&titlebar=<?php print str_replace("#","",$titlebar);?>" CLASS="button"/><?php print gettext('Form Colors');?></A><BR /><BR />
+		<A HREF="#" CLASS="button" OnClick="window.close();"/><?php print gettext('Close Window');?></A><BR /><BR />
 		</CENTER></BODY></HTML>	
 	<?php
 	break;
@@ -197,38 +197,38 @@ switch($func) {
 		<BODY style='background: <?php print $doc_bg;?>;'>
 		<CENTER>
 		<TABLE STYLE="width: 90%; border-bottom: #CECECE;">
-		<TR><TD CLASS="titlebar_text">Tickets 2.12 B Beta on www.yourdomain.com</TD><TD><SPAN CLASS="plain">Logout</SPAN></TD></TR>
+		<TR><TD CLASS="titlebar_text">Tickets 2.12 B Beta on www.yourdomain.com</TD><TD><SPAN CLASS="plain"><?php print gettext('Logout');?></SPAN></TD></TR>
 		<TR><TD COLSPAN=2 >
-		<SPAN CLASS="plain">Situation</SPAN>
-		<SPAN CLASS="plain">New</SPAN>
-		<SPAN CLASS="plain">Units</SPAN>
-		<SPAN CLASS="plain">Facs</SPAN>
-		<SPAN CLASS="plain">Search</SPAN>
-		<SPAN CLASS="plain">Reports</SPAN>
-		<SPAN CLASS="plain">Confug</SPAN>
-		<SPAN CLASS="plain">SOPs</SPAN>
-		<SPAN CLASS="plain">Chat</SPAN>
-		<SPAN CLASS="plain">Help</SPAN>
-		<SPAN CLASS="plain">Log</SPAN>
-		<SPAN CLASS="plain">Full scr</SPAN>
-		<SPAN CLASS="plain">Links</SPAN>
-		<SPAN CLASS="plain">Board</SPAN>
-		<SPAN CLASS="plain">Mobile</SPAN></TD></TR>
+		<SPAN CLASS="plain"><?php print gettext('Situation');?></SPAN>
+		<SPAN CLASS="plain"><?php print gettext('New');?></SPAN>
+		<SPAN CLASS="plain"><?php print gettext('Units');?></SPAN>
+		<SPAN CLASS="plain"><?php print gettext('Facilities');?></SPAN>
+		<SPAN CLASS="plain"><?php print gettext('Search');?></SPAN>
+		<SPAN CLASS="plain"><?php print gettext('Reports');?></SPAN>
+		<SPAN CLASS="plain"><?php print gettext('Config');?></SPAN>
+		<SPAN CLASS="plain"><?php print gettext('SOPs');?></SPAN>
+		<SPAN CLASS="plain"><?php print gettext('Chat');?></SPAN>
+		<SPAN CLASS="plain"><?php print gettext('Help');?></SPAN>
+		<SPAN CLASS="plain"><?php print gettext('Log');?></SPAN>
+		<SPAN CLASS="plain"><?php print gettext('Full scr');?></SPAN>
+		<SPAN CLASS="plain"><?php print gettext('Links');?></SPAN>
+		<SPAN CLASS="plain"><?php print gettext('Board');?></SPAN>
+		<SPAN CLASS="plain"><?php print gettext('Mobile');?></SPAN></TD></TR>
 		</TABLE>	
 		<BR />
 		<TABLE STYLE="width: 90%">
 		<FORM>
-		<TR CLASS="even"><TD WIDTH='50%' CLASS="td_label">Input Box</TD><TD WIDTH='50%' CLASS="td_data"><INPUT TYPE=text NAME=inputbox SIZE=20 MAXLENGTH=20 VALUE="Some Text Here"></TD></TR>
-		<TR CLASS="odd"><TD WIDTH='50%' CLASS="td_label">Textarea</TD><TD WIDTH='50%' CLASS="td_data"><TEXTAREA cols="30" rows="5" name="myname">This is a Textarea.</TEXTAREA></TD></TR>
+		<TR CLASS="even"><TD WIDTH='50%' CLASS="td_label"><?php print gettext('Input Box');?></TD><TD WIDTH='50%' CLASS="td_data"><INPUT TYPE=text NAME=inputbox SIZE=20 MAXLENGTH=20 VALUE="<?php print gettext('Some Text Here');?>"></TD></TR>
+		<TR CLASS="odd"><TD WIDTH='50%' CLASS="td_label"><?php print gettext('Textarea');?></TD><TD WIDTH='50%' CLASS="td_data"><TEXTAREA cols="30" rows="5" name="myname"><?php print gettext('This is a Textarea.');?></TEXTAREA></TD></TR>
 		<TR CLASS="even"><TD WIDTH='50%' CLASS="td_label"><TD WIDTH='50%' CLASS="td_data">
 		<SELECT NAME="SELECT">
-		<OPTION VALUE=0 SELECTED>SELECT AN ITEM
-		<OPTION VALUE=1>INCIDENT
-		<OPTION VALUE=2>RESPONDER
-		<OPTION VALUE=3>FACILITY
+		<OPTION VALUE=0 SELECTED><?php print gettext('SELECT AN ITEM');?>
+		<OPTION VALUE=1><?php print gettext('INCIDENT');?>
+		<OPTION VALUE=2><?php print gettext('RESPONDER');?>
+		<OPTION VALUE=3><?php print gettext('FACILITY');?>
 		</SELECT>
 		</TD></TR></FORM></TABLE>
-		<BR /><BR /><A HREF="#" CLASS="button" OnClick="window.close();"/>Close Window</A><BR /><BR />
+		<BR /><BR /><A HREF="#" CLASS="button" OnClick="window.close();"/><?php print gettext('Close Window');?></A><BR /><BR />
 		</CENTER></BODY></HTML>
 <?php
 	break;

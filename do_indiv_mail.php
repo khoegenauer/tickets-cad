@@ -66,11 +66,11 @@ if (empty($_POST)) {
  */
 	function validate() {
 		var errmsg="";
-		if (document.mail_form.frm_addr.value.trim()=="") {errmsg+="Message address is required";}
-		if (document.mail_form.frm_subj.value.trim()=="") {errmsg+="Message subject is required";}
-		if (document.mail_form.frm_text.value.trim()=="") {errmsg+="Message text is required";}
+		if (document.mail_form.frm_addr.value.trim()=="") {errmsg+="<?php print gettext('Message address is required');?>";}
+		if (document.mail_form.frm_subj.value.trim()=="") {errmsg+="<?php print gettext('Message subject is required');?>";}
+		if (document.mail_form.frm_text.value.trim()=="") {errmsg+="<?php print gettext('Message text is required');?>";}
 		if (!(errmsg=="")){
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
@@ -82,25 +82,25 @@ if (empty($_POST)) {
 	</HEAD>
 
 	<BODY><CENTER>		<!-- 1/12/09 -->
-	<CENTER><H3>Mail to Unit</H3>
+	<CENTER><H3><?php print gettext('Mail to Unit');?></H3>
 	<P>
 		<FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
 		<INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''>	<!-- for pipe-delim'd addr string -->
 		<TABLE BORDER = 0>
 		<TR CLASS= 'even'>
-			<TD ALIGN='right'>To:</TD><TD><INPUT NAME='frm_name' SIZE=32 VALUE = '<?php print $row['contact_name'];?>'></TD>
+			<TD ALIGN='right'><?php print gettext('To');?>:</TD><TD><INPUT NAME='frm_name' SIZE=32 VALUE = '<?php print $row['contact_name'];?>'></TD>
 			</TR>
 
 		<TR CLASS= 'odd'>
-			<TD ALIGN='right'>Addr:</TD><TD><INPUT NAME='frm_addr' SIZE=32 VALUE = '<?php print $row['contact_via'];?>'></TD>
+			<TD ALIGN='right'><?php print gettext('Addr');?>:</TD><TD><INPUT NAME='frm_addr' SIZE=32 VALUE = '<?php print $row['contact_via'];?>'></TD>
 			</TR>
 	
-		<TR CLASS='even'><TD ALIGN='right'>Subject: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
-		<TR CLASS='odd'><TD ALIGN='right'>Message:</TD><TD COLSPAN=2> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
+		<TR CLASS='even'><TD ALIGN='right'><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
+		<TR CLASS='odd'><TD ALIGN='right'><?php print gettext('Message');?>:</TD><TD COLSPAN=2> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
 		<TR CLASS='even'><TD ALIGN='center' COLSPAN=3><BR /><BR />
-			<INPUT TYPE='button' 	VALUE='Send' onClick = "validate()">&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='reset' 	VALUE='Reset'>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='button' 	VALUE='Cancel' onClick = 'window.close();'><BR /><BR />
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "validate()">&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
 			</TD></TR>
 			</TABLE></FORM>
 <?php
@@ -111,8 +111,8 @@ if (empty($_POST)) {
 			do_send ($_POST['frm_addr'], $_POST['frm_subj'], $_POST['frm_text'], 0, quote_smart(trim($_GET['the_id'])));	// ($to_str, $subject_str, $text_str )
 ?>
 	<BODY><CENTER>		
-	<CENTER><BR /><BR /><BR /><H3>Mail sent</H3>
-	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='Finished' onClick = 'window.close();'><BR /><BR />
+	<CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
+	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'><BR /><BR />
 
 <?php
 

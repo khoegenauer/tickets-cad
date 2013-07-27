@@ -37,7 +37,7 @@ while($row = stripslashes_deep(mysql_fetch_array($result), MYSQL_ASSOC)){			// b
 include('baaChart.php');
 $width = isset($img_width)? $img_width: $location_diam;		// 3/21/10
 $mygraph = new baaChart($width);
-$mygraph->setTitle("Incidents by Location", "");
+$mygraph->setTitle(gettext("Incidents by Location"), "");
 
 foreach($cities as $key => $val) {
 		$mygraph->addDataSeries('P',PIE_CHART_PCENT + PIE_LEGEND_VALUE,$val, $key);

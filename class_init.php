@@ -9,7 +9,7 @@ require_once('./incs/functions.inc.php');
 	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 	<HTML>
 	<HEAD>
-	<TITLE>Classes Database Initialization</TITLE>
+	<TITLE><?php print gettext('Classes Database Initialization');?></TITLE>
 	<META NAME="Description" CONTENT="">
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="Expires" CONTENT="0">
@@ -67,9 +67,9 @@ if (array_key_exists('initialize', $_POST)) {
 ?>
 	<br /><br /><br /><br /><br /><br /><center>
 	<h2>
-	Classes database initialization complete!
+	<?php print gettext('Classes database initialization complete!');?>
 	</h2>
-	<input type = button value = "Finished" onClick = "setTimeout('depart()',750);" />
+	<input type = button value = "<?php print gettext('Finished');?>" onClick = "setTimeout('depart()',750);" />
 	
 <?php
 	}
@@ -77,14 +77,14 @@ else {
 ?>
 	<br /><br /><br /><br /><br /><br /><center>
 	<h2>
-	Press <i>Proceed</i> to initialize Classes Database - cannot be undone!
+	<?php print gettext('Press <i>Proceed</i> to initialize Classes Database - cannot be undone!');?>
 	</h2>
 	<form name = 'init_form' method = post action = '<?php echo basename(__FILE__);?>'>
-	<input type = button value = "Proceed" onClick = "if (confirm('Last chance - click OK to proceed')){this.form.submit();}" />
+	<input type = button value = "<?php print gettext('Proceed');?>" onClick = "if (confirm('<?php print gettext('Last chance - click OK to proceed');?>)){this.form.submit();}" />
 	<input type = hidden name = 'initialize' value = 'initialize' />
 	</form>
 	<br /><br /><br />
-	<input type = button value = "Cancel" onClick = "setTimeout('depart()',750);" />
+	<input type = button value = "<?php print gettext('Cancel');?>" onClick = "setTimeout('depart()',750);" />
 
 <?php
 	}

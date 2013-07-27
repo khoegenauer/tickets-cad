@@ -20,7 +20,7 @@ error_reporting(E_ALL);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Edit Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Edit Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 	<META HTTP-EQUIV="Expires" CONTENT="0" />
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -223,7 +223,7 @@ function edit_ticket($id) {							/* post changes */
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Edit Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Edit Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 	<META HTTP-EQUIV="Expires" CONTENT="0" />
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -334,14 +334,14 @@ function edit_ticket($id) {							/* post changes */
 //		alert (theForm);
 		var errmsg="";
 		if ((document.edit.frm_status.value == <?php print $GLOBALS['STATUS_CLOSED'];?>) && (document.edit.frm_year_problemend.disabled))
-														{errmsg+= "\tClosed ticket requires run end date\n";}
+														{errmsg+= "\t<?php print gettext('Closed ticket requires run end date');?>\n";}
 		if ((document.edit.frm_status.value == <?php print $GLOBALS['STATUS_CLOSED'];?>) && (document.edit.frm_comments==""))
-														{errmsg+= "\tClosed ticket requires <?php print $disposition;?> data\n";}
-		if (theForm.frm_contact.value == "")			{errmsg+= "\tReported-by is required\n";}
-		if (theForm.frm_scope.value == "")				{errmsg+= "\tIncident name is required\n";}		// 10/21/08
-//		if (theForm.frm_description.value == "")		{errmsg+= "\tSynopsis is required\n";}
+														{errmsg+= "\t<?php print gettext('Closed ticket requires {$disposition} data');?>\n";}
+		if (theForm.frm_contact.value == "")			{errmsg+= "\t<?php print gettext('Reported-by is required');?>\n";}
+		if (theForm.frm_scope.value == "")				{errmsg+= "\t<?php print gettext('Incident name is required');?>\n";}		// 10/21/08
+//		if (theForm.frm_description.value == "")		{errmsg+= "\t<?php print gettext('Synopsis is required');?>\n";}
 		if (errmsg!="") {
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
@@ -351,7 +351,7 @@ function edit_ticket($id) {							/* post changes */
 <?php		/* 6/4/2013  */
 		if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 		// 7/2/2013
 ?>
-			var theMessage = "Updated  <?php print get_text('Incident');?> (" + theForm.frm_scope.value + ") by <?php echo $_SESSION['user'];?>";
+			var theMessage = "<?php print gettext('Updated');?>  <?php print get_text('Incident');?> (" + theForm.frm_scope.value + ") by <?php echo $_SESSION['user'];?>";
 			broadcast(theMessage ) ;
 <?php
 	}			// end if (broadcast)
@@ -499,7 +499,7 @@ function edit_ticket($id) {							/* post changes */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<HEAD><TITLE>Tickets - Add Module</TITLE>
+<HEAD><TITLE><?php print gettext('Tickets - Add Module');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 <META HTTP-EQUIV="Expires" CONTENT="0" />
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -522,7 +522,7 @@ require_once('./incs/links.inc.php');
 
 	if ((isset($_GET['action'])) && ($_GET['action'] == 'update')) {		/* update ticket */
 		if ($id == '' OR $id <= 0 OR !check_for_rows("SELECT * FROM $GLOBALS[mysql_prefix]ticket WHERE id='$id' LIMIT 1")) {
-			print "<FONT CLASS=\"warn\">Invalid Ticket ID: '$id'</FONT>";
+			print "<FONT CLASS=\"warn\">" . gettext('Invalid Ticket ID') . ": '$id'</FONT>";
 			}
 		else {
 			edit_ticket($id);									// post updated data
@@ -534,7 +534,7 @@ require_once('./incs/links.inc.php');
 			/* remove ticket and ticket actions */
 			$result = mysql_query("DELETE FROM `$GLOBALS[mysql_prefix]ticket` WHERE ID='$id'") or do_error("{$this_file}::remove_ticket(ticket)", 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 			$result = mysql_query("DELETE FROM `$GLOBALS[mysql_prefix]action` WHERE ticket_id='$id'") or do_error("{$this_file}::remove_ticket(action)", 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
-			print "<FONT CLASS=\"header\">Ticket '$id' has been removed.</FONT><BR /><BR />";
+			print "<FONT CLASS=\"header\">" . gettext('Ticket') . " '$id' " / gettext('has been removed.') . "</FONT><BR /><BR />";
 			list_tickets();
 			}
 		else {		//confirm deletion
@@ -543,7 +543,7 @@ require_once('./incs/links.inc.php');
 		}
 	else {				// not ($_GET['delete'])
 		if ($id == '' OR $id <= 0 OR !check_for_rows("SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE id='$id'")) {		/* sanity check */
-			print "<FONT CLASS=\"warn\">Invalid Ticket ID: '$id'</FONT><BR />";
+			print "<FONT CLASS=\"warn\">" . gettext('Invalid Ticket ID') . ": '$id'</FONT><BR />";
 			} 
 
 		else {				// OK, do form - 7/7/09
@@ -584,18 +584,18 @@ require_once('./incs/links.inc.php');
 	
 			print "<FORM NAME='edit' METHOD='post' onSubmit='return validate(document.edit)' ACTION='{$this_file}?id=$id&action=update'>";	// 8/26/10
 			print "<TABLE BORDER='0' ID='data'>\n";
-			print "<TR CLASS='odd'><TD ALIGN='center' COLSPAN=2><FONT CLASS='$theClass'><B>Edit Run Ticket</FONT> (#" . $id . ")</B></TD></TR>";
-			print "<TR CLASS='odd'><TD ALIGN='center' COLSPAN=2><FONT CLASS='header'><FONT SIZE='-2'>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>";
-			print "<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\" Incident Name - Use an easily identifiable name.\" >{$incident_name}</A>:</TD><TD><INPUT TYPE='text' NAME='frm_scope' SIZE='48' VALUE=\"{$row['scope']}\" MAXLENGTH='48'></TD></TR>\n"; 
-			print "<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Incident Priority - Normal, Medium or High. Affects order and coloring of Incidents on Situation display\">" . get_text("Priority") . "</A>:</TD><TD CLASS='$theClass'><SELECT NAME='frm_severity'>";		// 2/21/09
+			print "<TR CLASS='odd'><TD ALIGN='center' COLSPAN=2><FONT CLASS='$theClass'><B>" . gettext('Edit Run Ticket') . "</FONT> (#" . $id . ")</B></TD></TR>";
+			print "<TR CLASS='odd'><TD ALIGN='center' COLSPAN=2><FONT CLASS='header'><FONT SIZE='-2'>(" . gettext('mouseover caption for help information') . ")</FONT></FONT><BR /><BR /></TD></TR>";
+			print "<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\" " . gettext('Incident Name - Use an easily identifiable name.') . "\" >{$incident_name}</A>:</TD><TD><INPUT TYPE='text' NAME='frm_scope' SIZE='48' VALUE=\"{$row['scope']}\" MAXLENGTH='48'></TD></TR>\n"; 
+			print "<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Incident Priority - Normal, Medium or High. Affects order and coloring of Incidents on Situation display.') . "\">" . get_text("Priority") . "</A>:</TD><TD CLASS='$theClass'><SELECT NAME='frm_severity'>";		// 2/21/09
 			$nsel = ($row['severity']==$GLOBALS['SEVERITY_NORMAL'])? "SELECTED" : "" ;
 			$msel = ($row['severity']==$GLOBALS['SEVERITY_MEDIUM'])? "SELECTED" : "" ;
 			$hsel = ($row['severity']==$GLOBALS['SEVERITY_HIGH'])? "SELECTED" : "" ;
 			
-			print "<OPTION VALUE='" . $GLOBALS['SEVERITY_NORMAL'] . "' $nsel>normal</OPTION>";
-			print "<OPTION VALUE='" . $GLOBALS['SEVERITY_MEDIUM'] . "' $msel>medium</OPTION>";
-			print "<OPTION VALUE='" . $GLOBALS['SEVERITY_HIGH'] . "' $hsel>high</OPTION>";
-			print "</SELECT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS='td_label'><A HREF=\"#\" TITLE=\"Incident Nature or Type - Available types are set in in_types table in the configuration\">{$nature}</A>:</SPAN>\n";
+			print "<OPTION VALUE='" . $GLOBALS['SEVERITY_NORMAL'] . "' $nsel>" . gettext('normal') . "</OPTION>";
+			print "<OPTION VALUE='" . $GLOBALS['SEVERITY_MEDIUM'] . "' $msel>" . gettext('medium') . "</OPTION>";
+			print "<OPTION VALUE='" . $GLOBALS['SEVERITY_HIGH'] . "' $hsel>" . gettext('high') . "</OPTION>";
+			print "</SELECT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Incident Nature or Type - Available types are set in in_types table in the configuration') . "\">{$nature}</A>:</SPAN>\n";
 
 			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]in_types` ORDER BY `group` ASC, `sort` ASC, `type` ASC";
 			$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
@@ -624,19 +624,19 @@ require_once('./incs/links.inc.php');
 				}
 			unset ($result);
 			print "</OPTGROUP></SELECT>";
-			print "&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS='td_label'><A HREF=\"#\" TITLE=\"Incident Protocol - this will show automatically if a protocol is set for the Incident Type in the configuration\">" . get_text("Protocol") . "</A>:</SPAN></TD></TR>\n";
+			print "&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Incident Protocol - this will show automatically if a protocol is set for the Incident Type in the configuration') . "\">" . get_text("Protocol") . "</A>:</SPAN></TD></TR>\n";
 
 			print "<TR CLASS='even'><TD CLASS='td_label'></TD><TD ID='proto_cell'>{$row['protocol']}</TD></TR>\n";
 			print "<TR CLASS='even'><TD COLSPAN='2'>&nbsp;</TD></TR>";
-			print "<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Location - type in location in fields, click location on map or use *Located at Facility* menu below \">" . get_text("Location") . "</A>: </TD><TD><INPUT SIZE='48' TYPE='text'NAME='frm_street' VALUE=\"{$row['street']}\" MAXLENGTH='48'></TD></TR>\n";
-			print "<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"City - defaults to default city set in configuration. Type in City if required\">" . get_text("City") . "</A>:&nbsp;&nbsp;&nbsp;&nbsp;";
+			print "<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Location - type in location in fields, click location on map or use *Located at Facility* menu below.') . " \">" . get_text("Location") . "</A>: </TD><TD><INPUT SIZE='48' TYPE='text'NAME='frm_street' VALUE=\"{$row['street']}\" MAXLENGTH='48'></TD></TR>\n";
+			print "<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('City - defaults to default city set in configuration. Type in City if required.') . " \">" . get_text("City") . "</A>:&nbsp;&nbsp;&nbsp;&nbsp;";
 			print 		"</TD><TD><INPUT SIZE='32' TYPE='text' 	NAME='frm_city' VALUE=\"{$row['city']}\" MAXLENGTH='32' onChange = 'this.value=capWords(this.value)'>\n";
 			$st_size = (get_variable("locale") ==0)?  2: 4;												// 11/23/10
 
-			print 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"#\" TITLE=\"State - US State or non-US Country code e.g. UK for United Kingdom\">St</A>:&nbsp;&nbsp;<INPUT SIZE='{$st_size}' TYPE='text' NAME='frm_state' VALUE='" . $row['state'] . "' MAXLENGTH='{$st_size}'></TD></TR>\n";
+			print 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"#\" TITLE=\"" . gettext('State - US State or non-US Country code e.g. UK for United Kingdom') . "\">" . gettext('St') . "</A>:&nbsp;&nbsp;<INPUT SIZE='{$st_size}' TYPE='text' NAME='frm_state' VALUE='" . $row['state'] . "' MAXLENGTH='{$st_size}'></TD></TR>\n";
 
-			print "<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Caller reporting the incident\">" . get_text("Reported by") . "</A>:</TD><TD><INPUT SIZE='48' TYPE='text' 	NAME='frm_contact' VALUE=\"{$row['contact']}\" MAXLENGTH='48'></TD></TR>\n";
-			print "<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Phone number\">" . get_text("Phone") . "</A>:&nbsp;&nbsp;&nbsp;&nbsp;";
+			print "<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Caller reporting the incident') . "\">" . get_text("Reported by") . "</A>:</TD><TD><INPUT SIZE='48' TYPE='text' 	NAME='frm_contact' VALUE=\"{$row['contact']}\" MAXLENGTH='48'></TD></TR>\n";
+			print "<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Phone number') . "\">" . get_text("Phone") . "</A>:&nbsp;&nbsp;&nbsp;&nbsp;";
 			print 		"</TD><TD><INPUT SIZE='48' TYPE='text' NAME='frm_phone' VALUE='" . $row['phone'] . "' MAXLENGTH='16'></TD></TR>\n";
 
 			if (!(empty($row['phone']))) {					// 3/13/10
@@ -658,19 +658,19 @@ require_once('./incs/links.inc.php');
 			$end_date = (!(empty($row['problemend'])))? $row['problemend']:  (time() - (get_variable('delta_mins')*60));		// 1/7/10
 			$elapsed = my_date_diff($end_date, $row['problemstart']);
 
-			print "<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Incident Status - Open or Closed or set to Scheduled for future booked calls\">" . get_text("Status") . "</A>:</TD><TD>
-				<SELECT NAME='frm_status'><OPTION VALUE='{$GLOBALS['STATUS_OPEN']}' $selO>Open</OPTION><OPTION VALUE='" . $GLOBALS['STATUS_CLOSED'] . "'$selC>Closed</OPTION><OPTION VALUE='" . $GLOBALS['STATUS_SCHEDULED'] . "'$selP>Scheduled</OPTION></SELECT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$elapsed} </TD></TR>";
-//			print "<TR CLASS='even'><TD CLASS='td_label'>Affected:</TD><TD><INPUT TYPE='text' SIZE='48' NAME='frm_affected' VALUE='" . $row['affected'] . "' MAXLENGTH='48'></TD></TR>\n";
+			print "<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Incident Status - Open or Closed or set to Scheduled for future booked calls') . "\">" . get_text("Status") . "</A>:</TD><TD>
+				<SELECT NAME='frm_status'><OPTION VALUE='{$GLOBALS['STATUS_OPEN']}' $selO>" . gettext('Open') . "</OPTION><OPTION VALUE='" . $GLOBALS['STATUS_CLOSED'] . "'$selC>" . gettext('Closed') . "</OPTION><OPTION VALUE='" . $GLOBALS['STATUS_SCHEDULED'] . "'$selP>" . gettext('Scheduled') . "</OPTION></SELECT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$elapsed} </TD></TR>";
+//			print "<TR CLASS='even'><TD CLASS='td_label'>" . gettext('Affected') . ":</TD><TD><INPUT TYPE='text' SIZE='48' NAME='frm_affected' VALUE='" . $row['affected'] . "' MAXLENGTH='48'></TD></TR>\n";
 
 //	facility handling  - 3/25/10
 
 			if (!($row['facility'] == NULL)) {				// 9/22/09
 	
-				print "<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Use the first dropdown menu to select the Facility where the incident is located at, use the second dropdown menu to select the facility where persons from the incident will be received\">Facility</A>: &nbsp;&nbsp;</TD>";		// 2/21/09
+				print "<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Use the first dropdown menu to select the Facility where the incident is located at, use the second dropdown menu to select the facility where persons from the incident will be received') . "\">" . gettext('Facility') . "</A>: &nbsp;&nbsp;</TD>";		// 2/21/09
 				$query_fc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";		
 				$result_fc = mysql_query($query_fc) or do_error($query_fc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 				print "<TD><SELECT NAME='frm_facility_id' onChange='document.edit.frm_fac_chng.value = 1; do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim());'>";
-				print "<OPTION VALUE=0>Not using facility</OPTION>";
+				print "<OPTION VALUE=0>" . gettext('Not using facility') . "</OPTION>";
 	
 				print "\n<SCRIPT>fac_lat[" . 0 . "] = " . get_variable('def_lat') . " ;</SCRIPT>\n";
 				print "\n<SCRIPT>fac_lng[" . 0 . "] = " . get_variable('def_lng') . " ;</SCRIPT>\n";
@@ -687,14 +687,14 @@ require_once('./incs/links.inc.php');
 			else {	
 				$query_fc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";		
 				$result_fc = mysql_query($query_fc) or do_error($query_fc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-				$pulldown = '<option>Incident at Facility?</option>';
+				$pulldown = '<option>" . gettext('Incident at Facility?') . "</option>';
 				while ($row_fc = mysql_fetch_array($result_fc, MYSQL_ASSOC)) {
 					$pulldown .= "<option value=\"{$row_fc['id']}\">{$row_fc['name']}</option>\n";
 					print "\n<SCRIPT>fac_lat[" . $row_fc['id'] . "] = " . $row_fc['lat'] . " ;</SCRIPT>\n";
 					print "\n<SCRIPT>fac_lng[" . $row_fc['id'] . "] = " . $row_fc['lng'] . " ;</SCRIPT>\n";
 					}
 				unset ($result_fc);
-				print "<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Use the first dropdown menu to select the Facility where the incident is located at, use the second dropdown menu to select the facility where persons from the incident will be received\">Facility?</A>:</TD>";
+				print "<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Use the first dropdown menu to select the Facility where the incident is located at, use the second dropdown menu to select the facility where persons from the incident will be received') . "\">" . gettext('Facility?') . "</A>:</TD>";
 				print "<TD><SELECT NAME='frm_facility_id' onChange='document.edit.frm_fac_chng.value = 1; do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim())'>$pulldown</SELECT>&nbsp;&nbsp;&nbsp;&nbsp;\n";
 				}
 //	receiving facility - 3/25/10
@@ -703,7 +703,7 @@ require_once('./incs/links.inc.php');
 				$query_rfc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";		
 				$result_rfc = mysql_query($query_rfc) or do_error($query_rfc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 				print "<SELECT NAME='frm_rec_facility_id' onChange = 'document.edit.frm_fac_chng.value = parseInt(document.edit.frm_fac_chng.value)+ 2;'>";
-				print "<OPTION VALUE=0>No receiving facility</OPTION>";
+				print "<OPTION VALUE=0>" . gettext('No receiving facility') . "</OPTION>";
 
 				while ($row_rfc = mysql_fetch_array($result_rfc, MYSQL_ASSOC)) {
 					$sel2 = ($row['rec_facility'] == $row_rfc['id']) ? " SELECTED " : "";
@@ -715,7 +715,7 @@ require_once('./incs/links.inc.php');
 			else {
 				$query_rfc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";			//10/1/09
 				$result_rfc = mysql_query($query_rfc) or do_error($query_rfc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-				$pulldown2 = '<option>Receiving Facility?</option>';
+				$pulldown2 = '<option>' . gettext('Receiving Facility?') . '</option>';
 					while ($row_rfc = mysql_fetch_array($result_rfc, MYSQL_ASSOC)) {
 						$pulldown2 .= "<option value=\"{$row_rfc['id']}\">{$row_rfc['name']}</option>\n";
 					}
@@ -723,7 +723,7 @@ require_once('./incs/links.inc.php');
 				print "<SELECT NAME='frm_rec_facility_id' onChange = 'document.edit.frm_fac_chng.value = parseInt(document.edit.frm_fac_chng.value)+ 2;'>$pulldown2</SELECT></TD></TR>\n";	//10/1/09
 				}
 
-			print "<TR CLASS='odd' VALIGN='top'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Synopsis - Details about the Incident, ensure as much detail as possible is completed\">" . get_text("Synopsis") . "</A>:</TD>";
+			print "<TR CLASS='odd' VALIGN='top'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Synopsis - Details about the Incident, ensure as much detail as possible is completed.') . "\">" . get_text("Synopsis") . "</A>:</TD>";
 			print 	"<TD CLASS='td_label'><TEXTAREA NAME='frm_description' COLS='45' ROWS='2' >" . $row['tick_descr'] . "</TEXTAREA></TD></TR>\n";		// 8/8/09
 
 ?>
@@ -750,10 +750,10 @@ require_once('./incs/links.inc.php');
 		}		// end function set_signal()
 </SCRIPT>
 		<TR VALIGN = 'TOP' CLASS='odd'>		<!-- 11/15/10 -->
-			<TD></TD><TD CLASS="td_label">Signal &raquo; 
+			<TD></TD><TD CLASS="td_label"><?php print gettext('Signal');?> &raquo; 
 
 				<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-				<OPTION VALUE=0 SELECTED>Select</OPTION>
+				<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -766,16 +766,16 @@ require_once('./incs/links.inc.php');
 
 <?php
 
-			print "<TR CLASS='even'><TD CLASS='td_label'><A HREF='#' TITLE='911 contact information'>" . get_text("911 Contacted") . "</A>:&nbsp;</TD>
+			print "<TR CLASS='even'><TD CLASS='td_label'><A HREF='#' TITLE='" . gettext('911 contact information') . "'>" . get_text("911 Contacted") . "</A>:&nbsp;</TD>
 				<TD><INPUT SIZE='56' TYPE='text' NAME='frm_nine_one_one' VALUE='{$row['nine_one_one']}' MAXLENGTH='96' ></TD></TR>";
 
 			if (good_date($row['booked_date'])) {	//10/1/09
-				print "\n<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Scheduled Date. Must be set if Incident Status is *Scheduled*. Sets date and time for a future booked incident, mainly used for non immediate patient transport. Click on Radio button to show date fields.\">Scheduled Date</A>:</TD><TD>";
+				print "\n<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Scheduled Date. Must be set if Incident Status is *Scheduled*. Sets date and time for a future booked incident, mainly used for non immediate patient transport. Click on Radio button to show date fields.') . "\">" . gettext('Scheduled Date') . "</A>:</TD><TD>";
 				generate_date_dropdown("booked_date",$row['booked_date']);
 				print "</TD></TR>\n";
 				}
 			else {	//10/1/09
-				print "\n<TR CLASS='odd' valign='middle'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Scheduled Date. Must be set if Incident Status is *Scheduled*. Sets date and time for a future booked incident, mainly used for non immediate patient transport. Click on Radio button to show date fields.\">" . get_text("Scheduled Date") . "</A>: &nbsp;&nbsp;<input type='radio' name='boo_but' onClick = 'do_booking(this.form);' /></TD><TD>";
+				print "\n<TR CLASS='odd' valign='middle'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Scheduled Date. Must be set if Incident Status is *Scheduled*. Sets date and time for a future booked incident, mainly used for non immediate patient transport. Click on Radio button to show date fields.') . "\">" . get_text("Scheduled Date") . "</A>: &nbsp;&nbsp;<input type='radio' name='boo_but' onClick = 'do_booking(this.form);' /></TD><TD>";
 				print "<SPAN style = 'visibility:hidden' ID = 'booked1'>";
 				generate_date_dropdown('booked_date',0, TRUE);
 				print "</TD></TR>\n";
@@ -783,15 +783,15 @@ require_once('./incs/links.inc.php');
 				}
 
 				print "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'><HR SIZE=1 COLOR=BLUE WIDTH='67%' /></TD></TR>\n";			
-			print "<TR CLASS='odd' VALIGN='top'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"{$disposition} - additional comments about incident\">{$disposition}</A>:</TD>";				// 10/21/08, 8/8/09
+			print "<TR CLASS='odd' VALIGN='top'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"{$disposition} - " . gettext('additional comments about incident') . "\">{$disposition}</A>:</TD>";				// 10/21/08, 8/8/09
 			print 	"<TD><TEXTAREA NAME='frm_comments' COLS='45' ROWS='2' >" . $row['comments'] . "</TEXTAREA></TD></TR>\n";
 
 ?>
 		<TR VALIGN = 'TOP' CLASS='odd'>		<!-- 12/18/10 -->
-			<TD></TD><TD CLASS="td_label">Signal &raquo; 
+			<TD></TD><TD CLASS="td_label"><?php print gettext('Signal');?> &raquo; 
 
 				<SELECT NAME='signals' onChange = 'set_signal2(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-				<OPTION VALUE=0 SELECTED>Select</OPTION>
+				<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -802,32 +802,32 @@ require_once('./incs/links.inc.php');
 			</SELECT>
 			</TD></TR>
 <?php
-			print "\n<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Run-start, Incident start time. Edit by clicking padlock icon to enable date & time fields\">" . get_text("Run Start") . "</A>:</TD><TD>";
+			print "\n<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Run-start, Incident start time. Edit by clicking padlock icon to enable date & time fields.') . "\">" . get_text("Run Start") . "</A>:</TD><TD>";
 			print  generate_date_dropdown("problemstart",$row['problemstart'],0, TRUE);
 			print "&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'st_unlk(document.edit);'></TD></TR>\n";
 			if (good_date($row['problemend'])) {
-				print "\n<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Run-end, Incident end time. When Incident is closed, click on radio button which will enable date & time fields\">Run End</A>:</TD><TD>";
+				print "\n<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Run-end, Incident end time. When Incident is closed, click on radio button which will enable date & time fields.') . "\">" . gettext('Run End') . "</A>:</TD><TD>";
 				generate_date_dropdown("problemend",$row['problemend']);
 				print "</TD></TR>\n";
 				}
 			else {
-				print "\n<TR CLASS='odd' valign='middle'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Run-end, Incident end time. When Incident is closed, click on radio button which will enable date & time fields\">" . get_text("Run End") . "</A>: &nbsp;&nbsp;<input type='radio' name='re_but' onClick ='do_end(this.form);' /></TD><TD>";
+				print "\n<TR CLASS='odd' valign='middle'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Run-end, Incident end time. When Incident is closed, click on radio button which will enable date & time fields.') . "\">" . get_text("Run End") . "</A>: &nbsp;&nbsp;<input type='radio' name='re_but' onClick ='do_end(this.form);' /></TD><TD>";
 				print "<SPAN style = 'visibility:hidden' ID = 'runend1'>";
 				generate_date_dropdown('problemend',0, TRUE);
 				print "</TD></TR>\n";
 				print "</SPAN></TD></TR>\n";
 				}
 
-			print "<TR CLASS='even'><TD CLASS='td_label' onClick = 'javascript: do_coords(document.edit.frm_lat.value ,document.edit.frm_lng.value  )'><U><A HREF=\"#\" TITLE=\"Position - Lat and Lng for Incident position. Click to show all position data.\">Position</A>:</U>:</TD><TD>";
+			print "<TR CLASS='even'><TD CLASS='td_label' onClick = 'javascript: do_coords(document.edit.frm_lat.value ,document.edit.frm_lng.value  )'><U><A HREF=\"#\" TITLE=\"" . gettext('Position - Lat and Lng for Incident position. Click to show all position data.') . "\">" . gettext('Position') . "</A>:</U>:</TD><TD>";
 			print "</TD></TR>\n";
-			print "<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"Incident last updated - date & time.\">Updated</A>:</TD><TD>" . format_date($row['updated']) . "</TD></TR>\n";		// 10/21/08
+			print "<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Incident last updated - date & time.') . "\">" . gettext('Updated') . "</A>:</TD><TD>" . format_date($row['updated']) . "</TD></TR>\n";		// 10/21/08
 			$lat = $row['lat']; $lng = $row['lng'];	
 			print "<TR CLASS='even'><TD COLSPAN='2' ALIGN='center'><BR />";
 			print ($mode==1)? 					// 9/8/10
-				"<INPUT TYPE='button' VALUE='Cancel' onClick='window.close();'  STYLE = 'margin-left:20px' />":
-				"<INPUT TYPE='button' VALUE='Cancel' onClick='history.back();'  STYLE = 'margin-left:20px' />";
-			print "<INPUT TYPE='reset' VALUE='Reset' onclick= 'st_unlk_res(this.form); reset_end(this.form); resetmap($lat, $lng);'  STYLE = 'margin-left:20px' />";
-			print "<INPUT TYPE='submit' VALUE='Submit' STYLE = 'margin-left:20px' />";
+				"<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "' onClick='window.close();'  STYLE = 'margin-left:20px' />":
+				"<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "' onClick='history.back();'  STYLE = 'margin-left:20px' />";
+			print "<INPUT TYPE='reset' VALUE='" . gettext('Reset') . "' onclick= 'st_unlk_res(this.form); reset_end(this.form); resetmap($lat, $lng);'  STYLE = 'margin-left:20px' />";
+			print "<INPUT TYPE='submit' VALUE='" . gettext('Submit') . "' STYLE = 'margin-left:20px' />";
 			print "</TD></TR>";
 ?>	
 			
@@ -842,7 +842,7 @@ require_once('./incs/links.inc.php');
 			<INPUT TYPE="hidden" NAME="frm_fac_chng" VALUE="0" />		<!-- 3/25/10 -->
 			<INPUT TYPE="hidden" NAME="mode" VALUE="<?php print $mode;?>" />	<!-- 9/8/10 -->
 <?php
-			print "<TR CLASS='even'><TD COLSPAN='10' ALIGN='center'><BR /><B><U><A HREF=\"#\" TITLE=\"List of all actions and patients atached to this Incident\">Actions and Patients</A></U></B><BR /></TD></TR>";	//8/7/09
+			print "<TR CLASS='even'><TD COLSPAN='10' ALIGN='center'><BR /><B><U><A HREF=\"#\" TITLE=\"" . gettext('List of all actions and patients atached to this Incident.') . "\">" . gettext('Actions and Patients') . "</A></U></B><BR /></TD></TR>";	//8/7/09
 			print "<TR CLASS='odd'><TD COLSPAN='10' ALIGN='center'>";										//8/7/09
 			print show_actions($row[0], "date", TRUE, TRUE, $mode);											// 9/8/10
 			print "</TD></TR>";																//8/7/09
@@ -883,11 +883,11 @@ require_once('./incs/links.inc.php');
 			} else {
 			    var charCode = ch.charCodeAt(0);
 				if (charCode > 255) {
-				    alert( "Unicode Character '"
+				    alert( "<?php print gettext('Unicode Character');?> '"
 	                        + ch
-	                        + "' cannot be encoded using standard URL encoding.\n" +
-					          "(URL encoding only supports 8-bit characters.)\n" +
-							  "A space (+) will be substituted." );
+	                        + "' <?php print gettext('cannot be encoded using standard URL encoding.');?>\n" +
+					          "(<?php print gettext('URL encoding only supports 8-bit characters.');?>)\n" +
+							  "<?php print gettext('A space (+) will be substituted.');?>" );
 					encoded += "+";
 				} else {
 					encoded += "%";
@@ -985,7 +985,7 @@ require_once('./incs/links.inc.php');
 	function phone_lkup(){	
 		var goodno = document.edit.frm_phone.value.replace(/\D/g, "" );		// strip all non-digits - 1/18/09
 		if (goodno.length<10) {
-			alert("10-digit phone no. required - any format");
+			alert("<?php print gettext('10-digit phone no. required - any format');?>");
 			return;}
 		var params = "phone=" + URLEncode(goodno)
 		sendRequest (document.edit, 'wp_lkup.php',handleResult, params);		//1/17/09

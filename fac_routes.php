@@ -118,25 +118,25 @@ function get_icon_legend (){
 function do_fac($theFac, $theWidth, $search=FALSE, $dist=TRUE) {
 
 	$print = "<TABLE BORDER='0'ID='left' width='" . $theWidth . "'>\n";		//
-	$print .= "<TR CLASS='even'><TD CLASS='td_data' COLSPAN=2 ALIGN='center'><B>Facility: <I>" . highlight($search,$theFac['fac_name']) . "</B></TD></TR>\n";
+	$print .= "<TR CLASS='even'><TD CLASS='td_data' COLSPAN=2 ALIGN='center'><B>" . gettext('Facility') . ": <I>" . highlight($search,$theFac['fac_name']) . "</B></TD></TR>\n";
 
-	$print .= "<TR CLASS='odd'  VALIGN='top'><TD>Description:</TD>	<TD>" . highlight($search, nl2br($theFac['fac_descr'])) . "</TD></TR>\n";
-	$print .= "<TR CLASS='even'  VALIGN='top'><TD>Capability:</TD>	<TD>" . highlight($search, nl2br($theFac['capab'])) . "</TD></TR>\n";
-	$print .= "<TR CLASS='odd'  VALIGN='top'><TD>Status:</TD>	<TD>" . $theFac['status_val'] . "</TD></TR>\n";
-	$print .= "<TR CLASS='even'  VALIGN='top'><TD>Opening Hours:</TD>	<TD>" . $theFac['opening_hours'] . "</TD></TR>\n";
-	$print .= "<TR CLASS='odd'  VALIGN='top'><TD>Access Rules:</TD>	<TD>" . $theFac['access_rules'] . "</TD></TR>\n";
-	$print .= "<TR CLASS='even'  VALIGN='top'><TD>Sec Reqs:</TD>	<TD>" . $theFac['security_reqs'] . "</TD></TR>\n";
-	$print .= "<TR CLASS='odd'  VALIGN='top'><TD>Cont name:</TD>	<TD>" . $theFac['contact_name'] . "</TD></TR>\n";
-	$print .= "<TR CLASS='even'  VALIGN='top'><TD>Cont email:</TD>	<TD>" . $theFac['contact_email'] . "</TD></TR>\n";
-	$print .= "<TR CLASS='odd'  VALIGN='top'><TD>Cont phone:</TD>	<TD>" . $theFac['contact_phone'] . "</TD></TR>\n";
-	$print .= "<TR CLASS='even'  VALIGN='top'><TD>Sec contact:</TD>	<TD>" . $theFac['security_contact'] . "</TD></TR>\n";
-	$print .= "<TR CLASS='odd'  VALIGN='top'><TD>Sec email:</TD>	<TD>" . $theFac['security_email'] . "</TD></TR>\n";
-	$print .= "<TR CLASS='even'  VALIGN='top'><TD>Sec phone:</TD>	<TD>" . $theFac['security_phone'] . "</TD></TR>\n";
-	$print .= "<TR CLASS='odd'  VALIGN='top'><TD>Prim pager:</TD>	<TD>" . $theFac['pager_p'] . "</TD></TR>\n";
-	$print .= "<TR CLASS='even'  VALIGN='top'><TD>Sec pager:</TD>	<TD>" . $theFac['pager_s'] . "</TD></TR>\n";
+	$print .= "<TR CLASS='odd'  VALIGN='top'><TD>" . gettext('Description') . ":</TD>	<TD>" . highlight($search, nl2br($theFac['fac_descr'])) . "</TD></TR>\n";
+	$print .= "<TR CLASS='even'  VALIGN='top'><TD>" . gettext('Capability') . ":</TD>	<TD>" . highlight($search, nl2br($theFac['capab'])) . "</TD></TR>\n";
+	$print .= "<TR CLASS='odd'  VALIGN='top'><TD>" . gettext('Status') . ":</TD>	<TD>" . $theFac['status_val'] . "</TD></TR>\n";
+	$print .= "<TR CLASS='even'  VALIGN='top'><TD>" . gettext('Opening Hours') . ":</TD>	<TD>" . $theFac['opening_hours'] . "</TD></TR>\n";
+	$print .= "<TR CLASS='odd'  VALIGN='top'><TD>" . gettext('Access Rules') . ":</TD>	<TD>" . $theFac['access_rules'] . "</TD></TR>\n";
+	$print .= "<TR CLASS='even'  VALIGN='top'><TD>" . gettext('Sec Reqs') . ":</TD>	<TD>" . $theFac['security_reqs'] . "</TD></TR>\n";
+	$print .= "<TR CLASS='odd'  VALIGN='top'><TD>" . gettext('Cont name') . ":</TD>	<TD>" . $theFac['contact_name'] . "</TD></TR>\n";
+	$print .= "<TR CLASS='even'  VALIGN='top'><TD>" . gettext('Cont email') . ":</TD>	<TD>" . $theFac['contact_email'] . "</TD></TR>\n";
+	$print .= "<TR CLASS='odd'  VALIGN='top'><TD>" . gettext('Cont phone') . ":</TD>	<TD>" . $theFac['contact_phone'] . "</TD></TR>\n";
+	$print .= "<TR CLASS='even'  VALIGN='top'><TD>" . gettext('Sec contact') . ":</TD>	<TD>" . $theFac['security_contact'] . "</TD></TR>\n";
+	$print .= "<TR CLASS='odd'  VALIGN='top'><TD>" . gettext('Sec email') . ":</TD>	<TD>" . $theFac['security_email'] . "</TD></TR>\n";
+	$print .= "<TR CLASS='even'  VALIGN='top'><TD>" . gettext('Sec phone') . ":</TD>	<TD>" . $theFac['security_phone'] . "</TD></TR>\n";
+	$print .= "<TR CLASS='odd'  VALIGN='top'><TD>" . gettext('Prim pager') . ":</TD>	<TD>" . $theFac['pager_p'] . "</TD></TR>\n";
+	$print .= "<TR CLASS='even'  VALIGN='top'><TD>" . gettext('Sec pager') . ":</TD>	<TD>" . $theFac['pager_s'] . "</TD></TR>\n";
 
-	$print .= "<TR CLASS='odd' ><TD>Updated:</TD>		<TD>" . format_date($theFac['updated']) . "</TD></TR>\n";
-//	$print .= "<TR CLASS='even'><TD>Status:</TD>		<TD>" . $theFac['status_id'] . "</TD></TR>\n";
+	$print .= "<TR CLASS='odd' ><TD>" . gettext('Updated') . ":</TD>		<TD>" . format_date($theFac['updated']) . "</TD></TR>\n";
+//	$print .= "<TR CLASS='even'><TD>" . gettext('Status') . ":</TD>		<TD>" . $theFac['status_id'] . "</TD></TR>\n";
 
 	$print .= "<TR STYLE = 'display:none;'><TD colspan=2><SPAN ID='oldlat'>" . $theFac['lat'] . "</SPAN><SPAN ID='oldlng'>" . $theFac['lng'] . "</SPAN></TD></TR>";
 	$print .= "</TABLE>\n";
@@ -147,7 +147,7 @@ function do_fac($theFac, $theWidth, $search=FALSE, $dist=TRUE) {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 	<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">	
-	<HEAD><TITLE>Tickets - Routes Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Routes Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="Expires" CONTENT="0">
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -368,9 +368,9 @@ if (!empty($_POST)) {
 			sendRequest (url, fvg_handleResult, params);				
 	//			form.submit();
 		} else {
-			errmsg+= "\tYou cannot Hide all the regions\n";
+			errmsg+= "\t<?php print gettext('You cannot Hide all the regions');?>\n";
 			if (errmsg!="") {
-				alert ("Please correct the following and re-submit:\n\n" + errmsg);
+				alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 				return false;
 			}
 		}
@@ -467,7 +467,7 @@ if (!empty($_POST)) {
 		var url = "mail_edit.php?fac_id=" + fac_id + "&addrs=" + addrs + "&text=";	// no text
 		newwindow_mail=window.open(url, "mail_edit",  "titlebar, location=0, resizable=1, scrollbars, height=360,width=600,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 		if (isNull(newwindow_mail)) {
-			alert ("Email edit operation requires popups to be enabled -- please adjust your browser options.");
+			alert ("<?php print gettext('Email edit operation requires popups to be enabled -- please adjust your browser options.');?>");
 			return;
 			}
 		newwindow_mail.focus();
@@ -495,10 +495,10 @@ if (!empty($_POST)) {
 		require_once('./incs/links.inc.php');
 		}
 ?>
-	<CENTER><BR><BR><BR><BR><H3>Call Assignments made to:<BR /><?php print substr((str_replace ( "\n", ", ", $_POST['frm_name_str'])) , 0, -2);?><BR><BR> <!-- 11/8/08 -->
-	See call Board</H3>
+	<CENTER><BR><BR><BR><BR><H3><?php print gettext('Call Assignments made to');?>:<BR /><?php print substr((str_replace ( "\n", ", ", $_POST['frm_name_str'])) , 0, -2);?><BR><BR> <!-- 11/8/08 -->
+	<?php print gettext('See call Board');?></H3>
 	<FORM NAME='cont_form' METHOD = 'get' ACTION = "main.php">
-	<INPUT TYPE='button' VALUE='Continue' onClick = "document.cont_form.submit()">
+	<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>' onClick = "document.cont_form.submit()">
 	</FORM></BODY></HTML>
 <?php		
 	}		// end if (!empty($_POST))
@@ -665,9 +665,9 @@ require_once('./incs/links.inc.php');
 		</TD>
 		<TD VALIGN="top" ALIGN='center'>
 			<DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
-			<BR /><A HREF='#' onClick='doGrid()'><U>Grid</U>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doTraffic()'><U>Traffic</U>
+			<BR /><A HREF='#' onClick='doGrid()'><U><?php print gettext('Grid');?></U>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doTraffic()'><U><?php print gettext('Traffic');?></U>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<A HREF='#' onClick = "sv_win('<?php print $row_fac['lat'];?>','<?php print $row_fac['lng'];?>' );"><U>Street view</U></A>			
+			<A HREF='#' onClick = "sv_win('<?php print $row_fac['lat'];?>','<?php print $row_fac['lng'];?>' );"><U><?php print gettext('Street view');?></U></A>			
 			<BR />
 			<BR />
 <?php
@@ -678,7 +678,7 @@ require_once('./incs/links.inc.php');
 		</TD></TR></TABLE><!-- end outer -->
 	<DIV ID='bottom' STYLE='display:none'>
 	<CENTER>
-	<H3>Dispatching ... please wait ...</H3><BR /><BR /><BR />
+	<H3><?php print gettext('Dispatching ... please wait.');?> ...</H3><BR /><BR /><BR />
 <!-- 	<IMG SRC="./markers/spinner.gif" BORDER=0> -->
 	</DIV>
 		
@@ -710,13 +710,13 @@ require_once('./incs/links.inc.php');
 	print "<INPUT TYPE='hidden' NAME='frm_u_id' VALUE=''>";
 	print "<INPUT TYPE='hidden' NAME='frm_mail_subject' VALUE='Directions to Facility'>";
 	print "<INPUT TYPE='hidden' NAME='frm_scope' VALUE=''>"; // 10/29/09
-	print "<INPUT TYPE='submit' value='Mail Direcs' ID = 'mail_dir_but' />";
+	print "<INPUT TYPE='submit' value='" . gettext('Mail Direcs') . "' ID = 'mail_dir_but' />";
 	print "</FORM>";
-	print "<INPUT TYPE='button' VALUE='Reset' onClick = 'doReset()' />";
+	print "<INPUT TYPE='button' VALUE='" . gettext('Reset') . "' onClick = 'doReset()' />";
 	print "</SPAN>";
-	print "<INPUT TYPE='button' VALUE='Cancel'  onClick='history.back();' />";
+	print "<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "'  onClick='history.back();' />";
 	print "<SPAN ID=\"loading\" STYLE=\"display: 'inline-block'\">";
-	print "<TABLE BGCOLOR='red' WIDTH='80%'><TR><TD><FONT COLOR='white'><B>Loading Directions, Please wait........</B></FONT></TD></TR></TABLE>";		// 10/28/09
+	print "<TABLE BGCOLOR='red' WIDTH='80%'><TR><TD><FONT COLOR='white'><B>" . gettext('Loading Directions. Please wait.') . ".......</B></FONT></TD></TR></TABLE>";		// 10/28/09
 	print "</SPAN>";
 ?>
 	</DIV>
@@ -761,7 +761,7 @@ require_once('./incs/links.inc.php');
 	function do_notify() {
 //		alert(352);
 		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
-		var theText= "ATTENTION - New Facility Routing: ";
+		var theText= "<?php print gettext('ATTENTION - New Facility Routing');?>: ";
 		var theId = '<?php print $_GET['fac_id'];?>';
 		
 //		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_fac_id=" + escape(theId);		// ($to_str, $text, $fac_id)
@@ -941,7 +941,7 @@ function do_list($unit_id ="") {
 			f.target = 'Mail Form'
 			newwindow_mail=window.open('',f.target,'titlebar, location=0, resizable=1, scrollbars, height=360,width=600,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300');
 			if (isNull(newwindow_mail)) {
-				alert ("Email edit operation requires popups to be enabled -- please adjust your browser options.");
+				alert ("<?php print gettext('Email edit operation requires popups to be enabled -- please adjust your browser options.');?>");
 				return;
 				}
 			newwindow_mail.focus();
@@ -1024,7 +1024,7 @@ function do_list($unit_id ="") {
 			current_id= "R"+id;
 			document.getElementById(current_id).style.visibility = "visible";		// show newest
 			if (!(lats[id])) {
-				alert("611 Cannot route -  no position data currently available\n\nClick map point for directions.");
+				alert("611 <?php print gettext('Cannot route -  no position data currently available\n\nClick map point for directions.');?>");
 				$('directions').innerHTML = "";							// 11/13/09	
 				$('mail_dir_but').style.visibility = "hidden";			// 11/13/09	
 				}
@@ -1082,7 +1082,7 @@ function do_list($unit_id ="") {
 			var url = "street_view.php?thelat=" + theLat + "&thelng=" + theLng;
 			newwindow_sl=window.open(url, "sta_log",  "titlebar=no, location=0, resizable=1, scrollbars, height=450,width=640,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 			if (!(newwindow_sl)) {
-				alert ("Street view operation requires popups to be enabled. Please adjust your browser options - or else turn off the Call Board option.");
+				alert ("<?php print gettext('Street view operation requires popups to be enabled. Please adjust your browser options - or else turn off the Call Board option.');?>");
 				return;
 				}
 			newwindow_sl.focus();
@@ -1095,19 +1095,19 @@ function do_list($unit_id ="") {
  */		
 		function handleErrors(){		//G_GEO_UNKNOWN_DIRECTIONS 
 			if (gdir.getStatus().code == G_GEO_UNKNOWN_DIRECTIONS ) {
-				alert("501: directions unavailable\n\nClick map point for directions.");
+				alert("501: <?php print gettext('Directions unavailable.') . "\n\n" . gettext('Click map point for directions.');?>");
 				}
 			else if (gdir.getStatus().code == G_GEO_UNKNOWN_ADDRESS)
-				alert("440: No corresponding geographic location could be found for one of the specified addresses. This may be due to the fact that the address is relatively new, or it may be incorrect.\nError code: " + gdir.getStatus().code);
+				alert("440: <?php print gettext('No corresponding geographic location could be found for one of the specified addresses. This may be due to the fact that the address is relatively new, or it may be incorrect.') . "\n" . gettext('Error code');?>: " + gdir.getStatus().code);
 			else if (gdir.getStatus().code == G_GEO_SERVER_ERROR)
-				alert("442: A map request could not be processed, reason unknown.\n Error code: " + gdir.getStatus().code);
+				alert("442: <?php print gettext('A map request could not be processed, reason unknown.') . "\n" . gettext('Error code');?>: " + gdir.getStatus().code);
 			else if (gdir.getStatus().code == G_GEO_MISSING_QUERY)
-				alert("444: Technical error.\n Error code: " + gdir.getStatus().code);
+				alert("444: <?php print gettext('Technical error.\n Error code');?>: " + gdir.getStatus().code);
 			else if (gdir.getStatus().code == G_GEO_BAD_KEY)
-				alert("448: The given key is either invalid or does not match the domain for which it was given. \n Error code: " + gdir.getStatus().code);
+				alert("448: <?php print gettext('The given key is either invalid or does not match the domain for which it was given.') . "\n" . gettext('Error code');?>: " + gdir.getStatus().code);
 			else if (gdir.getStatus().code == G_GEO_BAD_REQUEST)
-				alert("450: A directions request could not be successfully parsed.\n Error code: " + gdir.getStatus().code);
-			else alert("451: An unknown error occurred.");
+				alert("450: <?php print gettext('A directions request could not be successfully parsed.') . "\n" . gettext('Error code');?>: " + gdir.getStatus().code);
+			else alert("451: <?php print gettext('An unknown error occurred.');?>");
 			}		// end function handleErrors()
 /**
  * 
@@ -1121,7 +1121,7 @@ function do_list($unit_id ="") {
  * @returns {undefined}
  */
 		function guest () {
-			alert ("Demonstration only.  Guests may not commit dispatch!");
+			alert ("<?php print gettext('Demonstration only.  Guests may not commit dispatch!');?>");
 			}
 /**
  * 
@@ -1137,11 +1137,11 @@ function do_list($unit_id ="") {
 				}
 			if (msgstr.length==0) {
 				var more = (nr_units>1)? "s": ""
-				alert ("Please select unit" + more + ", or cancel");
+				alert ("<?php print gettext('Please select unit');?>" + more + ", <?php print gettext('or cancel');?>");
 				return false;
 				}
 			else {
-				if (confirm ("Please confirm Unit dispatch as follows\n\n" + msgstr)) {
+				if (confirm ("<?php print gettext('Please confirm Unit dispatch as follows');?>\n\n" + msgstr)) {
 					document.routes_Form.frm_id_str.value = document.routes_Form.frm_id_str.value.substring(0, document.routes_Form.frm_id_str.value.length - 1);	// drop trailing separator
 					document.routes_Form.frm_name_str.value = msgstr;	// for re-use
 					document.routes_Form.submit();
@@ -1188,9 +1188,9 @@ function do_list($unit_id ="") {
 		$("loading").style.display = "none";		// 10/28/09
 		
 		var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_responders'>";
-		side_bar_html += "<TR class='even'>	<TD  COLSPAN=99 ALIGN='center'><B>Routes to Facility: <I><?php print shorten($row_fac['fac_name'], 20); ?></I></B></TD></TR>\n";
-		side_bar_html += "<TR class='odd'>	<TD COLSPAN=99 ALIGN='center'>Click line, icon or map for route</TD></TR>\n";
-		side_bar_html += "<TR class='even'>	<TD COLSPAN=3></TD><TD ALIGN='center'>Unit</TD><TD ALIGN='center'>SLD</TD><TD ALIGN='center'>Facility</TD><TD ALIGN='center'>Status</TD><TD ALIGN='center'>As of</TD></TR>\n";
+		side_bar_html += "<TR class='even'>	<TD  COLSPAN=99 ALIGN='center'><B><?php print gettext('Routes to Facility');?>: <I><?php print shorten($row_fac['fac_name'], 20); ?></I></B></TD></TR>\n";
+		side_bar_html += "<TR class='odd'>	<TD COLSPAN=99 ALIGN='center'><?php print gettext('Click line, icon or map for route');?></TD></TR>\n";
+		side_bar_html += "<TR class='even'>	<TD COLSPAN=3></TD><TD ALIGN='center'><?php print gettext('Unit');?></TD><TD ALIGN='center'>SLD</TD><TD ALIGN='center'><?php print gettext('Facility');?></TD><TD ALIGN='center'><?php print gettext('Status');?></TD><TD ALIGN='center'><?php print gettext('As of');?></TD></TR>\n";
 
 		var gmarkers = [];
 		var infoTabs = [];
@@ -1293,10 +1293,10 @@ function do_list($unit_id ="") {
 //					snap (__LINE__, $unit_row['unit_id']);
 					$tab_1 = "<TABLE CLASS='infowin' width='" . $_SESSION['scr_width']/4 . "px'>";
 					$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . shorten($unit_row['name'], 48) . "</TD></TR>";
-					$tab_1 .= "<TR CLASS='even'><TD>Description:</TD><TD>" . shorten(str_replace($eols, " ", $unit_row['description']), 32) . "</TD></TR>";
-					$tab_1 .= "<TR CLASS='odd'><TD>Status:</TD><TD>" . $unit_row['unitstatus'] . " </TD></TR>";
-					$tab_1 .= "<TR CLASS='even'><TD>Contact:</TD><TD>" . $unit_row['contact_name']. " Via: " . $unit_row['contact_via'] . "</TD></TR>";
-					$tab_1 .= "<TR CLASS='odd'><TD>As of:</TD><TD>" . format_date($unit_row['updated']) . "</TD></TR>";
+					$tab_1 .= "<TR CLASS='even'><TD>" . gettext('Description') . ":</TD><TD>" . shorten(str_replace($eols, " ", $unit_row['description']), 32) . "</TD></TR>";
+					$tab_1 .= "<TR CLASS='odd'><TD>" . gettext('Status') . ":</TD><TD>" . $unit_row['unitstatus'] . " </TD></TR>";
+					$tab_1 .= "<TR CLASS='even'><TD>" . gettext('Contact') . ":</TD><TD>" . $unit_row['contact_name']. " " . gettext('Via') . ": " . $unit_row['contact_via'] . "</TD></TR>";
+					$tab_1 .= "<TR CLASS='odd'><TD>" . gettext('As of') . ":</TD><TD>" . format_date($unit_row['updated']) . "</TD></TR>";
 					$tab_1 .= "</TABLE>";
 					}
 ?>
@@ -1337,10 +1337,10 @@ function do_list($unit_id ="") {
 			
 						$tab_2 = "<TABLE CLASS='infowin' width='" . $_SESSION['scr_width']/4 . "px'>";
 						$tab_2 .= "<TR><TH CLASS='even' COLSPAN=2>" . $track_row['source'] . "</TH></TR>";
-						$tab_2 .= "<TR CLASS='odd'><TD>Course: </TD><TD>" . $track_row['course'] . ", Speed:  " . $track_row['speed'] . ", Alt: " . $track_row['altitude'] . "</TD></TR>";
-						$tab_2 .= "<TR CLASS='even'><TD>Closest city: </TD><TD>" . $track_row['closest_city'] . "</TD></TR>";
-						$tab_2 .= "<TR CLASS='odd'><TD>Status: </TD><TD>" . $track_row['status'] . "</TD></TR>";
-						$tab_2 .= "<TR CLASS='even'><TD>As of: </TD><TD>" . format_date($track_row['packet_date']) . "</TD></TR>";
+						$tab_2 .= "<TR CLASS='odd'><TD>" . gettext('Course') . ": </TD><TD>" . $track_row['course'] . ", " . gettext('Speed') . ":  " . $track_row['speed'] . ", " . gettext('Alt') . ": " . $track_row['altitude'] . "</TD></TR>";
+						$tab_2 .= "<TR CLASS='even'><TD>" . gettext('Closest city') . ": </TD><TD>" . $track_row['closest_city'] . "</TD></TR>";
+						$tab_2 .= "<TR CLASS='odd'><TD>" . gettext('Status') . ": </TD><TD>" . $track_row['status'] . "</TD></TR>";
+						$tab_2 .= "<TR CLASS='even'><TD>" . gettext('As of') . ": </TD><TD>" . format_date($track_row['packet_date']) . "</TD></TR>";
 						$tab_2 .= "</TABLE>";
 ?>
 						var myinfoTabs = [
@@ -1454,7 +1454,7 @@ function do_list($unit_id ="") {
 		}		// end if (GBrowserIsCompatible())
 
 	else {
-		alert("Sorry,  browser compatibility problem. Contact your tech support group.");
+		alert("<?php print gettext('Sorry,  browser compatibility problem. Contact your tech support group.');?>");
 		}
 
 	</SCRIPT>

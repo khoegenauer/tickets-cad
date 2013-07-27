@@ -27,8 +27,8 @@ require_once($_SESSION['fip']);		//7/28/10
 <?php
 
 if (empty($_POST['frm_u_id'])) {
-	print "<CENTER>You must select a Unit first</BR></BR>";
-	print "<A href='javascript: self.close ()'>Close</A></CENTER>";
+	print "<CENTER>" . gettext('You must select a Unit first') . "</BR></BR>";
+	print "<A href='javascript: self.close ()'>" . gettext('Close') . "</A></CENTER>";
 	exit();
 	}
 
@@ -93,11 +93,11 @@ if (empty($_POST)) {
  */
 	function validate() {
 		var errmsg="";
-		if (document.mail_form.frm_addr.value.trim()=="") {errmsg+="Message address is required";}
-		if (document.mail_form.frm_subj.value.trim()=="") {errmsg+="Message subject is required";}
-		if (document.mail_form.frm_text.value.trim()=="") {errmsg+="Message text is required";}
+		if (document.mail_form.frm_addr.value.trim()=="") {errmsg+="<?php print gettext('Message address is required');?>";}
+		if (document.mail_form.frm_subj.value.trim()=="") {errmsg+="<?php print gettext('Message subject is required');?>";}
+		if (document.mail_form.frm_text.value.trim()=="") {errmsg+="<?php print gettext('Message text is required');?>";}
 		if (!(errmsg=="")){
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
@@ -116,25 +116,25 @@ if (empty($_POST)) {
 	</HEAD>
 
 	<BODY><CENTER>		<!-- 1/12/09 -->
-	<CENTER><H3>Mail to Unit</H3>
+	<CENTER><H3><?php print gettext('Mail to Unit');?></H3>
 	<P>
 		<FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
 		<INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''>	<!-- for pipe-delim'd addr string -->
 		<TABLE BORDER = 0>
 		<TR CLASS= 'even'>
-			<TD ALIGN='right'>To:</TD><TD><INPUT NAME='frm_name' SIZE=32 VALUE = '<?php print $contact_name;?>'></TD>
+			<TD ALIGN='right'><?php print gettext('To');?>:</TD><TD><INPUT NAME='frm_name' SIZE=32 VALUE = '<?php print $contact_name;?>'></TD>
 			</TR>
 
 		<TR CLASS= 'odd'>
-			<TD ALIGN='right'>Addr:</TD><TD><INPUT NAME='frm_addr' SIZE=32 VALUE = '<?php print $contact_email;?>'></TD>
+			<TD ALIGN='right'><?php print gettext('Addr');?>:</TD><TD><INPUT NAME='frm_addr' SIZE=32 VALUE = '<?php print $contact_email;?>'></TD>
 		</TR>
 <?php
 		if((get_variable('use_messaging') == 2) || (get_variable('use_messaging') == 3)) {	//	10/23/12
 ?>
-			<TR CLASS='even'><TD ALIGN='right'><?php get_provider_name(get_msg_variable('smsg_provider'));?> Addrs: </TD>
+			<TR CLASS='even'><TD ALIGN='right'><?php get_provider_name(get_msg_variable('smsg_provider'));?> <?php print gettext('Addrs');?>: </TD>
 				<TD><INPUT TYPE='text' NAME='frm_smsgaddrs' size='60' VALUE='<?php print $smsg_id;?>'></TD>
 			</TR>	
-			<TR CLASS='even'><TD>Use <?php get_provider_name(get_msg_variable('smsg_provider'));?>?: </TD> <!-- 10/23/12 -->
+			<TR CLASS='even'><TD><?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?: </TD> <!-- 10/23/12 -->
 				<TD><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE="0"></TD> <!-- 10/23/12 -->
 			</TR>			
 <?php
@@ -145,17 +145,17 @@ if (empty($_POST)) {
 <?php
 			}	
 ?>
-		<TR CLASS='even'><TD ALIGN='right'>Subject: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60 VALUE = '<?php print $mail_subject;?> - <?php print $tick_name;?>'></TD></TR>		<!-- 10/29/09 -->
-		<TR CLASS='odd'><TD ALIGN='right'>Message:</TD><TD COLSPAN=2> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4><?php print $direcs;?></TEXTAREA></TD></TR>
+		<TR CLASS='even'><TD ALIGN='right'><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60 VALUE = '<?php print $mail_subject;?> - <?php print $tick_name;?>'></TD></TR>		<!-- 10/29/09 -->
+		<TR CLASS='odd'><TD ALIGN='right'><?php print gettext('Message');?>:</TD><TD COLSPAN=2> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4><?php print $direcs;?></TEXTAREA></TD></TR>
 		<TR CLASS='even'><TD ALIGN='center' COLSPAN=3><BR /><BR />
 		<INPUT TYPE="hidden" NAME="frm_direcs" VALUE="">
 		<INPUT TYPE="hidden" NAME="frm_u_id" VALUE='<?php print $unit_id;?>'>
 		<INPUT TYPE="hidden" NAME="frm_tick_id" VALUE='<?php print $the_tick;?>'>		
 		<INPUT TYPE="hidden" NAME="frm_mail_subject" VALUE="">
 		<INPUT TYPE="hidden" NAME="frm_scope" VALUE="">		<!-- 10/29/09 -->
-			<INPUT TYPE='button' 	VALUE='Send' onClick = "validate()">&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='reset' 	VALUE='Reset'>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='button' 	VALUE='Cancel' onClick = 'window.close();'><BR /><BR />
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "validate()">&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
 			</TD></TR>
 			</TABLE></FORM>
 <?php
@@ -165,8 +165,8 @@ if (empty($_POST)) {
 		do_send ($the_addrs, $the_sms, $_POST['frm_subj'], $_POST['frm_text'], $the_tick, $unit_id);	// ($to_str, $subject_str, $text_str )
 ?>
 	<BODY><CENTER>		
-	<CENTER><BR /><BR /><BR /><H3>Mail sent</H3>
-	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='Finished' onClick = 'window.close();'><BR /><BR />
+	<CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
+	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'><BR /><BR />
 
 <?php
 

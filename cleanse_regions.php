@@ -170,8 +170,8 @@ if(isset($_GET['func']) && ($_GET['func']=='clean')) {
 	<BODY onLoad = 'ck_frames()'>
 	<?php print $text_output;?>
 	<DIV style='font-size: 14px; position: fixed; top: 150px; left: 100px;'>
-	Region table Cleansed<br /><br />
-	<A style='font-size: 14px;' href="config.php">Return to Config</A>		
+	<?php print gettext('Region table Cleansed');?><br /><br />
+	<A style='font-size: 14px;' href="config.php"><?php print gettext('Return to Config');?></A>		
 	</DIV>
 	</BODY>
 	</HTML>
@@ -287,16 +287,16 @@ if(isset($_GET['func']) && ($_GET['func']=='clean')) {
 
 	<DIV style='font-size: 20px; font-weight: bold; width:70%;'>
 	<DIV class='page_heading'>
-	Region Table Allocation List<DIV class='button_bar'>
-	<A class='buttons' href="cleanse_regions.php">Cleanse / Sanitize</A>	
-	<A class='buttons' href="config.php">Cancel / Return to Config</A></DIV></DIV>	
+	<?php print gettext('Region Table Allocation List');?><DIV class='button_bar'>
+	<A class='buttons' href="cleanse_regions.php"><?php print gettext('Cleanse / Sanitize');?></A>	
+	<A class='buttons' href="config.php"><?php print gettext('Cancel / Return to Config');?></A></DIV></DIV>	
 	<DIV id='flag' class='flag'></DIV>
 	<DIV style='width:100%;'>
 <?php	
 	$counter = 0;
 	print "<TABLE style='width: 100%; border: 1px;'>";
 	print "<TR class='table_header'>";
-	print "<TD class='table_hdr_cell'>Region</TD><TD class='table_hdr_cell'>Users</TD><TD class='table_hdr_cell'>Tickets</TD><TD class='table_hdr_cell'>Responders</TD><TD class='table_hdr_cell'>Facilities</TD></TR>";
+	print "<TD class='table_hdr_cell'>" . gettext('Region') . "</TD><TD class='table_hdr_cell'>" . gettext('Users') . "</TD><TD class='table_hdr_cell'>" . gettext('Tickets') . "</TD><TD class='table_hdr_cell'>" . gettext('Responders') . "</TD><TD class='table_hdr_cell'>" . gettext('Facilities') . "</TD></TR>";
 	// list all allocations
 		foreach ($region_ids as $value) {
 			print "<TR>";
@@ -311,11 +311,11 @@ if(isset($_GET['func']) && ($_GET['func']=='clean')) {
 						print "User ID: " . $value2 . "<BR />";
 						} elseif($num_entries >=2) {
 						$counter++;						
-						print "<FONT COLOR='red'>User ID: " . $value2 . "&nbsp;&nbsp;&nbsp;" . "Duplicate Entries</FONT>";
+						print "<FONT COLOR='red'>" . gettext('User ID') . ": " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext("Duplicate Entries") . "</FONT>";
 						}
 					}
 				} else {
-				print "No Users Allocated to Regions";
+				print gettext("No Users Allocated to Regions");
 				}					
 			print "</TD>";
 			print "<TD class='table_cell'>";
@@ -328,11 +328,11 @@ if(isset($_GET['func']) && ($_GET['func']=='clean')) {
 						print "Ticket ID: " . $value2 . "<br />";
 						} elseif($num_entries >=2) {
 						$counter++;
-						print "<FONT COLOR='red'>Ticket ID: " . $value2 . "&nbsp;&nbsp;&nbsp;" . "Duplicate Entries</FONT>";
+						print "<FONT COLOR='red'>" . gettext('Ticket ID') . ": " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext("Duplicate Entries") . "</FONT>";
 						}
 					}
 				} else {					
-				print "No Tickets Allocated to Regions";
+				print gettext("No Tickets Allocated to Regions");
 				}				
 			print "</TD>";	
 			print "<TD class='table_cell'>";			
@@ -342,14 +342,14 @@ if(isset($_GET['func']) && ($_GET['func']=='clean')) {
 					$result = mysql_query($query);
 					$num_entries = mysql_num_rows($result);
 					if($num_entries == 1) {				
-						print "Responder ID: " . $value2 . "<br />";
+						print gettext("Responder ID") . ": " . $value2 . "<br />";
 						} elseif($num_entries >=2) {
 						$counter++;						
-						print "<FONT COLOR='red'>Responder ID: " . $value2 . "&nbsp;&nbsp;&nbsp;" . "Duplicate Entries</FONT>";
+						print "<FONT COLOR='red'>" . gettext('Responder ID') . ": " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext("Duplicate Entries") . "</FONT>";
 						}
 					}
 				} else {
-				print "No Responders Allocated to Regions";
+				print gettext("No Responders Allocated to Regions");
 				}				
 			print "</TD>";
 			print "<TD class='table_cell'>";
@@ -362,18 +362,18 @@ if(isset($_GET['func']) && ($_GET['func']=='clean')) {
 						print "Facility ID: " . $value2 . "<br />";
 						} elseif($num_entries >=2) {
 						$counter++;
-						print "<FONT COLOR='red'>Facility ID: " . $value2 . "&nbsp;&nbsp;&nbsp;" . "Duplicate Entries</FONT>";
+						print "<FONT COLOR='red'>" . gettext('Facility ID') . ": " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext("Duplicate Entries") . "</FONT>";
 						}
 					}
 				} else {
-				print "No Facilities Allocated to Regions";
+				print gettext("No Facilities Allocated to Regions");
 				}
 			print "</TD></TR>";
 		}
 	if($counter >= 1) {
-		$output_text = "<FONT COLOR='red'>THERE ARE ERRORS</FONT>";
+		$output_text = "<FONT COLOR='red'>" . gettext('THERE ARE ERRORS') . "</FONT>";
 		} else {
-		$output_text = "<FONT COLOR='green'>NO ERRORS</FONT>";
+		$output_text = "<FONT COLOR='green'>" . gettext('NO ERRORS') . "</FONT>";
 		}
 	// end of allocations list			
 ?>
@@ -419,12 +419,12 @@ if(isset($_GET['func']) && ($_GET['func']=='clean')) {
 	</HEAD>
 	<BODY onLoad = 'ck_frames()'>
 	<DIV style='font-size: 14px; position: fixed; top: 150px; left: 100px;'>
-	Are you sure you want to cleanse the Region allocations<br />
+	<?php print gettext('Are you sure you want to cleanse the Region allocations');?><br />
 	<br />
-	If you are SURE, click <A style='font-size: 14px;' href="cleanse_regions.php?func=clean">CLEANSE</A>
+	<?php print gettext('If you are SURE, click');?> <A style='font-size: 14px;' href="cleanse_regions.php?func=clean"><?php print gettext('CLEANSE');?></A>
 	<br />
 	<br />
-	If NOT then click <A style='font-size: 14px;' href="config.php">CANCEL</A>		
+	<?php print gettext('If NOT then click');?> <A style='font-size: 14px;' href="config.php"><?php print gettext('CANCEL');?></A>		
 	</DIV>
 	</BODY>
 	</HTML>

@@ -20,23 +20,23 @@ function myErrorHandler($errno, $errstr, $errfile, $errline)
 {
     switch ($errno) {
     case E_USER_ERROR:
-        echo "<b>My ERROR</b> [$errno] $errstr<br />\n";
-        echo "  Fatal error on line $errline in file $errfile";
+        echo "<b>" . gettext('My ERROR') . "</b> [{$errno}] {$errstr}<br />\n";
+        echo gettext('Fatal error on line') . $errline . " " . gettext('in file') . $errfile;
         echo ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
-        echo "Aborting...<br />\n";
+        echo gettext('Aborting.') . "..<br />\n";
         exit(1);
         break;
 
     case E_USER_WARNING:
-        echo "<b>My WARNING</b> [$errno] $errstr<br />\n";
+        echo "<b>" . gettext('My WARNING') . "</b> [{$errno}] {$errstr}<br />\n";
         break;
 
     case E_USER_NOTICE:
-        echo "<b>My NOTICE</b> [$errno] $errstr<br />\n";
+        echo "<b>" . gettext('My NOTICE') . "</b> [{$errno}] {$errstr}<br />\n";
         break;
 
     default:
-        echo "Unknown error type: [$errno] $errstr<br />\n";
+        echo gettext('Unknown error type') . ": [{$errno}] {$errstr}<br />\n";
         break;
     }
 
@@ -62,18 +62,18 @@ function myErrorHandler($errno, $errstr, $errfile, $errline)
 function scale_by_log($vect, $scale)
 {
     if (!is_numeric($scale) || $scale <= 0) {
-        trigger_error("log(x) for x <= 0 is undefined, you used: scale = $scale", E_USER_ERROR);
+        trigger_error("log(x) for x <= 0 is undefined, you used: scale = {$scale}", E_USER_ERROR);
     }
 
     if (!is_array($vect)) {
-        trigger_error("Incorrect input vector, array of values expected", E_USER_WARNING);
+        trigger_error(gettext("Incorrect input vector, array of values expected"), E_USER_WARNING);
         return null;
     }
 
     $temp = array();
     foreach($vect as $pos => $value) {
         if (!is_numeric($value)) {
-            trigger_error("Value at position $pos is not a number, using 0 (zero)", E_USER_NOTICE);
+            trigger_error(gettext("Value at position {$pos} is not a number, using 0 (zero)"), E_USER_NOTICE);
             $value = 0;
         }
         $temp[$pos] = log($scale) * $value;

@@ -83,11 +83,11 @@ if (empty($_POST)) {
 		 		}
 	
 		var errmsg="";
-		if (addr_err) 									  {errmsg+="One or more addresses required\n";}
-		if (document.mail_form.frm_subj.value.trim()=="") {errmsg+="Message subject is required\n";}
-		if (document.mail_form.frm_text.value.trim()=="") {errmsg+="Message text is required\n";}
+		if (addr_err) 									  {errmsg+="<?php print gettext('One or more addresses required');?>\n";}
+		if (document.mail_form.frm_subj.value.trim()=="") {errmsg+="<?php print gettext('Message subject is required');?>\n";}
+		if (document.mail_form.frm_text.value.trim()=="") {errmsg+="<?php print gettext('Message text is required');?>\n";}
 		if (!(errmsg=="")){
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
@@ -132,20 +132,20 @@ if (empty($_POST)) {
 				
 ?>
 		<TR><TD COLSPAN=5>&nbsp;</TD></TR>	
-		<TR CLASS='even'><TD ALIGN='right'>Subject: </TD><TD COLSPAN=4><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
-		<TR CLASS='odd'><TD ALIGN='right'>Message:</TD><TD COLSPAN=4> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
+		<TR CLASS='even'><TD ALIGN='right'><?php print gettext('Subject');?>: </TD><TD COLSPAN=4><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
+		<TR CLASS='odd'><TD ALIGN='right'><?php print gettext('Message');?>:</TD><TD COLSPAN=4> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
 		<TR CLASS='even'><TD></TD><TD ALIGN='left' COLSPAN=3><BR /><BR />
-			<INPUT TYPE='button' 	VALUE='Send' onClick = "validate()"  STYLE =  'margin-left: 100px'>
-			<INPUT TYPE='reset' 	VALUE='Reset' STYLE =  'margin-left: 20px'>
-			<INPUT TYPE='button' 	VALUE='Cancel' onClick = 'window.close();'STYLE =  'margin-left: 20px'><BR /><BR />
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "validate()"  STYLE =  'margin-left: 100px'>
+			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>' STYLE =  'margin-left: 20px'>
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'STYLE =  'margin-left: 20px'><BR /><BR />
 			</TD></TR>
 			</TABLE></FORM>
 <?php
 		}		// end if ($i > 0 )
 	else {
 ?>
-		<BR /><H3>No facility addresses available</H3><BR /><BR />
-		<INPUT TYPE='button'  VALUE = 'Close' onClick='window.close();' />
+		<BR /><H3><?php print gettext('No facility addresses available');?></H3><BR /><BR />
+		<INPUT TYPE='button'  VALUE = '<?php print gettext('Close');?>' onClick='window.close();' />
 <?php
 	
 		}		// end if/else end if ($i > 0 )
@@ -163,8 +163,8 @@ if (empty($_POST)) {
 		do_send ($addr_str, $_POST['frm_subj'], $_POST['frm_text'], 0, 0);	// ($to_str, $subject_str, $text_str ) - | separator
 ?>
 	<BODY>
-	<CENTER><BR /><BR /><BR /><H3>Mail sent</H3>
-	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='Finished' onClick = 'window.close();'><BR /><BR />
+	<CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
+	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'><BR /><BR />
 
 <?php
 

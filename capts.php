@@ -35,7 +35,7 @@ $func = (empty($_POST))? "l":$_POST['func'];
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Captions processor</TITLE>
+<TITLE><?php print gettext('Captions processor');?></TITLE>
 <META NAME="Author" CONTENT="">
 <META NAME="Keywords" CONTENT="">
 <META NAME="Description" CONTENT="">
@@ -83,7 +83,7 @@ $func = (empty($_POST))? "l":$_POST['func'];
 			$query = "UPDATE `$GLOBALS[mysql_prefix]captions` SET `repl` = {$the_repl} WHERE `id` = " . quote_smart($_POST['frm_id']) . " LIMIT 1;";
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 
-			$outstr = urlencode("Update applied!");
+			$outstr = urlencode(gettext("Update applied!"));
 			header("Location:capts.php?caption={$outstr}");
 			break;
 
@@ -100,11 +100,11 @@ $func = (empty($_POST))? "l":$_POST['func'];
 			echo "<TABLE ID='outer' ALIGN='center' CELLPADDING = 4 >";
 			$notice = (array_key_exists('caption', $_GET))? $_GET['caption']: "";
 			echo "<TR CLASS='odd'><TD COLSPAN=99 ALIGN='center'><B><I>{$notice}</I></B></TD></TR>\n";
-			echo "<TR CLASS='even'><TD COLSPAN=99 ALIGN='center'><H3>Click <u>caption</u> to edit</H3></TD></TR>\n";
+			echo "<TR CLASS='even'><TD COLSPAN=99 ALIGN='center'><H3>" . gettext('Click <u>caption</u> to edit') . "</H3></TD></TR>\n";
 			echo "<TR VALIGN='top'><TD>";
 			$out_str = "<TABLE ALIGN='center' border=0>\n";
 		
-			$out_str .=  "<TR CLASS='odd'><TD><B>&nbsp;&nbsp;Caption</B></TD><TD><B>&nbsp;&nbsp;Replacement</B></TD></TR>\n";
+			$out_str .=  "<TR CLASS='odd'><TD><B>&nbsp;&nbsp;" . gettext('Caption') . "</B></TD><TD><B>&nbsp;&nbsp;" . gettext('Replacement') . "</B></TD></TR>\n";
 			while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 				$i++;
 				$capt_val = shorten($row['capt'], 16);
@@ -119,7 +119,7 @@ $func = (empty($_POST))? "l":$_POST['func'];
 					echo $out_str;
 					echo "</TD><TD>";		// outer table
 					$out_str = "\n<TABLE BORDER=0 ALIGN='center'>";
-					$out_str .=  "<TR CLASS='odd'><TD><B>&nbsp;&nbsp;Caption</B></TD><TD><B>&nbsp;&nbsp;Replacement</B></TD></TR>\n";
+					$out_str .=  "<TR CLASS='odd'><TD><B>&nbsp;&nbsp;" . gettext('Caption') . "</B></TD><TD><B>&nbsp;&nbsp;" . gettext('Replacement') . "</B></TD></TR>\n";
 					}
 				$j++;
 				}		// end while()
@@ -130,7 +130,7 @@ $func = (empty($_POST))? "l":$_POST['func'];
 			
 ?>
 			<TR CLASS='odd'><TD COLSPAN=99 ALIGN='center'><BR />
-				<INPUT TYPE = 'button' VALUE = 'Restore default captions' onClick = "if(confirm('Click OK to restore all original captions')){document.do_restore_form.submit();}"
+				<INPUT TYPE = 'button' VALUE = '<?php print gettext('Restore default captions');?>' onClick = "if(confirm('<?php print gettext('Click OK to restore all original captions');?>')){document.do_restore_form.submit();}"
 				</TD></TR>			
 			</TABLE><!-- outer table -->
 <?php
@@ -146,7 +146,7 @@ $func = (empty($_POST))? "l":$_POST['func'];
 				<INPUT TYPE ='hidden' NAME = 'frm_id' VALUE='<?php print $_POST['frm_id'];?>' />
 				<INPUT TYPE ='hidden' NAME = 'func' VALUE='u' />
 			<TABLE ALIGN='center' STYLE = 'margin-top:60px'>
-			<TR CLASS='even' VALIGN = 'bottom'><TH COLSPAN=2>Enter caption change</TH></TR>
+			<TR CLASS='even' VALIGN = 'bottom'><TH COLSPAN=2><?php print gettext('Enter caption change');?></TH></TR>
 			<TR CLASS='odd' VALIGN = 'bottom'><TD COLSPAN=2>&nbsp;</TD></TR>
 			
 			<TR CLASS='odd' VALIGN='baseline'>
@@ -157,9 +157,9 @@ $func = (empty($_POST))? "l":$_POST['func'];
 				<TD>&nbsp;</TD>
 				</TR>
 			<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'>
-				<INPUT TYPE ='button' VALUE = 'Cancel' onClick="document.can_form.submit();" />
-				<INPUT TYPE ='reset' VALUE = 'Reset' onClick = "this.form.reset()" STYLE = 'margin-left:40px;' />
-				<INPUT TYPE ='submit' VALUE = 'Next'  STYLE = 'margin-left:40px;' />
+				<INPUT TYPE ='button' VALUE = '<?php print gettext('Cancel');?>' onClick="document.can_form.submit();" />
+				<INPUT TYPE ='reset' VALUE = '<?php print gettext('Reset');?>' onClick = "this.form.reset()" STYLE = 'margin-left:40px;' />
+				<INPUT TYPE ='submit' VALUE = '<?php print gettext('Next');?>'  STYLE = 'margin-left:40px;' />
 				</FORM>
 				</TABLE>
 <?php
@@ -170,12 +170,12 @@ $func = (empty($_POST))? "l":$_POST['func'];
  			$query = "UPDATE `{$the_table}` SET `repl` = `capt`;";			// 6/26/11
 
 			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-			$outstr = urlencode( "Entries restored to original values");
+			$outstr = urlencode( gettext("Entries restored to original values"));
 			header("Location:capts.php?caption={$outstr}");
 			break;
 
 		default :
-			echo "ERROR - ERROR - ERROR" . __LINE__; 
+			echo gettext("ERROR") ." - " . gettext("ERROR") ." - " . gettext("ERROR") ." - " . __LINE__; 
 		}	// end switch 
 	
 ?>

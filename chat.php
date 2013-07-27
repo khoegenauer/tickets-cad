@@ -46,7 +46,7 @@ $signals_list .= "</SELECT>\n";
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Chat Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Chat Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 	<META HTTP-EQUIV="Expires" CONTENT="0" />
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -122,11 +122,11 @@ $signals_list .= "</SELECT>\n";
 			} else {
 			    var charCode = ch.charCodeAt(0);
 				if (charCode > 255) {
-				    alert( "Unicode Character '"
+				    alert( "<?php print gettext('Unicode Character');?> '"
 	                        + ch
-	                        + "' cannot be encoded using standard URL encoding.\n" +
-					          "(URL encoding only supports 8-bit characters.)\n" +
-							  "A space (+) will be substituted." );
+	                        + "' <?php print gettext('cannot be encoded using standard URL encoding.');?>\n" +
+					          "(<?php print gettext('URL encoding only supports 8-bit characters.');?>)\n" +
+							  "<?php print gettext('A space (+) will be substituted.');?>" );
 					encoded += "+";
 				} else {
 					encoded += "%";
@@ -158,7 +158,7 @@ $signals_list .= "</SELECT>\n";
 					plaintext += unescape( encoded.substr(i,3) );
 					i += 3;
 				} else {
-					alert( '-- invalid escape combination near ...' + encoded.substr(i) );
+					alert( '-- <?php print gettext('invalid escape combination near');?> ...' + encoded.substr(i) );
 					plaintext += "%[ERROR]";
 					i++;
 				}
@@ -214,7 +214,7 @@ $signals_list .= "</SELECT>\n";
 	function handleResult(req) {									// the called-back phone lookup function
 		var payload = req.responseText;		
 		if (payload.substring(0,1)=="-") {
-			alert ("chat failed -  <?php print __LINE__;?>");
+			alert ("<?php print gettext('chat failed');?> -  <?php print __LINE__;?>");
 			return false;
 			}
 		else {
@@ -305,7 +305,7 @@ $signals_list .= "</SELECT>\n";
 		var url = "chat_invite.php?frm_to=" + target.trim() + "&frm_user=" + document.chat_form.frm_user.value;		// user id or broadcast
 		var payload = syncAjax(url);						// send lookup url
 		if (payload.substring(0,1)=="-") {					// stringObject.substring(start,stop)
-			alert ("chat failed -  <?php print __LINE__;?>");
+			alert ("<?php print gettext('chat failed');?> -  <?php print __LINE__;?>");
 			set_to();										// set timeout again
 			return false;
 			}
@@ -473,7 +473,7 @@ $signals_list .= "</SELECT>\n";
 	if (mysql_affected_rows()==0) { $who = "no others";};
 ?>
 		<DIV  STYLE = 'margin-left:100px;'>
-		<FONT CLASS="header">Chat</FONT> <I>(logged-in: <?php print $who; ?>)</I><BR /><BR />
+		<FONT CLASS="header"><?php print gettext('Chat') . "</FONT> <I>(" . gettext('logged-in');?> : <?php print $who; ?>)</I><BR /><BR />
 		<FORM METHOD="post" NAME='chat_form' onSubmit="return false;">
 		<NOBR>
 		<INPUT TYPE="text" NAME="frm_message" SIZE=80 value = "" onFocus = "clear_to()"; onBlur = 'set_to()'; >
@@ -489,10 +489,10 @@ $signals_list .= "</SELECT>\n";
 
 		<SPAN ID = 'botton_row' STYLE='margin-left:120px;'>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<B>Invite </B><SELECT NAME='chat_invite' 
+		<B><?php print gettext('Invite');?> </B><SELECT NAME='chat_invite' 
 				onChange = "$('send_butt').style.display='inline';$('can_butt').style.display='inline';"> 
-		<OPTION VALUE="" SELECTED>Select</OPTION>	
-		<OPTION VALUE=0>All</OPTION>	
+		<OPTION VALUE="" SELECTED><?php print gettext('Select');?></OPTION>	
+		<OPTION VALUE=0><?php print gettext('All');?></OPTION>	
 
 <?php
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `id` != {$_SESSION['user_id']} ";
@@ -503,10 +503,10 @@ $signals_list .= "</SELECT>\n";
 		}
 	print "\t</SELECT>\n";
 ?>
-		<INPUT ID = 'send_butt' TYPE='button' VALUE = 'Send invite' style='margin-left:10px; display:none' onClick = "do_send_inv(document.chat_form.chat_invite.value);">
-		<SPAN ID= 'sent_msg' STYLE = 'margin-left:60px; display:none;'><B>Invitation Sent!</B></span>
-		<INPUT ID = 'can_butt' TYPE='button' VALUE = 'Cancel' style='margin-left:10px; display:none' onClick = "$('send_butt').style.display='none';$('can_butt').style.display='none';document.chat_form.chat_invite.options[0].selected = true;">
-		<INPUT TYPE="button" VALUE = "Close"  style='margin-left:60px;'onClick = "this.disabled=true; clear_to(); opener.chat_win_close(); self.close()">
+		<INPUT ID = 'send_butt' TYPE='button' VALUE = '<?php print gettext('Send invite');?>' style='margin-left:10px; display:none' onClick = "do_send_inv(document.chat_form.chat_invite.value);">
+		<SPAN ID= 'sent_msg' STYLE = 'margin-left:60px; display:none;'><B><?php print gettext('Invitation Sent!');?></B></span>
+		<INPUT ID = 'can_butt' TYPE='button' VALUE = '<?php print gettext('Cancel'?>' style='margin-left:10px; display:none' onClick = "$('send_butt').style.display='none';$('can_butt').style.display='none';document.chat_form.chat_invite.options[0].selected = true;">
+		<INPUT TYPE="button" VALUE = "<?php print gettext('Close');?>"  style='margin-left:60px;'onClick = "this.disabled=true; clear_to(); opener.chat_win_close(); self.close()">
 		<NOBR></CENTER>
 		</SPAN>
 		</FORM>

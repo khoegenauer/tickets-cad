@@ -28,7 +28,7 @@ $the_width = 600;
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-	<HEAD><TITLE>Tickets - Call History</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Call History');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="Expires" CONTENT="0">
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -74,13 +74,13 @@ $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_er
 $count = (mysql_num_rows($result)==0)? "": " <I>(" .mysql_affected_rows() . ")</I>";
 ?>
 <TABLE ALIGN='center' ID = 'outer'>
-<TR><TH><BR /><BR />Calls for <?php print format_phone ($the_phone) . $count; ?></TH></TR>
+<TR><TH><BR /><BR /><?php print gettext('Calls for');?> <?php print format_phone ($the_phone) . $count; ?></TH></TR>
 <TR><TD>
 <?php
 if (mysql_affected_rows()==0) {						// 7/16/2013
 ?>
 </TD></TR>
-<TR CLASS='even'><TH ALIGN='center'>None</TD></TR>
+<TR CLASS='even'><TH ALIGN='center'><?php print gettext('None');?></TD></TR>
 
 <?php
 	}		// end if (mysql_affected_rows()==0)
@@ -93,7 +93,7 @@ else {
 ?>
 </TH></TR>
 <TR CLASS='odd'><TD ALIGN = 'center'><BR />
-	<INPUT TYPE='button' VALUE= 'Finished' onClick = 'window.close()'>
+	<INPUT TYPE='button' VALUE= '<?php print gettext('Finished');?>' onClick = 'window.close()'>
 </TD></TR></TABLE>
 </BODY>
 </HTML>

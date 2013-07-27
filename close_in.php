@@ -27,7 +27,7 @@ $disposition = get_text("Disposition");				// 12/1/10
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Close Incident</TITLE>
+<TITLE><?php print gettext('Close Incident');?></TITLE>
 <META NAME="Author" CONTENT="" />
 <META NAME="Keywords" CONTENT="" />
 <META NAME="Description" CONTENT="" />
@@ -72,8 +72,8 @@ else {			// not empty then is finished
 <?php
 		$scope = do_is_finished();		// 2/15/10
 ?>
-<H3>Call '<SPAN style = 'background-color:#DEE3E7'><?php print $scope; ?></SPAN>' closed</H3><BR /><BR />	<!-- 2/15/10 -->
-<INPUT TYPE = 'button' VALUE = 'Finished' onClick = "opener.location.href = 'main.php'; window.close();">
+<H3><?php print gettext('Call');?><SPAN style = 'background-color:#DEE3E7'><?php print $scope; ?></SPAN><?php print gettext('closed');?></H3><BR /><BR />	<!-- 2/15/10 -->
+<INPUT TYPE = 'button' VALUE = '<?php print gettext('Finished');?>' onClick = "opener.location.href = 'main.php'; window.close();">
 </BODY>
 </HTML>
 
@@ -98,8 +98,8 @@ function do_is_closed() {
 	global $row;
 ?>		
 <CENTER>
-	<H3>Call '<?php print $row['scope'];?>' is already closed</H3><BR /><BR />
-	<INPUT TYPE = 'button' VALUE = 'Cancel' onClick = 'window.close()'>	
+	<H3><?php print gettext("Call  {$row['scope']} is already closed");?></H3><BR /><BR />
+	<INPUT TYPE = 'button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close()'>	
 	</BODY>
 	</HTML>
 <?php		
@@ -142,7 +142,7 @@ function do_is_start($in_row) {				// 3/22/10
 		}		// end function
 		
 </SCRIPT>
-	<H4>Enter Incident Close Information</H4>
+	<H4><?php print gettext('Enter Incident Close Information');?></H4>
 <?php
 		$short_descr = substr($in_row['scope'], 0, 20);
 		$sep = (empty($in_row['tick_street']))? "" : ", ";
@@ -152,13 +152,13 @@ function do_is_start($in_row) {				// 3/22/10
 	<FORM NAME='frm_note' METHOD='post' ACTION = '<?php print basename(__FILE__);?>'>
 	<TABLE ALIGN = 'center' CELLPADDING = 2 CELLSPACING = 0>
 	
-	<TR CLASS='even'><TD CLASS='td_label'  ALIGN='right'>Run End:&nbsp;</TD><TD>
+	<TR CLASS='even'><TD CLASS='td_label'  ALIGN='right'><?php print gettext('Run End');?>:&nbsp;</TD><TD>
 <?php 
 	print generate_date_dropdown('problemend',0, FALSE) . "</TD></TR>";
 	print (empty($in_row['comments']))? "" : "<TR><TD></TD><TD>{$in_row['comments']}</TD></TR>";
 	if (!(empty($in_row['description']))) {
 ?>		
-	<TR CLASS='odd'><TD ALIGN='right' CLASS='td_label' >Synopsis:&nbsp;</TD>
+	<TR CLASS='odd'><TD ALIGN='right' CLASS='td_label' ><?php print gettext('Synopsis');?>:&nbsp;</TD>
 		<TD><?php print $in_row['description'];?></TD></TR>
 <?php
 	$capt = "Add'l";
@@ -192,10 +192,10 @@ function do_is_start($in_row) {				// 3/22/10
 		<TD><TEXTAREA NAME='frm_synopsis' COLS=56 ROWS = 2></TEXTAREA>
 			</TD></TR>
 		<TR VALIGN = 'TOP' CLASS='odd'>		<!-- 11/15/10 -->
-			<TD></TD><TD CLASS="td_label">Signal &raquo; 
+			<TD></TD><TD CLASS="td_label"><?php print gettext('Signal');?> &raquo; 
 
 				<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-				<OPTION VALUE=0 SELECTED>Select</OPTION>
+				<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -211,10 +211,10 @@ function do_is_start($in_row) {				// 3/22/10
 		<TD><TEXTAREA NAME='frm_disp' COLS=56 ROWS = 2><?php print $in_row['comments'];?></TEXTAREA>
 			</TD></TR>
 		<TR VALIGN = 'TOP' CLASS='odd'>		<!-- 11/15/10 -->
-			<TD></TD><TD CLASS="td_label">Signal &raquo; 
+			<TD></TD><TD CLASS="td_label"><?php print gettext('Signal');?> &raquo; 
 
 				<SELECT NAME='signals2' onChange = 'set_signal2(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-				<OPTION VALUE=0 SELECTED>Select</OPTION>
+				<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -271,9 +271,9 @@ function do_is_start($in_row) {				// 3/22/10
 
 ?>			
 	<TR CLASS='<?php print $evenodd[($i)%2]?>'><TD></TD><TD ALIGN = 'center'>
-	<INPUT TYPE = 'button' VALUE = 'Cancel' onClick = 'window.close()' />
-	<INPUT TYPE = 'button' VALUE = 'Reset' onClick = 'this.form.reset()' STYLE = 'margin-left:20px' />
-	<INPUT TYPE = 'button' VALUE = 'Next' onClick = 'validate()'  STYLE = 'margin-left:20px' />
+	<INPUT TYPE = 'button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close()' />
+	<INPUT TYPE = 'button' VALUE = '<?php print gettext('Reset');?>' onClick = 'this.form.reset()' STYLE = 'margin-left:20px' />
+	<INPUT TYPE = 'button' VALUE = '<?php print gettext('Next');?>' onClick = 'validate()'  STYLE = 'margin-left:20px' />
 	</TD></TR>
 	</TABLE>
 	<INPUT TYPE = 'hidden' NAME = 'frm_ticket_id' VALUE='<?php print $_GET['ticket_id']; ?>' />

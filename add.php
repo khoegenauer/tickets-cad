@@ -372,7 +372,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 ?>
 			<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 			<html xmlns="http://www.w3.org/1999/xhtml">
-			<HEAD><TITLE>Tickets - Add Module</TITLE>
+			<HEAD><TITLE><?php print gettext('Tickets - Add Module');?></TITLE>
 			<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 			<META HTTP-EQUIV="Expires" CONTENT="0" />
 			<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -502,22 +502,22 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 <?php
 	$now = time() - (intval(get_variable('delta_mins')*60));		// 6/20/10
 	
-	print "<BR /><BR /><BR /><CENTER><FONT CLASS='header'>Ticket: '{$ticket_name}  ' Added by '{$_SESSION['user_id']}' at " . date(get_variable("date_format"),$now) . "</FONT></CENTER><BR /><BR />";
+	print "<BR /><BR /><BR /><CENTER><FONT CLASS='header'>" . gettext('Ticket') . ": '{$ticket_name}' " . gettext('Added by') . " '{$_SESSION['user_id']}' at " . date(get_variable("date_format"),$now) . "</FONT></CENTER><BR /><BR />";
 ?>	
 	<FORM NAME='to_main' METHOD='post' ACTION='main.php'>
-	<CENTER><INPUT TYPE='submit' VALUE='Main' />
+	<CENTER><INPUT TYPE='submit' VALUE='<?php print gettext('Main');?>' />
 	</FORM>
 
 	<FORM NAME='to_routes' METHOD='get' ACTION='<?php print $_SESSION['routesfile'];?>'>
 	<INPUT TYPE='hidden' NAME='ticket_id' VALUE='<?php print $_POST['ticket_id'];?>' />
-	<INPUT TYPE='submit' VALUE='Routes' /></CENTER>
+	<INPUT TYPE='submit' VALUE='<?php print gettext('Routes');?>' /></CENTER>
 	</FORM>
 <?php
 		}				// end if ($_GET['add'] ...
 //					==============================================
 	else {
 		if (is_guest() && !get_variable('guest_add_ticket')) {		// 6/25/10
-			print '<FONT CLASS="warn">Guest/member users may not add tickets on this system.  Contact administrator for further information.</FONT>';
+			print '<FONT CLASS="warn">' . gettext('Guest/member users may not add tickets on this system.  Contact administrator for further information.') . '</FONT>';
 			exit();
 			}
 
@@ -544,7 +544,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<HEAD><TITLE>Tickets - Add Module</TITLE>
+<HEAD><TITLE><?php print gettext('Tickets - Add Module');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 <META HTTP-EQUIV="Expires" CONTENT="0" />
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -646,7 +646,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		var url = "street_view.php?thelat=" + thelat + "&thelng=" + thelng;
 		newwindow_sl=window.open(url, "sta_log",  "titlebar=no, location=0, resizable=1, scrollbars, height=450,width=640,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 		if (!(newwindow_sl)) {
-			alert ("Street view operation requires popups to be enabled. Please adjust your browser options - or else turn off the Call Board option.");
+			alert ("<?php print gettext('Street view operation requires popups to be enabled. Please adjust your browser options - or else turn off the Call Board option.');?>");
 			return;
 			}
 		newwindow_sl.focus();
@@ -700,7 +700,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		newwindow_c_h=window.open(url, "Call_hist",  "titlebar, resizable=1, scrollbars, height=640,width=760,status=0,toolbar=0,menubar=0,location=0, left=50,top=150,screenX=100,screenY=300");
 		if (isNullOrEmpty(newwindow_c_h)) {
 			starting = false;
-			alert ("Call history operation requires popups to be enabled. Please adjust your browser options.");
+			alert ("<?php print gettext('Call history operation requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 		newwindow_c_h.focus();
@@ -805,7 +805,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 	function writeConsole(content) {
 		top.consoleRef=window.open('','myconsole',
 			'width=800,height=250' +',menubar=0' +',toolbar=0' +',status=0' +',scrollbars=1' +',resizable=1')
-	 	top.consoleRef.document.writeln('<html><head><title>Console</title></head>'
+	 	top.consoleRef.document.writeln('<html><head><title>' . gettext('Console') . '</title></head>'
 			+'<body bgcolor=white onLoad="self.focus()">' +content +'</body></html>'
 			)				// end top.consoleRef.document.writeln()
 	 	top.consoleRef.document.close();
@@ -954,11 +954,11 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 			} else {
 			    var charCode = ch.charCodeAt(0);
 				if (charCode > 255) {
-				    alert( "Unicode Character '"
+				    alert( "<?php print gettext('Unicode Character');?> '"
 	                        + ch
-	                        + "' cannot be encoded using standard URL encoding.\n" +
-					          "(URL encoding only supports 8-bit characters.)\n" +
-							  "A space (+) will be substituted." );
+	                        + "' <?php print gettext('cannot be encoded using standard URL encoding.');?>\n" +
+					          "(<?php print gettext('URL encoding only supports 8-bit characters.');?>)\n" +
+							  "<?php print gettext('A space (+) will be substituted.');?>" );
 					encoded += "+";
 				} else {
 					encoded += "%";
@@ -990,7 +990,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 					plaintext += unescape( encoded.substr(i,3) );
 					i += 3;
 				} else {
-					alert( '-- invalid escape combination near ...' + encoded.substr(i) );
+					alert( '-- <?php print gettext('invalid escape combination near');?> ...' + encoded.substr(i) );
 					plaintext += "%[ERROR]";
 					i++;
 				}
@@ -1223,7 +1223,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 	if (get_variable("locale") ==0) {				// USA only
 ?>
 		if (goodno.length<10) {
-			alert("10-digit phone no. required - any format");
+			alert("<?php print gettext('10-digit phone no. required - any format');?>");
 			return;}
 <?php
 		}		// end locale check
@@ -1276,7 +1276,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  */
 	function loc_lkup(my_form) {		   						// 7/5/10
 		if ((my_form.frm_city.value.trim()==""  || my_form.frm_state.value.trim()=="")) {
-			alert ("City and State are required for location lookup.");
+			alert ("<?php print gettext('City and State are required for location lookup.');?>");
 			return false;
 			}
 
@@ -1284,7 +1284,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 
 		geocoder.geocode( { 'address': myAddress}, function(results, status) {		
 			if (status == google.maps.GeocoderStatus.OK)	{ pt_to_map (my_form, results[0].geometry.location.lat(), results[0].geometry.location.lng());}					
-			else 											{ alert("Geocode lookup failed: " + status);}
+			else 											{ alert("<?php print gettext('Geocode lookup failed');?>: " + status);}
 			});				// end geocoder.geocode()
 
 		}				// end function loc_lkup()
@@ -1346,7 +1346,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 							}
 					}				// end switch
 				}
-			} else { alert("Geocoder lookup failed due to: " + status); }
+			} else { alert("<?php print gettext('Geocoder lookup failed due to');?>: " + status); }
 		});
 	}				// end function
 	
@@ -1365,7 +1365,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 				geocoder.getLocations(latlng, function(response) {
 				map.clearOverlays();  
 				if(response.Status.code != 200) {
-					alert("<?php print __LINE__;?>: address unavailable");
+					alert("<?php print __LINE__;?>: <?php print gettext('address unavailable');?>");
 				} else { 
 
 					place = response.Placemark[0];    
@@ -1472,48 +1472,48 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 	
 		var errmsg="";
 		if ((theForm.frm_status.value==<?php print $GLOBALS['STATUS_CLOSED'];?>) && (!theForm.re_but.checked)) 
-													{errmsg+= "\tRun end-date is required for Status=Closed\n";}
+													{errmsg+= "\t<?php print gettext('Run end-date is required for Status=Closed');?>\n";}
 		if ((theForm.frm_status.value==<?php print $GLOBALS['STATUS_OPEN'];?>) && (theForm.re_but.checked)) 
-													{errmsg+= "\tRun end-date not allowed for Status=Open\n";}	// 9/30/10													
+													{errmsg+= "\t<?php print gettext('Run end-date not allowed for Status=Open');?>\n";}	// 9/30/10													
 <?php
 	if (!(intval(get_variable('quick')==1))) {
 ?>
-		if (theForm.frm_in_types_id.value == 0)		{errmsg+= "\tNature of Incident is required\n";}			// 1/11/09
+		if (theForm.frm_in_types_id.value == 0)		{errmsg+= "\t<?php print gettext('Nature of Incident is required');?>\n";}			// 1/11/09
 <?php
 		}
 ?>		
-		if (theForm.frm_contact.value == "")		{errmsg+= "\tReported-by is required\n";}
-		if (theForm.frm_scope.value == "")			{errmsg+= "\tIncident name is required\n";}
-//		if (theForm.frm_description.value == "")	{errmsg+= "\tSynopsis is required\n";}
+		if (theForm.frm_contact.value == "")		{errmsg+= "\t<?php print gettext('Reported-by is required');?>\n";}
+		if (theForm.frm_scope.value == "")			{errmsg+= "\t<?php print gettext('Incident name is required');?>\n";}
+//		if (theForm.frm_description.value == "")	{errmsg+= "\t<?php print gettext('Synopsis is required');?>\n";}
 //		theForm.frm_lat.disabled=false;														// 9/9/08
 <?php
 	if (($gmaps) && (!($in_win))) {
 ?>
-		if ((theForm.frm_lat.value == 0) || (theForm.frm_lng.value == 0))		{errmsg+= "\tMap position is required\n";}
+		if ((theForm.frm_lat.value == 0) || (theForm.frm_lng.value == 0))		{errmsg+= "\t<?php print gettext('Map position is required');?>\n";}
 <?php
 			}
 ?>			
 		if (theForm.frm_status.value==<?php print $GLOBALS['STATUS_SCHEDULED'];?>) {		//10/1/09
-			if (theForm.frm_year_booked_date.value == "NULL") 		{errmsg+= "\tScheduled date time error - Hours\n";}
-			if (theForm.frm_minute_booked_date.value == "NULL") 	{errmsg+= "\tScheduled date time error - Minutes\n";}
+			if (theForm.frm_year_booked_date.value == "NULL") 		{errmsg+= "\t<?php print gettext('Scheduled date time error - Hours');?>\n";}
+			if (theForm.frm_minute_booked_date.value == "NULL") 	{errmsg+= "\t<?php print gettext('Scheduled date time error - Minutes');?>\n";}
 			}
 
 //		theForm.frm_lat.disabled=true;
-		if (!chkval(theForm.frm_hour_problemstart.value, 0,23)) 		{errmsg+= "\tRun start time error - Hours\n";}
-		if (!chkval(theForm.frm_minute_problemstart.value, 0,59)) 		{errmsg+= "\tRun start time error - Minutes\n";}
-		if (!datechk_s(theForm))										{errmsg+= "\tRun start time error - future date\n" ;}
+		if (!chkval(theForm.frm_hour_problemstart.value, 0,23)) 		{errmsg+= "\t<?php print gettext('Run start time error - Hours');?>\n";}
+		if (!chkval(theForm.frm_minute_problemstart.value, 0,59)) 		{errmsg+= "\t<?php print gettext('Run start time error - Minutes');?>\n";}
+		if (!datechk_s(theForm))										{errmsg+= "\t<?php print gettext('Run start time error - future date');?>\n" ;}
 
 		if (theForm.re_but.checked) {				// run end?
 			do_unlock_pe(theForm);								// problemend values
-			if (!datechk_e(theForm)){errmsg+= "\tRun start time error - future\n" ;}
-			if (!datechk_e(theForm)){errmsg+= "\tRun start time error - future\n" ;}
-			if (!datechk_r(theForm)){errmsg+= "\tRun start time error - future\n" ;}
+			if (!datechk_e(theForm)){errmsg+= "\t<?php print gettext('Run start time error - future');?>\n" ;}
+			if (!datechk_e(theForm)){errmsg+= "\t<?php print gettext('Run start time error - future');?>\n" ;}
+			if (!datechk_r(theForm)){errmsg+= "\t<?php print gettext('Run start time error - future');?>\n" ;}
 		
-			if (!chkval(theForm.frm_hour_problemend.value, 0,23)) 		{errmsg+= "\tRun end time error - Hours\n";}
-			if (!chkval(theForm.frm_minute_problemend.value, 0,59)) 	{errmsg+= "\tRun end time error - Minutes\n";}
+			if (!chkval(theForm.frm_hour_problemend.value, 0,23)) 		{errmsg+= "\t<?php print gettext('Run end time error - Hours');?>\n";}
+			if (!chkval(theForm.frm_minute_problemend.value, 0,59)) 	{errmsg+= "\t<?php print gettext('Run end time error - Minutes');?>\n";}
 			}
 		if (errmsg!="") {
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
@@ -1752,7 +1752,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		break;
 
 		default:		// ROW
-			print "\n\t alert('Unavailable');\n;";		
+			print "\n\t alert('" . gettext('Unavailable') . "');\n;";		
 		}			// end switch($locale)
 ?>
 		}				// end function
@@ -1818,7 +1818,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		$where2 GROUP BY `$GLOBALS[mysql_prefix]facilities`.`id` ORDER BY `name` ASC";		
 //	print $query_fc;
 	$result_fc = mysql_query($query_fc) or do_error($query_fc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-	$pulldown = '<option value=0 selected>Incident at Facility</option>\n';	// 3/18/10
+	$pulldown = '<option value=0 selected>' . gettext('Incident at Facility') . '</option>\n';	// 3/18/10
 		while ($row_fc = mysql_fetch_array($result_fc, MYSQL_ASSOC)) {
 			$pulldown .= "<option value=\"{$row_fc['fac_id']}\">" . shorten($row_fc['name'], 30) . "</option>\n";
 			print "\tfac_lat[" . $row_fc['fac_id'] . "] = " . $row_fc['lat'] . " ;\n";
@@ -1863,7 +1863,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 	function do_act_window(the_url) {				// 5/6/11
 		newwindow=window.open(the_url, "new_window",  "titlebar, location=0, resizable=1, scrollbars, height=480,width=960,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 		if (newwindow == null) {
-			alert ("Station log operation requires popups to be enabled. Please adjust your browser options.");
+			alert ("<?php print gettext('Station log operation requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 		newwindow.focus();
@@ -1876,7 +1876,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 	function do_pat_window(the_url) {				// 5/6/11
 		newwindow=window.open(the_url, "new_window",  "titlebar, location=0, resizable=1, scrollbars, height=480,width=720,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 		if (newwindow == null) {
-			alert ("Station log operation requires popups to be enabled. Please adjust your browser options.");
+			alert ("<?php print gettext('Station log operation requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 		newwindow.focus();
@@ -1912,9 +1912,9 @@ $onload_str .= (is_float($cid_lat))? " pt_to_map( add, {$cid_lat} ,{$cid_lng});"
 <div id = 'outer' style = "position:fixed; ">				<!-- 2/19/11 -->
 <div id="boxB" class="box" style="left:<?php print $from_left;?>px; top:<?php print $from_top;?>px;">
   <div class="bar" STYLE="width:12em; color:red; background-color : transparent;"
-       onmousedown="dragStart(event, 'boxB')"><i>&nbsp;&nbsp;&nbsp;&nbsp;Drag me</i></div>
+       onmousedown="dragStart(event, 'boxB')"><i>&nbsp;&nbsp;&nbsp;&nbsp;<?php print gettext('Drag me');?></i></div>
   <div class="content" style="width:auto;">
-  		<INPUT TYPE="button" VALUE="History"  onClick="do_hist_win();" STYLE = 'margin-top:none;'><BR />
+  		<INPUT TYPE="button" VALUE="<?php print gettext('History');?>"  onClick="do_hist_win();" STYLE = 'margin-top:none;'><BR />
   		<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>"  onClick="do_cancel(document.add);" STYLE = 'margin-top:4px;'><BR />
   		<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onclick= "do_reset(this.form);"  STYLE = 'margin-top:4px;'><BR />
   		<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>"  onClick="validate(document.add);" STYLE = 'margin-top:4px;'><BR />
@@ -2000,7 +2000,7 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{	// 6/10/11
 
 	}
 if(is_super()) {
-	$al_names .= "&nbsp;&nbsp;Superadmin Level";
+	$al_names .= "&nbsp;&nbsp;" . gettext('Superadmin Level') . '"';
 }	
 
 if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
@@ -2018,9 +2018,9 @@ foreach($curr_viewed as $grp_id) {	//	6/10/11
 	$z++;
 	}
 	
-$heading = "Add Ticket - " . get_variable('map_caption');
+$heading = gettext("Add Ticket") . " - " . get_variable('map_caption');
 if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {	//	6/10/11		
-	$regs_string = "<FONT SIZE='-1'>Allocated " . get_text("Regions") . ":&nbsp;&nbsp;" . $al_names . "&nbsp;&nbsp;|&nbsp;&nbsp;Currently Viewing " . get_text("Regions") . ":&nbsp;&nbsp;" . $curr_names . "</FONT>";	//	6/10/11	
+	$regs_string = "<FONT SIZE='-1'>" . gettext('Allocated') . " " . get_text("Regions") . ":&nbsp;&nbsp;" . $al_names . "&nbsp;&nbsp;|&nbsp;&nbsp;" . gettext('Currently Viewing') . " " . get_text("Regions") . ":&nbsp;&nbsp;" . $curr_names . "</FONT>";	//	6/10/11	
 } else {
 	$regs_string = "";
 }	
@@ -2043,13 +2043,13 @@ var obj_sugg;
  */
 function do_nearby(the_form){		// 11/22/2012
 	if (the_form.frm_lat.value.length == 0) {
-		alert("Map <?php echo get_text("Location");?> is required for nearby <?php echo get_text("Incident");?> lookup.");
+		alert("<?php print gettext('Map Location is required for nearby Incident lookup.');?>");
 		return;
 		}
 	var the_url = "nearby.php?tick_lat="+the_form.frm_lat.value+"&tick_lng="+the_form.frm_lng.value;
 	newwindow=window.open(the_url, "new_window",  "titlebar, location=0, resizable=1, scrollbars, height=480,width=960,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 	if (newwindow == null) {
-		alert ("Nearby operation requires popups to be enabled. Please adjust your browser options.");
+		alert ("<?php print gettext('Nearby operation requires popups to be enabled. Please adjust your browser options.');?>");
 		return;
 		}
 	newwindow.focus();
@@ -2062,8 +2062,8 @@ function do_nearby(the_form){		// 11/22/2012
 <TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR>				<!-- 6/10/11 -->	
 <TR><TD>
 <TABLE BORDER="0"><BR />
-<TR><TD ALIGN='center' COLSPAN='3'><FONT CLASS='header'><FONT COLOR='green'>New Call</FONT></FONT><BR />
-	<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD>
+<TR><TD ALIGN='center' COLSPAN='3'><FONT CLASS='header'><FONT COLOR='green'><?php print gettext('New Call');?></FONT></FONT><BR />
+	<FONT SIZE=-1>(<?php print gettext('mouseover caption for help information');?>)</FONT></FONT><BR /><BR /></TD>
 	</TR>
 <FORM NAME="add" METHOD="post" ACTION="<?php print basename(__FILE__);?>?add=true" onSubmit="return validate(document.add)">
 <TR CLASS='even'>
@@ -2073,14 +2073,14 @@ function do_nearby(the_form){		// 11/22/2012
 	</TR>
 <TR CLASS='odd'>
 	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_city"];?>')"><?php print get_text("City");?>:</TD>
-	<TD ALIGN='center' ><BUTTON type="button" onClick="Javascript:loc_lkup(document.add);return false;"><img src="./markers/glasses.png" alt="Lookup location." /></BUTTON>&nbsp;&nbsp;</TD>		
+	<TD ALIGN='center' ><BUTTON type="button" onClick="Javascript:loc_lkup(document.add);return false;"><img src="./markers/glasses.png" alt="<?php print gettext('Lookup location.');?>" /></BUTTON>&nbsp;&nbsp;</TD>		
 	<TD><INPUT ID="my_txt"  onFocus = "createAutoComplete();$('city_reset').visibility='visible';" NAME="frm_city" autocomplete="off" tabindex=2 SIZE="32" TYPE="text" VALUE="<?php print $city; ?>" MAXLENGTH="32" onChange = " $('city_reset').visibility='visible'; this.value=capWords(this.value)">
 		<span id="suggest" onmousedown="$('suggest').style.display='none'; $('city_reset').style.visibility='visible';" style="visibility:hidden;border:#000000 1px solid;width:150px;right:400px;" /></span>
 		<IMG ID = 'city_reset' SRC="./markers/reset.png" STYLE = "margin-left:20px; visibility:hidden;" onClick = "this.style.visibility='hidden'; document.add.frm_city.value=''; document.add.frm_city.focus(); obj_sugg = null; ">
 <?php
 	if ($gmaps) {		// 12/1/2012
 ?>	
-		<BUTTON type="button" onClick="Javascript:do_nearby(this.form);return false;">Nearby?</BUTTON> <!-- 11/22/2012 -->
+		<BUTTON type="button" onClick="Javascript:do_nearby(this.form);return false;"><?php print gettext('Nearby?');?></BUTTON> <!-- 11/22/2012 -->
 <?php
 	}	
 ?>			
@@ -2089,7 +2089,7 @@ function do_nearby(the_form){		// 11/22/2012
 	</TR>
 <TR CLASS='even'>
 	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_phone"];?>');"><?php print get_text("Phone");?></A>:</TD> 
-	<TD ALIGN='center' ><BUTTON type="button" onClick="Javascript:phone_lkup(document.add.frm_phone.value);"><img src="./markers/glasses.png" alt="Lookup phone no." ></button>&nbsp;&nbsp;</TD>	
+	<TD ALIGN='center' ><BUTTON type="button" onClick="Javascript:phone_lkup(document.add.frm_phone.value);"><img src="./markers/glasses.png" alt="<?php print gettext('Lookup phone number');?>" ></button>&nbsp;&nbsp;</TD>	
 	<TD><INPUT NAME="frm_phone"  tabindex=4 SIZE="16" TYPE="text" VALUE="<?php print $phone;?>"  MAXLENGTH="16">&nbsp;<SPAN ID='repeats'></SPAN></TD>
 	</TR>
 <TR CLASS='odd'>
@@ -2097,7 +2097,7 @@ function do_nearby(the_form){		// 11/22/2012
 	<TD></TD>
 	<TD>
 		<SELECT NAME="frm_in_types_id"  tabindex=5 onChange="do_set_severity (this.selectedIndex); do_inc_name(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim());">	<!--  10/4/08 -->
-		<OPTION VALUE=0 SELECTED>TBD</OPTION>				<!-- 1/11/09 -->
+		<OPTION VALUE=0 SELECTED><?php print gettext('TBD');?></OPTION>				<!-- 1/11/09 -->
 <?php
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]in_types` ORDER BY `group` ASC, `sort` ASC, `type` ASC";
 		$temp_result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -2143,7 +2143,7 @@ if(get_num_groups()) {
 	if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>
 		<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
-		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');"><?php print get_text("Regions");?></A>: </TD>
+		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('<?php print gettext('Sets groups that Incident is allocated to - click + to expand, - to collapse');?>');"><?php print get_text("Regions");?></A>: </TD>
 		<TD>
 		<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 		<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
@@ -2157,7 +2157,7 @@ if(get_num_groups()) {
 		} elseif((is_admin()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
 ?>
 		<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
-		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');"><?php print get_text("Regions");?></A>: </TD>
+		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('<?php print gettext('Sets groups that Incident is allocated to - click + to expand, - to collapse');?>');"><?php print get_text("Regions");?></A>: </TD>
 		<TD>
 		<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 		<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
@@ -2171,7 +2171,7 @@ if(get_num_groups()) {
 		} else {
 ?>
 		<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
-		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');"><?php print get_text("Regions");?></A>: </TD>
+		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('<?php print gettext('Sets groups that Incident is allocated to - click + to expand, - to collapse');?>');"><?php print get_text("Regions");?></A>: </TD>
 		<TD>
 		<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 		<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
@@ -2230,10 +2230,10 @@ if(get_num_groups()) {
 <TR VALIGN = 'TOP' CLASS='even'>		<!-- 11/15/10 -->
 	<TD></TD>
 	<TD></TD>
-	<TD CLASS="td_label">Signal &raquo; 
+	<TD CLASS="td_label"><?php print gettext('Signal');?> &raquo; 
 
 				<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-				<OPTION VALUE=0 SELECTED>Select</OPTION>
+				<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";		// 12/18/10
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -2260,7 +2260,7 @@ if(get_num_groups()) {
 	<TD><INPUT NAME="frm_contact"  tabindex=9 SIZE="56" TYPE="text" VALUE="<?php print $reported_by; ?>" MAXLENGTH="48" onFocus ="Javascript: if (this.value.trim()=='TBD') {this.value='';}"></TD>
 	</TR>
 <TR CLASS='odd' ID = 'tr_misc' STYLE = 'display:none'>
-	<TD CLASS="td_label">Add'l:</TD>
+	<TD CLASS="td_label"><?php print gettext('Additional');?>:</TD>
 	<TD></TD>
 	<TD ID='td_misc' CLASS="td_label"></TD>
 	</TR> <!-- 3/13/10 -->
@@ -2321,7 +2321,7 @@ if(get_num_groups()) {
 	if ($facilities > 0) {				// any? - 3/24/10
 ?>	
 	<TR CLASS='odd'>
-		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_facy"];?>');">Facility?</A>:&nbsp;&nbsp;&nbsp;&nbsp;</TD>	 <!-- 9/22/09 -->
+		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_facy"];?>');"><?php print gettext('Facility?');?></A>:&nbsp;&nbsp;&nbsp;&nbsp;</TD>	 <!-- 9/22/09 -->
 		<TD></TD>
 		<TD>
 			<SELECT NAME="frm_facility_id"  tabindex=11 onChange="do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim())"><?php print $pulldown; ?></SELECT>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2352,9 +2352,9 @@ if(get_num_groups()) {
 		<TD>
 <?php print generate_date_dropdown('problemstart',0,TRUE);?>
 		<SPAN CLASS="td_label" STYLE='margin-left:12px' onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_status"];?>');"><?php print get_text("Status");?>:</SPAN>
-		<SELECT NAME='frm_status'><OPTION VALUE='<?php print $GLOBALS['STATUS_OPEN'];?>' selected>Open</OPTION>
-		<OPTION VALUE='<?php print $GLOBALS['STATUS_CLOSED']; ?>'>Closed</OPTION>
-		<OPTION VALUE='<?php print $GLOBALS['STATUS_SCHEDULED']; ?>'>Scheduled</OPTION></SELECT>		
+		<SELECT NAME='frm_status'><OPTION VALUE='<?php print $GLOBALS['STATUS_OPEN'];?>' selected><?php print gettext('Open');?></OPTION>
+		<OPTION VALUE='<?php print $GLOBALS['STATUS_CLOSED']; ?>'><?php print gettext('Closed');?></OPTION>
+		<OPTION VALUE='<?php print $GLOBALS['STATUS_SCHEDULED']; ?>'><?php print gettext('Scheduled');?></OPTION></SELECT>		
 		
 		</TD>
 	</TR>
@@ -2377,10 +2377,10 @@ if(get_num_groups()) {
 	<TR VALIGN = 'TOP' CLASS='even'>		<!-- 11/15/10 -->
 		<TD></TD>
 		<TD></TD>
-		<TD CLASS="td_label">Signal &raquo; 
+		<TD CLASS="td_label"><?php print gettext('Signal');?> &raquo; 
 
 			<SELECT NAME='signals' onChange = 'set_signal2(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-				<OPTION VALUE=0 SELECTED>Select</OPTION>
+				<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 //				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";		// 12/18/10
 //				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -2399,7 +2399,7 @@ if(get_num_groups()) {
 	<TR CLASS='odd'>
 		<TD CLASS="td_label">
 			<SPAN ID="pos" onClick = 'javascript: do_coords(document.add.frm_lat.value, document.add.frm_lng.value );'> 
-			<U><A HREF="#" TITLE="<?php print $titles["_coords"];?>"><?php print $incident;?> Lat/Lng</A></U></SPAN>: 
+			<U><A HREF="#" TITLE="<?php print $titles["_coords"];?>"><?php print $incident;?> <?php print gettext('Lat/Lng');?></A></U></SPAN>: 
 				<font color='red' size='-1'>*</font>
 		</TD>
 		<TD ALIGN='center' ><img id='lock_p' border=0 src='./markers/unlock2.png' STYLE='vertical-align: middle' onClick = 'do_unlock_pos(document.add);'></TD>
@@ -2412,7 +2412,7 @@ if(get_num_groups()) {
 	}		// end if ($gmaps)
 ?>			
 	<TR CLASS='even'>
-		<TD COLSPAN="3" ALIGN="center"><br /><IMG SRC="glasses.png" BORDER="0"/>: Lookup </TD>
+		<TD COLSPAN="3" ALIGN="center"><br /><IMG SRC="glasses.png" BORDER="0"/>: <?php print gettext('Lookup');?> </TD>
 		</TR>
 	
 		<INPUT TYPE="hidden" NAME="frm_lat" VALUE="">				<!-- // 9/9/08 -->
@@ -2430,8 +2430,8 @@ if(get_num_groups()) {
 
 	<TABLE ID='four' border=0><TR><TD id='three' ALIGN='center'><div id='map_canvas' style='z-index:1; width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px'></div>
 	<BR /><CENTER><FONT CLASS='header'><?php echo get_variable('map_caption');?></FONT><BR /><BR />
-		<SPAN ID='do_grid' onclick = "toglGrid()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>Grid</U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<SPAN ID='do_sv' onClick = "sv_win(document.add)" style='display:none'><u>Street view</U></SPAN> <!-- 2/11/09 -->
+		<SPAN ID='do_grid' onclick = "toglGrid()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u><?php print gettext('Grid');?></U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<SPAN ID='do_sv' onClick = "sv_win(document.add)" style='display:none'><u><?php print gettext('Street view');?></U></SPAN> <!-- 2/11/09 -->
 		
 	</TD></TR /></TABLE>
 	</TD>

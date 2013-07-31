@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Sounds</TITLE>
+<TITLE><?php print gettext('Sounds');?></TITLE>
 <META NAME="Author" CONTENT="">
 <META NAME="Keywords" CONTENT="">
 <META NAME="Description" CONTENT="">
@@ -48,26 +48,26 @@ div {MARGIN:12PX; TEXT-DECORATION: underline; }
 <audio src="./sounds/weatherwarning.mp3" preload></audio>
 <audio src="./sounds/whistlewolf.mp3" preload></audio>
 
-<h2>Available Sound Effects For Notification - <u>click below to try</u></h2>
-<h3>wav format sound files (Firefox 3.5+ and Safari 5.0+ )</h3>
-<DIV onClick = 'playit(0);'>Aooga (aooga.wav)</DIV>
-<DIV onClick = 'playit(1);'>Applause (applause.wav)</DIV>
-<DIV onClick = 'playit(2);'>Dive alarm (divalarm.wav)</DIV>
-<DIV onClick = 'playit(3);'>Door squeak (door-squeak-1.wav)</DIV>
-<DIV onClick = 'playit(4);'>Flush toilet (flushtoilet.wav)</DIV>
-<DIV onClick = 'playit(5);'>Sonar (sonar.wav)</DIV>
-<DIV onClick = 'playit(6);'>Taps (taps.wav)</DIV>
-<br><br><h3>mp3 format sound files (Chrome 5.0+ and Safari 5.0+ )</h3>
+<h2><?php print gettext('Available Sound Effects For Notification');?> - <u><?php print gettext('click below to try');?></u></h2>
+<h3><?php print gettext('wav format sound files');?> (Firefox 3.5+ and Safari 5.0+ )</h3>
+<DIV onClick = 'playit(0);'><?php print gettext('Aooga');?> (aooga.wav)</DIV>
+<DIV onClick = 'playit(1);'><?php print gettext('Applause');?> (applause.wav)</DIV>
+<DIV onClick = 'playit(2);'><?php print gettext('Dive alarm');?> (divalarm.wav)</DIV>
+<DIV onClick = 'playit(3);'><?php print gettext('Door squeak');?> (door-squeak-1.wav)</DIV>
+<DIV onClick = 'playit(4);'><?php print gettext('Flush toilet');?> (flushtoilet.wav)</DIV>
+<DIV onClick = 'playit(5);'><?php print gettext('Sonar');?> (sonar.wav)</DIV>
+<DIV onClick = 'playit(6);'><?php print gettext('Taps');?> (taps.wav)</DIV>
+<br><br><h3><?php print gettext('mp3 format sound files');?> (Chrome 5.0+ and Safari 5.0+ )</h3>
 
-<DIV onClick = 'playit(7);'>Phone ring (phonesring.mp3)</DIV>
-<!-- <DIV onClick = 'playit(8);'>4bells.wav (4bells.wav)</DIV>
+<DIV onClick = 'playit(7);'><?php print gettext('Phone ring');?> (phonesring.mp3)</DIV>
+<!-- <DIV onClick = 'playit(8);'><?php print gettext('4bells.wav');?> (4bells.wav)</DIV>
 <DIV onClick = 'playit(9);'>bass_1.mid ()</DIV> -->
-<DIV onClick = 'playit(10);'>Fire truck siren (firetrucksiren.mp3)</DIV>
-<DIV onClick = 'playit(11);'>Missile (missle.mp3)</DIV>
-<DIV onClick = 'playit(12);'>Electric shock (shockperson.mp3)</DIV>
-<DIV onClick = 'playit(13);'>Weather warning (weatherwarning.mp3)</DIV>
-<DIV onClick = 'playit(14);'>Wolf whistle (whistlewolf.mp3)</DIV>
+<DIV onClick = 'playit(10);'><?php print gettext('Fire truck siren');?> (firetrucksiren.mp3)</DIV>
+<DIV onClick = 'playit(11);'><?php print gettext('Missile');?> (missle.mp3)</DIV>
+<DIV onClick = 'playit(12);'><?php print gettext('Electric shock');?> (shockperson.mp3)</DIV>
+<DIV onClick = 'playit(13);'><?php print gettext('Weather warning');?> (weatherwarning.mp3)</DIV>
+<DIV onClick = 'playit(14);'><?php print gettext('Wolf whistle');?> (whistlewolf.mp3)</DIV>
 <BR />
-<SPAN onClick = 'window.close()'><u>Finished</u></SPAN>
+<SPAN onClick = 'window.close()'><u><?php print gettext('Finished');?></u></SPAN>
 </BODY>
 </HTML>

@@ -41,7 +41,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Action Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Action Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="Expires" CONTENT="0">
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -226,18 +226,18 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
  */	
 	function validate(theForm) {
 		var errmsg="";
-		if (theForm.frm_description.value == "")		{errmsg+= "\tDescription is required\n";}
+		if (theForm.frm_description.value == "")		{errmsg+= "\t<?php print gettext('Description is required');?>\n";}
 		do_unlock(theForm) ;
-		if (!chkval(theForm.frm_year_asof.value, <?php print date('Y')-1 . ", " . date('Y'); ?>)) 	{errmsg+= "\tAs-of date error - Year\n";}
-		if (!chkval(theForm.frm_month_asof.value, 1,12)) 		{errmsg+= "\tAs-of date error - Month\n";}
-		if (!chkval(theForm.frm_day_asof.value, 1,31)) 			{errmsg+= "\tAs-of date error - Day\n";}
-		if (!chkval(theForm.frm_hour_asof.value, 0,23)) 		{errmsg+= "\tAs-of time error - Hours\n";}
-		if (!chkval(theForm.frm_minute_asof.value, 0,59)) 		{errmsg+= "\tAs-of time error - Minutes\n";}
-		if (!datechk_r(theForm))								{errmsg+= "\tAs-of date/time error - future?\n" ;}
+		if (!chkval(theForm.frm_year_asof.value, <?php print date('Y')-1 . ", " . date('Y'); ?>)) 	{errmsg+= "\t<?php print gettext('As-of date error - Year');?>\n";}
+		if (!chkval(theForm.frm_month_asof.value, 1,12)) 		{errmsg+= "\t<?php print gettext('As-of date error - Month');?>\n";}
+		if (!chkval(theForm.frm_day_asof.value, 1,31)) 			{errmsg+= "\t<?php print gettext('As-of date error - Day');?>\n";}
+		if (!chkval(theForm.frm_hour_asof.value, 0,23)) 		{errmsg+= "\t<?php print gettext('As-of time error - Hours');?>\n";}
+		if (!chkval(theForm.frm_minute_asof.value, 0,59)) 		{errmsg+= "\t<?php print gettext('As-of time error - Minutes');?>\n";}
+		if (!datechk_r(theForm))								{errmsg+= "\t<?php print gettext('As-of date/time error - future?');?>\n" ;}
 		
 		if (errmsg!="") {
 			do_lock(theForm);
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
@@ -245,7 +245,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 		// 7/2/2013
 ?>
 								/*	5/22/2013 */
-			var theMessage = "New  <?php print get_text('Action');?> record by <?php echo $_SESSION['user'];?>";
+			var theMessage = "<?php print gettext('New Action record by') . ": " . $_SESSION['user'];?>";
 			broadcast(theMessage ) ;
 <?php
 	}			// end if (broadcast)
@@ -282,9 +282,9 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			var url = "persist3.php";	//	3/15/11	
 			sendRequest (url, fvg_handleResult, params);				
 		} else {
-			errmsg+= "\tYou cannot Hide all the regions\n";
+			errmsg+= "\t<?php print gettext('You cannot Hide all the regions');?>\n";
 			if (errmsg!="") {
-				alert ("Please correct the following and re-submit:\n\n" + errmsg);
+				alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 				return false;
 			}
 		}
@@ -410,9 +410,9 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));
 
 		if ($_GET['ticket_id'] == '' OR $_GET['ticket_id'] <= 0 OR !check_for_rows("SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE id='$_GET[ticket_id]'"))
-			print "<FONT CLASS='warn'>Invalid Ticket ID: '$_GET[ticket_id]'</FONT>";
+			print "<FONT CLASS='warn'>" . gettext('Invalid Ticket ID') . ": '$_GET[ticket_id]'</FONT>";
 		elseif ($_POST['frm_description'] == '')
-			print '<FONT CLASS="warn">Please enter Description.</FONT><BR />';
+			print '<FONT CLASS="warn">' . gettext('Please enter Description.') . '</FONT><BR />';
 		else {
 			$responder = $sep = "";
 			foreach ($_POST as $VarName=>$VarValue) {			// 3/20/10
@@ -452,9 +452,9 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 				}		// end insert process
 				
 			add_header($_GET['ticket_id']);
-			print '<br /><FONT CLASS="header">Action record has been added.</FONT><BR /><BR />';
+			print '<br /><FONT CLASS="header">' . gettext('Action record has been added.') . '</FONT><BR /><BR />';
 
-			print "<A HREF='main.php?id=" . $_GET['ticket_id'] . "'><U>Continue</U></A>";
+			print "<A HREF='main.php?id=" . $_GET['ticket_id'] . "'><U>" . gettext('Continue') . "</U></A>";
 			show_ticket($_GET['ticket_id']);
 //________________________________________________________________
 			print "</BODY>";				// 10/19/08
@@ -572,7 +572,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 //			($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, $rec_facility_id=0, $mileage=0) {		// generic log table writer - 5/31/08, 10/6/09
 		
 			$result = mysql_query("DELETE FROM `$GLOBALS[mysql_prefix]action` WHERE `id`='$_GET[id]' LIMIT 1") or do_error('','mysql_query',mysql_error(), basename(__FILE__), __LINE__);
-			print '<FONT CLASS="header">Action deleted</FONT><BR /><BR />';
+			print '<FONT CLASS="header">' . gettext('Action deleted') . '</FONT><BR /><BR />';
 			add_header($_GET['ticket_id']);
 			show_ticket($_GET['ticket_id']);
 			}
@@ -581,10 +581,10 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			$result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
 			$row = stripslashes_deep(mysql_fetch_assoc($result));
 
-			print "<FONT CLASS='header'>Really delete action record '" . shorten($row['description'], 24) . "' ? </FONT><BR /><BR />";
+			print "<FONT CLASS='header'>" . gettext('Really delete action record') . " '" . shorten($row['description'], 24) . "' ? </FONT><BR /><BR />";
 			print "<FORM NAME='delfrm' METHOD='post' ACTION='action.php?action=delete&id=$_GET[id]&ticket_id=" . $_GET['ticket_id'] . "&confirm=1'>";
-			print "<INPUT TYPE='Submit' VALUE='Yes'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-			print "<INPUT TYPE='Button' VALUE='Cancel' onClick='history.back();'></FORM>";
+			print "<INPUT TYPE='Submit' VALUE='" . gettext('Yes') . "'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			print "<INPUT TYPE='Button' VALUE='" . gettext('Cancel') . "' onClick='history.back();'></FORM>";
 			}
 
 		}				// end if ($get_action == 'delete') 
@@ -604,7 +604,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		$result = mysql_query("UPDATE `$GLOBALS[mysql_prefix]ticket` SET `updated` =	'$frm_asof' WHERE id='$_GET[ticket_id]' LIMIT 1") 	or do_error('action.php::update action','mysql_query',mysql_error(), basename(__FILE__), __LINE__);
 		$result = mysql_query("SELECT ticket_id FROM `$GLOBALS[mysql_prefix]action` WHERE `id`='$_GET[id]' LIMIT 1") 			or do_error('action.php::update action','mysql_query',mysql_error(), basename(__FILE__), __LINE__);
 		$row = stripslashes_deep(mysql_fetch_array($result));
-		print '<BR /><BR /><FONT CLASS="header">Action updated</FONT><BR /><BR />';
+		print '<BR /><BR /><FONT CLASS="header">' . gettext('Action updated') . '</FONT><BR /><BR />';
 		add_header($_GET['ticket_id']);
 		show_ticket($row['ticket_id']);
 		}				// end if ($get_action == 'update') 
@@ -618,10 +618,10 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 //		dump ($responders);
 		$do_yr_asof = true;
 ?>
-		<SPAN STYLE='margin-left:83px;'><FONT CLASS="header">Edit Action</FONT></SPAN><BR /><BR />
+		<SPAN STYLE='margin-left:83px;'><FONT CLASS="header"><?php print gettext('Edit Action');?></FONT></SPAN><BR /><BR />
 		<FORM METHOD="post" NAME='ed_frm' ACTION="action.php?id=<?php print $_GET['id'];?>&ticket_id=<?php print $_GET['ticket_id'];?>&action=update">
 		<TABLE BORDER="0"> <!-- 3/20/10 -->
-		<TR CLASS='even' VALIGN='top'><TD rowspan=4><B>Description:</B> <font color='red' size='-1'>*</font></TD>
+		<TR CLASS='even' VALIGN='top'><TD rowspan=4><B><?php print gettext('Description');?>:</B> <font color='red' size='-1'>*</font></TD>
 			<TD colspan=3><TEXTAREA ROWS="2" COLS="90" NAME="frm_description" WRAP="virtual"><?php print $row['description'];?></TEXTAREA>
 			</TD></TR>
 		<TR CLASS='odd' VALIGN='top'>
@@ -651,7 +651,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		print "<TR VALIGN='top'><TD COLSPAN=2>" . get_units_legend(). "</TD></TR>";
 		$checked = (in_array("0", $responders))? "CHECKED" : "";	// NA is special case - 8/8/10
 		print "<TD><DIV  style='width:auto;height:{$height}PX; overflow-y: auto; overflow-x: auto;' >
-			<INPUT TYPE = 'checkbox' VALUE=0 NAME = 'frm_cb_0'>NA<BR />\n";
+			<INPUT TYPE = 'checkbox' VALUE=0 NAME = 'frm_cb_0'>" . gettext('NA') . "<BR />\n";
 
     	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 			$the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$row['icon']];		// 7/20/10
@@ -672,7 +672,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		unset ($row);
 		print "\t</DIV></TD>\n";
 ?>
-		<TD CLASS="td_label"><SPAN>As of: &nbsp;&nbsp;<SPAN>
+		<TD CLASS="td_label"><SPAN><?php print gettext('As of');?>: &nbsp;&nbsp;<SPAN>
 		<INPUT SIZE=4 NAME="frm_year_asof" VALUE="" MAXLENGTH=4>
 		<INPUT SIZE=2 NAME="frm_month_asof" VALUE="" MAXLENGTH=2>
 		<INPUT SIZE=2 NAME="frm_day_asof" VALUE="" MAXLENGTH=2>
@@ -680,9 +680,9 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.ed_frm);'>
 			<br /> <br /> <br />
 
-			<INPUT TYPE="button" VALUE="Cancel"	onClick="history.back()" STYLE = 'margin-left:20px' > 
-			<INPUT TYPE="button" VALUE="Form reset" 	onClick="this.form.reset();init();" STYLE = 'margin-left:20px'>
-			<INPUT TYPE="button" VALUE="Next"	onClick="return validate(this.form)" STYLE = 'margin-left:20px'>
+			<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"	onClick="history.back()" STYLE = 'margin-left:20px' > 
+			<INPUT TYPE="button" VALUE="<?php print gettext('Form reset');?>" 	onClick="this.form.reset();init();" STYLE = 'margin-left:20px'>
+			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>"	onClick="return validate(this.form)" STYLE = 'margin-left:20px'>
 			</TD></TR>
 		</TABLE></FORM><BR />
 <?php
@@ -733,7 +733,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'><?php print $heading; ?> </FONT></TD></TR>	<!-- 6/10/11 -->
 		<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR>				<!-- 6/10/11 -->	
 		<FORM METHOD="post" NAME="add_frm" onSubmit='return validate(this.form);' ACTION="action.php?ticket_id=<?php print $tick_id;?>&action=add">		<!-- 6/10/11-->
-		<TR CLASS='even'><TD CLASS='td_label'>Description: <font color='red' size='-1'>*</font></TD>
+		<TR CLASS='even'><TD CLASS='td_label'><?php print gettext('Description');?>: <font color='red' size='-1'>*</font></TD>
 			<TD colspan=2><TEXTAREA ROWS="2" COLS="90" NAME="frm_description"></TEXTAREA>
 			</TD></TR>
 <SCRIPT>
@@ -750,9 +750,9 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		}		// end function set_signal()
 </SCRIPT>
 		<TR VALIGN = 'TOP' CLASS='even'>		<!-- 11/15/10 -->
-			<TD ALIGN='right' CLASS="td_label"></TD><TD>Signal &raquo;
+			<TD ALIGN='right' CLASS="td_label"></TD><TD><?php print gettext('Signal');?> &raquo;
 				<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-				<OPTION VALUE=0 SELECTED>Select</OPTION>
+				<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -820,7 +820,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		print "<TR><TD></TD><TD COLSPAN=2>" . get_units_legend(). "</TD></TR>";
 		print "<TR CLASS='odd'><TD CLASS='td_label'></TD>";		// 8/8/10
 		print "<TD><DIV  style='width:auto;height:{$height}PX; overflow-y: auto; overflow-x: auto;' >
-			<INPUT TYPE = 'checkbox' VALUE=0 NAME = 'frm_cb_0'>NA<BR />\n";
+			<INPUT TYPE = 'checkbox' VALUE=0 NAME = 'frm_cb_0'>" . gettext('NA') . "<BR />\n";
 //    		$the_class = (array_key_exists($row['type'], $optstyles))?  $optstyles[$row['type']] : "";
 
     	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
@@ -838,7 +838,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			}
 		print "</DIV></TD>";
 ?>
-		<TD CLASS="td_label"><SPAN STYLE = 'margin-left:20px'>As of: &nbsp;&nbsp;</SPAN>
+		<TD CLASS="td_label"><SPAN STYLE = 'margin-left:20px'><?php print gettext('As of');?>: &nbsp;&nbsp;</SPAN>
 			<INPUT SIZE=4 NAME="frm_year_asof" VALUE="" MAXLENGTH=4 />
 			<INPUT SIZE=2 NAME="frm_month_asof" VALUE="" MAXLENGTH=2 />
 			<INPUT SIZE=2 NAME="frm_day_asof" VALUE="" MAXLENGTH=2 />
@@ -847,9 +847,9 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.add_frm);'>
 			<br /> <br /> <br />
 
-			<INPUT TYPE="button" VALUE="Cancel"	onClick="history.back();"  STYLE = 'margin-left:40px' />
-			<INPUT TYPE="button" VALUE="Reset form"	onClick="this.form.reset();init();"  STYLE = 'margin-left:20px' />
-			<INPUT TYPE="button" VALUE="Next"	onClick="return validate(this.form)"  STYLE = 'margin-left:20px' />
+			<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"	onClick="history.back();"  STYLE = 'margin-left:40px' />
+			<INPUT TYPE="button" VALUE="<?php print gettext('Reset form');?>"	onClick="this.form.reset();init();"  STYLE = 'margin-left:20px' />
+			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>"	onClick="return validate(this.form)"  STYLE = 'margin-left:20px' />
 			</TD></TR>
 
 		</TABLE><BR />

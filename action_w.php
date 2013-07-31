@@ -33,7 +33,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Action Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Action Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 	<META HTTP-EQUIV="Expires" CONTENT="0" />
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -158,18 +158,18 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
  */	
 	function validate(theForm) {
 		var errmsg="";
-		if (theForm.frm_description.value == "")		{errmsg+= "\tDescription is required\n";}
+		if (theForm.frm_description.value == "")		{errmsg+= "\tDescription is required');?>\n";}
 		do_unlock(theForm) ;
-		if (!chkval(theForm.frm_year_asof.value, <?php print date('Y')-1 . ", " . date('Y'); ?>)) 	{errmsg+= "\tAs-of date error - Year\n";}
-		if (!chkval(theForm.frm_month_asof.value, 1,12)) 		{errmsg+= "\tAs-of date error - Month\n";}
-		if (!chkval(theForm.frm_day_asof.value, 1,31)) 			{errmsg+= "\tAs-of date error - Day\n";}
-		if (!chkval(theForm.frm_hour_asof.value, 0,23)) 		{errmsg+= "\tAs-of time error - Hours\n";}
-		if (!chkval(theForm.frm_minute_asof.value, 0,59)) 		{errmsg+= "\tAs-of time error - Minutes\n";}
-		if (!datechk_r(theForm))								{errmsg+= "\tAs-of date/time error - future?\n" ;}
+		if (!chkval(theForm.frm_year_asof.value, <?php print date('Y')-1 . ", " . date('Y'); ?>)) 	{errmsg+= "\t<?php print gettext('As-of date error - Year');?>\n";}
+		if (!chkval(theForm.frm_month_asof.value, 1,12)) 		{errmsg+= "\t<?php print gettext('As-of date error - Month');?>\n";}
+		if (!chkval(theForm.frm_day_asof.value, 1,31)) 			{errmsg+= "\t<?php print gettext('As-of date error - Day');?>\n";}
+		if (!chkval(theForm.frm_hour_asof.value, 0,23)) 		{errmsg+= "\t<?php print gettext('As-of time error - Hours');?>\n";}
+		if (!chkval(theForm.frm_minute_asof.value, 0,59)) 		{errmsg+= "\t<?php print gettext('As-of time error - Minutes');?>\n";}
+		if (!datechk_r(theForm))								{errmsg+= "\t<?php print gettext('As-of date/time error - future?');?>\n" ;}
 		
 		if (errmsg!="") {
 			do_lock(theForm);
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
@@ -198,9 +198,9 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));
 
 		if ($_GET['ticket_id'] == '' OR $_GET['ticket_id'] <= 0 OR !check_for_rows("SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE id='$_GET[ticket_id]'"))
-			print "<FONT CLASS='warn'>Invalid Ticket ID: '$_GET[ticket_id]'</FONT>";
+			print "<FONT CLASS='warn'>" . gettext('Invalid Ticket ID') . ": '$_GET[ticket_id]'</FONT>";
 		elseif ($_POST['frm_description'] == '')
-			print '<FONT CLASS="warn">Please enter Description.</FONT><BR />';
+			print '<FONT CLASS="warn">' . gettext('Please enter Description.') . '</FONT><BR />';
 		else {
 			$responder = $sep = "";
 			foreach ($_POST as $VarName=>$VarValue) {			// 3/20/10
@@ -240,10 +240,10 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 				}		// end insert process
 				
 //			add_header($_GET['ticket_id']);
-			print "<br /><FONT CLASS='header' STYLE = 'margin-left:200px;'>Action record has been added</FONT><BR /><BR />";
+			print "<br /><FONT CLASS='header' STYLE = 'margin-left:200px;'>" . gettext('Action record has been added') . "</FONT><BR /><BR />";
 
 //			show_ticket($_GET['ticket_id']);
-			print "<BR /><BR /><INPUT TYPE='button' VALUE='Finished' onClick = 'opener.location.reload(true); opener.parent.frames[\"upper\"].show_msg(\"Action added!\"); window.close();' STYLE = 'margin-left:300px;' /><BR /><BR /><BR />";	//	01/22/11Added refresh of opener window.
+			print "<BR /><BR /><INPUT TYPE='button' VALUE='" . gettext('Finished') . "' onClick = 'opener.location.reload(true); opener.parent.frames[\"upper\"].show_msg(\"" . gettext('Action added!') . "\"); window.close();' STYLE = 'margin-left:300px;' /><BR /><BR /><BR />";	//	01/22/11Added refresh of opener window.
 //________________________________________________________________
 			print "</BODY>";				// 10/19/08
 			
@@ -360,7 +360,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 //			($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, $rec_facility_id=0, $mileage=0) {		// generic log table writer - 5/31/08, 10/6/09
 		
 			$result = mysql_query("DELETE FROM `$GLOBALS[mysql_prefix]action` WHERE `id`='$_GET[id]' LIMIT 1") or do_error('','mysql_query',mysql_error(), basename(__FILE__), __LINE__);
-			print '<FONT CLASS="header">Action deleted</FONT><BR /><BR />';
+			print '<FONT CLASS="header">' . gettext('Action deleted') . '</FONT><BR /><BR />';
 			add_header($_GET['ticket_id']);
 			show_ticket($_GET['ticket_id']);
 			}
@@ -369,10 +369,10 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 			$result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
 			$row = stripslashes_deep(mysql_fetch_assoc($result));
 
-			print "<FONT CLASS='header'>Really delete action record '" . shorten($row['description'], 24) . "' ? </FONT><BR /><BR />";
+			print "<FONT CLASS='header'>" . gettext('Really delete action record') . " '" . shorten($row['description'], 24) . "' ? </FONT><BR /><BR />";
 			print "<FORM NAME='delfrm' METHOD='post' ACTION='action_w.php?action=delete&id=$_GET[id]&ticket_id=" . $_GET['ticket_id'] . "&confirm=1'>";
-			print "<INPUT TYPE='Submit' VALUE='Yes'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-			print "<INPUT TYPE='Button' VALUE='Cancel' onClick='history.back();'></FORM>";
+			print "<INPUT TYPE='Submit' VALUE='" . gettext('Yes') . "'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			print "<INPUT TYPE='Button' VALUE='" . gettext('Cancel') . "' onClick='history.back();'></FORM>";
 			}
 
 		}				// end if ($get_action == 'delete') 
@@ -392,7 +392,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		$result = mysql_query("UPDATE `$GLOBALS[mysql_prefix]ticket` SET `updated` =	'$frm_asof' WHERE id='$_GET[ticket_id]' LIMIT 1") 	or do_error('action_w.php::update action','mysql_query',mysql_error(), basename(__FILE__), __LINE__);
 		$result = mysql_query("SELECT ticket_id FROM `$GLOBALS[mysql_prefix]action` WHERE `id`='$_GET[id]' LIMIT 1") 			or do_error('action_w.php::update action','mysql_query',mysql_error(), basename(__FILE__), __LINE__);
 		$row = stripslashes_deep(mysql_fetch_array($result));
-		print '<BR /><BR /><FONT CLASS="header">Action updated</FONT><BR /><BR />';
+		print '<BR /><BR /><FONT CLASS="header">' . gettext('Action updated') . '</FONT><BR /><BR />';
 		add_header($_GET['ticket_id']);
 		show_ticket($row['ticket_id']);
 		}				// end if ($get_action == 'update') 
@@ -406,10 +406,10 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 //		dump ($responders);
 		$do_yr_asof = true;
 ?>
-		<SPAN STYLE='margin-left:83px;'><FONT CLASS="header">Edit Action</FONT></SPAN><BR /><BR />
+		<SPAN STYLE='margin-left:83px;'><FONT CLASS="header"><?php print gettext('Edit Action');?></FONT></SPAN><BR /><BR />
 		<FORM METHOD="post" NAME='ed_frm' ACTION="action_w.php?id=<?php print $_GET['id'];?>&ticket_id=<?php print $_GET['ticket_id'];?>&action=update">
 		<TABLE BORDER="0"> <!-- 3/20/10 -->
-		<TR CLASS='even' VALIGN='top'><TD rowspan=4><B>Description:</B> <font color='red' size='-1'>*</font></TD>
+		<TR CLASS='even' VALIGN='top'><TD rowspan=4><B><?php print gettext('Description');?>:</B> <font color='red' size='-1'>*</font></TD>
 			<TD colspan=3><TEXTAREA ROWS="2" COLS="90" NAME="frm_description" WRAP="virtual"><?php print $row['description'];?></TEXTAREA>
 			</TD></TR>
 		<TR CLASS='odd' VALIGN='top'>
@@ -433,7 +433,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		print "<TR VALIGN='top'><TD COLSPAN=2>" . get_units_legend(). "</TD></TR>";
 		$checked = (in_array("0", $responders))? "CHECKED" : "";	// NA is special case - 8/8/10
 		print "<TD><DIV  style='width:auto;height:{$height}PX; overflow-y: auto; overflow-x: auto;' >
-			<INPUT TYPE = 'checkbox' VALUE=0 NAME = 'frm_cb_0'>NA<BR />\n";
+			<INPUT TYPE = 'checkbox' VALUE=0 NAME = 'frm_cb_0" . gettext('NA') . "<BR />\n";
 
     	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 			$the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$row['icon']];		// 7/20/10
@@ -454,7 +454,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		unset ($row);
 		print "\t</DIV></TD>\n";
 ?>
-		<TD CLASS="td_label"><SPAN>As of: &nbsp;&nbsp;<SPAN>
+		<TD CLASS="td_label"><SPAN><?php print gettext('As of');?>: &nbsp;&nbsp;<SPAN>
 		<INPUT SIZE=4 NAME="frm_year_asof" VALUE="" MAXLENGTH=4>
 		<INPUT SIZE=2 NAME="frm_month_asof" VALUE="" MAXLENGTH=2>
 		<INPUT SIZE=2 NAME="frm_day_asof" VALUE="" MAXLENGTH=2>
@@ -462,9 +462,9 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.ed_frm);'>
 			<br /> <br /> <br />
 
-			<INPUT TYPE="button" VALUE="Cancel"	onClick="history.back()" STYLE = 'margin-left:20px' > 
-			<INPUT TYPE="button" VALUE="Form reset" 	onClick="this.form.reset();init();" STYLE = 'margin-left:20px'>
-			<INPUT TYPE="button" VALUE="Next"	onClick="return validate(this.form)" STYLE = 'margin-left:20px'>
+			<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"	onClick="history.back()" STYLE = 'margin-left:20px' > 
+			<INPUT TYPE="button" VALUE="<?php print gettext('Form reset');?>" 	onClick="this.form.reset();init();" STYLE = 'margin-left:20px'>
+			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>"	onClick="return validate(this.form)" STYLE = 'margin-left:20px'>
 			</TD></TR>
 		</TABLE></FORM><BR />
 <?php
@@ -473,10 +473,10 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 	else if ($get_action == 'form') {
 		$do_yr_asof = true;
 ?>
-		<SPAN STYLE='margin-left:60px;'><FONT CLASS="header">Add Action</FONT></SPAN><BR /><BR />
+		<SPAN STYLE='margin-left:60px;'><FONT CLASS="header"><?php print gettext('Add Action');?></FONT></SPAN><BR /><BR />
 		<FORM METHOD="post" NAME="add_frm" onSubmit='return validate(this.form);' ACTION="action_w.php?ticket_id=<?php print $_GET['ticket_id'];?>&action=add">
 		<TABLE BORDER="0" STYLE='margin-left:100px;'>
-		<TR CLASS='even'><TD CLASS='td_label'>Description: <font color='red' size='-1'>*</font></TD>
+		<TR CLASS='even'><TD CLASS='td_label'><?php print gettext('Description');?>: <font color='red' size='-1'>*</font></TD>
 			<TD colspan=2><TEXTAREA ROWS="2" COLS="90" NAME="frm_description"></TEXTAREA>
 			</TD></TR>
 <?php
@@ -500,7 +500,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		print "<TR><TD></TD><TD COLSPAN=2>" . get_units_legend(). "</TD></TR>";
 		print "<TR CLASS='odd'><TD CLASS='td_label'></TD>";		// 8/8/10
 		print "<TD><DIV  style='width:auto;height:{$height}PX; overflow-y: auto; overflow-x: auto;' >
-			<INPUT TYPE = 'checkbox' VALUE=0 NAME = 'frm_cb_0'>NA<BR />\n";
+			<INPUT TYPE = 'checkbox' VALUE=0 NAME = 'frm_cb_0'>" . gettext('NA') . "<BR />\n";
 //    		$the_class = (array_key_exists($row['type'], $optstyles))?  $optstyles[$row['type']] : "";
 
     	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
@@ -518,7 +518,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 			}
 		print "</DIV></TD>";
 ?>
-		<TD CLASS="td_label"><SPAN STYLE = 'margin-left:20px'>As of: &nbsp;&nbsp;</SPAN>
+		<TD CLASS="td_label"><SPAN STYLE = 'margin-left:20px'><?php print gettext('As of');?>: &nbsp;&nbsp;</SPAN>
 			<INPUT SIZE=4 NAME="frm_year_asof" VALUE="" MAXLENGTH=4 />
 			<INPUT SIZE=2 NAME="frm_month_asof" VALUE="" MAXLENGTH=2 />
 			<INPUT SIZE=2 NAME="frm_day_asof" VALUE="" MAXLENGTH=2 />
@@ -528,9 +528,9 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 			<br /> <br /> <br />
 			<TR><TD COLSPAN=3 ALIGN='center'>
 
-			<INPUT TYPE = 'button' VALUE = 'Cancel' onClick = 'window.close();' STYLE = 'margin-left:40px' />
-			<INPUT TYPE="button" VALUE="Reset form"	onClick="this.form.reset();init();"  STYLE = 'margin-left:20px' />
-			<INPUT TYPE="button" VALUE="Next"	onClick="return validate(this.form)"  STYLE = 'margin-left:20px' />
+			<INPUT TYPE = 'button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' STYLE = 'margin-left:40px' />
+			<INPUT TYPE="button" VALUE="<?php print gettext('Reset form');?>"	onClick="this.form.reset();init();"  STYLE = 'margin-left:20px' />
+			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>"	onClick="return validate(this.form)"  STYLE = 'margin-left:20px' />
 			</TD></TR>
 
 		</TABLE><BR />

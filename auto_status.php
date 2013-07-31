@@ -114,8 +114,8 @@ if(!empty($_POST)) {
 	</HEAD>
 	<BODY onLoad='ck_frames();'>
 	<DIV style='font-size: 14px; position: fixed; top: 150px; left: 100px;'>
-	Settings Saved<br /><br />
-	<A style='font-size: 14px;' href="config.php">Return to Config</A>		
+	<?php print gettext('Settings Saved');?><br /><br />
+	<A style='font-size: 14px;' href="config.php"><?php print gettext('Return to Config');?></A>		
 	</DIV>
 	</BODY>
 	</HTML>
@@ -180,12 +180,12 @@ if(!empty($_POST)) {
 	<BODY onLoad='ck_frames();'>
 
 	<DIV id='outer' style='position: absolute; top: 5%; width: 100%; height: 75%; border: 1px solid #FFFFFF;'>
-		<DIV class='heading' style='width: 100%; position: absolute; text-align: center;'>AUTOMATIC STATUS UPDATES VIA INCOMING MESSAGING</DIV>
+		<DIV class='heading' style='width: 100%; position: absolute; text-align: center;'><?php print gettext('AUTOMATIC STATUS UPDATES VIA INCOMING MESSAGING');?></DIV>
 		<DIV id='left_col' style='width: 45%; position: absolute; top: 60px; left: 2%; border: 3px outset #CECECE;'>
 			<FORM NAME='auto_stat_edit' METHOD="post" ACTION="<?php print basename(__FILE__);?>">
 			<TABLE style='width: 100%;'>
 				<TR class='heading'>
-					<TH COLSPAN=99>SETTINGS</TH>
+					<TH COLSPAN=99><?php print gettext('SETTINGS');?></TH>
 				</TR>
 				<TR class='spacer'>
 					<TD class='spacer' COLSPAN=99>&nbsp;</TH>
@@ -196,14 +196,14 @@ if(!empty($_POST)) {
 				foreach($status_ids as $the_id) {
 ?>
 				<TR class='<?php print $class;?>'>
-					<TD class='td_label'><FONT COLOR='blue'>(GROUP - : <?php print $status_ids[$the_id[0]][2];?>)</FONT> <?php print $status_ids[$the_id[0]][1];?></TD>
+					<TD class='td_label'><FONT COLOR='blue'>(<?php print gettext('GROUP');?> - : <?php print $status_ids[$the_id[0]][2];?>)</FONT> <?php print $status_ids[$the_id[0]][1];?></TD>
 					<TD class='td_data'>
 <?php
 					$the_text = (array_key_exists($the_id[0], $current)) ? $current[$the_id[0]][1] : "Not Set";
 ?>						
 						<input type="text" name="text_val<?php print $i;?>" value="<?php print $the_text;?>" size="20" />&nbsp;&nbsp;
 						<select name="s<?php print $i;?>" size="1" onchange="document.forms['auto_stat_edit'].text_val<?php print $i;?>.value = document.forms['auto_stat_edit'].s<?php print $i;?>.options[this.selectedIndex].value; document.forms['auto_stat_edit'].s<?php print $i;?>.value=''">
-							<option value=" " selected="selected">Select or type in box</option>						
+							<option value=" " selected="selected"><?php print gettext('Select or type in box');?></option>						
 <?php
 							foreach($signals AS $val) {
 ?>
@@ -224,18 +224,18 @@ if(!empty($_POST)) {
 			</TABLE>
 		</DIV>
 		<DIV id='right_col' style='width: 40%; height: 500px; position: absolute; top: 60px; right: 2%; border: 3px outset #DEDEDE; background-color: #F0F0F0;'>
-			<DIV class='heading' style='width: 100%;'>HELP</DIV>
-			<DIV class='td_data' style='width: 100%;'>
+			<DIV class='heading' style='width: 100%;'><?php print gettext('HELP');?></DIV>
+			<DIV class='td_data' style='width: 100%;'><?php print gettext('
 			This page is to set the Auto Status text values and their associated status values.<BR /><BR />
 			On the left side sre the status values currently configured on the Tickets CAD system. These can be changed through Config / Units Status. Next to these are a text box 
 			where you can type in the text values you want to search for in incoming SMS messages. The Responder sending the message will put this text between the start and end tags
 			configured in Messaging settings (default *). Next to the text box is a select control where you can select from pre-configured signals that are configured in Config / Signals.<BR /><BR />
 			To congigure the auto status values, for each status value that you want to be automatically set by incoming SMS message, type the text value that you want to trigger this or 
-			select from the pre-configured signals and then click Submit.<BR />
+			select from the pre-configured signals and then click Submit.');?><BR />
 			</DIV>
 		</DIV>
 		<DIV style='width: 100%; text-align: center; position: absolute; bottom: 10%;'>
-			<INPUT TYPE='SUBMIT' NAME='SUBMIT' VALUE='Submit'>
+			<INPUT TYPE='SUBMIT' NAME='SUBMIT' VALUE='<?php print gettext('Submit');?>'>
 		</DIV>
 		</FORM>			
 	</DIV>

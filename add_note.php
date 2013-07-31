@@ -25,7 +25,7 @@ $disposition = get_text("Disposition");				// 12/1/10
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Add Note to Existing Incident</TITLE>
+<TITLE><?php print gettext('Add Note to Existing Incident');?></TITLE>
 <META NAME="Author" CONTENT="">
 <META NAME="Keywords" CONTENT="">
 <META NAME="Description" CONTENT="">
@@ -50,7 +50,7 @@ $disposition = get_text("Disposition");				// 12/1/10
  */    
 function validate () {
 	if(document.frm_note.frm_text.value.trim().length==0) {
-		alert("Enter text - or Cancel"); 
+		alert("<?php print gettext('Enter text - or Cancel');?>"); 
 		return false;
 		} 
 	else {
@@ -64,7 +64,7 @@ if (empty($_POST)) {
 ?>
 <BODY onLoad = "document.frm_note.frm_text.focus();">
 <CENTER>
-<H4>Enter note text</H4>
+<H4><?php print gettext('Enter note text');?></H4>
 <FORM NAME='frm_note' METHOD='post' ACTION = '<?php print basename(__FILE__);?>'>
 <TEXTAREA NAME='frm_text' COLS=60 ROWS = 3></TEXTAREA>
 <BR />
@@ -83,7 +83,7 @@ if (empty($_POST)) {
 
 Signal &raquo; 
 <SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-<OPTION VALUE=0 SELECTED>Select</OPTION>
+<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -93,14 +93,14 @@ Signal &raquo;
 ?>
 			</SELECT><BR /><BR />
 
-<B>Apply to</B>&nbsp;:&nbsp;&nbsp;
-Description &raquo; <INPUT TYPE = 'radio' NAME='frm_add_to' value='0' CHECKED />&nbsp;&nbsp;&nbsp;&nbsp;
+<B><?php print gettext('Apply to');?></B>&nbsp;:&nbsp;&nbsp;
+<?php print gettext('Description');?> &raquo; <INPUT TYPE = 'radio' NAME='frm_add_to' value='0' CHECKED />&nbsp;&nbsp;&nbsp;&nbsp;
 <?php print $disposition;?> &raquo; <INPUT TYPE = 'radio' NAME='frm_add_to' value='1' /><BR /><BR />
-<INPUT TYPE = 'button' VALUE = 'Cancel' onClick = 'window.close()' />&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE = 'button' VALUE = 'Reset' onClick = 'this.form.reset()' />&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE = 'button' VALUE = 'Next' onClick = 'validate()' />
+<INPUT TYPE = 'button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close()' />&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE = 'button' VALUE = '<?php print gettext('Reset');?>' onClick = 'this.form.reset()' />&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE = 'button' VALUE = '<?php print gettext('Next');?>' onClick = 'validate()' />
 
-<!-- <INPUT TYPE = 'button' VALUE = 'Next' onClick = 'this.form.submit()' /> -->
+<!-- <INPUT TYPE = 'button' VALUE = '<?php print gettext('Next');?>' onClick = 'this.form.submit()' /> -->
 <INPUT TYPE = 'hidden' NAME = 'frm_ticket_id' VALUE='<?php print $_GET['ticket_id']; ?>' />
 </FORM>
 <?php
@@ -132,8 +132,8 @@ Description &raquo; <INPUT TYPE = 'radio' NAME='frm_add_to' value='0' CHECKED />
 ?>
 <BODY onLoad = "opener.location.reload(true);"><CENTER>
 <BR /><BR />
-<H3>Note added to Incident '<?php print $row['scope'];?>'</H3><BR /><BR />
-<INPUT TYPE = 'button' VALUE = 'Finished' onClick = 'window.close()'>
+<H3><?php print gettext('Note added to Incident');?> '<?php print $row['scope'];?>'</H3><BR /><BR />
+<INPUT TYPE = 'button' VALUE = '<?php print gettext('Finished');?>' onClick = 'window.close()'>
 </CENTER>
 </BODY>
 </HTML>

@@ -18,7 +18,7 @@ define ("tab", "\t");
 		$lat = $mapData[0]["lat"];
 		$lon = $mapData[0]["long"];
 		if ((is_float($lat)) && (!floatval(lat) == 0.0)) {
-			$ret = "-Lookup failed";
+			$ret = "-" . gettext("Lookup failed");
 			}
 		else {
 			$ret = tab . $lat . tab .  $lon . tab ;
@@ -26,5 +26,5 @@ define ("tab", "\t");
 		print $ret;
 	
 //dump ($ret);
-//print eol . "<h3>End</h3>";
+//print eol . "<h3>" . gettext('End') . "</h3>";
 ?>

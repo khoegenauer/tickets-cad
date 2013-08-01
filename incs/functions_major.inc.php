@@ -272,8 +272,8 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 	if (!isset($_GET['status'])) {
 		$open = "Open";
 	} else {
-	$open = (isset($_GET['status']) && ($_GET['status']==$GLOBALS['STATUS_OPEN']))? "Open" : "";
-	$open = (isset($_GET['status']) && ($_GET['status']==$GLOBALS['STATUS_SCHEDULED']))? "Scheduled" : "";	//	11/29/10
+	$open = (isset($_GET['status']) && ($_GET['status']==$GLOBALS['STATUS_OPEN']))? gettext("Open") : "";
+	$open = (isset($_GET['status']) && ($_GET['status']==$GLOBALS['STATUS_SCHEDULED']))? gettext("Scheduled") : "";	//	11/29/10
 	}
 	
 	if(isset($_SESSION['viewed_groups'])) {	//	6/10/11
@@ -292,7 +292,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 		}
 		
 	$heading = $captions[($func)] . " - " . get_variable('map_caption');
-	$regs_string = "<FONT SIZE='-1'>Allocated " . get_text("Regions") . ":&nbsp;&nbsp;" . $al_names . "&nbsp;&nbsp;|&nbsp;&nbsp;Currently Viewing " . get_text("Regions") . ":&nbsp;&nbsp;" . $curr_names . "</FONT>";	//	6/10/11
+	$regs_string = "<FONT SIZE='-1'>" . gettext("Allocated Regions") . ":&nbsp;&nbsp;" . $al_names . "&nbsp;&nbsp;|&nbsp;&nbsp;" . gettext('Currently Viewing') . " " . get_text("Regions") . ":&nbsp;&nbsp;" . $curr_names . "</FONT>";	//	6/10/11
 	$eols = array ("\r\n", "\n", "\r");		// all flavors of eol
 	@session_start(); 
 
@@ -335,7 +335,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 	</TD></TR>
 	<TR><TD align = 'left' VALIGN='TOP'  >
 		<TABLE>
-			<TR class = 'heading'><TH width = <?php print $col_width;?> ALIGN='center' COLSPAN='99'>Incidents <SPAN ID='sched_flag'></SPAN>
+			<TR class = 'heading'><TH width = <?php print $col_width;?> ALIGN='center' COLSPAN='99'><?php print gettext('Incidents');?> <SPAN ID='sched_flag'></SPAN>
 				<SPAN id='collapse_incs' onClick="hideDiv('incs_list_sh', 'collapse_incs', 'expand_incs')" style = 'display: "";'><IMG SRC = './markers/collapse.png' ALIGN='right'></SPAN>
 			<SPAN id='expand_incs' onClick="showDiv('incs_list_sh', 'collapse_incs', 'expand_incs')" style = 'display: none;'><IMG SRC = './markers/expand.png' ALIGN='right'></SPAN>
 			</TH></TR>
@@ -360,7 +360,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 			</TD></TR>
 		</TABLE>
 		<TABLE>
-			<TR class = 'heading'><TH width = <?php print $col_width;?> ALIGN='center' COLSPAN='99'>Facilities 
+			<TR class = 'heading'><TH width = <?php print $col_width;?> ALIGN='center' COLSPAN='99'><?php print gettext('Facilities');?> 
 				<SPAN id='collapse_facs' onClick="hideDiv('facs_list_sh', 'collapse_facs', 'expand_facs')" style = "display: <?php print $facs_col_butt;?>;"><IMG SRC = './markers/collapse.png' ALIGN='right'></SPAN>
 				<SPAN id='expand_facs' onClick="showDiv('facs_list_sh', 'collapse_facs', 'expand_facs')" style = "display: <?php print $facs_exp_butt;?>;"><IMG SRC = './markers/expand.png' ALIGN='right'></SPAN>
 			</TH></TR>
@@ -380,12 +380,12 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 			<DIV ID='map_canvas' STYLE='WIDTH: <?php print round ($map_factor * get_variable('map_width'));?>PX; HEIGHT: <?php print round ($map_factor * get_variable('map_height'));?>PX; z-index: 999;'></DIV>
 		</TD></TR>
 		<TR><TD ALIGN='center' style='padding: 0'>
-			<BR /><CENTER><A HREF='#' onClick='toglGrid()'><u>Grid</U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doTraffic()'><U>Traffic</U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doWeather()'><U>Weather</U></A></CENTER>
+			<BR /><CENTER><A HREF='#' onClick='toglGrid()'><u><?php print gettext('Grid');?></U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doTraffic()'><U><?php print gettext('Traffic');?></U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doWeather()'><U><?php print gettext('Weather');?></U></A></CENTER>
 		</TD></TR>
 		<TR><TD>&nbsp;</TD></TR>				<!-- 3/15/11 -->
 		<TR><TD>
 			<TABLE ALIGN='center' WIDTH='<?php print $ctrls_width;?>'>
-				<TR class='heading'><TH ALIGN='center' COLSPAN=99>Show / Hide
+				<TR class='heading'><TH ALIGN='center' COLSPAN=99><?php print gettext('Show / Hide');?>
 					<SPAN id='collapse_buttons' onClick="hideDiv('buttons_sh', 'collapse_buttons', 'expand_buttons')" style = "display: <?php print $col_butt;?>;"><IMG SRC = './markers/collapse.png' ALIGN='right'></SPAN>
 					<SPAN id='expand_buttons' onClick="showDiv('buttons_sh', 'collapse_buttons', 'expand_buttons')" style = "display: <?php print $exp_butt;?>;"><IMG SRC = './markers/expand.png' ALIGN='right'></SPAN>
 				</TH></TR>
@@ -394,11 +394,11 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 						<TABLE ID='buttons_sh' style='display: <?php print $show_controls;?>;'>
 							<TR CLASS='odd'><TD>
 								<TABLE>
-									<TR class='heading_2'><TH ALIGN='center' WIDTH='<?php print $ctrls_width;?>'>Incidents</TH></TR>
+									<TR class='heading_2'><TH ALIGN='center' WIDTH='<?php print $ctrls_width;?>'><?php print gettext('Incidents');?></TH></TR>
 									<TR><TD>				<!-- 3/15/11 -->
-										<DIV class='pri_button' onClick="set_pri_chkbox('normal'); hideGroup(1, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' STYLE = 'vertical-align: middle'BORDER=0>&nbsp;&nbsp;Normal: <input type=checkbox id='normal'  onClick="set_pri_chkbox('normal')"/>&nbsp;&nbsp;</DIV>
-										<DIV class='pri_button' onClick="set_pri_chkbox('medium'); hideGroup(2, 'Incident');"><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;Medium: <input type=checkbox id='medium'  onClick="set_pri_chkbox('medium')"/>&nbsp;&nbsp;</DIV>
-										<DIV class='pri_button' onClick="set_pri_chkbox('high'); hideGroup(3, 'Incident');"><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;High: <input type=checkbox id='high'  onClick="set_pri_chkbox('high')"/>&nbsp;&nbsp;</DIV>
+										<DIV class='pri_button' onClick="set_pri_chkbox('normal'); hideGroup(1, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' STYLE = 'vertical-align: middle'BORDER=0>&nbsp;&nbsp;<?php print gettext('Normal');?>: <input type=checkbox id='normal'  onClick="set_pri_chkbox('normal')"/>&nbsp;&nbsp;</DIV>
+										<DIV class='pri_button' onClick="set_pri_chkbox('medium'); hideGroup(2, 'Incident');"><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;<?php print gettext('Medium');?>: <input type=checkbox id='medium'  onClick="set_pri_chkbox('medium')"/>&nbsp;&nbsp;</DIV>
+										<DIV class='pri_button' onClick="set_pri_chkbox('high'); hideGroup(3, 'Incident');"><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;<?php print gettext('High');?>: <input type=checkbox id='high'  onClick="set_pri_chkbox('high')"/>&nbsp;&nbsp;</DIV>
 										<DIV class='pri_button' ID = 'pri_all' class='pri_button' STYLE = 'display: none; width: 70px;' onClick="set_pri_chkbox('all'); hideGroup(4, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' BORDER=0 STYLE = 'vertical-align: middle'><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle'><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;All <input type=checkbox id='all'  STYLE = 'display:none;' onClick="set_pri_chkbox('all')"/>&nbsp;&nbsp;</DIV>
 										<DIV class='pri_button' ID = 'pri_none' class='pri_button' STYLE = 'width: 60px;' onClick="set_pri_chkbox('none'); hideGroup(5, 'Incident');"><IMG SRC = './our_icons/sm_white.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;None <input type=checkbox id='none' STYLE = 'display:none;' onClick="set_pri_chkbox('none')"/>&nbsp;&nbsp;</DIV>
 									</TD></TR>
@@ -419,7 +419,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 			</TABLE>
 		</TD></TR>
 		<TR><TD CLASS='td_label' COLSPAN=99 ALIGN='CENTER'>
-			&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="mailto:<?php echo get_contact_addr ();?>?subject=Question/Comment on Tickets Dispatch System"><u>Contact us</u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom"></A>
+			&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="mailto:<?php echo get_contact_addr ();?>?subject=Question/Comment on Tickets Dispatch System"><u><?php print gettext('Contact us');?></u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom"></A>
 		</TD></TR>
 	</TABLE>
 	</TD></TR>
@@ -577,7 +577,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 	function writeConsole(content) {
 		top.consoleRef=window.open('','myconsole',
 			'width=800,height=250' +',menubar=0' +',toolbar=0' +',status=0' +',scrollbars=1' +',resizable=1')
-	 	top.consoleRef.document.writeln('<html><head><title>Console</title></head>'
+	 	top.consoleRef.document.writeln('<html><head><title><?php print gettext('Console');?></title></head>'
 			+'<body bgcolor=white onLoad="self.focus()">' +content +'</body></html>'
 			)				// end top.consoleRef.document.writeln()
 	 	top.consoleRef.document.close();
@@ -609,7 +609,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 			return false;
 			}
 		else {
-			parent.frames['upper'].show_msg ('<?php print get_text("Units");?> status update applied!')
+			parent.frames['upper'].show_msg ('<?php print get_text("Units status update applied!");?>')
 			return true;
 			}				// end if/else (payload.substring(... )
 		}		// end function to_server()
@@ -625,7 +625,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 			return false;
 			}
 		else {
-			parent.frames['upper'].show_msg ('Facility status update applied!')
+			parent.frames['upper'].show_msg ('<?php print gettext('Facility status update applied!');?>')
 			return true;
 			}				// end if/else (payload.substring(... )
 		}		// end function to_server_fac()
@@ -657,7 +657,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 		var url = "do_unit_mail.php?name=" + escape(the_id);	//
 		newwindow_mail=window.open(url, "mail_edit",  "titlebar, location=0, resizable=1, scrollbars, height=320,width=720,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 		if (isNull(newwindow_mail)) {
-			alert ("Email edit operation requires popups to be enabled -- please adjust your browser options.");
+			alert ("<?php print gettext('Email edit operation requires popups to be enabled -- please adjust your browser options.');?>");
 			return;
 			}
 		newwindow_mail.focus();
@@ -670,7 +670,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 		var url = (isNull(the_name))? "do_fac_mail.php?" : "do_fac_mail.php?name=" + escape(the_name) + "&addrs=" + escape(the_addrs);	//
 		newwindow_mail=window.open(url, "mail_edit",  "titlebar, location=0, resizable=1, scrollbars, height=320,width=720,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 		if (isNull(newwindow_mail)) {
-			alert ("Email edit operation requires popups to be enabled -- please adjust your browser options.");
+			alert ("<?php print gettext('Email edit operation requires popups to be enabled -- please adjust your browser options.');?>");
 			return;
 			}
 		newwindow_mail.focus();
@@ -684,7 +684,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 		var url = "close_in.php?ticket_id=" + escape(the_id);	//
 		newwindow_close = window.open(url, "close_ticket", "titlebar, location=0, resizable=1, scrollbars, height=300, width=700, status=0, toolbar=0, menubar=0, left=100,top=100,screenX=100,screenY=100");
 		if (isNull(newwindow_close)) {
-			alert ("Close Ticket operation requires popups to be enabled -- please adjust your browser options.");
+			alert ("<?php print gettext('Close Ticket operation requires popups to be enabled -- please adjust your browser options.');?>");
 			return;
 			}
 		newwindow_close.focus();
@@ -757,19 +757,19 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 		chg_disp_tr +="\t\t<SELECT NAME = 'frm_interval' onChange = 'do_listtype(this.value);'>\n";
 		chg_disp_tr +="\t\t<OPTION VALUE='99' SELECTED><?php print get_text("Change display"); ?></OPTION>\n";
 		chg_disp_tr +="\t\t<OPTION VALUE='0'><?php print get_text("Current situation"); ?></OPTION>\n";
-		chg_disp_tr +="\t\t<OPTION VALUE='1'><?php print $incidents;?> closed today</OPTION>\n";
-		chg_disp_tr +="\t\t<OPTION VALUE='2'><?php print $incidents;?> closed yesterday+</OPTION>\n";
-		chg_disp_tr +="\t\t<OPTION VALUE='3'><?php print $incidents;?> closed this week</OPTION>\n";
-		chg_disp_tr +="\t\t<OPTION VALUE='4'><?php print $incidents;?> closed last week</OPTION>\n";
-		chg_disp_tr +="\t\t<OPTION VALUE='5'><?php print $incidents;?> closed last week+</OPTION>\n";
-		chg_disp_tr +="\t\t<OPTION VALUE='6'><?php print $incidents;?> closed this month</OPTION>\n";
-		chg_disp_tr +="\t\t<OPTION VALUE='7'><?php print $incidents;?> closed last month</OPTION>\n";
-		chg_disp_tr +="\t\t<OPTION VALUE='8'><?php print $incidents;?> closed this year</OPTION>\n";
-		chg_disp_tr +="\t\t<OPTION VALUE='9'><?php print $incidents;?> closed last year</OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='1'><?php print $incidents;?> <?php print gettext('closed today');?></OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='2'><?php print $incidents;?> <?php print gettext('closed yesterday+');?></OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='3'><?php print $incidents;?> <?php print gettext('closed this week');?></OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='4'><?php print $incidents;?> <?php print gettext('closed last week');?></OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='5'><?php print $incidents;?> <?php print gettext('closed last week+');?></OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='6'><?php print $incidents;?> <?php print gettext('closed this month');?></OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='7'><?php print $incidents;?> <?php print gettext('closed last month');?></OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='8'><?php print $incidents;?> <?php print gettext('closed this year');?></OPTION>\n";
+		chg_disp_tr +="\t\t<OPTION VALUE='9'><?php print $incidents;?> <?php print gettext('closed last year');?></OPTION>\n";
 		chg_disp_tr +="\t\t</SELECT>\n</FORM>\n";
 				// 3/30/2013
- 		chg_disp_tr +="\t\t<SPAN ID = 'btn_go' onClick='document.to_listtype.submit()' CLASS='conf_button' STYLE = 'margin-left: 10px; display:none; color: green;'><U>Next</U></SPAN>";
- 		chg_disp_tr +="\t\t<SPAN ID = 'btn_can' onClick='hide_btns_closed(); hide_btns_scheduled(); ' CLASS='conf_button' STYLE = 'margin-left: 10px; display:none; color: red;'><U>Cancel</U></SPAN>";
+ 		chg_disp_tr +="\t\t<SPAN ID = 'btn_go' onClick='document.to_listtype.submit()' CLASS='conf_button' STYLE = 'margin-left: 10px; display:none; color: green;'><U><?php print gettext('Next');?></U></SPAN>";
+ 		chg_disp_tr +="\t\t<SPAN ID = 'btn_can' onClick='hide_btns_closed(); hide_btns_scheduled(); ' CLASS='conf_button' STYLE = 'margin-left: 10px; display:none; color: red;'><U><?php print gettext('Cancel');?></U></SPAN>";
  		chg_disp_tr +="</TD></TR>\n";
 
 		return chg_disp_tr;
@@ -839,11 +839,11 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
 			} else {
 				var charCode = ch.charCodeAt(0);
 				if (charCode > 255) {
-					alert( "Unicode Character '"
+					alert( "<?php print gettext('Unicode Character');?> '"
 							+ ch
-							+ "' cannot be encoded using standard URL encoding.\n" +
-							  "(URL encoding only supports 8-bit characters.)\n" +
-							  "A space (+) will be substituted." );
+							+ "' <?php print gettext('cannot be encoded using standard URL encoding.');?>\n" +
+							  "(<?php print gettext('URL encoding only supports 8-bit characters.');?>)\n" +
+							  "<?php print gettext('A space (+) will be substituted.');?>" );
 					encoded += "+";
 				} else {
 					encoded += "%";
@@ -1691,9 +1691,9 @@ var divarea;
 			sendRequest (url, fvg_handleResult, params);				
 //			form.submit();
 		} else {
-			errmsg+= "\tYou cannot Hide all the regions\n";
+			errmsg+= "\t<?php print gettext('You cannot Hide all the regions');?>\n";
 			if (errmsg!="") {
-				alert ("Please correct the following and re-submit:\n\n" + errmsg);
+				alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 				return false;
 			}
 		}
@@ -1714,7 +1714,7 @@ var divarea;
 		var url = "do_fac_mail.php?fac_id=" + id;	
 		newwindow_in=window.open (url, 'Email_Window',  'titlebar, resizable=1, scrollbars, height=300,width=600,status=0,toolbar=0,menubar=0,location=0, left=50,top=150,screenX=100,screenY=300');
 		if (isNull(newwindow_in)) {
-			alert ("This requires popups to be enabled. Please adjust your browser options.");
+			alert ("<?php print gettext('This requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 		newwindow_in.focus();
@@ -1759,7 +1759,7 @@ var divarea;
 		var url = "patient_w.php?action=list&ticket_id=" + id;	
 		newwindow=window.open (url, 'Patient_Window', 'titlebar, resizable=1, scrollbars, height=300,width=550,status=0,toolbar=0,menubar=0,location=0, left=50,top=150,screenX=50,screenY=150');
 		if (isNull(newwindow)) {
-			alert ("This requires popups to be enabled. Please adjust your browser options.");
+			alert ("<?php print gettext('This requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 		newwindow.focus();
@@ -2021,7 +2021,7 @@ function do_track(callsign) {
 
 		newwindow=window.open(url, callsign,  spec);
 		if (isNull(newwindow)) {
-			alert ("Track display requires popups to be enabled. Please adjust your browser options.");
+			alert ("<?php print gettext('Track display requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 //		starting = false;
@@ -2041,7 +2041,7 @@ function do_popup(id) {					// added 7/9/09
 
 		newwindow=window.open(url, id, spec);
 		if (isNull(newwindow)) {
-			alert ("Popup Incident display requires popups to be enabled. Please adjust your browser options.");
+			alert ("<?php print gettext('Popup Incident display requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 //		starting = false;
@@ -2087,16 +2087,16 @@ function cs_handleResult(req) {					// the 'called-back' function for show curre
 	$num_sched = mysql_num_rows($result_sched);	//	11/29/10
 	
 	if (($num_sched != 0) && ($func != 10)) {	//	11/29/10
-		$scheduled_link = ($num_sched >= 1) ? "Scheduled Jobs: " . $num_sched : "Scheduled Jobs: " . $num_sched;
+		$scheduled_link = ($num_sched >= 1) ? gettext("Scheduled Jobs") . ": " . $num_sched : gettext("Scheduled Jobs") . ": " . $num_sched;
 	$order_by =  (!empty ($get_sortby))? $get_sortby: $_SESSION['sortorder']; // use default sort order?
 ?>
-		sched_html +="\t\t<SPAN class='scheduled' TITLE='Click link to view a list of scheduled jobs that are not shown on the current situation screen. Scheduled jobs that are due in the next 2 days are shown on the current situation screen and have a * in front of the ID, the date is highlighted and is the scheduled date.' onClick='do_sched_jobs(10);'><u><?php print $scheduled_link;?></u></SPAN>\n";	//	3/15/11
+		sched_html +="\t\t<SPAN class='scheduled' TITLE='<?php print gettext('Click link to view a list of scheduled jobs that are not shown on the current situation screen. Scheduled jobs that are due in the next 2 days are shown on the current situation screen and have a * in front of the ID, the date is highlighted and is the scheduled date.');?>' onClick='do_sched_jobs(10);'><u><?php print $scheduled_link;?></u></SPAN>\n";	//	3/15/11
 <?php
 	}	//	11/29/10	
 	
 	if (($num_sched != 0) && ($func == 10)) {	//	11/29/10
 ?>
-		sched_html +="\t\t<SPAN class='scheduled' TITLE='Click link view current situation screen including scheduled jobs that are due in the next 2 days. Scheduled jobs are shown with a * in front of the ID, the date is highlighted and is the scheduled date.' onClick='do_curr_jobs(0);'>Click to view current situation</SPAN>\n";	//	3/15/11
+		sched_html +="\t\t<SPAN class='scheduled' TITLE='<?php print gettext('Click link view current situation screen including scheduled jobs that are due in the next 2 days. Scheduled jobs are shown with a * in front of the ID, the date is highlighted and is the scheduled date.');?>' onClick='do_curr_jobs(0);'><?php print gettext('Click to view current situation');?></SPAN>\n";	//	3/15/11
 <?php
 	}	//	11/29/10		
 	
@@ -2411,7 +2411,7 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 		}
 ?>	
 	side_bar_html += "<TR class='spacer'><TD CLASS='spacer' COLSPAN=99>&nbsp;</TD></TR>";	//	3/15/11
-	side_bar_html += "<TR class='even'><TH colspan=99 align='center'>Click/Mouse-over for information</TH></TR>";	//	3/15/11
+	side_bar_html += "<TR class='even'><TH colspan=99 align='center'><?php print gettext('Click/Mouse-over for information');?></TH></TR>";	//	3/15/11
 	side_bar_html += "<TR class='odd'><TD></TD><TD align='left' COLSPAN=2><B><?php print $incident;?></B></TD><TD align='left'><B><?php print $nature;?></B></TD><TD align='left'><B>&nbsp;Addr</B></TD><TD align='left'><B>P</B></TD><TD align='left'><B>A</B></TD><TD align='left'><B>U</B></TD><TD align='left'><B>&nbsp;&nbsp;As of</B></TD></TR>";
 
 <?php		
@@ -2523,43 +2523,43 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 		
 			$tab_1 = "<TABLE CLASS='infowin'  width='{$iw_width}' >";
 			$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>$strike" . replace_quotes(shorten($row['scope'], 48))  . "$strikend</B></TD></TR>";
-			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>As of:</TD><TD ALIGN='left'>" . format_date_2(($row['updated'])) . "</TD></TR>";
+			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('As of') . ":</TD><TD ALIGN='left'>" . format_date_2(($row['updated'])) . "</TD></TR>";
 			if (is_date($row['booked_date'])){
-				$tab_1 .= "<TR CLASS='odd'><TD>Booked Date:</TD><TD ALIGN='left'>" . format_date_2($row['booked_date']) . "</TD></TR>";	//10/27/09, 3/15/11
+				$tab_1 .= "<TR CLASS='odd'><TD>" . gettext('Booked Date') . ":</TD><TD ALIGN='left'>" . format_date_2($row['booked_date']) . "</TD></TR>";	//10/27/09, 3/15/11
 				}
-			$tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>Reported by:</TD><TD ALIGN='left'>" . replace_quotes(shorten($row['contact'], 32)) . "</TD></TR>";
-			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>Phone:</TD><TD ALIGN='left'>" . format_phone($row['phone']) . "</TD></TR>";
-			$tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>Addr:</TD><TD ALIGN='left'>$address_street</TD></TR>";
+			$tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>" . gettext('Reported by') . ":</TD><TD ALIGN='left'>" . replace_quotes(shorten($row['contact'], 32)) . "</TD></TR>";
+			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Phone') . ":</TD><TD ALIGN='left'>" . format_phone($row['phone']) . "</TD></TR>";
+			$tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>" . gettext('Addr') . ":</TD><TD ALIGN='left'>$address_street</TD></TR>";
 	
 			$elapsed = get_elapsed_time ($row);
-			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>Status:</TD><TD ALIGN='left'>" . get_status($row['status']) . "&nbsp;&nbsp;&nbsp;($elapsed)</TD></TR>";	// 3/27/10
-			$tab_1 .= (empty($row['fac_name']))? "" : "<TR CLASS='even'><TD ALIGN='left'>Receiving Facility:</TD><TD ALIGN='left'>" . replace_quotes(shorten($row['fac_name'], 30))  . "</TD></TR>";	//3/27/10, 3/15/11
+			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Status') . ":</TD><TD ALIGN='left'>" . get_status($row['status']) . "&nbsp;&nbsp;&nbsp;($elapsed)</TD></TR>";	// 3/27/10
+			$tab_1 .= (empty($row['fac_name']))? "" : "<TR CLASS='even'><TD ALIGN='left'>" . gettext('Receiving Facility') . ":</TD><TD ALIGN='left'>" . replace_quotes(shorten($row['fac_name'], 30))  . "</TD></TR>";	//3/27/10, 3/15/11
 			$utm = get_variable('UTM');
 			if ($utm==1) {
 				$coords =  $row['lat'] . "," . $row['lng'];																	// 8/12/09
-				$tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>UTM grid:</TD><TD ALIGN='left'>" . toUTM($coords) . "</TD></TR>";
+				$tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>" . gettext('UTM grid') . ":</TD><TD ALIGN='left'>" . toUTM($coords) . "</TD></TR>";
 				}
-			$tab_1 .= "<TR CLASS='even'>	<TD ALIGN='left'>Description:</TD><TD ALIGN='left'>" . replace_quotes(shorten(str_replace($eols, " ", $row['tick_descr']), 48)) . "</TD></TR>";	// str_replace("\r\n", " ", $my_string)
+			$tab_1 .= "<TR CLASS='even'>	<TD ALIGN='left'>" . gettext('Description') . ":</TD><TD ALIGN='left'>" . replace_quotes(shorten(str_replace($eols, " ", $row['tick_descr']), 48)) . "</TD></TR>";	// str_replace("\r\n", " ", $my_string)
 			$tab_1 .= "<TR CLASS='odd'>		<TD ALIGN='left'>{$disposition}:</TD><TD ALIGN='left'>" . shorten(replace_quotes($row['comments']), 48) . "</TD></TR>";		// 8/13/09, 3/15/11
 			$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'><FONT SIZE='-1'>";
 
 //			$tab_1 .= "<TR><TD COLSPAN=2 ALIGN='left'>" . show_assigns(0, $the_id) . "</TD></TR>";
 //
-//			$tab_1 .= "<TR CLASS='even'>	<TD ALIGN='left'>911 contact:</TD><TD ALIGN='left'>" . shorten($row['nine_one_one'], 48) . "</TD></TR>";	// 6/26/10
+//			$tab_1 .= "<TR CLASS='even'>	<TD ALIGN='left'>" . gettext('911 contact') . ":</TD><TD ALIGN='left'>" . shorten($row['nine_one_one'], 48) . "</TD></TR>";	// 6/26/10
 //		
 //			$locale = get_variable('locale');	// 08/03/09
 //			switch($locale) { 
 //				case "0":
-//				$tab_1 .= "<TR CLASS='odd'>	<TD ALIGN='left'>USNG:</TD><TD ALIGN='left'>" . LLtoUSNG($row['lat'], $row['lng']) . "</TD></TR>";	// 8/23/08, 10/15/08, 8/3/09
+//				$tab_1 .= "<TR CLASS='odd'>	<TD ALIGN='left'>" . gettext('USNG') . ":</TD><TD ALIGN='left'>" . LLtoUSNG($row['lat'], $row['lng']) . "</TD></TR>";	// 8/23/08, 10/15/08, 8/3/09
 //				break;
 //			
 //				case "1":
-//				$tab_1 .= "<TR CLASS='odd'>	<TD ALIGN='left'>OSGB:</TD><TD ALIGN='left'>" . LLtoOSGB($row['lat'], $row['lng']) . "</TD></TR>";	// 8/23/08, 10/15/08, 8/3/09
+//				$tab_1 .= "<TR CLASS='odd'>	<TD ALIGN='left'>" . gettext('OSGB') . ":</TD><TD ALIGN='left'>" . LLtoOSGB($row['lat'], $row['lng']) . "</TD></TR>";	// 8/23/08, 10/15/08, 8/3/09
 //				break;
 //			
 //				case "2":
 //				$coords =  $row['lat'] . "," . $row['lng'];							// 8/12/09
-//				$tab_1 .= "<TR CLASS='odd'>	<TD ALIGN='left'>UTM:</TD><TD ALIGN='left'>" . toUTM($coords) . "</TD></TR>";	// 8/23/08, 10/15/08, 8/3/09
+//				$tab_1 .= "<TR CLASS='odd'>	<TD ALIGN='left'>" . gettext('UTM') . ":</TD><TD ALIGN='left'>" . toUTM($coords) . "</TD></TR>";	// 8/23/08, 10/15/08, 8/3/09
 //				break;
 //			
 //				default:
@@ -2568,42 +2568,42 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 //		
 //
 //
-			$tab_1 .= 	$todisp . "&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='main.php?id={$the_id}'><U>Details</U></A>";		// 08/8/02
+			$tab_1 .= 	$todisp . "&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='main.php?id={$the_id}'><U>" . gettext('Details') . "</U></A>";		// 08/8/02
 			if (!(is_guest() )) {
 				if (can_edit()) {							//8/27/10
-					$tab_1 .= 	"&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='{$_SESSION['editfile']}?id={$the_id}{$rand}'><U>Edit</U></A>";	
+					$tab_1 .= 	"&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='{$_SESSION['editfile']}?id={$the_id}{$rand}'><U>" . gettext('Edit') . "</U></A>";	
 					}
 				if ((!(is_closed($the_id))) && (!is_unit()))  {		// 3/3/11
 					$tab_1 .= "&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick = do_close_tick('{$the_id}');><U>" . get_text("Close incident") . " </U></A><BR /><BR /> ";  // 3/3/11
 					}
-				$tab_1 .= 	"&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = do_popup('{$the_id}');><FONT COLOR='blue'><B><U>Popup</B></U></FONT></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ;	// 7/7/09
-				$tab_1 .= 	"<SPAN onClick = 'do_add_note ({$the_id});'><FONT COLOR='blue'><B><U>Add note</B></U></FONT></SPAN><BR /><BR />" ;	// 7/7/09
+				$tab_1 .= 	"&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = do_popup('{$the_id}');><FONT COLOR='blue'><B><U>" . gettext('Popup') . "</B></U></FONT></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ;	// 7/7/09
+				$tab_1 .= 	"<SPAN onClick = 'do_add_note ({$the_id});'><FONT COLOR='blue'><B><U>" . gettext('Add note') . "</B></U></FONT></SPAN><BR /><BR />" ;	// 7/7/09
 				if (can_edit()) {							//8/27/10
 					$tab_1 .= 	"<A HREF='patient.php?ticket_id={$the_id}{$rand}'><U>Add {$patient}</U></A>&nbsp;&nbsp;&nbsp;&nbsp;";	// 7/9/09
-					$tab_1 .= 	"<A HREF='action.php?ticket_id={$the_id}{$rand}'><U>Add Action</U></A>&nbsp;&nbsp;&nbsp;&nbsp;";
-					$tab_1 .=   "<A HREF='#' onClick = 'do_mail_all_win({$the_id});'><U>Contact Units</U></A>";					
+					$tab_1 .= 	"<A HREF='action.php?ticket_id={$the_id}{$rand}'><U>" . gettext('Add Action') . "</U></A>&nbsp;&nbsp;&nbsp;&nbsp;";
+					$tab_1 .=   "<A HREF='#' onClick = 'do_mail_all_win({$the_id});'><U>" . gettext('Contact Units') . "</U></A>";					
 					}
 				}
 			$tab_1 .= 	"</FONT></TD></TR></TABLE>";			// 11/6/08
 		
 			$tab_2 = "<DIV style='max-height: 200px; overflow: auto;'><TABLE CLASS='infowin'  width='{$iw_width}' >";	// 8/12/09
-			$tab_2 .= "<TR CLASS='even'>	<TD ALIGN='left'>Description:</TD><TD ALIGN='left'>" . replace_quotes(shorten(str_replace($eols, " ", $row['tick_descr']), 48)) . "</TD></TR>";	// str_replace("\r\n", " ", $my_string)
+			$tab_2 .= "<TR CLASS='even'>	<TD ALIGN='left'>" . gettext('Description') . ":</TD><TD ALIGN='left'>" . replace_quotes(shorten(str_replace($eols, " ", $row['tick_descr']), 48)) . "</TD></TR>";	// str_replace("\r\n", " ", $my_string)
 			$tab_2 .= "<TR CLASS='odd'>		<TD ALIGN='left'>{$disposition}:</TD><TD ALIGN='left'>" . shorten(replace_quotes($row['comments']), 48) . "</TD></TR>";		// 8/13/09, 3/15/11
-			$tab_2 .= "<TR CLASS='even'>	<TD ALIGN='left'>911 contact:</TD><TD ALIGN='left'>" . shorten($row['nine_one_one'], 48) . "</TD></TR>";	// 6/26/10
+			$tab_2 .= "<TR CLASS='even'>	<TD ALIGN='left'>" . gettext('911 contact') . ":</TD><TD ALIGN='left'>" . shorten($row['nine_one_one'], 48) . "</TD></TR>";	// 6/26/10
 		
 			$locale = get_variable('locale');	// 08/03/09
 			switch($locale) { 
 				case "0":
-				$tab_2 .= "<TR CLASS='odd'>	<TD ALIGN='left'>USNG:</TD><TD ALIGN='left'>" . LLtoUSNG($row['lat'], $row['lng']) . "</TD></TR>";	// 8/23/08, 10/15/08, 8/3/09
+				$tab_2 .= "<TR CLASS='odd'>	<TD ALIGN='left'>" . gettext('USNG') . ":</TD><TD ALIGN='left'>" . LLtoUSNG($row['lat'], $row['lng']) . "</TD></TR>";	// 8/23/08, 10/15/08, 8/3/09
 				break;
 			
 				case "1":
-				$tab_2 .= "<TR CLASS='odd'>	<TD ALIGN='left'>OSGB:</TD><TD ALIGN='left'>" . LLtoOSGB($row['lat'], $row['lng']) . "</TD></TR>";	// 8/23/08, 10/15/08, 8/3/09
+				$tab_2 .= "<TR CLASS='odd'>	<TD ALIGN='left'>" . gettext('OSGB') . ":</TD><TD ALIGN='left'>" . LLtoOSGB($row['lat'], $row['lng']) . "</TD></TR>";	// 8/23/08, 10/15/08, 8/3/09
 				break;
 			
 				case "2":
 				$coords =  $row['lat'] . "," . $row['lng'];							// 8/12/09
-				$tab_2 .= "<TR CLASS='odd'>	<TD ALIGN='left'>UTM:</TD><TD ALIGN='left'>" . toUTM($coords) . "</TD></TR>";	// 8/23/08, 10/15/08, 8/3/09
+				$tab_2 .= "<TR CLASS='odd'>	<TD ALIGN='left'>" . gettext('UTM') . ":</TD><TD ALIGN='left'>" . toUTM($coords) . "</TD></TR>";	// 8/23/08, 10/15/08, 8/3/09
 				break;
 			
 				default:
@@ -2698,7 +2698,7 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 <?php
 		
 		if ($sb_indx == 0) {
-			$txt_str = ($func>0)? "closed tickets this period!": "current tickets!";
+			$txt_str = ($func>0)? gettext("closed tickets this period!"): gettext("current tickets!");
 			print "\n\t\tside_bar_html += \"<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'><I><B>No {$txt_str}</B></I></TD></TR>\";";
 			print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD COLSPAN='99' ><BR /><BR /></TD></TR>\";";
 			}
@@ -2959,7 +2959,7 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$units_ct = mysql_affected_rows();			// 1/4/10
 	if ($units_ct==0){
-		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TH></TH><TH ALIGN='center' COLSPAN=99><I><B>No units!</I></B></TH></TR>\"\n";
+		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TH></TH><TH ALIGN='center' COLSPAN=99><I><B>" . gettext('No units!') . "</I></B></TH></TR>\"\n";
 		}
 	else {
 		$checked = array ("", "", "", "");
@@ -2967,15 +2967,15 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 ?>
 	
 	side_bar_html += "<TR CLASS = 'even'><TD COLSPAN=99 ALIGN='center'>";
-	side_bar_html += "<I><B>Sort</B>:&nbsp;&nbsp;&nbsp;&nbsp;";
+	side_bar_html += "<I><B><?php print gettext('Sort');?></B>:&nbsp;&nbsp;&nbsp;&nbsp;";
 	side_bar_html += "<?php print get_text("Units");?> &raquo; 	<input type = radio name = 'frm_order' value = 1 <?php print $checked[1];?> onClick = 'do_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-	side_bar_html += "Type &raquo; 	<input type = radio name = 'frm_order' value = 2 <?php print $checked[2];?> onClick = 'do_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-	side_bar_html += "Status &raquo; <input type = radio name = 'frm_order' value = 3 <?php print $checked[3];?> onClick = 'do_sort_sub(this.value);' />";
+	side_bar_html += "<?php print gettext('Type');?> &raquo; 	<input type = radio name = 'frm_order' value = 2 <?php print $checked[2];?> onClick = 'do_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+	side_bar_html += "<?php print gettext('Status');?> &raquo; <input type = radio name = 'frm_order' value = 3 <?php print $checked[3];?> onClick = 'do_sort_sub(this.value);' />";
 	side_bar_html += "</I></TD></TR>";
 <?php	
-		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD><B>" . get_text("Units") . "</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(0); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD ALIGN='left' COLSPAN='2'><B>{$incident}</B></TD><TD>&nbsp; <B>Status</B></TD><TD><B>M</B></TD><TD><B>&nbsp;As of</B></TD></TR>\"\n" ;	// 12/17/10
-//		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD><B>Unit</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(0); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD>&nbsp; <B>Status</B></TD><TD ALIGN='left' COLSPAN='2'><B>{$incident}</B></TD><TD><B>M</B></TD><TD><B>&nbsp;As of</B></TD></TR>\"\n" ;	// 12/17/10
-//		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD><B>Unit</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(null, null); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD>&nbsp; <B>Status</B></TD><TD ALIGN='left' COLSPAN='2'><B>{$incident}</B></TD><TD><B>M</B></TD><TD><B>&nbsp;As of</B></TD></TR>\"\n" ;
+		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD><B>" . get_text("Units") . "</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(0); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD ALIGN='left' COLSPAN='2'><B>{$incident}</B></TD><TD>&nbsp; <B>" . gettext('Status') . "</B></TD><TD><B>" . gettext('M') . "</B></TD><TD><B>&nbsp;" . gettext('As of') . "</B></TD></TR>\"\n" ;	// 12/17/10
+//		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD><B>" . gettext('Unit') . "</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(0); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD>&nbsp; <B>" . gettext('Status') . "</B></TD><TD ALIGN='left' COLSPAN='2'><B>{$incident}</B></TD><TD><B>" . gettext('M') . "</B></TD><TD><B>&nbsp;" . gettext('As of') . "</B></TD></TR>\"\n" ;	// 12/17/10
+//		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD><B>" . gettext('Unit') . "</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(null, null); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD>&nbsp; <B>" . gettext('Status') . "</B></TD><TD ALIGN='left' COLSPAN='2'><B>{$incident}</B></TD><TD><B>" . gettext('M') . "</B></TD><TD><B>&nbsp;" . gettext('As of') . "</B></TD></TR>\"\n" ;
 		}
 
 	$aprs = $instam = $locatea = $gtrack = $glat = $t_tracker = $ogts = FALSE;		//7/23/09
@@ -3011,10 +3011,10 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 		
 		print "\t\tvar sym = \"$index\";\n";				// for sidebar and icon 10/8/09	- 4/22/11
 												// 2/13/09
-		$todisp = ((is_guest()) || (is_unit()))? "": "&nbsp;&nbsp;<A HREF='{$_SESSION['unitsfile']}?func=responder&view=true&disp=true&id=" . $row['unit_id'] . "'><U>Dispatch</U></A>&nbsp;&nbsp;";		// 08/8/02
-		$toedit = ((is_guest()) || (is_user()) || (is_unit()) )? "" :"&nbsp;&nbsp;<A HREF='{$_SESSION['unitsfile']}?func=responder&edit=true&id=" . $row['unit_id'] . "'><U>Edit</U></A>&nbsp;&nbsp;" ;	// 7/27/10
-		$totrack  = ((intval($row['mobile'])==0)||(empty($row['callsign'])))? "" : "&nbsp;&nbsp;<SPAN onClick = do_track('" .$row['callsign']  . "');><B><U>Tracks</B></U>&nbsp;&nbsp;</SPAN>" ;
-		$tofac = (is_guest())? "": "<A HREF='{$_SESSION['unitsfile']}?func=responder&view=true&dispfac=true&id=" . $row['unit_id'] . "'><U>To Facility</U></A>&nbsp;&nbsp;";	// 08/8/02
+		$todisp = ((is_guest()) || (is_unit()))? "": "&nbsp;&nbsp;<A HREF='{$_SESSION['unitsfile']}?func=responder&view=true&disp=true&id=" . $row['unit_id'] . "'><U>" . gettext('Dispatch') . "</U></A>&nbsp;&nbsp;";		// 08/8/02
+		$toedit = ((is_guest()) || (is_user()) || (is_unit()) )? "" :"&nbsp;&nbsp;<A HREF='{$_SESSION['unitsfile']}?func=responder&edit=true&id=" . $row['unit_id'] . "'><U>" . gettext('Edit') . "</U></A>&nbsp;&nbsp;" ;	// 7/27/10
+		$totrack  = ((intval($row['mobile'])==0)||(empty($row['callsign'])))? "" : "&nbsp;&nbsp;<SPAN onClick = do_track('" .$row['callsign']  . "');><B><U>" . gettext('Tracks') . "</B></U>&nbsp;&nbsp;</SPAN>" ;
+		$tofac = (is_guest())? "": "<A HREF='{$_SESSION['unitsfile']}?func=responder&view=true&dispfac=true&id=" . $row['unit_id'] . "'><U>" . gettext('To Facility') . "</U></A>&nbsp;&nbsp;";	// 08/8/02
 
 		$hide_unit = ($row['hide']=="y")? "1" : "0" ;		// 3/8/10
 		$track_type = get_remote_type($row) ;				// 7/8/11
@@ -3052,14 +3052,14 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 // MAIL						
 		if ((!is_guest()) && is_email($row['contact_via'])) {		// 2/1/10
 			$mail_link = "\t<TD CLASS='mylink' ALIGN='center'>"
-				. "&nbsp;<IMG SRC='mail.png' BORDER=0 TITLE = 'click to email unit {$row['handle']}'"
+				. "&nbsp;<IMG SRC='mail.png' BORDER=0 TITLE = '" . gettext('click to email unit') . " {$row['handle']}'"
 				. " onclick = 'do_mail_win(\\\"{$row['unit_id']}\\\");'> "
 				. "&nbsp;</TD>";		// 4/26/09, 12/17/10
 //				dump(__LINE__);
 //				dump($mail_link);
 				}
 		else {
-			$mail_link = "\t<TD ALIGN='center'>na</TD>";
+			$mail_link = "\t<TD ALIGN='center'>" . gettext('NA') . "</TD>";
 			}
 		$sidebar_line .= $mail_link;
 
@@ -3077,7 +3077,7 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 
 		switch ($units_assigned) {		
 			case 0:
-				$ass_td = "<TD COLSPAN='2' onClick = '{$on_click}' > na </TD>";
+				$ass_td = "<TD COLSPAN='2' onClick = '{$on_click}' > " . gettext('NA') . " </TD>";
 				break;			
 			case 1:
 				$row_assign = stripslashes_deep(mysql_fetch_assoc($result_as));
@@ -3135,25 +3135,25 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 
 			$tab_1 = "<TABLE CLASS='infowin'  width='{$iw_width}' >";
 			$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>{$row['handle']}</B> - " . $the_type . "</TD></TR>";
-			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>Description:</TD><TD ALIGN='left'>" . shorten(str_replace($eols, " ", $row['unit_descr']), 32) . "</TD></TR>";
+			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Description') . ":</TD><TD ALIGN='left'>" . shorten(str_replace($eols, " ", $row['unit_descr']), 32) . "</TD></TR>";
 			$tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>{$gt_status}:</TD><TD ALIGN='left'> {$row['stat_descr']}</TD></TR>";
-			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>Contact:</TD><TD ALIGN='left'>" . $row['contact_name']. " Via: " . $row['contact_via'] . "</TD></TR>";
-			$tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>As of:</TD><TD ALIGN='left'>" . format_date_2($row['updated']) . "</TD></TR>";
+			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Contact') . ":</TD><TD ALIGN='left'>" . $row['contact_name']. " " . gettext('Via') . ": " . $row['contact_via'] . "</TD></TR>";
+			$tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>" . gettext('As of') . ":</TD><TD ALIGN='left'>" . format_date_2($row['updated']) . "</TD></TR>";
 
 			if (array_key_exists($row['unit_id'], $assigns_ary)) {
-				$tab_1 .= "<TR CLASS='even'><TD ALIGN='left' CLASS='emph'>Dispatched to:</TD><TD ALIGN='left' CLASS='emph'><A HREF='main.php?id=" . $tickets[$row['unit_id']] . "'>" . shorten($assigns[$row['unit_id']], 20) . "</A></TD></TR>";
+				$tab_1 .= "<TR CLASS='even'><TD ALIGN='left' CLASS='emph'>" . gettext('Dispatched to') . ":</TD><TD ALIGN='left' CLASS='emph'><A HREF='main.php?id=" . $tickets[$row['unit_id']] . "'>" . shorten($assigns[$row['unit_id']], 20) . "</A></TD></TR>";
 				}
-			$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . $tofac . $todisp . $totrack . $toedit . "&nbsp;&nbsp;<A HREF='{$_SESSION['unitsfile']}?func=responder&view=true&id=" . $row['unit_id'] . "'><U>View</U></A></TD></TR>";	// 08/8/02
+			$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . $tofac . $todisp . $totrack . $toedit . "&nbsp;&nbsp;<A HREF='{$_SESSION['unitsfile']}?func=responder&view=true&id=" . $row['unit_id'] . "'><U>" . gettext('View') . "</U></A></TD></TR>";	// 08/8/02
 			$tab_1 .= "</TABLE>";
 
 // tab 2
 			if ($row_track) {		// three tabs if track data
 				$tab_2 = "<DIV style='max-height: 200px; overflow: auto;'><TABLE CLASS='infowin'  width='{$iw_width}' >";
 				$tab_2 .="<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . $row_track['source'] . "</B></TD></TR>";
-				$tab_2 .= "<TR CLASS='odd'><TD ALIGN='left'>Course: </TD><TD ALIGN='left'>" . $row_track['course'] . ", Speed:  " . $row_track['speed'] . ", Alt: " . $row_track['altitude'] . "</TD></TR>";
-				$tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>Closest city: </TD><TD ALIGN='left'>" . $row_track['closest_city'] . "</TD></TR>";
+				$tab_2 .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Course') . ": </TD><TD ALIGN='left'>" . $row_track['course'] . ", " .  gettext('Speed') . ":  " . $row_track['speed'] . ", " . gettext('Altitude') . ": " . $row_track['altitude'] . "</TD></TR>";
+				$tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>" . gettext('Closest city') . ": </TD><TD ALIGN='left'>" . $row_track['closest_city'] . "</TD></TR>";
 				$tab_2 .= "<TR CLASS='odd'><TD ALIGN='left'>{$gt_status}: </TD><TD ALIGN='left'>" . $row_track['status'] . "</TD></TR>";				// 7/2/2013
-				$tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>As of: </TD><TD ALIGN='left'> {$strike_ary[0]} " . format_date_2(strtotime($row_track['packet_date'])) . "{$strike_ary[1]}</TD></TR></TABLE></DIV";
+				$tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>" . gettext('As of') . ": </TD><TD ALIGN='left'> {$strike_ary[0]} " . format_date_2(strtotime($row_track['packet_date'])) . "{$strike_ary[1]}</TD></TR></TABLE></DIV";
 ?>
 /*
 			var myinfoTabs = [
@@ -3226,8 +3226,8 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 //	print "\n\tside_bar_html+= \"<TR CLASS='\" + colors[i%2] +\"'><TD COLSPAN='7' ALIGN='right'>{$source_legend}</TD></TR>\";\n";
 ?>
 	var legends = "<TR class='even'><TD ALIGN='center' COLSPAN='99'><TABLE ALIGN='center' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> >";	//	3/15/11
-	legends += "<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR><TR class='even'><TD ALIGN='center' COLSPAN='99'><B><?php print get_text("Units");?> Legend</B></TD></TR>";	//	3/15/11
-	legends += "<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'>&nbsp;&nbsp;<B>M</B>obility:&nbsp;&nbsp; stopped: <FONT COLOR='red'>&bull;</FONT>&nbsp;&nbsp;&nbsp;moving: <FONT COLOR='green'>&bull;</FONT>&nbsp;&nbsp;&nbsp;fast: <FONT COLOR='white'>&bull;</FONT>&nbsp;&nbsp;&nbsp;silent: <FONT COLOR='black'>&bull;</FONT>&nbsp;&nbsp;</TD></TR>";	//	3/15/11
+	legends += "<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR><TR class='even'><TD ALIGN='center' COLSPAN='99'><B><?php print gettext("Units Legend");?></B></TD></TR>";	//	3/15/11
+	legends += "<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'>&nbsp;&nbsp;<?php print gettext('<B>M</B>obility');?>:&nbsp;&nbsp; <?php print gettext('stopped');?>: <FONT COLOR='red'>&bull;</FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('moving');?>: <FONT COLOR='green'>&bull;</FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('fast');?>: <FONT COLOR='white'>&bull;</FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('silent');?>: <FONT COLOR='black'>&bull;</FONT>&nbsp;&nbsp;</TD></TR>";	//	3/15/11
 	legends += "<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'><?php print get_units_legend();?></TD></TR></TABLE>";	//	3/15/11
 
 	$("side_bar_r").innerHTML = side_bar_html;		//	12/03/10
@@ -3244,10 +3244,10 @@ if($units_ct > 0) {	//	3/15/11
 		$all="ALL";		//	12/03/10
 		$none="NONE";				//	12/03/10
 ?>
-		side_bar_html += "<DIV ID = 'ALL_BUTTON' class='cat_button' onClick='set_chkbox(\"<?php print $all;?>\")'><FONT COLOR = 'red'>ALL</FONT><input type=checkbox id='<?php print $all;?>' onClick='set_chkbox(\"<?php print $all;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
-		side_bar_html += "<DIV ID = 'NONE_BUTTON' class='cat_button'  onClick='set_chkbox(\"<?php print $none;?>\")'><FONT COLOR = 'red'>NONE</FONT><input type=checkbox id='<?php print $none;?>' onClick='set_chkbox(\"<?php print $none;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
-		side_bar_html += "<DIV ID = 'go_can' style='float:right; padding:2px;'><SPAN ID = 'go_button' onClick='do_go_button()' class='conf_next_button' STYLE = 'display:none;'><U>Next</U></SPAN>";
-		side_bar_html += "<SPAN ID = 'can_button'  onClick='cancel_buttons()' class='conf_can_button' STYLE = 'display:none;'><U>Cancel</U></SPAN></DIV>";
+		side_bar_html += "<DIV ID = 'ALL_BUTTON' class='cat_button' onClick='set_chkbox(\"<?php print $all;?>\")'><FONT COLOR = 'red'><?php print gettext('ALL');?></FONT><input type=checkbox id='<?php print $all;?>' onClick='set_chkbox(\"<?php print $all;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
+		side_bar_html += "<DIV ID = 'NONE_BUTTON' class='cat_button'  onClick='set_chkbox(\"<?php print $none;?>\")'><FONT COLOR = 'red'><?php print gettext('NONE');?></FONT><input type=checkbox id='<?php print $none;?>' onClick='set_chkbox(\"<?php print $none;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
+		side_bar_html += "<DIV ID = 'go_can' style='float:right; padding:2px;'><SPAN ID = 'go_button' onClick='do_go_button()' class='conf_next_button' STYLE = 'display:none;'><U><?php print gettext('Next');?></U></SPAN>";
+		side_bar_html += "<SPAN ID = 'can_button'  onClick='cancel_buttons()' class='conf_can_button' STYLE = 'display:none;'><U><?php print gettext('Cancel');?></U></SPAN></DIV>";
 		side_bar_html+="</form></TD></TR></TABLE>";			<!-- 12/03/10 -->
 <?php
 } else {
@@ -3260,8 +3260,8 @@ if($units_ct > 0) {	//	3/15/11
 		$none="NONE";				//	12/03/10
 ?>
 		side_bar_html += "<DIV class='cat_button' style='color: red;'>None Defined ! </DIV>";			<!-- 12/03/10 -->
-		side_bar_html += "<DIV ID = 'ALL_BUTTON' class='cat_button' STYLE='display: none;' onClick='set_chkbox(\"<?php print $all;?>\")'><FONT COLOR = 'red'>ALL</FONT><input type=checkbox id='<?php print $all;?>' onClick='set_chkbox(\"<?php print $all;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
-		side_bar_html += "<DIV ID = 'NONE_BUTTON' class='cat_button' STYLE='display: none;' onClick='set_chkbox(\"<?php print $none;?>\")'><FONT COLOR = 'red'>NONE</FONT><input type=checkbox id='<?php print $none;?>' onClick='set_chkbox(\"<?php print $none;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
+		side_bar_html += "<DIV ID = 'ALL_BUTTON' class='cat_button' STYLE='display: none;' onClick='set_chkbox(\"<?php print $all;?>\")'><FONT COLOR = 'red'><?php print gettext('ALL');?></FONT><input type=checkbox id='<?php print $all;?>' onClick='set_chkbox(\"<?php print $all;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
+		side_bar_html += "<DIV ID = 'NONE_BUTTON' class='cat_button' STYLE='display: none;' onClick='set_chkbox(\"<?php print $none;?>\")'><FONT COLOR = 'red'><?php print gettext('NONE');?></FONT><input type=checkbox id='<?php print $none;?>' onClick='set_chkbox(\"<?php print $none;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
 		side_bar_html +="</form></TD></TR></TABLE></DIV>";			<!-- 12/03/10 -->
 <?php
 }
@@ -3440,20 +3440,20 @@ function createfacMarker(fac_point, fac_tabs, id, fac_icon, type, region) {		// 
 //	print "\n\t\tside_bar_html += \"<TR CLASS='even' colspan='99'><TABLE ID='fac_table' STYLE='display: inline-block; width: 100%'>\"\n";
 	$facs_ct = mysql_affected_rows();			// 1/4/10
 	if ($facs_ct==0){
-		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TH COLSPAN=99 ALIGN='center'><I><B>No Facilities!</I></B></TH></TR>\"\n";	//	3/15/11
+		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TH COLSPAN=99 ALIGN='center'><I><B>" . gettext('No Facilities!') . "</I></B></TH></TR>\"\n";	//	3/15/11
 		} else {
 		$fs_checked = array ("", "", "", "");
 		$fs_checked[$_SESSION['fac_flag_2']] = " CHECKED";
 ?>
 		side_bar_html += "<TR CLASS = 'even'><TD COLSPAN=99 ALIGN='center'>";	//	3/15/11
-		side_bar_html += "<I><B>Sort</B>:&nbsp;&nbsp;&nbsp;&nbsp;";
-		side_bar_html += "Handle&raquo; 	<input type = radio name = 'frm_order' value = 1 <?php print $fs_checked[1];?> onClick = 'do_fac_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";	//	3/15/11, 5/3/11
-		side_bar_html += "Type &raquo; 	<input type = radio name = 'frm_order' value = 2 <?php print $fs_checked[2];?> onClick = 'do_fac_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";	//	3/15/11, 5/3/11
-		side_bar_html += "Status &raquo; <input type = radio name = 'frm_order' value = 3 <?php print $fs_checked[3];?> onClick = 'do_fac_sort_sub(this.value);' />";	//	3/15/11, 5/3/11
+		side_bar_html += "<I><B>" . gettext('Sort') . "</B>:&nbsp;&nbsp;&nbsp;&nbsp;";
+		side_bar_html += gettext('Handle') . "&raquo; 	<input type = radio name = 'frm_order' value = 1 <?php print $fs_checked[1];?> onClick = 'do_fac_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";	//	3/15/11, 5/3/11
+		side_bar_html += gettext('Type') . " &raquo; 	<input type = radio name = 'frm_order' value = 2 <?php print $fs_checked[2];?> onClick = 'do_fac_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";	//	3/15/11, 5/3/11
+		side_bar_html += gettext('Status') . " &raquo; <input type = radio name = 'frm_order' value = 3 <?php print $fs_checked[3];?> onClick = 'do_fac_sort_sub(this.value);' />";	//	3/15/11, 5/3/11
 		side_bar_html += "</I></TD></TR>";	//	3/15/11
 <?php
 	
-		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD><B>Icon</B></TD><TD ALIGN='left'>&nbsp;&nbsp;&nbsp;&nbsp;<B>" . get_text ("Type") . "</B></TD><TD ALIGN='left'><B>" . get_text ("Facility") . "</B> ({$facs_ct}) </TD><TD ALIGN='left'><IMG SRC='mail_red.png' BORDER=0 onClick = '{$mail_str}'/></TD><TD COLSPAN=2 ALIGN='center'><B>" . get_text ("Beds") . "</B></TD><TD>&nbsp;<B>" . get_text ("Status") . "</B></TD><TD ALIGN='left'><B>&nbsp;" . get_text ("As of") . "</B></TD></TR>\"\n";	// 7/2/10, 3/15/11
+		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD><B>" . gettext('Icon') . "</B></TD><TD ALIGN='left'>&nbsp;&nbsp;&nbsp;&nbsp;<B>" . get_text ("Type") . "</B></TD><TD ALIGN='left'><B>" . get_text ("Facility") . "</B> ({$facs_ct}) </TD><TD ALIGN='left'><IMG SRC='mail_red.png' BORDER=0 onClick = '{$mail_str}'/></TD><TD COLSPAN=2 ALIGN='center'><B>" . get_text ("Beds") . "</B></TD><TD>&nbsp;<B>" . get_text ("Status") . "</B></TD><TD ALIGN='left'><B>&nbsp;" . get_text ("As of") . "</B></TD></TR>\"\n";	// 7/2/10, 3/15/11
 		}
 
 // ===========================  begin major while() for FACILITIES ==========
@@ -3465,7 +3465,7 @@ function createfacMarker(fac_point, fac_tabs, id, fac_icon, type, region) {		// 
 //		snap(__LINE__, $row_fac['fac_id']);
 	
 		$fac_gps = get_allocates(3, $row_fac['fac_id']);	//	6/10/11
-		$grp_names = "Groups Assigned: ";	//	6/10/11
+		$grp_names = gettext("Groups Assigned") . ": ";	//	6/10/11
 		$y=0;	//	6/10/11
 		foreach($fac_gps as $value) {	//	6/10/11
 			$counter = (count($fac_gps) > ($y+1)) ? ", " : "";
@@ -3495,9 +3495,9 @@ function createfacMarker(fac_point, fac_tabs, id, fac_icon, type, region) {		// 
 			$facedit = $toroute = $facmail = "";
 			}
 		else {
-			$facedit = "&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='{$_SESSION['facilitiesfile']}?func=responder&edit=true&id=" . $row_fac['fac_id'] . "'><U>Edit</U></A>" ;
-			$facmail = "&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = do_mail_fac_win('" .$row_fac['fac_id']  . "');><U><B>Email</B></U></SPAN>" ;
-			$toroute = "&nbsp;<A HREF='{$_SESSION['facroutesfile']}?fac_id=" . $fac_id . "'><U>Route To Facility</U></A>";//	 8/2/08
+			$facedit = "&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='{$_SESSION['facilitiesfile']}?func=responder&edit=true&id=" . $row_fac['fac_id'] . "'><U>" . gettext('Edit') . "</U></A>" ;
+			$facmail = "&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = do_mail_fac_win('" .$row_fac['fac_id']  . "');><U><B>" . gettext('Email') . "</B></U></SPAN>" ;
+			$toroute = "&nbsp;<A HREF='{$_SESSION['facroutesfile']}?fac_id=" . $fac_id . "'><U>" . gettext('Route To Facility') . "</U></A>";//	 8/2/08
 			}
 	
 		if ((my_is_float($row_fac['lat'])) && (my_is_float($row_fac['lng']))) {
@@ -3513,7 +3513,7 @@ function createfacMarker(fac_point, fac_tabs, id, fac_icon, type, region) {		// 
 			if ((may_email()) && ((is_email($row_fac['contact_email'])) || (is_email($row_fac['security_email']))) ) {		// 7/2/10
 													// 5/19/11
              $mail_link = "\t<TD CLASS='mylink' ALIGN='left'>"
-                  . "<IMG SRC='mail.png' width='10' height='10' BORDER=0 TITLE = 'click to email facility {$f_disp_name[0]}'"
+                  . "<IMG SRC='mail.png' width='10' height='10' BORDER=0 TITLE = '" . gettext('click to email facility') . " {$f_disp_name[0]}'"
                   . " onclick = 'do_mail_win(\\\"{$f_disp_name[0]},{$row_fac['contact_email']}\\\");'> "
                   . "</TD>";                            // 4/26/09
 					}
@@ -3533,28 +3533,28 @@ function createfacMarker(fac_point, fac_tabs, id, fac_icon, type, region) {		// 
 			$fac_tab_1 = "<TABLE CLASS='infowin'  width='{$iw_width}' >";
 			$fac_tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . addslashes(shorten($facility_display_name, 48)) . "</B></TD></TR>";
 			$fac_tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'><B>" . addslashes(shorten($row_fac['fac_type_name'], 48)) . "</B></TD></TR>";
-			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>Description:&nbsp;</TD><TD ALIGN='left'>" . replace_quotes(addslashes(str_replace($eols, " ", $row_fac['facility_description']))) . "</TD></TR>";
-			$fac_tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>Status:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['status_val']) . " </TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>" . gettext('Description') . ":&nbsp;</TD><TD ALIGN='left'>" . replace_quotes(addslashes(str_replace($eols, " ", $row_fac['facility_description']))) . "</TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Status') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['status_val']) . " </TD></TR>";
 // 10/29/2012
 			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>" . get_text("Beds") . ":&nbsp;</TD><TD ALIGN='left'>" . get_text("Available"). ":&nbsp;&nbsp;" . $row_fac['beds_a'] . "&nbsp;&nbsp;&nbsp;" . get_text("Occupied") . ":&nbsp;&nbsp;" . $row_fac['beds_o'] . "</TD></TR>";
 			$fac_tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>" . get_text("Beds information") . ":&nbsp;</TD><TD ALIGN='left'>" . $row_fac['beds_info'] . "</TD></TR>";
 
-			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>Contact:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['contact_name']). "&nbsp;&nbsp;&nbsp;Email: " . addslashes($row_fac['contact_email']) . "</TD></TR>";
-			$fac_tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>Phone:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['contact_phone']) . " </TD></TR>";
-			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>As of:&nbsp;</TD><TD ALIGN='left' TITLE = '{$row_fac['updated']}'> " . format_sb_date_2($row_fac['updated']) . "</TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>" . gettext('Contact') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['contact_name']). "&nbsp;&nbsp;&nbsp;Email: " . addslashes($row_fac['contact_email']) . "</TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Phone') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['contact_phone']) . " </TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='left'>" . gettext('As of') . ":&nbsp;</TD><TD ALIGN='left' TITLE = '{$row_fac['updated']}'> " . format_sb_date_2($row_fac['updated']) . "</TD></TR>";
 			$fac_tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . $facedit . $facmail . "&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='{$_SESSION['facilitiesfile']}?func=responder&view=true&id=" . $row_fac['fac_id'] . "'><U>View</U></A></TD></TR>";
 //			$fac_tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . $toroute . $facedit ."&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='{$_SESSION['facilitiesfile']}?func=responder&view=true&id=" . $row_fac['fac_id'] . "'><U>View</U></A></TD></TR>";
 			$fac_tab_1 .= "</TABLE>";
 	
 			$fac_tab_2 = "<DIV style='max-height: 200px; overflow: auto;'><TABLE CLASS='infowin'  width='{$iw_width}' >";
-			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='left'>Security contact:&nbsp;</TD><TD ALIGN='left'>" . replace_quotes(addslashes($row_fac['security_contact'])) . " </TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>Security email:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_email']) . " </TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='left'>Security phone:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_phone']) . " </TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>Access rules:&nbsp;</TD><TD ALIGN='left'>" . replace_quotes(addslashes(str_replace($eols, " ", $row_fac['access_rules']))) . "</TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='left'>Security reqs:&nbsp;</TD><TD ALIGN='left'>" . replace_quotes(addslashes(str_replace($eols, " ", $row_fac['security_reqs']))) . "</TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>Opening hours:&nbsp;</TD><TD ALIGN='left'>" . replace_quotes(addslashes(str_replace($eols, " ", $row_fac['opening_hours']))) . "</TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='left'>Prim pager:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['pager_p']) . " </TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>Sec pager:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['pager_s']) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Security contact') . ":&nbsp;</TD><TD ALIGN='left'>" . replace_quotes(addslashes($row_fac['security_contact'])) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>" . gettext('Security email') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_email']) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Security phone') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_phone']) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>" . gettext('Access rules') . ":&nbsp;</TD><TD ALIGN='left'>" . replace_quotes(addslashes(str_replace($eols, " ", $row_fac['access_rules']))) . "</TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Security reqs') . ":&nbsp;</TD><TD ALIGN='left'>" . replace_quotes(addslashes(str_replace($eols, " ", $row_fac['security_reqs']))) . "</TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>" . gettext('Opening hours') . ":&nbsp;</TD><TD ALIGN='left'>" . replace_quotes(addslashes(str_replace($eols, " ", $row_fac['opening_hours']))) . "</TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Prim pager') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['pager_p']) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='left'>" . gettext('Sec pager') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['pager_s']) . " </TD></TR>";
 			$fac_tab_2 .= "</TABLE></DIV>";
 			
 ?>
@@ -3630,12 +3630,12 @@ function createfacMarker(fac_point, fac_tabs, id, fac_icon, type, region) {		// 
 	
 	side_bar_html ="<TABLE border='0' VALIGN='top' ALIGN='center' CLASS='sidebar' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> >";	//	11/29/10, 3/15/11
 	side_bar_html +="<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR>";	//	11/29/10, 3/15/11
-	side_bar_html +="<TR class='even'><TD ALIGN='center' COLSPAN=99><B>Facilities Legend</B></TD></TR>";		// legend row, 11/29/10, 3/15/11
+	side_bar_html +="<TR class='even'><TD ALIGN='center' COLSPAN=99><B><?php print gettext(' Legend');?></B></TD></TR>";		// legend row, 11/29/10, 3/15/11
 	side_bar_html +="<TR class='even'><TD ALIGN='center' COLSPAN=99><?php print get_facilities_legend();?></TD></TR></TABLE>\n";	//	3/15/11
 	$("facs_legend").innerHTML = side_bar_html + "</TABLE>";	//side_bar_html to facilities legend div
 
 	side_bar_html = "";
-	side_bar_html+="<TABLE><TR class='heading_2'><TH width = <?php print $ctrls_width;?> ALIGN='center'>Facilities</TH></TR><TR class='odd'><TD COLSPAN=99 CLASS='td_label' ><form action='#'>";			//	12/03/10, 3/15/11
+	side_bar_html+="<TABLE><TR class='heading_2'><TH width = <?php print $ctrls_width;?> ALIGN='center'><?php print gettext('Facilities');?></TH></TR><TR class='odd'><TD COLSPAN=99 CLASS='td_label' ><form action='#'>";			//	12/03/10, 3/15/11
 <?php
 if(!empty($fac_categories)) {
 /**
@@ -3677,10 +3677,10 @@ if(!empty($fac_categories)) {
 	$all="fac_ALL";		//	12/03/10
 	$none="fac_NONE";				//	12/03/10
 ?>
-	side_bar_html += "<DIV ID = 'fac_ALL_BUTTON'  class='cat_button' onClick='set_fac_chkbox(\"<?php print $all;?>\")'><FONT COLOR = 'red'>ALL</FONT><input type=checkbox id='<?php print $all;?>' onClick='set_fac_chkbox(\"<?php print $all;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
-	side_bar_html += "<DIV ID = 'fac_NONE_BUTTON'  class='cat_button' onClick='set_fac_chkbox(\"<?php print $none;?>\")'><FONT COLOR = 'red'>NONE</FONT><input type=checkbox id='<?php print $none;?>' onClick='set_fac_chkbox(\"<?php print $none;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
-	side_bar_html += "<DIV ID = 'fac_go_can' style='float:right; padding:2px;'><SPAN ID = 'fac_go_button' onClick='do_go_facilities_button()' class='conf_next_button' STYLE = 'display:none;'><U>Next</U></SPAN>";
-	side_bar_html += "<SPAN ID = 'fac_can_button'  onClick='fac_cancel_buttons()' class='conf_can_button' STYLE = 'display:none;'><U>Cancel</U></SPAN></DIV>";
+	side_bar_html += "<DIV ID = 'fac_ALL_BUTTON'  class='cat_button' onClick='set_fac_chkbox(\"<?php print $all;?>\")'><FONT COLOR = 'red'><?php print gettext('ALL');?></FONT><input type=checkbox id='<?php print $all;?>' onClick='set_fac_chkbox(\"<?php print $all;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
+	side_bar_html += "<DIV ID = 'fac_NONE_BUTTON'  class='cat_button' onClick='set_fac_chkbox(\"<?php print $none;?>\")'><FONT COLOR = 'red'><?php print gettext('NONE');?></FONT><input type=checkbox id='<?php print $none;?>' onClick='set_fac_chkbox(\"<?php print $none;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
+	side_bar_html += "<DIV ID = 'fac_go_can' style='float:right; padding:2px;'><SPAN ID = 'fac_go_button' onClick='do_go_facilities_button()' class='conf_next_button' STYLE = 'display:none;'><U><?php print gettext('Next');?></U></SPAN>";
+	side_bar_html += "<SPAN ID = 'fac_can_button'  onClick='fac_cancel_buttons()' class='conf_can_button' STYLE = 'display:none;'><U><?php print gettext('Cancel');?></U></SPAN></DIV>";
 	side_bar_html+="</DIV></form></TD></TR></TABLE>";			<!-- 12/03/10, 3/15/11 -->
 	$("fac_boxes").innerHTML = side_bar_html;										// 12/03/10 side_bar_html to responders div			
 
@@ -3726,8 +3726,8 @@ if(!empty($fac_categories)) {
 	$none="fac_NONE";				//	12/03/10
 ?>	
 	side_bar_html= "";		//	12/03/10
-	side_bar_html+="<TABLE><TR class='heading_2'><TH width = <?php print $ctrls_width;?> ALIGN='center' COLSPAN='99'>Facilities</TH></TR><TR class='odd'><TD COLSPAN=99 CLASS='td_label'><form action='#'>";			//	12/03/10, 3/15/11
-	side_bar_html += "<DIV class='cat_button' style='color: red;'>None Defined ! </DIV>";			<!-- 12/03/10, 3/15/11 -->
+	side_bar_html+="<TABLE><TR class='heading_2'><TH width = <?php print $ctrls_width;?> ALIGN='center' COLSPAN='99'><?php print gettext('Facilities');?></TH></TR><TR class='odd'><TD COLSPAN=99 CLASS='td_label'><form action='#'>";			//	12/03/10, 3/15/11
+	side_bar_html += "<DIV class='cat_button' style='color: red;'><?php print gettext('None Defined!');?> </DIV>";			<!-- 12/03/10, 3/15/11 -->
 <?php
 	$all="fac_ALL";		//	12/03/10
 	$none="fac_NONE";				//	12/03/10
@@ -3758,15 +3758,15 @@ if(!empty($fac_categories)) {
 	}
 	?>
 	side_bar_html= "";		//	6/10/11
-	side_bar_html+="<TABLE><TR class='heading_2'><TH width = <?php print $ctrls_width;?> ALIGN='center'>Boundaries and Fences</TH></TR><TR class='odd'><TD COLSPAN=99 CLASS='td_label' ><form action='#'>";			//		6/10/11
+	side_bar_html+="<TABLE><TR class='heading_2'><TH width = <?php print $ctrls_width;?> ALIGN='center'><?php print gettext('Boundaries and Fences');?></TH></TR><TR class='odd'><TD COLSPAN=99 CLASS='td_label' ><form action='#'>";			//		6/10/11
 
 <?php
 $boundary_names = array_unique($boundary_names);
 $counter = count($boundary_names);
 if($counter == 0) {
 ?>
-		side_bar_html += "<DIV class='cat_button' STYLE='display: none;'>No Boundaries</DIV>";			<!-- 6/10/11 -->
-		side_bar_html += "<DIV class='cat_button' style='color: red;'>None Defined ! </DIV>";			<!-- 6/10/11 -->
+		side_bar_html += "<DIV class='cat_button' STYLE='display: none;'><?php print gettext('No Boundaries');?></DIV>";			<!-- 6/10/11 -->
+		side_bar_html += "<DIV class='cat_button' style='color: red;'><?php print gettext('None Defined!');?> </DIV>";			<!-- 6/10/11 -->
 		side_bar_html +="</form></TD></TR></TABLE></DIV>";			<!-- 6/10/11 -->
 <?php
 } else {
@@ -3779,10 +3779,10 @@ if($counter == 0) {
 		$all="BND_ALL";		//	6/10/11
 		$none="BND_NONE";				//	6/10/11
 ?>
-		side_bar_html += "<DIV ID = 'BND_ALL_BUTTON' class='cat_button' onClick='set_bnd_chkbox(\"<?php print $all;?>\")'><FONT COLOR = 'red'>ALL</FONT><input type=checkbox id='<?php print $all;?>' onClick='set_bnd_chkbox(\"<?php print $all;?>\")'/></FONT></DIV>";			<!-- 6/10/11 -->
-		side_bar_html += "<DIV ID = 'BND_NONE_BUTTON' class='cat_button'  onClick='set_bnd_chkbox(\"<?php print $none;?>\")'><FONT COLOR = 'red'>NONE</FONT><input type=checkbox id='<?php print $none;?>' onClick='set_bnd_chkbox(\"<?php print $none;?>\")'/></FONT></DIV>";			<!-- 6/10/11 -->
-		side_bar_html += "<DIV ID = 'bnd_go_can' style='float:right; padding:2px;'><SPAN ID = 'bnd_go_button' onClick='do_go_bnd_button()' class='conf_next_button' STYLE = 'display:none;'><U>Next</U></SPAN>";
-		side_bar_html += "<SPAN ID = 'bnd_can_button'  onClick='bnd_cancel_buttons()' class='conf_can_button' STYLE = 'display:none;'><U>Cancel</U></SPAN></DIV>";
+		side_bar_html += "<DIV ID = 'BND_ALL_BUTTON' class='cat_button' onClick='set_bnd_chkbox(\"<?php print $all;?>\")'><FONT COLOR = 'red'><?php print gettext('ALL');?></FONT><input type=checkbox id='<?php print $all;?>' onClick='set_bnd_chkbox(\"<?php print $all;?>\")'/></FONT></DIV>";			<!-- 6/10/11 -->
+		side_bar_html += "<DIV ID = 'BND_NONE_BUTTON' class='cat_button'  onClick='set_bnd_chkbox(\"<?php print $none;?>\")'><FONT COLOR = 'red'><?php print gettext('NONE');?></FONT><input type=checkbox id='<?php print $none;?>' onClick='set_bnd_chkbox(\"<?php print $none;?>\")'/></FONT></DIV>";			<!-- 6/10/11 -->
+		side_bar_html += "<DIV ID = 'bnd_go_can' style='float:right; padding:2px;'><SPAN ID = 'bnd_go_button' onClick='do_go_bnd_button()' class='conf_next_button' STYLE = 'display:none;'><U><?php print gettext('Next');?></U></SPAN>";
+		side_bar_html += "<SPAN ID = 'bnd_can_button'  onClick='bnd_cancel_buttons()' class='conf_can_button' STYLE = 'display:none;'><U><?php print gettext('Cancel');?></U></SPAN></DIV>";
 		side_bar_html+="</form></TD></TR></TABLE>";			<!-- 6/10/11 -->
 <?php
 }
@@ -3813,7 +3813,7 @@ if($counter == 0) {
 // ===============================================  3633  ==============================================
 //	}		// end if (GBrowserIsCompatible())
 //else {
-//	alert("Sorry, browser compatibility problem. Contact your tech support group.");
+//	alert("<?php print gettext('Sorry, browser compatibility problem. Contact your tech support group.');?>");
 //	}
 	
 function tester() {
@@ -3911,16 +3911,16 @@ print get_buttons_inner2();	//	4/12/12
     $locale = get_variable('locale');    // 10/29/09
     switch($locale) {
         case "0":
-        $grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;USNG&nbsp;&nbsp;" . LLtoUSNG($row['lat'], $row['lng']);
+        $grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('USNG') . "&nbsp;&nbsp;" . LLtoUSNG($row['lat'], $row['lng']);
         break;
 
         case "1":
-        $grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;OSGB&nbsp;&nbsp;" . LLtoOSGB($row['lat'], $row['lng']);    // 8/23/08, 10/15/08, 8/3/09
+        $grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('OSGB') . "&nbsp;&nbsp;" . LLtoOSGB($row['lat'], $row['lng']);    // 8/23/08, 10/15/08, 8/3/09
         break;
    
         case "2":
         $coords =  $row['lat'] . "," . $row['lng'];                                    // 8/12/09
-        $grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;UTM&nbsp;&nbsp;" . toUTM($coords);    // 8/23/08, 10/15/08, 8/3/09
+        $grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('UTM') . "&nbsp;&nbsp;" . toUTM($coords);    // 8/23/08, 10/15/08, 8/3/09
         break;
 
         default:
@@ -3959,14 +3959,14 @@ print get_buttons_inner2();	//	4/12/12
 		$by_str = ($row['call_taker'] ==0)?	"" : "&nbsp;&nbsp;by " . get_owner($row['call_taker']) . "&nbsp;&nbsp;";		// 1/7/10
 		print "<TR CLASS='print_TD'><TD ALIGN='left'>" . get_text("Written") . ":</TD>	
 				<TD ALIGN='left'>" . format_date_2(strtotime($row['date'])) . $by_str;
-		print 		"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Updated:&nbsp;&nbsp;" . format_date_2(strtotime($row['updated'])) . "</TD></TR>\n";
-		print empty($row['booked_date']) ? "" : "<TR CLASS='print_TD'><TD ALIGN='left'>Scheduled date:</TD>	
+		print 		"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('Updated') . ":&nbsp;&nbsp;" . format_date_2(strtotime($row['updated'])) . "</TD></TR>\n";
+		print empty($row['booked_date']) ? "" : "<TR CLASS='print_TD'><TD ALIGN='left'>" . gettext('Scheduled date') . ":</TD>	
 				<TD ALIGN='left'>" . format_date_2(strtotime($row['booked_date'])) . "</TD></TR>\n";	// 10/6/09	
 		print "<TR CLASS='print_TD' ><TD ALIGN='left' COLSPAN='2'>&nbsp;
 				<TD ALIGN='left'></TR>\n";			// separator
-		print empty($row['fac_name'])? "" : "<TR CLASS='print_TD' ><TD ALIGN='left'>{$incident} at Facility:</TD>	
+		print empty($row['fac_name'])? "" : "<TR CLASS='print_TD' ><TD ALIGN='left'>{$incident} " . gettext('at Facility') . ":</TD>	
 				<TD ALIGN='left'>" .  $row['fac_name'] . "</TD></TR>\n";	// 8/1/09, 3/27/10
-		print empty($row['rec_fac_name'])? "" : "<TR CLASS='print_TD' ><TD ALIGN='left'>Receiving Facility:</TD>	
+		print empty($row['rec_fac_name'])? "" : "<TR CLASS='print_TD' ><TD ALIGN='left'>" . gettext('Receiving Facility') . ":</TD>	
 				<TD ALIGN='left'>" .  $row['rec_fac_name'] . "</TD></TR>\n";	// 10/6/09	
 		print empty($row['comments'])? "" : "<TR CLASS='print_TD'  VALIGN='top'><TD ALIGN='left'>{$disposition}:</TD>
 				<TD ALIGN='left'>" .  replace_quotes(nl2br($row['comments'])) . "</TD></TR>\n";	
@@ -3974,21 +3974,21 @@ print get_buttons_inner2();	//	4/12/12
 				<TD ALIGN='left'>" . format_date_2(strtotime($row['problemstart']));
 //		$elapsed_str = (!(empty($closed)))? $elapsed : "" ;				
 		$elapsed_str = get_elapsed_time ($row);			
-		print	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End:&nbsp;&nbsp;" . format_date_2(strtotime($row['problemend'])) . "&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
+		print	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('End') . ":&nbsp;&nbsp;" . format_date_2(strtotime($row['problemend'])) . "&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
 	
 		$locale = get_variable('locale');	// 08/03/09
 		switch($locale) { 
 			case "0":
-				$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;USNG&nbsp;&nbsp;" . LLtoUSNG($row['lat'], $row['lng']);
+				$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('USNG') . "&nbsp;&nbsp;" . LLtoUSNG($row['lat'], $row['lng']);
 				break;
 	
 			case "1":
-				$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;OSGB&nbsp;&nbsp;" . LLtoOSGB($row['lat'], $row['lng']);	// 8/23/08, 10/15/08, 8/3/09
+				$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('OSGB') . "&nbsp;&nbsp;" . LLtoOSGB($row['lat'], $row['lng']);	// 8/23/08, 10/15/08, 8/3/09
 				break;
 		
 			case "2":
 				$coords =  $row['lat'] . "," . $row['lng'];									// 8/12/09
-				$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;UTM&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
+				$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('UTM') . "&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
 				break;
 	
 			default:
@@ -4108,7 +4108,7 @@ print get_buttons_inner2();	//	4/12/12
 		<DIV ID='map_canvas' STYLE='WIDTH:" . get_variable('map_width') . "px; HEIGHT: " . get_variable('map_height') . "PX'></DIV>
 		<BR />
 		<SPAN ID='grid_id' onClick='toglGrid()'><U>Grid</U></SPAN>
-		<SPAN ID='do_sv' onClick = 'sv_win(document.sv_form)' STYLE = 'margin-left: 20px' ><u>Street view</U></SPAN>";
+		<SPAN ID='do_sv' onClick = 'sv_win(document.sv_form)' STYLE = 'margin-left: 20px' ><u>" . gettext('Street view') . "</U></SPAN>";
 	print ($zoom_tight)? "<SPAN  onClick= 'zoom_in({$row['lat']}, {$row['lng']}, {$zoom_tight});' STYLE = 'margin-left:20px'><U>Zoom</U></SPAN>\n" : "";	// 3/27/10	
 		
 	print "</TD></TR>";	// 11/29/08
@@ -4117,48 +4117,48 @@ print get_buttons_inner2();	//	4/12/12
 	print "<INPUT TYPE='hidden' NAME='frm_lng' VALUE=" .$row['lng'] . "></FORM>";
 
 	print "<TR ID='pointl1' CLASS='print_TD' STYLE = 'display:none;'>
-		<TD ALIGN='center'><B>Range:</B>&nbsp;&nbsp; <SPAN ID='range'></SPAN>&nbsp;&nbsp;<B>Brng</B>:&nbsp;&nbsp;
+		<TD ALIGN='center'><B>" . gettext('Range') . ":</B>&nbsp;&nbsp; <SPAN ID='range'></SPAN>&nbsp;&nbsp;<B>" . gettext('Brng') . "</B>:&nbsp;&nbsp;
 			<SPAN ID='brng'></SPAN></TD></TR>\n
 		<TR ID='pointl2' CLASS='print_TD' STYLE = 'display:none;'>
-			<TD ALIGN='center'><B>Lat:</B>&nbsp;<SPAN ID='newlat'></SPAN>
-			&nbsp;<B>Lng:</B>&nbsp;&nbsp; <SPAN ID='newlng'></SPAN>&nbsp;&nbsp;<B>NGS:</B>&nbsp;<SPAN ID = 'newusng'></SPAN></TD></TR>\n
-		<TR><TD ALIGN='center'><BR /><FONT SIZE='-1'>Click map point for distance information.</FONT></TD></TR>\n";
+			<TD ALIGN='center'><B>" . gettext('Lat') . ":</B>&nbsp;<SPAN ID='newlat'></SPAN>
+			&nbsp;<B>Lng:</B>&nbsp;&nbsp; <SPAN ID='newlng'></SPAN>&nbsp;&nbsp;<B>" . gettext('NGS') . ":</B>&nbsp;<SPAN ID = 'newusng'></SPAN></TD></TR>\n
+		<TR><TD ALIGN='center'><BR /><FONT SIZE='-1'>" . gettext('Click map point for distance information') . ".</FONT></TD></TR>\n";
 	print "</TABLE>\n";
 	if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) || (get_variable('use_messaging') == 3)) {
 		print "<DIV style='width:" . get_variable('map_width') . "px; background-color: #CECECE;'>
 				<DIV style='background-color: #707070; color: #FFFFFF; position: relative; text-align: center;'><BR />
-					<SPAN id='all_read_but' class='plain' style='float: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='read_status(\"read\", 0, \"ticket\", " . $row['tick_id'] . ", 0);'>Mark All Read</SPAN>	
-					<SPAN id='all_unread_but' class='plain' style='float: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='read_status(\"unread\", 0, \"ticket\", " . $row['tick_id'] . ", 0);'>Mark All Unread</SPAN>	
-					<SPAN id='waste_but' class='plain' style='float: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='get_wastebin();'>Wastebasket</SPAN>	
-					<SPAN id='inbox_but' class='plain' style='float: none; display: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='get_inbox();'>Inbox</SPAN><BR /><BR />			
+					<SPAN id='all_read_but' class='plain' style='float: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='read_status(\"read\", 0, \"ticket\", " . $row['tick_id'] . ", 0);'>" . gettext('Mark All Read') . "</SPAN>	
+					<SPAN id='all_unread_but' class='plain' style='float: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='read_status(\"unread\", 0, \"ticket\", " . $row['tick_id'] . ", 0);'>" . gettext('Mark All Unread') . "</SPAN>	
+					<SPAN id='waste_but' class='plain' style='float: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='get_wastebin();'>" . gettext('Wastebasket') . "</SPAN>	
+					<SPAN id='inbox_but' class='plain' style='float: none; display: none;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='get_inbox();'>" . gettext('Inbox') . "</SPAN><BR /><BR />			
 
 				</DIV>";
 		print "	<DIV style='background-color: #707070; color: #FFFFFF; position: relative; text-align: center;'>
-					<SPAN style='vertical-align: middle; text-align: center; font-size: 22px; color: #FFFFFF;'>Messages for Ticket " . $row['tick_id'] . "</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;
-					<SPAN ID='the_box' style='font-size: 14px; color: blue; background-color: #FFFFFF;'>Showing Inbox</SPAN><BR />
-					<SPAN style='font-size: 10px;'>Click Column Heading to sort</SPAN><BR />
+					<SPAN style='vertical-align: middle; text-align: center; font-size: 22px; color: #FFFFFF;'>" . gettext('Messages for Ticket') . " " . $row['tick_id'] . "</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;
+					<SPAN ID='the_box' style='font-size: 14px; color: blue; background-color: #FFFFFF;'>" . gettext('Showing Inbox') . "</SPAN><BR />
+					<SPAN style='font-size: 10px;'>" . gettext('Click Column Heading to sort') . "</SPAN><BR />
 				</DIV>";
 
 		print	"<DIV style='background-color: #707070; color: #FFFFFF; position: relative; text-align: center;'>
 					<FORM NAME='the_filter'>			
-						<SPAN style='vertical-align: middle; text-align: center;'><B>FILTER: &nbsp;&nbsp;</B><INPUT TYPE='text' NAME='frm_filter' size='60' MAXLENGTH='128' VALUE=''>
-						<SPAN id = 'filter_box' class='plain' style='float: none; vertical-align: middle;' onMouseover = 'do_hover(this);' onMouseout='do_plain(this);' onClick='do_filter(the_ticket,\"\")'>&nbsp;&nbsp;&#9654;&nbsp;&nbsp;GO</SPAN>
-						<SPAN id = 'the_clear' class='plain' style='float: none; display: none; vertical-align: middle;' onMouseover = 'do_hover(this);' onMouseout='do_plain(this);' onClick='clear_filter(the_ticket,\"\")'>&nbsp;&nbsp;X&nbsp;&nbsp;Clear</SPAN>
+						<SPAN style='vertical-align: middle; text-align: center;'><B>" . gettext('FILTER') . ": &nbsp;&nbsp;</B><INPUT TYPE='text' NAME='frm_filter' size='60' MAXLENGTH='128' VALUE=''>
+						<SPAN id = 'filter_box' class='plain' style='float: none; vertical-align: middle;' onMouseover = 'do_hover(this);' onMouseout='do_plain(this);' onClick='do_filter(the_ticket,\"\")'>&nbsp;&nbsp;&#9654;&nbsp;&nbsp;" . gettext('GO') . "</SPAN>
+						<SPAN id = 'the_clear' class='plain' style='float: none; display: none; vertical-align: middle;' onMouseover = 'do_hover(this);' onMouseout='do_plain(this);' onClick='clear_filter(the_ticket,\"\")'>&nbsp;&nbsp;X&nbsp;&nbsp;" . gettext('Clear') . "</SPAN>
 						</SPAN><BR /><BR />
 					</FORM>
 				</DIV>";
 		print "	<TABLE cellspacing='0' cellpadding='0' style='width: 98%; background-color: #CECECE;'>
 					<TR style='background-color: #CECECE; color: #FFFFFF; width: 100%;'>";
 						$print = "";
-	//					$print .= (in_array('1', $column_arr)) ? "<TD id='ticket' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`ticket_id`',filter)\">Tkt</TD>" : "";					
-						$print .= (in_array('2', $column_arr)) ? "<TD id='type' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`msg_type`',filter)\">Typ</TD>" : "";				
-						$print .= (in_array('3', $column_arr)) ? "<TD id='from' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`fromname`',filter)\">From</TD>" : "";				
-						$print .= (in_array('4', $column_arr)) ? "<TD id='recipients' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`recipients`',filter)\">To</TD>" : "";
-						$print .= (in_array('5', $column_arr)) ? "<TD id='subject' class='cols_h' NOWRAP style='width: 20%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`subject`',filter)\">Subject</TD>" : "";					
-						$print .= (in_array('6', $column_arr)) ? "<TD id='message' class='msg_col_h' NOWRAP style='width: 40%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`message`',filter)\">Message</TD>" : "";
-						$print .= (in_array('7', $column_arr)) ? "<TD id='date' class='cols_h' style='width: 10%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`date`',filter)\">Date</TD>" : "";
-						$print .= (in_array('8', $column_arr)) ? "<TD id='owner' class='cols_h' NOWRAP style='width: 7%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`_by`',filter)\">Owner</TD>" : "";
-						$print .= "<TD class='cols_h' NOWRAP style='width: 4%;'>Del</TD>";
+	//					$print .= (in_array('1', $column_arr)) ? "<TD id='ticket' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`ticket_id`',filter)\">" . gettext('Tkt') . "</TD>" : "";					
+						$print .= (in_array('2', $column_arr)) ? "<TD id='type' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`msg_type`',filter)\">" . gettext('Typ') . "</TD>" : "";				
+						$print .= (in_array('3', $column_arr)) ? "<TD id='from' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`fromname`',filter)\">" . gettext('From') . "</TD>" : "";				
+						$print .= (in_array('4', $column_arr)) ? "<TD id='recipients' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`recipients`',filter)\">" . gettext('To') . "</TD>" : "";
+						$print .= (in_array('5', $column_arr)) ? "<TD id='subject' class='cols_h' NOWRAP style='width: 20%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`subject`',filter)\">" . gettext('Subject') . "</TD>" : "";					
+						$print .= (in_array('6', $column_arr)) ? "<TD id='message' class='msg_col_h' NOWRAP style='width: 40%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`message`',filter)\">" . gettext('Message') . "</TD>" : "";
+						$print .= (in_array('7', $column_arr)) ? "<TD id='date' class='cols_h' style='width: 10%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`date`',filter)\">" . gettext('Date') . "</TD>" : "";
+						$print .= (in_array('8', $column_arr)) ? "<TD id='owner' class='cols_h' NOWRAP style='width: 7%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`_by`',filter)\">" . gettext('Owner') . "</TD>" : "";
+						$print .= "<TD class='cols_h' NOWRAP style='width: 4%;'>" . gettext('Del') . "</TD>";
 						print $print;
 		print "		</TR>						
 				</TABLE>";
@@ -4189,7 +4189,7 @@ print get_buttons_inner2();	//	4/12/12
 		var url = "street_view.php?thelat=" + thelat + "&thelng=" + thelng;
 		newwindow_sl=window.open(url, "sta_log",  "titlebar=no, location=0, resizable=1, scrollbars, height=450,width=640,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 		if (!(newwindow_sl)) {
-			alert ("Street view operation requires popups to be enabled. Please adjust your browser options - or else turn off the Call Board option.");
+			alert ("<?php print gettext('Street view operation requires popups to be enabled. Please adjust your browser options - or else turn off the Call Board option.');?>");
 			return;
 			}
 		newwindow_sl.focus();
@@ -4413,22 +4413,22 @@ function createfacMarker(fac_point, fac_name, id, fac_icon) {
 			$fac_tab_1 = "<TABLE CLASS='infowin'  width='{$iw_width}' >";
 			$fac_tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . addslashes(shorten($facility_display_name, 48)) . "</B></TD></TR>";
 			$fac_tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'><B>" . addslashes(shorten($row_fac['fac_type_name'], 48)) . "</B></TD></TR>";
-			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>Description:&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['facility_description'])) . "</TD></TR>";
-			$fac_tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Status:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['status_val']) . " </TD></TR>";
-			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>Contact:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['contact_name']). "&nbsp;&nbsp;&nbsp;Email: " . addslashes($row_fac['contact_email']) . "</TD></TR>";
-			$fac_tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Phone:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['contact_phone']) . " </TD></TR>";
-			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>As of:&nbsp;</TD><TD ALIGN='left'>" . format_date_2(strtotime($row_fac['updated'])) . "</TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('Description') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['facility_description'])) . "</TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>" . gettext('Status') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['status_val']) . " </TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('Contact') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['contact_name']). "&nbsp;&nbsp;&nbsp;Email: " . addslashes($row_fac['contact_email']) . "</TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>" . gettext('Phone') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['contact_phone']) . " </TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('As of') . ":&nbsp;</TD><TD ALIGN='left'>" . format_date_2(strtotime($row_fac['updated'])) . "</TD></TR>";
 			$fac_tab_1 .= "</TABLE>";
 	
 			$fac_tab_2 = "<DIV style='max-height: 200px; overflow: auto;'><TABLE CLASS='infowin'  width='{$iw_width}' >";
-			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>Security contact:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_contact']) . " </TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>Security email:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_email']) . " </TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>Security phone:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_phone']) . " </TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>Access rules:&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['access_rules'])) . "</TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>Security reqs:&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['security_reqs'])) . "</TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>Opening hours:&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['opening_hours'])) . "</TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>Prim pager:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['pager_p']) . " </TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>Sec pager:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['pager_s']) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>" . gettext('Security contact') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_contact']) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('Security email') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_email']) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>" . gettext('Security phone') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_phone']) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('Access rules') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['access_rules'])) . "</TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>" . gettext('Security reqs') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['security_reqs'])) . "</TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('Opening hours') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['opening_hours'])) . "</TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>" . gettext('Prim pager') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['pager_p']) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('Sec pager') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['pager_s']) . " </TD></TR>";
 			$fac_tab_2 .= "</TABLE></DIV>";
 			
 ?>
@@ -4466,10 +4466,10 @@ function createfacMarker(fac_point, fac_name, id, fac_icon) {
 
 //	$tab_1 = "<TABLE CLASS='infowin'  width='{$iw_width}' >";
 //	$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . shorten($row['scope'], 48)  . "</B></TD></TR>";
-//	$tab_1 .= "<TR CLASS='odd'><TD>As of:</TD><TD>" . format_date_2($row['updated']) . "</TD></TR>";
-//	$tab_1 .= "<TR CLASS='even'><TD>Reported by:</TD><TD>" . shorten($row['contact'], 32) . "</TD></TR>";
-//	$tab_1 .= "<TR CLASS='odd'><TD>Phone:</TD><TD>" . format_phone ($row['phone']) . "</TD></TR>";
-//	$tab_1 .= "<TR CLASS='even'><TD>Addr:</TD><TD>" . $street . " </TD></TR>";
+//	$tab_1 .= "<TR CLASS='odd'><TD>" . gettext('As of') . ":</TD><TD>" . format_date_2($row['updated']) . "</TD></TR>";
+//	$tab_1 .= "<TR CLASS='even'><TD>" . gettext('Reported by') . ":</TD><TD>" . shorten($row['contact'], 32) . "</TD></TR>";
+//	$tab_1 .= "<TR CLASS='odd'><TD>" . gettext('Phone') . ":</TD><TD>" . format_phone ($row['phone']) . "</TD></TR>";
+//	$tab_1 .= "<TR CLASS='even'><TD>" . gettext('Addr') . ":</TD><TD>" . $street . " </TD></TR>";
 //	$tab_1 .= "</TABLE>";		// 11/6/08
 
 	do_kml();			// kml functions
@@ -4601,28 +4601,28 @@ function do_ticket($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// retu
 	$print .= "<TR CLASS='odd'><TD ALIGN='left'>" . get_text("Status") . ":</TD>		<TD ALIGN='left'>" . get_status($theRow['status']) . "&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
 	$by_str = ($theRow['call_taker'] ==0)?	"" : "&nbsp;&nbsp;by " . get_owner($theRow['call_taker']) . "&nbsp;&nbsp;";		// 1/7/10
 	$print .= "<TR CLASS='even'><TD ALIGN='left'>" . get_text("Written") . ":</TD>		<TD ALIGN='left'>" . format_date_2($theRow['date']) . $by_str;
-	$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Updated:&nbsp;&nbsp;" . format_date_2($theRow['updated']) . "</TD></TR>\n";
-	$print .=  empty($theRow['booked_date']) ? "" : "<TR CLASS='odd'><TD ALIGN='left'>Scheduled date:</TD>		<TD ALIGN='left'>" . format_date_2($theRow['booked_date']) . "</TD></TR>\n";	// 10/6/09
+	$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('Updated') . ":&nbsp;&nbsp;" . format_date_2($theRow['updated']) . "</TD></TR>\n";
+	$print .=  empty($theRow['booked_date']) ? "" : "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Scheduled date') . ":</TD>		<TD ALIGN='left'>" . format_date_2($theRow['booked_date']) . "</TD></TR>\n";	// 10/6/09
 	$print .= "<TR CLASS='even' ><TD ALIGN='left' COLSPAN='2'>&nbsp;	<TD ALIGN='left'></TR>\n";			// separator
-	$print .= empty($theRow['fac_name']) ? "" : "<TR CLASS='odd' ><TD ALIGN='left'>{$incident} at Facility:</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['fac_name']) . "</TD></TR>\n";	// 8/1/09
-	$print .= empty($theRow['rec_fac_name']) ? "" : "<TR CLASS='even' ><TD ALIGN='left'>Receiving Facility:</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['rec_fac_name']) . "</TD></TR>\n";	// 10/6/09
+	$print .= empty($theRow['fac_name']) ? "" : "<TR CLASS='odd' ><TD ALIGN='left'>" . gettext('Incident at Facility') . ":</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['fac_name']) . "</TD></TR>\n";	// 8/1/09
+	$print .= empty($theRow['rec_fac_name']) ? "" : "<TR CLASS='even' ><TD ALIGN='left'>" . gettext('Receiving Facility') . ":</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['rec_fac_name']) . "</TD></TR>\n";	// 10/6/09
 	$print .= empty($theRow['comments'])? "" : "<TR CLASS='odd'  VALIGN='top'><TD ALIGN='left'>{$disposition}:</TD>	<TD ALIGN='left'>" . replace_quotes(highlight($search, nl2br($theRow['comments']))) . "</TD></TR>\n";
 	$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("Run Start") . ":</TD> <TD ALIGN='left'>" . format_date_2($theRow['problemstart']);
 	$end_str = (good_date_time($theRow['problemend']))? format_date_2(strtotime($theRow['problemend'])) : "";
-	$print .= 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End:&nbsp;&nbsp;{$end_str}&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
+	$print .= 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('End') . ":&nbsp;&nbsp;{$end_str}&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
 	$locale = get_variable('locale');	// 08/03/09
 	switch($locale) { 
 		case "0":
-		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;USNG&nbsp;&nbsp;" . LLtoUSNG($theRow['lat'], $theRow['lng']);
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('USNG') . "&nbsp;&nbsp;" . LLtoUSNG($theRow['lat'], $theRow['lng']);
 		break;
 
 		case "1":
-		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;OSGB&nbsp;&nbsp;" . LLtoOSGB($theRow['lat'], $theRow['lng']);	// 8/23/08, 10/15/08, 8/3/09
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('OSGB') . "&nbsp;&nbsp;" . LLtoOSGB($theRow['lat'], $theRow['lng']);	// 8/23/08, 10/15/08, 8/3/09
 		break;
 	
 		case "2":
 		$coords =  $theRow['lat'] . "," . $theRow['lng'];									// 8/12/09
-		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;UTM&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('UTM') . "&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
 		break;
 
 		default:
@@ -4692,28 +4692,28 @@ function do_ticket_only($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						//
 	$print .= "<TR CLASS='odd'><TD ALIGN='left'>" . get_text("Status") . ":</TD>		<TD ALIGN='left'>" . get_status($theRow['status']) . "&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
 	$by_str = ($theRow['call_taker'] ==0)?	"" : "&nbsp;&nbsp;by " . get_owner($theRow['call_taker']) . "&nbsp;&nbsp;";		// 1/7/10
 	$print .= "<TR CLASS='even'><TD ALIGN='left'>" . get_text("Written") . ":</TD>		<TD ALIGN='left'>" . format_date_2($theRow['date']) . $by_str;
-	$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Updated:&nbsp;&nbsp;" . format_date_2($theRow['updated']) . "</TD></TR>\n";
-	$print .=  empty($theRow['booked_date']) ? "" : "<TR CLASS='odd'><TD ALIGN='left'>Scheduled date:</TD>		<TD ALIGN='left'>" . format_date_2($theRow['booked_date']) . "</TD></TR>\n";	// 10/6/09
+	$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('Updated') . ":&nbsp;&nbsp;" . format_date_2($theRow['updated']) . "</TD></TR>\n";
+	$print .=  empty($theRow['booked_date']) ? "" : "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Scheduled date') . ":</TD>		<TD ALIGN='left'>" . format_date_2($theRow['booked_date']) . "</TD></TR>\n";	// 10/6/09
 	$print .= "<TR CLASS='even' ><TD ALIGN='left' COLSPAN='2'>&nbsp;	<TD ALIGN='left'></TR>\n";			// separator
-	$print .= empty($theRow['fac_name']) ? "" : "<TR CLASS='odd' ><TD ALIGN='left'>{$incident} at Facility:</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['fac_name']) . "</TD></TR>\n";	// 8/1/09
-	$print .= empty($theRow['rec_fac_name']) ? "" : "<TR CLASS='even' ><TD ALIGN='left'>Receiving Facility:</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['rec_fac_name']) . "</TD></TR>\n";	// 10/6/09
+	$print .= empty($theRow['fac_name']) ? "" : "<TR CLASS='odd' ><TD ALIGN='left'>" . gettext('Incident at Facility') . ":</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['fac_name']) . "</TD></TR>\n";	// 8/1/09
+	$print .= empty($theRow['rec_fac_name']) ? "" : "<TR CLASS='even' ><TD ALIGN='left'>" . gettext('Receiving Facility') . ":</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['rec_fac_name']) . "</TD></TR>\n";	// 10/6/09
 	$print .= empty($theRow['comments'])? "" : "<TR CLASS='odd'  VALIGN='top'><TD ALIGN='left'>{$disposition}:</TD>	<TD ALIGN='left'>" . replace_quotes(highlight($search, nl2br($theRow['comments']))) . "</TD></TR>\n";
 	$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("Run Start") . ":</TD> <TD ALIGN='left'>" . format_date_2($theRow['problemstart']);
 	$end_str = (good_date_time($theRow['problemend']))? format_date_2(strtotime($theRow['problemend'])) : "";
-	$print .= 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End:&nbsp;&nbsp;{$end_str}&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
+	$print .= 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('End') . ":&nbsp;&nbsp;{$end_str}&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
 	$locale = get_variable('locale');	// 08/03/09
 	switch($locale) { 
 		case "0":
-		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;USNG&nbsp;&nbsp;" . LLtoUSNG($theRow['lat'], $theRow['lng']);
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('USNG') . "&nbsp;&nbsp;" . LLtoUSNG($theRow['lat'], $theRow['lng']);
 		break;
 
 		case "1":
-		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;OSGB&nbsp;&nbsp;" . LLtoOSGB($theRow['lat'], $theRow['lng']);	// 8/23/08, 10/15/08, 8/3/09
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('OSGB') . "&nbsp;&nbsp;" . LLtoOSGB($theRow['lat'], $theRow['lng']);	// 8/23/08, 10/15/08, 8/3/09
 		break;
 	
 		case "2":
 		$coords =  $theRow['lat'] . "," . $theRow['lng'];									// 8/12/09
-		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;UTM&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('UTM') . "&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
 		break;
 
 		default:
@@ -4816,7 +4816,7 @@ function popup_ticket($id,$print='false', $search = FALSE) {								/* 7/9/09 - 
 		}
 
 	if ($id == '' OR $id <= 0 OR !check_for_rows("SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE id='$id'")) {	/* sanity check */
-		print "Invalid Ticket ID: '$id'<BR />";
+		print gettext("Invalid Ticket ID") . ": '$id'<BR />";
 		return;
 		}
 
@@ -4832,7 +4832,7 @@ function popup_ticket($id,$print='false', $search = FALSE) {								/* 7/9/09 - 
 		WHERE ID='$id' $restrict_ticket";	// 8/12/09
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	if (!mysql_num_rows($result)){	//no tickets? print "error" or "restricted user rights"
-		print "<FONT CLASS=\"warn\">No such ticket or user access to ticket is denied</FONT>";
+		print "<FONT CLASS=\"warn\">" . gettext('No such ticket or user access to ticket is denied') . "</FONT>";
 		exit();
 		}
 
@@ -4850,11 +4850,11 @@ function popup_ticket($id,$print='false', $search = FALSE) {								/* 7/9/09 - 
 	print "<INPUT TYPE='hidden' NAME='frm_lng' VALUE=" .$row['lng'] . "></FORM>";
 
 	print "<TR ID='pointl1' CLASS='print_TD' STYLE = 'display:none;'>
-		<TD ALIGN='center'><B>Range:</B>&nbsp;&nbsp; <SPAN ID='range'></SPAN>&nbsp;&nbsp;<B>Brng</B>:&nbsp;&nbsp;
+		<TD ALIGN='center'><B>" . gettext('Range') . ":</B>&nbsp;&nbsp; <SPAN ID='range'></SPAN>&nbsp;&nbsp;<B>" . gettext('Brng') . "</B>:&nbsp;&nbsp;
 			<SPAN ID='brng'></SPAN></TD></TR>\n
 		<TR ID='pointl2' CLASS='print_TD' STYLE = 'display:none;'>
-			<TD ALIGN='center'><B>Lat:</B>&nbsp;<SPAN ID='newlat'></SPAN>
-			&nbsp;<B>Lng:</B>&nbsp;&nbsp; <SPAN ID='newlng'></SPAN>&nbsp;&nbsp;<B>NGS:</B>&nbsp;<SPAN ID = 'newusng'></SPAN></TD></TR>\n";
+			<TD ALIGN='center'><B>" . gettext('Lat') . ":</B>&nbsp;<SPAN ID='newlat'></SPAN>
+			&nbsp;<B>" . gettext('Lng') . ":</B>&nbsp;&nbsp; <SPAN ID='newlng'></SPAN>&nbsp;&nbsp;<B>" . gettext('NGS') . ":</B>&nbsp;<SPAN ID = 'newusng'></SPAN></TD></TR>\n";
 	print "</TABLE>\n";
 	print "</TD></TR>";
 	print "<TR CLASS='odd' ><TD COLSPAN='2' CLASS='print_TD'>";
@@ -5076,22 +5076,22 @@ function createfacMarker(fac_point, fac_name, id, fac_icon) {
 			$fac_tab_1 = "<TABLE CLASS='infowin'  width='{$iw_width}' >";
 			$fac_tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . addslashes(shorten($facility_display_name, 48)) . "</B></TD></TR>";
 			$fac_tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'><B>" . addslashes(shorten($row_fac['fac_type_name'], 48)) . "</B></TD></TR>";
-			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>Description:&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['facility_description'])) . "</TD></TR>";
-			$fac_tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Status:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['status_val']) . " </TD></TR>";
-			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>Contact:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['contact_name']). "&nbsp;&nbsp;&nbsp;Email: " . addslashes($row_fac['contact_email']) . "</TD></TR>";
-			$fac_tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Phone:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['contact_phone']) . " </TD></TR>";
-			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>As of:&nbsp;</TD><TD ALIGN='left'>" . format_date_2(strtotime($row_fac['updated'])) . "</TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('Description') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['facility_description'])) . "</TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>" . gettext('Status') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['status_val']) . " </TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('Contact') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['contact_name']). "&nbsp;&nbsp;&nbsp;" . gettext('Email') . ": " . addslashes($row_fac['contact_email']) . "</TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>" . gettext('Phone') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['contact_phone']) . " </TD></TR>";
+			$fac_tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('As of') . ":&nbsp;</TD><TD ALIGN='left'>" . format_date_2(strtotime($row_fac['updated'])) . "</TD></TR>";
 			$fac_tab_1 .= "</TABLE>";
 
 			$fac_tab_2 = "<DIV style='max-height: 200px; overflow: auto;'><TABLE CLASS='infowin'  width='{$iw_width}' >";
-			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>Security contact:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_contact']) . " </TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>Security email:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_email']) . " </TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>Security phone:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_phone']) . " </TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>Access rules:&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['access_rules'])) . "</TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>Security reqs:&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['security_reqs'])) . "</TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>Opening hours:&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['opening_hours'])) . "</TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>Prim pager:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['pager_p']) . " </TD></TR>";
-			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>Sec pager:&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['pager_s']) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>" . gettext('Security contact') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_contact']) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('Security email') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_email']) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>" . gettext('Security phone') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['security_phone']) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('Access rules') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['access_rules'])) . "</TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>" . gettext('Security reqs') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['security_reqs'])) . "</TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('Opening hours') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes(str_replace($eols, " ", $row_fac['opening_hours'])) . "</TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='odd'><TD ALIGN='right'>" . gettext('Prim pager') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['pager_p']) . " </TD></TR>";
+			$fac_tab_2 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('Sec pager') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes($row_fac['pager_s']) . " </TD></TR>";
 			$fac_tab_2 .= "</TABLE></DIV>";
 			
 ?>
@@ -5233,28 +5233,28 @@ function do_ticket_wm($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// r
 	$print .= "<TR CLASS='odd'><TD ALIGN='left'>" . get_text("Status") . ":</TD>		<TD ALIGN='left'>" . get_status($theRow['status']) . "&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
 	$by_str = ($theRow['call_taker'] ==0)?	"" : "&nbsp;&nbsp;by " . get_owner($theRow['call_taker']) . "&nbsp;&nbsp;";		// 1/7/10
 	$print .= "<TR CLASS='even'><TD ALIGN='left'>" . get_text("Written") . ":</TD>		<TD ALIGN='left'>" . format_date_2(strtotime($theRow['date'])) . $by_str;
-	$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Updated:&nbsp;&nbsp;" . format_date_2(strtotime($theRow['updated'])) . "</TD></TR>\n";
-	$print .=  empty($theRow['booked_date']) ? "" : "<TR CLASS='odd'><TD ALIGN='left'>Scheduled date:</TD>		<TD ALIGN='left'>" . format_date_2(strtotime($theRow['booked_date'])) . "</TD></TR>\n";	// 10/6/09
+	$print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('Updated') . ":&nbsp;&nbsp;" . format_date_2(strtotime($theRow['updated'])) . "</TD></TR>\n";
+	$print .=  empty($theRow['booked_date']) ? "" : "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Scheduled date') . ":</TD>		<TD ALIGN='left'>" . format_date_2(strtotime($theRow['booked_date'])) . "</TD></TR>\n";	// 10/6/09
 	$print .= "<TR CLASS='even' ><TD ALIGN='left' COLSPAN='2'>&nbsp;	<TD ALIGN='left'></TR>\n";			// separator
-	$print .= empty($theRow['fac_name']) ? "" : "<TR CLASS='odd' ><TD ALIGN='left'>{$incident} at Facility:</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['fac_name']) . "</TD></TR>\n";	// 8/1/09
-	$print .= empty($theRow['rec_fac_name']) ? "" : "<TR CLASS='even' ><TD ALIGN='left'>Receiving Facility:</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['rec_fac_name']) . "</TD></TR>\n";	// 10/6/09
+	$print .= empty($theRow['fac_name']) ? "" : "<TR CLASS='odd' ><TD ALIGN='left'>" . gettext('Incident at Facility') . ":</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['fac_name']) . "</TD></TR>\n";	// 8/1/09
+	$print .= empty($theRow['rec_fac_name']) ? "" : "<TR CLASS='even' ><TD ALIGN='left'>" . gettext('Receiving Facility') . ":</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['rec_fac_name']) . "</TD></TR>\n";	// 10/6/09
 	$print .= empty($theRow['comments'])? "" : "<TR CLASS='odd'  VALIGN='top'><TD ALIGN='left'>{$disposition}:</TD>	<TD ALIGN='left'>" . replace_quotes(highlight($search, nl2br($theRow['comments']))) . "</TD></TR>\n";
 	$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("Run Start") . ":</TD> <TD ALIGN='left'>" . format_date_2(strtotime($theRow['problemstart']));
 	$end_str = (good_date_time($theRow['problemend']))? format_date_2(strtotime($theRow['problemend'])) : "";
-	$print .= 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End:&nbsp;&nbsp;{$end_str}&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
+	$print .= 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('End') . ":&nbsp;&nbsp;{$end_str}&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
 	$locale = get_variable('locale');	// 08/03/09
 	switch($locale) { 
 		case "0":
-		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;USNG&nbsp;&nbsp;" . LLtoUSNG($theRow['lat'], $theRow['lng']);
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('USNG') . "&nbsp;&nbsp;" . LLtoUSNG($theRow['lat'], $theRow['lng']);
 		break;
 
 		case "1":
-		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;OSGB&nbsp;&nbsp;" . LLtoOSGB($theRow['lat'], $theRow['lng']);	// 8/23/08, 10/15/08, 8/3/09
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('OSGB') . "&nbsp;&nbsp;" . LLtoOSGB($theRow['lat'], $theRow['lng']);	// 8/23/08, 10/15/08, 8/3/09
 		break;
 	
 		case "2":
 		$coords =  $theRow['lat'] . "," . $theRow['lng'];									// 8/12/09
-		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;UTM&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
+		$grid_type = "&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('UTM') . "&nbsp;&nbsp;" . toUTM($coords);	// 8/23/08, 10/15/08, 8/3/09
 		break;
 
 		default:

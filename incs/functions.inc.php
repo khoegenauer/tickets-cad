@@ -344,11 +344,11 @@ $evenodd = array ("even", "odd", "heading");	// class names for alternating tabl
 /* connect to mysql database */
 
 if (!mysql_connect($GLOBALS['mysql_host'], $GLOBALS['mysql_user'], $GLOBALS['mysql_passwd'])) {
-	die ("Connection attempt to MySQL failed - correction required in order to continue.");
+	die (gettext("Connection attempt to MySQL failed - correction required in order to continue."));
 	}
 
 if (!mysql_select_db($GLOBALS['mysql_db'])) {
-	print "Connection attempt to database failed. Please run <a href=\"install.php\">install.php</a> with valid  database configuration information.";
+	print gettext("Connection attempt to database failed. Please run <a href=\"install.php\">install.php</a> with valid  database configuration information.");
 	exit();
 	}
 
@@ -356,7 +356,7 @@ if (!mysql_select_db($GLOBALS['mysql_db'])) {
 $failed = 0;
 if (!mysql_table_exists("$GLOBALS[mysql_prefix]user")) 		{ print "MySQL table '$GLOBALS[mysql_prefix]user' is missing<BR />"; $failed = 1; 	}
 if ($failed) {
-	print "One or more database tables is missing.  Please run <a href=\"install.php\">install.php</a> with valid database configuration information.";
+	print gettext("One or more database tables is missing.  Please run <a href=\"install.php\">install.php</a> with valid database configuration information.");
 	exit();
 	}
 
@@ -562,7 +562,7 @@ function show_assigns($which, $id_in){				// 10/20/12
 				$out_str .= "<TR><TD COLSPAN=4 CLASS='odd' ALIGN='center'><B>{$the_handle}</B></TD></TR>\n";
 				$i=0;
 				}			
-			$out_str .= "<TR CLASS = '{$evenodd[$i%2]}'><TD>Start</TD><TD  ALIGN='right'>" . format_date_2(strtotime($row['problemstart_i'])) . "</TD><TD></TD></TR>\n"; $i++; 
+			$out_str .= "<TR CLASS = '{$evenodd[$i%2]}'><TD>" . gettext('Start') . "</TD><TD  ALIGN='right'>" . format_date_2(strtotime($row['problemstart_i'])) . "</TD><TD></TD></TR>\n"; $i++; 
 			if (is_date($row['dispatched'])) 	{
 				$delta  = my_date_diff($row['problemstart_i'], $row['dispatched_i']);
 				$out_str .= "<TR CLASS = '{$evenodd[$i%2]}'><TD>{$tags_arr[0]}</TD><TD ALIGN='right'>" . format_date_2(strtotime($row['dispatched_i'])) . 	"</TD><TD>&nbsp;({$delta})</TD></TR>\n"; $i++;}
@@ -581,8 +581,8 @@ function show_assigns($which, $id_in){				// 10/20/12
 			if (is_date($row['clear'])) 		{
 				$delta  = my_date_diff($row['problemstart_i'], $row['clear_i']);
 				$out_str .= "<TR CLASS = '{$evenodd[$i%2]}'><TD>{$tags_arr[5]}</TD><TD ALIGN='right'>" . format_date_2(strtotime($row['clear_i'])) . 		"</TD><TD>&nbsp;({$delta})</TD></TR>\n"; $i++;}
-			$out_str .= "<TR CLASS = '{$evenodd[$i%2]}'><TD COLSPAN = '3'>Start Miles: {$start_miles}&nbsp;&nbsp;On Scene Miles: {$os_miles}&nbsp;&nbsp;End Miles: {$end_miles}</TD></TR>\n"; $i++;	//	1/28/13
-			$out_str .= "<TR CLASS = '{$evenodd[$i%2]}'><TD COLSPAN = '3'>TOTAL MILES: {$tot_miles}</TD></TR>\n"; $i++;	//	1/28/13				
+			$out_str .= "<TR CLASS = '{$evenodd[$i%2]}'><TD COLSPAN = '3'>" . gettext('Start Miles') . ": {$start_miles}&nbsp;&nbsp;" . gettext('On Scene Miles') . ": {$os_miles}&nbsp;&nbsp;" . gettext('End Miles') . ": {$end_miles}</TD></TR>\n"; $i++;	//	1/28/13
+			$out_str .= "<TR CLASS = '{$evenodd[$i%2]}'><TD COLSPAN = '3'>" . gettext('TOTAL MILES') . ": {$tot_miles}</TD></TR>\n"; $i++;	//	1/28/13				
 			}
 		$out_str .= "</TABLE>\n";
 		}
@@ -644,8 +644,8 @@ function show_actions ($the_id, $theSort="date", $links, $display) {			/* list a
 		$print .= ($pat_row['action_type']!=$GLOBALS['ACTION_COMMENT'] ? "*" : "-")."</TD>\n
 			\t<TD>" . shorten($pat_row['description'], 24) . "</TD>\n";
 		if ($links) {
-			$print .= "\t<TD>&nbsp;[<A HREF='patient.php?ticket_id=$the_id&id={$pat_row['pat_id']}&action=edit'>edit</A>|
-				<A HREF='patient.php?id=" . $pat_row['pat_id'] . "&ticket_id=$the_id&action=delete'>delete</A>]</TD>\n";	
+			$print .= "\t<TD>&nbsp;[<A HREF='patient.php?ticket_id=$the_id&id={$pat_row['pat_id']}&action=edit'>" . gettext('Edit') . "</A>|
+				<A HREF='patient.php?id=" . $pat_row['pat_id'] . "&ticket_id=$the_id&action=delete'>" . gettext('Delete') . "</A>]</TD>\n";	
 				}
 		$print .=  "\t<TD></TD><TD>Y({$genders[$pat_row['gender']]}) - {$pat_row['fullname']} -
 					 Z{$pat_row['dob']}</TD>\n
@@ -680,8 +680,8 @@ function show_actions ($the_id, $theSort="date", $links, $display) {			/* list a
 		$print .= ($act_row['action_type']!=$GLOBALS['ACTION_COMMENT'])? '*' : '-';
 		$print .= "</TD><TD CLASS='normal_text'>" . replace_newline($act_row['description']) . "</TD>";	//	3/15/11
 		if ($links) {
-			$print .= "<TD><NOBR>&nbsp;[<A HREF='action.php?ticket_id=$the_id&id=" . $act_row['id'] . "&action=edit'>edit</A>|
-				<A HREF='action.php?id=" . $act_row['id'] . "&ticket_id=$the_id&action=delete'>delete</A>]</NOBR></TD>";	
+			$print .= "<TD><NOBR>&nbsp;[<A HREF='action.php?ticket_id=$the_id&id=" . $act_row['id'] . "&action=edit'>" . gettext('Edit') . "</A>|
+				<A HREF='action.php?id=" . $act_row['id'] . "&ticket_id=$the_id&action=delete'>" . gettext('Delete') . "</A>]</NOBR></TD>";	
 			}
 		$print .= "</TR>\n";
 		$caption = "";
@@ -713,13 +713,13 @@ function list_messages($the_id, $theSort="date", $links, $display) {
 		$evenodd = array ("even", "odd");		// class names for display table row colors
 		$actr=0;		
 		$print = "<TABLE WIDTH='100%'>";
-		$print .= "<TR><TD CLASS='heading' COLSPAN=99 ALIGN='center'><U>Messages</U></TD></TR>";
-		$print .= "<TR CLASS='{$evenodd[$actr%2]}'><TD WIDTH='10%'><B>Type</B></TD><TD WIDTH='15%'><B>To</B></TD><TD WIDTH='15%'><B>From</B></TD><TD WIDTH='20%'><B>Subject</B></TD><TD WIDTH='30%'><B>Message</B></TD><TD WIDTH='10%'><B>Date</B></TD></TR>";
+		$print .= "<TR><TD CLASS='heading' COLSPAN=99 ALIGN='center'><U>" . gettext('Messages') . "</U></TD></TR>";
+		$print .= "<TR CLASS='{$evenodd[$actr%2]}'><TD WIDTH='10%'><B>" . gettext('Type') . "</B></TD><TD WIDTH='15%'><B>" . gettext('To') . "</B></TD><TD WIDTH='15%'><B>" . gettext('From') . "</B></TD><TD WIDTH='20%'><B>" . gettext('Subject') . "</B></TD><TD WIDTH='30%'><B>" . gettext('Message') . "</B></TD><TD WIDTH='10%'><B>" . gettext('Date') . "</B></TD></TR>";
 		$actr++;		
 		$query_messages = "SELECT * FROM `$GLOBALS[mysql_prefix]messages` WHERE `ticket_id`= " . $the_id . " ORDER BY '" . $theSort . "' ASC;";
 		$result_messages = mysql_query($query_messages) or do_error($query_messages, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 		if(mysql_num_rows($result_messages) == 0) {
-			$print .= "<TR CLASS='{$evenodd[$actr%2]}'><TD ALIGN='center' COLSPAN='99'>No Messages</TD></TR>";
+			$print .= "<TR CLASS='{$evenodd[$actr%2]}'><TD ALIGN='center' COLSPAN='99'>" . gettext('No Messages') . "</TD></TR>";
 			} else {
 			while ($row_messages = mysql_fetch_assoc($result_messages))	{
 				if ($row_messages['msg_type'] == 1) {
@@ -817,8 +817,8 @@ function show_actions_orig ($the_id, $theSort="date", $links, $display) {			/* l
 			<TD>" . shorten($act_row['description'], 24) . "</TD>";
 			
 		if ($links) {
-			$print .= "<TD>&nbsp;[<A HREF='patient.php?ticket_id=$the_id&id=" . $act_row['id'] . "&action=edit'>edit</A>|
-				<A HREF='patient.php?id=$the_patient_id&ticket_id=$the_id&action=delete'>delete</A>]</TD></TR>\n";	
+			$print .= "<TD>&nbsp;[<A HREF='patient.php?ticket_id=$the_id&id=" . $act_row['id'] . "&action=edit'>" . gettext('Edit') . "</A>|
+				<A HREF='patient.php?id=$the_patient_id&ticket_id=$the_id&action=delete'>" . gettext('Delete') . "</A>]</TD></TR>\n";	
 				}
 		$caption = "";				// once only
 		$actr++;
@@ -835,7 +835,7 @@ function show_actions_orig ($the_id, $theSort="date", $links, $display) {			/* l
 		return "";
 		}				
 	else {
-		$caption = "Actions: &nbsp;&nbsp;";
+		$caption = gettext('"Actions') . ": &nbsp;&nbsp;";
 		$pctr=0;
 		while ($act_row = stripslashes_deep(mysql_fetch_assoc($result))){
 		$tipstr = addslashes($act_row['description']);		
@@ -855,8 +855,8 @@ function show_actions_orig ($the_id, $theSort="date", $links, $display) {			/* l
 			$print .= ($act_row['action_type']!=$GLOBALS['ACTION_COMMENT'])? '*' : '-';
 			$print .= "</TD><TD CLASS='normal_text' WIDTH='100%'>" . replace_newline($act_row['description']) . "</TD>";	//	3/15/11
 			if ($links) {
-				$print .= "<TD><NOBR>&nbsp;[<A HREF='action.php?ticket_id=$the_id&id=" . $act_row['id'] . "&action=edit'>edit</A>|
-					<A HREF='action.php?id=" . $act_row['id'] . "&ticket_id=$the_id&action=delete'>delete</A>]</NOBR></TD></TR>\n";	
+				$print .= "<TD><NOBR>&nbsp;[<A HREF='action.php?ticket_id=$the_id&id=" . $act_row['id'] . "&action=edit'>" . gettext('edit') . "</A>|
+					<A HREF='action.php?id=" . $act_row['id'] . "&ticket_id=$the_id&action=delete'>" . gettext('Delete') . "</A>]</NOBR></TD></TR>\n";	
 				}
 			$caption = "";
 			$pctr++;
@@ -891,7 +891,7 @@ function show_messages ($the_id, $theSort="date", $links, $display) {			/* list 
 	$result = mysql_query($query) or do_error($query, $query, mysql_error(), basename( __FILE__), __LINE__);
 	$responderlist = array();
 	$responderlist[0] = "NA";	
-	$caption = "Messages: ";	
+	$caption = gettext("Messages") . ": ";	
 	while ($act_row = stripslashes_deep(mysql_fetch_assoc($result))){
 		$responderlist[$act_row['id']] = $act_row['handle'];
 		}	
@@ -952,8 +952,8 @@ function show_messages ($the_id, $theSort="date", $links, $display) {			/* list 
 			$print .= "<TD CLASS='normal_text' WIDTH='100%'>" . shorten($msg_row['message'], 24) . "</TD>";
 			
 			if ($links) {
-				$print .= "<TD>[<A HREF='message.php?message_id=" . $msg_row['message_id'] . "&action=view'>view</A>|
-					<A HREF='message.php?message_id=" . $msg_row['message_id'] . "&action=delete'>delete</A>]</TD>\n";	
+				$print .= "<TD>[<A HREF='message.php?message_id=" . $msg_row['message_id'] . "&action=view'>" . gettext('View') . "</A>|
+					<A HREF='message.php?message_id=" . $msg_row['message_id'] . "&action=delete'>" . gettext('Delete') . "</A>]</TD>\n";	
 					}
 			$print .= "</TR>";
 			$caption = "";				// once only
@@ -1006,9 +1006,9 @@ function show_log ($theid, $show_cfs=FALSE) {								// 11/20/09, 10/20/12
 
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 		if ($i==0) {				// 11/20/09
-			$print .= "<TR CLASS='heading'><TD CLASS='heading' TITLE = \"{$row['tickname']}\" COLSPAN=99 ALIGN='center'><U>Log: <I>". shorten($row['tickname'], 32) . "</I></U></TD></TR>";
-			$cfs_head = ($show_cfs)? "<TD ALIGN='center'>CFS</TD>" : ""  ;
-			$print .= "<TR CLASS='odd'><TD ALIGN='left'>Code</TD>" . $cfs_head . "<TD ALIGN='left'>Unit</TD><TD ALIGN='left'>Status</TD><TD ALIGN='left'>When</TD><TD ALIGN='left'>By</TD><TD ALIGN='left'>From</TD></TR>";
+			$print .= "<TR CLASS='heading'><TD CLASS='heading' TITLE = \"{$row['tickname']}\" COLSPAN=99 ALIGN='center'><U>" . gettext('Log') . ": <I>". shorten($row['tickname'], 32) . "</I></U></TD></TR>";
+			$cfs_head = ($show_cfs)? "<TD ALIGN='center'>" . gettext('CFS') . "</TD>" : ""  ;
+			$print .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Code') . "</TD>" . $cfs_head . "<TD ALIGN='left'>" . gettext('Unit') . "</TD><TD ALIGN='left'>" . gettext('Status') . "</TD><TD ALIGN='left'>" . gettext('When') . "</TD><TD ALIGN='left'>" . gettext('By') . "</TD><TD ALIGN='left'>" . gettext('From') . "</TD></TR>";
 			}
 	
 		$print .= "<TR CLASS='" . $evenodd[$i%2] . "'>" .				// 11/20/09
@@ -1613,10 +1613,10 @@ function format_date_time($date){		// mySql format to settings spec - 2/15/09 - 
  */
 function get_status($status){							/* return status text from code */
 	switch($status)	{
-		case 1: 	return 'Closed';	break;
-		case 2: 	return 'Open';		break;
-		case 3: 	return 'Scheduled';	break;
-		default: 	return 'Status error';
+		case 1: 	return gettext('Closed');	break;
+		case 2: 	return gettext('Open');		break;
+		case 3: 	return gettext('Scheduled');	break;
+		default: 	return gettext('Status error');
 		}
 	}
 
@@ -1674,10 +1674,10 @@ function get_reader($id){								/* Add in for Messaging 10/23/12 */
  */
 function get_severity($severity){			/* return severity string from value */
 	switch($severity) {
-		case $GLOBALS['SEVERITY_NORMAL']: 	return "normal"; break;
-		case $GLOBALS['SEVERITY_MEDIUM']: 	return "medium"; break;
-		case $GLOBALS['SEVERITY_HIGH']: 	return "high"; break;
-		default: 							return "Severity error"; break;
+		case $GLOBALS['SEVERITY_NORMAL']: 	return gettext("normal"); break;
+		case $GLOBALS['SEVERITY_MEDIUM']: 	return gettext("medium"); break;
+		case $GLOBALS['SEVERITY_HIGH']: 	return gettext("high"); break;
+		default: 							return gettext("Severity error"); break;
 		}
 	}
 
@@ -1860,11 +1860,11 @@ function do_error($err_function, $err, $custom_err='', $file='', $line=''){ /* r
 		@error_log ($log_message);								// to server log
 		}
 
-	print "<FONT CLASS=\"warn\">An error occured in function '<B>$err_function</B>': '<B>$err</B>'<BR />";
-	if ($file OR $line) print "Error occured in '$file' at line '$line'<BR />";
-	if ($custom_err != '') print "Additional info: '<B>$custom_err</B>'<BR />";
-	print '<BR />Check your MySQL connection and if the problem persist, contact the <A HREF="help.php?q=credits">author</A>.<BR />';
-	die('<B>Execution stopped.</B></FONT>');
+	print "<FONT CLASS=\"warn\">" . gettext('An error occured in function') . " '<B>$err_function</B>': '<B>$err</B>'<BR />";
+	if ($file OR $line) print gettext("Error occured in '$file' at line '$line'") . "<BR />";
+	if ($custom_err != '') print gettext("Additional info") . ": '<B>$custom_err</B>'<BR />";
+	print '<BR />' . gettext('Check your MySQL connection and if the problem persist, contact the <A HREF="help.php?q=credits">author</A>.') . '<BR />';
+	die('<B>' . gettext('Execution stopped.') . '</B></FONT>');
 	}
 
 /**
@@ -2366,10 +2366,10 @@ function report_action($action_type,$ticket_id,$value1='',$value2=''){/* insert 
 	if (!get_variable('reporting')) return;
 	
 	switch($action_type)	{
-		case $GLOBALS[ACTION_OPEN]: 	$description = "Action Opened"; break;
-		case $GLOBALS[ACTION_CLOSED]: 	$description = "Action Closed"; break;
-		case $GLOBALS[PATIENT_OPEN]: 	$description = get_text("Patient") . " Item Opened"; break;
-		case $GLOBALS[PATIENT_CLOSED]: 	$description = get_text("Patient") . " Item Closed"; break;
+		case $GLOBALS[ACTION_OPEN]: 	$description = gettext("Action Opened"); break;
+		case $GLOBALS[ACTION_CLOSED]: 	$description = gettext("Action Closed"); break;
+		case $GLOBALS[PATIENT_OPEN]: 	$description = get_text("Patient") . " " . gettext("Item Opened"); break;
+		case $GLOBALS[PATIENT_CLOSED]: 	$description = get_text("Patient") . " " . gettext("Item Closed"); break;
 		default: 						$description = "[unknown report value: $action_type]";
 		}
 	$now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
@@ -2597,15 +2597,15 @@ function nl2brr($text) {
  */
 function get_level_text ($level) {
 	switch ($level) {
-		case $GLOBALS['LEVEL_SUPER'] 			: return "Super"; break;
-		case $GLOBALS['LEVEL_ADMINISTRATOR'] 	: return "Admin"; break;
-		case $GLOBALS['LEVEL_USER'] 			: return "Operator"; break;
-		case $GLOBALS['LEVEL_GUEST'] 			: return "Guest"; break;
-		case $GLOBALS['LEVEL_MEMBER'] 			: return "Member"; break;			// 3/3/09
-		case $GLOBALS['LEVEL_UNIT'] 			: return "Unit"; break;				// 7/12/10
-		case $GLOBALS['LEVEL_STATS'] 			: return "Statistics"; break;		// 6/10/11
-		case $GLOBALS['LEVEL_SERVICE_USER'] 	: return "Service User"; break;		// 10/23/12
-		default 								: return "level error"; break;
+		case $GLOBALS['LEVEL_SUPER'] 			: return gettext("Super"); break;
+		case $GLOBALS['LEVEL_ADMINISTRATOR'] 	: return gettext("Admin"); break;
+		case $GLOBALS['LEVEL_USER'] 			: return gettext("Operator"); break;
+		case $GLOBALS['LEVEL_GUEST'] 			: return gettext("Guest"); break;
+		case $GLOBALS['LEVEL_MEMBER'] 			: return gettext("Member"); break;			// 3/3/09
+		case $GLOBALS['LEVEL_UNIT'] 			: return gettext("Unit"); break;				// 7/12/10
+		case $GLOBALS['LEVEL_STATS'] 			: return gettext("Statistics"); break;		// 6/10/11
+		case $GLOBALS['LEVEL_SERVICE_USER'] 	: return gettext("Service User"); break;		// 10/23/12
+		default 								: return gettext("level error"); break;
 		}
 	}		//end function
 	
@@ -3557,7 +3557,7 @@ function do_send ($to_str, $smsg_to_str, $subject_str, $text_str, $ticket_id, $r
 		$the_resp_ids = implode(",", $the_responder_ids);
 		foreach($the_responder_ids as $val) {
 			if($val == 0) {
-				$the_responders = "Not Set";
+				$the_responders = gettext("Not Set");
 				} else {
 				$the_responders = get_responder($val) . $sep;
 				$sep = ",";
@@ -3577,13 +3577,13 @@ function do_send ($to_str, $smsg_to_str, $subject_str, $text_str, $ticket_id, $r
 	$now = time() - (intval(intval(get_variable('delta_mins')))*60);
 	$my_smtp_ary = explode ("/",  trim(get_variable('smtp_acct')));   
 	if ((count($my_smtp_ary)>1) && (count($my_smtp_ary)<5)) {					// 4/19/11, 10/23/12, 11/2/12
-		 do_log($GLOBALS['LOG_ERROR'], 0, 0, "Invalid smtp account information: " . trim(get_variable('smtp_acct')));
+		 do_log($GLOBALS['LOG_ERROR'], 0, 0, gettext("Invalid smtp account information") . ": " . trim(get_variable('smtp_acct')));
 		 return;
 		}
 
 	$temp = explode("/", trim(get_variable('email_reply_to'))); 
 	if (!(is_email(trim($temp[0])))) {								// accommodate possible /B
-		do_log($GLOBALS['LOG_ERROR'], 0, 0, "Invalid email reply-to: " . trim(get_variable('email_reply_to')));
+		do_log($GLOBALS['LOG_ERROR'], 0, 0, gettext("Invalid email reply-to") . ": " . trim(get_variable('email_reply_to')));
 		return ;		
 		}
 	if(!function_exists('stripLabels')) {
@@ -3601,7 +3601,7 @@ function do_send ($to_str, $smsg_to_str, $subject_str, $text_str, $ticket_id, $r
  * @since
  */
 		function stripLabels($sText){
-			$labels = array("Incident:", "Priority:", "Nature:", "Addr:", "Descr:", "Reported by:", "Phone:", "Written:", "Updated:", "Status:", "Disp:", "Run Start:", "Map:", "Patient:", "Actions:", "Tickets host:"); // 5/9/10
+			$labels = array(gettext("Incident:"), gettext("Priority:"), gettext("Nature:"), gettext("Addr:"), gettext("Descr:"), gettext("Reported by:"), gettext("Phone:"), gettext("Written:"), gettext("Updated:"), gettext("Status:"), gettext("Disp:"), gettext("Run Start:"), gettext("Map:"), gettext("Patient:"), gettext("Actions:"), gettext("Tickets host:")); // 5/9/10
 			for ($x = 0; $x < count($labels); $x++) {
 				$sText = str_replace($labels[$x] , '', $sText);
 				}
@@ -4154,7 +4154,7 @@ function get_status_sel($unit_in, $status_val_in, $tbl_in) {					// returns sele
 			$status_field = "status_val";
 			break;
 		default:
-			print "ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ";	
+			print gettext("ERROR") . " " . gettext("ERROR") . " " . gettext("ERROR") . " " . gettext("ERROR") . " " . gettext("ERROR") . " " . gettext("ERROR");	
 			}
 
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]{$tablename}`, `$GLOBALS[mysql_prefix]{$status_table}` WHERE `$GLOBALS[mysql_prefix]{$tablename}`.`id` = $unit_in 
@@ -4283,9 +4283,9 @@ function get_recfac_sel($unit_in, $tickid, $assign_id) {					// 10/18/11 - Gets 
 	$i = 0;
 	$outstr = "\t\t<SELECT CLASS='sit' style='width: 90%;' name='frm_rec_fac' {$dis} ONCHANGE = 'set_rec_fac(this.value)' >";
 	if($curr_fac == 0) {
-		$outstr .= "\t\t\t<OPTION VALUE=0 SELECTED>None Selected</OPTION>";	
+		$outstr .= "\t\t\t<OPTION VALUE=0 SELECTED>" . gettext('None Selected') . "</OPTION>";	
 		} else {
-		$outstr .= "\t\t\t<OPTION VALUE=0>None Selected</OPTION>";			
+		$outstr .= "\t\t\t<OPTION VALUE=0>" . gettext('None Selected') . "</OPTION>";			
 		}
 	while ($row02 = stripslashes_deep(mysql_fetch_assoc($result02))) {
 		$sel = ($row02['fac_id'] == $curr_fac)? " SELECTED": "";
@@ -4313,7 +4313,7 @@ function get_units_legend() {		// returns string as centered span - 2/8/10
 		LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` ON `$GLOBALS[mysql_prefix]unit_types`.`id` = `$GLOBALS[mysql_prefix]responder`.`type` ORDER BY `mytype`";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
-	$out_str = "<SPAN CLASS = 'odd' ALIGN = 'center'><SPAN CLASS = 'even' ALIGN = 'center'> Units: </SPAN>&nbsp;";
+	$out_str = "<SPAN CLASS = 'odd' ALIGN = 'center'><SPAN CLASS = 'even' ALIGN = 'center'> " . gettext('Units') . ": </SPAN>&nbsp;";
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 		$the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$row['icon']];	
 		$the_text_color = 	$GLOBALS['UNIT_TYPES_TEXT'][$row['icon']];		
@@ -4339,7 +4339,7 @@ function get_facilities_legend() {		// returns string as centered row - 2/8/10
 		LEFT JOIN `$GLOBALS[mysql_prefix]fac_types` ON `$GLOBALS[mysql_prefix]fac_types`.`id` = `$GLOBALS[mysql_prefix]facilities`.`type` ORDER BY `mytype`";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
-	$out_str = "<SPAN class='even' ALIGN = 'center'><SPAN CLASS = 'even' ALIGN='center'> Facilities: </SPAN>&nbsp;";	//	3/15/11
+	$out_str = "<SPAN class='even' ALIGN = 'center'><SPAN CLASS = 'even' ALIGN='center'> " . gettext('Facilities') . ": </SPAN>&nbsp;";	//	3/15/11
 	while ($row = stripslashes_deep(mysql_fetch_array($result))) {
 		$the_bg_color = 	$GLOBALS['FACY_TYPES_BG'][$row['icon']];	
 		$the_text_color = 	$GLOBALS['FACY_TYPES_TEXT'][$row['icon']];		
@@ -4384,7 +4384,7 @@ function is_phone ($instr) {		// 3/13/10
 function get_unit_status_legend() {		// returns string as div - 3/21/10
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]un_status` ORDER BY `status_val`";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-	$out_str = "<DIV><SPAN CLASS = 'even' ALIGN = 'center'> Status legend: </SPAN>&nbsp;";
+	$out_str = "<DIV><SPAN CLASS = 'even' ALIGN = 'center'> " . gettext('Status legend') . ": </SPAN>&nbsp;";
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 		$out_str .= "<SPAN STYLE='background-color:{$row['bg_color']}; color:{$row['text_color']}'>&nbsp;{$row['status_val']}&nbsp;</SPAN>&nbsp;";
 		}
@@ -4580,7 +4580,7 @@ function get_start($local_func){						// 5/2/10
 			break;
 			
 		default:
-			echo __LINE__ . " error error error error error \n";
+			echo __LINE__ . gettext("ERROR") . " " . gettext("ERROR") . " " . gettext("ERROR") . " " . gettext("ERROR") . " " . gettext("ERROR") . " " . "\n";
 			}
 		}		// end function get_start
 
@@ -4623,7 +4623,7 @@ function get_end($local_func){
 			break;
 			
 		default:
-			echo __LINE__ . " error error error error error \n";
+			echo __LINE__ . gettext("ERROR") . " " . gettext("ERROR") . " " . gettext("ERROR") . " " . gettext("ERROR") . " " . "\n";
 			}
 		}		// end function get_end
 
@@ -5051,8 +5051,8 @@ function get_buttons_inner(){		//	4/12/12
 		side_bar_html= "";
 		side_bar_html +="<form name='region_form' METHOD='post' action='main.php'><DIV><SPAN class='but_hdr'>Regions</SPAN>";
 		side_bar_html +="<?php print get_regions_buttons($_SESSION['user_id']);?>";
-		side_bar_html +="<SPAN id='reg_sub_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='form_validate(document.region_form);'>Update</SPAN>";
-		side_bar_html +="<SPAN id='expand_regs' class='plain' style='z-index:1001; cursor: pointer; float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onclick=\"$('top_reg_box').style.display = 'none'; $('regions_outer').style.display = 'block';\">Undock</SPAN></DIV></form>";
+		side_bar_html +="<SPAN id='reg_sub_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='form_validate(document.region_form);'><?php print gettext('Update');?></SPAN>";
+		side_bar_html +="<SPAN id='expand_regs' class='plain' style='z-index:1001; cursor: pointer; float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onclick=\"$('top_reg_box').style.display = 'none'; $('regions_outer').style.display = 'block';\"><?php print gettext('Undock');?></SPAN></DIV></form>";
 		$("region_boxes").innerHTML = side_bar_html;	
 		</SCRIPT>
 <?php
@@ -5076,9 +5076,9 @@ function get_buttons_inner2(){		//	4/12/12
 ?>
 		<SCRIPT>
 		side_bar_html= "";
-		side_bar_html+="<form name='region_form2' METHOD='post' action='main.php'><DIV><SPAN class='but_hdr'>Regions</SPAN><BR /><BR />";
+		side_bar_html+="<form name='region_form2' METHOD='post' action='main.php'><DIV><SPAN class='but_hdr'><?php print gettext('Regions');?></SPAN><BR /><BR />";
 		side_bar_html += "<?php print get_regions_buttons2($_SESSION['user_id']);?><BR /><BR />";
-		side_bar_html+="<BR /><BR /><SPAN id='reg_sub_but2' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='form_validate(document.region_form2);'>Update</SPAN></DIV></form>";
+		side_bar_html+="<BR /><BR /><SPAN id='reg_sub_but2' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='form_validate(document.region_form2);'><?php print gettext('Update');?></SPAN></DIV></form>";
 		$("region_boxes2").innerHTML = side_bar_html;			
 		</SCRIPT>
 <?php
@@ -5171,7 +5171,7 @@ function shut_down(){				// 5/25/11
 ?>
 <html>
  <body onload="setTimeout('parent.frames['upper'].do_logout();', 2000);" > 
- <BR /><BR /><CENTER><H2>Intrusion attempt prevented!</H2></CENTER>
+ <BR /><BR /><CENTER><H2><?php print gettext('Intrusion attempt prevented!');?></H2></CENTER>
  </body>
 </html>
 <?php
@@ -5194,7 +5194,7 @@ function win_shut_down() {				// for use in window vs. frame
 ?>
 <html>
  <body onload="setTimeout('window.close()', 2000);" > 
- <BR /><BR /><CENTER><H2>Intrusion attempt prevented!</H2></CENTER>
+ <BR /><BR /><CENTER><H2><?php print gettext('Intrusion attempt prevented!');?></H2></CENTER>
  </body>
 </html>
 <?php

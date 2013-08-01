@@ -32,7 +32,7 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 	$locale = get_variable('locale');	
 
 	$message="";
-	$_end = (good_date_time($t_row['problemend']))?  "  End:" . $t_row['problemend'] : "" ;		// 
+	$_end = (good_date_time($t_row['problemend']))?  " " . gettext('End') . ":" . $t_row['problemend'] : "" ;		// 
 	
 	for ($i = 0;$i< strlen($match_str); $i++) {
 		if(!($match_str[$i]==" ")) {
@@ -207,7 +207,7 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 
 	$message = str_replace("\n.", "\n..", $message);					// see manual re mail win platform peculiarities
 
-	$subject = (strpos ($match_str, "A" ))? "": "Incident: {$the_scope}";	// 11/14/2012 - 11/14/2012 - don't duplicate
+	$subject = (strpos ($match_str, "A" ))? "": gettext("Incident") . ": {$the_scope}";	// 11/14/2012 - 11/14/2012 - don't duplicate
 
 	if ($txt_only) {
 		return $subject . "\n" . $message;		// 2/16/09
@@ -242,16 +242,16 @@ function do_send ($to_str, $subject_str, $text_str ) {					// 7/7/09
 	$my_smtp_ary = explode ("/",  trim(get_variable('smtp_acct')));   
 
 	if ((count($my_smtp_ary)>1) && (count($my_smtp_ary)!=6)) {
-		 do_log($GLOBALS['LOG_ERROR'], 0, 0, "Invalid smtp account information: " . trim(get_variable('smtp_acct')));
+		 do_log($GLOBALS['LOG_ERROR'], 0, 0, gettext("Invalid smtp account information") . ": " . trim(get_variable('smtp_acct')));
 		 return ;
 		}
 
 	if ((count($my_smtp_ary)==6) && (!(is_email(trim($my_smtp_ary[5]))))) {									// email format test
-		 do_log($GLOBALS['LOG_ERROR'], 0, 0, "Invalid smtp account address: " . trim($my_smtp_ary[5]));
+		 do_log($GLOBALS['LOG_ERROR'], 0, 0, gettext("Invalid smtp account address") . ": " . trim($my_smtp_ary[5]));
 		 return ;
 		}
 	if (!(is_email(trim(get_variable('email_reply_to'))))) {					// email format test
-		do_log($GLOBALS['LOG_ERROR'], 0, 0, "Invalid email reply-to: " . trim(get_variable('email_reply_to')));
+		do_log($GLOBALS['LOG_ERROR'], 0, 0, gettext("Invalid email reply-to") . ": " . trim(get_variable('email_reply_to')));
 		return ;		
 		}
 
@@ -270,7 +270,7 @@ function do_send ($to_str, $subject_str, $text_str ) {					// 7/7/09
  * @since
  */
 	function stripLabels($sText){
-		$labels = array("Incident:", "Priority:", "Nature:", "Addr:", "Descr:", "Reported by:", "Phone:", "Written:", "Updated:", "Status:", "Disp:", "Run Start:", "Map:", "Patient:", "Actions:", "Tickets host:"); // 5/9/10
+		$labels = array(gettext("Incident:"), gettext("Priority:"), gettext("Nature:"), gettext("Addr:"), gettext("Descr:"), gettext("Reported by:"), gettext("Phone:"), gettext("Written:"), gettext("Updated:"), gettext("Status:"), gettext("Disp:"), gettext("Run Start:"), gettext("Map:"), gettext("Patient:"), gettext("Actions:"), gettext("Tickets host:")); // 5/9/10
 		for ($x = 0; $x < count($labels); $x++) {
 			$sText = str_replace($labels[$x] , '', $sText);
 			}

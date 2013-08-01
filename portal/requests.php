@@ -35,7 +35,7 @@ function get_user_name($the_id) {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<HEAD><TITLE>Tickets - Service User Requests</TITLE>
+<HEAD><TITLE><?php print gettext('Tickets - Service User Requests');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 <META HTTP-EQUIV="Expires" CONTENT="0" />
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -221,23 +221,23 @@ function syncAjax(strURL) {
 function get_requests() {
 	the_string = "<TABLE cellspacing='0' cellpadding='1' style='width: 100%; table-layout: fixed; color: #FFFFFF;'>";
 	the_string += "<TR class='heading' style='font-weight: bold; font-size: 12px;'>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>ID</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Patient</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Phone</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Contact</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Scope</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Description</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Comments</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Status</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Requested</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Tentative</TD>";	
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Accepted</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Declined</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Resourced</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Completed</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Closed</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>Updated</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'>By</TD>";			
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('ID');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Patient');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Phone');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Contact');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Scope');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Description');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Comments');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Status');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Requested');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Tentative');?></TD>";	
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Accepted');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Declined');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Resourced');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Completed');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Closed');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('Updated');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('By');?></TD>";			
 	the_string += "</TR>";			
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./ajax/list_requests.php?version=" + randomnumber;
@@ -246,9 +246,9 @@ function get_requests() {
 		var the_requests=JSON.decode(req.responseText);
 		theClass = "background-color: #CECECE";
 		for(var key in the_requests) {
-			if(the_requests[key][0] == "No Current Requests") {
+			if(the_requests[key][0] == "<?php print gettext('No Current Requests');?>") {
 				the_string += "<TR style='" + theClass + "; border-bottom: 2px solid #000000;'>";
-				the_string += "<TD COLSPAN=99 width='100%' style='font-weight: bold; font-size: 16px; text-align: center;'>No Current Requests</TD></TR>";
+				the_string += "<TD COLSPAN=99 width='100%' style='font-weight: bold; font-size: 16px; text-align: center;'><?php print gettext('No Current Requests');?></TD></TR>";
 				} else {
 				var the_request_id = the_requests[key][0];
 				if((the_requests[key][16] == 'Open') || (the_requests[key][16] == 'Tentative')) {
@@ -306,30 +306,30 @@ function do_requests_loop() {
 function requests_cb2(req) {
 	the_string = "<TABLE cellspacing='0' cellpadding='1' style='width: 100%; table-layout: fixed;'>";
 	the_string += "<TR class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>ID</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Patient</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Phone</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Contact</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Scope</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Description</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Comments</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Status</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Requested</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Tentative</TD>";	
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Accepted</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Declined</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Resourced</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Completed</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Closed</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>Updated</TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>By</TD>";					
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('ID');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Patient');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Phone');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Contact');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Scope');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Description');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Comments');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Status');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Requested');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Tentative');?></TD>";	
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Accepted');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Declined');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Resourced');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Completed');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Closed');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Updated');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('By');?></TD>";					
 	the_string += "</TR>";		
 	var the_requests=JSON.decode(req.responseText);
 	theClass = "background-color: #CECECE";
 	for(var key in the_requests) {
-		if(the_requests[key][0] == "No Current Requests") {
+		if(the_requests[key][0] == "<?php print gettext('No Current Requests');?>") {
 			the_string += "<TR style='" + theClass + "; border-bottom: 2px solid #000000;'>";
-			the_string += "<TD COLSPAN=99 width='100%' style='font-weight: bold; font-size: 16px; text-align: center;'>No Current Requests</TD></TR>";
+			the_string += "<TD COLSPAN=99 width='100%' style='font-weight: bold; font-size: 16px; text-align: center;'><?php print gettext('No Current Requests');?></TD></TR>";
 			} else {
 			var the_request_id = the_requests[key][0];
 			if((the_requests[key][16] == 'Open') || (the_requests[key][16] == 'Tentative')) {
@@ -376,7 +376,7 @@ function do_logout() {
 </HEAD>
 <!-- <BODY onLoad = "ck_frames();"> -->
 <BODY onLoad="ck_frames(); location.href = '#top'; get_requests();">
-	<DIV id='the_banner' class='heading' style='position: fixed; left: 2%; top: 2%; width:90%; border: 2px outset #CECECE; padding: 10px; text-align: center; font-size: 28px;'>Requests</DIV>
+	<DIV id='the_banner' class='heading' style='position: fixed; left: 2%; top: 2%; width:90%; border: 2px outset #CECECE; padding: 10px; text-align: center; font-size: 28px;'><?php print gettext('Requests');?></DIV>
 	<DIV id='the_list' style='position: fixed; left: 2%; top: 10%; width: 90%; height: 80%; max-height: 90%; border: 2px outset #CECECE; padding: 10px;'>
 		<DIV ID='all_requests' style='width: 98%; overflow-y: auto;'></DIV>
 	</DIV>	

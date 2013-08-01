@@ -35,7 +35,7 @@ function get_user_name($the_id) {
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets Personnel Database - Member Details</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets Personnel Database - Member Details');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="Expires" CONTENT="0">
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -97,8 +97,8 @@ function get_user_name($the_id) {
 if(empty($_POST)) {	//	Upload a file for import
 ?>
 	<BODY>
-		<DIV id='banner' class='heading' style='font-size: 20px; position: absolute: top: 5%; width: 95%; border: 1px outset #000000; text-align: center;'>Upload requests as a csv file
-			<SPAN ID='close_but' CLASS='plain' style='float: right;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.close();">Close</SPAN>
+		<DIV id='banner' class='heading' style='font-size: 20px; position: absolute: top: 5%; width: 95%; border: 1px outset #000000; text-align: center;'><?php print gettext('Upload requests as a csv file');?>
+			<SPAN ID='close_but' CLASS='plain' style='float: right;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.close();"><?php print gettext('Close');?></SPAN>
 		</DIV><BR /><BR />
 		<DIV id='outer' style='position: relative; top: 1%; left: 1%; width: 95%; text-align: center; margin: 10px;'>
 			<DIV id='inner' style='position: relative; top: 20%; left: 20%; height: 30%; width: 60%;'>
@@ -143,14 +143,14 @@ if(empty($_POST)) {	//	Upload a file for import
 	$now = mysql_format_date(time() - (get_variable('delta_mins')*60));				
 	for($z = 0; $z < count($the_arr); $z++) {
 		$the_contact = quote_smart(trim(get_user_name($who)));
-		$the_street = ($_POST['ic_col']['frm_street'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_street']] : "Not Imported";
-		$the_city = ($_POST['ic_col']['frm_city'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_city']] : "Not Imported";	
-		$the_state = ($_POST['ic_col']['frm_state'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_state']] : "Not Imported";	
+		$the_street = ($_POST['ic_col']['frm_street'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_street']] : gettext("Not Imported");
+		$the_city = ($_POST['ic_col']['frm_city'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_city']] : gettext("Not Imported");	
+		$the_state = ($_POST['ic_col']['frm_state'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_state']] : gettext("Not Imported");	
 		$the_name = ($_POST['ic_col']['frm_the_name'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_the_name']] : 1;		
-		$the_phone = ($_POST['ic_col']['frm_phone'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_phone']] : "Not Imported";	
-		$the_scope = ($_POST['ic_col']['frm_scope'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_scope']] : "Not Imported";	
-		$the_description = ($_POST['ic_col']['frm_description'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_description']] : "Not Imported";	
-		$the_comments = ($_POST['ic_col']['frm_comments'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_comments']] : "Not Imported";	
+		$the_phone = ($_POST['ic_col']['frm_phone'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_phone']] : gettext("Not Imported");	
+		$the_scope = ($_POST['ic_col']['frm_scope'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_scope']] : gettext("Not Imported");	
+		$the_description = ($_POST['ic_col']['frm_description'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_description']] : gettext("Not Imported");	
+		$the_comments = ($_POST['ic_col']['frm_comments'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_comments']] : gettext("Not Imported");	
 		$the_request_date = ($_POST['ic_col']['frm_request_date'] != '999999') ? $the_arr[$z][$_POST['ic_col']['frm_request_date']] : $now;			
 //		$the_request_date =  $now;
 		$the_status = 'Open';
@@ -206,8 +206,8 @@ if(empty($_POST)) {	//	Upload a file for import
 		if ($addrs) {				// any addresses?
 			$to_str = implode("|", $addrs);
 			$smsg_to_str = "";
-			$subject_str = "New " . get_text('Service User') . " Requests";
-			$text_str = "New requests have been loaded by \n\n" . get_user_name($_SESSION['user_id']) . "\n\nDated " . $now . "\n\nPlease log on to Tickets and check"; 
+			$subject_str = gettext("New Service User Requests");
+			$text_str = gettext("New requests have been loaded by") . ": \n\n" . get_user_name($_SESSION['user_id']) . "\n\nDated " . $now . "\n\n" . gettext('Please log on to Tickets and check'); 
 			do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
 			}				// end if/else ($addrs)			
 ?>
@@ -215,8 +215,8 @@ if(empty($_POST)) {	//	Upload a file for import
 	<CENTER>
 	<DIV id='outer' style='position: absolute; width: 100%;'>
 		<DIV style='position: relative; top: 5%; width: 60%; max-height: 350px; border: 2px outset #FFFFFF; background-color: #FEF7D6; padding: 20px;'>
-		Data successfully imported.<BR />
-		<SPAN ID = 'close_but' class = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.close();">Finish</SPAN>			
+		<?php print gettext('Data successfully imported.');?><BR />
+		<SPAN ID = 'close_but' class = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.close();"><?php print gettext('Finish');?></SPAN>			
 		</DIV>
 	</DIV>
 	</CENTER>
@@ -282,11 +282,11 @@ if(empty($_POST)) {	//	Upload a file for import
 ?>
 	<BODY>
 	<CENTER>
-	<DIV id='banner' class='heading' style='font-size: 20px; position: absolute: top: 5%; width: 95%; border: 1px outset #000000; text-align: center;'>Upload requests as a csv file</DIV><BR /><BR />
+	<DIV id='banner' class='heading' style='font-size: 20px; position: absolute: top: 5%; width: 95%; border: 1px outset #000000; text-align: center;'><?php print gettext('Upload requests as a csv file');?></DIV><BR /><BR />
 	<DIV id='outer' style='position: relative; top: 1%; left: 1%; width: 95%; text-align: center; margin: 10px;'>	
 		<DIV style='position: relative; top 0%; width: 80%; height: auto; text-align: center; background-color: #DEDEDE; color: #000000; font-weight: bold; border: 2px outset #FFFFFF; padding: 20px;'>
-			<DIV>Number of rows in original file is <?php print $row;?>&nbsp;&nbsp;&nbsp;Number of columns in original file is <?php print $num;?></DIV>
-			<DIV><B>Columns from original file are</B></DIV><BR />
+			<DIV><?php print gettext('Number of rows in original file is');?> <?php print $row;?>&nbsp;&nbsp;&nbsp;<?php print gettext('Number of columns in original file is');?> <?php print $num;?></DIV>
+			<DIV><B><?php print gettext('Columns from original file are');?></B></DIV><BR />
 			<DIV style='text-align: center; font-size: 0.9em; padding: 5px; max-height: 50px; overflow-y: scroll;'>
 <?php
 				foreach($col_names as $thename) {
@@ -307,7 +307,7 @@ if(empty($_POST)) {	//	Upload a file for import
 ?>
 						<TD style='width: 50%;'>
 						<SELECT NAME='ic_col[<?php print $val[1];?>]'>
-							<OPTION style='font-size: 100%;' VALUE=999999 SELECTED>Select one</OPTION>
+							<OPTION style='font-size: 100%;' VALUE=999999 SELECTED><?php print gettext('Select one');?></OPTION>
 <?php
 							for($b=0; $b < $num; $b++) {
 ?>

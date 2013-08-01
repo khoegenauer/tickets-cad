@@ -19,7 +19,7 @@ $row = stripslashes_deep(mysql_fetch_assoc($result));
 $query_fc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";
 $result_fc = mysql_query($query_fc) or do_error($query_fc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 $rec_fac_menu = "<SELECT NAME='frm_rec_fac'>";
-$rec_fac_menu .= "<OPTION VALUE=0 selected>Receiving Facility</OPTION>";
+$rec_fac_menu .= "<OPTION VALUE=0 selected>" . gettext('Receiving Facility') . "</OPTION>";
 while ($row_fc = mysql_fetch_array($result_fc, MYSQL_ASSOC)) {
 		$sel = ($row_fc['id'] == $row['rec_facility']) ? "SELECTED" : "";
 		$rec_fac_menu .= "<OPTION VALUE=" . $row_fc['id'] . " " . $sel . ">" . shorten($row_fc['name'], 30) . "</OPTION>";
@@ -29,14 +29,14 @@ $rec_fac_menu .= "<SELECT>";
 $query_fc2 = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";
 $result_fc2 = mysql_query($query_fc2) or do_error($query_fc2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 $orig_fac_menu = "<SELECT NAME='frm_orig_fac'>";
-$orig_fac_menu .= "<OPTION VALUE=0 selected>Receiving Facility</OPTION>";
+$orig_fac_menu .= "<OPTION VALUE=0 selected>" . gettext('Receiving Facility') . "</OPTION>";
 while ($row_fc2 = mysql_fetch_array($result_fc2, MYSQL_ASSOC)) {
 		$sel = ($row_fc2['id'] == $row['orig_facility']) ? "SELECTED" : "";
 		$orig_fac_menu .= "<OPTION VALUE=" . $row_fc2['id'] . " " . $sel . ">" . shorten($row_fc2['name'], 30) . "</OPTION>";
 		}
 $orig_fac_menu .= "<SELECT>";
 
-$status_array = array('Open', 'Accepted', 'Resourced', 'Complete');
+$status_array = array(gettext('Open'), gettext('Accepted'), gettext('Resourced'), gettext('Complete'));
 $status_sel = "<SELECT NAME='frm_status'>";
 foreach($status_array AS $val) {
 	$sel = ($val == $row['status']) ? "SELECTED": "";
@@ -64,10 +64,10 @@ function get_contact_details($the_id) {
 	if(mysql_num_rows($result) == 1) {
 		$row = stripslashes_deep(mysql_fetch_assoc($result));
 		$the_ret[] = (($row['name_f'] != "") && ($row['name_l'] != "")) ? $the_ret[] = $row['name_f'] . " " . $row['name_l'] : $the_ret[] = $row['user'];
-		$the_ret[] = ($row['email'] != "") ? $row['email'] : "Unknown";
-		$the_ret[] = ($row['email_s'] != "") ? $row['email_s'] : "Unknown";		
-		$the_ret[] = ($row['phone_p'] != "") ? $row['phone_p'] : "Unknown";			
-		$the_ret[] = ($row['phone_s'] != "") ? $row['phone_s'] : "Unknown";		
+		$the_ret[] = ($row['email'] != "") ? $row['email'] : gettext("Unknown");
+		$the_ret[] = ($row['email_s'] != "") ? $row['email_s'] : gettext("Unknown");		
+		$the_ret[] = ($row['phone_p'] != "") ? $row['phone_p'] : gettext("Unknown");			
+		$the_ret[] = ($row['phone_s'] != "") ? $row['phone_s'] : gettext("Unknown");		
 		}
 	return $the_ret;
 	}
@@ -118,7 +118,7 @@ function get_facilityname($value) {
 ?>
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 	<html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Service User Request</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Service User Request');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 	<META HTTP-EQUIV="Expires" CONTENT="0" />
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -281,9 +281,9 @@ function get_facilityname($value) {
 				$('view').style.display = 'none';
 				$('edit').style.display = 'none';			
 				$('result').style.display = 'inline-block';
-				var the_link = "A New Ticket has been inserted. click the link below to view<BR /><BR /><BR /><BR />";		
-				the_link += "<SPAN id='the_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.opener.parent.frames[\"main\"].location=\"../edit.php?id=" + the_response[0] + "\"; window.close();'>Go to Ticket</SPAN>";			
-				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
+				var the_link = "<?php print gettext('A New Ticket has been inserted. click the link below to view.');?><BR /><BR /><BR /><BR />";		
+				the_link += "<SPAN id='the_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.opener.parent.frames[\"main\"].location=\"../edit.php?id=" + the_response[0] + "\"; window.close();'><?php print gettext('Go to Ticket');?></SPAN>";			
+				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'><?php print gettext('Close');?></SPAN>";
 				$('done').innerHTML = the_link;
 				}
 			}
@@ -307,8 +307,8 @@ function get_facilityname($value) {
 			$('view').style.display = 'none';
 			$('edit').style.display = 'none';			
 			$('result').style.display = 'inline-block';
-			var the_link = "Status has been updated<BR /><BR /><BR /><BR />";		
-			the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
+			var the_link = "<?php print gettext('Status has been updated.');?><BR /><BR /><BR /><BR />";		
+			the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'><?php print gettext('Close');?></SPAN>";
 			$('done').innerHTML = the_link;
 			}
 		}		// end function status_update()
@@ -329,9 +329,9 @@ function get_facilityname($value) {
 				$('view').style.display = 'none';
 				$('edit').style.display = 'none';			
 				$('result').style.display = 'inline-block';
-				var the_link = "A New Ticket has been inserted. click the link below to view<BR /><BR /><BR /><BR />";		
-				the_link += "<SPAN id='the_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.opener.parent.frames[\"main\"].location=\"../edit.php?id=" + the_response[0] + "\"; window.close();'>Go to Ticket</SPAN>";			
-				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
+				var the_link = "<?php print gettext('A New Ticket has been inserted. click the link below to view.');?><BR /><BR /><BR /><BR />";		
+				the_link += "<SPAN id='the_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.opener.parent.frames[\"main\"].location=\"../edit.php?id=" + the_response[0] + "\"; window.close();'><?php print gettext('Go to Ticket');?></SPAN>";			
+				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'><?php print gettext('Close');?></SPAN>";
 				$('done').innerHTML = the_link;
 				}
 			}
@@ -353,8 +353,8 @@ function get_facilityname($value) {
 				$('view').style.display = 'none';
 				$('edit').style.display = 'none';			
 				$('result').style.display = 'inline-block';
-				var the_link = "The request has been declined<BR /><BR /><BR /><BR />";		
-				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
+				var the_link = "<?php print gettext('The request has been declined.');?><BR /><BR /><BR /><BR />";		
+				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'><?php print gettext('Close');?></SPAN>";
 				$('done').innerHTML = the_link;
 				}
 			}
@@ -374,8 +374,8 @@ function get_facilityname($value) {
 	<!-- <BODY onLoad = "ck_frames();"> -->
 
 <?php
-	$rec_facility = ($row['rec_facility'] != 0) ? get_facilityname($row['rec_facility']) : "Not Set";
-	$orig_facility = ($row['orig_facility'] != 0) ? get_facilityname($row['orig_facility']) : "Not Set";	
+	$rec_facility = ($row['rec_facility'] != 0) ? get_facilityname($row['rec_facility']) : gettext("Not Set");
+	$orig_facility = ($row['orig_facility'] != 0) ? get_facilityname($row['orig_facility']) : gettext("Not Set");	
 	$onload_str = "load(" .  get_variable('def_lat') . ", " . get_variable('def_lng') . "," . get_variable('def_zoom') . ");";
 	$now = time() - (intval(get_variable('delta_mins')*60));
 	$the_details = get_contact_details($row['requester']);	
@@ -413,15 +413,15 @@ print "Done";
 	<BODY onLoad="startup(); location.href = '#top';">
 
 	<DIV id='view' style='position: absolute; width: 95%; text-align: center; margin: 10px;'>
-		<DIV id='banner' class='heading' style='font-size: 20px; position: relative: top: 5%; width: 100%; border: 1px outset #000000;'>Tickets Service User Request</DIV><BR /><BR />
+		<DIV id='banner' class='heading' style='font-size: 20px; position: relative: top: 5%; width: 100%; border: 1px outset #000000;'><?php print gettext('Tickets Service User Request');?></DIV><BR /><BR />
 		<DIV id='leftcol' style='position: fixed; left: 2%; top: 8%; width: 96%; height: 90%;'>
 			<DIV id='left_scroller' style='position: relative; top: 0px; left: 0px; height: 80%; overflow-y: auto; overflow-x: hidden; border: 1px outset #000000;'>
 				<TABLE style='width: 100%;'>
 					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;'>Requested By</TD><TD class='td_data' style='text-align: left;'><?php print get_user_name($row['requester']);?></TD>
+						<TD class='td_label' style='text-align: left;'><?php print gettext('Requested By');?></TD><TD class='td_data' style='text-align: left;'><?php print get_user_name($row['requester']);?></TD>
 					</TR>
 					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;'>Request Date and Time</TD><TD class='td_data' style='text-align: left;'><?php print format_date($row['request_date']);?></TD>
+						<TD class='td_label' style='text-align: left;'><?php print gettext('Request Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print format_date($row['request_date']);?></TD>
 					</TR>	
 					<TR class='odd'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Status');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['status'];?></TD>
@@ -464,44 +464,44 @@ print "Done";
 <?php
 	if($can_edit) {
 ?>
-			<SPAN id='edit_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "do_edit();">Edit</SPAN>	
+			<SPAN id='edit_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "do_edit();"><?php print gettext('Edit');?></SPAN>	
 <?php
 	}
 	if((!is_service_user()) && ($row['status'] == 'Open')) {
 ?>
-			<SPAN id='tent_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "tentative(<?php print $id;?>);">Tentatively Accept and open Ticket</SPAN>
+			<SPAN id='tent_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "tentative(<?php print $id;?>);"><?php print gettext('Tentatively Accept and open Ticket');?></SPAN>
 <?php
 	}
 	if((!is_service_user()) && ($row['status'] == 'Open')) {
 ?>
-			<SPAN id='accept_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "accept(<?php print $id;?>);">Accept and open Ticket</SPAN>
+			<SPAN id='accept_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "accept(<?php print $id;?>);"><?php print gettext('Accept and open Ticket');?></SPAN>
 <?php
 	}
 	if((!is_service_user()) && ($row['status'] == 'Tentative')) {
 ?>
-			<SPAN id='accept_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "status_update(<?php print $id;?>, 'Accepted');">Accept</SPAN>
+			<SPAN id='accept_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "status_update(<?php print $id;?>, 'Accepted');"><?php print gettext('Accept');?></SPAN>
 <?php
 	}
 	if((!is_service_user()) && (($row['status'] == 'Open') || ($row['status'] == 'Tentative'))) {
 ?>	
-			<SPAN id='decline_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "decline(<?php print $id;?>);">Decline</SPAN>			
+			<SPAN id='decline_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "decline(<?php print $id;?>);"><?php print gettext('Decline');?></SPAN>			
 <?php
 	}
 ?>
-			<SPAN id='close_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.close();">Cancel</SPAN><BR /><BR />		
+			<SPAN id='close_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.close();"><?php print gettext('Cancel');?></SPAN><BR /><BR />		
 		</DIV>
 	</DIV>
 	<DIV id='edit' style='position: absolute; width: 95%; text-align: center; margin: 10px;'>
-		<DIV id='edit_banner' class='heading' style='font-size: 20px; position: relative: top: 5%; width: 100%; border: 1px outset #000000;'>Edit Tickets Service User Request</DIV><BR /><BR />
+		<DIV id='edit_banner' class='heading' style='font-size: 20px; position: relative: top: 5%; width: 100%; border: 1px outset #000000;'><?php print gettext('Edit Tickets Service User Request');?></DIV><BR /><BR />
 		<DIV id='edit_leftcol' style='position: fixed; left: 2%; top: 8%; width: 96%; height: 90%;'>
 			<DIV id='edit_left_scroller' style='position: relative; top: 0px; left: 0px; height: 90%; overflow-y: auto; overflow-x: hidden; border: 1px outset #000000;'>
 				<FORM NAME='edit_frm' METHOD='POST' ACTION = "<?php print basename( __FILE__); ?>">
 				<TABLE style='width: 100%;'>
 					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;'>Requested By</TD><TD class='td_data' style='text-align: left;'><?php print get_user_name($row['requester']);?></TD>
+						<TD class='td_label' style='text-align: left;'><?php print gettext('Requested By');?></TD><TD class='td_data' style='text-align: left;'><?php print get_user_name($row['requester']);?></TD>
 					</TR>
 					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;'>Request Date and Time</TD><TD class='td_data' style='text-align: left;'><?php print generate_date_dropdown('request_date',$row['request_date'],FALSE);?></TD>
+						<TD class='td_label' style='text-align: left;'><?php print gettext('Request Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print generate_date_dropdown('request_date',$row['request_date'],FALSE);?></TD>
 					</TR>	
 					<TR class='odd'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Status');?></TD><TD class='td_data' style='text-align: left;'><?php print $status_sel;?></TD>
@@ -540,8 +540,8 @@ print "Done";
 				<INPUT NAME='requester' TYPE='hidden' SIZE='24' VALUE="<?php print $_SESSION['user_id'];?>">
 				<INPUT NAME='id' TYPE='hidden' SIZE='24' VALUE="<?php print $id;?>">
 			</DIV><BR /><BR />
-			<SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.forms['edit_frm'].submit();">Update</SPAN>
-			<SPAN id='close_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.close();">Cancel</SPAN><BR /><BR />	
+			<SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.forms['edit_frm'].submit();"><?php print gettext('Update');?></SPAN>
+			<SPAN id='close_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.close();"><?php print gettext('Cancel');?></SPAN><BR /><BR />	
 			</FORM>		
 		</DIV>
 	</DIV>

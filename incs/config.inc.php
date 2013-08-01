@@ -53,47 +53,47 @@ function optimize_db(){
 /* reset database to defaults */
 function reset_db($user=0,$ticket=0,$responders=0,$facilities=0,$settings=0,$messages=0,$purge=0){
 	if($ticket)	{
-	 	print '<LI> Deleting actions...';
+	 	print '<LI> ' . gettext('Deleting actions.') . '..';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]action") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-	 	print '<LI> Deleting assigns...';
+	 	print '<LI> ' . gettext('Deleting assigns.') . '..';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]assigns") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-	 	print '<LI> Deleting chat_messages...';
+	 	print '<LI> ' . gettext('Deleting chat_messages.') . '..';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]chat_messages") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-	 	print '<LI> Deleting log...';
+	 	print '<LI> ' . gettext('Deleting log.') . '..';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]log") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-	 	print '<LI> Deleting notifies...';
+	 	print '<LI> ' . gettext('Deleting notifies.') . '..';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]notify") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-	 	print '<LI> Deleting patient...';
+	 	print '<LI> ' . gettext('Deleting patient.') . '..';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]patient") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-		print '<LI> Deleting tickets...';
+		print '<LI> ' . gettext('Deleting tickets.') . '..';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]ticket") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]allocates WHERE `type` = 1") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);		
 		}
 		
 	if($responders) {
-	 	print '<LI> Deleting responder...';
+	 	print '<LI> ' . gettext('Deleting responder.') . '..';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]responder") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]allocates WHERE `type` = 2") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);	
-	 	print '<LI> Deleting tracks...';
+	 	print '<LI> ' . gettext('Deleting tracks.') . '..';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]tracks") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]tracks_hh") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);		
 		}
 		
 	if($facilities) {
-	 	print '<LI> Deleting facilities...';
+	 	print '<LI> ' . gettext('Deleting facilities.') . '..';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]facilities") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]allocates WHERE `type` = 3") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);		
 		}
 		
 	if($messages) {
-	 	print '<LI> Deleting messages...';
+	 	print '<LI> ' . gettext('Deleting messages.') . '..';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]messages") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);		
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]messages_bin") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);				
 		}
 		
 	if($user)	{
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]notify") or do_error('reset_db()::mysql_query(delete notifies)', 'mysql query failed', mysql_error(), __FILE__, __LINE__);
-		print '<LI> Deleting users and notifies...';
+		print '<LI> ' . gettext('Deleting users and notifies.') . '..';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]user") or do_error('reset_db()::mysql_query(delete users)', 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]allocates WHERE `type` = 4") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 		//	add admin user
@@ -104,10 +104,10 @@ function reset_db($user=0,$ticket=0,$responders=0,$facilities=0,$settings=0,$mes
 		//	add allocation for new admin user to region / group 1
 		$query = "INSERT INTO `$GLOBALS[mysql_prefix]allocates` (`group`,`type`,`al_as_of`,`al_status`,`resource_id`,`sys_comments`,`user_id`) VALUES (1,4,'$now',0,$new_id,'Allocated to Group after reset operation',$new_id)";				
 		$result = mysql_query($query) or do_error(query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
-		print '<LI> Admin account created with password \'admin\'';
+		print '<LI> ' . gettext('Admin account created with password') . ' \'admin\'';
 		}
 	if($settings) {		//reset all default settings
-		print '<LI> Deleting settings...';
+		print '<LI> ' . gettext('Deleting settings.') . '..';
 
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]settings") or do_error('reset_db()::mysql_query(delete settings)', 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 		do_insert_settings('_aprs_time','0');
@@ -193,7 +193,7 @@ function reset_db($user=0,$ticket=0,$responders=0,$facilities=0,$settings=0,$mes
 		}	//
 
 
-	print '<LI> Database reset done<BR /><BR />';
+	print '<LI> ' . gettext('Database reset done') . '<BR /><BR />';
 	}
 
 /**
@@ -278,24 +278,24 @@ function show_stats(){			/* 6/9/08 show database/user stats */
 	$pluralS = ($super_in_db==1)? "": "s";
 	
 	$rsvd_str = ($ticket_rsvd_in_db==0)? "": $ticket_rsvd_in_db . " reserved, ";
-	print "<TABLE BORDER='0'><TR CLASS='even'><TD CLASS='td_label'COLSPAN=2 ALIGN='center'>System Summary</TD></TR><TR>";	
+	print "<TABLE BORDER='0'><TR CLASS='even'><TD CLASS='td_label'COLSPAN=2 ALIGN='center'>" . gettext('System Summary') . "</TD></TR><TR>";	
 
 
-	print "<TR CLASS='odd'><TD CLASS='td_label'>Tickets Version:</TD><TD ALIGN='left'><B>" . get_variable('_version') . "</B></TD></TR>";
-	print "<TR CLASS='even'><TD CLASS='td_label'>Server OS:</TD><TD ALIGN='left'>" . php_uname() . "</TD></TR>";	
-	print "<TR CLASS='odd'><TD CLASS='td_label'>PHP Version:</TD><TD ALIGN='left'>" . phpversion() . " under " .$_SERVER['SERVER_SOFTWARE'] . "</TD></TR>";		// 8/8/08
-	print "<TR CLASS='even'><TD CLASS='td_label'>Database:</TD><TD ALIGN='left'>$GLOBALS[mysql_db] on $GLOBALS[mysql_host] running mysql ".mysql_get_server_info()."</TD></TR>";
+	print "<TR CLASS='odd'><TD CLASS='td_label'>" . gettext('Tickets Version') . ":</TD><TD ALIGN='left'><B>" . get_variable('_version') . "</B></TD></TR>";
+	print "<TR CLASS='even'><TD CLASS='td_label'>" . gettext('Server OS') . ":</TD><TD ALIGN='left'>" . php_uname() . "</TD></TR>";	
+	print "<TR CLASS='odd'><TD CLASS='td_label'>" . gettext('PHP Version') . ":</TD><TD ALIGN='left'>" . phpversion() . " under " .$_SERVER['SERVER_SOFTWARE'] . "</TD></TR>";		// 8/8/08
+	print "<TR CLASS='even'><TD CLASS='td_label'>" . gettext('Database') . ":</TD><TD ALIGN='left'>$GLOBALS[mysql_db] on $GLOBALS[mysql_host] running mysql ".mysql_get_server_info()."</TD></TR>";
 
 	$fmt = "m/d/Y H:i:s";
 	$now =  date($fmt,time());											// 8/26/08
 	$adj =  date($fmt, (time() - (get_variable('delta_mins')*60)));
 //	$nist = date($fmt, ntp_time());
-	$nist = "NA";
+	$nist = gettext("NA");
 
-	print "<TR CLASS='odd'><TD CLASS='td_label'>Server time:</TD>
-		<TD ALIGN='left'>" . $now . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>Adjusted:</B> $adj  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>NIST:</B> $nist</TD></TR>";
+	print "<TR CLASS='odd'><TD CLASS='td_label'>" . gettext('Server time') . ":</TD>
+		<TD ALIGN='left'>" . $now . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>" . gettext('Adjusted') . ":</B> $adj  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>" . gettext('NIST') . ":</B> $nist</TD></TR>";
 
-	print "<TR CLASS='even'><TD CLASS='td_label'>Tickets in database:&nbsp;&nbsp;</TD><TD ALIGN='left'>$rsvd_str $ticket_open_in_db open, ".($ticket_in_db - $ticket_open_in_db - $ticket_rsvd_in_db)." closed, $ticket_in_db total</TD></TR>";
+	print "<TR CLASS='even'><TD CLASS='td_label'>" . gettext('Tickets in database') . ":&nbsp;&nbsp;</TD><TD ALIGN='left'>" . $rsvd_str . " " . $ticket_open_in_db ." " . gettext('open') . ", " . ($ticket_in_db - $ticket_open_in_db - $ticket_rsvd_in_db) . gettext('closed') . ", " . $ticket_in_db . " " . gettext('total') . "</TD></TR>";
 
 	$type_color=array();												// 1/28/09
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]unit_types`";
@@ -317,28 +317,28 @@ function show_stats(){			/* 6/9/08 show database/user stats */
 	$show_str = $out_str . $total . " total";
 	unset($result);	
 
-	print "<TR CLASS='odd'><TD CLASS='td_label'>Units in database:</TD><TD ALIGN='left'>" . $show_str . "</TD></TR>";
+	print "<TR CLASS='odd'><TD CLASS='td_label'>" . gettext('Units in database') . ":</TD><TD ALIGN='left'>" . $show_str . "</TD></TR>";
 	
-	print "<TR CLASS='even'><TD CLASS='td_label'>Users in database:</TD><TD ALIGN='left'>$super_in_db Super$pluralS, $admin_in_db Administrator$pluralA, $oper_in_db Operator$pluralOp, $guest_in_db Guest$pluralG, $memb_in_db Member$pluralM, $stats_in_db Statistics ".($super_in_db+$oper_in_db+$admin_in_db+$guest_in_db+$memb_in_db+$stats_in_db)." total</TD></TR>";	//	11/07/11
+	print "<TR CLASS='even'><TD CLASS='td_label'>" . gettext('Users in database') . ":</TD><TD ALIGN='left'>$super_in_db Super$pluralS, $admin_in_db Administrator$pluralA, $oper_in_db Operator$pluralOp, $guest_in_db Guest$pluralG, $memb_in_db Member$pluralM, $stats_in_db Statistics ".($super_in_db+$oper_in_db+$admin_in_db+$guest_in_db+$memb_in_db+$stats_in_db)." total</TD></TR>";	//	11/07/11
 
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]log`";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 	$nr_logs = mysql_affected_rows();
 	unset($result);	
 
-	print "<TR CLASS='odd'><TD CLASS='td_label'>Log records in database:&nbsp;&nbsp;</TD><TD ALIGN='left'>{$nr_logs}</TD></TR>";		// 4/5/09
+	print "<TR CLASS='odd'><TD CLASS='td_label'>" . gettext('Log records in database') . ":&nbsp;&nbsp;</TD><TD ALIGN='left'>{$nr_logs}</TD></TR>";		// 4/5/09
 		
-	print "<TR CLASS='even'><TD CLASS='td_label'>Current User:</TD><TD ALIGN='left'>";
+	print "<TR CLASS='even'><TD CLASS='td_label'>" . gettext('Current User') . ":</TD><TD ALIGN='left'>";
 	print $_SESSION['user'] . ", " .	get_level_text ($_SESSION['level']);
 
-//	print "</TD></TR><TR CLASS='even'><TD CLASS=\"td_label\">Sorting:</TD><TD ALIGN=\"left\">";	//
+//	print "</TD></TR><TR CLASS='even'><TD CLASS=\"td_label\">" . gettext('Sorting') . ":</TD><TD ALIGN=\"left\">";	//
 	$_SESSION['ticket_per_page'] == 0 ? print ", unlimited " : print $_SESSION['ticket_per_page'];
 	print " tickets/page, order by '".str_replace('DESC','descending', $_SESSION['sortorder'])."'</TD></TR>";
-	print "<TR CLASS='odd'><TD CLASS='td_label'>Visting from:</TD><TD ALIGN='left'>" . $_SERVER['REMOTE_ADDR'] . ", " . gethostbyaddr($_SERVER['REMOTE_ADDR']) . "</TD></TR>";
-	print "<TR CLASS='even'><TD CLASS='td_label'>Browser:</TD><TD ALIGN='left'>";
+	print "<TR CLASS='odd'><TD CLASS='td_label'>" . gettext('Visting from') . ":</TD><TD ALIGN='left'>" . $_SERVER['REMOTE_ADDR'] . ", " . gethostbyaddr($_SERVER['REMOTE_ADDR']) . "</TD></TR>";
+	print "<TR CLASS='even'><TD CLASS='td_label'>" . gettext('Browser') . ":</TD><TD ALIGN='left'>";
 	print $_SERVER["HTTP_USER_AGENT"];
 	print  "</TD></TR>";
-	print "<TR CLASS='odd'><TD CLASS='td_label'>Monitor resolution: </TD><TD ALIGN='left'>" . $_SESSION['scr_width'] . " x " . $_SESSION['scr_height'] . "</TD></TR>";
+	print "<TR CLASS='odd'><TD CLASS='td_label'>" . gettext('Monitor resolution') . ": </TD><TD ALIGN='left'>" . $_SESSION['scr_width'] . " x " . $_SESSION['scr_height'] . "</TD></TR>";
 	print "</TABLE>";		//
 	}
 
@@ -366,23 +366,23 @@ function list_users(){		/* list users */
 		WHERE `passwd` <> '55606758fdb765ed015f0612112a6ca7'	
 		ORDER BY `u`.`user` ASC ";																// 5/25/09, 1/16/08
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-	if (mysql_affected_rows()==0) 	 { print '<B>[no users found]</B><BR />'; return; 	}
+	if (mysql_affected_rows()==0) 	 { print '<B>[' gettext('no users found') . ']</B><BR />'; return; 	}
 
 //	if (!check_for_rows("SELECT id FROM `$GLOBALS[mysql_prefix]user`")==0) { print '<B>[no users found]</B><BR />'; return; 	}
 	$now = mysql_format_date(time() - (get_variable('delta_mins')*60));		// 1/23/10
 
 	print "<TABLE BORDER='0' CELLPADDING=2>";
 	$caption = (has_admin())?" - click to edit":  ""; 	// 
-	print "<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'><B>Users" . $caption . " </B></TD></TR>";
+	print "<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'><B>" . gettext('Users') . " " . $caption . " </B></TD></TR>";
 	print "<TR CLASS='odd'><TD><B>ID</B></TD>
-		<TD><B>&nbsp;User</B></TD>
-		<TD><B>&nbsp;Online</B></TD>
-		<TD><B>&nbsp;Level</B></TD>
-		<TD><B>&nbsp;Unit</B></TD>
-		<TD><B>&nbsp;Description</B></TD>
-		<TD><B>&nbsp;Log in</B></TD>
-		<TD><B>&nbsp;From</B></TD>
-		<TD><B>&nbsp;Browser</B></TD>
+		<TD><B>&nbsp;" . gettext('User') . "</B></TD>
+		<TD><B>&nbsp;" . gettext('Online') . "</B></TD>
+		<TD><B>&nbsp;" . gettext('Level') . "</B></TD>
+		<TD><B>&nbsp;" . gettext('Unit') . "</B></TD>
+		<TD><B>&nbsp;" . gettext('Description') . "</B></TD>
+		<TD><B>&nbsp;" . gettext('Log in') . "</B></TD>
+		<TD><B>&nbsp;" . gettext('From') . "</B></TD>
+		<TD><B>&nbsp;" . gettext('Browser') . "</B></TD>
 		</TR>";
 	$i=1;
 	while($row = stripslashes_deep(mysql_fetch_array($result))) {				// 10/8/08
@@ -460,7 +460,7 @@ function validate_email($email){ 	//really validate? - code courtesy of Jerrett 
    			) {
 
 		$return['status'] = false;
-		$return['msg'] = 'invalid e-mail address';
+		$return['msg'] = gettext('invalid e-mail address');
 		return $return;
 		}
 
@@ -490,84 +490,84 @@ function validate_email($email){ 	//really validate? - code courtesy of Jerrett 
  */
 function get_setting_help($setting){/* get help for settings */
 	switch($setting) {
-		case "_aprs_time":				return "Not user-settable; used for APRS time between polls"; break;
-		case "_version": 				return "Tickets version number"; break;
-		case "abbreviate_affected": 	return "Abbreviates \"affected\" string at this length when listing tickets, 0 to turn off"; break;
-		case "abbreviate_description": 	return "Abbreviates descriptions at this length when listing tickets, 0 to turn off"; break;
-		case "allow_custom_tags": 		return "Enable/disable use of custom tags for rowbreak, italics etc."; break;
-		case "allow_notify": 			return "Allow/deny notification of ticket updates"; break;
-		case "auto_poll":				return "APRS/Instamapper will be polled every n minutes.  Use 0 for no poll"; break;
-		case "auto_route": 				return "Do/don&#39;t (1/0) use routing for new tickets"; break;												// 9/13/08
-		case "call_board":				return "Call Board - 0, 1, 2 - for none, floating window, fixed frame"; break;
-		case "chat_time":				return "Keep n hours of Chat"; break;
-		case "date_format": 			return "Format dates according to php function date() variables"; break;	
-		case "def_area_code":			return "Default telephone area code"; break;
-		case "def_city":				return "Default city name"; break;
-		case "def_lat":					return "Map center default lattitude"; break;
-		case "def_lng":					return "Map center default longitude"; break;
-		case "def_st":					return "Default two-letter state"; break;
-		case "def_zoom":				return "Map default zoom"; break;
-		case "delta_mins":				return "Minutes delta - for server/users time synchronization"; break;
-		case "email_reply_to":			return "The default reply-to address for emailing incident information"; break;
-		case "email_from":				return "Outgoing email will use this value as the FROM value. VALID ADDRESS MANDATORY!"; break;
-		case "frameborder": 			return "Size of frameborder"; break;
-		case "framesize": 				return "Size of the top frame in pixels"; break;
-		case "gmaps_api_key":			return "Google maps API key - see HELP/README re how to obtain"; break;	
-		case "guest_add_ticket": 		return "Allow guest users to add tickets - NOT RECOMMENDED"; break;
-		case "host": 					return "Hostname where Tickets is run"; break;
-		case "kml_files":  				return "Do/don&#39;t (1/0) display KML files"; break;
-		case "lat_lng":					return "Lat/lng display: (0) for DDD.ddddd, (1) for DDD MMM SS.ss, (2) for DDD MM.mm"; break;		// 9/13/08
-		case "link_capt":				return "Caption to be used for external link button"; break;
-		case "link_url":				return "URL of external page link"; break;
-		case "login_banner": 			return "Message to be shown at login screen"; break;
-		case "map_caption":				return "Map caption - cosmetic"; break;
-		case "map_height":				return "Map height - pixels"; break;
-		case "map_width":				return "Map width - pixels"; break;
-		case "military_time": 			return "Enter dates as military time (no am/pm)"; break;
-		case "quick":					return "Do/don&#39;t (1/0) bypass user notification steps for quicker operation"; break;			// 3/11/09
-		case "restrict_user_add": 		return "Restrict user to only post tickets as himself"; break;
-		case "restrict_user_tickets": 	return "Restrict to showing only tickets to current user"; break;
-		case "serial_no_ap": 			return "Don&#39;t (0), Do prepend (1), or Append(2) ticket ID# to incident name"; break;												// 9/13/08
-		case "situ_refr":				return "Situation map auto refresh - in seconds"; break;											// 3/11/09
-		case "smtp_acct":				return "Ex: outgoing.verizon.net/587/ashore4/*&^$#@/ashore4@verizon.net"; break;					// 7/12/09
-		case "terrain": 				return "Do/don&#39;t (1/0) include terrain map view option"; break;
-		case "ticket_per_page": 		return "Number of tickets per page to show"; break;
-		case "ticket_table_width": 		return "Width of table when showing ticket"; break;
-		case "UTM":						return "Shows UTM values in addition to Lat/Long"; break;
-		case "validate_email": 			return "Do/don&#39;t (1/0) use simple email validation check for notifies"; break;
-		case "wp_key": 					return "White pages lookup key - obtain your own for high volume use"; break;												// 9/13/08
-		case "closed_interval": 		return "Closed tickets and cleared dispatches are visible for this many hours"; break;												// 9/13/08
-		case "def_zoom_fixed": 			return "Dynamic or fixed map/zoom; 0 dynamic, 1 fixed situ, 2 fixed units, 3 both"; break;												// 9/13/08
-		case "instam_key": 				return "Instamapper &#39;Master API key&#39;"; break;												// 9/13/08
-		case "msg_text_1": 				return "Default message string for incident new/edit notifies; see instructions"; break;		// 4/5/09										// 9/13/08
-		case "msg_text_2": 				return "Default message string for incident mini-menu email; see instructions"; break;												// 9/13/08
-		case "msg_text_3": 				return "Default message string for for dispatch notifies; see instructions"; break;												// 9/13/08
-		case "ogts_info": 				return "Open GTS server info"; break;												// 9/13/08		
-		case "gtrack_url": 				return "URL for Gtrack server in format http://www.yourserver.com"; break;	//06/24/09
-		case "maptype": 				return "Default Map display type - 1 for Standard, 2 for Satellite, 3 for Terrain Map, 4 for Hybrid"; break;	//08/02/09
-		case "locale": 					return "Locale for USNG/UTM/OSG setting plus date format - 0=US, 1=UK, 2=ROW "; break;	//08/03/09
-		case "func_key1": 				return "User Defined Function key 1 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."; break;	//08/05/09
-		case "func_key2": 				return "User Defined Function key 2 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."; break;	//08/05/09
-		case "func_key3": 				return "User Defined Function key 3 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."; break;	//08/05/09
-		case "reverse_geo": 			return "Use Reverse Geocoding when setting location for an incident. 1 for yes, 0 for no. Default is 0"; break;	//11/01/09
-		case "logo": 					return "Enter filename of your site logo file here"; break;	//8/13/10
-		case "regions_control": 		return "Regions select / view control floating over map (0) or docked to top bar (1)"; break;												// 9/13/08
-		case "pie_charts": 				return "Severity/Incident types/Location pie chart diameters, in pixels"; break;	// 3/21/10
-		case "internet": 				return "Internet/network connection available: 1 (default) for Yes, 2 for No, 3 for maybe - will check network dynamically"; break;	// 8/13/10		
-		case "sound_mp3": 				return "Enter filename of your site mp3 alert tone - Default is phonesring.mp3"; break;	// 8/13/10
-		case "sound_wav": 				return "Enter filename of your site WAV alert tone - Default is aooga.wav"; break;	// 8/13/10			
-		case "oper_can_edit": 			return "Operator is disallowed (0) or allowed to (1) edit incident data"; break;	// 8/27/10		
-		case "disp_stat": 				return "Dispatch status tags, slash-separated; for &#39;dispatched&#39;, responding&#39;, &#39;on-scene&#39;, &#39;facility-enroute&#39;, &#39;facility arrived&#39;, &#39;clear&#39; IN THAT ORDER! (D/R/O/FE/FA/Clear)"; break;	// 8/29/10		
-		case "group_or_dispatch": 		return "Show hide categories for units on the situation screen are based on show/hide setting in un_status table (0 - default) or on status groups in un_status table (1)"; break;	// 8/29/10		
-		case "aprs_fi_key": 			return "To use aprs location data you will need to sign up for an aprs.fi user account/key (free).  Obtain from http://aprs.fi"; break;	// 3/19/11		
-		case "title_string": 			return "If text is entered here it replaces the default title in the top bar."; break;	// 6/10/11	
-		case "use_messaging": 			return "Setting determines whether to use Tickets 2-way Messaging interface. Setting 0 (Default) does not use messaging, 1 to use Email, 2 to use SMS Gateway and 3 to use Email and SMS Gateway"; break;	// 6/10/11			
-		case "map_in_portal": 			return "Setting determines whether to show map on portal page or not - 1 (default) shows the map"; break;	// 6/10/11			
-		case "ics_top": 				return "Do/don&#39;t (1/0) show ICS button in top button row.  (Default is 0, for \"No\".)";	 break;	// 5/21/2013	
-		case "auto_refresh": 			return "Do/don&#39;t (1/0) Automatic refresh for Sit scr, Full scr, Mobile; slash-separated, with 1 = Yes.  (Default is 1/1/1.)";	 break;	// 5/21/2013	
-		case "broadcast": 				return "Do/don&#39;t (1/0) use &#39;broadcast to other users&#39; - aka HAS, for Hello-All-Stations  (Default is 0, for \"No\")";	 break;	// 5/21/2013	
-		case "hide_booked": 			return "Booked/scheduled runs don&#39;t appear on the situation screen until they are this-many hours from 'now'.  (Default is 48 hours.)";	 break;	// 5/21/2013	
-		default: 						return "No help for '$setting'"; break;	//	 ics_top
+		case "_aprs_time":				return gettext("Not user-settable; used for APRS time between polls"); break;
+		case "_version": 				return gettext("Tickets version number"); break;
+		case "abbreviate_affected": 	return gettext("Abbreviates \"affected\" string at this length when listing tickets, 0 to turn off"); break;
+		case "abbreviate_description": 	return gettext("Abbreviates descriptions at this length when listing tickets, 0 to turn off"); break;
+		case "allow_custom_tags": 		return gettext("Enable/disable use of custom tags for rowbreak, italics etc."); break;
+		case "allow_notify": 			return gettext("Allow/deny notification of ticket updates"); break;
+		case "auto_poll":				return gettext("APRS/Instamapper will be polled every n minutes.  Use 0 for no poll"); break;
+		case "auto_route": 				return gettext("Do/don&#39;t (1/0) use routing for new tickets"); break;												// 9/13/08
+		case "call_board":				return gettext("Call Board - 0, 1, 2 - for none, floating window, fixed frame"); break;
+		case "chat_time":				return gettext("Keep n hours of Chat"); break;
+		case "date_format": 			return gettext("Format dates according to php function date() variables"); break;	
+		case "def_area_code":			return gettext("Default telephone area code"); break;
+		case "def_city":				return gettext("Default city name"); break;
+		case "def_lat":					return gettext("Map center default lattitude"); break;
+		case "def_lng":					return gettext("Map center default longitude"); break;
+		case "def_st":					return gettext("Default two-letter state"); break;
+		case "def_zoom":				return gettext("Map default zoom"); break;
+		case "delta_mins":				return gettext("Minutes delta - for server/users time synchronization"); break;
+		case "email_reply_to":			return gettext("The default reply-to address for emailing incident information"); break;
+		case "email_from":				return gettext("Outgoing email will use this value as the FROM value. VALID ADDRESS MANDATORY!"); break;
+		case "frameborder": 			return gettext("Size of frameborder"); break;
+		case "framesize": 				return gettext("Size of the top frame in pixels"); break;
+		case "gmaps_api_key":			return gettext("Google maps API key - see HELP/README re how to obtain"); break;	
+		case "guest_add_ticket": 		return gettext("Allow guest users to add tickets - NOT RECOMMENDED"); break;
+		case "host": 					return gettext("Hostname where Tickets is run"); break;
+		case "kml_files":  				return gettext("Do/don&#39;t (1/0) display KML files"); break;
+		case "lat_lng":					return gettext("Lat/lng display: (0) for DDD.ddddd, (1) for DDD MMM SS.ss, (2) for DDD MM.mm"); break;		// 9/13/08
+		case "link_capt":				return gettext("Caption to be used for external link button"); break;
+		case "link_url":				return gettext("URL of external page link"); break;
+		case "login_banner": 			return gettext("Message to be shown at login screen"); break;
+		case "map_caption":				return gettext("Map caption - cosmetic"); break;
+		case "map_height":				return gettext("Map height - pixels"); break;
+		case "map_width":				return gettext("Map width - pixels"); break;
+		case "military_time": 			return gettext("Enter dates as military time (no am/pm)"); break;
+		case "quick":					return gettext("Do/don&#39;t (1/0) bypass user notification steps for quicker operation"); break;			// 3/11/09
+		case "restrict_user_add": 		return gettext("Restrict user to only post tickets as himself"); break;
+		case "restrict_user_tickets": 	return gettext("Restrict to showing only tickets to current user"); break;
+		case "serial_no_ap": 			return gettext("Don&#39;t (0), Do prepend (1), or Append(2) ticket ID# to incident name"); break;												// 9/13/08
+		case "situ_refr":				return gettext("Situation map auto refresh - in seconds"); break;											// 3/11/09
+		case "smtp_acct":				return gettext("Ex: outgoing.verizon.net/587/ashore4/*&^$#@/ashore4@verizon.net"); break;					// 7/12/09
+		case "terrain": 				return gettext("Do/don&#39;t (1/0) include terrain map view option"); break;
+		case "ticket_per_page": 		return gettext("Number of tickets per page to show"); break;
+		case "ticket_table_width": 		return gettext("Width of table when showing ticket"); break;
+		case "UTM":						return gettext("Shows UTM values in addition to Lat/Long"); break;
+		case "validate_email": 			return gettext("Do/don&#39;t (1/0) use simple email validation check for notifies"); break;
+		case "wp_key": 					return gettext("White pages lookup key - obtain your own for high volume use"); break;												// 9/13/08
+		case "closed_interval": 		return gettext("Closed tickets and cleared dispatches are visible for this many hours"); break;												// 9/13/08
+		case "def_zoom_fixed": 			return gettext("Dynamic or fixed map/zoom; 0 dynamic, 1 fixed situ, 2 fixed units, 3 both"); break;												// 9/13/08
+		case "instam_key": 				return gettext("Instamapper &#39;Master API key&#39;"); break;												// 9/13/08
+		case "msg_text_1": 				return gettext("Default message string for incident new/edit notifies; see instructions"); break;		// 4/5/09										// 9/13/08
+		case "msg_text_2": 				return gettext("Default message string for incident mini-menu email; see instructions"); break;												// 9/13/08
+		case "msg_text_3": 				return gettext("Default message string for for dispatch notifies; see instructions"); break;												// 9/13/08
+		case "ogts_info": 				return gettext("Open GTS server info"); break;												// 9/13/08		
+		case "gtrack_url": 				return gettext("URL for Gtrack server in format http://www.yourserver.com"); break;	//06/24/09
+		case "maptype": 				return gettext("Default Map display type - 1 for Standard, 2 for Satellite, 3 for Terrain Map, 4 for Hybrid"); break;	//08/02/09
+		case "locale": 					return gettext("Locale for USNG/UTM/OSG setting plus date format - 0=US, 1=UK, 2=ROW "); break;	//08/03/09
+		case "func_key1": 				return gettext("User Defined Function key 1 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."); break;	//08/05/09
+		case "func_key2": 				return gettext("User Defined Function key 2 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."); break;	//08/05/09
+		case "func_key3": 				return gettext("User Defined Function key 3 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."); break;	//08/05/09
+		case "reverse_geo": 			return gettext("Use Reverse Geocoding when setting location for an incident. 1 for yes, 0 for no. Default is 0"); break;	//11/01/09
+		case "logo": 					return gettext("Enter filename of your site logo file here"; break;	//8/13/10
+		case "regions_control": 		return gettext("Regions select / view control floating over map (0) or docked to top bar (1)"); break;												// 9/13/08
+		case "pie_charts": 				return gettext("Severity/Incident types/Location pie chart diameters, in pixels"); break;	// 3/21/10
+		case "internet": 				return gettext("Internet/network connection available: 1 (default) for Yes, 2 for No, 3 for maybe - will check network dynamically"); break;	// 8/13/10		
+		case "sound_mp3": 				return gettext("Enter filename of your site mp3 alert tone - Default is phonesring.mp3"); break;	// 8/13/10
+		case "sound_wav": 				return gettext("Enter filename of your site WAV alert tone - Default is aooga.wav"); break;	// 8/13/10			
+		case "oper_can_edit": 			return gettext("Operator is disallowed (0) or allowed to (1) edit incident data"); break;	// 8/27/10		
+		case "disp_stat": 				return gettext("Dispatch status tags, slash-separated; for &#39;dispatched&#39;, responding&#39;, &#39;on-scene&#39;, &#39;facility-enroute&#39;, &#39;facility arrived&#39;, &#39;clear&#39; IN THAT ORDER! (D/R/O/FE/FA/Clear)"); break;	// 8/29/10		
+		case "group_or_dispatch": 		return gettext("Show hide categories for units on the situation screen are based on show/hide setting in un_status table (0 - default) or on status groups in un_status table (1)"); break;	// 8/29/10		
+		case "aprs_fi_key": 			return gettext("To use aprs location data you will need to sign up for an aprs.fi user account/key (free).  Obtain from http://aprs.fi"); break;	// 3/19/11		
+		case "title_string": 			return gettext("If text is entered here it replaces the default title in the top bar."); break;	// 6/10/11	
+		case "use_messaging": 			return gettext("Setting determines whether to use Tickets 2-way Messaging interface. Setting 0 (Default) does not use messaging, 1 to use Email, 2 to use SMS Gateway and 3 to use Email and SMS Gateway"); break;	// 6/10/11			
+		case "map_in_portal": 			return gettext("Setting determines whether to show map on portal page or not - 1 (default) shows the map"); break;	// 6/10/11			
+		case "ics_top": 				return gettext("Do/don&#39;t (1/0) show ICS button in top button row.  (Default is 0, for \"No\".)");	 break;	// 5/21/2013	
+		case "auto_refresh": 			return gettext("Do/don&#39;t (1/0) Automatic refresh for Sit scr, Full scr, Mobile; slash-separated, with 1 = Yes.  (Default is 1/1/1.)");	 break;	// 5/21/2013	
+		case "broadcast": 				return gettext("Do/don&#39;t (1/0) use &#39;broadcast to other users&#39; - aka HAS, for Hello-All-Stations  (Default is 0, for \"No\")");	 break;	// 5/21/2013	
+		case "hide_booked": 			return gettext("Booked/scheduled runs don&#39;t appear on the situation screen until they are this-many hours from 'now'.  (Default is 48 hours.)");	 break;	// 5/21/2013	
+		default: 						return gettext("No help for '$setting'"); break;	//	 ics_top
 		}
 	}
 	
@@ -586,20 +586,20 @@ function get_setting_help($setting){/* get help for settings */
  */
 function get_css_day_help($setting){/* get help for color settings	3/15/11 */
 	switch($setting) {
-		case "page_background":				return "Main Page Background color."; break;
-		case "normal_text": 				return "Normal text color."; break;
-		case "row_dark": 					return "Dark background color of list entries."; break;
-		case "row_light": 					return "Dark background color of list entries."; break;
-		case "row_plain": 					return "Plain Row Background color"; break;
-		case "select_menu_background": 		return "Background color for pulldown (select) menus."; break;
-		case "select_menu_foreground": 		return "Text color for pulldown (select) menus."; break;
-		case "form_input_text":				return "Form field text color."; break;
-		case "form_input_box_background": 	return "Form field background color."; break;
-		case "legend":						return "Text color for unit and facility legends."; break;
-		case "links":						return "Text color for links."; break;
-		case "other_text": 					return "All other text elements color."; break;	
-		case "list_header_text": 			return "Text color for list headings."; break;		
-		default: 							return "No help for '$setting'"; break;	//
+		case "page_background":				return gettext("Main Page Background color."); break;
+		case "normal_text": 				return gettext("Normal text color."); break;
+		case "row_dark": 					return gettext("Dark background color of list entries."); break;
+		case "row_light": 					return gettext("Dark background color of list entries."); break;
+		case "row_plain": 					return gettext("Plain Row Background color"); break;
+		case "select_menu_background": 		return gettext("Background color for pulldown (select) menus."); break;
+		case "select_menu_foreground": 		return gettext("Text color for pulldown (select) menus."); break;
+		case "form_input_text":				return gettext("Form field text color."); break;
+		case "form_input_box_background": 	return gettext("Form field background color."); break;
+		case "legend":						return gettext("Text color for unit and facility legends."); break;
+		case "links":						return gettext("Text color for links."); break;
+		case "other_text": 					return gettext("All other text elements color."); break;	
+		case "list_header_text": 			return gettext("Text color for list headings."); break;		
+		default: 							return gettext("No help for '$setting'"); break;	//
 		}
 	}	
 	
@@ -618,20 +618,20 @@ function get_css_day_help($setting){/* get help for color settings	3/15/11 */
  */
 function get_css_night_help($setting){/* get help for color settings	3/15/11 */
 	switch($setting) {
-		case "page_background":				return "Main Page Background color."; break;
-		case "normal_text": 				return "Normal text color."; break;
-		case "row_dark": 					return "Dark background color of list entries."; break;
-		case "row_light": 					return "Dark background color of list entries."; break;
-		case "row_plain": 					return "Plain Row Background color"; break;
-		case "select_menu_background": 		return "Background color for pulldown (select) menus."; break;
-		case "select_menu_foreground": 		return "Text color for pulldown (select) menus."; break;
-		case "form_input_text":				return "Form field text color."; break;
-		case "form_input_box_background": 	return "Form field background color."; break;
-		case "legend":						return "Text color for unit and facility legends."; break;
-		case "links":						return "Text color for links."; break;
-		case "other_text": 					return "All other text elements color."; break;	
-		case "list_header_text": 			return "Text color for list headings."; break;		
-		default: 							return "No help for '$setting'"; break;	//		default: 						return "No help for '$setting'"; break;	//
+		case "page_background":				return gettext("Main Page Background color."); break;
+		case "normal_text": 				return gettext("Normal text color."); break;
+		case "row_dark": 					return gettext("Dark background color of list entries."); break;
+		case "row_light": 					return gettext("Dark background color of list entries."); break;
+		case "row_plain": 					return gettext("Plain Row Background color"); break;
+		case "select_menu_background": 		return gettext("Background color for pulldown (select) menus."); break;
+		case "select_menu_foreground": 		return gettext("Text color for pulldown (select) menus."); break;
+		case "form_input_text":				return gettext("Form field text color."); break;
+		case "form_input_box_background": 	return gettext("Form field background color."); break;
+		case "legend":						return gettext("Text color for unit and facility legends."); break;
+		case "links":						return gettext("Text color for links."); break;
+		case "other_text": 					return gettext("All other text elements color."); break;	
+		case "list_header_text": 			return gettext("Text color for list headings."); break;		
+		default: 							return gettext("No help for '$setting'"); break;	//		default: 						return "No help for '$setting'"; break;	//
 		}
 	}		
 
@@ -650,33 +650,33 @@ function get_css_night_help($setting){/* get help for color settings	3/15/11 */
  */
 function get_msg_settings_help($setting){/* get help for color settings	3/15/11 */
 	switch($setting) {
-		case "email_server":				return "POP3 server address such as pop.gmail.com. Do not include the http://"; break;
-		case "email_port": 					return "Email server port - normally 110. For gmail use port 995"; break;
-		case "email_protocol": 				return "Leave as default POP3"; break;
-		case "email_addon": 				return "Leave as default 'notls'"; break;
-		case "email_del": 					return "Delete (1) or not delete (0) server emails after download"; break;		
-		case "email_folder": 				return "Leave as default INBOX"; break;
-		case "email_userid": 				return "Your login ID for the email server. Either just 'userid' or sometimes 'userid@domain.com'. This is email provider dependant"; break;
-		case "email_password": 				return "Your email server password"; break;
-		case "email_svr_simple":			return "Email server simple or normal authentication - i.e. does this use SSL and a different port. Most public servers do not use simple authentication. 1 for simple 0 for normal."; break;
-		case "no_whitelist": 				return "Use (0) or not use (1) the whitelist functionality which stops storing of emails from unknown senders"; break;
-		case "smsg_provider": 				return "Shows the current SMS Gateway Provider (only provides name translation in the various screens). Only SMS Responder is currently implemented, please leave with this setting. "; break;
-		case "smsg_server":					return "Incoming API page for SMS Gateway provider (the receiving page). Include the http://."; break;
-		case "smsg_server2":				return "If SMS Gateway provider has a backup server this is the address for the receiving page. Include the http://"; break;
-		case "smsg_og_serv1": 				return "Outgoing Primary server API sending page for the SMS Gateway provider. Include the http://"; break;	
-		case "smsg_og_serv2": 				return "Outgoing Secondary server API sendig page for SMS Gateway provider. Include the http://"; break;	
-		case "smsg_force_sec": 				return "Force Tickets to use the backup SMS Gateway server - for use when the primary is still working but maybe slow or otherwise unreliable. If Primary is completely down then Tickets will automate switching to secondary."; break;		
-		case "smsg_orgcode": 				return "SMS Gateway provider primary authorisation - your account name"; break;		
-		case "smsg_apipin": 				return "SMS Gateway provider password / pin for the account name / org code"; break;		
-		case "smsg_mode": 					return "Leave as default - 'SENDXML'"; break;		
-		case "smsg_replyto": 				return "The reply to number for the SMS Gateway provider (primary server) that ensures that replies to SMS Messages end up on the server and thus into Tickets"; break;		
-		case "smsg_replyto": 				return "The reply to number for the SMS Gateway provider (secondary server) that ensures that replies to SMS Messages end up on the server and thus into Tickets"; break;		
-		case "smsg_server_inuse": 			return "Shows what SMS Gateway server is currently in use, primary (1) or secondary (2). Can be changed however this is also automatically changed by Tickets based on a check of server connection"; break;		
-		case "columns": 					return "For message lists the specific columns to show - enables reduction in detail where screen real estate is limited."; break;		
-		case "use_autostat": 				return "Whether to use automatic status updates for responders who send reply messages with specific text in the message. Delimiters for the special text are set in start and end tag."; break;				
-		case "start_tag": 					return "Start delimiter. Text in incoming SMS messages between the start tag and end tag will be used to drive specific responder status changes."; break;		
-		case "end_tag": 					return "The end tag for the special text in SMS incoming messages that delimits the end of the special text. Text between the start tag and this will be used for auto status updates."; break;		
-		default: 							return "No help for '$setting'"; break;	//		default: 						return "No help for '$setting'"; break;	//
+		case "email_server":				return gettext("POP3 server address such as pop.gmail.com. Do not include the http://"); break;
+		case "email_port": 					return gettext("Email server port - normally 110. For gmail use port 995"); break;
+		case "email_protocol": 				return gettext("Leave as default POP3"); break;
+		case "email_addon": 				return gettext("Leave as default 'notls'"); break;
+		case "email_del": 					return gettext("Delete (1) or not delete (0) server emails after download"); break;		
+		case "email_folder": 				return gettext("Leave as default INBOX"); break;
+		case "email_userid": 				return gettext("Your login ID for the email server. Either just 'userid' or sometimes 'userid@domain.com'. This is email provider dependant"); break;
+		case "email_password": 				return gettext("Your email server password"); break;
+		case "email_svr_simple":			return gettext("Email server simple or normal authentication - i.e. does this use SSL and a different port. Most public servers do not use simple authentication. 1 for simple 0 for normal."); break;
+		case "no_whitelist": 				return gettext("Use (0) or not use (1) the whitelist functionality which stops storing of emails from unknown senders"); break;
+		case "smsg_provider": 				return gettext("Shows the current SMS Gateway Provider (only provides name translation in the various screens). Only SMS Responder is currently implemented, please leave with this setting."); break;
+		case "smsg_server":					return gettext("Incoming API page for SMS Gateway provider (the receiving page). Include the http://."); break;
+		case "smsg_server2":				return gettext("If SMS Gateway provider has a backup server this is the address for the receiving page. Include the http://"); break;
+		case "smsg_og_serv1": 				return gettext("Outgoing Primary server API sending page for the SMS Gateway provider. Include the http://"); break;	
+		case "smsg_og_serv2": 				return gettext("Outgoing Secondary server API sendig page for SMS Gateway provider. Include the http://"); break;	
+		case "smsg_force_sec": 				return gettext("Force Tickets to use the backup SMS Gateway server - for use when the primary is still working but maybe slow or otherwise unreliable. If Primary is completely down then Tickets will automate switching to secondary."); break;		
+		case "smsg_orgcode": 				return gettext("SMS Gateway provider primary authorisation - your account name"); break;		
+		case "smsg_apipin": 				return gettext("SMS Gateway provider password / pin for the account name / org code"); break;		
+		case "smsg_mode": 					return gettext("Leave as default - 'SENDXML'"); break;		
+		case "smsg_replyto": 				return gettext("The reply to number for the SMS Gateway provider (primary server) that ensures that replies to SMS Messages end up on the server and thus into Tickets"); break;		
+		case "smsg_replyto": 				return gettext("The reply to number for the SMS Gateway provider (secondary server) that ensures that replies to SMS Messages end up on the server and thus into Tickets"); break;		
+		case "smsg_server_inuse": 			return gettext("Shows what SMS Gateway server is currently in use, primary (1) or secondary (2). Can be changed however this is also automatically changed by Tickets based on a check of server connection"); break;		
+		case "columns": 					return gettext("For message lists the specific columns to show - enables reduction in detail where screen real estate is limited."); break;		
+		case "use_autostat": 				return gettext("Whether to use automatic status updates for responders who send reply messages with specific text in the message. Delimiters for the special text are set in start and end tag."); break;				
+		case "start_tag": 					return gettext("Start delimiter. Text in incoming SMS messages between the start tag and end tag will be used to drive specific responder status changes."); break;		
+		case "end_tag": 					return gettext("The end tag for the special text in SMS incoming messages that delimits the end of the special text. Text between the start tag and this will be used for auto status updates."); break;		
+		default: 							return gettext("No help for '$setting'"); break;	//		default: 						return "No help for '$setting'"; break;	//
 		}
 	}	
 	

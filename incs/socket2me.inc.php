@@ -3,6 +3,7 @@
 5/21/2013 initial release - useage: inside the page <head> "require_once('./incs/socket2me.inc.php');"
 5/27/2013 removed user_id prepend
 6/3/2013 revised js source per AH email
+8/20/2013 - revised to avoid websocket.js include
 */
 
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
@@ -15,11 +16,22 @@ $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 $user_id = (array_key_exists('user_id', $_SESSION)) ? $_SESSION['user_id'] : "";
 //snap (basename(__FILE__), $user_id);
 
+if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) {	// 8/20/2013
 ?>
 	<script src="./js/easyWebSocket.min.js"></script>	<!-- 6/3/2013 -->
+<?php
+	}
+?>
 	<script>
 //	var user_id;				// js global
-
+/**
+ * get_user_id
+ * Insert Description
+ *
+ * JS Function
+ *
+ * @returns {type}
+ */
 	function get_user_id() {									
 		if ( (window.opener) && (window.opener.parent.frames["upper"] ) ) {						// in call board?
 			user_id = window.opener.parent.frames["upper"].$("user_id").innerHTML;
@@ -51,8 +63,16 @@ $user_id = (array_key_exists('user_id', $_SESSION)) ? $_SESSION['user_id'] : "";
 				do_audio();										// invoke audio function in top
 				}				// end mine?
 			}				// end incoming
-
+/**
+ * broadcast
+ * Insert Description
+ *
+ * JS Function
+ * @params {string} theMessage
+ * @returns {type}
+ */
 	    function broadcast(theMessage ) {
+	    	return;
 <?php
 	$do_broadcast = get_variable('broadcast');
 	if (intval ($do_broadcast) == 1) {							// possibly disabled
@@ -64,7 +84,14 @@ $user_id = (array_key_exists('user_id', $_SESSION)) ? $_SESSION['user_id'] : "";
 		}		// end ($do_broadcast) == 1
 ?>		
 	    	}		// end function broadcast
-
+/**
+ * do_audio
+ * Insert Description
+ *
+ * JS Function
+ *
+ * @returns {type}
+ */
 		function do_audio()	{
 			if (typeof(do_audible) == "function") {do_audible();}					// if in top
 			else if ( (window.opener) && ( window.opener.parent.frames["upper"] ) )

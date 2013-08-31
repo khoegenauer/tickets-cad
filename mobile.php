@@ -32,6 +32,7 @@ $units_side_bar_height = .6;		// max height of units sidebar as decimal fraction
 2/27/12 blink logic added
 6/3/2013 reload() made conditional on setting value
 6/10/2013 corrections applied to to_refresh form
+8/30/2013 initialized variables, per Troy Thone email
 */
 
 session_start();	
@@ -57,6 +58,10 @@ if ($istest) {
 	
 $internet = $_SESSION['internet'];	
 require_once('incs/functions_major_nm.inc.php');				// 7/28/10
+
+$assign_id = (array_key_exists('assign_id', $_GET) ) ? $_GET['assign_id'] : "";		// 8/30/2013
+$ticket_id = (array_key_exists('ticket_id', $_GET) ) ? $_GET['ticket_id'] : "";
+
 $patient = get_text("Patient");									// 12/1/10
 
 // 0=>unit, 1=>my calls, 2=> all calls - 9/3/10 

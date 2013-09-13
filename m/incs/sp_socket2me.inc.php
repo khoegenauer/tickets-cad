@@ -8,54 +8,46 @@
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
 error_reporting (E_ALL  ^ E_DEPRECATED);
 
-require_once('functions.inc.php');
 $host  = $_SERVER['HTTP_HOST'];
 $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 @session_start();
-$user_id = (array_key_exists('user_id', $_SESSION)) ? $_SESSION['user_id'] : "";
-//snap (basename(__FILE__), $user_id);
+$user_id = ( ( array_key_exists ( 'SP' , $_SESSION ) ) && (array_key_exists('user_id', $_SESSION['SP'] ) ) )? $_SESSION['SP']['user_id'] : "";
+
+if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) {	// 8/20/2013
 
 ?>
-	<script src="./js/easyWebSocket.min.js"></script>	<!-- 6/3/2013 -->
-	<script>
-//	var user_id;				// js global
+	<script src="easyWebSocket.min.js"></script>	<!-- 6/3/2013 -->
+	<script>		// 8/10/2013
+
+	var socket = new EasyWebSocket('ws://<?php echo "{$host}{$uri}"?>/');		// instantiate
 
 	function get_user_id() {
-		return '<?php echo $_SESSION['user'];?>';
-		}				// end function get_user_id()
-	
-	    var socket = new EasyWebSocket('ws://<?php echo "{$host}{$uri}"?>/');		// instantiate
+		return parent.frames['top'].$("the_user").innerHTML;
+		}				// end function get_user_id()	
 	    
-	    socket.onmessage = function(event) {					// on incoming
-	    	var ourArr = event.data.split("/");
-	    	var temp = get_user_id();
-	    	if (ourArr[0] != temp ) {							// is this mine?
-	    		var payload = ourArr.slice(1);					// no, drop user_id segment before showing it
-	    		payload = payload.join ("/");					// array back to string
+	 socket.onmessage = function(event) {					// on incoming
+	 	var ourArr = event.data.split("/");
+	 	var temp = get_user_id();
+	 	if (ourArr[0] != temp ) {							// is this mine?
+	 		var payload = ourArr.slice(1);					// no, drop user_id segment before showing it
+	 		payload = payload.join ("/");					// array back to string
 
-				if ( (window.opener) && (window.opener.parent.frames["upper"] ) ) 			// in call board?
-					{ window.opener.parent.frames["upper"].show_has_message(payload); }	// call the function() there
-				else {
-					if ( parent.frames["upper"])	{ parent.frames["upper"].show_has_message(payload); }						
-					else						{ show_has_message(payload); }
-					}		// end else		
+			if ( (window.opener) && (window.opener.parent.frames["upper"] ) ) 			// in call board?
+				{ window.opener.parent.frames["upper"].show_has_message(payload); }	// call the function() there
+			else {
+				if ( parent.frames["upper"])	{ parent.frames["upper"].show_has_message(payload); }						
+				else						{ show_has_message(payload); }
+				}		// end else		
 
-				do_audio();										// invoke audio function in top
-				}				// end mine?
-			}				// end incoming
+			do_audio();										// invoke audio function in top
+			}				// end mine?
+		}				// end incoming
 
-	    function broadcast(theMessage ) {
-<?php
-	$do_broadcast = get_variable('broadcast');
-	if (intval ($do_broadcast) == 1) {							// possibly disabled
-?>
+	function broadcast( theMessage ) {
 	    	var temp = get_user_id();
 			var outStr = temp + "/" + theMessage;
-	    	socket.send(outStr);
-<?php
-		}		// end ($do_broadcast) == 1
-?>		
-	    	}		// end function broadcast
+	    	socket.send(outStr);		
+	    	}		// end function broadcast ()
 
 		function do_audio()	{
 			if (typeof(do_audible) == "function") {do_audible();}					// if in top
@@ -64,3 +56,6 @@ $user_id = (array_key_exists('user_id', $_SESSION)) ? $_SESSION['user_id'] : "";
 			else	{ parent.frames["upper"].do_audible();	}						// if in board 
 			}		// end function do_audio()
 	</script>
+<?php
+	}
+?>	

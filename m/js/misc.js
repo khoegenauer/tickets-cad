@@ -237,6 +237,7 @@ function do_unload () {
 		if (navigator.geolocation) {
 			unit_id = unit_id_val;
 			var array_pos = navigator.geolocation.getCurrentPosition(reportCurrentPosition);	// note callback
+			return array_pos;
 			}
 		else { return false; } 
 		}				// end function get Location() 

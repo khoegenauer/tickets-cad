@@ -9,10 +9,10 @@ require_once('../incs/functions.inc.php');		//7/28/10
 require_once('incs/sp_functions.inc.php');		// 4/8/2013 
 
 @session_start();
-if (empty($_SESSION)) {
+if (! array_key_exists('SP', $_SESSION)) {
 	header("Location: index.php");
 	}
-$me = $_SESSION['user_unit_id'] ;		// possibly empty
+$me = $_SESSION['SP']['user_unit_id'] ;		// possibly empty
 ?>
 <!DOCTYPE html> 
 <html lang="en"> 
@@ -78,11 +78,12 @@ $me = $_SESSION['user_unit_id'] ;		// possibly empty
 	</script>
 <?php
 if (intval(get_variable('broadcast'))==1) {	
-	require_once('./incs/sp_socket2me.inc.php');		//6/27/2013 
+//	require_once('./incs/sp_socket2me.inc.php');		//6/27/2013 
 	}
 ?>		
 	</head>
-	<body><center>
+	<body>				<!-- <?php echo __LINE__; ?> -->	
+	<center>
 <?php
 	require_once('incs/header.php');	
  	$act_id_array = explode (",", $_POST['act_id_str']);
@@ -90,14 +91,14 @@ if (intval(get_variable('broadcast'))==1) {
 	$rarrow = (intval($_POST['act_id']) == count ($act_id_array) -1 )? 	"" : "&nbsp;&raquo;" ;	// suppress right-pointer if at end
 ?>
 		<div style='float:left; '>
-			<div id = "left-side" onclick = 'actnavBack();' style = "position:fixed; left: 50px; top:125px; margin-left:100px; font-size: 4.0em; opacity:0.50;"><?php echo $larrow; ?></div>
+			<div id = "left-side" onclick = 'actnavBack();' style = "position:fixed; left: 0px; top:125px; margin-left:10px; font-size: 4.0em; opacity:0.50;"><?php echo $larrow; ?></div>
 		</div>
 		<div style='float:right; '>
 			<div id = "right-side" onclick = 'actnavFwd ();' style = "position:fixed; right: 25px; top:125px;font-size: 4.0em; opacity:0.5;"><?php echo $rarrow; ?></div>
 		</div>
 <?php	
-		$div_height = $_SESSION['scr_height'] - 120;								// nav bars				
-		$div_width = floor($_SESSION['scr_width'] * .6) ;							// allow for nav arrows		
+		$div_height = $_SESSION['SP']['scr_height'] - 120;								// nav bars				
+		$div_width = floor($_SESSION['SP']['scr_width'] * .6) ;							// allow for nav arrows		
 		echo "<center><div style = 'height:{$div_height}px; width:auto; overflow: auto; width:{$div_width}px;'><br />";
 		
 		$act_id_array = explode (",", $_POST['act_id_str']);
@@ -146,7 +147,7 @@ if (intval(get_variable('broadcast'))==1) {
 		$row = stripslashes_deep(mysql_fetch_array($result)) ;
 	
 		$hides = array("action_type");								// hide these columns
-		echo "<table border=1>\n";
+		echo "\n<table border=1>\n";
 		for ($i=0; $i< mysql_num_fields($result); $i++) {						// each field
 			if (!(substr(mysql_field_name($result, $i ), 0, 1) == "_")) {  		// meta-data?			
 				if ( ! ( empty($row[$i] ) ) ) {			
@@ -168,7 +169,7 @@ if (intval(get_variable('broadcast'))==1) {
 							$the_onclick_str .= "document.navForm.submit();";
 							echo "<tr onclick = '{$the_onclick_str}'><td>{$fn}:</td>
 								<td><span>{$row[$i]}</span> 
-									<span style = 'margin-left:20px; font-weight:bold;'><img src = './images/go-next.png'/></span></td>
+									<span style = 'margin-left:20px; font-weight:bold;'><img src = './images/go-right.png'/></span></td>
 								</tr>\n";
 							break;
 

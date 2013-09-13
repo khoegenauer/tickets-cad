@@ -7,12 +7,75 @@ if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09
 error_reporting (E_ALL	^ E_DEPRECATED);
 require_once('../incs/functions.inc.php');		// 7/28/10
 require_once('incs/sp_functions.inc.php');		// 4/8/2013 
+	function get_single ($the_id) {
+		return "SELECT 
+			CONCAT_WS(' / ',`scope`,`y`.`type`) 		AS `incident/type`,
+			CONCAT('*', `severity` ) 					AS `severity` , 
+			CONCAT_WS(' ',`street`,`city`, `state`) 	AS `location`,
+			`y`.`protocol`								AS `response protocol`, 
+			`t`.`id`  									AS `responding`,
+			`t`.`description`							AS `synopsis` ,
+			`t`.`comments`								AS `disposition` ,
+			`t`.`problemstart`							AS `problem_start` ,
+			`status`, 
+			`t`.`scope`									AS `close incident` ,
+			(SELECT COUNT( * )
+					FROM `$GLOBALS[mysql_prefix]action`
+					WHERE `$GLOBALS[mysql_prefix]action`.`ticket_id` = `t`.`id`
+					) AS `actions`,						
+			(SELECT COUNT( * )
+					FROM `$GLOBALS[mysql_prefix]patient`
+					WHERE `$GLOBALS[mysql_prefix]patient`.`ticket_id` = `t`.`id`
+					) AS `patients`,
+			1											AS `map`,
+			`booked_date`								AS `scheduled`,
+			`t`.`updated` 								AS `as of`
+			FROM `$GLOBALS[mysql_prefix]ticket` `t` 
+			LEFT JOIN `$GLOBALS[mysql_prefix]in_types` `y` ON (`t`.`in_types_id` = `y`.`id`)
+			WHERE (`t`.`id` = {$the_id})
+			LIMIT 1	";
+		}			// end function
+
+	function get_list_sql () {
+		$hide_limit = intval ( get_variable('hide_booked') );		// 5/26/2013
+		return "SELECT `t`.`id`,
+				CONCAT_WS(' ',`street`,`city`) 					AS `addr`, 
+				`severity` , 
+				SUBSTRING(CAST(`problemstart` AS CHAR),9,8 ) 	AS `problem_start`,
+				`status` 										AS `tick_status`, 
+				`lat`, 
+				`lng`, 
+				`scope` ,
+				`t`.`description` 								AS `description` ,
+				 `comments` ,
+				(SELECT COUNT( * )
+					FROM `$GLOBALS[mysql_prefix]assigns`
+					WHERE (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`
+					AND `clear` IS NULL
+					OR DATE_FORMAT( `clear` , '%y' ) = '00')
+					) 											AS `u`, 
+					( SELECT COUNT( * )
+						FROM `$GLOBALS[mysql_prefix]action`
+						WHERE `$GLOBALS[mysql_prefix]action`.`ticket_id` = `t`.`id`
+						) 										AS `a`,
+					( SELECT COUNT( * )
+						FROM `$GLOBALS[mysql_prefix]patient`
+						WHERE `$GLOBALS[mysql_prefix]patient`.`ticket_id` = `t`.`id`
+						) AS `p`,
+				`booked_date`									AS `scheduled`,
+				SUBSTRING(CAST(`updated` AS CHAR),9,8 ) 		AS `as of`				
+				FROM `$GLOBALS[mysql_prefix]ticket` `t` 
+				WHERE ( (`t`.`status`='{$GLOBALS['STATUS_OPEN']}') 
+					OR ( (`t`.`status`='{$GLOBALS['STATUS_SCHEDULED']}') AND 
+					(`booked_date` <=  (NOW() + INTERVAL {$hide_limit} HOUR) ) ) )  
+				ORDER BY `severity` DESC, `problemstart` ASC";
+				}		// end function
 
 @session_start();
-if (empty($_SESSION)) {
+if (! array_key_exists('SP', $_SESSION)) {
 	header("Location: index.php");
 	}
-$me = $_SESSION['user_unit_id'] ;				// possibly empty
+$me = $_SESSION['SP']['user_unit_id'] ;				// possibly empty
 ?>
 <!DOCTYPE html> 
 <html lang="en"> 
@@ -20,7 +83,8 @@ $me = $_SESSION['user_unit_id'] ;				// possibly empty
 	<meta charset="utf-8" />
 	<title>Tickets SP <?php echo get_text("Incidents");?></title>
 	<link rel="stylesheet"  type="text/css" href="./css_default.php?rand=<?php echo time();?>" />
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1">-->
+	<meta name="viewport" content="width=device-width, user-scalable=no">
 	<script src="./js/misc.js" type="text/javascript"></script> 
 
 <?php
@@ -41,89 +105,125 @@ $me = $_SESSION['user_unit_id'] ;				// possibly empty
 		 	}				// end while ($in_row ... )	
 		}				// end if isset ($_POST['ticket_id'])
 
-	if ( ( isset($_POST['id'] ) ) && (  strlen ( $_POST['id'] ) > 0 ) ) {		// ====================================================
-																		/*	show the one record	 */
+	if ( ( isset($_POST['id'] ) ) && (  strlen ( $_POST['id'] ) > 0 ) ) {		
+
+ 	/*	=================		SHOW THE ONE RECORD		=================	*/
+ 	
 		$id_array = explode (",", $_POST['id_str']);
 		$the_id = $id_array[intval($_POST['id'])];		// nth entry is record id
+		
+		function get_sidelinks () {		// returns 2-element array of strings
+			global $id_array;
+			$out_arr = array("", "");
+			if ( $_POST['id'] > 0 ) {		// if not at array origin then a prior one exists
+//				$query = "SELECT CONCAT_WS(' / ',`scope`,`y`.`type`)  AS `left_one`	FROM `$GLOBALS[mysql_prefix]responder` 
+//					WHERE `id` = {$id_array[($_POST['id']-1)]} LIMIT 1";
+
+				$query = "SELECT CONCAT_WS(' / ',`scope`,`y`.`type`)  AS `left_one`	
+					FROM `$GLOBALS[mysql_prefix]ticket` `t`
+					LEFT JOIN `$GLOBALS[mysql_prefix]in_types` `y` ON (`y`.`id` = `t`.`in_types_id`)
+					WHERE `t`.`id` = {$id_array[($_POST['id']-1)]} LIMIT 1";
+
+				$result = mysql_query($query) or do_error($as_query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
+				$in_row = stripslashes_deep(mysql_fetch_array($result));
+				$out_arr[0] = $in_row['left_one'];
+				}
+			if ( $_POST['id'] < count ($id_array)-1 ) {		// then not at end
+//				$query = "SELECT CONCAT_WS(' / ',`scope`,`y`.`type`)  AS `right_one` FROM `$GLOBALS[mysql_prefix]responder` 
+//					WHERE `id` = {$id_array[($_POST['id']+1)]} LIMIT 1";
+
+				$query = "SELECT CONCAT_WS(' / ',`scope`,`y`.`type`)  AS `right_one`	
+					FROM `$GLOBALS[mysql_prefix]ticket` `t`
+					LEFT JOIN `$GLOBALS[mysql_prefix]in_types` `y` ON (`y`.`id` = `t`.`in_types_id`)
+					WHERE `t`.`id` = {$id_array[($_POST['id']+1)]} LIMIT 1";
+
+				$result = mysql_query($query) or do_error($as_query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
+				$in_row = stripslashes_deep(mysql_fetch_array($result));
+				$out_arr[1] = $in_row['right_one'];
+				}
+			return $out_arr;			
+			}
+
+
 ?>
-			<script>
-		    DomReady.ready(function() {
-				var timer = setInterval(function(){getLocation(<?php echo $me;?>)}, (60*1000)) ;		// get position one per minute
-		    	var id_array = document.navForm.id_str.value.split(",");		
-				});
-		
-//			do_set_time("dispatched", {$the_id}, 0)
-			function do_set_time (column, record_id, cell_id, function_id) {		// ajax call to set selected dispatch time
-		
-				function the_callback(req) {
-					document.getElementById(cell_id).innerHTML=req.responseText;
-					CngClass(cell_id, "bright");									// highlight for 2 seconds
-					setTimeout ( function() {  CngClass(cell_id, "plain")}, 3000);
-					}		// end function the_callback()
-		
-				var params = "the_column="+ column + "&record_id=" +record_id + "&function_id=" + function_id;		// 
-				var url = "./ajax/set_disp_times.php";
-		 		sendRequest(url,the_callback, params);		//  issue AJAX request
-		 		}		// end function do set_time
-		
-		</script>
+<script>
+	DomReady.ready(function() {
+		var timer = setInterval(function(){getLocation(<?php echo $me;?>)}, (60*1000)) ;		// get position one per minute
+		var id_array = document.navForm.id_str.value.split(",");		
+		});
+	
+//			 do_set_time("dispatched", {$the_id}, 0)
+	function do_set_time (column, record_id, cell_id, function_id) {		// ajax call to set selected dispatch time
+	
+		function the_callback(req) {
+			document.getElementById(cell_id).innerHTML=req.responseText;
+			CngClass(cell_id, "bright");									// highlight for 2 seconds
+			setTimeout ( function() {  CngClass(cell_id, "plain")}, 3000);
+			}		// end function the_callback()
+	
+		var params = "the_column="+ column + "&record_id=" +record_id + "&function_id=" + function_id;		// 
+		var url = "./ajax/set_disp_times.php";
+		sendRequest(url,the_callback, params);		//  issue AJAX request
+		}		// end function do set_time	
+	function call_map ( ) {
+		document.navForm.action = 'sp_map_spec.php';	// 
+		document.navForm.submit();
+		}	
+	function call_close ( ) {
+		document.navForm.action = 'sp_close_in.php';	// close incident
+		document.navForm.submit();
+		}
+	function call_near ( ) {
+		document.navForm.action = 'sp_map_near.php';	// 
+		document.navForm.submit();
+		}
+
+	function do_resp (the_id) {
+		document.respForm.responder_id.value = the_id;
+		document.respForm.submit();
+		}		// end function do_resp ()
+
+	</script>
 <?php
 if (intval(get_variable('broadcast'))==1) {	
-	require_once('./incs/sp_socket2me.inc.php');		//6/27/2013 
+//	require_once('./incs/sp_socket2me.inc.php');		//6/27/2013 
 	}
 ?>		
 		</head>
-		<body>		
+		<body>		<!-- <?php echo __LINE__; ?> -->
+		
 <?php		
 				
 	require_once('incs/header.php');	
  	$id_array = explode (",", $_POST['id_str']);
- 	$larrow = (intval($_POST['id'] == 0))? "" : "&laquo;&nbsp;" ;	// suppress display if at origin
-	$rarrow = (intval($_POST['id']) == count ($id_array) -1 )? "" : "&nbsp;&raquo;" ;	// suppress display if at end
+	$link_arr = get_sidelinks ();
+		 	
+	$larrow = (intval($_POST['id'] == 0))? "" : "&laquo;&nbsp; <span style = 'font-size: 50%;'>{$link_arr[0]}</span>" ;					// suppress display if at origin
+	$rarrow = (intval($_POST['id']) == count ($id_array) -1 )? "" : "<span style = 'font-size: 50%;'>{$link_arr[1]}</span>&nbsp;&raquo;" ;	// suppress display if at end
+
 ?>
 		<div style='float:left; '>
-			<div id = "left-side" onclick = 'navBack();' style = "position:fixed; left: 50px; top:125px; margin-left:100px; font-size: 4.0em; opacity:0.50;"><?php echo $larrow; ?></div>
+			<div id = "left-side" onclick = 'navBack();' style = "position:fixed; left: 0px; top:125px; margin-left:10px; font-size: 4.0em; opacity:0.50;"><?php echo $larrow; ?></div>
 		</div>
 		<div style='float:right; '>
-			<div id = "right-side" onclick = 'navFwd ();' style = "position:fixed; right: 25px; top:125px;font-size: 4.0em; opacity:0.5;"><?php echo $rarrow; ?></div>
+			<div id = "right-side" onclick = 'navFwd ();' style = "position:fixed; right: 50px; top:125px;font-size: 4.0em; opacity:0.5;"><?php echo $rarrow; ?></div>
 		</div>
 <?php	
 		$the_count =  count ($id_array);
 		echo "\n<br/><br/><center><h2>Selected " . get_text("Incident") . " (of {$the_count} )</h2>\n";
 		
-		$div_height = $_SESSION['scr_height'] - 200;								// nav bars			
-		$div_width = floor($_SESSION['scr_width'] * .6) ;							// allow for nav arrows		
-		echo "\n<div id = 'inner_div' style = 'height:{$div_height}px; width:auto; overflow: auto; width:{$div_width}px;'>";	
+		$div_height = $_SESSION['SP']['scr_height'] - 200;								// nav bars			
+		$div_width = floor($_SESSION['SP']['scr_width'] * .6) ;							// allow for nav arrows		
+		echo "\n<div id = 'inner_div' style =  height:{$div_height}px; width:auto; overflow: auto; width:{$div_width}px;'>";	
 				
 		echo "<table id = 'inner' border=1>\n";
-
-		$query = "SELECT 
-			CONCAT_WS(' / ',`scope`,`y`.`type`) 	AS `incident/type`,
-			CONCAT('*', `severity` ) 					AS `severity` , 
-			CONCAT_WS(' ',`street`,`city`, `state`) 	AS `location`,
-			`y`.`protocol`								AS `response protocol`, 
-			`t`.`id`  									AS `responding`,
-			`t`.`description`							AS `synopsis` ,
-			`t`.`comments`								AS `disposition` ,
-			`t`.`problemstart`							AS `start_str` ,
-			`status`, 
-			`t`.`scope`									AS `close incident` ,
-			(SELECT COUNT( * )
-					FROM `$GLOBALS[mysql_prefix]action`
-					WHERE `$GLOBALS[mysql_prefix]action`.`ticket_id` = `t`.`id`
-					) AS `actions`,						
-			(SELECT COUNT( * )
-					FROM `$GLOBALS[mysql_prefix]patient`
-					WHERE `$GLOBALS[mysql_prefix]patient`.`ticket_id` = `t`.`id`
-					) AS `patients`,
-			`t`.`updated` AS `as of`
-			FROM `$GLOBALS[mysql_prefix]ticket` `t` 
-			LEFT JOIN `$GLOBALS[mysql_prefix]in_types` `y` ON (`t`.`in_types_id` = `y`.`id`)
-			WHERE (`t`.`id` = {$the_id})
-			LIMIT 1	";
-
+/*
+	$hide_limit = get_variable('hide_booked');		// 5/26/2013
+	$query_sched = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `status`='{$GLOBALS['STATUS_SCHEDULED']}' AND `booked_date` >= (NOW() + INTERVAL {$hide_limit} HOUR)";	//	11/29/10
+*/
+		$query = get_single ($the_id) ;
 		$result = mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
-		$hides = array("tick_id", "lat", "lng", "start_str");						// hide these columns
+		$hides = array("tick_id", "lat", "lng", "tick_status");						// hide these columns
 		$row = stripslashes_deep(mysql_fetch_array($result, MYSQL_BOTH)) ;
 		for ($i=0; $i< mysql_num_fields($result); $i++) {						// each field
 			if (!(substr(mysql_field_name($result, $i ), 0, 1) == "_")) {  		// meta-data?
@@ -147,50 +247,70 @@ if (intval(get_variable('broadcast'))==1) {
 
 						case "status":
 							$the_status = get_status_str($row[$i]);
-							$the_diff = my_date_diff ( $row["start_str"], mysql_format_date(now())) ;
+							$the_diff = my_date_diff ( $row["problem_start"], mysql_format_date(now())) ;
 							echo "<tr><td>{$fn}:</td><td>{$the_status} ({$the_diff})</td></tr>\n";		
 							break;
 
 						case "as of":	
-						case "start_str":	
+						case "problem_start":	
 							$datestr = format_date(strval(strtotime($row[$i])));
 							echo "<tr><td>{$fn}:</td><td>{$datestr}</td></tr>\n";
 							break;
 
 						case "synopsis":
 						case "disposition":
-							$the_rand_str = "?rand=" . time();
-							$the_onclick_str = 		"document.navForm.action = \"sp_add_note.php?{$the_rand_str}\";";
-							$the_onclick_str .= 	"document.navForm.ticket.value={$the_id};";
-							$the_onclick_str .= 	"document.navForm.submit();";
-							echo "<tr onclick = '{$the_onclick_str}'><td>{$fn}:</td>
-								<td><span>{$row[$i]}</span>
-									<span style = 'margin-left:20px; font-weight:bold;'><img src = './images/go-next.png'/></span></td>
-								</tr>\n";		
+							if ( ( sp_is_guest() ) || ( sp_is_member() ) ) {		// disallow update
+								echo "<tr><td>{$fn}:</td>";
+								echo "<td>{$row[$i]}</td></tr>\n";
+								}
+							else {							
+								$the_rand_str = "rand=" . time();
+								$the_onclick_str = 		"document.navForm.action = \"sp_add_note.php?{$the_rand_str}\";";
+								$the_onclick_str .= 	"document.navForm.ticket.value={$the_id};";
+								$the_onclick_str .= 	"document.navForm.submit();";
+								echo "<tr onclick = '{$the_onclick_str}'><td>{$fn}:</td>
+									<td><span>{$row[$i]}</span>
+										<span style = 'margin-left:20px; font-weight:bold;'><img src = './images/go-right.png'/></span></td>
+									</tr>\n";		
+								}
 							break;
 
-						case "close incidentZZZ":
-							$the_rand_str = "?rand=" . time();
-							$the_onclick_str = 		"document.navForm.action = \"sp_close_in.php?{$the_rand_str}\";";
-							$the_onclick_str .= 	"document.navForm.ticket.value={$the_id};";
-							$the_onclick_str .= 	"document.navForm.submit();";
-							echo "<tr onclick = '{$the_onclick_str}'><td>{$fn}:</td>
-								<td><span>{$row[$i]}</span>
-									<span style = 'margin-left:20px; font-weight:bold;'><img src = './images/go-next.png'/></span></td>
-								</tr>\n";		
-							break;
 						case "actions":
 						case "patients":
 							$the_status = get_status_str($row[$i]);
-							$the_rand_str = "?rand=" . time();
-							$the_onclick_str = 		"document.navForm.action = \"sp_act.php{$the_rand_str}\";";
+							$the_rand_str = "rand=" . time();
+							$the_onclick_str = 		"document.navForm.action = \"sp_act.php?{$the_rand_str}\";";
 							$the_onclick_str .= 	"document.navForm.submit();";
 							echo "<tr onclick = '{$the_onclick_str}'><td>{$fn}:</td>
 								<td><span>{$row[$i]}</span>
-									<span style = 'margin-left:20px; font-weight:bold;'><img src = './images/go-next.png'/></span></td>
+									<span style = 'margin-left:20px; font-weight:bold;'><img src = './images/go-right.png'/></span></td>
 								</tr>\n";		
 							break;
 
+						case "map":
+							echo "<tr onclick = 'call_map ( ) '><td>{$fn}:</td>";
+							echo "<td><span style = 'margin-left:20px;'><img src = './images/go-right.png'/></span>";
+							echo "</td></tr>\n";
+							break;
+
+						case "close incident":
+							if ( ( sp_is_guest() ) || ( sp_is_member() ) ) {		// disallow
+								echo "<tr><td>{$fn}:</td>";
+								echo "<td>{$row[$i]}</td></tr>\n";
+								}
+							else {
+								echo "<tr onclick = 'call_close ( ) '><td>{$fn}:</td>";
+								echo "<td><span style = 'margin-left:20px;'><img src = './images/go-right.png'/></span>";
+								echo "</td></tr>\n";
+								}
+							break;
+
+/*						case "nearby":
+							echo "<tr onclick = 'call_near ( ) '><td>{$fn}:</td>";
+							echo "<td><span style = 'margin-left:20px;'><img src = './images/go-right.png'/></span>";
+							echo "</td></tr>\n";
+							break;
+*/
 						default: 
 							echo "<tr><td>{$fn}:</td><td>{$row[$i]}</td></tr>\n";
 						};				// end switch ()
@@ -203,33 +323,9 @@ if (intval(get_variable('broadcast'))==1) {
 		$id_array = explode (",", $_POST['id_str']);
 		}
 //	==============================================	MIDDLE	=======================================================		
-else {								// list
-		
-	$query = "SELECT `t`.`id`,
-			CONCAT_WS(' ',`street`,`city`) AS `addr`,
-			 `status`, `lat`, `lng`, `scope` , `t`.`description` AS `description` ,
-			 `severity` , `comments` ,
-			(SELECT COUNT( * )
-				FROM `$GLOBALS[mysql_prefix]assigns`
-				WHERE (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`
-				AND `clear` IS NULL
-				OR DATE_FORMAT( `clear` , '%y' ) = '00')
-				) AS `u`, (
-				SELECT COUNT( * )
-					FROM `$GLOBALS[mysql_prefix]action`
-					WHERE `$GLOBALS[mysql_prefix]action`.`ticket_id` = `t`.`id`
-					) AS `a`,(						
-				SELECT COUNT( * )
-					FROM `$GLOBALS[mysql_prefix]patient`
-					WHERE `$GLOBALS[mysql_prefix]patient`.`ticket_id` = `t`.`id`
-					) AS `p`,
-			SUBSTRING(CAST(`updated` AS CHAR),9,8 ) AS `as of`				
-			FROM `$GLOBALS[mysql_prefix]ticket` `t` 
-			WHERE 	( (`t`.`status`='{$GLOBALS['STATUS_OPEN']}')  
-			OR 		(`t`.`status`='{$GLOBALS['STATUS_SCHEDULED']}') )
-			ORDER BY `severity` DESC, `problemstart` ASC";
-		
-		$result = mysql_query($query) or do_error($as_query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
+else {								// list		
+		$query =  get_list_sql ();
+		$result = mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 		
 		$sep = $_POST['id_str'] = "";
 		while ($in_row = stripslashes_deep(mysql_fetch_array($result))) {		// to comma sep'd string of id's
@@ -242,20 +338,21 @@ else {								// list
 		<script>			
 		    DomReady.ready(function() {
 		    	document.getElementById("fi").style.display = "none";
-				var timer = setInterval(function(){getLocation(<?php echo $_SESSION['user_unit_id'];?>)}, (60*1000)) ;		// get position one per minute
+				var timer = setInterval(function(){getLocation(<?php echo $_SESSION['SP']['user_unit_id'];?>)}, (60*1000)) ;		// get position one per minute
 				});
 		</script>	
 		</head>
-		<body><center>
+		<body>				<!-- <?php echo __LINE__; ?> -->
+		<center>
 <?php
 			require_once('incs/header.php');	
 			
 			if ( mysql_num_rows($result) == 0 ) {
-				echo "<div id = 'list' style = 'text-align:center; margin-top:100px;'>h2>No current " . get_text("Incidents") . "</h2></div>\n";		
+				echo "<div id = 'list' style = 'text-align:center; margin-top:100px;'><h2>No current " . get_text("Incidents") . "</h2></div>\n";		
 				}
 			else {					
-				$hides = array("the_group", "as_of", "assign_id", "id", "lat", "lng");		// hide these columns
-				$top_row = get_text("Incidents") . " - <i>click for details</i>";
+				$hides = array("tick_status", "the_group", "as_of", "assign_id", "id", "lat", "lng");		// hide these columns	tick_status
+				$top_row = get_text("Incidents") . " - <i>click/tap for details</i>";
 				echo "<br/>\n<div id = 'list' >\n";
 				echo sp_show_list($result, $hides, basename(__FILE__) , $top_row) . "\n" ;	
 				echo "<br/><br/>";			// show bottom rows
@@ -268,13 +365,23 @@ else {								// list
 	$idVal = ( array_key_exists("id", $_POST) )? $_POST['id'] : "" ;
 
 ?>
+<form name = "respForm" method = post 	action = "sp_resp.php?rand=<?php echo time();?>">
+<input type = hidden name = "responder_id" 	value = "" />			
+</form>
+
 <form name = "navForm" method = post 	action = "<?php echo basename(__FILE__);?>">
 <input type = hidden name = "id" 			value = "<?php echo $idVal;?>" />			<!-- array index of target record -->
 <input type = hidden name = "id_str" 		value = "<?php echo $_POST['id_str'];?>" />
 <input type = hidden name = "ticket" 		value = "" />
 <input type = hidden name = "act_id" 		value = "" />				<!-- secondary navigation -->
 <input type = hidden name = "act_id_str" 	value = "" />				<!-- 		 "			  -->
+<input type = hidden name = "group" 		value = "<?php echo $GLOBALS['TABLE_TICKET'];?>" />
 </form>
+
+<form name = "tickForm" method = post 	action = "sp_tick.php?rand=<?php echo time();?>">
+<input type = hidden name = "ticket_id" 	value = "" />			
+</form>
+
 <script>
 	function navTo (url, id) {
 		var ts = Math.round((new Date()).getTime() / 1000);

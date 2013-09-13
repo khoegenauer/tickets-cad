@@ -6,20 +6,28 @@
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		
 error_reporting ( E_ALL ^ E_DEPRECATED );
 
+error_reporting(0);
+
 require_once('../../incs/functions.inc.php');
 require_once('../incs/sp_functions.inc.php');
+@session_start();	
 
+/*
 $GLOBALS['TABLE_TICKET'] 	= 0;	
 $GLOBALS['TABLE_RESPONDER'] = 1;
 $GLOBALS['TABLE_FACILITY']  = 2;
 $GLOBALS['TABLE_ASSIGN']   	= 3;
 $GLOBALS['TABLE_ROAD']   	= 4;
-
+$GLOBALS['TABLE_CLOSED']   	= 5;
+*/
 extract ($_POST);
-$the_id = intval($_POST['record_id']);
+
+
+$the_id = intval ($_POST['record_id']);
 switch ($table_id) {
 
     case $GLOBALS['TABLE_TICKET']:
+	case $GLOBALS['TABLE_CLOSED']:
 		$query = get_tick_sql ($the_id);
 		
 		$result = mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
@@ -28,9 +36,10 @@ switch ($table_id) {
 			}
 		else {
 			$row = stripslashes_deep(mysql_fetch_array($result)) ;
-			$hides = array("status", "tick_id", "lat", "lng", "_by", "in_types_id", "group", "id", "set_severity", "sort", "color" , "date", "street", "city", "state");		// hide these columns
-			echo "\n<center><h2>" . get_text("Incident") . " " . "{$row['incident/type']} </h2>\n";
-			$ret_str =  "<table border=0>";
+			$hides = array("status", "lat", "lng", "_by", "in_types_id", "group", "id", "set_severity", "sort", "color" , "date", "street", "city", "state", "map", "nearby");		// hide these columns
+			$the_status = get_status_str($row['status']);
+			echo "\n<center><h2>{$the_status} ". get_text("Incident") . ": " . "{$row['incident/type']} </h2>\n";
+			$ret_str =  "<table border=0 width=200px;>";
 			for ($i=0; $i< mysql_num_fields($result); $i++) {				// each field
 				if (!in_array(mysql_field_name($result, $i), $hides)) {		// filter hides ?	
 					if ( ! ( empty($row[$i] ) ) ) {
@@ -74,32 +83,76 @@ switch ($table_id) {
 		break;
 		
     case $GLOBALS['TABLE_RESPONDER']:
+//			unit_status    
 		$query = get_resp_sql ($the_id);		
+//		snap ( __LINE__, $query);
+
 		$result = mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 		if ( ! (mysql_num_rows ( $result ) ) == 1 ) {
 			report_error ( basename(__FILE__) . __LINE__);
 			}
 		else {
 			$row = stripslashes_deep(mysql_fetch_array($result)) ;
-			echo "\n<center><h2>" . get_text("Responder") ." " . "{$row['handle']}</h2>\n";	
-			$hides = array("description", "un_status_id", "lat", "lng", "icon_str", "hide", "group", "bg_color", "text_color", "icon", "user_id", "type", "id", "sort", "_on", "_from", "_by");
+			$unit_text = get_text("Units");	
+			echo "\n<center><h2>" . get_text("Responder") ." " . "{$row[$unit_text]}</h2>\n";	
+			$hides = array("id","description", "un_status_id", "lat", "lng", "icon_str", "hide", "group", "bg_color", "text_color", "icon", "user_id", "type", "sort", "_on", "_from", "_by", "map", "callsign");
 		
 			$ret_str = "<table border=0>";
 			for ($i=0; $i< mysql_num_fields($result); $i++) {					// each field
 				if (!in_array(mysql_field_name($result, $i), $hides) ) {		// filter hides 	
 					if ( ! (empty(  $row[$i]) ) ) {
-						$fn = get_text ( ucfirst(mysql_field_name($result, $i ) ) );
+						$fn = do_colname ( get_text ( ucfirst(mysql_field_name($result, $i ) ) ) );
 						switch ( strtolower ( mysql_field_name($result, $i) ) ) {
-							case "mobile" :
+
+							case "unit_status":
+								$temp = get_unit_status ($the_id);
+								switch ( count ($temp) ) {
+									case 1 :	$unit_status = $temp[0];					break;
+									case 2 :	$unit_status =  "<b>{$temp[0]}</b> (<i>{$temp[1]}</i>)";	break;
+									default:	$unit_status =  "error " . __LINE__;
+									}		// end switch()									
+								$ret_str .= "<tr><td>{$fn}:</td><td>{$unit_status}</td></tr>\n";
+								break;
+
+
+							case "nearby" :
 							case "aprs" :
 							case "instamapper" :
 							case "open gts" :
 							case "locatea" :
 							case "g tracker" :
 							case "t tracker" :
-							case "latitude" :
-								$ret_str .= "<tr><td>{$fn}:</td><td>Yes</td></tr>\n";
+							case "g latitude" :
+								$callsign = $row['callsign'];
+								$ret_str .= "";
 								break;	
+
+							case "mobile":
+								$temp = get_tracking_type ($row);
+								$mobile_str =  ( is_null( $temp ) ) ? "" : $temp[0] . " (<i>" . get_mobile_time ($row). "</i>)" ;
+								$ret_str .= "<tr><td>{$fn}:</td><td>{$mobile_str}</td></tr>\n";						
+								break;
+
+							case "as of":
+								$datestr = format_date(strval(strtotime($row[$i])));
+								$ret_str .= "<tr><td>{$fn}:</td><td>{$datestr}</td></tr>\n";
+								break;
+
+							case "contact via":
+								if (is_email($row[$i]) ) {							
+									$onclick_str = "onclick = \"do_mail ('{$row[$i]}')\"";		// address string
+									$ret_str .= "<tr {$onclick_str}><td>{$fn}:</td><td>{$row[$i]} <img style = 'margin-left:32px;' src = './images/go-right.png'/></td></tr>\n";
+									}
+								else {
+									$ret_str .= "<tr><td>{$fn}:</td><td>{$row[$i]}</td></tr>\n";
+									}								
+								break;
+
+							case "dist":
+								$measure =  ( trim(get_variable("locale") ) == 0 ) ? "mi" : "km";
+								$ret_str .= "<tr><td>{$fn}:</td><td>{$row[$i]} {$measure}</td></tr>\n";
+								break;
+
 							default: 						
 								$ret_str .= "<tr><td>{$fn}:</td><td>{$row[$i]}</td></tr>\n";
 							}				// end switch
@@ -120,7 +173,7 @@ switch ($table_id) {
 			}
 		else {			
 			$row = stripslashes_deep(mysql_fetch_array($result)) ;
-			$hides = array("tick_id", "lat", "lng", "_by", "_from", "_on", "id" );						// hide these columns
+			$hides = array("lat", "lng", "type", "icon", "id", "_by", "_from", "_on", "user" , "map" );			// hide these columns
 			echo "\n<center><h2>" . get_text("Facility") ." " . "{$row['facility']}</h2>\n";
 			
 			$ret_str = "<table border=0>";
@@ -129,7 +182,14 @@ switch ($table_id) {
 				if (!in_array(mysql_field_name($result, $i), $hides)) {		// filter hides ?	
 					if ( ! (empty($row[$i]) ) ) {
 						$fn = get_text(ucfirst(mysql_field_name($result, $i)));
-						$ret_str .= "<tr><td>{$fn}:</td><td>{$row[$i]}</td></tr>\n";
+						switch ( strtolower ( mysql_field_name($result, $i) ) ) {
+							case "as of":
+								$datestr = format_date(strval(strtotime($row[$i])));
+								$ret_str .= "<tr><td>{$fn}:</td><td>{$datestr}</td></tr>\n";
+								break;
+							default: 						
+								$ret_str .= "<tr><td>{$fn}:</td><td>{$row[$i]}</td></tr>\n";
+							}				// end switch
 						}
 					}
 				}

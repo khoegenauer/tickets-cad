@@ -8,10 +8,10 @@ error_reporting (E_ALL	^ E_DEPRECATED);
 require_once('../incs/functions.inc.php');
 require_once('incs/sp_functions.inc.php');
 @session_start();
-if (empty($_SESSION)) {
+if (! array_key_exists('SP', $_SESSION)) {
 	header("Location: index.php");
 	}
-$me = $_SESSION['user_unit_id'] ;				// possibly empty
+$me = $_SESSION['SP']['user_unit_id'] ;				// possibly empty
 ?>
 <!DOCTYPE html> 
 <html lang="en"> 
@@ -23,7 +23,7 @@ $me = $_SESSION['user_unit_id'] ;				// possibly empty
 	<script src="./js/misc.js" type="text/javascript"></script> 
 <?php
 if (intval(get_variable('broadcast'))==1) {	
-	require_once('./incs/sp_socket2me.inc.php');		//6/27/2013 
+//	require_once('./incs/sp_socket2me.inc.php');		//6/27/2013 
 	}
 
 if ( ! ( array_key_exists ( "update", $_POST ) ) ) { 	// ========================	TOP	==========================
@@ -74,10 +74,8 @@ blockquote {
 		echo "\n<blockquote>{$row['comments']}</blockquote> <br/>";
 		$addl = "additional";
 		}
+$disabled = ( ( sp_is_guest() ) || ( sp_is_member() ) ) ? "disabled" : "" ;		// 
 ?>
-<H4>Enter <?php echo $addl;?> note text</H4>
-<FORM name='frm_note' METHOD='post' ACTION = '<?php echo basename(__FILE__);?>?rand=<?php echo time();?>'>
-<TEXTAREA name='frm_text' COLS=40 ROWS = 2 placeholder="here ..."></TEXTAREA>
 <script>
 	function set_signal(inval) {
 		var temp_ary = inval.split("|", 2);		// inserted separator
@@ -85,10 +83,20 @@ blockquote {
 		document.frm_note.frm_text.focus();		
 		}		// end function set_signal()
 </script>
-
-<B>Signal</B> &raquo; 
-<SELECT name='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
-<OPTION value=0 SELECTED>Select</OPTION>
+<FORM name='frm_note' METHOD='post' ACTION = '<?php echo basename(__FILE__);?>?rand=<?php echo time();?>'>
+<table border = 0>
+<tr><td colspan = 2 align = center>
+	<H4>Enter <?php echo $addl;?> note text</H4>
+	</td></tr>
+	<tr><td><td>
+	<TEXTAREA name='frm_text' COLS=40 ROWS = 2 placeholder="here ..." <?php echo $disabled;?>></TEXTAREA>
+	</td></tr>
+<tr valign = 'baseline'><td>	
+	<br/>
+	<B>Signal</B> &raquo; 
+	</td><td>
+		<SELECT name='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;' <?php echo $disabled;?>>	<!--  11/17/10 -->
+		<OPTION value=0 SELECTED>Select</OPTION>
 <?php											// signals list
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -97,13 +105,17 @@ blockquote {
 					}
 ?>
 			</SELECT><BR />
-
-<B>Apply to</B>&nbsp;&raquo;&nbsp;
-Description &raquo; <input type = 'radio' name='frm_add_to' value='0' CHECKED />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<?php echo get_text("Disposition"); ?>&raquo; <input type = 'radio' name='frm_add_to' value='1' /><BR />
-<input type = 'button' value = 'Cancel' 	onClick = 'navTo ("sp_tick.php", <?php echo $_POST['id'];?>)' />&nbsp;&nbsp;&nbsp;&nbsp;
-<input type = 'button' value = 'Reset' 		onClick = 'this.form.reset()' />&nbsp;&nbsp;&nbsp;&nbsp;
-<input type = 'button' value = 'Next' 		onClick = 'validate()' />
+</td></tr>
+<tr><td colspan=2 align='center'>
+	<B>Apply to</B>&nbsp;&raquo;&nbsp;
+		<?php echo get_text("Description"); ?>	 &raquo; <input type = 'radio' name='frm_add_to' value='0' CHECKED <?php echo $disabled;?> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<?php echo get_text("Disposition"); ?>&raquo; <input type = 'radio' name='frm_add_to' value='1' <?php echo $disabled;?>/><br/><br/>
+	</td></tr>
+	<tr><td colspan = 2 align = 'center'>
+		<input type = 'button' value = 'Cancel' 	onClick = 'navTo ("sp_tick.php", <?php echo $_POST['id'];?>)' />&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type = 'button' value = 'Reset' 		onClick = 'this.form.reset()' <?php echo $disabled;?>/>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type = 'button' value = 'Next' 		onClick = 'validate()' <?php echo $disabled;?>/>
+	</td></tr></table>		
 
 <input type = hidden name = 'update' 		value='1' />									<!-- signifies 'do update' -->
 <input type = hidden name = "id" 			value = "<?php echo $_POST['id'];?>" />			<!-- array index of target record -->
@@ -111,6 +123,7 @@ Description &raquo; <input type = 'radio' name='frm_add_to' value='0' CHECKED />
 <input type = hidden name = "ticket" 		value = "<?php echo $_POST['ticket'];?>" />
 <input type = hidden name = "act_id" 		value = "" />				<!-- secondary navigation -->
 <input type = hidden name = "act_id_str" 	value = "" />				<!-- 		 "			  -->
+<input type = hidden name = "group" 		value = "<?php echo $GLOBALS['TABLE_TICKET'];?>" />
 </form>
 
 <form name = "navForm" method = post 	action = "<?php echo basename(__FILE__);?>">
@@ -119,6 +132,7 @@ Description &raquo; <input type = 'radio' name='frm_add_to' value='0' CHECKED />
 <input type = hidden name = "ticket" 		value = "<?php echo $_POST['ticket'];?>" />
 <input type = hidden name = "act_id" 		value = "" />				<!-- secondary navigation -->
 <input type = hidden name = "act_id_str" 	value = "" />				<!-- 		 "			  -->
+<input type = hidden name = "group" 		value = "<?php echo $GLOBALS['TABLE_TICKET'];?>" />
 </form>
 <script>
 	function navTo (url, id) {
@@ -137,7 +151,7 @@ Description &raquo; <input type = 'radio' name='frm_add_to' value='0' CHECKED />
 			
 		@session_start();		
 		$the_date = format_date(strval(now()));
-		$the_text = quote_smart ("[{$_SESSION['user']}:{$the_date}]" . addslashes ( strip_tags ( trim ( $_POST['frm_text'] ) ) ) . "\n");;	
+		$the_text = quote_smart ("[{$_SESSION['SP']['user']}:{$the_date}]" . addslashes ( strip_tags ( trim ( $_POST['frm_text'] ) ) ) . "\n");;	
 	
 		$query = "UPDATE `$GLOBALS[mysql_prefix]ticket` SET `{$field_name[$_POST['frm_add_to']]}`=  		
 			concat ( `{$field_name[$_POST['frm_add_to']]}` , {$the_text} ) 
@@ -159,6 +173,7 @@ Description &raquo; <input type = 'radio' name='frm_add_to' value='0' CHECKED />
 <input type = hidden name = "ticket" 		value = "<?php echo $_POST['ticket'];?>" />
 <input type = hidden name = "act_id" 		value = "" />				<!-- secondary navigation -->
 <input type = hidden name = "act_id_str" 	value = "" />				<!-- 		 "			  -->
+<input type = hidden name = "group" 		value = "<?php echo $GLOBALS['TABLE_TICKET'];?>" />
 </form>
 <?php
 		unset($result);

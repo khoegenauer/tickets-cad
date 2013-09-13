@@ -1,0 +1,23 @@
+.leaflet-marker-icon-wrapper {
+	position: absolute
+}
+
+.leaflet-marker-iconlabel {
+	background: transparent;
+	color: #000;
+	-moz-border-radius: 7px; 
+	-webkit-border-radius: 7px;
+	border-radius: 7px;
+	-moz-box-shadow: 0 3px 10px #888;
+	 -webkit-box-shadow: 0 3px 14px #999;
+	box-shadow: 0 3px 10px #888;
+	display: block;
+	font: 1.2em  Arial, "Helvetica Neue", Helvetica, sans-serif;
+	font-weight:700;
+	padding: 4px 1px;
+	-ms-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	white-space: nowrap;
+}

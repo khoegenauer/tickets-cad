@@ -136,11 +136,11 @@
 
 		var overlays = {
 			"Me" : 				me,
-			"Units (1)": 				units,
-			"Incidents (1)": 			incidents,
-			"Nearby (1)": 			nearby,
-			"RoadInfo (1)": 			roadinfo,
-			"Facilities (1)": 		facilities
+			"Units (1)": 		units,
+			"Incidents (1)": 	incidents,
+			"Nearby (1)": 		nearby,
+			"RoadInfo (1)": 	roadinfo,
+			"Facilities (1)": 	facilities
 			};
 
 		function onMapClick(e) {

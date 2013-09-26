@@ -281,7 +281,7 @@ else {
 <?php
 			require_once('incs/header.php');	
 			if ( mysql_num_rows($result) == 0 ) {
-				echo "<div style = 'text-align:center; margin-top:100px;'><h2>No " . get_text("Responders") . " in database</h2></div>\n";		
+				echo "<div style = 'text-align:center; margin-top:200px;'><h2>No " . get_text("Responders") . " in database</h2></div>\n";		
 				}
 			else {
 //				$hides = array("the_group", "as_of", "assign_id", "id", "lat", "lng");		// hide these columns
@@ -313,6 +313,25 @@ else {
 		document.navForm.id.value = (id == null)? "": id;
 		document.navForm.submit();
 		}				// end function navTo ()
+
+//	EventSource's response has a MIME type ("text/html") that is not "text/event-stream". Aborting the connection.
+
+
+var evtSource = new EventSource("db_monitor.php");
+source.addEventListener('open', function(event) {
+	alert('Connection  opened');
+	updateConnectionStatus('Connected', true);
+	}, false);
+
+
+evtSource.onmessage = function(e) {
+	alert ("message: " + e.data);
+	}
+	
+evtSource.onerror = function(e) {
+	alert("EventSource failed@326.");
+	};	
+
 </script>
 </body>
 </html>

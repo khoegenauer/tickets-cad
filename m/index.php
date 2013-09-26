@@ -16,9 +16,9 @@ xhr.abort();    // aborting the request
 ?>
 <!DOCTYPE html>
 <html>
-<frameset rows="0, *">
-	<frame src="location.php?rand=<?php echo time();?>" 	name="top" 	frameborder="0" border="0" framespacing="0" noresize="noresize" style="margin-top:0px;">
-	<frame src="login.php?rand=<?php echo time();?>" 		name="main" frameborder="0" border="0" framespacing="0" noresize="noresize" style="margin-top:0px;">
+<frameset rows=" 0, *">
+	<frame src="location.php?rand=<?php echo time();?>" 	name="top"		frameborder="0" border="0" framespacing="0" noresize="noresize" style="margin-top:0px;">
+	<frame src="login.php?rand=<?php echo time();?>" 		name="main"		frameborder="0" border="0" framespacing="0" noresize="noresize" style="margin-top:0px;">
     <noframes>
 	<b>A browser with frames capability is required for this application</b>
 	</noframes>

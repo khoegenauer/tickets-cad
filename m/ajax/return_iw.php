@@ -12,14 +12,6 @@ require_once('../../incs/functions.inc.php');
 require_once('../incs/sp_functions.inc.php');
 @session_start();	
 
-/*
-$GLOBALS['TABLE_TICKET'] 	= 0;	
-$GLOBALS['TABLE_RESPONDER'] = 1;
-$GLOBALS['TABLE_FACILITY']  = 2;
-$GLOBALS['TABLE_ASSIGN']   	= 3;
-$GLOBALS['TABLE_ROAD']   	= 4;
-$GLOBALS['TABLE_CLOSED']   	= 5;
-*/
 extract ($_POST);
 
 
@@ -39,7 +31,7 @@ switch ($table_id) {
 			$hides = array("status", "lat", "lng", "_by", "in_types_id", "group", "id", "set_severity", "sort", "color" , "date", "street", "city", "state", "map", "nearby");		// hide these columns
 			$the_status = get_status_str($row['status']);
 			echo "\n<center><h2>{$the_status} ". get_text("Incident") . ": " . "{$row['incident/type']} </h2>\n";
-			$ret_str =  "<table border=0 width=200px;>";
+			$ret_str =  "<table id='infowin' border=0>";
 			for ($i=0; $i< mysql_num_fields($result); $i++) {				// each field
 				if (!in_array(mysql_field_name($result, $i), $hides)) {		// filter hides ?	
 					if ( ! ( empty($row[$i] ) ) ) {
@@ -97,7 +89,7 @@ switch ($table_id) {
 			echo "\n<center><h2>" . get_text("Responder") ." " . "{$row[$unit_text]}</h2>\n";	
 			$hides = array("id","description", "un_status_id", "lat", "lng", "icon_str", "hide", "group", "bg_color", "text_color", "icon", "user_id", "type", "sort", "_on", "_from", "_by", "map", "callsign");
 		
-			$ret_str = "<table border=0>";
+			$ret_str = "<table id='infowin'  border=0>";
 			for ($i=0; $i< mysql_num_fields($result); $i++) {					// each field
 				if (!in_array(mysql_field_name($result, $i), $hides) ) {		// filter hides 	
 					if ( ! (empty(  $row[$i]) ) ) {
@@ -176,7 +168,7 @@ switch ($table_id) {
 			$hides = array("lat", "lng", "type", "icon", "id", "_by", "_from", "_on", "user" , "map" );			// hide these columns
 			echo "\n<center><h2>" . get_text("Facility") ." " . "{$row['facility']}</h2>\n";
 			
-			$ret_str = "<table border=0>";
+			$ret_str = "<table id='infowin'  border=0>";
 
 			for ($i=0; $i< mysql_num_fields($result); $i++) {				// each field
 				if (!in_array(mysql_field_name($result, $i), $hides)) {		// filter hides ?	
@@ -218,7 +210,7 @@ switch ($table_id) {
 			$row = stripslashes_deep(mysql_fetch_array($result)) ;
 			$hides = array("id", "lat", "lng", "", "_from", "_on", "icon" );						// hide these columns
 			echo "\n<center><h2>" . get_text("Road information") . " {$row['title']}</h2>\n";			
-			$ret_str = "<table border=0>";
+			$ret_str = "<table id='infowin'  border=0>";
 
 			for ($i=0; $i< mysql_num_fields($result); $i++) {				// each field
 				if (!in_array(mysql_field_name($result, $i), $hides)) {		// filter hides ?	

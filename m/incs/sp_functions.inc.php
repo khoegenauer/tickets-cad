@@ -23,18 +23,21 @@ $ini_arr = parse_ini_file ("sp.ini");
 
 @session_start();	
 
-$GLOBALS['TABLE_TICKET'] 	= 0;	
-$GLOBALS['TABLE_RESPONDER'] = 1;
-$GLOBALS['TABLE_FACILITY']  = 2;
-$GLOBALS['TABLE_ASSIGN']   	= 3;
-$GLOBALS['TABLE_ROAD']   	= 4;
-$GLOBALS['TABLE_CLOSED']   	= 5;
+$GLOBALS['TABLE_TICKET'] 	= 		0;	
+$GLOBALS['TABLE_RESPONDER'] = 		1;
+$GLOBALS['TABLE_FACILITY']  = 		2;
+$GLOBALS['TABLE_ASSIGN']   	= 		3;
+$GLOBALS['TABLE_ROAD']   	= 		4;
+$GLOBALS['TABLE_CLOSED']   	= 		5;
+$GLOBALS['ME']   			= 		6;
+$GLOBALS['TABLE_RESPONDER_HIDE'] = 	7;
+
 //$GLOBALS['FONT_SIZE']   	= ".8";
 $GLOBALS['FONT_SIZE']   	= $ini_arr['def_fontsize'];
 
 define("COL_WIDTH", 24);
 
-function sp_is_super(){				// added 6/9/08
+function sp_is_super(){		
 	return ($_SESSION['SP']['level'] == $GLOBALS['LEVEL_SUPER']);		
 	}
 function sp_is_administrator(){		/* is user admin or super? */
@@ -66,6 +69,20 @@ function sp_see_buttons() {
 	}
 function sp_may_email() {
 	return (!(sp_is_guest()) || (sp_is_member() || sp_is_unit())) ;						// members, units  allowed
+	}
+
+function my_gcd ( $in_lat1, $in_lon1, $in_lat2, $in_lon2) {				// great circle distance - miles
+	$rad = doubleval(pi()/180.0);
+
+	$lon1 = doubleval($in_lon1)*$rad; $lat1 = doubleval($in_lat1)*$rad;
+	$lon2 = doubleval($in_lon2)*$rad; $lat2 = doubleval($in_lat2)*$rad;
+	
+	$theta = $lon2 - $lon1;
+	$dist = acos(sin($lat1) * sin($lat2) + cos($lat1) * cos($lat2) * cos ($theta));
+	if ($dist < 0) { $dist += pi(); }
+	$dist = $dist * 6371.2;
+	$miles = doubleval($dist * 0.621);
+	return round ( $miles, 1 );		// 1 decimal precision	- $inches = doubleval($miles*63360)
 	}
 
 function gcd ( $lat1, $lon1, $lat2, $lon2) {				// great circle distance - 7/25/2013
@@ -158,7 +175,7 @@ function sp_show_list($res, $hides, $proc, $top_row_txt = "" ) {					// returns 
 	$out_str .= "</tr>\n</thead>\n<tbody>\n";
 
 	$i = 0;				// row index
- 	while ($in_row = stripslashes_deep(mysql_fetch_array($res))) {		// each data row
+ 	while ($in_row = stripslashes_deep(mysql_fetch_array($res))) {					// each data row
 // 		dump($in_row);
 		$severity_class_str = ($do_severity )? 	"class = '" . get_severity($in_row['severity']) . "'" : "";		// apply text color?
 		$url = "navTo('{$proc}', {$i})";												// set for row click
@@ -167,12 +184,12 @@ function sp_show_list($res, $hides, $proc, $top_row_txt = "" ) {					// returns 
 			if (!in_array(mysql_field_name($res, $j), $hides)) {					// hides?
 				switch (mysql_field_name($res, $j)) {
 					case "unit_status" :						// 
-						$temp = get_unit_status ($in_row['id']);								// returns array
+						$temp = get_unit_status ($in_row['id']);					// returns array
 						if ( count ( $temp ) ==2 ) 	$display_val = "<b>{$temp[0]}</b> ({$temp[1]})";	// incident id
 						else 						$display_val = $temp[0];
 						break;
 					case "unit_tr" :
-						$temp = get_tracking_type($in_row);										// returns array
+						$temp = get_tracking_type($in_row);							// returns array
 						$display_val = $temp[1];
 						break;
 //					case "problem_start" :

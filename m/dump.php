@@ -25,7 +25,7 @@ $me = $_SESSION['SP']['user_unit_id'] ;		// possibly empty
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 	<script src="./js/misc.js" type="text/javascript"></script> 
 
-<div style = "font-size: 2.5em">
+<div style = "font-size: 1.0em">
 <?php
 dump($_SESSION['SP']);
 ?>

@@ -1,4 +1,5 @@
 <?php
+$_limit = 9999;
 /*
 alert("<?php echo __LINE__;?> ");
 
@@ -13,24 +14,53 @@ error_reporting (E_ALL  ^ E_DEPRECATED);
 if ( !array_key_exists('SP', $_SESSION) ) {
 	header("Location: index.php");
 	}
-$_limit = 9999;
 
 $me = $_SESSION['SP']['user_unit_id'] ;		// possibly empty
 
 require_once('../incs/functions.inc.php');
 require_once('./incs/sp_functions.inc.php');
+/*
+$GLOBALS['TABLE_TICKET'] 			= 0;	
+$GLOBALS['TABLE_RESPONDER'] 		= 1;
+$GLOBALS['TABLE_FACILITY']  		= 2;
+$GLOBALS['TABLE_ASSIGN']   			= 3;
+$GLOBALS['TABLE_ROAD']   			= 4;
+$GLOBALS['TABLE_CLOSED']   			= 5;
+$GLOBALS['ME']   					= 6;
+$GLOBALS['TABLE_RESPONDER_HIDE'] 	= 7;
+*/
 
-$GLOBALS['TABLE_TICKET'] 	= 0;	
-$GLOBALS['TABLE_RESPONDER'] = 1;
-$GLOBALS['TABLE_FACILITY']  = 2;
-$GLOBALS['TABLE_ASSIGN']   	= 3;
-$GLOBALS['TABLE_ROAD']   	= 4;
-$GLOBALS['TABLE_CLOSED']   	= 5;
-$GLOBALS['ME']   			= 6;
+$layers = array();
+$layers[$GLOBALS['TABLE_TICKET']] =  	"incidents";
+$layers[$GLOBALS['TABLE_RESPONDER']] =	"units";
+$layers[$GLOBALS['TABLE_FACILITY']] =	"facilities";
+$layers[$GLOBALS['TABLE_ASSIGN']] =  	null;
+$layers[$GLOBALS['TABLE_ROAD']] =    	"roadinfo";
+$layers[$GLOBALS['TABLE_CLOSED']] =  	"nearby" ;
+$layers[$GLOBALS['ME']] =    			"me";
+$layers[$GLOBALS['TABLE_RESPONDER_HIDE']] =    			"hides";
 
-//		WARNING - WARNING - WARNING - match any changes to JS definitions below - WARNING - WARNING - WARNING - WARNING 
-$layers =	array($GLOBALS['TABLE_TICKET']  => "incidents", 	$GLOBALS['TABLE_RESPONDER'] => "units", 	$GLOBALS['TABLE_FACILITY'] => "facilities", 	$GLOBALS['TABLE_ROAD'] => "roadinfo", 	$GLOBALS['TABLE_CLOSED'] => "nearby" , 		$GLOBALS['ME'] => "me" );
-$icons =	array($GLOBALS['TABLE_TICKET']  => "tickIcon", 		$GLOBALS['TABLE_RESPONDER'] => "unitIcon", 	$GLOBALS['TABLE_FACILITY'] => "facIcon", 		$GLOBALS['TABLE_ROAD'] => "roadIcon", 	$GLOBALS['TABLE_CLOSED'] => "closedIcon", 	$GLOBALS['ME'] => "meIcon" );
+$icons = array();
+$icons[$GLOBALS['TABLE_TICKET']]=		"tickIcon";
+$icons[$GLOBALS['TABLE_RESPONDER']]=	"unitIcon";
+$icons[$GLOBALS['TABLE_FACILITY']]=		"facIcon";
+$icons[$GLOBALS['TABLE_ASSIGN']] =  	null;
+$icons[$GLOBALS['TABLE_ROAD']] =		"roadIcon";
+$icons[$GLOBALS['TABLE_CLOSED']]=		"closedIcon";
+$icons[$GLOBALS['ME']] = 				"meIcon";
+$icons[$GLOBALS['TABLE_RESPONDER_HIDE']] =	"hideIcon";
+
+$count = array();
+$count[$GLOBALS['TABLE_TICKET']] =
+$count[$GLOBALS['TABLE_RESPONDER']] =
+$count[$GLOBALS['TABLE_FACILITY']] =
+$count[$GLOBALS['TABLE_ASSIGN']] =
+$count[$GLOBALS['TABLE_ROAD']] =
+$count[$GLOBALS['TABLE_CLOSED']] =
+$count[$GLOBALS['ME']] = 
+$count[$GLOBALS['TABLE_RESPONDER_HIDE']] = 0;
+
+$ini_array = parse_ini_file("./incs/sp.ini");
 
 function randomFloat() {
 	return floatval ( .5 - (mt_rand(0, 10000) ) / 10000);
@@ -74,6 +104,8 @@ if (intval(get_variable('broadcast'))==1) {
 </head>
 <body>	<!-- <?php echo __LINE__;?> -->
 	<div id="map"></div>
+<!-- $("map").style.backgroundImage = "url(./markers/loading.jpg)"; -->
+
 <?php
 	if ( is_ok_position ( $_SESSION["SP"]['latitude'] , $_SESSION["SP"]['longitude'] ) ) {
 		$my_position_arr = array ($_SESSION["SP"]['latitude'] , $_SESSION["SP"]['longitude'] ) ;
@@ -105,7 +137,18 @@ if (intval(get_variable('broadcast'))==1) {
 		markers_ary.push(markers_work);														// indexed by $side_bar_index
 		my_bounds.extend(markers_work.getLatLng());											// to bounding box
 <?php
-	}		// end function do_marker()
+		}		// end function do_do_marker()
+
+	function do_do_marker ($the_lat, $the_lng, $the_layer , $the_icon, $the_table, $the_id, $side_bar_index) {
+		global $icons, $layers;
+		if ( is_ok_position ( $the_lat , $the_lng ) ) {
+			do_marker ($the_lat, $the_lng, 	$layers[$the_table], $icons[$the_table], $the_table, $the_id, $side_bar_index);	
+			}
+		else	{
+			do_marker ( ( get_variable('def_lat') + randomFloat() ), ( get_variable('def_lng') + randomFloat() ) , 	$layers[$the_table], "pos_unknown_icon", $the_table, $the_id, $side_bar_index);			
+			}
+		}				//end function do_do_marker()
+
 ?>
 		DomReady.ready(function() {			//set initial bounds at map center	
 			parent.frames["top"].document.getElementById("the_user").innerHTML = 		'<?php echo $_SESSION['SP']['user'];?>';
@@ -143,6 +186,7 @@ if (intval(get_variable('broadcast'))==1) {
 		
 		var incidents = 	new L.LayerGroup();
 		var units = 		new L.LayerGroup();
+		var hides = 		new L.LayerGroup();
 		var facilities = 	new L.LayerGroup();
 		var roadinfo = 		new L.LayerGroup();
 		var nearby = 		new L.LayerGroup();
@@ -150,51 +194,26 @@ if (intval(get_variable('broadcast'))==1) {
 		var me_is_onscr = 	false;
 <?php	
 		$side_bar_index = 0;		// used only with sidebar page
-		
-//							 generate UNITS  data
+// ==============================================================================================
 
-		$query = "SELECT `r`.`id` AS `unit_id`, `icon_str`, `handle`, `lat`, `lng`, `type`, `un_status_id`, `s`.`dispatch`,
+	function x_get_resp_sql ($where_cl) {
+		global $_limit;
+		return "SELECT `r`.`id` AS `unit_id`, `icon_str`, `handle`, `lat`, `lng`, `type`, `un_status_id`, `dispatch`,
 					SUBSTRING(CAST(`updated` AS CHAR),9,8 ) AS `sb_updated`,
 					`r`.`description` AS `unit_descr`, 
 					`t`.`description` AS `unit_type`, 
 					`s`.`description` AS `unit_status`
 				FROM `$GLOBALS[mysql_prefix]responder` `r` 
-				LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` `t` ON ( `r`.`type` = t.id )	
-				LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON ( `r`.`un_status_id` = s.id ) 	
+				LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` `t` ON ( `r`.`type` = `t`.`id` )	
+				LEFT JOIN `$GLOBALS[mysql_prefix]un_status` `s` ON ( `r`.`un_status_id` = `s`.`id` ) 	
+				{$where_cl}
 				ORDER BY `handle` ASC LIMIT {$_limit}
 				";			
+		}			// end function x_get_resp_sql		
 
-		$result_unit = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-		$ct_u = mysql_num_rows($result_unit);
-		while ($in_row = stripslashes_deep(mysql_fetch_assoc($result_unit))) {		
-			if ( intval ( $in_row['unit_id'] ) == intval ( $me ) ) 	{
-				$the_layer = 	$layers[$GLOBALS['ME']];
-				$the_icon = 	$icons[$GLOBALS['ME']];
-				$my_lat = 		$in_row['lat']; 
-				$my_lng = 		$in_row['lng']; 
-				$my_handle = 	$in_row['handle'];
-				echo "\n\t\tme_is_onscr = true;\n";				// note JS variable
-?>
-
-		var my_marker_index = <?php echo $side_bar_index;?>;			// save for marker motion
-<?php
-				}
-			else 													{
-				$the_layer = 	$layers[$GLOBALS['TABLE_RESPONDER']];
-				$the_icon = 	$icons[$GLOBALS['TABLE_RESPONDER']];
-				}
-			if ( is_ok_position ( $in_row['lat'] , $in_row['lng'] ) ) {
-//				do_marker ($in_row['lat'], $in_row['lng'], 	$layers[$GLOBALS['TABLE_RESPONDER']], $icons[$GLOBALS['TABLE_RESPONDER']], $GLOBALS['TABLE_RESPONDER'], $in_row['unit_id'], $side_bar_index);
-				do_marker ($in_row['lat'], $in_row['lng'], 	$the_layer , $the_icon, $GLOBALS['TABLE_RESPONDER'], $in_row['unit_id'], $side_bar_index);
-				}
-			else {				// invalid position data
-				do_marker ( ( get_variable('def_lat') + randomFloat() ) , ( get_variable('def_lng') + randomFloat() ), 	$the_layer, "pos_unknown_icon", $GLOBALS['TABLE_RESPONDER'], $in_row['unit_id'], $side_bar_index);			
-				}
-			$side_bar_index++;
-			}
-//							 generate FACILITIES data
-
-		$query = "SELECT `f`.`id` AS `facy_id`, `icon_str`, `handle`, `type`, `lat`, `lng`, `status_id`, 
+	function get_facy_sql () {
+		global $_limit;
+		return "SELECT `f`.`id` AS `facy_id`, `icon_str`, `handle`, `type`, `lat`, `lng`, `status_id`, 
 				SUBSTRING(CAST(`updated` AS CHAR),9,8 ) AS `sb_updated`,
 				`f`.`description` AS `facy_descr`, 
 				`t`.`description` AS `facy_type`, 
@@ -204,24 +223,14 @@ if (intval(get_variable('broadcast'))==1) {
 				LEFT JOIN `$GLOBALS[mysql_prefix]fac_types` `t` ON `f`.type = `t`.id 
 				LEFT JOIN `$GLOBALS[mysql_prefix]fac_status` `s` ON `f`.status_id = `s`.id 
 				ORDER BY `handle` ASC  LIMIT {$_limit}
-				";			
-		$result_facy = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-		$ct_f = mysql_num_rows($result_facy);
-		while ($in_row = stripslashes_deep(mysql_fetch_assoc($result_facy))) {			
+				";
+				}		// end function get facy_sql
 
-			if ( is_ok_position ( $in_row['lat'] , $in_row['lng'] ) ) {
-				do_marker ($in_row['lat'], $in_row['lng'], 	$layers[$GLOBALS['TABLE_FACILITY']], $icons[$GLOBALS['TABLE_FACILITY']], $GLOBALS['TABLE_FACILITY'], $in_row['facy_id'], $side_bar_index);
-				}
-			else {				// invalid position data
-				do_marker ( ( get_variable('def_lat') + randomFloat() ), ( get_variable('def_lng') + randomFloat() ) , 	$layers[$GLOBALS['TABLE_FACILITY']], "pos_unknown_icon", $GLOBALS['TABLE_FACILITY'], $in_row['facy_id'], $side_bar_index);			
-				}
 
-			$side_bar_index++;
-			}
-//							 generate INCIDENT data - sidebar data unused here
-		$hide_limit = INTVAL ( get_variable('hide_booked') );
+	function get_local_tick_sql ($where_cl) {
+		global $_limit;
 
-		$query = "SELECT `t`.`id`  AS `tick_id`,
+		return "SELECT `t`.`id`  AS `tick_id`,
 				CONCAT_WS(' ',`street`,`city`) AS `addr`,
 				 `status`, `lat`, `lng`, `scope` , `t`.`description` AS `description` ,
 				 `severity` , `comments` ,
@@ -241,73 +250,89 @@ if (intval(get_variable('broadcast'))==1) {
 						) AS `p`,
 				SUBSTRING(CAST(`updated` AS CHAR),9,8 ) AS `as of`				
 				FROM `$GLOBALS[mysql_prefix]ticket` `t` 
-				WHERE ( (`t`.`status`='{$GLOBALS['STATUS_OPEN']}') 
-					OR ( (`t`.`status`='{$GLOBALS['STATUS_SCHEDULED']}') AND 
-					(`booked_date` <=  (NOW() + INTERVAL {$hide_limit} HOUR)) ) )  
+				{$where_cl}
 				ORDER BY `severity` DESC, `problemstart` ASC  LIMIT {$_limit}
 				";
+			}		// end function get tick_sql ( ... )
+
+// ==============================================================================================
+
+//							 generate UNITS  data
+
+		$not_me_str = ( intval ( $me ) > 0 )? " AND `r`.`id` != {$me} " : "";		// do the visible units
+		$_where_str = "WHERE (`hide` = 'n' {$not_me_str})";
+		$query = x_get_resp_sql ($_where_str);
+
+		$result_unit = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		$count[$GLOBALS['TABLE_RESPONDER']] = mysql_num_rows($result_unit);
+
+		while ($in_row = stripslashes_deep(mysql_fetch_assoc($result_unit))) {		
+			do_do_marker ($in_row['lat'], $in_row['lng'], $layers[$GLOBALS['TABLE_RESPONDER']], $icons[$GLOBALS['TABLE_RESPONDER']], $GLOBALS['TABLE_RESPONDER'], $in_row['unit_id'], $side_bar_index);
+			$side_bar_index++;
+			}
+
+		$_where_str = "WHERE (`hide` != 'n' {$not_me_str})";					// do the hidden units
+		$query = x_get_resp_sql ($_where_str);
+		$result_unit = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		$count[$GLOBALS['TABLE_RESPONDER_HIDE']] = mysql_num_rows($result_unit);
+		while ($in_row = stripslashes_deep(mysql_fetch_assoc($result_unit))) {	
+			do_do_marker ($in_row['lat'], $in_row['lng'], $layers[$GLOBALS['TABLE_RESPONDER_HIDE']], $icons[$GLOBALS['TABLE_RESPONDER_HIDE']], $GLOBALS['TABLE_RESPONDER_HIDE'], $in_row['unit_id'], $side_bar_index);
+			$side_bar_index++;
+			}
+
+		if (intval ( $me ) > 0 ) {												// do 'me'
+			$_where_str = "WHERE `r`.`id` = {$me}";	
+			$query = x_get_resp_sql ($_where_str);
+			$result_unit = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+			$count[$GLOBALS['ME']] = mysql_num_rows($result_unit);
+			echo "\n\t var my_marker_index = {$side_bar_index};\n";		
+			$in_row = stripslashes_deep ( mysql_fetch_assoc($result_unit) );
+			$my_handle = $in_row['handle'];				// used on layers control
+			do_do_marker ($in_row['lat'], $in_row['lng'], $layers[$GLOBALS['ME']], $icons[$GLOBALS['ME']], $GLOBALS['ME'], $in_row['unit_id'], $side_bar_index);
+			$side_bar_index++;
+			}			
+//							 generate FACILITIES data
+		$query = get_facy_sql();			
+		$result_facy = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		$count[$GLOBALS['TABLE_FACILITY']] = mysql_num_rows($result_facy);
+		while ($in_row = stripslashes_deep(mysql_fetch_assoc($result_facy))) {		
+			do_do_marker ($in_row['lat'], $in_row['lng'], 	$layers[$GLOBALS['TABLE_FACILITY']], $icons[$GLOBALS['TABLE_FACILITY']], $GLOBALS['TABLE_FACILITY'], $in_row['facy_id'], $side_bar_index);
+			$side_bar_index++;
+			}
+
+//							 generate INCIDENT data - sidebar data unused here
+		$hide_limit = INTVAL ( get_variable('hide_booked') );		// hours embargoed
+
+		$where_cl_str = " WHERE ( (`t`.`status`='{$GLOBALS['STATUS_OPEN']}') 
+							OR ( (`t`.`status`='{$GLOBALS['STATUS_SCHEDULED']}') AND 
+							(`booked_date` <=  (NOW() + INTERVAL {$hide_limit} HOUR)) ) )  
+							";
+
+		$query = get_local_tick_sql($where_cl_str);
 	
-			$result_tick = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-			$ct_t = mysql_num_rows($result_tick);
-			while ($in_row = stripslashes_deep(mysql_fetch_assoc($result_tick))) {
-				if ( is_ok_position ( $in_row['lat'] , $in_row['lng'] ) ) {
-					do_marker ($in_row['lat'], $in_row['lng'], 	$layers[$GLOBALS['TABLE_TICKET']], $icons[$GLOBALS['TABLE_TICKET']], $GLOBALS['TABLE_TICKET'], $in_row['tick_id'], $side_bar_index);
-					}
-				else {				// invalid position data
-					do_marker ( ( get_variable('def_lat') + randomFloat() ), ( get_variable('def_lng') + randomFloat() ), 	$layers[$GLOBALS['TABLE_TICKET']], "pos_unknown_icon", $GLOBALS['TABLE_TICKET'], $in_row['tick_id'], $side_bar_index);			
-					}
-	
-				$side_bar_index++;
-				}
+		$result_tick = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		$count[$GLOBALS['TABLE_TICKET']] = mysql_num_rows($result_tick);
+		while ($in_row = stripslashes_deep(mysql_fetch_assoc($result_tick))) {
+			do_do_marker ($in_row['lat'], $in_row['lng'], 	$layers[$GLOBALS['TABLE_TICKET']], $icons[$GLOBALS['TABLE_TICKET']], $GLOBALS['TABLE_TICKET'], $in_row['tick_id'], $side_bar_index);
+			$side_bar_index++;
+			}
+
 //							 generate NEARBY CLOSED INCIDENT data - sidebar data unused here
-//		if ( ! ( ( array_key_exists("longitude", $_SESSION['SP'] ) ) && ( ! empty ( $_SESSION['SP'] ['longitude'] ) ) ) ) { dump ( $_SESSION['SP'] ) ; } 
 		$nearby_ok = ( ( array_key_exists("longitude", $_SESSION['SP'] ) ) && ( is_ok_position ( $_SESSION['SP'] ['latitude'] , $_SESSION['SP'] ['longitude'] ) ) ) ;
 
 		if ( $nearby_ok ) { 	
-			$query = "SELECT `t`.`id`  AS `tick_id`,
-					CONCAT_WS(' ',`street`,`city`) AS `addr`,
-					 `status`, `lat`, `lng`, `scope` , `t`.`description` AS `description` ,
-					 `severity` , `comments` ,
-					(SELECT COUNT( * )
-						FROM `$GLOBALS[mysql_prefix]assigns`
-						WHERE (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`
-						AND `clear` IS NULL
-						OR DATE_FORMAT( `clear` , '%y' ) = '00')
-						) AS `u`, (
-						SELECT COUNT( * )
-							FROM `$GLOBALS[mysql_prefix]action`
-							WHERE `$GLOBALS[mysql_prefix]action`.`ticket_id` = `t`.`id`
-							) AS `a`,(						
-						SELECT COUNT( * )
-							FROM `$GLOBALS[mysql_prefix]patient`
-							WHERE `$GLOBALS[mysql_prefix]patient`.`ticket_id` = `t`.`id`
-							) AS `p`,
-	
-					( 6371 * acos ( 
-					cos ( radians ( {$_SESSION['SP']['latitude']} ) ) *
-					cos ( radians ( `lat` ) ) *
-					cos ( radians ( `lng` ) - radians ( {$_SESSION['SP']['longitude']} ) ) +
-					sin ( radians ( {$_SESSION['SP']['latitude']} ) ) *
-					sin ( radians ( `lat` ) ) ) ) 				AS `km_from`,
-					
-					SUBSTRING(CAST(`updated` AS CHAR),9,8 ) AS `as of`				
-					FROM `$GLOBALS[mysql_prefix]ticket` `t` 
-					WHERE ( ( `status` = {$GLOBALS['STATUS_CLOSED']} ) AND ( `lat` <> {$GLOBALS['NM_LAT_VAL']} ) )
-					ORDER BY `km_from` ASC, `t`.`updated` DESC LIMIT {$_limit}
-					";			//	STATUS_CLOSED	STATUS_OPEN
-	
+				$where_cl_str = " WHERE ( ( `status` = {$GLOBALS['STATUS_CLOSED']} ) AND ( `lat` <> {$GLOBALS['NM_LAT_VAL']} ) )";
+				$query = get_local_tick_sql ($where_cl_str);
 				$result_tick = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-				$ct_n = mysql_num_rows($result_tick);
 				if ($result_tick ) {
+					$range = $ini_array['range'];				// distance in meters for 'nearby'
 					while ($in_row = stripslashes_deep(mysql_fetch_assoc($result_tick))) {
-						if ( is_ok_position ( $in_row['lat'] , $in_row['lng'] ) ) {
-	//								  ( $lat, 			$lng, 			$layer, 						   $icon, 							 $table, 					$id, 				$sb_index) 					
-							do_marker ( $in_row['lat'], $in_row['lng'], $layers[$GLOBALS['TABLE_CLOSED']], $icons[$GLOBALS['TABLE_CLOSED']], $GLOBALS['TABLE_TICKET'], $in_row['tick_id'], $side_bar_index);
-							}
-						else {				// invalid position data
-							do_marker ( ( get_variable('def_lat') + randomFloat() ), ( get_variable('def_lng') + randomFloat() ), 	$layers[$GLOBALS['TABLE_TICKET']], "pos_unknown_icon", $GLOBALS['TABLE_TICKET'], $in_row['tick_id'], $side_bar_index);			
-							}
-			
+						$dist = my_gcd ( $in_row['lat'] , $in_row['lng'] , $_SESSION['SP']['latitude'], $_SESSION['SP']['longitude']);		// meters?
+						snap (__LINE__, $dist);			// 
+						if ( abs ( $dist ) < $range ) { 
+							do_do_marker ( $in_row['lat'], $in_row['lng'], $layers[$GLOBALS['TABLE_CLOSED']], $icons[$GLOBALS['TABLE_CLOSED']], $GLOBALS['TABLE_TICKET'], $in_row['tick_id'], $side_bar_index);			
+							$count[$GLOBALS['TABLE_CLOSED']]++;
+							}					
 						$side_bar_index++;
 						}
 					}
@@ -322,21 +347,40 @@ if (intval(get_variable('broadcast'))==1) {
  			if ( $result_road ) {
 	 			$the_icon = $icons[$GLOBALS['TABLE_ROAD']];		
 	 			while ($in_row = stripslashes_deep(mysql_fetch_assoc($result_road))) {			
-					if ( is_ok_position ( $in_row['lat'] , $in_row['lng'] ) ) {
-						do_marker ($in_row['lat'], $in_row['lng'], 	$layers[$GLOBALS['TABLE_ROAD']], $icons[$GLOBALS['TABLE_ROAD']], $GLOBALS['TABLE_ROAD'], $in_row['id'], $side_bar_index);
-						}
-					else {				// invalid position data
-						do_marker ( (get_variable('def_lat') + randomFloat() ) , ( get_variable('def_lng') + randomFloat() ), 	$layers[$GLOBALS['TABLE_ROAD']], "pos_unknown_icon", $GLOBALS['TABLE_ROAD'], $in_row['id'], $side_bar_index);			
-						}
-	
+					do_do_marker ($in_row['lat'], $in_row['lng'], 	$layers[$GLOBALS['TABLE_ROAD']], $icons[$GLOBALS['TABLE_ROAD']], $GLOBALS['TABLE_ROAD'], $in_row['id'], $side_bar_index);	
 	 				$side_bar_index++;
 	 				}
  				}		// end if ( $result_road ) 
  			}		// end if ($roadinfo_ok)
  			
- 			if ( ! ( isset($my_handle) ) ) $my_handle = "Me";
-?>
 //							end icon generation 
+
+ 			if ( ! ( isset($my_handle) ) ) $my_handle = "Me";
+
+/*
+dump ($ini_array);
+array(2) {
+  ["use_gmaps"]=>
+  string(1) "1"
+  ["def_fontsize"]=>
+  string(3) "1.0"
+  }
+*/
+
+	if ( array_key_exists ( "use_gmaps", $ini_array ) ) {
+		$baselayer_call = "gglr";
+	
+?>
+		var gglr = 			new L.Google('ROADMAP');
+//		var gglh = 			new L.Google('HYBRID');
+//		var ggls = 			new L.Google('SATELLITE');
+//		var gglt = 			new L.Google('TERRAIN');
+
+<?php
+		}		// end if ( do google )
+	else {		// do OSM
+		$baselayer_call = "OSM";
+?>
 
 		var my_Path = "http://127.0.0.1/_osm/";
 		var in_local_bool = false;
@@ -344,44 +388,52 @@ if (intval(get_variable('broadcast'))==1) {
 			"../_osm/tiles/{z}/{x}/{y}.png":
 			"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
-	    var cmAttr = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
-			cmUrl = osmUrl;
+		var cmUrl = osmUrl;
 
-//	    var OSM   = 		L.tileLayer(cmUrl, {attribution: cmAttr});
-	    var OSM   = 		L.tileLayer(cmUrl);
-		var gglr = 			new L.Google('ROADMAP');
-//		var gglh = 			new L.Google('HYBRID');
-//		var ggls = 			new L.Google('SATELLITE');
-//		var gglt = 			new L.Google('TERRAIN');
+	    var OSM   = 		L.tileLayer(cmUrl);		//
+<?php
+		}		// end 		// do OSM
+?>		
 		var full_scr = 		false;
 
 		var map = L.map('map', {
 			center: [<?php echo get_variable('def_lat') ; ?>, <?php echo get_variable('def_lng') ; ?>],
 			zoom: <?php echo get_variable('def_zoom') ; ?>,
 //			layers: [OSM, gglr, gglh, ggls, gglt, me, incidents, units],
-			layers: [ gglr, me, incidents, units],
+			layers: [ <?php echo $baselayer_call;?>, me, incidents, units],
 			fullscreenControl: full_scr
 			});
 
 		var baseLayers = {
-			"G_roads": 			gglr
+<?php
+	if ( array_key_exists ( "use_gmaps", $ini_array ) ) {
+?>		
 //			"G_hybrid": 		gglh,
 //			"G_satellite": 		ggls,			
 //			"G_terrain": 		gglt,			
-//			"OSM": 				OSM
-			};
+
+			"G_roads": 			gglr
+<?php
+		}
+	else {
+?>
+			"OSM": 				OSM
+<?php
+			}		// end else
+?>			
+			};		// end var baseLayers = ...
 
 		var overlays = {
-			"<?php echo $my_handle;?>" : 				me,
-			"Units (<?php echo $ct_u;?>)": 				units,
-			"Incidents (<?php echo $ct_t;?>)": 			incidents,
-<?php	if ($nearby_ok ) {	?>
-			"Nearby (<?php echo $ct_n;?>)": 			nearby,
-<?php			} ?>
-<?php	if ($roadinfo_ok) { ?>
-			"RoadInfo (<?php echo $ct_r;?>)": 			roadinfo,
-<?php		}	?>
-			"Facilities (<?php echo $ct_f;?>)": 		facilities
+<?php
+	echo "\t\t\t\"{$my_handle}\" : 				me";
+	if (intval ($count[$GLOBALS['TABLE_RESPONDER']] > 0 ) )			{echo ",\n\t\t\t\"Units ({$count[$GLOBALS['TABLE_RESPONDER']]})\": units";}
+	if (intval ($count[$GLOBALS['TABLE_RESPONDER_HIDE']] > 0 ) )	{echo ",\n\t\t\t\"Hidden ({$count[$GLOBALS['TABLE_RESPONDER_HIDE']] })\": hides";}
+	if (intval ($count[$GLOBALS['TABLE_TICKET']] > 0 ) )			{echo ",\n\t\t\t\"Incidents ({$count[$GLOBALS['TABLE_TICKET']] })\": incidents";}
+	if (intval ($count[$GLOBALS['TABLE_FACILITY']] > 0 ) )			{echo ",\n\t\t\t\"Facilities ({$count[$GLOBALS['TABLE_FACILITY']] })\": roadinfo";}
+	if (intval ($count[$GLOBALS['TABLE_ROAD']] > 0 ) )				{echo ",\n\t\t\t\"RoadInfo ({$count[$GLOBALS['TABLE_ROAD']] })\": facilities";}
+	if (intval ($count[$GLOBALS['TABLE_CLOSED']] > 0 ) )			{echo ",\n\t\t\t\"Nearby ({$count[$GLOBALS['TABLE_CLOSED']] })\": nearby";}
+?>
+
 			};
 
 		function onMapClick(e) {
@@ -421,7 +473,7 @@ if (intval(get_variable('broadcast'))==1) {
 
 			map.fitBounds(my_bounds);								// show the centered map					
 
-			radius = Math.round(getMapRadius() * 0.10);				// arbitrary
+			radius = Math.round(getMapRadius() * 0.20);				// arbitrary
 			my_circle = L.circle( [<?php echo $my_position_arr[0];?>, <?php echo $my_position_arr[1];?> ], radius, { color: 'red', fill: false}).addTo(map);		// center circle on my position
 			
 			},1000) ;												// wait for rendering
@@ -492,7 +544,6 @@ if (intval(get_variable('broadcast'))==1) {
 <tr><td class = 'my_hover' onclick = 'navTo("sp_mail.php", "")'>	<?php echo get_text("Email");?></td></tr>
 <tr><td class = 'my_hover' onclick = 'to_tickets ();'>				to Tickets</td></tr>
 <tr><td class = 'my_hover' onclick = 'location.reload();'>			Map refresh</td></tr>
-<tr><td class = 'my_hover' onclick = 'window.history.back();'>		Back</td></tr>
 </table>
 
 </body>

@@ -65,7 +65,7 @@ if (count($_POST) == 0) {									// new?
 ?>
 <head>
 	<meta charset="utf-8" />
-	<title>Tickets Mobile</title>
+	<title>Tickets SmartPhone Login</title>
 <!--
   <link rel="stylesheet"  type="text/css" href="http://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.css" />
   <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
@@ -94,7 +94,11 @@ if (count($_POST) == 0) {									// new?
 			}		// end function validate()			
 
 		function quick_in() {
-			return;
+					document.login.userid.value = 'admin';
+			document.login.password.value = 'admin';
+			$("login_v").style.display = 'none';
+			$("login_b").style.display = 'inline';							
+			document.login.submit();
 			}
 
 		DomReady.ready(function() {
@@ -160,7 +164,7 @@ if (count($_POST) == 0) {									// new?
 	</td></tr>
 <tr class = 'odd' ><td colspan=3 align="center"><br/><h2>Tickets SP Login</span>
 			
-			</h2><span class='tiny'>9/5/2013</span></td></tr>	
+			</h2><span class='tiny'>9/25/2013</span></td></tr>	
 <tr><td colspan=3 align = center  >width:<span id = "xwidth"></span> height:<span id = "xheight"></span></td></tr>			
 </table>
   </form>  <!-- login form -->
@@ -198,7 +202,7 @@ else {		// process $_POST
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
 		$_SESSION['SP']['latitude'] = 	get_variable('def_lat');	// pre-set default position values
-		$_SESSION['SP']['longitude'] =	get_variable('def_lat');			
+		$_SESSION['SP']['longitude'] =	get_variable('def_lng');			
 		
 		if (intval($row['responder_id']) > 0 ) {		//  responder_id ?
 			$query_unit = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `id`  = '{$row['responder_id']}' LIMIT 1";				
@@ -241,6 +245,26 @@ else {		// process $_POST
 			mysql_format_date(now() + (60*1000));		// do position update
 		$_SESSION['SP']['internet'] = TRUE;                        		
 		$_SESSION['SP']['map_type'] = 0;				// default is OSM
+														// 9/8/2013
+		$query = "SELECT MAX(`id`) AS `max_id` FROM `$GLOBALS[mysql_prefix]ticket` WHERE status != '$GLOBALS[STATUS_RESERVED]'";
+		$result_max = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		if (mysql_num_rows($result_max)==1)  {		
+			$row_tick = mysql_fetch_assoc ( $result_max );
+			$_SESSION['SP']['last_ticket'] = $row_tick['max_id'];
+			}
+		else {$_SESSION['SP']['last_ticket'] = 0;}
+		
+		$query = "SELECT MAX(`when`) AS `last_disp` FROM `$GLOBALS[mysql_prefix]log` WHERE (`code` IN 
+						('{$GLOBALS['LOG_CALL_DISP']}', '{$GLOBALS['LOG_CALL_RESP']}', '{$GLOBALS['LOG_CALL_ONSCN']}', 
+						'{$GLOBALS['LOG_CALL_U2FENR']}', '{$GLOBALS['LOG_CALL_U2FARR']}')
+						)";
+
+		$result_max = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		if (mysql_num_rows($result_max)==1)  {		
+				$row_disp = mysql_fetch_assoc ( $result_max );
+				$_SESSION['SP']['last_disp'] = $row_disp['last_disp'];		// note ts time format
+				}
+		else {$_SESSION['SP']['last_dispatch'] = 0;}		
 
 		$ini_arr = parse_ini_file ("incs/sp.ini");		
 		$_SESSION['SP']['font_size'] = $ini_arr['def_fontsize'];;	// EM units string from ini
@@ -248,12 +272,11 @@ else {		// process $_POST
 		$_POST  = array();			// force empty 
 
 		$target = "./sp_resp.php?rand=" . time();	// cache buster
-//		dump ($_SESSION);
 		header("Location: {$target}");				 /* OK - redirect to 1st page */
 		}
 	else {
-		$url = basename(__FILE__);
 		$message = urlencode("Password-userid fails - retry?");
+		$url = basename(__FILE__);
 		header("Location: {$url}?message={$message}"); 			/* Redirect */
 		exit;													/* force script termination. */
 		}

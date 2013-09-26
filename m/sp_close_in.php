@@ -215,8 +215,9 @@ function do_is_start($in_row) {				// 3/22/10
 
 ?>			
 	<tr><td colspan = 2 ALIGN = 'center'>
-	<input type = 'button' VALUE = 'Reset' onClick = 'this.form.reset()' STYLE = 'margin-left:20px' />
-	<input type = 'button' VALUE = 'Next' onClick = 'validate()'  STYLE = 'margin-left:20px' />
+	<input type = 'button' VALUE = 'Cancel'	onClick = 'navTo ("sp_tick.php", <?php echo $_POST['id'];?>)' />
+	<input type = 'button' VALUE = 'Reset'	onClick = 'this.form.reset()' STYLE = 'margin-left:40px' />
+	<input type = 'button' VALUE = 'Next'	onClick = 'validate()'  STYLE = 'margin-left:40px' />
 	</td></tr>
 	</table>
 	<input type = 'hidden' NAME = 'update' 			value='1' />

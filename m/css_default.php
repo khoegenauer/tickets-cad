@@ -28,8 +28,9 @@ table				{ border-collapse:collapse; border-spacing:0; margin-top:0px;
 						overflow:auto;	
 						margin-top: 0px ; 
 						margin-left: 0 auto; 
-						margin-right: 0 auto; 						
+						margin-right: 0 auto; 
 											}
+									
 table.tablesorter	{ border-collapse:collapse; border-spacing:0; margin-top:0px;  
 						width:auto;
 						font-size: <?php echo $ini_arr['def_fontsize'];?>em;						
@@ -91,7 +92,8 @@ tr:nth-child(odd) 	{ background: <?php echo $row_dark;?>;}
 td.nav 	{ width:64px; text-align: center; font-size: 1.0em; opacity: 0.25; }
 .tiny 	{ font-size: 0.25em; opacity: 0.25; }
 .link 	{ text-decoration:underline; }
-#context	{ font-family: Arial, Verdana, sans-serif; font-size: 1.5.0em; font-weight:bold; text-align:left;} 		
+#context	{   min-width:100px; font-family: Arial, Verdana, sans-serif; font-size: 1.0em; font-weight:bold; text-align:left;} 		
+#infowin	{   min-width:100px; max-width:280px; font-family: Arial, Verdana, sans-serif; font-size: 1.0em; font-weight:bold; text-align:left;} 		
 #header		{ font-family: Arial, Verdana, sans-serif; font-size: 1.5em; font-weight:bold; height:auto; text-align: center; width:100%; background-color: <?php echo "{$_SESSION['SP']['css']['page_background']};"?>;}
 #footer		{ font-family: Arial, Verdana, sans-serif; font-size: 1.5em; font-weight:bold; height:auto; text-align: center; width:100%; background-color: <?php echo "{$_SESSION['SP']['css']['page_background']};"?>;}
 /* Für ie6*/
@@ -111,4 +113,5 @@ td.nav 	{ width:64px; text-align: center; font-size: 1.0em; opacity: 0.25; }
 	margin-top: 0px ; 
 	margin-left: 0 auto; 
 	margin-right: 0 auto; 
-}
+	}
+

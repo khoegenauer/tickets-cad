@@ -1,6 +1,6 @@
 1.	Tickets SP is an adjunct to standard Tickets CAD, a no-muss no-fuss implementation intended for use by 
-	mobile responders utilizing small-screen devices such as smart-phones (hence SP) while on dispatch.  
-	Required: an installed Tickets CAD application.  (Download SP from www.ticketscad.org)
+	mobile responders utilizing small-screen devices such as smart-phones (hence 'SP') while on dispatch.  
+	Required: an installed Tickets CAD application.  
 
 2.	While it works on conventional desktop machines, users will see some waste of screen real-estate.  It's 
 	been tested and shows satisfactory operation on the android-powered Nexus 4, iPhone and iPad, with Chrome 
@@ -8,10 +8,10 @@
 
 3.	What's it do?  Well, this version (9/6/2013) has capabilities targeted at mobile incident response, which 
 	is well short of the gamut of a full-fledged Tickets operation.
-	a.	SP uses and requires yr existing Tickets database.
+	a.	SP uses and requires yr existing and correctly installed Tickets database.
 	b.	SP attempts to locate you while mobile; doing so is controlled by your browser settings.
-	c.  The map is Google's;  While we also operate with OSM, the combined downloads overwhelmed smaller devices 
-	    during early testing.  We'll get it working for a next release.
+	c.  The map is by OpenStreetMap, with Google's an option;  While we also operate with OSM, the combined 
+		downloads overwhelmed smaller devices during early testing.  We expect to get it working, however.
 	d.  SP  provides useful information on existing calls, incidents, responders, facilities, and - new! - road 
 	    information if yr database has any.  You can update status, add information to and close incidents, and 
 	    send email.
@@ -21,6 +21,9 @@
 		clutter. Changes are immediate; no map reload is done.
 	g.  Maps are full-screen; to navigate away, a right-click (desktop) or long-poke (mobile) on the map will 
 	    bring up a navigation menu.
+	h.  If you prefer to use Google maps, see file 'incs/sp.ini' , and 'un-comment' line 8.  That is, simply 
+	    remove the leading semi-colon at the line that reads ";use_gmaps = On" and save the file.  (This is a 
+	    common PHP usage for ini files.)
 
 4.	Installing SP: Simply unzip it into its own directory underneath your Tickets root.  (There's no 
 	installation process.)  You shd see the SP directory along with those 20-odd of Tickets proper.

@@ -29,7 +29,6 @@
 <!--
 	 <span id = 'ts' class='head_butt' style = 'display: none;'			onclick = 'do_show ()'>Show top</span>
 	 <span id = 'th' class='head_butt' style = 'display: inline-block;'	onclick = 'do_hide ()'>Hide top</span><span class = 'butt-sep'>|</span>
-	 <span id = 'du' class='head_butt' onclick = 'navTo("dump.php", "")'>Dump</span>
 -->	 
 	 <span id = 'fm' class='head_butt' onclick = 'navTo("sp_map.php", "")'>Map<span class = 'butt-sep'>&nbsp;&nbsp;|</span></span>			
      <span id = 'fc' class='head_butt' onclick = 'navTo("sp_calls.php", "")'>Calls<span class = 'butt-sep'>&nbsp;&nbsp;|</span></span> 		
@@ -37,6 +36,9 @@
 	 <span id = 'fr' class='head_butt' onclick = 'navTo("sp_resp.php", "")'>Responders<span class = 'butt-sep'>&nbsp;&nbsp;|</span></span>	
 	 <span id = 'ff' class='head_butt' onclick = 'navTo("sp_fac.php", "")'>Facilities<span class = 'butt-sep'>&nbsp;&nbsp;|</span></span>
 	 <span id = 'ff' class='head_butt' onclick = 'navTo("sp_mail.php", "")'>Mail</span>
+<!--
+	 <span id = 'du' class='head_butt' onclick = 'navTo("dump.php", "")'>Dump</span>
+-->	 	 
 </td></tr></table>
 </div>
 

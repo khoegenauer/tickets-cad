@@ -196,7 +196,7 @@ else {								// list
 <?php
 			require_once('incs/header.php');	
 			if ( mysql_num_rows($result) == 0 ) {
-				echo "<div style = 'text-align:center; margin-top:100px;'><h2>No " . get_text("Facilities") . " in database</h2></div>\m";		
+				echo "<div style = 'text-align:center; margin-top:200px;'><h2>No " . get_text("Facilities") . " in database</h2></div>\n";		
 				}
 			else {
 //				echo "<div style = 'text-align:center; margin-top:60px;'><h2>" . get_text("Facilities") . " - <i>click/tap for details</i></h2></div>\n";

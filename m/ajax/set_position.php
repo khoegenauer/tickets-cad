@@ -8,7 +8,7 @@ error_reporting ( E_ALL ^ E_DEPRECATED );
 
 require_once('../../incs/functions.inc.php');
 require_once('../incs/sp_functions.inc.php');
-snap (__LINE__, __LINE__);
+snap (basename(__FILE__), __LINE__);
 $now = now_ts() ;										// timestamp format
 
 if ( ! ( is_logged_in ( false ) ) ) {		// check, but don't update expiry - 8/22/2013

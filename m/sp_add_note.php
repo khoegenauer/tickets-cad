@@ -91,7 +91,7 @@ $disabled = ( ( sp_is_guest() ) || ( sp_is_member() ) ) ? "disabled" : "" ;		//
 	<tr><td><td>
 	<TEXTAREA name='frm_text' COLS=40 ROWS = 2 placeholder="here ..." <?php echo $disabled;?>></TEXTAREA>
 	</td></tr>
-<tr valign = 'baseline'><td>	
+<tr valign = 'top'><td>	
 	<br/>
 	<B>Signal</B> &raquo; 
 	</td><td>
@@ -107,14 +107,14 @@ $disabled = ( ( sp_is_guest() ) || ( sp_is_member() ) ) ? "disabled" : "" ;		//
 			</SELECT><BR />
 </td></tr>
 <tr><td colspan=2 align='center'>
-	<B>Apply to</B>&nbsp;&raquo;&nbsp;
+	<B>Apply to:</B>&nbsp;&nbsp;&nbsp;
 		<?php echo get_text("Description"); ?>	 &raquo; <input type = 'radio' name='frm_add_to' value='0' CHECKED <?php echo $disabled;?> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<?php echo get_text("Disposition"); ?>&raquo; <input type = 'radio' name='frm_add_to' value='1' <?php echo $disabled;?>/><br/><br/>
 	</td></tr>
 	<tr><td colspan = 2 align = 'center'>
-		<input type = 'button' value = 'Cancel' 	onClick = 'navTo ("sp_tick.php", <?php echo $_POST['id'];?>)' />&nbsp;&nbsp;&nbsp;&nbsp;
-		<input type = 'button' value = 'Reset' 		onClick = 'this.form.reset()' <?php echo $disabled;?>/>&nbsp;&nbsp;&nbsp;&nbsp;
-		<input type = 'button' value = 'Next' 		onClick = 'validate()' <?php echo $disabled;?>/>
+		<input type = 'button' value = 'Cancel' 	onClick = 'navTo ("sp_tick.php", <?php echo $_POST['id'];?>)' />
+		<input type = 'button' value = 'Reset' 		onClick = 'this.form.reset()' <?php echo $disabled;?>  STYLE = 'margin-left:40px' />
+		<input type = 'button' value = 'Next' 		onClick = 'validate()' <?php echo $disabled;?>  STYLE = 'margin-left:40px' />
 	</td></tr></table>		
 
 <input type = hidden name = 'update' 		value='1' />									<!-- signifies 'do update' -->

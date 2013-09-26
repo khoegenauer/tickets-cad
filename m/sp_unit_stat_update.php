@@ -56,7 +56,7 @@ $disabled = ( ( sp_is_guest() ) || ( sp_is_member() ) ) ? "disabled" : "" ;		//
 <FORM name='frm_status' METHOD='post' ACTION = '<?php echo basename(__FILE__);?>?rand=<?php echo time();?>'>
 <table border = 0 style = 'margin-top: 80px;'>
 <tr><td colspan = 2 align = center>
-	<H4>Select status for <?php echo $row['the_type'];?> <?php echo $row['handle'];?></H4>
+	<H4>Change status for <?php echo $row['the_type'];?> <?php echo $row['handle'];?></H4>
 	</td></tr>
 <tr><td colspan = 2 align = center>
 <?php

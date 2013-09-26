@@ -1,5 +1,6 @@
 <?php
 /*
+9/12/2013 corrected notifies sql
 */
 if ( !defined ( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}
 error_reporting (E_ALL	^ E_DEPRECATED);
@@ -33,8 +34,9 @@ if ( ! ( array_key_exists ( "frm_add_str", $_POST ) ) ) { 	// ==================
 			FROM `$GLOBALS[mysql_prefix]responder` 
 		WHERE (`contact_via` 	REGEXP '^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$') )
 	UNION 
-		(SELECT '?' AS `user`, `email_address` AS `email`, NULL AS `email_s`   
-			FROM `$GLOBALS[mysql_prefix]notify` 
+		(SELECT `u`.`user` AS `user`, `n`.`email_address` AS `email`, NULL AS `email_s`   
+			FROM `$GLOBALS[mysql_prefix]notify` `n`
+			LEFT JOIN `$GLOBALS[mysql_prefix]user` `u` ON `n`.`user` = `u`.`id`
 		WHERE (`email_address` 	REGEXP '^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$') )		
 	UNION 
 		(SELECT `name` AS `user`, `email` AS `email`, `other` AS `email_s`   

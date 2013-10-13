@@ -1,0 +1,53 @@
+Roadmap
+=======
+
+- Dependency Injection (Falko)
+    - Add remaining wrapper methods to Class, Method, Parameter, Property, and Extension
+    - Add missing class ezcReflectionObject
+    - Wrappers for recently introduced features in PHP's Reflection extension
+    - Write documentation of the methods introduced for the dependency injection mechanism
+- Test Coverage (Sebastian)
+    - Test ezcReflectionParameter::__construct, since PHP Manual states:
+      "To introspect function parameters, you will first have to create an
+      instance of the ReflectionFunction or ReflectionMethod classes and then
+      use their getParameters() method to retrieve an array of parameters."
+- Refactoring (Falko)
+    - Rename DocTag/Tag into Annotation in all class, interface, method, property, and parameter names
+    - Rename src/interfaces/parser.php into annotation_parser.php
+    - Complete the adoption of the eZ Components coding standard
+- Missing Features (?)
+    - Add support for mixed type
+    - Add support pipe notation in type definitions, i.e. @param datatype1|datatype2 $paramname description
+    - Use type hints for type introspection if they are available
+    - See todo annotations in the source code, e.g., using 'grep -inor todo.* --exclude-dir=.svn .'
+    - Implement getCode methods (Sebastian)
+    - support for annotation grouping especially for properties (has to be supported by PHP, maybe a feature for StaticReflection)
+    - trow ezcReflectionUnknownTypeException during XML Schema generation
+- Tutorial (?)
+- Documentation about available annotations (?)
+    (see https://instantsvc.svn.sourceforge.net/svnroot/instantsvc/branches/transition/doc/style-guide.html)
+- Integration of Toby's annotation parser? (Toby?)
+
+
+Depending Projects
+==================
+
+- ezcWsdl based on ezcReflection
+    - Can PHPT tests from the SOAP extension be reused?
+
+- StaticReflection (an implementation of PHP's Reflection API using static source code analysis)
+    - Parser which generates objects implementing ReflectionAPI
+        - Reuse phuml parser?
+            - open issues?
+        - Reuse function/method body parser from phpDepend or phpCallGraph?
+    - API Design for additional features StaticReflection
+        - Call and Dependency Analysis (e.g. getCallers, getCallees, getAccessedProperties, getAccessedSqlTables)
+        - Code Generation (e.g. save)
+        - Code Editing (e.g. addProperty, addMethod, addParameter, setCode, setName, copy, delete)
+        - Refactoring (e.g. setParentClass, emancipate, moveToParent)
+        - XMI Export (could perhaps go into ezcReflection)
+    - StaticReflection objects should be able to be created through
+        - Source code (static analysis of the files)
+        - (ezc)Reflection objects
+        - Manually calling API methods
+        - XMI import

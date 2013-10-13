@@ -1,0 +1,102 @@
+0.8.0 - 05 August 2009
+======================
+- Switched layouting in GraphVizDriver from top-to-bottom to left-to-right,
+  since that allows for more compact call graph layouts
+- New output driver that generates UML sequence diagrams using UMLGraph
+  (http://umlgraph.org) [thanks to Martin Cleaver]
+- New output driver that outputs the calls as an associative array
+  [thanks to Till Klampaeckel]
+- New output driver that detects dead (unreachable) code
+- Switched to most recent versions of ezcBase, ezcConsoleTools, and ezcReflection
+- Updated autoload files for ezcBase and ezcConsoleTools
+- Created separate folders for InstantSVC libraries
+- Modified CodeAnalyzer autoload file to work as an external repository in ezcBase
+- Added values 'array' and 'umlgraph' for the output format option
+- Added command line option -u / --umloutputdir
+- Added diagnostics output, so buffer around currentToken is self-evident
+- Candidate fix for ambiguous ->method call
+- Test for ambiguous ->method call
+- Added debugging trace to PHPCallGraph.php
+- Extended startFunction method signature to pass sourcecode of member
+  presently being analyzed ()
+- Added unit tests using PHPUnit
+- Created whitelist for PHPUnit's code coverage analysis
+- Added a configuration file for phpUnderControl
+- Added Apache Ant build script for use with phpUnderControl
+- Fixed an issue with reference parameters by sending function signatures
+  through htmlspecialchars() before inserting them into the XML code generated
+  by the CGA driver
+- Improved source code documentation
+- Introduced Static Reflection as storage objects in DeadCodeDriver
+- Added StaticReflection from InstantSVC SVN via svn:externals
+- Spelling of the program name changed into phpCallGraph
+- Added example for ArrayDriver in readme file
+- Added new options to readme file
+- Registered ArrayDriver in commandline interface
+- Added some files to the ignore list of the PEAR package definition
+- Added a shell script to set up autoloading for the external libraries
+- PEAR package Console_GetOpt removed
+- License infos updated
+- Script for generating a PEAR package description [thanks to Christian Weiske]
+- Added autoload definition for InstantSVC CodeAnalyzer
+- Added reset method to driver interface and all driver implementations
+
+0.7.0-pl1 - 04 February 2009
+============================
+- Fixed parameter handling for Windows
+
+0.7.0 - 14 November 2008
+========================
+- Fixed recursion into sub directories
+- Fixed cluster assignment in GraphVizDriver
+- Added option -a / --autoload which allows to define a PHP file with an
+  autoload function which will be included into the sandbox of the
+  CodeAnalyzer
+- Added option -g / --debug which enables printing of debug information in
+  the CodeAnalyzer (helpful if you get no output at all, since it shows errors
+  during code analysis)
+- Added white-list-based filtering of function calls in the sandbox of the
+  InstantSVC CodeAnalyzer
+- Added the possibility to define a PHP file with an autoload function,
+  which will be included into the sandbox
+- Added generation of include statements for the sandbox
+- Added exception for start-up errors of the sandbox, which may be caused
+  by extensions like PHP-GTK, when started inside a web server
+- Cleanup of sandbox code
+- Short open tags enabled in the php.ini for the CodeAnalyzer sandbox
+- New font and node color in GraphVizDriver
+- Rounded node style when not using colors
+- Added an __autoload function using ezcBase to load eZ Components classes
+- Added code to automatically find an SVN, Release or PEAR version of the
+  ezcBase class
+- Integrated the autoloader for eZ Components into the start script of
+  the phpCallGraph command line front-end
+- Start script for Windows improved (file names with spaces are supported now)
+- Ignore list introduced
+- Added the autoloader to the eZ Components example
+- Added debug option to example shell script
+- Command line help, readme file and source code documentation improved
+
+0.6.4 - 29 December 2007
+========================
+- Analysis for functions implemented
+- Workarround for analyzing code in the global scope (not)
+- Documentation improved
+- New methods reset() and initializeNewGraph() in class GraphVizDriver
+- Constructor parameters of GraphVizDriver reordered
+- Include path reordered to leverage an existing PEAR installation
+- Fixed some E_STRICT notices
+- Error reporting in GraphVizDriver reduced because of PEAR dependency
+- redundant file_put_contents() removed in commandline front end
+
+0.6.3 - 11 October 2007
+=======================
+- fixed Bug #1792171: bad path to php executable
+- basic PEAR classes included (no PEAR installation required)
+- batch script improved to ease usage under windows
+- autoload files for eZ Components and InstantSVC directly included
+  (improves Windows compatibility)
+
+0.6.1 - 10 September 2007
+=========================
+- first public release of PHPCallGraph

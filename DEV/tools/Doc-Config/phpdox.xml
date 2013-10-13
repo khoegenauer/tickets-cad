@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpdox xmlns="http://phpdox.de/config">
+  <project name="Tickets-CAD" source="${basedir}" workdir="${basedir}/DEV/build/docs/PHPDox/xml">
+    <collector backend="parser" />
+    <generator output="${basedir}/DEV/build/docs/PHPDox">
+      <build engine="html" output="html"/>
+    </generator>
+  </project>
+</phpdox>

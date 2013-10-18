@@ -1,0 +1,52 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/browser.inc.php
+--------------------------------------------------------------------------------
+FOUND 33 ERROR(S) AND 5 WARNING(S) AFFECTING 25 LINE(S)
+--------------------------------------------------------------------------------
+  1 | WARNING | File has mixed line endings; this may cause incorrect results
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | You must use "/**" style comments for a file comment
+  6 | ERROR   | Space before opening parenthesis of function call prohibited
+  8 | ERROR   | Doc comment for "$input" missing
+  8 | ERROR   | Missing @return tag in function comment
+  8 | ERROR   | Line indented incorrectly; expected 0 spaces, found 128
+  8 | ERROR   | Opening brace should be on a new line
+  8 | WARNING | Line exceeds 85 characters; contains 159 characters
+ 10 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 0
+ 11 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 0
+ 12 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 0
+ 14 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 0
+ 16 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 0
+ 16 | ERROR   | Space after opening parenthesis of function call prohibited
+ 18 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 0
+ 19 | ERROR   | Line indented incorrectly; expected 4 spaces, found 0
+ 19 | ERROR   | Expected "for (...) {\n"; found "for (...){\n"
+ 20 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 2
+ 21 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 2
+ 22 | ERROR   | Line indented incorrectly; expected 8 spaces, found 2
+ 22 | ERROR   | Expected "if (...) {\n"; found "if(...){\n"
+ 22 | ERROR   | There must be a single space between the closing parenthesis
+    |         | and the opening brace of a multi-line IF statement; found 0
+    |         | spaces
+ 23 | ERROR   | Line indented incorrectly; expected at least 12 spaces, found 4
+ 24 | ERROR   | Line indented incorrectly; expected at least 12 spaces, found 4
+ 25 | ERROR   | Line indented incorrectly; expected at least 12 spaces, found 4
+ 26 | ERROR   | Line indented incorrectly; expected 12 spaces, found 4
+ 26 | ERROR   | Expected "for (...) {\n"; found "for (...){\n"
+ 27 | ERROR   | Line indented incorrectly; expected at least 16 spaces, found 6
+ 27 | ERROR   | Space before opening parenthesis of function call prohibited
+ 28 | WARNING | Inline control structures are discouraged
+ 30 | WARNING | Inline control structures are discouraged
+ 39 | ERROR   | Expected "} else if (...) {\n"; found "}\n    else if (...)
+    |         | {\n"
+ 39 | WARNING | Line exceeds 85 characters; contains 87 characters
+ 42 | ERROR   | Expected "} else if (...) {\n"; found "}\n    else if (...)
+    |         | {\n"
+ 46 | ERROR   | Line indented incorrectly; expected 4 spaces, found 0
+ 52 | ERROR   | Line indented incorrectly; expected 4 spaces, found 0
+ 52 | ERROR   | Expected "} else {\n"; found "}else{\n"
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.75Mb
+

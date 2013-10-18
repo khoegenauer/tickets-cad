@@ -1,0 +1,41 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/js/jscoord.js
+--------------------------------------------------------------------------------
+FOUND 1 ERROR(S) AND 30 WARNING(S) AFFECTING 31 LINE(S)
+--------------------------------------------------------------------------------
+   1 | ERROR   | End of line character is invalid; expected "\n" but found
+     |         | "\r\n"
+  84 | WARNING | Inline control structures are discouraged
+  90 | WARNING | Inline control structures are discouraged
+  91 | WARNING | Inline control structures are discouraged
+  93 | WARNING | Inline control structures are discouraged
+  94 | WARNING | Inline control structures are discouraged
+ 157 | WARNING | Inline control structures are discouraged
+ 168 | WARNING | Inline control structures are discouraged
+ 172 | WARNING | Inline control structures are discouraged
+ 680 | WARNING | Inline control structures are discouraged
+ 695 | WARNING | Inline control structures are discouraged
+ 696 | WARNING | Inline control structures are discouraged
+ 697 | WARNING | Inline control structures are discouraged
+ 698 | WARNING | Inline control structures are discouraged
+ 699 | WARNING | Inline control structures are discouraged
+ 700 | WARNING | Inline control structures are discouraged
+ 701 | WARNING | Inline control structures are discouraged
+ 702 | WARNING | Inline control structures are discouraged
+ 703 | WARNING | Inline control structures are discouraged
+ 704 | WARNING | Inline control structures are discouraged
+ 705 | WARNING | Inline control structures are discouraged
+ 706 | WARNING | Inline control structures are discouraged
+ 707 | WARNING | Inline control structures are discouraged
+ 708 | WARNING | Inline control structures are discouraged
+ 709 | WARNING | Inline control structures are discouraged
+ 710 | WARNING | Inline control structures are discouraged
+ 711 | WARNING | Inline control structures are discouraged
+ 712 | WARNING | Inline control structures are discouraged
+ 713 | WARNING | Inline control structures are discouraged
+ 714 | WARNING | Inline control structures are discouraged
+ 715 | WARNING | Inline control structures are discouraged
+--------------------------------------------------------------------------------
+
+Time: 1 second, Memory: 8.00Mb
+

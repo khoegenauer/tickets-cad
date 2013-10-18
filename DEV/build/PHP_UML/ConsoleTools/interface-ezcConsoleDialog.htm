@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+	<title>interface ezcConsoleDialog</title>
+	<link type="text/css" rel="stylesheet" href="../$resources/style.css"/>
+	<script type="text/javascript" language="javascript" src="../$resources/treeview.js"></script>
+</head>
+<body onload="toggler.setupTreeView('MainList');toggler.backToMemorizedState('MainList', 'btnToggle')">
+	<ul class="navig">
+	<li><a href="javascript:toggler.toggleAll('MainList', 'btnToggle')" class="expandAllBtn" id="btnToggle">Expand all</a></li><li><a href="../help.htm" class="helpBtn">Help</a></li><li><a href="../index-all.htm" class="indexAllBtn">Index</a></li><li><a href="package-summary.htm" class="top">Package</a></li><li><a href="interface-ezcConsoleDialogValidator.htm" class="right">Next interface</a></li>
+	</ul>
+	<h1 class="interface">ezcConsoleDialog</h1>
+	<div id="MainList">
+	<div class="description"><p>Interface <span class="title">ConsoleTools\ezcConsoleDialog</span></p><ul class="description"><li>Interface that every console dialog class must implement.<br />
+<br />
+Console dialogs can either be used on their own or using the {@link ezcConsoleDialogViewer} (recommended). In the dialog viewer, a dialog is instanciated and displayed in a loop, until it receives a valid result value.</li><li class="smaller">@package ConsoleTools</li><li class="smaller">@version //autogen//</li><li>All implementing classes: <a href="../ConsoleTools/class-ezcConsoleMenuDialog.htm" class="link2">ConsoleTools\ezcConsoleMenuDialog</a>, <a href="../ConsoleTools/class-ezcConsoleQuestionDialog.htm" class="link2">ConsoleTools\ezcConsoleQuestionDialog</a></li><li>File: DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/interfaces/dialog.php</li></ul></div><h2>Functions</h2><ul class="summary"><li class="Collapsed" id="f525ccca9a5b3c"><a href="javascript:void(0);" class="method-pub" target="main">hasValidResult</a>()<ul class="description"><li>Public <a href="../datatype-bool.htm" class="link">bool</a> <span class="smallTitle">hasValidResult</span>()</li><li>Returns if the dialog retrieved a valid result.<br />
+Typically a dialog is displayed in a loop until he received a valid result. What a valid result is, is determined by the dialog itself.</li><li class="smaller">@return bool If a valid result was retrieved.</li></ul></li><li class="Collapsed" id="f525ccca9a5d4c"><a href="javascript:void(0);" class="method-pub" target="main">getResult</a>()<ul class="description"><li>Public <a href="../datatype-mixed.htm" class="link">mixed</a> <span class="smallTitle">getResult</span>()</li><li>Returns the result retrieved.<br />
+If no valid result was retreived, yet, this method should throw an {@link ezcDialogNoValidResultException}. Otherwise this method returns the result.</li><li class="smaller">@return mixed The retreived result.</li><li class="smaller">@throws ezcDialogNoValidResultException</li></ul></li><li class="Collapsed" id="f525ccca9a5fb8"><a href="javascript:void(0);" class="method-pub" target="main">display</a>()<ul class="description"><li>Public <a href="../datatype-void.htm" class="link">void</a> <span class="smallTitle">display</span>()</li><li>Displays the dialog.<br />
+Displays the dialog. Dialogs will most propably block the application until the user took some interaction.</li></ul></li><li class="Collapsed" id="f525ccca9a61b4"><a href="javascript:void(0);" class="method-pub" target="main">reset</a>()<ul class="description"><li>Public <a href="../datatype-void.htm" class="link">void</a> <span class="smallTitle">reset</span>()</li><li>Resets the dialog to its initial state.<br />
+Resets the dialog to its orginal state in respect to its internal changes. Note: Any changes you made to the options are kept in tact.</li></ul></li></ul>
+	</div>
+	<div id="footer">Documentation generated on Oct 15, 2013, 0:03:45 -0500 by <a href="http://pear.php.net/package/PHP_UML/" target="_new">PHP_UML</a></div>
+</body>
+</html>

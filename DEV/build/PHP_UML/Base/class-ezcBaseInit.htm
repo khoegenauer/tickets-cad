@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+	<title>class ezcBaseInit</title>
+	<link type="text/css" rel="stylesheet" href="../$resources/style.css"/>
+	<script type="text/javascript" language="javascript" src="../$resources/treeview.js"></script>
+</head>
+<body onload="toggler.setupTreeView('MainList');toggler.backToMemorizedState('MainList', 'btnToggle')">
+	<ul class="navig">
+	<li><a href="javascript:toggler.toggleAll('MainList', 'btnToggle')" class="expandAllBtn" id="btnToggle">Expand all</a></li><li><a href="../help.htm" class="helpBtn">Help</a></li><li><a href="../index-all.htm" class="indexAllBtn">Index</a></li><li><a href="class-ezcBaseFile.htm" class="left">Prev class</a></li><li><a href="package-summary.htm" class="top">Package</a></li><li><a href="class-ezcBaseMetaDataPearReader.htm" class="right">Next class</a></li>
+	</ul>
+	<h1 class="class">ezcBaseInit</h1>
+	<div id="MainList">
+	<div class="description"><p>Class <span class="title">Base\ezcBaseInit</span></p><ul class="description"><li>Provides a method to implement delayed initialization of objects.<br />
+<br />
+With the methods in this class you can implement callbacks to configure singleton classes. In order to do so you will have to change the getInstance() method of your singleton class to include a call to ezcBaseInit::fetchConfig() as in the following example:<br />
+<br />
+&lt;code&gt; &lt;?php public static function getInstance() { if ( is_null( self::$instance ) ) { self::$instance = new ezcConfigurationmanager(); ezcBaseInit::fetchConfig( 'ezcInitConfigurationManager', self::$instance ); } return self::$instance; } ?&gt; &lt;/code&gt; <br />
+You will also need to configure which callback class to call. This you do with the ezcBaseInit::setCallback() method. The following examples sets the callback classname for the configuration identifier 'ezcInitConfigurationManager' to 'cfgConfigurationManager':<br />
+<br />
+&lt;code&gt; &lt;?php ezcBaseInit::setCallback( 'ezcInitConfigurationManager', 'cfgConfigurationManager' ); ?&gt; &lt;/code&gt; <br />
+The class 'cfgConfigurationManager' is required to implement the ezcBaseConfigurationInitializer interface, which defines only one method:<br />
+configureObject(). An example on how to implement such a class could be:<br />
+<br />
+&lt;code&gt; &lt;?php class cfgConfigurationManager implements ezcBaseConfigurationInitializer { static public function configureObject( ezcConfigurationManager $cfgManagerObject ) { $cfgManagerObject-&gt;init( 'ezcConfigurationIniReader', 'settings', array( 'useComments' =&gt; true ) ); } } ?&gt; &lt;/code&gt; <br />
+Of course the implementation of this callback class is up to the application developer that uses the component (in this example the Configuration component's class ezcConfigurationManager).</li><li class="smaller">@package Base</li><li class="smaller">@version //autogentag//</li><li>File: DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/src/init.php</li></ul></div><h2>Properties</h2><ul class="summary"><li class="Collapsed" id="callbackMap"><a href="javascript:void(0);" class="property-pri" target="main">$callbackMap</a><ul class="description"><li>Private static <a href="../datatype-array.htm" class="link">array</a> <span class="smallTitle">$callbackMap</span><span class="defVal"> = array()</span></li><li>Contains the callback where the identifier is the key of the array, and the classname to callback to the value.</li></ul></li></ul><h2>Functions</h2><ul class="summary"><li class="Collapsed" id="f525ccca8397b9"><a href="javascript:void(0);" class="method-pub" target="main">setCallback</a>(<a href="../datatype-string.htm" class="link">string</a> $identifier, <a href="../datatype-string.htm" class="link">string</a> $callbackClassname)<ul class="description"><li>Public static <a href="../datatype-void.htm" class="link">void</a> <span class="smallTitle">setCallback</span>(<a href="../datatype-string.htm" class="link">string</a> $identifier, <a href="../datatype-string.htm" class="link">string</a> $callbackClassname)</li><li>Adds the classname $callbackClassname as callback for the identifier $identifier.</li><li class="smaller">@param string $identifier</li><li class="smaller">@param string $callbackClassname</li></ul></li><li class="Collapsed" id="f525ccca839d09"><a href="javascript:void(0);" class="method-pub" target="main">fetchConfig</a>(<a href="../datatype-string.htm" class="link">string</a> $identifier, <a href="../datatype-object.htm" class="link">object</a> $object)<ul class="description"><li>Public static <a href="../datatype-mixed.htm" class="link">mixed</a> <span class="smallTitle">fetchConfig</span>(<a href="../datatype-string.htm" class="link">string</a> $identifier, <a href="../datatype-object.htm" class="link">object</a> $object)</li><li>Uses the configured callback belonging to $identifier to configure the $object.<br />
+<br />
+The method will return the return value of the callback method, or null in case there was no callback set for the specified $identifier.</li><li class="smaller">@param string $identifier</li><li class="smaller">@param object $object</li></ul></li></ul>
+	</div>
+	<div id="footer">Documentation generated on Oct 15, 2013, 0:03:45 -0500 by <a href="http://pear.php.net/package/PHP_UML/" target="_new">PHP_UML</a></div>
+</body>
+</html>

@@ -1,0 +1,118 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/bits.class.php
+--------------------------------------------------------------------------------
+FOUND 98 ERROR(S) AND 9 WARNING(S) AFFECTING 46 LINE(S)
+--------------------------------------------------------------------------------
+  1 | WARNING | File has mixed line endings; this may cause incorrect results
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | You must use "/**" style comments for a file comment
+  6 | ERROR   | Space after opening parenthesis of function call prohibited
+  6 | ERROR   | Space before closing parenthesis of function call prohibited
+  7 | ERROR   | Space after opening parenthesis of function call prohibited
+  7 | ERROR   | Space before closing parenthesis of function call prohibited
+  8 | ERROR   | Space after opening parenthesis of function call prohibited
+  8 | ERROR   | Space before closing parenthesis of function call prohibited
+  9 | ERROR   | Space after opening parenthesis of function call prohibited
+  9 | ERROR   | Space before closing parenthesis of function call prohibited
+ 10 | ERROR   | Space after opening parenthesis of function call prohibited
+ 10 | ERROR   | Space before closing parenthesis of function call prohibited
+ 11 | ERROR   | Space after opening parenthesis of function call prohibited
+ 11 | ERROR   | Space before closing parenthesis of function call prohibited
+ 12 | ERROR   | Space after opening parenthesis of function call prohibited
+ 12 | ERROR   | Space before closing parenthesis of function call prohibited
+ 13 | ERROR   | Space after opening parenthesis of function call prohibited
+ 13 | ERROR   | Space before closing parenthesis of function call prohibited
+ 14 | ERROR   | Space after opening parenthesis of function call prohibited
+ 14 | ERROR   | Space before closing parenthesis of function call prohibited
+ 15 | ERROR   | Space after opening parenthesis of function call prohibited
+ 15 | ERROR   | Space before closing parenthesis of function call prohibited
+ 16 | ERROR   | Space after opening parenthesis of function call prohibited
+ 16 | ERROR   | Space before closing parenthesis of function call prohibited
+ 17 | ERROR   | Space after opening parenthesis of function call prohibited
+ 17 | ERROR   | Space before closing parenthesis of function call prohibited
+ 18 | ERROR   | Space after opening parenthesis of function call prohibited
+ 18 | ERROR   | Space before closing parenthesis of function call prohibited
+ 19 | ERROR   | Space after opening parenthesis of function call prohibited
+ 19 | ERROR   | Space before closing parenthesis of function call prohibited
+ 20 | ERROR   | Space after opening parenthesis of function call prohibited
+ 20 | ERROR   | Space before closing parenthesis of function call prohibited
+ 21 | ERROR   | Space after opening parenthesis of function call prohibited
+ 21 | ERROR   | Space before closing parenthesis of function call prohibited
+ 22 | ERROR   | Space after opening parenthesis of function call prohibited
+ 22 | ERROR   | Space before closing parenthesis of function call prohibited
+ 23 | ERROR   | Space after opening parenthesis of function call prohibited
+ 23 | ERROR   | Space before closing parenthesis of function call prohibited
+ 24 | ERROR   | Space after opening parenthesis of function call prohibited
+ 24 | ERROR   | Space before closing parenthesis of function call prohibited
+ 25 | ERROR   | Space after opening parenthesis of function call prohibited
+ 25 | ERROR   | Space before closing parenthesis of function call prohibited
+ 26 | ERROR   | Space after opening parenthesis of function call prohibited
+ 26 | ERROR   | Space before closing parenthesis of function call prohibited
+ 27 | ERROR   | Space after opening parenthesis of function call prohibited
+ 27 | ERROR   | Space before closing parenthesis of function call prohibited
+ 28 | ERROR   | Space after opening parenthesis of function call prohibited
+ 28 | ERROR   | Space before closing parenthesis of function call prohibited
+ 29 | ERROR   | Space after opening parenthesis of function call prohibited
+ 29 | ERROR   | Space before closing parenthesis of function call prohibited
+ 30 | ERROR   | Space after opening parenthesis of function call prohibited
+ 30 | ERROR   | Space before closing parenthesis of function call prohibited
+ 31 | ERROR   | Space after opening parenthesis of function call prohibited
+ 31 | ERROR   | Space before closing parenthesis of function call prohibited
+ 32 | ERROR   | Space after opening parenthesis of function call prohibited
+ 32 | ERROR   | Space before closing parenthesis of function call prohibited
+ 33 | ERROR   | Space after opening parenthesis of function call prohibited
+ 33 | ERROR   | Space before closing parenthesis of function call prohibited
+ 34 | ERROR   | Space after opening parenthesis of function call prohibited
+ 34 | ERROR   | Space before closing parenthesis of function call prohibited
+ 35 | ERROR   | Space after opening parenthesis of function call prohibited
+ 35 | ERROR   | Space before closing parenthesis of function call prohibited
+ 36 | ERROR   | Space after opening parenthesis of function call prohibited
+ 36 | ERROR   | Space before closing parenthesis of function call prohibited
+ 37 | ERROR   | Space after opening parenthesis of function call prohibited
+ 37 | ERROR   | Space before closing parenthesis of function call prohibited
+ 39 | ERROR   | Missing @category tag in class comment
+ 39 | ERROR   | Missing @package tag in class comment
+ 39 | ERROR   | Missing @author tag in class comment
+ 39 | ERROR   | Missing @license tag in class comment
+ 39 | ERROR   | Missing @link tag in class comment
+ 39 | ERROR   | Line indented incorrectly; expected 0 spaces, found 152
+ 39 | ERROR   | Opening brace of a class must be on the line after the
+    |         | definition
+ 40 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 2
+ 41 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 2
+ 41 | ERROR   | Line indented incorrectly; expected 4 spaces, found 134
+ 41 | ERROR   | Opening brace should be on a new line
+ 41 | WARNING | Line exceeds 85 characters; contains 157 characters
+ 42 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 6
+ 44 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 2
+ 44 | ERROR   | Doc comment for "$bit" missing
+ 44 | ERROR   | Missing @return tag in function comment
+ 44 | ERROR   | Line indented incorrectly; expected 4 spaces, found 150
+ 44 | ERROR   | Method name "CBitField::QueryBit" is not in camel caps format
+ 44 | ERROR   | Opening brace should be on a new line
+ 44 | WARNING | Line exceeds 85 characters; contains 176 characters
+ 45 | WARNING | Inline control structures are discouraged
+ 47 | WARNING | Inline control structures are discouraged
+ 50 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 2
+ 50 | ERROR   | Doc comment for "$bit" missing
+ 50 | ERROR   | Doc comment for "$boolean" missing
+ 50 | ERROR   | Missing @return tag in function comment
+ 50 | ERROR   | Line indented incorrectly; expected 4 spaces, found 169
+ 50 | ERROR   | Method name "CBitField::SetBit" is not in camel caps format
+ 50 | ERROR   | Opening brace should be on a new line
+ 50 | WARNING | Line exceeds 85 characters; contains 203 characters
+ 51 | WARNING | Inline control structures are discouraged
+ 53 | WARNING | Inline control structures are discouraged
+ 56 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 2
+ 56 | ERROR   | Doc comment for "$bit" missing
+ 56 | ERROR   | Missing @return tag in function comment
+ 56 | ERROR   | Line indented incorrectly; expected 4 spaces, found 149
+ 56 | ERROR   | Method name "CBitField::FlipBit" is not in camel caps format
+ 56 | ERROR   | Opening brace should be on a new line
+ 56 | WARNING | Line exceeds 85 characters; contains 174 characters
+ 57 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 4
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 2.00Mb
+

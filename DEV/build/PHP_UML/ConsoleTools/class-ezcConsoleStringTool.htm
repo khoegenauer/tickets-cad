@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+	<title>class ezcConsoleStringTool</title>
+	<link type="text/css" rel="stylesheet" href="../$resources/style.css"/>
+	<script type="text/javascript" language="javascript" src="../$resources/treeview.js"></script>
+</head>
+<body onload="toggler.setupTreeView('MainList');toggler.backToMemorizedState('MainList', 'btnToggle')">
+	<ul class="navig">
+	<li><a href="javascript:toggler.toggleAll('MainList', 'btnToggle')" class="expandAllBtn" id="btnToggle">Expand all</a></li><li><a href="../help.htm" class="helpBtn">Help</a></li><li><a href="../index-all.htm" class="indexAllBtn">Index</a></li><li><a href="class-ezcConsoleTable.htm" class="left">Prev class</a></li><li><a href="package-summary.htm" class="top">Package</a></li>
+	</ul>
+	<h1 class="class">ezcConsoleStringTool</h1>
+	<div id="MainList">
+	<div class="description"><p>Class <span class="title">ConsoleTools\ezcConsoleStringTool</span></p><ul class="description"><li>String tool class.<br />
+<br />
+Tool class for the ConsoleTools package. Contains multi-byte encoding save string methods.</li><li class="smaller">@package ConsoleTools</li><li class="smaller">@version //autogen//</li><li class="smaller">@access private</li><li>File: DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/tools/string.php</li></ul></div><h2>Functions</h2><ul class="summary"><li class="Collapsed" id="f525cccaa222ef"><a href="javascript:void(0);" class="method-pub" target="main">wordWrap</a>(<a href="../datatype-string.htm" class="link">string</a> $str, <a href="../datatype-int.htm" class="link">int</a> $width<span class="defVal"> = 75</span>, <a href="../datatype-string.htm" class="link">string</a> $break<span class="defVal"> = &quot;\n&quot;</span>, <a href="../datatype-bool.htm" class="link">bool</a> $cut<span class="defVal"> = false</span>)<ul class="description"><li>Public <span class="link">string|false</span> <span class="smallTitle">wordWrap</span>(<a href="../datatype-string.htm" class="link">string</a> $str, <a href="../datatype-int.htm" class="link">int</a> $width<span class="defVal"> = 75</span>, <a href="../datatype-string.htm" class="link">string</a> $break<span class="defVal"> = &quot;\n&quot;</span>, <a href="../datatype-bool.htm" class="link">bool</a> $cut<span class="defVal"> = false</span>)</li><li>Binary safe wordwrap() replacement.<br />
+<br />
+This method is a multi-byte encoding safe replacement for the PHP function wordwrap(). It mimics exactly the behavior of wordwrap(), but uses iconv_* functions with UTF-8 encoding. The parameters received by this method equal the parameters of {@link http://php.net/wordwrap wordwrap()}. Note: Make sure to only hand UTF-8 encoded content to this method.</li><li class="smaller">@param string $str</li><li class="smaller">@param int $width</li><li class="smaller">@param string $break</li><li class="smaller">@param bool $cut</li></ul></li><li class="Collapsed" id="f525cccaa22b2a"><a href="javascript:void(0);" class="method-pub" target="main">strPad</a>(<a href="../datatype-string.htm" class="link">string</a> $input, <a href="../datatype-int.htm" class="link">int</a> $padLength, <a href="../datatype-string.htm" class="link">string</a> $padString<span class="defVal"> = &#039; &#039;</span>, <a href="../datatype-int.htm" class="link">int</a> $padType<span class="defVal"> = STR_PAD_RIGHT</span>)<ul class="description"><li>Public <a href="../datatype-string.htm" class="link">string</a> <span class="smallTitle">strPad</span>(<a href="../datatype-string.htm" class="link">string</a> $input, <a href="../datatype-int.htm" class="link">int</a> $padLength, <a href="../datatype-string.htm" class="link">string</a> $padString<span class="defVal"> = &#039; &#039;</span>, <a href="../datatype-int.htm" class="link">int</a> $padType<span class="defVal"> = STR_PAD_RIGHT</span>)</li><li>Binary safe str_pad() replacement.<br />
+<br />
+This method is a multi-byte encoding safe replacement for the PHP function str_pad().  It mimics exactly the behavior of str_pad(), but uses iconv_* functions with UTF-8 encoding. The parameters received by this method equal the parameters of {@link http://php.net/str_pad str_pad()}. Note: Make sure to hand only UTF-8 encoded content to this method.</li><li class="smaller">@param string $input</li><li class="smaller">@param int $padLength</li><li class="smaller">@param string $padString</li><li class="smaller">@param int $padType</li></ul></li></ul>
+	</div>
+	<div id="footer">Documentation generated on Oct 15, 2013, 0:03:45 -0500 by <a href="http://pear.php.net/package/PHP_UML/" target="_new">PHP_UML</a></div>
+</body>
+</html>

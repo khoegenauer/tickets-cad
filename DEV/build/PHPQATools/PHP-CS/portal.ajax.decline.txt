@@ -1,0 +1,27 @@
+
+FILE: ...media/kevin/OS/xampp/htdocs/tickets/tickets-cad/portal/ajax/decline.php
+--------------------------------------------------------------------------------
+FOUND 14 ERROR(S) AND 2 WARNING(S) AFFECTING 9 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | Missing file doc comment
+  2 | ERROR   | "require_once" is a statement not a function; no parentheses
+    |         | are required
+  8 | WARNING | Line exceeds 85 characters; contains 171 characters
+  9 | ERROR   | No space found after comma in function call
+  9 | ERROR   | Space after opening parenthesis of function call prohibited
+  9 | WARNING | Line exceeds 85 characters; contains 117 characters
+ 11 | ERROR   | Expected "if (...) {\n"; found "if(...) {\n"
+ 12 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 12 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 13 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 13 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found 1
+ 13 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 14 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 14 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 15 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.50Mb
+

@@ -1,0 +1,22 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/as_up_un_status.php
+--------------------------------------------------------------------------------
+FOUND 7 ERROR(S) AND 4 WARNING(S) AFFECTING 10 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | You must use "/**" style comments for a file comment
+  4 | WARNING | Line exceeds 85 characters; contains 148 characters
+  5 | WARNING | Line exceeds 85 characters; contains 100 characters
+ 11 | ERROR   | "require_once" is a statement not a function; no parentheses
+    |         | are required
+ 18 | ERROR   | Space after closing parenthesis of function call prohibited
+ 26 | ERROR   | Space after opening parenthesis of function call prohibited
+ 26 | WARNING | Line exceeds 85 characters; contains 100 characters
+ 30 | WARNING | Line exceeds 85 characters; contains 87 characters
+ 31 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 33 | ERROR   | Space after closing parenthesis of function call prohibited
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.75Mb
+

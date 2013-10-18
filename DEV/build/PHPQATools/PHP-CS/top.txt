@@ -1,0 +1,572 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/top.php
+--------------------------------------------------------------------------------
+FOUND 305 ERROR(S) AND 117 WARNING(S) AFFECTING 282 LINE(S)
+--------------------------------------------------------------------------------
+    2 | ERROR   | You must use "/**" style comments for a file comment
+   18 | WARNING | Line exceeds 85 characters; contains 148 characters
+   38 | WARNING | Line exceeds 85 characters; contains 110 characters
+   42 | WARNING | Line exceeds 85 characters; contains 112 characters
+   46 | ERROR   | "require_once" is a statement not a function; no parentheses
+      |         | are required
+   47 | ERROR   | "require_once" is a statement not a function; no parentheses
+      |         | are required
+   50 | ERROR   | Expected "if (...) {\n"; found "if(...) {	//	10/28/10\n"
+   51 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+   51 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+   51 | ERROR   | "require_once" is a statement not a function; no parentheses
+      |         | are required
+   51 | ERROR   | File is being conditionally included; use "include_once"
+      |         | instead
+   52 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+   52 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found
+      |         | 1
+   53 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+   58 | ERROR   | TRUE, FALSE and NULL must be lowercase; expected "false" but
+      |         | found "FALSE"
+   64 | ERROR   | Space before opening parenthesis of function call prohibited
+   73 | WARNING | Line exceeds 85 characters; contains 89 characters
+   78 | WARNING | Line exceeds 85 characters; contains 157 characters
+   79 | WARNING | Line exceeds 85 characters; contains 121 characters
+   80 | WARNING | Line exceeds 85 characters; contains 157 characters
+   81 | WARNING | Line exceeds 85 characters; contains 121 characters
+   82 | WARNING | Line exceeds 85 characters; contains 156 characters
+   83 | WARNING | Line exceeds 85 characters; contains 121 characters
+   84 | WARNING | Line exceeds 85 characters; contains 156 characters
+   85 | WARNING | Line exceeds 85 characters; contains 121 characters
+   86 | WARNING | Line exceeds 85 characters; contains 156 characters
+   87 | WARNING | Line exceeds 85 characters; contains 121 characters
+   88 | WARNING | Line exceeds 85 characters; contains 136 characters
+   90 | WARNING | Line exceeds 85 characters; contains 159 characters
+   91 | WARNING | Line exceeds 85 characters; contains 110 characters
+   92 | WARNING | Line exceeds 85 characters; contains 161 characters
+  104 | ERROR   | Expected "if (...) {\n"; found "if(...) {\n"
+  105 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+  105 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+  106 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+  107 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+  108 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+  108 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found
+      |         | 1
+  108 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+  109 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+  109 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+  110 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+  111 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+  112 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+  113 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+  115 | WARNING | Line exceeds 85 characters; contains 97 characters
+  207 | WARNING | Line exceeds 85 characters; contains 100 characters
+  228 | WARNING | Line exceeds 85 characters; contains 101 characters
+  326 | WARNING | Line exceeds 85 characters; contains 87 characters
+  348 | WARNING | Line exceeds 85 characters; contains 152 characters
+  361 | WARNING | Line exceeds 85 characters; contains 93 characters
+  410 | WARNING | Line exceeds 85 characters; contains 89 characters
+  425 | WARNING | Line exceeds 85 characters; contains 87 characters
+  470 | WARNING | Line exceeds 85 characters; contains 112 characters
+  484 | WARNING | Line exceeds 85 characters; contains 90 characters
+  597 | WARNING | Line exceeds 85 characters; contains 112 characters
+  635 | WARNING | Line exceeds 85 characters; contains 88 characters
+  812 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 2
+  812 | WARNING | Line exceeds 85 characters; contains 136 characters
+  814 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+  814 | ERROR   | Closing brace must be on a line by itself
+  826 | WARNING | Line exceeds 85 characters; contains 93 characters
+  866 | WARNING | Line exceeds 85 characters; contains 94 characters
+  871 | WARNING | Line exceeds 85 characters; contains 204 characters
+  873 | WARNING | Line exceeds 85 characters; contains 129 characters
+  888 | WARNING | Line exceeds 85 characters; contains 97 characters
+  893 | WARNING | Line exceeds 85 characters; contains 215 characters
+  895 | WARNING | Line exceeds 85 characters; contains 124 characters
+  910 | WARNING | Line exceeds 85 characters; contains 93 characters
+  918 | WARNING | Line exceeds 85 characters; contains 229 characters
+  921 | WARNING | Line exceeds 85 characters; contains 128 characters
+  943 | WARNING | Line exceeds 85 characters; contains 90 characters
+  955 | WARNING | Line exceeds 85 characters; contains 194 characters
+  957 | WARNING | Line exceeds 85 characters; contains 165 characters
+  973 | WARNING | Line exceeds 85 characters; contains 93 characters
+  988 | WARNING | Line exceeds 85 characters; contains 122 characters
+ 1003 | WARNING | Line exceeds 85 characters; contains 190 characters
+ 1013 | WARNING | Line exceeds 85 characters; contains 127 characters
+ 1021 | WARNING | Line exceeds 85 characters; contains 98 characters
+ 1023 | WARNING | Line exceeds 85 characters; contains 96 characters
+ 1025 | WARNING | Line exceeds 85 characters; contains 89 characters
+ 1031 | ERROR   | There must be exactly one blank line before the tags in
+      |         | function comment
+ 1034 | ERROR   | @return tag is empty in function comment
+ 1041 | ERROR   | Function name "get_daynight" is prefixed with a package name
+      |         | but does not begin with a capital letter
+ 1041 | ERROR   | Opening brace should be on a new line
+ 1042 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1042 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1042 | WARNING | Line exceeds 85 characters; contains 120 characters
+ 1043 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1043 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1044 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1044 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found
+      |         | 1
+ 1053 | WARNING | Line exceeds 85 characters; contains 123 characters
+ 1075 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1075 | ERROR   | Line indented incorrectly; expected 0 spaces, found 2
+ 1076 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1076 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1077 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1077 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1078 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1078 | ERROR   | Closing brace indented incorrectly; expected 2 spaces, found
+      |         | 3
+ 1079 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1079 | ERROR   | Line indented incorrectly; expected 0 spaces, found 2
+ 1079 | ERROR   | Expected "} else {\n"; found "}\n		else {				// logged-in\n"
+ 1080 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1080 | ERROR   | Line indented incorrectly; expected 4 spaces, found 3
+ 1081 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1081 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found
+      |         | 4
+ 1082 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1082 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found
+      |         | 4
+ 1083 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1083 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found
+      |         | 4
+ 1084 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1084 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found
+      |         | 4
+ 1085 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1085 | ERROR   | Closing brace indented incorrectly; expected 3 spaces, found
+      |         | 4
+ 1086 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1086 | ERROR   | Line indented incorrectly; expected 4 spaces, found 3
+ 1086 | ERROR   | Expected "} else {\n"; found "}\n			else {\n"
+ 1087 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1087 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found
+      |         | 4
+ 1088 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1088 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found
+      |         | 4
+ 1089 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1089 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found
+      |         | 4
+ 1090 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1090 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found
+      |         | 4
+ 1091 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1091 | ERROR   | Closing brace indented incorrectly; expected 3 spaces, found
+      |         | 4
+ 1092 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1093 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 2
+ 1094 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1095 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1096 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1097 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1098 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1099 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1100 | WARNING | Line exceeds 85 characters; contains 98 characters
+ 1100 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1103 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1104 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1105 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1106 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1106 | ERROR   | Closing brace indented incorrectly; expected 2 spaces, found
+      |         | 3
+ 1152 | WARNING | Line exceeds 85 characters; contains 186 characters
+ 1183 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1183 | ERROR   | Line indented incorrectly; expected 0 spaces, found 2
+ 1183 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1183 | ERROR   | Space after opening parenthesis of function call prohibited
+ 1183 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1183 | ERROR   | Space before closing parenthesis of function call prohibited
+ 1183 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1183 | ERROR   | Space after opening parenthesis of function call prohibited
+ 1183 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1183 | ERROR   | Space before closing parenthesis of function call prohibited
+ 1183 | WARNING | Line exceeds 85 characters; contains 109 characters
+ 1184 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1185 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1186 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1187 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1188 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1189 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 2
+ 1190 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1191 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1192 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1193 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1194 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1195 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1196 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1197 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1198 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1199 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1200 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 2
+ 1201 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1201 | WARNING | Line exceeds 85 characters; contains 107 characters
+ 1202 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1217 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1218 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1219 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1220 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1221 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1222 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 2
+ 1223 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1224 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1225 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1226 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1227 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1228 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1229 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1230 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+ 1231 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 2
+ 1232 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1233 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1234 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1235 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1236 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1238 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1239 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1244 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1244 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 1244 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1244 | ERROR   | Space after opening parenthesis of function call prohibited
+ 1244 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1244 | ERROR   | Space before closing parenthesis of function call prohibited
+ 1244 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1244 | ERROR   | Space after opening parenthesis of function call prohibited
+ 1244 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1244 | ERROR   | Space before closing parenthesis of function call prohibited
+ 1244 | WARNING | Line exceeds 85 characters; contains 104 characters
+ 1245 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1245 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 2
+ 1245 | ERROR   | "require_once" is a statement not a function; no parentheses
+      |         | are required
+ 1245 | ERROR   | File is being conditionally included; use "include_once"
+      |         | instead
+ 1246 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1246 | ERROR   | Closing brace indented incorrectly; expected 1 spaces, found
+      |         | 2
+ 1263 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1264 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1264 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1264 | ERROR   | Space after opening parenthesis of function call prohibited
+ 1265 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1265 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 1265 | ERROR   | Expected "if (...) {\n"; found "if(...) {\n"
+ 1266 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1266 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 2
+ 1266 | WARNING | Line exceeds 85 characters; contains 137 characters
+ 1267 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1267 | ERROR   | Closing brace indented incorrectly; expected 1 spaces, found
+      |         | 2
+ 1267 | ERROR   | Line indented incorrectly; expected 0 spaces, found 2
+ 1268 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1268 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 2
+ 1269 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1271 | WARNING | Line exceeds 85 characters; contains 98 characters
+ 1272 | WARNING | Line exceeds 85 characters; contains 141 characters
+ 1274 | WARNING | Line exceeds 85 characters; contains 131 characters
+ 1277 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1279 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1280 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1281 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1281 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 1281 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1282 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1282 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 2
+ 1283 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1283 | ERROR   | Line indented incorrectly; expected 4 spaces, found 2
+ 1284 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1284 | ERROR   | Line indented incorrectly; expected 8 spaces, found 3
+ 1284 | ERROR   | Expected "if (...) {\n"; found "if (...)  {\n"
+ 1284 | ERROR   | There must be a single space between the closing parenthesis
+      |         | and the opening brace of a multi-line IF statement; found 2
+      |         | spaces
+ 1285 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1285 | ERROR   | Line indented incorrectly; expected at least 12 spaces, found
+      |         | 7
+ 1286 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1286 | ERROR   | Line indented incorrectly; expected at least 12 spaces, found
+      |         | 7
+ 1287 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1287 | ERROR   | Closing brace indented incorrectly; expected 3 spaces, found
+      |         | 7
+ 1288 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1288 | ERROR   | Closing brace indented incorrectly; expected 2 spaces, found
+      |         | 3
+ 1289 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1290 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1290 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 2
+ 1291 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1291 | ERROR   | Closing brace indented incorrectly; expected 1 spaces, found
+      |         | 2
+ 1292 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1294 | WARNING | Line exceeds 85 characters; contains 115 characters
+ 1295 | WARNING | Line exceeds 85 characters; contains 124 characters
+ 1296 | WARNING | Line exceeds 85 characters; contains 218 characters
+ 1300 | WARNING | Line exceeds 85 characters; contains 201 characters
+ 1301 | WARNING | Line exceeds 85 characters; contains 208 characters
+ 1305 | WARNING | Line exceeds 85 characters; contains 194 characters
+ 1307 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1308 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1309 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1309 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 1309 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1310 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1310 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 2
+ 1311 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1311 | ERROR   | Line indented incorrectly; expected 4 spaces, found 2
+ 1312 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1312 | ERROR   | Line indented incorrectly; expected 8 spaces, found 3
+ 1312 | ERROR   | Expected "if (...) {\n"; found "if (...)  {\n"
+ 1312 | ERROR   | There must be a single space between the closing parenthesis
+      |         | and the opening brace of a multi-line IF statement; found 2
+      |         | spaces
+ 1313 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1313 | ERROR   | Line indented incorrectly; expected at least 12 spaces, found
+      |         | 7
+ 1314 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1314 | ERROR   | Line indented incorrectly; expected at least 12 spaces, found
+      |         | 7
+ 1315 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1315 | ERROR   | Closing brace indented incorrectly; expected 3 spaces, found
+      |         | 7
+ 1316 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1316 | ERROR   | Closing brace indented incorrectly; expected 2 spaces, found
+      |         | 3
+ 1317 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1318 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1318 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 2
+ 1319 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1319 | ERROR   | Closing brace indented incorrectly; expected 1 spaces, found
+      |         | 2
+ 1320 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1321 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1321 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 1322 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1324 | WARNING | Line exceeds 85 characters; contains 167 characters
+ 1325 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1326 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1326 | ERROR   | Closing brace indented incorrectly; expected 1 spaces, found
+      |         | 3
+ 1328 | WARNING | Line exceeds 85 characters; contains 146 characters
+ 1331 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1331 | ERROR   | Line indented incorrectly; expected 0 spaces, found 2
+ 1331 | ERROR   | Expected "if (...) {\n"; found "if (...) { "
+ 1331 | ERROR   | Closing brace must be on a line by itself
+ 1331 | WARNING | Line exceeds 85 characters; contains 124 characters
+ 1338 | WARNING | Line exceeds 85 characters; contains 102 characters
+ 1339 | WARNING | Line exceeds 85 characters; contains 90 characters
+ 1340 | WARNING | Line exceeds 85 characters; contains 101 characters
+ 1342 | WARNING | Line exceeds 85 characters; contains 102 characters
+ 1343 | WARNING | Line exceeds 85 characters; contains 88 characters
+ 1344 | WARNING | Line exceeds 85 characters; contains 102 characters
+ 1345 | WARNING | Line exceeds 85 characters; contains 93 characters
+ 1347 | ERROR   | Expected "if (...) {\n"; found "if(...) {		//	10/23/12\n"
+ 1347 | WARNING | Line exceeds 85 characters; contains 135 characters
+ 1348 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1349 | WARNING | Line exceeds 85 characters; contains 101 characters
+ 1349 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1350 | WARNING | Line exceeds 85 characters; contains 86 characters
+ 1351 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1352 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1352 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found
+      |         | 1
+ 1354 | WARNING | Line exceeds 85 characters; contains 102 characters
+ 1355 | WARNING | Line exceeds 85 characters; contains 90 characters
+ 1356 | WARNING | Line exceeds 85 characters; contains 102 characters
+ 1357 | WARNING | Line exceeds 85 characters; contains 92 characters
+ 1358 | WARNING | Line exceeds 85 characters; contains 102 characters
+ 1359 | WARNING | Line exceeds 85 characters; contains 90 characters
+ 1361 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1361 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 1362 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1363 | WARNING | Line exceeds 85 characters; contains 102 characters
+ 1363 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1364 | WARNING | Line exceeds 85 characters; contains 132 characters
+ 1365 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1366 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1366 | ERROR   | Closing brace indented incorrectly; expected 1 spaces, found
+      |         | 3
+ 1367 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1367 | ERROR   | Line indented incorrectly; expected 0 spaces, found 2
+ 1368 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1369 | WARNING | Line exceeds 85 characters; contains 102 characters
+ 1369 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1371 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1372 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1372 | ERROR   | Closing brace indented incorrectly; expected 2 spaces, found
+      |         | 3
+ 1373 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1375 | WARNING | Line exceeds 85 characters; contains 102 characters
+ 1376 | WARNING | Line exceeds 85 characters; contains 86 characters
+ 1377 | WARNING | Line exceeds 85 characters; contains 101 characters
+ 1379 | WARNING | Line exceeds 85 characters; contains 102 characters
+ 1380 | WARNING | Line exceeds 85 characters; contains 92 characters
+ 1381 | WARNING | Line exceeds 85 characters; contains 103 characters
+ 1382 | WARNING | Line exceeds 85 characters; contains 124 characters
+ 1383 | WARNING | Line exceeds 85 characters; contains 102 characters
+ 1384 | WARNING | Line exceeds 85 characters; contains 153 characters
+ 1386 | WARNING | Line exceeds 85 characters; contains 102 characters
+ 1387 | WARNING | Line exceeds 85 characters; contains 107 characters
+ 1389 | WARNING | Line exceeds 85 characters; contains 125 characters
+ 1393 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1393 | ERROR   | Line indented incorrectly; expected 0 spaces, found 2
+ 1394 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1396 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1397 | WARNING | Line exceeds 85 characters; contains 101 characters
+ 1397 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1398 | WARNING | Line exceeds 85 characters; contains 128 characters
+ 1399 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1400 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1400 | ERROR   | Closing brace indented incorrectly; expected 2 spaces, found
+      |         | 3
+ 1402 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1402 | ERROR   | Line indented incorrectly; expected 0 spaces, found 2
+ 1402 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1402 | ERROR   | Space after opening parenthesis of function call prohibited
+ 1402 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1402 | ERROR   | Space before closing parenthesis of function call prohibited
+ 1402 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1402 | ERROR   | Space after opening parenthesis of function call prohibited
+ 1402 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1402 | ERROR   | Space before closing parenthesis of function call prohibited
+ 1402 | WARNING | Line exceeds 85 characters; contains 128 characters
+ 1403 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1404 | WARNING | Line exceeds 85 characters; contains 107 characters
+ 1404 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1405 | WARNING | Line exceeds 85 characters; contains 88 characters
+ 1406 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+ 1407 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1407 | ERROR   | Closing brace indented incorrectly; expected 2 spaces, found
+      |         | 1
+ 1415 | WARNING | Line exceeds 85 characters; contains 187 characters
+ 1416 | WARNING | Line exceeds 85 characters; contains 150 characters
+ 1417 | WARNING | Line exceeds 85 characters; contains 120 characters
+ 1427 | WARNING | Line exceeds 85 characters; contains 121 characters
+ 1443 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1443 | WARNING | Line exceeds 85 characters; contains 89 characters
+ 1444 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1446 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1446 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1447 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1447 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 1448 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1448 | ERROR   | Line indented incorrectly; expected 0 spaces, found 5
+ 1449 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1449 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1449 | WARNING | Line exceeds 85 characters; contains 104 characters
+ 1450 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1450 | ERROR   | Case breaking statement indented incorrectly; expected 9
+      |         | spaces, found 3
+ 1451 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1451 | ERROR   | Line indented incorrectly; expected 0 spaces, found 5
+ 1452 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1452 | ERROR   | Line indented incorrectly; expected 0 spaces, found 5
+ 1453 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1453 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 3
+ 1453 | WARNING | Line exceeds 85 characters; contains 105 characters
+ 1454 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1454 | ERROR   | Case breaking statement indented incorrectly; expected 9
+      |         | spaces, found 3
+ 1455 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1455 | ERROR   | Line indented incorrectly; expected 0 spaces, found 5
+ 1456 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1456 | ERROR   | Closing brace indented incorrectly; expected 1 spaces, found
+      |         | 2
+ 1459 | WARNING | Line exceeds 85 characters; contains 106 characters
+ 1460 | WARNING | Line exceeds 85 characters; contains 114 characters
+ 1462 | WARNING | Line exceeds 85 characters; contains 130 characters
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 4.00Mb
+

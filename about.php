@@ -676,12 +676,53 @@ Changes for Tickets V 2.30A
 	  
 209.  Messages that are associated with a particular incident are output in the after action report.
 	  
-209.  As usual, various corrections applied in this release regarding functionality and security.   
+210.  As usual, various corrections applied in this release regarding functionality and security.   
+
+Changes for Tickets V 2.30B & C
+
+211.  Various fixes to Messaging
+
+Changes for Tickets V 2.40A
+
+212.  Revised mapping to Google Maps API V3.
+
+213.  Various other fixes to messaging.
+
+Changes for Tickets V 2.40B
+
+214.  Creation of map markup now supported - revised from Google maps API V2 to V3.
+
+215.  New "Hello All Stations" (HAS) feature. Allows broadcast message to all logged in users.  Optional, see setting 
+	  "broadcast", and note that the default value is 0, for 'off'.  This feature is experimental; when active, it
+	  requires an Internet connection.
+
+216.  Addition of setting to allow user definition of how many hours before current time, booked calls are hidden from 
+	  the current situation screen.  See setting "hide_booked", where the default is 48 hours.
+
+217.  Addition of system/messaging setting to determine whether incoming email messages from pop3 server are deleted 
+	  after download. Look under messaging settings (note you only see these settings if the system setting
+	  "use_messaging" is not 0.
+	  
+218.  We now provide for an 'ICS-213' button in the top menu; see setting 'ics_top', where a setting of '1' exercises
+	  this option.  Default is '0', for 'off'.
+
+219.  Database schema was revised to add indexing to certain of the larger tables.  Volume users will see some 
+	  performance gains.  And as usual various other fixes.
+
+Changes for Tickets 2.40C
+
+220.  Various fixes. No new functionality.
+
+Changes for Tickets 2.40D
+
+221.  Added PHP native mail test script
+
+222.  Various fixes including messaging, auto unit status and some map functions.
 
 Let us know if the above is too terse and where further expansion wd be useful.
 <A NAME = 'bottom'></A>
 
-February '13
+July '13
 Arnie Shore
 Andy Harvey, UK
 

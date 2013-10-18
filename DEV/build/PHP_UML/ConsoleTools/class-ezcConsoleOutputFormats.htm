@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+	<title>class ezcConsoleOutputFormats</title>
+	<link type="text/css" rel="stylesheet" href="../$resources/style.css"/>
+	<script type="text/javascript" language="javascript" src="../$resources/treeview.js"></script>
+</head>
+<body onload="toggler.setupTreeView('MainList');toggler.backToMemorizedState('MainList', 'btnToggle')">
+	<ul class="navig">
+	<li><a href="javascript:toggler.toggleAll('MainList', 'btnToggle')" class="expandAllBtn" id="btnToggle">Expand all</a></li><li><a href="../help.htm" class="helpBtn">Help</a></li><li><a href="../index-all.htm" class="indexAllBtn">Index</a></li><li><a href="class-ezcConsoleOutputFormat.htm" class="left">Prev class</a></li><li><a href="package-summary.htm" class="top">Package</a></li><li><a href="class-ezcConsoleTableCell.htm" class="right">Next class</a></li>
+	</ul>
+	<h1 class="class">ezcConsoleOutputFormats</h1>
+	<div id="MainList">
+	<div class="description"><p>Class <span class="title">ConsoleTools\ezcConsoleOutputFormats</span> implements <a href="../interface-Iterator.htm" class="link2">Iterator</a>, <a href="../interface-Countable.htm" class="link2">Countable</a></p><ul class="description"><li>Class to store the collection for formating classes.<br />
+<br />
+This class stores objects of {@link ezcConsoleOutputFormat}, which represents a format option set for {@link ezcConsoleOutput}.<br />
+<br />
+&lt;code&gt; // New ezcConsoleOutput // $output-&gt;format is instance of ezcConsoleOutputFormats.<br />
+$output = new ezcConsoleOutput(); <br />
+// Default format - color = blue $output-&gt;formats-&gt;default-&gt;color = 'blue'; // Default format - weight = bold $output-&gt;formats-&gt;default-&gt;style = array( 'bold' ); <br />
+// New format &quot;important&quot; - color = red $output-&gt;formats-&gt;important-&gt;color = 'red'; // Format &quot;important&quot; - background color = black $output-&gt;formats-&gt;important-&gt;bgcolor = 'black'; &lt;/code&gt;</li><li class="smaller">@package ConsoleTools</li><li class="smaller">@version //autogen//</li><li>All implemented interfaces: <a href="../interface-Iterator.htm" class="link2">Iterator</a>, <a href="../interface-Countable.htm" class="link2">Countable</a></li><li>File: DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/structs/output_formats.php</li></ul></div><h2>Properties</h2><ul class="summary"><li class="Collapsed" id="formats"><a href="javascript:void(0);" class="property-pro" target="main">$formats</a><ul class="description"><li>Protected <a href="../datatype-array.htm" class="link">array</a> <span class="smallTitle">$formats</span><span class="defVal"> = array()</span></li><li>Array of ezcConsoleOutputFormat.</li></ul></li></ul><h2>Functions</h2><ul class="summary"><li class="Collapsed" id="f525ccca9f1c99"><a href="javascript:void(0);" class="method-pub" target="main">__construct</a>()<ul class="description"><li>Public <a href="../datatype-void.htm" class="link">void</a> <span class="smallTitle">__construct</span>()</li><li>Create a new ezcConsoleOutputFormats object.<br />
+<br />
+Creates a new, empty object of this class. It also adds a default format.</li></ul></li><li class="Collapsed" id="f525ccca9f1ff3"><a href="javascript:void(0);" class="method-pub" target="main">current</a>()<ul class="description"><li>Public <a href="../ConsoleTools/class-ezcConsoleOutputFormat.htm" class="link">ConsoleTools\ezcConsoleOutputFormat</a> <span class="smallTitle">current</span>()</li><li>Returns the current Iterator value.<br />
+<br />
+Implementation of {@link Iterator::current()}.</li></ul></li><li class="Collapsed" id="f525ccca9f223c"><a href="javascript:void(0);" class="method-pub" target="main">next</a>()<ul class="description"><li>Public <span class="link">ezcConsoleOutputFormat|bool</span> <span class="smallTitle">next</span>()</li><li>Advances the Iterator to the next element.<br />
+<br />
+Implementation of {@link Iterator::next()}.</li></ul></li><li class="Collapsed" id="f525ccca9f2483"><a href="javascript:void(0);" class="method-pub" target="main">key</a>()<ul class="description"><li>Public <a href="../datatype-string.htm" class="link">string</a> <span class="smallTitle">key</span>()</li><li>Returns the current Iterator key.<br />
+<br />
+Implementation of {@link Iterator::key()}.</li></ul></li><li class="Collapsed" id="f525ccca9f26c7"><a href="javascript:void(0);" class="method-pub" target="main">rewind</a>()<ul class="description"><li>Public <a href="../ConsoleTools/class-ezcConsoleOutputFormat.htm" class="link">ConsoleTools\ezcConsoleOutputFormat</a> <span class="smallTitle">rewind</span>()</li><li>Resets the Iterator to the first element.<br />
+<br />
+Implementation of {@link Iterator::rewind()}.</li></ul></li><li class="Collapsed" id="f525ccca9f2917"><a href="javascript:void(0);" class="method-pub" target="main">valid</a>()<ul class="description"><li>Public <a href="../datatype-bool.htm" class="link">bool</a> <span class="smallTitle">valid</span>()</li><li>Checks if the current Iterator position is still valid.<br />
+<br />
+Implementation of {@link Iterator::valid()}.</li></ul></li><li class="Collapsed" id="f525ccca9f2b79"><a href="javascript:void(0);" class="method-pub" target="main">count</a>()<ul class="description"><li>Public <a href="../datatype-void.htm" class="link">void</a> <span class="smallTitle">count</span>()</li><li>Returns the number of registered formats.<br />
+<br />
+Implementation of {@link Countable::count()}.</li></ul></li><li class="Collapsed" id="f525ccca9f2dbc"><a href="javascript:void(0);" class="method-pub" target="main">__get</a>(<a href="../datatype-string.htm" class="link">string</a> $formatName)<ul class="description"><li>Public <a href="../ConsoleTools/class-ezcConsoleOutputFormat.htm" class="link">ConsoleTools\ezcConsoleOutputFormat</a> <span class="smallTitle">__get</span>(<a href="../datatype-string.htm" class="link">string</a> $formatName)</li><li>Read access to the formats.<br />
+<br />
+Formats are accessed directly like properties of this object. If a format does not exist, it is created on the fly (using default values),</li><li class="smaller">@param string $formatName</li><li class="smaller">@return ezcConsoleOutputFormat The format.</li></ul></li><li class="Collapsed" id="f525ccca9f316e"><a href="javascript:void(0);" class="method-pub" target="main">__set</a>(<a href="../datatype-string.htm" class="link">string</a> $formatName, <a href="../ConsoleTools/class-ezcConsoleOutputFormat.htm" class="link">ConsoleTools\ezcConsoleOutputFormat</a> $val)<ul class="description"><li>Public <a href="../datatype-void.htm" class="link">void</a> <span class="smallTitle">__set</span>(<a href="../datatype-string.htm" class="link">string</a> $formatName, <a href="../ConsoleTools/class-ezcConsoleOutputFormat.htm" class="link">ConsoleTools\ezcConsoleOutputFormat</a> $val)</li><li>Write access to the formats.<br />
+<br />
+Formats are accessed directly like properties of this object. If a format does not exist, it is created on the fly (using default values),</li><li class="smaller">@param string $formatName</li><li class="smaller">@param ezcConsoleOutputFormat $val The format defintion.</li></ul></li><li class="Collapsed" id="f525ccca9f3558"><a href="javascript:void(0);" class="method-pub" target="main">__isset</a>(<a href="../datatype-string.htm" class="link">string</a> $formatName)<ul class="description"><li>Public <a href="../datatype-bool.htm" class="link">bool</a> <span class="smallTitle">__isset</span>(<a href="../datatype-string.htm" class="link">string</a> $formatName)</li><li>Property isset access.</li><li class="smaller">@param string $formatName Name of the property.</li><li class="smaller">@return bool True is the property is set, otherwise false.</li></ul></li></ul>
+	</div>
+	<div id="footer">Documentation generated on Oct 15, 2013, 0:03:45 -0500 by <a href="http://pear.php.net/package/PHP_UML/" target="_new">PHP_UML</a></div>
+</body>
+</html>

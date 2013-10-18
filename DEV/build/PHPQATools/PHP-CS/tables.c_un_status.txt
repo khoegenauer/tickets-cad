@@ -1,0 +1,39 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tables/c_un_status.php
+--------------------------------------------------------------------------------
+FOUND 2 ERROR(S) AND 27 WARNING(S) AFFECTING 29 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | You must use "/**" style comments for a file comment
+  9 | WARNING | Line exceeds 85 characters; contains 125 characters
+ 10 | WARNING | Line exceeds 85 characters; contains 117 characters
+ 21 | WARNING | Line exceeds 85 characters; contains 131 characters
+ 24 | WARNING | Line exceeds 85 characters; contains 188 characters
+ 26 | WARNING | Line exceeds 85 characters; contains 90 characters
+ 27 | WARNING | Line exceeds 85 characters; contains 139 characters
+ 28 | WARNING | Line exceeds 85 characters; contains 121 characters
+ 29 | WARNING | Line exceeds 85 characters; contains 117 characters
+ 31 | WARNING | Line exceeds 85 characters; contains 88 characters
+ 32 | WARNING | Line exceeds 85 characters; contains 195 characters
+ 33 | WARNING | Line exceeds 85 characters; contains 318 characters
+ 35 | WARNING | Line exceeds 85 characters; contains 188 characters
+ 36 | WARNING | Line exceeds 85 characters; contains 263 characters
+ 37 | WARNING | Line exceeds 85 characters; contains 93 characters
+ 39 | WARNING | Line exceeds 85 characters; contains 272 characters
+ 40 | WARNING | Line exceeds 85 characters; contains 94 characters
+ 46 | WARNING | Line exceeds 85 characters; contains 87 characters
+ 48 | WARNING | Line exceeds 85 characters; contains 86 characters
+ 49 | WARNING | Line exceeds 85 characters; contains 86 characters
+ 52 | WARNING | Line exceeds 85 characters; contains 90 characters
+ 54 | WARNING | Line exceeds 85 characters; contains 86 characters
+ 57 | WARNING | Line exceeds 85 characters; contains 90 characters
+ 59 | WARNING | Line exceeds 85 characters; contains 86 characters
+ 64 | WARNING | Line exceeds 85 characters; contains 146 characters
+ 65 | WARNING | Line exceeds 85 characters; contains 217 characters
+ 66 | WARNING | Line exceeds 85 characters; contains 149 characters
+ 69 | WARNING | Line exceeds 85 characters; contains 108 characters
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.50Mb
+

@@ -1,0 +1,25 @@
+
+FILE: ...media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tables/u_unit_types.php
+--------------------------------------------------------------------------------
+FOUND 2 ERROR(S) AND 13 WARNING(S) AFFECTING 13 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  1 | ERROR   | Missing file doc comment
+  1 | WARNING | Line exceeds 85 characters; contains 129 characters
+  7 | WARNING | Line exceeds 85 characters; contains 86 characters
+  8 | WARNING | Line exceeds 85 characters; contains 91 characters
+  9 | WARNING | Line exceeds 85 characters; contains 124 characters
+ 14 | WARNING | Line exceeds 85 characters; contains 129 characters
+ 17 | WARNING | Line exceeds 85 characters; contains 258 characters
+ 18 | WARNING | Line exceeds 85 characters; contains 88 characters
+ 19 | WARNING | Line exceeds 85 characters; contains 272 characters
+ 21 | WARNING | Line exceeds 85 characters; contains 92 characters
+ 22 | WARNING | Line exceeds 85 characters; contains 94 characters
+ 32 | WARNING | Line exceeds 85 characters; contains 146 characters
+ 33 | WARNING | Line exceeds 85 characters; contains 151 characters
+ 34 | WARNING | Line exceeds 85 characters; contains 150 characters
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.50Mb
+

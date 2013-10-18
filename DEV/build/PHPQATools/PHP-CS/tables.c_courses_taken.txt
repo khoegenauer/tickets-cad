@@ -1,0 +1,63 @@
+
+FILE: ...ia/kevin/OS/xampp/htdocs/tickets/tickets-cad/tables/c_courses_taken.php
+--------------------------------------------------------------------------------
+FOUND 41 ERROR(S) AND 12 WARNING(S) AFFECTING 29 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | You must use "/**" style comments for a file comment
+ 16 | WARNING | Line exceeds 85 characters; contains 133 characters
+ 18 | WARNING | Line exceeds 85 characters; contains 118 characters
+ 21 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 21 | WARNING | Line exceeds 85 characters; contains 107 characters
+ 22 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 22 | ERROR   | No space found after comma in function call
+ 22 | ERROR   | No space found after comma in function call
+ 22 | ERROR   | Space after opening parenthesis of function call prohibited
+ 22 | WARNING | Line exceeds 85 characters; contains 119 characters
+ 24 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 25 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 27 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 27 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 28 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 28 | ERROR   | Line indented incorrectly; expected 4 spaces, found 2
+ 29 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 29 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 3
+ 30 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 30 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 3
+ 31 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 31 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 3
+ 32 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 32 | ERROR   | Closing brace indented incorrectly; expected 2 spaces, found 3
+ 33 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 33 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 2
+ 34 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 34 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 2
+ 35 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 35 | ERROR   | Closing brace indented incorrectly; expected 1 spaces, found 2
+ 38 | WARNING | Line exceeds 85 characters; contains 114 characters
+ 41 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 41 | WARNING | Line exceeds 85 characters; contains 158 characters
+ 42 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 42 | ERROR   | No space found after comma in function call
+ 42 | ERROR   | No space found after comma in function call
+ 42 | ERROR   | Space after opening parenthesis of function call prohibited
+ 42 | WARNING | Line exceeds 85 characters; contains 119 characters
+ 43 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 43 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 44 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 44 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 2
+ 44 | WARNING | Line exceeds 85 characters; contains 123 characters
+ 45 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 45 | ERROR   | Closing brace indented incorrectly; expected 1 spaces, found 2
+ 46 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 47 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 47 | ERROR   | Space before opening parenthesis of function call prohibited
+ 51 | WARNING | Line exceeds 85 characters; contains 223 characters
+ 53 | WARNING | Line exceeds 85 characters; contains 200 characters
+ 59 | WARNING | Line exceeds 85 characters; contains 146 characters
+ 61 | WARNING | Line exceeds 85 characters; contains 148 characters
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.75Mb
+

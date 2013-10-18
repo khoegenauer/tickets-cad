@@ -1,0 +1,47 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/js/tip_followscroll.js
+--------------------------------------------------------------------------------
+FOUND 34 ERROR(S) AND 3 WARNING(S) AFFECTING 35 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+ 18 | WARNING | Inline control structures are discouraged
+ 19 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 43 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 44 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 45 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 46 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 47 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 48 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 50 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 51 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 52 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 53 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 54 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 55 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 56 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 57 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 58 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 59 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 60 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 61 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 62 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 63 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 64 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 65 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 69 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 70 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 71 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 71 | WARNING | Inline control structures are discouraged
+ 72 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 73 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 73 | WARNING | Inline control structures are discouraged
+ 74 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 75 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 81 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 85 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 86 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 2.00Mb
+

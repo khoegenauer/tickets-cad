@@ -1,1 +1,547 @@
-Temporary Placeholder.
+phpcpd 1.4.0 by Sebastian Bergmann.
+
+Found 180 exact clones with 6434 duplicated lines in 143 files:
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incident_popup.php:189-203
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incident_popup_nm.php:127-141
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:2171-2180
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:2195-2204
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:2141-2154
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:2266-2279
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:2167-2179
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:2292-2304
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:2192-2204
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:2317-2329
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:3324-3353
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_mail.php:35-64
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:3380-3448
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_mail.php:93-161
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/full_scr.inc.php:407-464
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:462-519
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/full_scr.inc.php:2809-2829
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:3640-3660
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:4574-4617
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:4665-4708
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:4396-4409
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:5060-5073
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:4418-4428
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:5081-5091
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:4585-4597
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:5217-5229
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:4610-4627
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:5242-5259
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:303-310
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major_nm.inc.php:255-262
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:2290-2297
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major_nm.inc.php:859-866
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:2383-2389
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major_nm.inc.php:953-959
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:2426-2433
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major_nm.inc.php:987-994
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:2755-2777
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major_nm.inc.php:1143-1165
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:2793-2806
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major_nm.inc.php:1181-1194
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:3320-3340
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major_nm.inc.php:1403-1423
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:3934-3946
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major_nm.inc.php:1654-1666
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:5207-5229
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major_nm.inc.php:1899-1921
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:4646-4688
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major_nm.inc.php:1972-2014
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:4716-4725
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major_nm.inc.php:2042-2051
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:381-470
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:298-387
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:446-469
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:510-533
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:1680-1729
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:871-920
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:1884-1893
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:995-1004
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:2096-2156
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:1147-1207
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:2194-2217
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:1222-1245
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:2608-2763
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:1488-1643
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:2797-3033
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:1675-1911
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:3121-3219
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:1968-2066
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_mail.php:7-20
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:2119-2132
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:3317-3471
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:2140-2294
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:3809-3878
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:2556-2625
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:4011-4065
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:2756-2810
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:4467-4560
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:3062-3155
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:4642-4703
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:3237-3298
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/full_scr.inc.php:2755-2771
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/landb.inc.php:99-115
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/remotes.inc.php:210-224
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/remotes.inc.php:304-318
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/persist.php:17-27
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/persist2.php:15-25
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/persist.php:7-27
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/persist3.php:5-25
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/portal/ajax/insert_ticket.php:61-88
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/portal/ajax/insert_ticket_tentative.php:61-88
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/cleanse_regions.php:23-81
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/cleanse_regions.php:191-249
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/action.php:398-415
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/action_w.php:186-203
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/action.php:460-572
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/action_w.php:248-360
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/action.php:585-593
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/action_w.php:373-381
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/action.php:654-662
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/action_w.php:436-444
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/action.php:816-827
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/action_w.php:496-507
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/add.php:139-212
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/add_nm.php:98-171
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/add.php:231-241
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/add_nm.php:191-201
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/add.php:304-314
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/add_nm.php:263-273
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/portal/ajax/decline.php:9-16
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/del_message.php:57-64
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/del_message.php:57-64
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/del_messages.php:54-61
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/del_message.php:57-64
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/empty_wastebasket.php:9-16
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_all_messages.php:6-20
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_arch_msgs.php:6-20
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_all_messages.php:102-128
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_arch_msgs.php:216-242
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_all_messages.php:6-27
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_messages.php:6-27
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_all_messages.php:54-176
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_messages.php:54-176
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_all_messages.php:6-27
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_sent_messages.php:6-27
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_all_messages.php:54-175
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_sent_messages.php:54-175
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_all_messages.php:17-27
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_waste_messages.php:16-26
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/del_message.php:56-64
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/restore_message.php:56-64
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/list_all_messages.php:116-123
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/view_arch_msg.php:74-81
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Plugins/Logger.php:39-47
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Plugins/Loggers/EchoLogger.php:63-71
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/CharacterReader/UsAsciiReader.php:51-62
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/CharacterReader/Utf8Reader.php:71-82
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/DependencyException.php:28-38
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/IoException.php:28-38
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/KeyCache/NullKeyCache.php:108-115
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/KeyCache.php:101-108
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/FailoverTransport.php:45-56
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/LoadBalancedTransport.php:45-56
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/DependencyException.php:28-38
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/RfcComplianceException.php:28-38
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Transport/Esmtp/Auth/LoginAuthenticator.php:58-65
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Transport/Esmtp/Auth/PlainAuthenticator.php:57-64
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Plugins/Pop/Pop3Exception.php:31-41
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/TransportException.php:29-39
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/xpm/PHP5/MAIL5.php:226-235
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/xpm/PHP5/MAIL5.php:273-282
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/xpm/PHP5/MAIL5.php:226-236
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/xpm/PHP5/MAIL5.php:371-381
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/autoload/base_autoload.php:12-46
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/src/base_autoload.php:12-46
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/src/exceptions/file_io.php:38-48
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/src/exceptions/file_permission.php:51-61
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/tests/features_unix_test.php:74-143
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/tests/features_windows_test.php:74-143
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/docs/tutorial_autoload.php:2-19
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/docs/tutorial_autoload.php:2-19
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/docs/tutorial_example_13_dialog_question.php:16-23
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/docs/tutorial_example_14_dialog_yesnoquestion.php:13-20
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/autoload/console_autoload.php:12-75
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/console_autoload.php:12-75
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/dialog/menu_dialog.php:187-214
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/dialog/question_dialog.php:221-248
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/dialog/menu_dialog.php:197-214
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/dialog/validators/menu_dialog_default.php:179-196
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/dialog/menu_dialog.php:197-214
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/dialog/validators/question_dialog_collection.php:166-183
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/dialog/menu_dialog.php:197-214
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/dialog/validators/question_dialog_regex.php:149-166
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/dialog/validators/question_dialog_regex.php:143-166
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/dialog/validators/question_dialog_type.php:201-224
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/input/help_generators/standard.php:297-316
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/input.php:1092-1111
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/options/progressmonitor.php:45-54
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/options/statusbar.php:49-58
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/docs/example_menu_dialog_full.php:3-29
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/data/posix/ezcConsoleMenuDialogTest__testDialog1.php:3-29
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/data/posix/ezcConsoleMenuDialogTest__testDialog1_res.php:2-22
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/data/posix/ezcConsoleMenuDialogTest__testDialog2_res.php:2-22
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/docs/example_question_dialog_collection_full.php:5-24
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/data/posix/ezcConsoleQuestionDialogTest__testDialog1.php:5-24
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/docs/example_question_dialog_type_full.php:3-28
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/data/posix/ezcConsoleQuestionDialogTest__testDialog2.php:3-28
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/docs/example_question_dialog_factory_yesno.php:3-21
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/data/posix/ezcConsoleQuestionDialogTest__testDialog3.php:3-21
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/input_test.php:1375-1383
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/input_test.php:1473-1481
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/menu_dialog_test.php:223-230
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/question_dialog_test.php:253-260
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/src/function.php:60-104
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/src/method.php:94-138
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/src/extension.php:187-196
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/src/property.php:311-320
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/autoload/reflection_autoload.php:28-38
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/src/reflection_autoload.php:25-35
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/src/tags/return.php:18-42
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/src/tags/var.php:18-42
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/function.php:258-380
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/method.php:362-484
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:79-592
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:80-593
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/do_unit_mail.php:360-377
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/do_unit_mail.php:610-627
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/edit.php:163-176
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/edit_nm.php:139-152
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/edit.php:215-227
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/edit_nm.php:171-183
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/edit.php:1792-1867
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/edit_nm.php:1017-1092
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/full_scr.inc.php:407-464
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities.php:994-1051
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:2231-2238
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities.php:1710-1717
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/action.php:693-702
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities.php:3027-3036
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities.php:1756-1764
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities_nm.php:590-598
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities.php:1786-1796
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities_nm.php:621-631
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities.php:2086-2121
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities_nm.php:782-817
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities.php:2222-2236
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities_nm.php:918-932
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities.php:2658-2664
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities_nm.php:1234-1240
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities.php:2876-2899
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities_nm.php:1356-1379
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities.php:3026-3037
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities_nm.php:1438-1449
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/fac_routes.php:19-139
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/fac_routes_nm.php:16-136
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/fac_routes.php:470-740
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/fac_routes_nm.php:468-738
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/fac_routes.php:1109-1389
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/fac_routes_nm.php:1107-1387
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/fac_routes.php:1431-1458
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/fac_routes_nm.php:1427-1454
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/circle.php:948-966
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/landb.php:891-909
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/circle.php:1209-1238
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/landb.php:1148-1177
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/circle.php:1324-1331
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/landb.php:1224-1231
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/circle.php:1398-1410
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/landb.php:1299-1311
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/icons/buttons/landb.php:1002-1014
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/landb.php:1391-1403
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/dump.php:34-48
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/sp_calls.php:350-364
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/close_in.php:316-333
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/sp_close_in.php:249-266
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/sp_map.php:51-60
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/sp_map_spec.php:63-72
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/sp_map.php:127-136
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/sp_map_spec.php:140-149
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/sp_map.php:262-280
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/sp_map_spec.php:301-319
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/sp_map.php:434-545
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/sp_map_spec.php:508-619
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/sp_fac.php:81-89
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/sp_resp.php:149-157
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/sp_mail.php:208-216
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/sp_resp.php:300-308
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/do_all_mail.php:17-166
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/mail_all.php:15-164
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incident_popup.php:14-20
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/map_popup.php:6-12
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incident_popup.php:221-239
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/map_popup.php:124-142
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:4574-4590
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/message.php:93-109
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major_nm.inc.php:1925-1932
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/message.php:119-126
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:4612-4633
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/message.php:130-151
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/portal/css/stylesheet.php:157-354
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/stylesheet.php:188-385
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/portal/css/stylesheet.php:533-556
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/stylesheet.php:650-673
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tables/c_fac_types.php:1-10
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tables/c_unit_types.php:1-10
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tables/u_fac_types.php:1-34
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tables/u_unit_types.php:1-34
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tables/v_fac_types.php:1-17
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tables/v_unit_types.php:1-17
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/full_scr.inc.php:408-441
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/routes.php:384-417
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/fac_routes.php:718-728
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/routes.php:1426-1436
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/fac_routes.php:1330-1339
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/routes_i.php:598-607
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/fac_routes.php:1444-1455
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/routes_i.php:707-718
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/city_graph.php:43-52
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/sever_graph.php:44-53
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/do_day_night_swap.php:18-32
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/as_up_un_status.php:20-34
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/landb.php:881-894
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/banner.php:878-891
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/circle.php:1096-1127
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/banner.php:1042-1073
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/circle.php:1180-1281
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/banner.php:1135-1236
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/landb.php:1201-1210
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/banner.php:1255-1264
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/circle.php:1365-1387
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/banner.php:1318-1340
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/circle.php:1436-1496
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/banner.php:1390-1450
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tracks.php:52-80
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tracks_hh.php:30-58
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tracks.php:575-584
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tracks_hh.php:511-520
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tracks.php:724-772
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tracks_hh.php:659-707
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/main.php:469-627
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:817-975
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/full_scr.inc.php:407-464
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:1580-1637
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:2330-2336
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:2388-2394
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:2326-2394
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:4125-4193
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities.php:3026-3036
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:4621-4631
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:2283-2293
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units_nm.php:737-747
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:3341-3359
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units_nm.php:956-974
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:3401-3408
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units_nm.php:1000-1007
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:3433-3442
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units_nm.php:1031-1040
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:3480-3487
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units_nm.php:1066-1073
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:3665-3671
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units_nm.php:1224-1230
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:3602-3611
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units_nm.php:1248-1257
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:3935-3946
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units_nm.php:1491-1502
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:4463-4495
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units_nm.php:1748-1780
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:4605-4629
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units_nm.php:1861-1885
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php:4864-4875
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units_nm.php:1993-2004
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/icons/gen_fac_icon.php:9-52
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/our_icons/gen_fac_icon.php:9-52
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/icons/gen_icon.php:9-52
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/our_icons/gen_icon.php:10-53
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/action.php:693-702
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/patient.php:570-579
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/add.php:1785-1793
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/patient.php:608-616
+
+  - /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/get_latest_id.php:102-108
+    /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/get_latest_id.php:142-148
+
+3.09% duplicated lines out of 208218 total lines of code.
+
+Time: 16 seconds, Memory: 98.25Mb

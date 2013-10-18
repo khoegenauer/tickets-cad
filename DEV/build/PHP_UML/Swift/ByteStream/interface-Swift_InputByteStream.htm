@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+	<title>interface Swift_InputByteStream</title>
+	<link type="text/css" rel="stylesheet" href="../../$resources/style.css"/>
+	<script type="text/javascript" language="javascript" src="../../$resources/treeview.js"></script>
+</head>
+<body onload="toggler.setupTreeView('MainList');toggler.backToMemorizedState('MainList', 'btnToggle')">
+	<ul class="navig">
+	<li><a href="javascript:toggler.toggleAll('MainList', 'btnToggle')" class="expandAllBtn" id="btnToggle">Expand all</a></li><li><a href="../../help.htm" class="helpBtn">Help</a></li><li><a href="../../index-all.htm" class="indexAllBtn">Index</a></li><li><a href="interface-Swift_FileStream.htm" class="left">Prev interface</a></li><li><a href="package-summary.htm" class="top">Package</a></li><li><a href="interface-Swift_OutputByteStream.htm" class="right">Next interface</a></li>
+	</ul>
+	<h1 class="interface">Swift_InputByteStream</h1>
+	<div id="MainList">
+	<div class="description"><p>Interface <span class="title">Swift\ByteStream\Swift_InputByteStream</span></p><ul class="description"><li>An abstract means of writing data.<br />
+Classes implementing this interface may use a subsystem which requires less memory than working with large strings of data.</li><li class="smaller">@package Swift</li><li class="smaller">@subpackage ByteStream</li><li class="smaller">@author Chris Corbyn</li><li>All implementing classes: <a href="../../Swift/ByteStream/class-Swift_ByteStream_AbstractFilterableInputStream.htm" class="link2">Swift\ByteStream\Swift_ByteStream_AbstractFilterableInputStream</a>, <a href="../../Swift/ByteStream/class-Swift_ByteStream_ArrayByteStream.htm" class="link2">Swift\ByteStream\Swift_ByteStream_ArrayByteStream</a>, <a href="../../Swift/ByteStream/class-Swift_ByteStream_FileByteStream.htm" class="link2">Swift\ByteStream\Swift_ByteStream_FileByteStream</a></li><li>File: lib/classes/Swift/InputByteStream.php</li></ul></div><h2>Functions</h2><ul class="summary"><li class="Collapsed" id="f525ccca537d13"><a href="javascript:void(0);" class="method-pub" target="main">write</a>(<a href="../../datatype-string.htm" class="link">string</a> $bytes)<ul class="description"><li>Public <a href="../../datatype-int.htm" class="link">int</a> <span class="smallTitle">write</span>(<a href="../../datatype-string.htm" class="link">string</a> $bytes)</li><li>Writes $bytes to the end of the stream.<br />
+<br />
+Writing may not happen immediately if the stream chooses to buffer.  If you want to write these bytes with immediate effect, call {@link commit()} after calling write().<br />
+<br />
+This method returns the sequence ID of the write (i.e. 1 for first, 2 for second, etc etc).</li><li class="smaller">@param string $bytes</li><li class="smaller">@throws Swift_IoException</li></ul></li><li class="Collapsed" id="f525ccca538079"><a href="javascript:void(0);" class="method-pub" target="main">commit</a>()<ul class="description"><li>Public <a href="../../datatype-void.htm" class="link">void</a> <span class="smallTitle">commit</span>()</li><li>For any bytes that are currently buffered inside the stream, force them off the buffer.</li><li class="smaller">@throws Swift_IoException</li></ul></li><li class="Collapsed" id="f525ccca538286"><a href="javascript:void(0);" class="method-pub" target="main">bind</a>(<a href="../../Swift/ByteStream/interface-Swift_InputByteStream.htm" class="link">Swift\ByteStream\Swift_InputByteStream</a> $is)<ul class="description"><li>Public <a href="../../datatype-void.htm" class="link">void</a> <span class="smallTitle">bind</span>(<a href="../../Swift/ByteStream/interface-Swift_InputByteStream.htm" class="link">Swift\ByteStream\Swift_InputByteStream</a> $is)</li><li>Attach $is to this stream.<br />
+The stream acts as an observer, receiving all data that is written.<br />
+All {@link write()} and {@link flushBuffers()} operations will be mirrored.</li><li class="smaller">@param Swift_InputByteStream $is</li></ul></li><li class="Collapsed" id="f525ccca5384fa"><a href="javascript:void(0);" class="method-pub" target="main">unbind</a>(<a href="../../Swift/ByteStream/interface-Swift_InputByteStream.htm" class="link">Swift\ByteStream\Swift_InputByteStream</a> $is)<ul class="description"><li>Public <a href="../../datatype-void.htm" class="link">void</a> <span class="smallTitle">unbind</span>(<a href="../../Swift/ByteStream/interface-Swift_InputByteStream.htm" class="link">Swift\ByteStream\Swift_InputByteStream</a> $is)</li><li>Remove an already bound stream.<br />
+If $is is not bound, no errors will be raised.<br />
+If the stream currently has any buffered data it will be written to $is before unbinding occurs.</li><li class="smaller">@param Swift_InputByteStream $is</li></ul></li><li class="Collapsed" id="f525ccca538771"><a href="javascript:void(0);" class="method-pub" target="main">flushBuffers</a>()<ul class="description"><li>Public <a href="../../datatype-void.htm" class="link">void</a> <span class="smallTitle">flushBuffers</span>()</li><li>Flush the contents of the stream (empty it) and set the internal pointer to the beginning.</li><li class="smaller">@throws Swift_IoException</li></ul></li></ul>
+	</div>
+	<div id="footer">Documentation generated on Oct 15, 2013, 0:03:44 -0500 by <a href="http://pear.php.net/package/PHP_UML/" target="_new">PHP_UML</a></div>
+</body>
+</html>

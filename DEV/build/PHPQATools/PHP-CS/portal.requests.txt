@@ -1,0 +1,135 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/portal/requests.php
+--------------------------------------------------------------------------------
+FOUND 38 ERROR(S) AND 85 WARNING(S) AFFECTING 98 LINE(S)
+--------------------------------------------------------------------------------
+   1 | ERROR   | End of line character is invalid; expected "\n" but found
+     |         | "\r\n"
+   2 | ERROR   | Missing file doc comment
+   2 | ERROR   | Expected "if (...) {\n"; found "if (...) { "
+   2 | ERROR   | Space after opening parenthesis of function call prohibited
+   2 | ERROR   | Space before closing parenthesis of function call prohibited
+   2 | ERROR   | Space after opening parenthesis of function call prohibited
+   2 | ERROR   | No space found after comma in function call
+   2 | ERROR   | Space before closing parenthesis of function call prohibited
+   2 | ERROR   | Closing brace must be on a line by itself
+   3 | ERROR   | Space before opening parenthesis of function call prohibited
+   6 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+   6 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+   7 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+   7 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found 1
+  16 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual variable
+     |         | name $the_id at position 1
+  16 | ERROR   | Missing parameter name at position 1
+  16 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  18 | ERROR   | @return tag is empty in function comment
+  25 | ERROR   | Function name "get_user_name" is prefixed with a package name
+     |         | but does not begin with a capital letter
+  25 | ERROR   | Opening brace should be on a new line
+  26 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+  26 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+  26 | WARNING | Line exceeds 85 characters; contains 96 characters
+  27 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+  27 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+  27 | ERROR   | Space after opening parenthesis of function call prohibited
+  27 | WARNING | Line exceeds 85 characters; contains 116 characters
+  28 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+  28 | ERROR   | Line indented incorrectly; expected 4 spaces, found 1
+  28 | ERROR   | Expected "if (...) {\n"; found "if(...) {\n"
+  29 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+  29 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 2
+  30 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+  30 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 2
+  30 | WARNING | Line exceeds 85 characters; contains 145 characters
+  31 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+  31 | ERROR   | Closing brace indented incorrectly; expected 1 spaces, found 2
+  32 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+  32 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+  33 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+  33 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found 1
+  36 | WARNING | Line exceeds 85 characters; contains 109 characters
+  44 | WARNING | Line exceeds 85 characters; contains 92 characters
+  75 | WARNING | Line exceeds 85 characters; contains 89 characters
+ 222 | WARNING | Line exceeds 85 characters; contains 114 characters
+ 224 | WARNING | Line exceeds 85 characters; contains 115 characters
+ 225 | WARNING | Line exceeds 85 characters; contains 120 characters
+ 226 | WARNING | Line exceeds 85 characters; contains 118 characters
+ 227 | WARNING | Line exceeds 85 characters; contains 120 characters
+ 228 | WARNING | Line exceeds 85 characters; contains 118 characters
+ 229 | WARNING | Line exceeds 85 characters; contains 124 characters
+ 230 | WARNING | Line exceeds 85 characters; contains 121 characters
+ 231 | WARNING | Line exceeds 85 characters; contains 119 characters
+ 232 | WARNING | Line exceeds 85 characters; contains 122 characters
+ 233 | WARNING | Line exceeds 85 characters; contains 123 characters
+ 234 | WARNING | Line exceeds 85 characters; contains 121 characters
+ 235 | WARNING | Line exceeds 85 characters; contains 121 characters
+ 236 | WARNING | Line exceeds 85 characters; contains 122 characters
+ 237 | WARNING | Line exceeds 85 characters; contains 122 characters
+ 238 | WARNING | Line exceeds 85 characters; contains 119 characters
+ 239 | WARNING | Line exceeds 85 characters; contains 120 characters
+ 240 | WARNING | Line exceeds 85 characters; contains 118 characters
+ 251 | WARNING | Line exceeds 85 characters; contains 168 characters
+ 255 | WARNING | Line exceeds 85 characters; contains 260 characters
+ 259 | WARNING | Line exceeds 85 characters; contains 150 characters
+ 260 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 261 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 262 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 263 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 264 | WARNING | Line exceeds 85 characters; contains 403 characters
+ 265 | WARNING | Line exceeds 85 characters; contains 403 characters
+ 266 | WARNING | Line exceeds 85 characters; contains 403 characters
+ 267 | WARNING | Line exceeds 85 characters; contains 185 characters
+ 268 | WARNING | Line exceeds 85 characters; contains 403 characters
+ 269 | WARNING | Line exceeds 85 characters; contains 403 characters
+ 270 | WARNING | Line exceeds 85 characters; contains 403 characters
+ 271 | WARNING | Line exceeds 85 characters; contains 403 characters
+ 272 | WARNING | Line exceeds 85 characters; contains 403 characters
+ 273 | WARNING | Line exceeds 85 characters; contains 403 characters
+ 274 | WARNING | Line exceeds 85 characters; contains 404 characters
+ 275 | WARNING | Line exceeds 85 characters; contains 403 characters
+ 276 | WARNING | Line exceeds 85 characters; contains 403 characters
+ 307 | WARNING | Line exceeds 85 characters; contains 98 characters
+ 308 | WARNING | Line exceeds 85 characters; contains 98 characters
+ 309 | WARNING | Line exceeds 85 characters; contains 131 characters
+ 310 | WARNING | Line exceeds 85 characters; contains 136 characters
+ 311 | WARNING | Line exceeds 85 characters; contains 134 characters
+ 312 | WARNING | Line exceeds 85 characters; contains 136 characters
+ 313 | WARNING | Line exceeds 85 characters; contains 134 characters
+ 314 | WARNING | Line exceeds 85 characters; contains 140 characters
+ 315 | WARNING | Line exceeds 85 characters; contains 137 characters
+ 316 | WARNING | Line exceeds 85 characters; contains 135 characters
+ 317 | WARNING | Line exceeds 85 characters; contains 138 characters
+ 318 | WARNING | Line exceeds 85 characters; contains 139 characters
+ 319 | WARNING | Line exceeds 85 characters; contains 137 characters
+ 320 | WARNING | Line exceeds 85 characters; contains 137 characters
+ 321 | WARNING | Line exceeds 85 characters; contains 138 characters
+ 322 | WARNING | Line exceeds 85 characters; contains 138 characters
+ 323 | WARNING | Line exceeds 85 characters; contains 135 characters
+ 324 | WARNING | Line exceeds 85 characters; contains 136 characters
+ 325 | WARNING | Line exceeds 85 characters; contains 136 characters
+ 332 | WARNING | Line exceeds 85 characters; contains 167 characters
+ 336 | WARNING | Line exceeds 85 characters; contains 259 characters
+ 340 | WARNING | Line exceeds 85 characters; contains 149 characters
+ 341 | WARNING | Line exceeds 85 characters; contains 401 characters
+ 342 | WARNING | Line exceeds 85 characters; contains 401 characters
+ 343 | WARNING | Line exceeds 85 characters; contains 401 characters
+ 344 | WARNING | Line exceeds 85 characters; contains 401 characters
+ 345 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 346 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 347 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 348 | WARNING | Line exceeds 85 characters; contains 184 characters
+ 349 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 350 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 351 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 352 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 353 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 354 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 355 | WARNING | Line exceeds 85 characters; contains 403 characters
+ 356 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 357 | WARNING | Line exceeds 85 characters; contains 402 characters
+ 379 | WARNING | Line exceeds 85 characters; contains 213 characters
+ 380 | WARNING | Line exceeds 85 characters; contains 150 characters
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 2.25Mb
+

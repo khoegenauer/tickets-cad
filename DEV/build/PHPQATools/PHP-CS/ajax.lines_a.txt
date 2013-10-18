@@ -1,0 +1,14 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/lines_a.php
+--------------------------------------------------------------------------------
+FOUND 4 ERROR(S) AFFECTING 4 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR | End of line character is invalid; expected "\n" but found "\r\n"
+  2 | ERROR | You must use "/**" style comments for a file comment
+ 11 | ERROR | "require_once" is a statement not a function; no parentheses are
+    |       | required
+ 12 | ERROR | Space before opening parenthesis of function call prohibited
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.75Mb
+

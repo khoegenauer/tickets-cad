@@ -1,0 +1,6 @@
+#!/bin/sh
+#KHoegenauer mod for testing Tickets
+php ./DEV/tools/higher-order-php-php-call-graph-all/phpcallgraphall.php ./*.php > ./DEV/build/callgraph/test-graph.dot
+dot -Tsvg test-graph.dot -o test-graph.svg
+#dot -Tpng test-graph.dot -o test-graph.png
+

@@ -1,0 +1,59 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tables/u_region.php
+--------------------------------------------------------------------------------
+FOUND 22 ERROR(S) AND 27 WARNING(S) AFFECTING 33 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  1 | ERROR   | Missing file doc comment
+  1 | WARNING | Line exceeds 85 characters; contains 129 characters
+ 10 | WARNING | Line exceeds 85 characters; contains 129 characters
+ 12 | WARNING | Line exceeds 85 characters; contains 97 characters
+ 13 | WARNING | Line exceeds 85 characters; contains 270 characters
+ 14 | WARNING | Line exceeds 85 characters; contains 90 characters
+ 15 | WARNING | Line exceeds 85 characters; contains 116 characters
+ 18 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 18 | WARNING | Line exceeds 85 characters; contains 96 characters
+ 19 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 19 | ERROR   | No space found after comma in function call
+ 19 | ERROR   | Space after opening parenthesis of function call prohibited
+ 19 | WARNING | Line exceeds 85 characters; contains 121 characters
+ 20 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 20 | ERROR   | Line indented incorrectly; expected 0 spaces, found 4
+ 21 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 22 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 22 | WARNING | Line exceeds 85 characters; contains 105 characters
+ 23 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 23 | ERROR   | Closing brace indented incorrectly; expected 4 spaces, found 5
+ 27 | WARNING | Line exceeds 85 characters; contains 89 characters
+ 28 | WARNING | Line exceeds 85 characters; contains 272 characters
+ 29 | WARNING | Line exceeds 85 characters; contains 90 characters
+ 30 | WARNING | Line exceeds 85 characters; contains 276 characters
+ 32 | WARNING | Line exceeds 85 characters; contains 265 characters
+ 33 | WARNING | Line exceeds 85 characters; contains 89 characters
+ 34 | WARNING | Line exceeds 85 characters; contains 265 characters
+ 35 | WARNING | Line exceeds 85 characters; contains 90 characters
+ 36 | WARNING | Line exceeds 85 characters; contains 265 characters
+ 37 | WARNING | Line exceeds 85 characters; contains 86 characters
+ 38 | WARNING | Line exceeds 85 characters; contains 261 characters
+ 40 | WARNING | Line exceeds 85 characters; contains 266 characters
+ 42 | WARNING | Line exceeds 85 characters; contains 116 characters
+ 45 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 45 | WARNING | Line exceeds 85 characters; contains 122 characters
+ 46 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 46 | ERROR   | No space found after comma in function call
+ 46 | ERROR   | Space after opening parenthesis of function call prohibited
+ 46 | WARNING | Line exceeds 85 characters; contains 121 characters
+ 47 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 47 | ERROR   | Line indented incorrectly; expected 0 spaces, found 4
+ 48 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 49 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 49 | WARNING | Line exceeds 85 characters; contains 113 characters
+ 50 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 50 | ERROR   | Closing brace indented incorrectly; expected 4 spaces, found 5
+ 56 | WARNING | Line exceeds 85 characters; contains 146 characters
+ 57 | WARNING | Line exceeds 85 characters; contains 150 characters
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.75Mb
+

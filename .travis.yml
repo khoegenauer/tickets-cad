@@ -3,7 +3,7 @@
 # database credentials, user, and permissions
 # passwordless apt-get install
 # SauceLabs Config
-# Split with Beehive? (Requires adding delay to avoid commit-build-commit loop)
+# Split with Buildhive? (Requires adding delay to avoid infinite commit-build-commit loop)
 # Apache, Nginx, Cherokee, Hiawatha, etc Servers
 # Possible to test caching, minification, etc?
 # Fix exception error and uncomment PHPCallGraph
@@ -16,6 +16,8 @@
 # Include Codeception to consolidate testing?
 # PHPUnit.xml needed
 # Unit Testing for Javascript?
+# Specify custom rules/config xml files for PHPQATools and PHPDoc
+# QA Tools for Javascript?
 
 # see http://about.travis-ci.org/docs/user/languages/php/ for more hints
 language: php
@@ -30,8 +32,8 @@ php:
   - 5.3
   # aliased to a recent 5.4.x version
   - 5.4
-  # aliased to a recent 5.5.x version
-  - 5.5
+  ## aliased to a recent 5.5.x version
+  # - 5.5
 
 # optionally specify a list of environments, for example to test different RDBMS
 env:
@@ -44,16 +46,33 @@ env:
 
 before_script:
 # execute any number of scripts before the test run, custom env's are available as variables
-#  - sudo apt-get update
+#  - sudo apt-get update -qq
+
+## For SQL ERD Generation
 #  - sudo apt-get install sqlfairy
+
+## For PHP_UML 
+#  - sudo apt-get install php5-xsl
+#  - pear install PHP_UML  
+
+## APACHE
+#  - sudo apt-get update > /dev/null
+#  - sudo apt-get install -y --force-yes apache2 libapache2-mod-php5 php5-curl php5-mysql php5-intl
+
+## For YUI Docs
+#  - sudo apt-get install nodejs -qq
+#  - npm -g install yuidocjs
+
 ## Only if SQLFairy doesn't work (Backup Plan: SchemaSpy)
-#  - sudo apt-get install graphviz
+#  - sudo apt-get install graphviz -qq
+
+##Sauce Connect
+#  - curl https://gist.github.com/santiycr/5139565/raw/sauce_connect_setup.sh | bash
 
 #  - if [[ "$DB" == "pgsql" ]]; then psql -c "DROP DATABASE IF EXISTS hello_world_test;" -U postgres; fi
 #  - if [[ "$DB" == "pgsql" ]]; then psql -c "create database hello_world_test;" -U postgres; fi
   - if [[ "$DB" == "mysql" ]]; then mysql -e "create database IF NOT EXISTS tickets;" -uroot; fi
 
-  - pear install PHP_UML  
   - pear channel-discover pear.phpqatools.org
   - pear install -f phpqatools/phpqatools
   - pear channel-discover pear.phpdoc.org
@@ -61,7 +80,7 @@ before_script:
   - phpenv rehash
 
 #SELENIUM / SAUCELABS INTEGRATION
-#PLACEHOLDER: NOT CORRECT FOR PHP. From Saucelabs tutorial "building a CI system using selenium builder github travis and sauce labs
+#PLACEHOLDER: PROBABLY(?) NOT CORRECT FOR PHP. From Saucelabs tutorial "building a CI system using selenium builder github travis and sauce labs
 #  - npm install -g se-interpreter
 
 # omitting "script:" will default to phpunit
@@ -71,6 +90,8 @@ script:
 ##    UI TESTING
 #Selenium and Appium(SauceLabs) (Sauce Connect?)
 ##    SECURITY TESTING
+#W3AF
+#Skipfish
 #OWASP-ZAP
 # /path/to/ZapDir/zap.jar -daemon (Starts zap with no UI)
 #RIPS
@@ -83,31 +104,39 @@ script:
 #  - phpunit --configuration phpunit_$DB.xml --coverage-text
   
 ##DEV TOOLS
-#PHP_UML
-  - phpuml ./ -n TicketsCAD -o ./DEV/build/PHP_UML -f htmlnew
-  - phpuml ./ -n TicketsCAD -o ./DEV/build/PHP_UML -f xmi
-#PHPCPD
+#PHP_UML (Works local)(<1min)(Requires PHP Extension "XSL")
+#  - phpuml ./ -n TicketsCAD -o ./DEV/build/PHP_UML -f htmlnew
+#  - phpuml ./ -n TicketsCAD -o ./DEV/build/PHP_UML -f xmi
+#PHPCPD (Works local)(<1min)
   - phpcpd ./ > ./DEV/build/PHPQATools/PHP-CPD/phpcpd_output.txt
-#PHPMD (All 3 completed)
-#  - phpmd ./ text codesize,unusedcode,naming > ./DEV/build/PHPQATools/PHP-MD/phpmd_output.txt
+#PHPMD (All 3 completed)(~15min)
+#  - phpmd ./ xml codesize,unusedcode,naming,design,controversial > ./DEV/build/PHPQATools/PHP-MD/phpmd_output.xml
+# (Time: 3min)
   - phpmd ./ text codesize > ./DEV/build/PHPQATools/PHP-MD/phpmd_codesize.txt
+# (Time: 4min)
   - phpmd ./ text unusedcode > ./DEV/build/PHPQATools/PHP-MD/phpmd_unused-code.txt
+# (Time: 3min)
   - phpmd ./ text naming > ./DEV/build/PHPQATools/PHP-MD/phpmd_naming.txt
-#PHPDepend
-  - pdepend --summary-xml=./DEV/build/PHPQATools/PDepend/summary.xml --jdepend-chart=./DEV/build/PHPQATools/PDepend/jdepend.svg --overview-pyramid=./DEV/build/PHPQATools/PDepend/pyramid.svg ./
-#PHPCodeSniffer
-  - phpcs ./ > ./DEV/build/PHPQATools/PHP-CS/phpcs-output.txt
-#phploc
-  - phploc ./ > ./DEV/build/PHPQATools/PHP-LOC/phploc-output.txt
-  - phploc --log-csv ./DEV/build/PHPQATools/PHP-LOC/phploc-gitlog.csv --progress --git-repository . ./
-#PHPCallGraph
-#  - ./DEV/tools/phpcallgraph-0.8.0/bin/phpcallgraph.php -f png -o ./DEV/build/PHP-CallGraph/callgraph.png -r -p ./
-#  - ./DEV/tools/phpcallgraph-0.8.0/bin/phpcallgraph.php -r -f deadcode ./ > ./DEV/build/PHP-CallGraph/phpcallgraph-deadcode.txt
-#PHPCodeBrowser
+# (Time: 2.5min)
+  - phpmd ./ text design > ./DEV/build/PHPQATools/PHP-MD/phpmd_design.txt
+# (Time: 3min)
+  - phpmd ./ text controversial > ./DEV/build/PHPQATools/PHP-MD/phpmd_controversial.txt
 
+#PHPDepend (Works local)(~2.5min)
+  - pdepend --summary-xml=./DEV/build/PHPQATools/PDepend/summary.xml --jdepend-chart=./DEV/build/PHPQATools/PDepend/jdepend.svg --overview-pyramid=./DEV/build/PHPQATools/PDepend/pyramid.svg ./
+#PHPCodeSniffer (Works local)(>59.5min) --standard=/path/to/custom_ruleset.xml
+#  - phpcs ./ > ./DEV/build/PHPQATools/PHP-CS/phpcs-output.txt
+#PHP-LOC (Works local, Pt 1 only)(<1min)
+  - phploc ./ > ./DEV/build/PHPQATools/PHP-LOC/phploc-output.txt
+#  - phploc --log-csv ./DEV/build/PHPQATools/PHP-LOC/phploc-gitlog.csv --progress ./
+#PHPCallGraph (Failed Local)(0)
+#  - php ./DEV/tools/phpcallgraph-0.8.0/bin/phpcallgraph -f png -o ./DEV/build/PHP-CallGraph/callgraph.png -r -p ./
+#  - php ./DEV/tools/phpcallgraph-0.8.0/bin/phpcallgraph -r -f deadcode ./ > ./DEV/build/PHP-CallGraph/phpcallgraph-deadcode.txt
+#PHPCodeBrowser (Works local)(<1min)
+#  - phpcb -s ./ -o ./DEV/build/PHPQATools/PHP-CB/ -i ./DEV/
 ##Documentation Generator
-#PHPDocumentor (Mod to avoid documenting the documentation?)
-  - phpdoc -d . -t ./DEV/build/docs --template checkstyle -i ./DEV/*
+#PHPDocumentor ()() (Mod to avoid documenting the documentation?)
+#  - phpdoc -d . -t ./DEV/build/docs --template checkstyle -i ./DEV/*
 # - or - 
 #Doxygen (Doxyfile stored in ./DEV/build/docs/Doxygen/)
 # Need to install Doxygen
@@ -119,6 +148,7 @@ script:
 # - and a -
 #JS Doc Generator ...
 #YUI Docs? (Requires node.js)
+#  - yuidoc -e .js,.php -x ./DEV/*,.git ./
 
 ## Database Tools
 #SQLFairy ERD Generation 

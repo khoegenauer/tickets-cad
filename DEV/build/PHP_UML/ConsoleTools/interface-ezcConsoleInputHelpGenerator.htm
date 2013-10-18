@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+	<title>interface ezcConsoleInputHelpGenerator</title>
+	<link type="text/css" rel="stylesheet" href="../$resources/style.css"/>
+	<script type="text/javascript" language="javascript" src="../$resources/treeview.js"></script>
+</head>
+<body onload="toggler.setupTreeView('MainList');toggler.backToMemorizedState('MainList', 'btnToggle')">
+	<ul class="navig">
+	<li><a href="javascript:toggler.toggleAll('MainList', 'btnToggle')" class="expandAllBtn" id="btnToggle">Expand all</a></li><li><a href="../help.htm" class="helpBtn">Help</a></li><li><a href="../index-all.htm" class="indexAllBtn">Index</a></li><li><a href="interface-ezcConsoleDialogValidator.htm" class="left">Prev interface</a></li><li><a href="package-summary.htm" class="top">Package</a></li><li><a href="interface-ezcConsoleInputValidator.htm" class="right">Next interface</a></li>
+	</ul>
+	<h1 class="interface">ezcConsoleInputHelpGenerator</h1>
+	<div id="MainList">
+	<div class="description"><p>Interface <span class="title">ConsoleTools\ezcConsoleInputHelpGenerator</span></p><ul class="description"><li>Interface for help generators used in ezcConsoleInput.<br />
+<br />
+An instance of a class implementing this interface is used in {@link ezcConsoleInput} to generate the help information.</li><li class="smaller">@package ConsoleTools</li><li class="smaller">@version //autogen//</li><li class="smaller">@access private</li><li class="smaller">@TODO Verify interface and make it public to replace the validation in</li><li>All implementing classes: <a href="../ConsoleTools/class-ezcConsoleStandardInputHelpGenerator.htm" class="link2">ConsoleTools\ezcConsoleStandardInputHelpGenerator</a></li><li>File: DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/interfaces/input_help_generator.php</li></ul></div><h2>Functions</h2><ul class="summary"><li class="Collapsed" id="f525ccca9aa958"><a href="javascript:void(0);" class="method-pub" target="main">__construct</a>(<a href="../ConsoleTools/class-ezcConsoleInput.htm" class="link">ConsoleTools\ezcConsoleInput</a> $input)<ul class="description"><li>Public <a href="../datatype-void.htm" class="link">void</a> <span class="smallTitle">__construct</span>(<a href="../ConsoleTools/class-ezcConsoleInput.htm" class="link">ConsoleTools\ezcConsoleInput</a> $input)</li><li>Creates a new help generator.<br />
+<br />
+Creates a new help generator for the given $input.</li><li class="smaller">@param ezcConsoleInput $input</li></ul></li><li class="Collapsed" id="f525ccca9aabf8"><a href="javascript:void(0);" class="method-pub" target="main">generateUngroupedOptionHelp</a>(<a href="../datatype-bool.htm" class="link">bool</a> $long<span class="defVal"> = false</span>, <a href="../datatype-array.htm" class="link">array</a> $optionsFilter<span class="defVal"> = null</span>)<ul class="description"><li>Public <span class="link">array(int=>array(int=>string))</span> <span class="smallTitle">generateUngroupedOptionHelp</span>(<a href="../datatype-bool.htm" class="link">bool</a> $long<span class="defVal"> = false</span>, <a href="../datatype-array.htm" class="link">array</a> $optionsFilter<span class="defVal"> = null</span>)</li><li>Generates help information as a multidimensional array.<br />
+<br />
+This method generates a tabular view on the help information of a program. The returned array has the following structure:<br />
+<br />
+&lt;code&gt; &lt;?php array( 0 =&gt; array( 0 =&gt; '&lt;option short/long name&gt;', 1 =&gt; '&lt;option help, depending on the $long parameter&gt;' ), 1 =&gt; array( 0 =&gt; '&lt;option short name&gt; / &lt;option long name&gt;', 1 =&gt; '&lt;option help, depending on the $long parameter&gt;' ), // ...<br />
+); ?&gt; &lt;/code&gt; <br />
+Each row of the array represents the help information for a single option.<br />
+The first cell of a row contains the option name (maybe short, long or both), the second cell contains the help text of the option.<br />
+<br />
+The returned array is used by {@link ezcConsoleInput} for different purposes.<br />
+For example, the user can retrieve it raw through the {@link ezcConsoleInput::getHelp()} method, he can generate a help {@link ezcConsoleTable} through {@link ezcConsoleInput::getHelpTable()} are can generate a printable help text through {@link ezcConsoleInput::getHelpText()}.<br />
+<br />
+The parameter $long defines if the long or short help text of the options should be used in the second cell of the returned array. The $optionsFilter parameter is used to restrict the generated help to a certain sub-set of options. It consists of an array of short or long names of the options to include.</li><li class="smaller">@param bool $long</li><li class="smaller">@param array(int=&gt;string) $optionsFilter</li></ul></li><li class="Collapsed" id="f525ccca9ab163"><a href="javascript:void(0);" class="method-pub" target="main">generateGroupedOptionHelp</a>(<a href="../datatype-array.htm" class="link">array</a> $groups, <a href="../datatype-bool.htm" class="link">bool</a> $long<span class="defVal"> = false</span>, <a href="../datatype-array.htm" class="link">array</a> $optionsFilter<span class="defVal"> = null</span>)<ul class="description"><li>Public <span class="link">array(string=>array(int=>array(int=>string)))</span> <span class="smallTitle">generateGroupedOptionHelp</span>(<a href="../datatype-array.htm" class="link">array</a> $groups, <a href="../datatype-bool.htm" class="link">bool</a> $long<span class="defVal"> = false</span>, <a href="../datatype-array.htm" class="link">array</a> $optionsFilter<span class="defVal"> = null</span>)</li><li>Generates help information as a multidimensional array, grouped in categories.<br />
+<br />
+This method behaves similar to {@link generateUngroupedOptionHelp()}. In contrast to the latter one, this method returns an array with 1 dimension more, grouping options into categories. The $groups parameter defines the categories to generate. Each category may contain an arbitrary number of options, options might occur in different categories.<br />
+<br />
+The returned array has the follorwing format:<br />
+<br />
+&lt;code&gt; &lt;?php array( '&lt;category name&gt;' =&gt; array( 0 =&gt; array( 0 =&gt; '&lt;option short/long name&gt;', 1 =&gt; '&lt;option help, depending on the $long parameter&gt;' ), 1 =&gt; array( 0 =&gt; '&lt;option short name&gt; / &lt;option long name&gt;', 1 =&gt; '&lt;option help, depending on the $long parameter&gt;' ), // ...<br />
+), '&lt;category name&gt;' =&gt; array( // ...<br />
+), // ...<br />
+); ?&gt; &lt;/code&gt; <br />
+The $long parameter, as in {@link generateUngroupedOptionHelp()} determines if the options short or long help is to be used. The $params array can in addition be used to determine if a parameter is displayed at all. If $optionsFilter is submitted and is not null, only options listed in it will be shown in the help at all.</li><li class="smaller">@param array(string=&gt;array(string)) $groups</li><li class="smaller">@param bool $long</li><li class="smaller">@param array(string) $params</li></ul></li><li class="Collapsed" id="f525ccca9ab770"><a href="javascript:void(0);" class="method-pub" target="main">generateArgumentHelp</a>(<a href="../datatype-bool.htm" class="link">bool</a> $long<span class="defVal"> = false</span>)<ul class="description"><li>Public <span class="link">array(int=>array(int=>string))</span> <span class="smallTitle">generateArgumentHelp</span>(<a href="../datatype-bool.htm" class="link">bool</a> $long<span class="defVal"> = false</span>)</li><li>Generates help information as a multi-dimensonal array for the given $argumentDefinition.<br />
+<br />
+This method generates a tabular help information for the given $argumentDefinition in the following format:<br />
+<br />
+&lt;code&gt; &lt;?php array( 0 =&gt; array( 0 =&gt; '&lt;argument synopsis&gt;', 1 =&gt; '&lt;argument help text&gt;' ), 1 =&gt; array( 0 =&gt; '&lt;argument synopsis&gt;', 1 =&gt; '&lt;argument help text&gt;' ), // ...<br />
+) ?&gt; &lt;/code&gt; <br />
+The $long parameter defines if the long of short help text should be used.</li><li class="smaller">@param bool $long</li></ul></li><li class="Collapsed" id="f525ccca9abb0d"><a href="javascript:void(0);" class="method-pub" target="main">generateSynopsis</a>(<a href="../datatype-array.htm" class="link">array</a> $optionFilter<span class="defVal"> = null</span>)<ul class="description"><li>Public <a href="../datatype-string.htm" class="link">string</a> <span class="smallTitle">generateSynopsis</span>(<a href="../datatype-array.htm" class="link">array</a> $optionFilter<span class="defVal"> = null</span>)</li><li>Generates a command line synopsis for the options and arguments.<br />
+<br />
+This method generates a synopsis string that lists the options and parameters available, indicating their usage.</li></ul></li></ul>
+	</div>
+	<div id="footer">Documentation generated on Oct 15, 2013, 0:03:45 -0500 by <a href="http://pear.php.net/package/PHP_UML/" target="_new">PHP_UML</a></div>
+</body>
+</html>

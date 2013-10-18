@@ -1,0 +1,17 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/js/osgb.js
+--------------------------------------------------------------------------------
+FOUND 8 ERROR(S) AFFECTING 8 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR | End of line character is invalid; expected "\n" but found "\r\n"
+  3 | ERROR | Spaces must be used to indent lines; tabs are not allowed
+  4 | ERROR | Spaces must be used to indent lines; tabs are not allowed
+  6 | ERROR | Spaces must be used to indent lines; tabs are not allowed
+  7 | ERROR | Spaces must be used to indent lines; tabs are not allowed
+  9 | ERROR | Spaces must be used to indent lines; tabs are not allowed
+ 10 | ERROR | Spaces must be used to indent lines; tabs are not allowed
+ 11 | ERROR | Spaces must be used to indent lines; tabs are not allowed
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.75Mb
+

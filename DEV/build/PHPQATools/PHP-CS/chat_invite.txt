@@ -1,0 +1,23 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/chat_invite.php
+--------------------------------------------------------------------------------
+FOUND 8 ERROR(S) AND 4 WARNING(S) AFFECTING 9 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | Missing file doc comment
+  5 | WARNING | Line exceeds 85 characters; contains 148 characters
+  9 | ERROR   | "require_once" is a statement not a function; no parentheses
+    |         | are required
+ 10 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 11 | WARNING | Line exceeds 85 characters; contains 106 characters
+ 15 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 16 | WARNING | Line exceeds 85 characters; contains 179 characters
+ 17 | ERROR   | No space found after comma in function call
+ 17 | ERROR   | No space found after comma in function call
+ 17 | ERROR   | Space after opening parenthesis of function call prohibited
+ 17 | WARNING | Line exceeds 85 characters; contains 118 characters
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.75Mb
+

@@ -1,0 +1,13 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/stylesheet.php
+--------------------------------------------------------------------------------
+FOUND 2 ERROR(S) AND 1 WARNING(S) AFFECTING 3 LINE(S)
+--------------------------------------------------------------------------------
+ 2 | ERROR   | Missing file doc comment
+ 7 | ERROR   | "require_once" is a statement not a function; no parentheses are
+   |         | required
+ 9 | WARNING | Line exceeds 85 characters; contains 120 characters
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 2.75Mb
+

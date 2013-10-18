@@ -1,0 +1,139 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/smtp.inc.php
+--------------------------------------------------------------------------------
+FOUND 113 ERROR(S) AND 12 WARNING(S) AFFECTING 50 LINE(S)
+--------------------------------------------------------------------------------
+  1 | WARNING | File has mixed line endings; this may cause incorrect results
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | You must use "/**" style comments for a file comment
+  7 | WARNING | Line exceeds 85 characters; contains 105 characters
+  8 | WARNING | Line exceeds 85 characters; contains 100 characters
+ 15 | ERROR   | Doc comment for "$my_smtp_ary" missing
+ 15 | ERROR   | Doc comment for "$my_to_ary" missing
+ 15 | ERROR   | Doc comment for "$my_subject_str" missing
+ 15 | ERROR   | Doc comment for "$my_message_str" missing
+ 15 | ERROR   | Doc comment for "$my_from_ary" missing
+ 15 | ERROR   | Doc comment for "$my_replyto_str" missing
+ 15 | ERROR   | Missing @return tag in function comment
+ 15 | ERROR   | Line indented incorrectly; expected 0 spaces, found 257
+ 15 | ERROR   | Function name "do_swift_mail" is prefixed with a package name
+    |         | but does not begin with a capital letter
+ 15 | ERROR   | Opening brace should be on a new line
+ 15 | WARNING | Line exceeds 85 characters; contains 399 characters
+ 16 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 16 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 16 | ERROR   | File is being conditionally included; use "include_once"
+    |         | instead
+ 17 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 17 | ERROR   | Line indented incorrectly; expected 4 spaces, found 2
+ 18 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 18 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 3
+ 18 | ERROR   | Space found before comma in function call
+ 18 | ERROR   | Space found before comma in function call
+ 18 | WARNING | Line exceeds 85 characters; contains 101 characters
+ 19 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 19 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 6
+ 20 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 20 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 6
+ 20 | ERROR   | Space after closing parenthesis of function call prohibited
+ 21 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 21 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 6
+ 22 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 22 | ERROR   | Closing brace indented incorrectly; expected 2 spaces, found 4
+ 23 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 23 | ERROR   | Line indented incorrectly; expected 4 spaces, found 2
+ 23 | ERROR   | Expected "} else {\n"; found "}\n		else {															// php
+    |         | mail\n"
+ 24 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 24 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 3
+ 24 | WARNING | Line exceeds 85 characters; contains 86 characters
+ 25 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 25 | ERROR   | Closing brace indented incorrectly; expected 2 spaces, found 3
+ 26 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 27 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 27 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 2
+ 27 | WARNING | Line exceeds 85 characters; contains 104 characters
+ 29 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 29 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 2
+ 30 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 31 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 32 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 33 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 33 | ERROR   | Space after closing parenthesis of function call prohibited
+ 34 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 35 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 36 | WARNING | Line exceeds 85 characters; contains 123 characters
+ 36 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 0
+ 37 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 37 | ERROR   | Line indented incorrectly; expected 4 spaces, found 2
+ 37 | ERROR   | Space before opening parenthesis of function call prohibited
+ 37 | ERROR   | Space before closing parenthesis of function call prohibited
+ 37 | WARNING | Line exceeds 85 characters; contains 134 characters
+ 38 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 38 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 3
+ 39 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 39 | ERROR   | Closing brace indented incorrectly; expected 2 spaces, found 3
+ 40 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 40 | ERROR   | Line indented incorrectly; expected 4 spaces, found 2
+ 40 | ERROR   | Expected "} else {\n"; found "}\n		else {\n"
+ 41 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 41 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 3
+ 42 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 42 | ERROR   | Closing brace indented incorrectly; expected 2 spaces, found 3
+ 44 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 44 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 45 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 45 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found 1
+ 48 | ERROR   | Doc comment for "$my_smtp_ary" missing
+ 48 | ERROR   | Doc comment for "$my_to_ary" missing
+ 48 | ERROR   | Doc comment for "$my_subject_str" missing
+ 48 | ERROR   | Doc comment for "$my_message_str" missing
+ 48 | ERROR   | Doc comment for "$my_from_ary" missing
+ 48 | ERROR   | Doc comment for "$my_replyto_str" missing
+ 48 | ERROR   | Missing @return tag in function comment
+ 48 | ERROR   | Line indented incorrectly; expected 0 spaces, found 258
+ 48 | ERROR   | Function name "do_native_mail" is prefixed with a package name
+    |         | but does not begin with a capital letter
+ 48 | ERROR   | Opening brace should be on a new line
+ 48 | WARNING | Line exceeds 85 characters; contains 375 characters
+ 49 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 49 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 49 | ERROR   | Space before opening parenthesis of function call prohibited
+ 49 | ERROR   | Space before closing parenthesis of function call prohibited
+ 49 | WARNING | Line exceeds 85 characters; contains 114 characters
+ 50 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 51 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 51 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 52 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 52 | ERROR   | Line indented incorrectly; expected 4 spaces, found 1
+ 53 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 53 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 2
+ 54 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 54 | ERROR   | Closing brace indented incorrectly; expected 1 spaces, found 2
+ 55 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 55 | ERROR   | Line indented incorrectly; expected 4 spaces, found 1
+ 56 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 56 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 2
+ 57 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 57 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 6
+ 58 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 58 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 6
+ 59 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 60 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 60 | ERROR   | Closing brace indented incorrectly; expected 1 spaces, found 5
+ 61 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 61 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 61 | ERROR   | Space before opening parenthesis of function call prohibited
+ 61 | ERROR   | Space after opening parenthesis of function call prohibited
+ 61 | ERROR   | Space found before comma in function call
+ 61 | WARNING | Line exceeds 85 characters; contains 88 characters
+ 62 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 63 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 63 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 64 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 64 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found 1
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 2.00Mb
+

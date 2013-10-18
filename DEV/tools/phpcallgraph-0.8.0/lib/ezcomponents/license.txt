@@ -1,3 +1,0 @@
-The components Base, ConsoleTools, Reflection are part of eZ Components and
-subject to the New BSD license which can be found at
-http://ez.no/ezcomponents/license

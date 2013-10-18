@@ -1,0 +1,880 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/baaChart.php
+--------------------------------------------------------------------------------
+FOUND 681 ERROR(S) AND 80 WARNING(S) AFFECTING 336 LINE(S)
+--------------------------------------------------------------------------------
+    1 | ERROR   | End of line character is invalid; expected "\n" but found
+      |         | "\r\n"
+    2 | ERROR   | You must use "/**" style comments for a file comment
+   31 | ERROR   | Space before opening parenthesis of function call prohibited
+   33 | ERROR   | Space before opening parenthesis of function call prohibited
+   33 | ERROR   | No space found after comma in function call
+   34 | ERROR   | Space before opening parenthesis of function call prohibited
+   34 | ERROR   | No space found after comma in function call
+   35 | ERROR   | Space before opening parenthesis of function call prohibited
+   35 | ERROR   | No space found after comma in function call
+   36 | ERROR   | Space before opening parenthesis of function call prohibited
+   36 | ERROR   | No space found after comma in function call
+   37 | ERROR   | Space before opening parenthesis of function call prohibited
+   37 | ERROR   | No space found after comma in function call
+   38 | ERROR   | Space before opening parenthesis of function call prohibited
+   38 | ERROR   | No space found after comma in function call
+   39 | ERROR   | Space before opening parenthesis of function call prohibited
+   39 | ERROR   | No space found after comma in function call
+   40 | ERROR   | Space before opening parenthesis of function call prohibited
+   40 | ERROR   | No space found after comma in function call
+   41 | ERROR   | Space before opening parenthesis of function call prohibited
+   41 | ERROR   | No space found after comma in function call
+   42 | ERROR   | Space before opening parenthesis of function call prohibited
+   42 | ERROR   | No space found after comma in function call
+   43 | ERROR   | Space before opening parenthesis of function call prohibited
+   43 | ERROR   | No space found after comma in function call
+   44 | ERROR   | Space before opening parenthesis of function call prohibited
+   44 | ERROR   | No space found after comma in function call
+   45 | ERROR   | Space before opening parenthesis of function call prohibited
+   45 | ERROR   | No space found after comma in function call
+   51 | ERROR   | @category tag must contain a name
+   52 | ERROR   | @package tag must contain a name
+   53 | ERROR   | Content missing for @author tag in class comment
+   54 | ERROR   | @copyright tag must contain a year and the name of the
+      |         | copyright holder
+   55 | ERROR   | @license tag must contain a URL and a license name
+   56 | ERROR   | Content missing for @version tag in doc comment
+   57 | ERROR   | Content missing for link tag in class comment
+   58 | ERROR   | Content missing for see tag in class comment
+   59 | ERROR   | Content missing for since tag in class comment
+   61 | ERROR   | Class name must begin with a capital letter
+   61 | ERROR   | Opening brace of a class must be on the line after the
+      |         | definition
+  118 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 0
+  119 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+  119 | ERROR   | Extra newline(s) found before function comment short
+      |         | description
+  120 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+  120 | ERROR   | Missing comment for param "$awidth" at position 1
+  120 | ERROR   | There must be exactly one blank line before the tags in
+      |         | function comment
+  121 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+  121 | ERROR   | Missing comment for param "$aheight" at position 2
+  122 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+  122 | ERROR   | Missing comment for param "$pic" at position 3
+  123 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+  123 | ERROR   | Missing comment for param "$clip" at position 4
+  124 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+  124 | ERROR   | Missing comment for param "$picx" at position 5
+  125 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+  125 | ERROR   | Missing comment for param "$picy" at position 6
+  126 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found
+      |         | 1
+  127 | ERROR   | Opening brace should be on a new line
+  143 | ERROR   | Expected "} else {\n"; found "}\n            else {\n"
+  148 | ERROR   | No space found after comma in function call
+  148 | ERROR   | No space found after comma in function call
+  148 | ERROR   | No space found after comma in function call
+  149 | ERROR   | No space found after comma in function call
+  149 | ERROR   | No space found after comma in function call
+  149 | ERROR   | No space found after comma in function call
+  150 | ERROR   | No space found after comma in function call
+  150 | ERROR   | No space found after comma in function call
+  150 | ERROR   | No space found after comma in function call
+  151 | ERROR   | No space found after comma in function call
+  151 | ERROR   | No space found after comma in function call
+  151 | ERROR   | No space found after comma in function call
+  152 | ERROR   | No space found after comma in function call
+  152 | ERROR   | No space found after comma in function call
+  152 | ERROR   | No space found after comma in function call
+  153 | ERROR   | No space found after comma in function call
+  153 | ERROR   | No space found after comma in function call
+  153 | ERROR   | No space found after comma in function call
+  154 | ERROR   | No space found after comma in function call
+  154 | ERROR   | No space found after comma in function call
+  154 | ERROR   | No space found after comma in function call
+  156 | ERROR   | Space before opening parenthesis of function call prohibited
+  156 | ERROR   | No space found after comma in function call
+  156 | ERROR   | No space found after comma in function call
+  156 | ERROR   | No space found after comma in function call
+  157 | ERROR   | Space before opening parenthesis of function call prohibited
+  157 | ERROR   | No space found after comma in function call
+  157 | ERROR   | No space found after comma in function call
+  157 | ERROR   | No space found after comma in function call
+  158 | ERROR   | Space before opening parenthesis of function call prohibited
+  158 | ERROR   | No space found after comma in function call
+  158 | ERROR   | No space found after comma in function call
+  158 | ERROR   | No space found after comma in function call
+  159 | ERROR   | Space before opening parenthesis of function call prohibited
+  159 | ERROR   | No space found after comma in function call
+  159 | ERROR   | No space found after comma in function call
+  159 | ERROR   | No space found after comma in function call
+  160 | ERROR   | Space before opening parenthesis of function call prohibited
+  160 | ERROR   | No space found after comma in function call
+  160 | ERROR   | No space found after comma in function call
+  160 | ERROR   | No space found after comma in function call
+  185 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $l at position 1
+  185 | ERROR   | Missing parameter name at position 1
+  185 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  186 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $t at position 2
+  186 | ERROR   | Missing parameter name at position 2
+  186 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  187 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $r at position 3
+  187 | ERROR   | Missing parameter name at position 3
+  187 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 3
+  188 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $b at position 4
+  188 | ERROR   | Missing parameter name at position 4
+  188 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 4
+  190 | ERROR   | @return tag is empty in function comment
+  197 | ERROR   | Opening brace should be on a new line
+  198 | WARNING | Inline control structures are discouraged
+  199 | WARNING | Inline control structures are discouraged
+  200 | WARNING | Inline control structures are discouraged
+  201 | WARNING | Inline control structures are discouraged
+  207 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $r at position 1
+  207 | ERROR   | Missing parameter name at position 1
+  207 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  208 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $g at position 2
+  208 | ERROR   | Missing parameter name at position 2
+  208 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  209 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $b at position 3
+  209 | ERROR   | Missing parameter name at position 3
+  209 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 3
+  210 | ERROR   | The variable names for parameters UNKNOWN (3) and [ UNKNOWN ]
+      |         | (4) do not align
+  210 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $trans at position 4
+  210 | ERROR   | Missing parameter name at position 4
+  210 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 4
+  212 | ERROR   | @return tag is empty in function comment
+  219 | ERROR   | Opening brace should be on a new line
+  220 | ERROR   | No space found after comma in function call
+  220 | ERROR   | No space found after comma in function call
+  220 | ERROR   | No space found after comma in function call
+  221 | WARNING | Inline control structures are discouraged
+  222 | WARNING | Inline control structures are discouraged
+  223 | ERROR   | No space found after comma in function call
+  230 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $r at position 1
+  230 | ERROR   | Missing parameter name at position 1
+  230 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  231 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $g at position 2
+  231 | ERROR   | Missing parameter name at position 2
+  231 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  232 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $b at position 3
+  232 | ERROR   | Missing parameter name at position 3
+  232 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 3
+  233 | ERROR   | The variable names for parameters UNKNOWN (3) and [ UNKNOWN ]
+      |         | (4) do not align
+  233 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $asbg at position 4
+  233 | ERROR   | Missing parameter name at position 4
+  233 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 4
+  235 | ERROR   | @return tag is empty in function comment
+  242 | ERROR   | Opening brace should be on a new line
+  243 | WARNING | Inline control structures are discouraged
+  244 | ERROR   | No space found after comma in function call
+  244 | ERROR   | No space found after comma in function call
+  244 | ERROR   | No space found after comma in function call
+  251 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $r at position 1
+  251 | ERROR   | Missing parameter name at position 1
+  251 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  252 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $g at position 2
+  252 | ERROR   | Missing parameter name at position 2
+  252 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  253 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $b at position 3
+  253 | ERROR   | Missing parameter name at position 3
+  253 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 3
+  255 | ERROR   | @return tag is empty in function comment
+  262 | ERROR   | Opening brace should be on a new line
+  263 | ERROR   | No space found after comma in function call
+  263 | ERROR   | No space found after comma in function call
+  263 | ERROR   | No space found after comma in function call
+  269 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $r at position 1
+  269 | ERROR   | Missing parameter name at position 1
+  269 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  270 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $g at position 2
+  270 | ERROR   | Missing parameter name at position 2
+  270 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  271 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $b at position 3
+  271 | ERROR   | Missing parameter name at position 3
+  271 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 3
+  273 | ERROR   | @return tag is empty in function comment
+  280 | ERROR   | Opening brace should be on a new line
+  281 | ERROR   | No space found after comma in function call
+  281 | ERROR   | No space found after comma in function call
+  281 | ERROR   | No space found after comma in function call
+  287 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $r at position 1
+  287 | ERROR   | Missing parameter name at position 1
+  287 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  288 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $g at position 2
+  288 | ERROR   | Missing parameter name at position 2
+  288 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  289 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $b at position 3
+  289 | ERROR   | Missing parameter name at position 3
+  289 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 3
+  291 | ERROR   | @return tag is empty in function comment
+  298 | ERROR   | Opening brace should be on a new line
+  299 | ERROR   | No space found after comma in function call
+  299 | ERROR   | No space found after comma in function call
+  299 | ERROR   | No space found after comma in function call
+  305 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $n at position 1
+  305 | ERROR   | Missing parameter name at position 1
+  305 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  306 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $r at position 2
+  306 | ERROR   | Missing parameter name at position 2
+  306 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  307 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $g at position 3
+  307 | ERROR   | Missing parameter name at position 3
+  307 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 3
+  308 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $b at position 4
+  308 | ERROR   | Missing parameter name at position 4
+  308 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 4
+  310 | ERROR   | @return tag is empty in function comment
+  317 | ERROR   | Opening brace should be on a new line
+  318 | WARNING | Inline control structures are discouraged
+  319 | ERROR   | No space found after comma in function call
+  319 | ERROR   | No space found after comma in function call
+  319 | ERROR   | No space found after comma in function call
+  325 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $aTitle at position 1
+  325 | ERROR   | Missing parameter name at position 1
+  325 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  326 | ERROR   | The variable names for parameters UNKNOWN (1) and [ UNKNOWN ]
+      |         | (2) do not align
+  326 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $aSub at position 2
+  326 | ERROR   | Missing parameter name at position 2
+  326 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  328 | ERROR   | @return tag is empty in function comment
+  335 | ERROR   | Opening brace should be on a new line
+  336 | WARNING | Inline control structures are discouraged
+  337 | WARNING | Inline control structures are discouraged
+  343 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $title at position 1
+  343 | ERROR   | Missing parameter name at position 1
+  343 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  344 | ERROR   | The variable names for parameters UNKNOWN (1) and [ UNKNOWN ]
+      |         | (2) do not align
+  344 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $min at position 2
+  344 | ERROR   | Missing parameter name at position 2
+  344 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  345 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $max at position 3
+  345 | ERROR   | Missing parameter name at position 3
+  345 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 3
+  346 | ERROR   | The variable names for parameters UNKNOWN (3) and [ UNKNOWN ]
+      |         | (4) do not align
+  346 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $gridint at position 4
+  346 | ERROR   | Missing parameter name at position 4
+  346 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 4
+  347 | ERROR   | The variable names for parameters UNKNOWN (4) and [ UNKNOWN ]
+      |         | (5) do not align
+  347 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $grid at position 5
+  347 | ERROR   | Missing parameter name at position 5
+  347 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 5
+  349 | ERROR   | @return tag is empty in function comment
+  356 | ERROR   | Opening brace should be on a new line
+  367 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $title at position 1
+  367 | ERROR   | Missing parameter name at position 1
+  367 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  368 | ERROR   | The variable names for parameters UNKNOWN (1) and [ UNKNOWN ]
+      |         | (2) do not align
+  368 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $grid at position 2
+  368 | ERROR   | Missing parameter name at position 2
+  368 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  370 | ERROR   | @return tag is empty in function comment
+  377 | ERROR   | Opening brace should be on a new line
+  385 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $labs at position 1
+  385 | ERROR   | Missing parameter name at position 1
+  385 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  387 | ERROR   | @return tag is empty in function comment
+  394 | ERROR   | Opening brace should be on a new line
+  395 | ERROR   | No space found after comma in function call
+  402 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $type at position 1
+  402 | ERROR   | Missing parameter name at position 1
+  402 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  403 | ERROR   | The variable names for parameters UNKNOWN (1) and [ UNKNOWN ]
+      |         | (2) do not align
+  403 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $stacked at position 2
+  403 | ERROR   | Missing parameter name at position 2
+  403 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  404 | ERROR   | The variable names for parameters UNKNOWN (2) and [ UNKNOWN ]
+      |         | (3) do not align
+  404 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $vals at position 3
+  404 | ERROR   | Missing parameter name at position 3
+  404 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 3
+  405 | ERROR   | The variable names for parameters UNKNOWN (3) and [ UNKNOWN ]
+      |         | (4) do not align
+  405 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $legend at position 4
+  405 | ERROR   | Missing parameter name at position 4
+  405 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 4
+  407 | ERROR   | @return tag is empty in function comment
+  414 | ERROR   | Opening brace should be on a new line
+  418 | ERROR   | No space found after comma in function call
+  423 | WARNING | Inline control structures are discouraged
+  427 | WARNING | Inline control structures are discouraged
+  427 | ERROR   | No space found after comma in function call
+  427 | ERROR   | No space found after comma in function call
+  436 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $x at position 1
+  436 | ERROR   | Missing parameter name at position 1
+  436 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  437 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $y at position 2
+  437 | ERROR   | Missing parameter name at position 2
+  437 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  439 | ERROR   | @return tag is empty in function comment
+  446 | ERROR   | Opening brace should be on a new line
+  454 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $val at position 1
+  454 | ERROR   | Missing parameter name at position 1
+  454 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  456 | ERROR   | @return tag is empty in function comment
+  463 | ERROR   | Opening brace should be on a new line
+  470 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $series at position 1
+  470 | ERROR   | Missing parameter name at position 1
+  470 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  472 | ERROR   | @return tag is empty in function comment
+  479 | ERROR   | Opening brace should be on a new line
+  486 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $filename at position 1
+  486 | ERROR   | Missing parameter name at position 1
+  486 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  488 | ERROR   | @return tag is empty in function comment
+  495 | ERROR   | Opening brace should be on a new line
+  498 | WARNING | Inline control structures are discouraged
+  498 | ERROR   | Space after opening parenthesis of function call prohibited
+  498 | ERROR   | Space before closing parenthesis of function call prohibited
+  499 | ERROR   | Space after opening parenthesis of function call prohibited
+  499 | ERROR   | Space before closing parenthesis of function call prohibited
+  500 | ERROR   | Space after opening parenthesis of function call prohibited
+  500 | ERROR   | Space before closing parenthesis of function call prohibited
+  501 | WARNING | Inline control structures are discouraged
+  501 | ERROR   | Space after opening parenthesis of function call prohibited
+  501 | ERROR   | Space before closing parenthesis of function call prohibited
+  508 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $filename at position 1
+  508 | ERROR   | Missing parameter name at position 1
+  508 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  510 | ERROR   | @return tag is empty in function comment
+  517 | ERROR   | Opening brace should be on a new line
+  524 | ERROR   | You must use "/**" style comments for a function comment
+  524 | ERROR   | Opening brace should be on a new line
+  525 | ERROR   | No space found after comma in function call
+  528 | ERROR   | No space found after comma in function call
+  528 | ERROR   | No space found after comma in function call
+  528 | ERROR   | No space found after comma in function call
+  528 | ERROR   | No space found after comma in function call
+  528 | ERROR   | No space found after comma in function call
+  528 | WARNING | Line exceeds 85 characters; contains 89 characters
+  529 | WARNING | Inline control structures are discouraged
+  531 | WARNING | Inline control structures are discouraged
+  532 | ERROR   | No space found after comma in function call
+  532 | ERROR   | No space found after comma in function call
+  532 | ERROR   | No space found after comma in function call
+  532 | ERROR   | No space found after comma in function call
+  532 | ERROR   | No space found after comma in function call
+  532 | WARNING | Line exceeds 85 characters; contains 94 characters
+  533 | WARNING | Line exceeds 85 characters; contains 131 characters
+  537 | WARNING | Inline control structures are discouraged
+  537 | WARNING | Line exceeds 85 characters; contains 91 characters
+  539 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found
+      |         | 0
+  543 | ERROR   | No space found after comma in function call
+  543 | ERROR   | No space found after comma in function call
+  544 | WARNING | Inline control structures are discouraged
+  551 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $i at position 1
+  551 | ERROR   | Missing parameter name at position 1
+  551 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  552 | ERROR   | The variable names for parameters UNKNOWN (1) and [ UNKNOWN ]
+      |         | (2) do not align
+  552 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $alpha at position 2
+  552 | ERROR   | Missing parameter name at position 2
+  552 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  553 | ERROR   | The variable names for parameters UNKNOWN (2) and [ UNKNOWN ]
+      |         | (3) do not align
+  553 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $x at position 3
+  553 | ERROR   | Missing parameter name at position 3
+  553 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 3
+  554 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $y at position 4
+  554 | ERROR   | Missing parameter name at position 4
+  554 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 4
+  555 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $r at position 5
+  555 | ERROR   | Missing parameter name at position 5
+  555 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 5
+  557 | ERROR   | @return tag is empty in function comment
+  564 | ERROR   | Opening brace should be on a new line
+  567 | WARNING | Inline control structures are discouraged
+  570 | ERROR   | No space found after comma in function call
+  578 | ERROR   | No space found after comma in function call
+  578 | ERROR   | No space found after comma in function call
+  578 | ERROR   | No space found after comma in function call
+  578 | ERROR   | No space found after comma in function call
+  578 | ERROR   | No space found after comma in function call
+  578 | WARNING | Line exceeds 85 characters; contains 92 characters
+  579 | ERROR   | No space found after comma in function call
+  579 | ERROR   | No space found after comma in function call
+  579 | ERROR   | No space found after comma in function call
+  579 | ERROR   | No space found after comma in function call
+  579 | ERROR   | No space found after comma in function call
+  585 | ERROR   | No space found after comma in function call
+  585 | ERROR   | No space found after comma in function call
+  585 | ERROR   | No space found after comma in function call
+  585 | ERROR   | No space found after comma in function call
+  585 | ERROR   | No space found after comma in function call
+  585 | WARNING | Line exceeds 85 characters; contains 92 characters
+  586 | ERROR   | No space found after comma in function call
+  586 | ERROR   | No space found after comma in function call
+  586 | ERROR   | No space found after comma in function call
+  586 | ERROR   | No space found after comma in function call
+  586 | ERROR   | No space found after comma in function call
+  593 | ERROR   | There must be exactly one blank line before the tags in
+      |         | function comment
+  596 | ERROR   | @return tag is empty in function comment
+  603 | ERROR   | Opening brace should be on a new line
+  606 | WARNING | Inline control structures are discouraged
+  608 | ERROR   | No space found after comma in function call
+  620 | ERROR   | No space found after comma in function call
+  620 | ERROR   | No space found after comma in function call
+  620 | ERROR   | Closing brace must be on a line by itself
+  620 | WARNING | Line exceeds 85 characters; contains 106 characters
+  621 | ERROR   | No space found after comma in function call
+  621 | ERROR   | No space found after comma in function call
+  621 | ERROR   | Closing brace must be on a line by itself
+  621 | WARNING | Line exceeds 85 characters; contains 109 characters
+  622 | ERROR   | No space found after comma in function call
+  622 | ERROR   | No space found after comma in function call
+  622 | ERROR   | No space found after comma in function call
+  622 | ERROR   | Closing brace must be on a line by itself
+  622 | WARNING | Line exceeds 85 characters; contains 121 characters
+  629 | ERROR   | There must be exactly one blank line before the tags in
+      |         | function comment
+  632 | ERROR   | @return tag is empty in function comment
+  639 | ERROR   | Opening brace should be on a new line
+  644 | ERROR   | Expected "foreach (...) {\n"; found "foreach(...) {\n"
+  648 | WARNING | Inline control structures are discouraged
+  655 | ERROR   | No space found after comma in function call
+  662 | ERROR   | There must be exactly one blank line before the tags in
+      |         | function comment
+  665 | ERROR   | @return tag is empty in function comment
+  672 | ERROR   | Opening brace should be on a new line
+  676 | ERROR   | No space found after comma in function call
+  682 | WARNING | Inline control structures are discouraged
+  684 | ERROR   | No space found after comma in function call
+  684 | ERROR   | No space found after comma in function call
+  684 | ERROR   | No space found after comma in function call
+  684 | ERROR   | No space found after comma in function call
+  684 | ERROR   | No space found after comma in function call
+  684 | WARNING | Line exceeds 85 characters; contains 104 characters
+  685 | ERROR   | No space found after comma in function call
+  685 | ERROR   | No space found after comma in function call
+  685 | ERROR   | No space found after comma in function call
+  685 | ERROR   | No space found after comma in function call
+  685 | ERROR   | No space found after comma in function call
+  685 | WARNING | Line exceeds 85 characters; contains 92 characters
+  686 | ERROR   | No space found after comma in function call
+  686 | ERROR   | No space found after comma in function call
+  686 | ERROR   | No space found after comma in function call
+  686 | ERROR   | No space found after comma in function call
+  686 | ERROR   | No space found after comma in function call
+  689 | WARNING | Inline control structures are discouraged
+  691 | ERROR   | No space found after comma in function call
+  691 | ERROR   | No space found after comma in function call
+  691 | ERROR   | No space found after comma in function call
+  691 | ERROR   | No space found after comma in function call
+  691 | ERROR   | No space found after comma in function call
+  691 | WARNING | Line exceeds 85 characters; contains 98 characters
+  692 | ERROR   | No space found after comma in function call
+  692 | ERROR   | No space found after comma in function call
+  692 | ERROR   | No space found after comma in function call
+  692 | ERROR   | No space found after comma in function call
+  692 | ERROR   | No space found after comma in function call
+  692 | WARNING | Line exceeds 85 characters; contains 98 characters
+  693 | ERROR   | No space found after comma in function call
+  693 | ERROR   | No space found after comma in function call
+  693 | ERROR   | No space found after comma in function call
+  693 | ERROR   | No space found after comma in function call
+  693 | ERROR   | No space found after comma in function call
+  693 | WARNING | Line exceeds 85 characters; contains 98 characters
+  695 | ERROR   | No space found after comma in function call
+  695 | ERROR   | No space found after comma in function call
+  695 | WARNING | Line exceeds 85 characters; contains 95 characters
+  696 | ERROR   | No space found after comma in function call
+  696 | ERROR   | No space found after comma in function call
+  696 | ERROR   | No space found after comma in function call
+  696 | ERROR   | No space found after comma in function call
+  696 | ERROR   | No space found after comma in function call
+  707 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $v at position 1
+  707 | ERROR   | Missing parameter name at position 1
+  707 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  708 | ERROR   | The variable names for parameters UNKNOWN (1) and [ UNKNOWN ]
+      |         | (2) do not align
+  708 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $base at position 2
+  708 | ERROR   | Missing parameter name at position 2
+  708 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  710 | ERROR   | @return tag is empty in function comment
+  717 | ERROR   | Opening brace should be on a new line
+  727 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $x at position 1
+  727 | ERROR   | Missing parameter name at position 1
+  727 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  728 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $y at position 2
+  728 | ERROR   | Missing parameter name at position 2
+  728 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+  729 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $m at position 3
+  729 | ERROR   | Missing parameter name at position 3
+  729 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 3
+  730 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $c at position 4
+  730 | ERROR   | Missing parameter name at position 4
+  730 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 4
+  732 | ERROR   | @return tag is empty in function comment
+  739 | ERROR   | Opening brace should be on a new line
+  744 | ERROR   | No space found after comma in function call
+  744 | ERROR   | No space found after comma in function call
+  744 | ERROR   | No space found after comma in function call
+  744 | ERROR   | No space found after comma in function call
+  744 | ERROR   | No space found after comma in function call
+  745 | ERROR   | No space found after comma in function call
+  745 | ERROR   | No space found after comma in function call
+  745 | ERROR   | No space found after comma in function call
+  745 | ERROR   | No space found after comma in function call
+  745 | ERROR   | No space found after comma in function call
+  750 | ERROR   | No space found after comma in function call
+  750 | ERROR   | No space found after comma in function call
+  750 | ERROR   | No space found after comma in function call
+  750 | ERROR   | No space found after comma in function call
+  750 | ERROR   | No space found after comma in function call
+  751 | ERROR   | No space found after comma in function call
+  751 | ERROR   | No space found after comma in function call
+  751 | ERROR   | No space found after comma in function call
+  751 | ERROR   | No space found after comma in function call
+  751 | ERROR   | No space found after comma in function call
+  755 | ERROR   | No space found after comma in function call
+  755 | ERROR   | No space found after comma in function call
+  755 | ERROR   | No space found after comma in function call
+  755 | ERROR   | No space found after comma in function call
+  755 | ERROR   | No space found after comma in function call
+  755 | ERROR   | No space found after comma in function call
+  755 | ERROR   | No space found after comma in function call
+  756 | ERROR   | No space found after comma in function call
+  756 | ERROR   | No space found after comma in function call
+  756 | ERROR   | No space found after comma in function call
+  761 | ERROR   | No space found after comma in function call
+  761 | ERROR   | No space found after comma in function call
+  761 | ERROR   | No space found after comma in function call
+  761 | ERROR   | No space found after comma in function call
+  761 | ERROR   | No space found after comma in function call
+  762 | ERROR   | No space found after comma in function call
+  762 | ERROR   | No space found after comma in function call
+  762 | ERROR   | No space found after comma in function call
+  762 | ERROR   | No space found after comma in function call
+  762 | ERROR   | No space found after comma in function call
+  767 | ERROR   | No space found after comma in function call
+  767 | ERROR   | No space found after comma in function call
+  767 | ERROR   | No space found after comma in function call
+  768 | ERROR   | No space found after comma in function call
+  768 | ERROR   | No space found after comma in function call
+  768 | ERROR   | No space found after comma in function call
+  776 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $i at position 1
+  776 | ERROR   | Missing parameter name at position 1
+  776 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  778 | ERROR   | @return tag is empty in function comment
+  785 | ERROR   | Opening brace should be on a new line
+  789 | WARNING | Inline control structures are discouraged
+  797 | WARNING | Inline control structures are discouraged
+  798 | WARNING | Inline control structures are discouraged
+  799 | ERROR   | No space found after comma in function call
+  799 | ERROR   | No space found after comma in function call
+  799 | ERROR   | No space found after comma in function call
+  799 | ERROR   | No space found after comma in function call
+  799 | ERROR   | No space found after comma in function call
+  799 | WARNING | Line exceeds 85 characters; contains 111 characters
+  800 | ERROR   | No space found after comma in function call
+  800 | ERROR   | No space found after comma in function call
+  800 | ERROR   | No space found after comma in function call
+  800 | ERROR   | No space found after comma in function call
+  800 | ERROR   | No space found after comma in function call
+  800 | WARNING | Line exceeds 85 characters; contains 115 characters
+  801 | ERROR   | No space found after comma in function call
+  801 | ERROR   | No space found after comma in function call
+  801 | ERROR   | No space found after comma in function call
+  801 | ERROR   | No space found after comma in function call
+  801 | ERROR   | No space found after comma in function call
+  801 | WARNING | Line exceeds 85 characters; contains 115 characters
+  805 | WARNING | Inline control structures are discouraged
+  806 | ERROR   | No space found after comma in function call
+  806 | ERROR   | No space found after comma in function call
+  806 | WARNING | Line exceeds 85 characters; contains 103 characters
+  812 | WARNING | Inline control structures are discouraged
+  814 | ERROR   | No space found after comma in function call
+  816 | ERROR   | Expected "if (...) {\n"; found "if (...){\n"
+  816 | ERROR   | There must be a single space between the closing parenthesis
+      |         | and the opening brace of a multi-line IF statement; found 0
+      |         | spaces
+  818 | WARNING | Inline control structures are discouraged
+  824 | WARNING | Line exceeds 85 characters; contains 87 characters
+  826 | ERROR   | No space found after comma in function call
+  827 | ERROR   | No space found after comma in function call
+  827 | WARNING | Line exceeds 85 characters; contains 92 characters
+  828 | WARNING | Inline control structures are discouraged
+  829 | ERROR   | Expected "if (...) {\n"; found "if(...)\n                {\n"
+  829 | ERROR   | There must be a single space between the closing parenthesis
+      |         | and the opening brace of a multi-line IF statement; found
+      |         | newline
+  836 | ERROR   | No space found after comma in function call
+  836 | ERROR   | No space found after comma in function call
+  836 | ERROR   | No space found after comma in function call
+  836 | ERROR   | No space found after comma in function call
+  836 | ERROR   | No space found after comma in function call
+  836 | WARNING | Line exceeds 85 characters; contains 86 characters
+  837 | ERROR   | No space found after comma in function call
+  837 | ERROR   | No space found after comma in function call
+  837 | ERROR   | No space found after comma in function call
+  837 | ERROR   | No space found after comma in function call
+  837 | ERROR   | No space found after comma in function call
+  839 | WARNING | Inline control structures are discouraged
+  847 | WARNING | Inline control structures are discouraged
+  851 | ERROR   | No space found after comma in function call
+  851 | ERROR   | No space found after comma in function call
+  851 | ERROR   | No space found after comma in function call
+  851 | ERROR   | No space found after comma in function call
+  851 | ERROR   | No space found after comma in function call
+  851 | ERROR   | No space found after comma in function call
+  851 | ERROR   | No space found after comma in function call
+  851 | ERROR   | No space found after comma in function call
+  851 | WARNING | Line exceeds 85 characters; contains 105 characters
+  852 | ERROR   | No space found after comma in function call
+  852 | ERROR   | No space found after comma in function call
+  852 | ERROR   | No space found after comma in function call
+  852 | ERROR   | No space found after comma in function call
+  861 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual
+      |         | variable name $posArray at position 1
+  861 | ERROR   | Missing parameter name at position 1
+  861 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+  863 | ERROR   | @return tag is empty in function comment
+  870 | ERROR   | Opening brace should be on a new line
+  872 | ERROR   | Line indented incorrectly; expected 8 spaces, found 13
+  873 | ERROR   | Line indented incorrectly; expected 12 spaces, found 22
+  879 | ERROR   | Line indented incorrectly; expected 8 spaces, found 13
+  882 | WARNING | Inline control structures are discouraged
+  885 | ERROR   | Line indented incorrectly; expected 8 spaces, found 13
+  886 | WARNING | Inline control structures are discouraged
+  887 | ERROR   | Line indented incorrectly; expected 12 spaces, found 22
+  894 | ERROR   | Line indented incorrectly; expected 16 spaces, found 31
+  895 | ERROR   | Line indented incorrectly; expected 16 spaces, found 31
+  900 | WARNING | Line exceeds 85 characters; contains 105 characters
+  901 | WARNING | Line exceeds 85 characters; contains 99 characters
+  902 | WARNING | Line exceeds 85 characters; contains 95 characters
+  903 | ERROR   | Case breaking statement indented incorrectly; expected 35
+      |         | spaces, found 36
+  905 | ERROR   | Line indented incorrectly; expected 16 spaces, found 31
+  910 | WARNING | Line exceeds 85 characters; contains 105 characters
+  911 | WARNING | Line exceeds 85 characters; contains 99 characters
+  912 | WARNING | Line exceeds 85 characters; contains 99 characters
+  913 | ERROR   | Case breaking statement indented incorrectly; expected 35
+      |         | spaces, found 36
+  923 | ERROR   | There must be exactly one blank line before the tags in
+      |         | function comment
+  926 | ERROR   | @return tag is empty in function comment
+  933 | ERROR   | Opening brace should be on a new line
+  938 | ERROR   | Space before opening parenthesis of function call prohibited
+  938 | ERROR   | No space found after comma in function call
+  938 | ERROR   | No space found after comma in function call
+  943 | ERROR   | Space before opening parenthesis of function call prohibited
+  943 | ERROR   | No space found after comma in function call
+  943 | ERROR   | No space found after comma in function call
+  949 | ERROR   | There must be exactly one blank line before the tags in
+      |         | function comment
+  952 | ERROR   | @return tag is empty in function comment
+  959 | ERROR   | Opening brace should be on a new line
+  960 | WARNING | Inline control structures are discouraged
+  964 | WARNING | Inline control structures are discouraged
+  967 | WARNING | Inline control structures are discouraged
+  987 | ERROR   | There must be exactly one blank line before the tags in
+      |         | function comment
+  990 | ERROR   | @return tag is empty in function comment
+  997 | ERROR   | Opening brace should be on a new line
+ 1004 | WARNING | Line exceeds 85 characters; contains 97 characters
+ 1007 | ERROR   | No space found after comma in function call
+ 1007 | ERROR   | No space found after comma in function call
+ 1007 | ERROR   | No space found after comma in function call
+ 1007 | ERROR   | No space found after comma in function call
+ 1007 | ERROR   | No space found after comma in function call
+ 1007 | WARNING | Line exceeds 85 characters; contains 97 characters
+ 1009 | ERROR   | No space found after comma in function call
+ 1009 | ERROR   | No space found after comma in function call
+ 1009 | ERROR   | No space found after comma in function call
+ 1009 | ERROR   | No space found after comma in function call
+ 1009 | ERROR   | No space found after comma in function call
+ 1011 | ERROR   | No space found after comma in function call
+ 1011 | ERROR   | No space found after comma in function call
+ 1015 | ERROR   | No space found after comma in function call
+ 1015 | ERROR   | No space found after comma in function call
+ 1015 | WARNING | Line exceeds 85 characters; contains 87 characters
+ 1016 | ERROR   | No space found after comma in function call
+ 1016 | ERROR   | No space found after comma in function call
+ 1016 | ERROR   | No space found after comma in function call
+ 1016 | ERROR   | No space found after comma in function call
+ 1016 | ERROR   | No space found after comma in function call
+ 1020 | ERROR   | No space found after comma in function call
+ 1020 | ERROR   | No space found after comma in function call
+ 1020 | ERROR   | No space found after comma in function call
+ 1020 | ERROR   | No space found after comma in function call
+ 1020 | ERROR   | No space found after comma in function call
+ 1025 | ERROR   | There must be exactly one blank line before the tags in
+      |         | function comment
+ 1028 | ERROR   | @return tag is empty in function comment
+ 1035 | ERROR   | Opening brace should be on a new line
+ 1040 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1047 | ERROR   | There must be exactly one blank line before the tags in
+      |         | function comment
+ 1050 | ERROR   | @return tag is empty in function comment
+ 1057 | ERROR   | Opening brace should be on a new line
+ 1064 | ERROR   | No space found after comma in function call
+ 1064 | ERROR   | No space found after comma in function call
+ 1064 | ERROR   | No space found after comma in function call
+ 1064 | ERROR   | No space found after comma in function call
+ 1064 | ERROR   | No space found after comma in function call
+ 1067 | ERROR   | No space found after comma in function call
+ 1067 | ERROR   | No space found after comma in function call
+ 1067 | ERROR   | No space found after comma in function call
+ 1067 | ERROR   | No space found after comma in function call
+ 1067 | ERROR   | No space found after comma in function call
+ 1072 | ERROR   | No space found after comma in function call
+ 1072 | ERROR   | No space found after comma in function call
+ 1072 | WARNING | Line exceeds 85 characters; contains 90 characters
+ 1074 | ERROR   | Expected "} else {\n"; found "}\n            else {\n"
+ 1075 | ERROR   | No space found after comma in function call
+ 1075 | ERROR   | No space found after comma in function call
+ 1075 | WARNING | Line exceeds 85 characters; contains 98 characters
+ 1081 | ERROR   | No space found after comma in function call
+ 1081 | ERROR   | No space found after comma in function call
+ 1081 | ERROR   | No space found after comma in function call
+ 1081 | ERROR   | No space found after comma in function call
+ 1081 | ERROR   | No space found after comma in function call
+ 1086 | ERROR   | There must be exactly one blank line before the tags in
+      |         | function comment
+ 1089 | ERROR   | @return tag is empty in function comment
+ 1096 | ERROR   | Opening brace should be on a new line
+ 1098 | ERROR   | No space found after comma in function call
+ 1101 | WARNING | Inline control structures are discouraged
+ 1103 | WARNING | Inline control structures are discouraged
+ 1106 | ERROR   | Expected "} else {\n"; found "}\n        else {\n"
+ 1110 | ERROR   | Perl-style comments are not allowed. Use "// Comment." or "/*
+      |         | comment */" instead.
+ 1112 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 1112 | ERROR   | Line indented incorrectly; expected at least 20 spaces, found
+      |         | 17
+ 1116 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1116 | ERROR   | No space found after comma in function call
+ 1124 | ERROR   | There must be exactly one blank line before the tags in
+      |         | function comment
+ 1127 | ERROR   | @return tag is empty in function comment
+ 1134 | ERROR   | Opening brace should be on a new line
+ 1137 | ERROR   | Line indented incorrectly; expected 8 spaces, found 12
+ 1137 | ERROR   | Closing brace must be on a line by itself
+ 1138 | ERROR   | Line indented incorrectly; expected 8 spaces, found 12
+ 1138 | ERROR   | Closing brace must be on a line by itself
+ 1139 | ERROR   | Line indented incorrectly; expected 8 spaces, found 12
+ 1139 | ERROR   | Closing brace must be on a line by itself
+ 1140 | ERROR   | Line indented incorrectly; expected 8 spaces, found 12
+ 1140 | ERROR   | Closing brace must be on a line by itself
+ 1145 | ERROR   | Line indented incorrectly; expected 12 spaces, found 13
+ 1146 | ERROR   | Line indented incorrectly; expected at least 16 spaces, found
+      |         | 13
+ 1146 | ERROR   | No space found after comma in function call
+ 1146 | ERROR   | No space found after comma in function call
+ 1146 | ERROR   | No space found after comma in function call
+ 1146 | ERROR   | No space found after comma in function call
+ 1146 | ERROR   | No space found after comma in function call
+ 1146 | WARNING | Line exceeds 85 characters; contains 124 characters
+ 1148 | ERROR   | Line indented incorrectly; expected 12 spaces, found 13
+ 1148 | ERROR   | Expected "} else {\n"; found "}\n             else {\n"
+ 1149 | ERROR   | Line indented incorrectly; expected at least 16 spaces, found
+      |         | 13
+ 1149 | ERROR   | No space found after comma in function call
+ 1150 | ERROR   | Line indented incorrectly; expected at least 16 spaces, found
+      |         | 13
+ 1150 | ERROR   | No space found after comma in function call
+ 1150 | ERROR   | No space found after comma in function call
+ 1150 | ERROR   | No space found after comma in function call
+ 1150 | ERROR   | No space found after comma in function call
+ 1150 | ERROR   | No space found after comma in function call
+ 1150 | WARNING | Line exceeds 85 characters; contains 117 characters
+ 1151 | ERROR   | Line indented incorrectly; expected at least 16 spaces, found
+      |         | 12
+ 1151 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1151 | ERROR   | No space found after comma in function call
+ 1151 | ERROR   | No space found after comma in function call
+ 1151 | ERROR   | Space before closing parenthesis of function call prohibited
+ 1151 | WARNING | Line exceeds 85 characters; contains 106 characters
+ 1152 | ERROR   | Line indented incorrectly; expected at least 16 spaces, found
+      |         | 12
+ 1154 | ERROR   | Case breaking statement indented incorrectly; expected 12
+      |         | spaces, found 13
+ 1157 | WARNING | Line exceeds 85 characters; contains 86 characters
+ 1158 | WARNING | Line exceeds 85 characters; contains 88 characters
+ 1160 | ERROR   | Expected "} else {\n"; found "}\n            else {\n"
+ 1166 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1166 | ERROR   | No space found after comma in function call
+ 1166 | ERROR   | No space found after comma in function call
+ 1166 | ERROR   | Space before closing parenthesis of function call prohibited
+ 1166 | WARNING | Line exceeds 85 characters; contains 120 characters
+ 1173 | ERROR   | Space before opening parenthesis of function call prohibited
+ 1173 | ERROR   | No space found after comma in function call
+ 1173 | ERROR   | No space found after comma in function call
+ 1173 | ERROR   | Space before closing parenthesis of function call prohibited
+ 1173 | WARNING | Line exceeds 85 characters; contains 129 characters
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 8.25Mb
+

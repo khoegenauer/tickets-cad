@@ -1,0 +1,16 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/persist3.php
+--------------------------------------------------------------------------------
+FOUND 3 ERROR(S) AND 2 WARNING(S) AFFECTING 5 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | You must use "/**" style comments for a file comment
+  8 | ERROR   | "require_once" is a statement not a function; no parentheses
+    |         | are required
+ 19 | WARNING | Line exceeds 85 characters; contains 106 characters
+ 20 | WARNING | Line exceeds 85 characters; contains 110 characters
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.75Mb
+

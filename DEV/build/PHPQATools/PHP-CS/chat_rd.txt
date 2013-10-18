@@ -1,0 +1,46 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/chat_rd.php
+--------------------------------------------------------------------------------
+FOUND 28 ERROR(S) AND 7 WARNING(S) AFFECTING 18 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | Missing file doc comment
+  7 | WARNING | Line exceeds 85 characters; contains 148 characters
+ 11 | ERROR   | "require_once" is a statement not a function; no parentheses
+    |         | are required
+ 12 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 12 | ERROR   | Space before opening parenthesis of function call prohibited
+ 14 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 14 | WARNING | Line exceeds 85 characters; contains 109 characters
+ 15 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 15 | ERROR   | No space found after comma in function call
+ 15 | ERROR   | No space found after comma in function call
+ 15 | ERROR   | Space after opening parenthesis of function call prohibited
+ 15 | WARNING | Line exceeds 85 characters; contains 105 characters
+ 17 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 18 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 18 | WARNING | Line exceeds 85 characters; contains 114 characters
+ 21 | WARNING | Line exceeds 85 characters; contains 128 characters
+ 24 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 26 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 27 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 27 | ERROR   | No space found after comma in function call
+ 27 | ERROR   | No space found after comma in function call
+ 27 | ERROR   | Space after opening parenthesis of function call prohibited
+ 27 | WARNING | Line exceeds 85 characters; contains 104 characters
+ 29 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 30 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 30 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 30 | ERROR   | Expected "while (...) {\n"; found "while (...){\n"
+ 31 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 31 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 2
+ 31 | ERROR   | No space found after comma in function call
+ 31 | WARNING | Line exceeds 85 characters; contains 137 characters
+ 32 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 32 | ERROR   | Closing brace indented incorrectly; expected 1 spaces, found 2
+ 33 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.75Mb
+

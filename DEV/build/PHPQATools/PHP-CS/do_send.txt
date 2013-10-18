@@ -1,0 +1,20 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/do_send.php
+--------------------------------------------------------------------------------
+FOUND 6 ERROR(S) AND 3 WARNING(S) AFFECTING 7 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | You must use "/**" style comments for a file comment
+  3 | WARNING | Line exceeds 85 characters; contains 88 characters
+  4 | WARNING | Line exceeds 85 characters; contains 148 characters
+  9 | ERROR   | "require_once" is a statement not a function; no parentheses
+    |         | are required
+ 14 | WARNING | Line exceeds 85 characters; contains 109 characters
+ 19 | ERROR   | Space before opening parenthesis of function call prohibited
+ 19 | ERROR   | Space after closing parenthesis of function call prohibited
+ 19 | ERROR   | Space before closing parenthesis of function call prohibited
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.75Mb
+

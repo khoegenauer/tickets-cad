@@ -1,0 +1,50 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/portal/up_status.php
+--------------------------------------------------------------------------------
+FOUND 37 ERROR(S) AND 2 WARNING(S) AFFECTING 21 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | You must use "/**" style comments for a file comment
+  9 | ERROR   | "require_once" is a statement not a function; no parentheses
+    |         | are required
+ 17 | ERROR   | Space after closing parenthesis of function call prohibited
+ 18 | ERROR   | Expected "if (...) {\n"; found "if(...) {\n"
+ 19 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 19 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 20 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 20 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found 1
+ 20 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 20 | ERROR   | Expected "} elseif (...) {\n"; found "} elseif(...) {\n"
+ 21 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 21 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 22 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 22 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 22 | ERROR   | Expected "} elseif (...) {\n"; found "} elseif(...) {\n"
+ 23 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 23 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 24 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 24 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 24 | ERROR   | Expected "} elseif (...) {\n"; found "} elseif(...) {\n"
+ 25 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 25 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 26 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 26 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 26 | ERROR   | Expected "} elseif (...) {\n"; found "} elseif(...) {\n"
+ 27 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 27 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 28 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 28 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 28 | ERROR   | Expected "} elseif (...) {\n"; found "} elseif(...) {\n"
+ 29 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 29 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 30 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 37 | ERROR   | Space after opening parenthesis of function call prohibited
+ 37 | WARNING | Line exceeds 85 characters; contains 100 characters
+ 38 | WARNING | Line exceeds 85 characters; contains 89 characters
+ 39 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 41 | ERROR   | Space after closing parenthesis of function call prohibited
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.75Mb
+

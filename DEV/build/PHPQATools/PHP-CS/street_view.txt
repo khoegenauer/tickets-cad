@@ -1,0 +1,39 @@
+ERROR: The file "./street_view.php" does not exist.
+
+Usage: phpcs [-nwlsaepvi] [-d key[=value]]
+    [--report=<report>] [--report-file=<reportfile>] [--report-<report>=<reportfile>] ...
+    [--report-width=<reportWidth>] [--generator=<generator>] [--tab-width=<tabWidth>]
+    [--severity=<severity>] [--error-severity=<severity>] [--warning-severity=<severity>]
+    [--config-set key value] [--config-delete key] [--config-show]
+    [--standard=<standard>] [--sniffs=<sniffs>] [--encoding=<encoding>]
+    [--extensions=<extensions>] [--ignore=<patterns>] <file> ...
+        -n            Do not print warnings (shortcut for --warning-severity=0)
+        -w            Print both warnings and errors (on by default)
+        -l            Local directory only, no recursion
+        -s            Show sniff codes in all reports
+        -a            Run interactively
+        -e            Explain a standard by showing the sniffs it includes
+        -p            Show progress of the run
+        -v[v][v]      Print verbose output
+        -i            Show a list of installed coding standards
+        -d            Set the [key] php.ini value to [value] or [true] if value is omitted
+        --help        Print this help message
+        --version     Print version information
+        <file>        One or more files and/or directories to check
+        <extensions>  A comma separated list of file extensions to check
+                      (only valid if checking a directory)
+        <patterns>    A comma separated list of patterns to ignore files and directories
+        <encoding>    The encoding of the files being checked (default is iso-8859-1)
+        <sniffs>      A comma separated list of sniff codes to limit the check to
+                      (all sniffs must be part of the specified standard)
+        <severity>    The minimum severity required to display an error or warning
+        <standard>    The name or path of the coding standard to use
+        <tabWidth>    The number of spaces each tab represents
+        <generator>   The name of a doc generator to use
+                      (forces doc generation instead of checking)
+        <report>      Print either the "full", "xml", "checkstyle", "csv", "emacs"
+                      "source", "summary", "svnblame", "gitblame", "hgblame" or
+                      "notifysend" report
+                      (the "full" report is printed by default)
+        <reportfile>  Write the report to the specified file path
+        <reportWidth> How many columns wide screen reports should be printed

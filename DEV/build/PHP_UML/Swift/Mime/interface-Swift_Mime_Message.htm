@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+	<title>interface Swift_Mime_Message</title>
+	<link type="text/css" rel="stylesheet" href="../../$resources/style.css"/>
+	<script type="text/javascript" language="javascript" src="../../$resources/treeview.js"></script>
+</head>
+<body onload="toggler.setupTreeView('MainList');toggler.backToMemorizedState('MainList', 'btnToggle')">
+	<ul class="navig">
+	<li><a href="javascript:toggler.toggleAll('MainList', 'btnToggle')" class="expandAllBtn" id="btnToggle">Expand all</a></li><li><a href="../../help.htm" class="helpBtn">Help</a></li><li><a href="../../index-all.htm" class="indexAllBtn">Index</a></li><li><a href="interface-Swift_Mime_HeaderSet.htm" class="left">Prev interface</a></li><li><a href="package-summary.htm" class="top">Package</a></li><li><a href="interface-Swift_Mime_MimeEntity.htm" class="right">Next interface</a></li>
+	</ul>
+	<h1 class="interface">Swift_Mime_Message</h1>
+	<div id="MainList">
+	<div class="description"><p>Interface <span class="title">Swift\Mime\Swift_Mime_Message</span> extends <a href="../../Swift/Mime/interface-Swift_Mime_MimeEntity.htm" class="link2">Swift\Mime\Swift_Mime_MimeEntity</a></p><ul class="description"><li>A Message (RFC 2822) object.</li><li class="smaller">@package Swift</li><li class="smaller">@subpackage Mime</li><li class="smaller">@author Chris Corbyn</li><li>All implementing classes: <a href="../../Swift/Mime/class-Swift_Message.htm" class="link2">Swift\Mime\Swift_Message</a>, <a href="../../Swift/Mime/class-Swift_Mime_SimpleMessage.htm" class="link2">Swift\Mime\Swift_Mime_SimpleMessage</a></li><li>File: lib/classes/Swift/Mime/Message.php</li></ul></div><dl class="inheritTree"><dd style="padding-left:-15px"><a href="../../Swift/Mime/interface-Swift_Mime_CharsetObserver.htm" class="link2">Swift\Mime\Swift_Mime_CharsetObserver</a></dd><dd style="padding-left:74px"><img src="../../$resources/inherit.gif" alt="extended by "/><a href="../../Swift/Mime/interface-Swift_Mime_MimeEntity.htm" class="link2">Swift\Mime\Swift_Mime_MimeEntity</a></dd><dd style="padding-left:153px" class="current"><img src="../../$resources/inherit.gif" alt="extended by "/>Swift\Mime\Swift_Mime_Message</dd></dl><h2>Functions</h2><ul class="summary"><li class="Collapsed" id="f525ccca58d159"><a href="javascript:void(0);" class="method-pub" target="main">generateId</a>()<ul class="description"><li>Public <a href="../../datatype-string.htm" class="link">string</a> <span class="smallTitle">generateId</span>()</li><li>Generates a valid Message-ID and switches to it.</li></ul></li><li class="Collapsed" id="f525ccca58d343"><a href="javascript:void(0);" class="method-pub" target="main">setSubject</a>(<a href="../../datatype-string.htm" class="link">string</a> $subject)<ul class="description"><li>Public <a href="../../datatype-void.htm" class="link">void</a> <span class="smallTitle">setSubject</span>(<a href="../../datatype-string.htm" class="link">string</a> $subject)</li><li>Set the subject of the message.</li><li class="smaller">@param string $subject</li></ul></li><li class="Collapsed" id="f525ccca58d587"><a href="javascript:void(0);" class="method-pub" target="main">getSubject</a>()<ul class="description"><li>Public <a href="../../datatype-string.htm" class="link">string</a> <span class="smallTitle">getSubject</span>()</li><li>Get the subject of the message.</li></ul></li><li class="Collapsed" id="f525ccca58d76e"><a href="javascript:void(0);" class="method-pub" target="main">setDate</a>(<a href="../../datatype-int.htm" class="link">int</a> $date)<ul class="description"><li>Public <a href="../../datatype-void.htm" class="link">void</a> <span class="smallTitle">setDate</span>(<a href="../../datatype-int.htm" class="link">int</a> $date)</li><li>Set the origination date of the message as a UNIX timestamp.</li><li class="smaller">@param int $date</li></ul></li><li class="Collapsed" id="f525ccca58d9b5"><a href="javascript:void(0);" class="method-pub" target="main">getDate</a>()<ul class="description"><li>Public <a href="../../datatype-int.htm" class="link">int</a> <span class="smallTitle">getDate</span>()</li><li>Get the origination date of the message as a UNIX timestamp.</li></ul></li><li class="Collapsed" id="f525ccca58db9d"><a href="javascript:void(0);" class="method-pub" target="main">setReturnPath</a>(<a href="../../datatype-string.htm" class="link">string</a> $address)<ul class="description"><li>Public <a href="../../datatype-void.htm" class="link">void</a> <span class="smallTitle">setReturnPath</span>(<a href="../../datatype-string.htm" class="link">string</a> $address)</li><li>Set the return-path (bounce-detect) address.</li><li class="smaller">@param string $address</li></ul></li><li class="Collapsed" id="f525ccca58de00"><a href="javascript:void(0);" class="method-pub" target="main">getReturnPath</a>()<ul class="description"><li>Public <a href="../../datatype-string.htm" class="link">string</a> <span class="smallTitle">getReturnPath</span>()</li><li>Get the return-path (bounce-detect) address.</li></ul></li><li class="Collapsed" id="f525ccca58dff5"><a href="javascript:void(0);" class="method-pub" target="main">setSender</a>(<a href="../../datatype-mixed.htm" class="link">mixed</a> $address, <a href="../../datatype-string.htm" class="link">string</a> $name<span class="defVal"> = null</span>)<ul class="description"><li>Public <a href="../../datatype-void.htm" class="link">void</a> <span class="smallTitle">setSender</span>(<a href="../../datatype-mixed.htm" class="link">mixed</a> $address, <a href="../../datatype-string.htm" class="link">string</a> $name<span class="defVal"> = null</span>)</li><li>Set the sender of this message.<br />
+<br />
+If multiple addresses are present in the From field, this SHOULD be set.<br />
+<br />
+According to RFC 2822 it is a requirement when there are multiple From addresses, but Swift itself does not require it directly.<br />
+<br />
+An associative array (with one element!) can be used to provide a display- name: i.e. array('email@address' =&gt; 'Real Name').<br />
+<br />
+If the second parameter is provided and the first is a string, then $name is associated with the address.</li><li class="smaller">@param mixed $address</li><li class="smaller">@param string $name optional</li></ul></li><li class="Collapsed" id="f525ccca58e387"><a href="javascript:void(0);" class="method-pub" target="main">getSender</a>()<ul class="description"><li>Public <a href="../../datatype-string.htm" class="link">string</a> <span class="smallTitle">getSender</span>()</li><li>Get the sender address for this message.<br />
+<br />
+This has a higher significance than the From address.</li></ul></li><li class="Collapsed" id="f525ccca58e58e"><a href="javascript:void(0);" class="method-pub" target="main">setFrom</a>(<a href="../../datatype-mixed.htm" class="link">mixed</a> $addresses, <a href="../../datatype-string.htm" class="link">string</a> $name<span class="defVal"> = null</span>)<ul class="description"><li>Public <a href="../../datatype-void.htm" class="link">void</a> <span class="smallTitle">setFrom</span>(<a href="../../datatype-mixed.htm" class="link">mixed</a> $addresses, <a href="../../datatype-string.htm" class="link">string</a> $name<span class="defVal"> = null</span>)</li><li>Set the From address of this message.<br />
+<br />
+It is permissible for multiple From addresses to be set using an array.<br />
+<br />
+If multiple From addresses are used, you SHOULD set the Sender address and according to RFC 2822, MUST set the sender address.<br />
+<br />
+An array can be used if display names are to be provided: i.e.<br />
+array('email@address.com' =&gt; 'Real Name').<br />
+<br />
+If the second parameter is provided and the first is a string, then $name is associated with the address.</li><li class="smaller">@param mixed $addresses</li><li class="smaller">@param string $name optional</li></ul></li><li class="Collapsed" id="f525ccca58e91c"><a href="javascript:void(0);" class="method-pub" target="main">getFrom</a>()<ul class="description"><li>Public <span class="link">string[]</span> <span class="smallTitle">getFrom</span>()</li><li>Get the From address(es) of this message.<br />
+<br />
+This method always returns an associative array where the keys are the addresses.</li></ul></li><li class="Collapsed" id="f525ccca58eb26"><a href="javascript:void(0);" class="method-pub" target="main">setReplyTo</a>(<a href="../../datatype-mixed.htm" class="link">mixed</a> $addresses, <a href="../../datatype-string.htm" class="link">string</a> $name<span class="defVal"> = null</span>)<ul class="description"><li>Public <a href="../../datatype-void.htm" class="link">void</a> <span class="smallTitle">setReplyTo</span>(<a href="../../datatype-mixed.htm" class="link">mixed</a> $addresses, <a href="../../datatype-string.htm" class="link">string</a> $name<span class="defVal"> = null</span>)</li><li>Set the Reply-To address(es).<br />
+<br />
+Any replies from the receiver will be sent to this address.<br />
+<br />
+It is permissible for multiple reply-to addresses to be set using an array.<br />
+<br />
+This method has the same synopsis as {@link setFrom()} and {@link setTo()}.<br />
+<br />
+If the second parameter is provided and the first is a string, then $name is associated with the address.</li><li class="smaller">@param mixed $addresses</li><li class="smaller">@param string $name optional</li></ul></li><li class="Collapsed" id="f525ccca58eeb9"><a href="javascript:void(0);" class="method-pub" target="main">getReplyTo</a>()<ul class="description"><li>Public <span class="link">string[]</span> <span class="smallTitle">getReplyTo</span>()</li><li>Get the Reply-To addresses for this message.<br />
+<br />
+This method always returns an associative array where the keys provide the email addresses.</li></ul></li><li class="Collapsed" id="f525ccca58f0c4"><a href="javascript:void(0);" class="method-pub" target="main">setTo</a>(<a href="../../datatype-mixed.htm" class="link">mixed</a> $addresses, <a href="../../datatype-string.htm" class="link">string</a> $name<span class="defVal"> = null</span>)<ul class="description"><li>Public <a href="../../datatype-void.htm" class="link">void</a> <span class="smallTitle">setTo</span>(<a href="../../datatype-mixed.htm" class="link">mixed</a> $addresses, <a href="../../datatype-string.htm" class="link">string</a> $name<span class="defVal"> = null</span>)</li><li>Set the To address(es).<br />
+<br />
+Recipients set in this field will receive a copy of this message.<br />
+<br />
+This method has the same synopsis as {@link setFrom()} and {@link setCc()}.<br />
+<br />
+If the second parameter is provided and the first is a string, then $name is associated with the address.</li><li class="smaller">@param mixed $addresses</li><li class="smaller">@param string $name optional</li></ul></li><li class="Collapsed" id="f525ccca58f41f"><a href="javascript:void(0);" class="method-pub" target="main">getTo</a>()<ul class="description"><li>Public <span class="link">string[]</span> <span class="smallTitle">getTo</span>()</li><li>Get the To addresses for this message.<br />
+<br />
+This method always returns an associative array, whereby the keys provide the actual email addresses.</li></ul></li><li class="Collapsed" id="f525ccca58f632"><a href="javascript:void(0);" class="method-pub" target="main">setCc</a>(<a href="../../datatype-mixed.htm" class="link">mixed</a> $addresses, <a href="../../datatype-string.htm" class="link">string</a> $name<span class="defVal"> = null</span>)<ul class="description"><li>Public <a href="../../datatype-void.htm" class="link">void</a> <span class="smallTitle">setCc</span>(<a href="../../datatype-mixed.htm" class="link">mixed</a> $addresses, <a href="../../datatype-string.htm" class="link">string</a> $name<span class="defVal"> = null</span>)</li><li>Set the Cc address(es).<br />
+<br />
+Recipients set in this field will receive a 'carbon-copy' of this message.<br />
+<br />
+This method has the same synopsis as {@link setFrom()} and {@link setTo()}.</li><li class="smaller">@param mixed $addresses</li><li class="smaller">@param string $name optional</li></ul></li><li class="Collapsed" id="f525ccca58f993"><a href="javascript:void(0);" class="method-pub" target="main">getCc</a>()<ul class="description"><li>Public <span class="link">string[]</span> <span class="smallTitle">getCc</span>()</li><li>Get the Cc addresses for this message.<br />
+<br />
+This method always returns an associative array, whereby the keys provide the actual email addresses.</li></ul></li><li class="Collapsed" id="f525ccca58fbaa"><a href="javascript:void(0);" class="method-pub" target="main">setBcc</a>(<a href="../../datatype-mixed.htm" class="link">mixed</a> $addresses, <a href="../../datatype-string.htm" class="link">string</a> $name<span class="defVal"> = null</span>)<ul class="description"><li>Public <a href="../../datatype-void.htm" class="link">void</a> <span class="smallTitle">setBcc</span>(<a href="../../datatype-mixed.htm" class="link">mixed</a> $addresses, <a href="../../datatype-string.htm" class="link">string</a> $name<span class="defVal"> = null</span>)</li><li>Set the Bcc address(es).<br />
+<br />
+Recipients set in this field will receive a 'blind-carbon-copy' of this message.<br />
+<br />
+In other words, they will get the message, but any other recipients of the message will have no such knowledge of their receipt of it.<br />
+<br />
+This method has the same synopsis as {@link setFrom()} and {@link setTo()}.</li><li class="smaller">@param mixed $addresses</li><li class="smaller">@param string $name optional</li></ul></li><li class="Collapsed" id="f525ccca58ff0f"><a href="javascript:void(0);" class="method-pub" target="main">getBcc</a>()<ul class="description"><li>Public <span class="link">string[]</span> <span class="smallTitle">getBcc</span>()</li><li>Get the Bcc addresses for this message.<br />
+<br />
+This method always returns an associative array, whereby the keys provide the actual email addresses.</li></ul></li></ul>
+	</div>
+	<div id="footer">Documentation generated on Oct 15, 2013, 0:03:44 -0500 by <a href="http://pear.php.net/package/PHP_UML/" target="_new">PHP_UML</a></div>
+</body>
+</html>

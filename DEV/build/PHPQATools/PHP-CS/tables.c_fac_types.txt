@@ -1,0 +1,22 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tables/c_fac_types.php
+--------------------------------------------------------------------------------
+FOUND 2 ERROR(S) AND 10 WARNING(S) AFFECTING 11 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  1 | ERROR   | Missing file doc comment
+  7 | WARNING | Line exceeds 85 characters; contains 86 characters
+  8 | WARNING | Line exceeds 85 characters; contains 91 characters
+  9 | WARNING | Line exceeds 85 characters; contains 124 characters
+ 13 | WARNING | Line exceeds 85 characters; contains 129 characters
+ 16 | WARNING | Line exceeds 85 characters; contains 230 characters
+ 17 | WARNING | Line exceeds 85 characters; contains 88 characters
+ 18 | WARNING | Line exceeds 85 characters; contains 237 characters
+ 34 | WARNING | Line exceeds 85 characters; contains 149 characters
+ 35 | WARNING | Line exceeds 85 characters; contains 178 characters
+ 36 | WARNING | Line exceeds 85 characters; contains 134 characters
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.50Mb
+

@@ -1,0 +1,120 @@
+
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/src/base.php:428	The method checkDependency() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/src/base.php:441	The method checkDependency() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/src/exceptions/exception.php:17	The class ezcBaseException has 15 children. Consider to rebalance this class hierarchy to keep number of children under 15.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/tests/base_test.php:13	The class ezcBaseTest has a coupling between objects value of 16. Consider to reduce the number of dependencies under 13.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/input.php:111	The class ezcConsoleInput has a coupling between objects value of 24. Consider to reduce the number of dependencies under 13.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/input_test.php:18	The class ezcConsoleInputTest has a coupling between objects value of 17. Consider to reduce the number of dependencies under 13.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/suite.php:146	The class ezcConsoleToolsSuite has a coupling between objects value of 30. Consider to reduce the number of dependencies under 13.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/tests/suite.php:49	The class ezcReflectionSuite has a coupling between objects value of 20. Consider to reduce the number of dependencies under 13.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/pear/PEAR.php:904	The method PEAR_Error() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/pear/PEAR.php:913	The method PEAR_Error() contains an eval expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/PHPCallGraphCli.php:37	The class PHPCallGraphCli has a coupling between objects value of 13. Consider to reduce the number of dependencies under 13.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/PHPCallGraphCli.php:166	The method run() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/PHPCallGraphCli.php:168	The method run() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:237	The method classForObj() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:245	The method objForClass() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:258	The method objForClass() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:380	The method getCodeForCurrentClassAndMethod() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:430	The method exitUnlessOutputDirExists() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:437	The method exitUnlessSequenceLibExists() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:485	The method _registerObject() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/baaChart.php:502	The method drawGraph() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/error.php:27	The function myErrorHandler() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:1867	The function do_error() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:3906	The function show_ticket() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major.inc.php:4836	The function popup_ticket() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_major_nm.inc.php:1646	The function show_ticket() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions_nm.inc.php:978	The function do_error() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/gd_image.inc.php:2263	The method Headers() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/jpgraph.php:741	The class Graph has a coupling between objects value of 23. Consider to reduce the number of dependencies under 13.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/jpgraph.php:889	The method Graph() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/jpgraph_errhandler.inc.php:56	The method ErrMsgText() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/jpgraph_errhandler.inc.php:334	The method Raise() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/jpgraph_errhandler.inc.php:401	The method Raise() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/jpgraph_errhandler.inc.php:474	The method Raise() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/jpgraph_mgraph.php:583	The method Headers() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/jpgraph_utils.inc.php:80	The method E() contains an eval expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/login.inc.php:193	The function redir() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/login.inc.php:380	The function do_login() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/login.inc.php:580	The function do_login() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/messaging.inc.php:593	The function get_emails() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/index.php:168	The function do_insert_day_colors() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/index.php:187	The function do_insert_night_colors() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:143	The function table_exists() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:170	The function do_insert_settings() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:280	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:305	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:324	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:345	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:365	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:381	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:401	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:419	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:441	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:463	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:484	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:515	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:536	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:555	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:565	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:587	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:604	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:633	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:661	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:682	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:717	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:735	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:753	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:774	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:793	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:817	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:840	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:874	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:891	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:920	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:941	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:959	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:971	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:993	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1004	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1048	The function create_tables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1070	The function create_user() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1072	The function create_user() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1203	The function upgrade_065_07() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1204	The function upgrade_065_07() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1205	The function upgrade_065_07() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1206	The function upgrade_065_07() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1207	The function upgrade_065_07() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1208	The function upgrade_065_07() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1209	The function upgrade_065_07() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1210	The function upgrade_065_07() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1213	The function upgrade_065_07() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1214	The function upgrade_065_07() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1215	The function upgrade_065_07() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1216	The function upgrade_065_07() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install.php:1219	The function upgrade_065_07() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/xpm/PHP5/FUNC5.php:148	The method trace() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/xpm/PHP5/FUNC5.php:149	The method trace() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/xpm/PHP5/FUNC5.php:156	The method trace() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/opengts.php:46	The function customError() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/portal/incs/exportcsv.inc.php:157	The function exportMysqlToCsv() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tables.php:277	The function myerror() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tables.php:2146	The function fnTables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/tables.php:2149	The function fnTables() contains an exit expression.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/instantsvc/components/CodeAnalyzer/tests/test_files/load_dir/folder2/error.php	-	Unexpected token: dfg, line: 3, col: 10, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/instantsvc/components/CodeAnalyzer/tests/test_files/load_dir/folder2/error.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/add_nm.php	-	Unexpected token: }, line: 2069, col: 3, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/add_nm.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/cancel_add.php	-	Unexpected token: }, line: 17, col: 127, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/cancel_add.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/chat.php	-	Unexpected token: ?>, line: 508, col: 77, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/chat.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/config.php	-	Unexpected token: ;, line: 176, col: 74, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/config.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/do_cid.php	-	Unexpected token: ?>, line: 45, col: 1, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/do_cid.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/do_unit_mail.php	-	Unexpected token: ;, line: 693, col: 82, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/do_unit_mail.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/edit.php	-	Unexpected token: ,, line: 897, col: 177, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/edit.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/edit_nm.php	-	Unexpected token: ;, line: 690, col: 76, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/edit_nm.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities.php	-	Unexpected token: }, line: 2448, col: 2, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/facilities.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/config.inc.php	-	Unexpected token: ;, line: 553, col: 80, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/config.inc.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/landb.inc.php	-	Unexpected end of token stream in file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/landb.inc.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install_module.php	-	Unexpected token: for, line: 221, col: 78, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/install_module.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/quick_start.php	-	Unexpected token: DO, line: 685, col: 59, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/quick_start.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/routes.php	-	Unexpected token: :, line: 1416, col: 146, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/routes.php.
+/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php	-	Unexpected token: ), line: 2898, col: 74, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/units.php.

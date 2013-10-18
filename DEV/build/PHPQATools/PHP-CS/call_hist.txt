@@ -1,0 +1,50 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/call_hist.php
+--------------------------------------------------------------------------------
+FOUND 24 ERROR(S) AND 12 WARNING(S) AFFECTING 27 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | Missing file doc comment
+  7 | WARNING | Line exceeds 85 characters; contains 148 characters
+ 22 | ERROR   | "require_once" is a statement not a function; no parentheses
+    |         | are required
+ 23 | ERROR   | "require_once" is a statement not a function; no parentheses
+    |         | are required
+ 37 | WARNING | Line exceeds 85 characters; contains 122 characters
+ 38 | WARNING | Line exceeds 85 characters; contains 107 characters
+ 42 | WARNING | Line exceeds 85 characters; contains 135 characters
+ 51 | WARNING | Line exceeds 85 characters; contains 114 characters
+ 52 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 66 | WARNING | Line exceeds 85 characters; contains 113 characters
+ 67 | WARNING | Line exceeds 85 characters; contains 135 characters
+ 68 | WARNING | Line exceeds 85 characters; contains 115 characters
+ 70 | WARNING | Line exceeds 85 characters; contains 131 characters
+ 73 | ERROR   | Space after opening parenthesis of function call prohibited
+ 73 | WARNING | Line exceeds 85 characters; contains 118 characters
+ 77 | ERROR   | Space before opening parenthesis of function call prohibited
+ 77 | WARNING | Line exceeds 85 characters; contains 116 characters
+ 81 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 0
+ 82 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 0
+ 83 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 0
+ 85 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 0
+ 86 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 86 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found 1
+ 87 | ERROR   | Expected "} else {\n"; found "}		else {\n"
+ 89 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 89 | ERROR   | Line indented incorrectly; expected 4 spaces, found 1
+ 90 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 90 | ERROR   | Line indented incorrectly; expected at least 8 spaces, found 2
+ 90 | ERROR   | TRUE, FALSE and NULL must be lowercase; expected "false" but
+    |         | found "FALSE"
+ 90 | ERROR   | TRUE, FALSE and NULL must be lowercase; expected "false" but
+    |         | found "FALSE"
+ 91 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 91 | ERROR   | Closing brace indented incorrectly; expected 1 spaces, found 2
+ 92 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 92 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found 1
+ 96 | WARNING | Line exceeds 85 characters; contains 93 characters
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.75Mb
+

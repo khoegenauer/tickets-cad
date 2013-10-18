@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+	<title>interface Swift_Transport_SmtpAgent</title>
+	<link type="text/css" rel="stylesheet" href="../../$resources/style.css"/>
+	<script type="text/javascript" language="javascript" src="../../$resources/treeview.js"></script>
+</head>
+<body onload="toggler.setupTreeView('MainList');toggler.backToMemorizedState('MainList', 'btnToggle')">
+	<ul class="navig">
+	<li><a href="javascript:toggler.toggleAll('MainList', 'btnToggle')" class="expandAllBtn" id="btnToggle">Expand all</a></li><li><a href="../../help.htm" class="helpBtn">Help</a></li><li><a href="../../index-all.htm" class="indexAllBtn">Index</a></li><li><a href="interface-Swift_Transport_MailInvoker.htm" class="left">Prev interface</a></li><li><a href="package-summary.htm" class="top">Package</a></li><li><a href="interface-Swift_Transport.htm" class="right">Next interface</a></li>
+	</ul>
+	<h1 class="interface">Swift_Transport_SmtpAgent</h1>
+	<div id="MainList">
+	<div class="description"><p>Interface <span class="title">Swift\Transport\Swift_Transport_SmtpAgent</span></p><ul class="description"><li>Wraps an IoBuffer to send/receive SMTP commands/responses.</li><li class="smaller">@package Swift</li><li class="smaller">@subpackage Transport</li><li class="smaller">@author Chris Corbyn</li><li>All implementing classes: <a href="../../Swift/Transport/class-Swift_SmtpTransport.htm" class="link2">Swift\Transport\Swift_SmtpTransport</a>, <a href="../../Swift/Transport/class-Swift_Transport_EsmtpTransport.htm" class="link2">Swift\Transport\Swift_Transport_EsmtpTransport</a></li><li>File: lib/classes/Swift/Transport/SmtpAgent.php</li></ul></div><h2>Functions</h2><ul class="summary"><li class="Collapsed" id="f525ccca619eee"><a href="javascript:void(0);" class="method-pub" target="main">getBuffer</a>()<ul class="description"><li>Public <a href="../../Swift/Transport/interface-Swift_Transport_IoBuffer.htm" class="link">Swift\Transport\Swift_Transport_IoBuffer</a> <span class="smallTitle">getBuffer</span>()</li><li>Get the IoBuffer where read/writes are occurring.</li></ul></li><li class="Collapsed" id="f525ccca61a0e0"><a href="javascript:void(0);" class="method-pub" target="main">executeCommand</a>(<a href="../../datatype-string.htm" class="link">string</a> $command, <a href="../../datatype-array.htm" class="link">array</a> $codes<span class="defVal"> = array()</span>, <a href="../../datatype-mixed.htm" class="link">mixed</a> &#38;$failures<span class="defVal"> = null</span>)<ul class="description"><li>Public <a href="../../datatype-void.htm" class="link">void</a> <span class="smallTitle">executeCommand</span>(<a href="../../datatype-string.htm" class="link">string</a> $command, <a href="../../datatype-array.htm" class="link">array</a> $codes<span class="defVal"> = array()</span>, <a href="../../datatype-mixed.htm" class="link">mixed</a> &#38;$failures<span class="defVal"> = null</span>)</li><li>Run a command against the buffer, expecting the given response codes.<br />
+If no response codes are given, the response will not be validated.<br />
+If codes are given, an exception will be thrown on an invalid response.</li><li class="smaller">@param string $command</li><li class="smaller">@param int[] $codes</li><li class="smaller">@param string[] &amp;$failures</li></ul></li></ul>
+	</div>
+	<div id="footer">Documentation generated on Oct 15, 2013, 0:03:44 -0500 by <a href="http://pear.php.net/package/PHP_UML/" target="_new">PHP_UML</a></div>
+</body>
+</html>

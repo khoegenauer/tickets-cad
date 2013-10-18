@@ -1,0 +1,48 @@
+
+FILE: ...edia/kevin/OS/xampp/htdocs/tickets/tickets-cad/ajax/restore_message.php
+--------------------------------------------------------------------------------
+FOUND 32 ERROR(S) AND 4 WARNING(S) AFFECTING 31 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | You must use "/**" style comments for a file comment
+  6 | ERROR   | "require_once" is a statement not a function; no parentheses
+    |         | are required
+  8 | ERROR   | TRUE, FALSE and NULL must be lowercase; expected "null" but
+    |         | found "NULL"
+ 12 | ERROR   | Space after opening parenthesis of function call prohibited
+ 12 | WARNING | Line exceeds 85 characters; contains 104 characters
+ 34 | WARNING | Line exceeds 85 characters; contains 212 characters
+ 36 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 37 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 38 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 39 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 40 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 41 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 42 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 43 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 44 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 45 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 46 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 47 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 48 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 49 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 50 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 51 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 52 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 53 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 54 | WARNING | Line exceeds 85 characters; contains 109 characters
+ 57 | WARNING | Line exceeds 85 characters; contains 109 characters
+ 58 | ERROR   | Expected "if (...) {\n"; found "if(...) {\n"
+ 59 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 59 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 60 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 60 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found 1
+ 60 | ERROR   | Line indented incorrectly; expected 0 spaces, found 1
+ 61 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 61 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 62 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 2.00Mb
+

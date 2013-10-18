@@ -1,0 +1,42 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/cancel_add.php
+--------------------------------------------------------------------------------
+FOUND 25 ERROR(S) AND 6 WARNING(S) AFFECTING 14 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | You must use "/**" style comments for a file comment
+  6 | ERROR   | "require_once" is a statement not a function; no parentheses
+    |         | are required
+  8 | ERROR   | Space before opening parenthesis of function call prohibited
+ 11 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 11 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 11 | WARNING | Line exceeds 85 characters; contains 109 characters
+ 12 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 12 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 12 | WARNING | Line exceeds 85 characters; contains 118 characters
+ 14 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 14 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 14 | WARNING | Line exceeds 85 characters; contains 92 characters
+ 15 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 15 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 15 | WARNING | Line exceeds 85 characters; contains 118 characters
+ 17 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 17 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 17 | WARNING | Line exceeds 85 characters; contains 140 characters
+ 18 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 18 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 18 | WARNING | Line exceeds 85 characters; contains 118 characters
+ 19 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 19 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found 1
+ 20 | ERROR   | Expected "} else {\n"; found "}\nelse {\n"
+ 21 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 21 | ERROR   | Line indented incorrectly; expected at least 4 spaces, found 1
+ 21 | ERROR   | Space before opening parenthesis of function call prohibited
+ 21 | ERROR   | Space before opening parenthesis of function call prohibited
+ 22 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 22 | ERROR   | Closing brace indented incorrectly; expected 0 spaces, found 1
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.75Mb
+

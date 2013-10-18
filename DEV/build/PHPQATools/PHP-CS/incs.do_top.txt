@@ -1,0 +1,32 @@
+
+FILE: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/do_top.php
+--------------------------------------------------------------------------------
+FOUND 2 ERROR(S) AND 20 WARNING(S) AFFECTING 22 LINE(S)
+--------------------------------------------------------------------------------
+  1 | ERROR   | End of line character is invalid; expected "\n" but found
+    |         | "\r\n"
+  2 | ERROR   | You must use "/**" style comments for a file comment
+  9 | WARNING | Line exceeds 85 characters; contains 131 characters
+ 13 | WARNING | Line exceeds 85 characters; contains 86 characters
+ 14 | WARNING | Line exceeds 85 characters; contains 90 characters
+ 15 | WARNING | Line exceeds 85 characters; contains 98 characters
+ 16 | WARNING | Line exceeds 85 characters; contains 100 characters
+ 17 | WARNING | Line exceeds 85 characters; contains 119 characters
+ 18 | WARNING | Line exceeds 85 characters; contains 132 characters
+ 19 | WARNING | Line exceeds 85 characters; contains 118 characters
+ 20 | WARNING | Line exceeds 85 characters; contains 118 characters
+ 21 | WARNING | Line exceeds 85 characters; contains 118 characters
+ 22 | WARNING | Line exceeds 85 characters; contains 118 characters
+ 23 | WARNING | Line exceeds 85 characters; contains 117 characters
+ 24 | WARNING | Line exceeds 85 characters; contains 122 characters
+ 25 | WARNING | Line exceeds 85 characters; contains 115 characters
+ 26 | WARNING | Line exceeds 85 characters; contains 116 characters
+ 27 | WARNING | Line exceeds 85 characters; contains 124 characters
+ 28 | WARNING | Line exceeds 85 characters; contains 120 characters
+ 29 | WARNING | Line exceeds 85 characters; contains 122 characters
+ 30 | WARNING | Line exceeds 85 characters; contains 119 characters
+ 32 | WARNING | Line exceeds 85 characters; contains 118 characters
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 1.75Mb
+

@@ -433,7 +433,8 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 					$coords = explode (",", $temp[0]);
 					$lat = $coords[0];
 					$lng = $coords[1];
-					$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;					
+					$fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
+					
 					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}, {$name}); // 513\n";
 					break;
 				case "t":		// text banner
@@ -692,7 +693,13 @@ if((array_key_exists('func', $_REQUEST)) && ($_REQUEST['func'] == "do_db")) {	//
 //										remove placeholder inserted by 'add'		
 		$query = "DELETE FROM `$GLOBALS[mysql_prefix]assigns` WHERE `ticket_id` = " . quote_smart($frm_ticket_id) . " AND `responder_id` = 0 LIMIT 1";
 		$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
-
+		
+							//	Automatic Status Update by Dispatch Status
+		$use_status_update = get_variable('use_disp_autostat');		//	9/10/13
+		if($use_status_update == "1") {		//	9/10/13
+			auto_disp_status(1, $assigns[$i]);
+			}
+		
 							// apply status update to unit status
 
 		$query = "SELECT `id`, `contact_via`, `smsg_id` FROM `$GLOBALS[mysql_prefix]responder` WHERE `id` = " . quote_smart($assigns[$i])  ." LIMIT 1";		// 10/7/08
@@ -999,7 +1006,9 @@ function doReset() {
 		FROM `$GLOBALS[mysql_prefix]assigns` 
 		LEFT JOIN `$GLOBALS[mysql_prefix]ticket` `t` 	ON (`$GLOBALS[mysql_prefix]assigns`.`ticket_id` = `t`.`id`)
 		LEFT JOIN `$GLOBALS[mysql_prefix]responder` `r` ON (`$GLOBALS[mysql_prefix]assigns`.`responder_id` = `r`.`id`)
-		AND ((`clear` IS NULL) OR (DATE_FORMAT(`clear`,'%y') = '00')) ";				// 6/25/10	
+		AND ((`clear` IS NULL) OR (DATE_FORMAT(`clear`,'%y') = '00')) ";				// 6/25/10
+
+	
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
@@ -1280,7 +1289,7 @@ function toggle_div(theDiv, theButton, theText) {
 			<TR class='even'><TD><INPUT SIZE='48' TYPE='text' NAME='capabilities' VALUE='<?php print $capabilities;?>' MAXLENGTH='64'></TD></TR>	<!-- 3/15/11 -->
 			<INPUT TYPE='hidden' NAME='ticket_id' 	VALUE='<?php print get_ticket_id (); ?>' />
 			<INPUT TYPE='hidden' NAME='unit_id' 	VALUE='<?php print $unit_id; ?>' />
-			<TR class='odd'><TD align="center"><input type="button" OnClick="filterSubmit();" VALUE="<?php  print gettext('Filter');?>"/>&nbsp;&nbsp;<input type="button" OnClick="filterReset();" VALUE="Reset Filter" <?php print $disabled;?>/></TD></TR>	<!-- 3/15/11 -->	
+			<TR class='odd'><TD align="center"><input type="button" OnClick="filterSubmit();" VALUE="<?php  print gettext('Filter');?>"/>&nbsp;&nbsp;<input type="button" OnClick="filterReset();" VALUE="<?pphp print gettext('Reset Filter');?>" <?php print $disabled;?>/></TD></TR>	<!-- 3/15/11 -->	
 			</FORM></TABLE></DIV></TD>
 		<?php }
 	?>

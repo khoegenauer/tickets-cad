@@ -346,6 +346,71 @@ function do_is_start($in_row) {				// 3/22/10
 		$row = mysql_fetch_assoc($result);
 
 		do_log($GLOBALS['LOG_INCIDENT_CLOSE'], $_POST['frm_ticket_id'])	;
+		$addrs = notify_user($the_id, $GLOBALS['NOTIFY_TICKET_CHG']);		// returns array of adddr's for notification, or FALSE
+		if ($addrs) {				// any addresses?	8/28/13
+?>	
+<SCRIPT>
+			function do_notify() {
+
+				var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
+				var theText= ' New <?php print get_text("Incident");?>: ';
+				var theId = '<?php print $_POST['ticket_id'];?>';
+				
+		//		mail_it ($to_str, $text, $theId, $text_sel=1;, $txt_only = FALSE)
+
+				var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId + "&text_sel=1";		// ($to_str, $text, $ticket_id)   10/15/08
+				sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
+				}			// end function do notify()
+			
+			function handleResult(req) {				// the 'called-back' function
+<?php
+
+			if($istest) {print "\t\t\talert('HTTP error ' + req.status + '" . __LINE__ . "');\n";}
+?>
+			}
+
+			function sendRequest(url,callback,postData) {
+				var req = createXMLHTTPObject();
+				if (!req) return;
+				var method = (postData) ? "POST" : "GET";
+				req.open(method,url,true);
+				if (postData)
+					req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+				req.onreadystatechange = function () {
+					if (req.readyState != 4) return;
+					if (req.status != 200 && req.status != 304) {
+<?php
+				if($istest) {print "\t\t\talert('HTTP error ' + req.status + '" . __LINE__ . "');\n";}
+?>
+						return;
+						}
+					callback(req);
+					}
+				if (req.readyState == 4) return;
+				req.send(postData);
+				}
+	
+			var XMLHttpFactories = [
+				function () {return new XMLHttpRequest()	},
+				function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
+				function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
+				function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+				];
+			
+			function createXMLHTTPObject() {
+				var xmlhttp = false;
+				for (var i=0;i<XMLHttpFactories.length;i++) {
+					try { xmlhttp = XMLHttpFactories[i](); }
+					catch (e) { continue; }
+					break;
+					}
+				return xmlhttp;
+				}
+<?php
+		}				// end if ($addrs)
+?>
+</SCRIPT>
+<?php
 		unset($result);
 		return $row['scope'];				// 2/15/10
 

@@ -172,6 +172,9 @@ if(file_exists("./incs/modules.inc.php")) {
 	var updated;					// 'moved' unit date/time
 	var dispatch;					// latest dispatch status change - date-time
 	var new_msg = 0;				// New messages, 10/23/12
+	var the_unit = 0;
+	var the_status = 0;
+	var the_time = 0;
 /**
  * 
  * @returns {undefined}
@@ -198,7 +201,7 @@ if(file_exists("./incs/modules.inc.php")) {
 				for(var key in response[0]) {
 					the_resp = key;
 					the_val = response[0][key];
-					un_stat_chg(the_resp, the_val)
+					un_stat_chg(the_resp, the_val);
 					}
 				if(response[1]) {
 					var the_mess = response[1][0];
@@ -216,6 +219,7 @@ if(file_exists("./incs/modules.inc.php")) {
  * @returns {undefined}
  */		
 	function do_loop() {								// monitor for changes - 4/10/10, 6/10/11
+		do_filelist();	//	9/10/13
 		var randomnumber=Math.floor(Math.random()*99999999);		
 		sendRequest ('get_latest_id.php?version=' + randomnumber,get_latest_id_cb, "");	
 		}			// end function do_loop()	
@@ -240,7 +244,7 @@ if(file_exists("./incs/modules.inc.php")) {
 			}
 		}	
 
-	var arr_lgth_good = 9;								// size of a valid returned array - 2/25/12, 10/23/12
+	var arr_lgth_good = 13;								// size of a valid returned array - 2/25/12, 10/23/12
 /**
  * 
  * @param {type} req
@@ -272,14 +276,14 @@ if(file_exists("./incs/modules.inc.php")) {
 			}
 
 		var temp = parseInt(the_id_arr[0]);				// new chat invite?
-		if (temp > chat_id) {
+		if (temp != chat_id) {
 			chat_id = temp;
 			chat_signal();								// light the chat button
 			}
 	
 		$("div_ticket_id").innerHTML = the_id_arr[1].trim();	// 2/19/12
 		var temp =  parseInt(the_id_arr[1]);			// ticket?
-		if (temp > ticket_id) {
+		if (temp != ticket_id) {
 			ticket_id = temp;
 			tick_signal();								// light the ticket button
 			}
@@ -310,13 +314,31 @@ if(file_exists("./incs/modules.inc.php")) {
 			$("div_patient_id").innerHTML = the_id_arr[6].trim();
 			}
 		
-		if (the_id_arr[7] != $("div_requests_id").innerHTML) {
+		if (the_id_arr[7] != $("div_requests_id").innerHTML) {	//		9/10/13
 			if(the_id_arr[7] != "0") {
 				$("div_requests_id").innerHTML = the_id_arr[7];
 				$("reqs").style.display = "inline-block";
 				$("reqs").innerHTML = "Open Requests = " + the_id_arr[7];			
+				} else if (the_id_arr[8] != "0") {
+				$("div_requests_id").innerHTML = the_id_arr[7];
+				$("reqs").style.display = "inline-block";
+				$("reqs").innerHTML = "Requests";	
+				} else {
+				$("div_requests_id").innerHTML = the_id_arr[7];
+				$("reqs").style.display = "none";
+				$("reqs").innerHTML = "";	
 				}
 			}
+
+		var temp2 =  parseInt(the_id_arr[9]);			// unit?	9/10/13
+		var temp3 =  parseInt(the_id_arr[10]);			// status?	9/10/13
+		var temp4 =  the_id_arr[11].trim();				// unit timestamp?	9/10/13
+		if ((temp2 != the_unit) || (temp3 != the_status) || (temp4 != the_time)) {	//		9/10/13
+			the_unit = temp2;	//		9/10/13
+			the_status = temp3;	//		9/10/13
+			the_time =  temp4;	// timestamp this unit, 	9/10/13
+			un_stat_chg(the_unit, the_status);	//		9/10/13
+			}			
 		}			// end function get_latest_id_cb()		
 /**
  * 
@@ -391,7 +413,8 @@ if(file_exists("./incs/modules.inc.php")) {
 //				the_id_str = syncAjax("get_latest_id.php");			// note synch call
 				var the_id_arr=JSON.decode(req.responseText);				// 1/7/11
 				
-				if (the_id_arr.length != 9)  {						// 2/25/12, 10/23/12
+				if (the_id_arr.length != 13)  {						// 2/25/12, 10/23/12
+
 					alert("<?php echo 'error: ' . basename(__FILE__) . '@' .  __LINE__;?>");
 					}
 				else {
@@ -404,14 +427,23 @@ if(file_exists("./incs/modules.inc.php")) {
 					$("div_assign_id").innerHTML = the_id_arr[4].trim();	// 2/19/12
 					$("div_action_id").innerHTML = the_id_arr[5].trim();	// 2/25/12
 					$("div_patient_id").innerHTML = the_id_arr[6].trim();	// 2/25/12
-					if(the_id_arr[7] != "0") {	//	10/23/12
-						$("div_requests_id").innerHTML = the_id_arr[7];	
+					if(the_id_arr[7] != "0") {	//		9/10/13
+						$("div_requests_id").innerHTML = the_id_arr[7];
 						$("reqs").style.display = "inline-block";
-						$("reqs").innerHTML = "<?php print gettext('Open Requests');?> = " + the_id_arr[7];
+						$("reqs").innerHTML = "Open Requests = " + the_id_arr[7];			
+						} else if (the_id_arr[8] != "0") {
+						$("div_requests_id").innerHTML = the_id_arr[7];
+						$("reqs").style.display = "inline-block";
+						$("reqs").innerHTML = "Requests";	
+						} else {
+						$("div_requests_id").innerHTML = the_id_arr[7];
+						$("reqs").style.display = "none";
+						$("reqs").innerHTML = "";	
 						}
 					}
 				mu_get();				// start loop
 				get_msgs();
+				do_filelist();	//	9/10/13
 				}				// end function init_cb()
 		}				// end function mu_init()
 /**
@@ -461,7 +493,7 @@ if(file_exists("./incs/modules.inc.php")) {
 				for(var key in response[0]) {
 					the_resp = key;
 					the_val = response[0][key];
-					un_stat_chg(the_resp, the_val)
+					un_stat_chg(the_resp, the_val);
 					}	
 				if(response[1]) {
 					var the_mess = response[1][0];
@@ -850,10 +882,28 @@ if(file_exists("./incs/modules.inc.php")) {
 		$("buttons").style.display = "inline";
 		$("daynight").style.display = "inline";
 		$("has_form_row").style.display = "none";		// 5/26/2013
-		$("has_message_row").style.display = "none";		
+		$("has_message_row").style.display = "none";
+		
+		}
+		
+	function do_filelist() {	//	9/10/13
+		randomnumber=Math.floor(Math.random()*99999999);
+		var url ="./ajax/gen_file_list.php?version=" + randomnumber;
+		sendRequest (url, genfile_cb, "");
+		function genfile_cb(req) {
+			var the_files=JSON.decode(req.responseText);
+			$('file_list').innerHTML = the_files[0];
+			$('file_list2').innerHTML = the_files[1];
+			}
 		}
 
 //	============== module window openers ===========================================
+
+	function open_FWindow(theFilename) {										// 9/10/13
+		var url = theFilename;
+		var ofWindow = window.open(url, 'ViewFileWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100');
+		setTimeout(function() { ofWindow.focus(); }, 1);
+		}
 
 	var newwindow_sl = null;
 	var starting;
@@ -1090,7 +1140,7 @@ function get_daynight() {
 				$night_disabled = "DISABLED";
 				}	
 ?>
-		var current_user_id = "<?php print $_SESSION['user_id'];?>";
+		var current_user_id = "<?php print $the_userid;?>";
 			show_butts();														// navigation buttons
 			$("gout").style.display  = "inline";								// logout button
 			$("user_id").innerHTML  = "<?php print $the_userid;?>";		//	7/16/13
@@ -1159,10 +1209,17 @@ function get_daynight() {
 		catch (e) {
 			}
 		}		// end do_manual()
-/**
- * 
- * @returns {undefined}
- */		
+		
+		function do_files() {	//	9/10/13
+			hide_butts();								// hide buttons
+			$("file_buts_row").style.display = "inline-block";
+			}
+			
+		function hide_files() {	//	9/10/13
+			$("file_buts_row").style.display = "none";
+			show_butts();
+			}
+		
 		function can_has () {							// cancel HAS function - return to normal display
 			$("has_form_row").style.display = "none";
 			show_butts();								// show buttons		
@@ -1182,12 +1239,8 @@ function get_daynight() {
 <?php				// 7/2/2013
 		if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 		// 
 ?>
-/**
- * 
- * @returns {undefined}
- */  
-		function do_broadcast () {
-			hide_butts();								// hide buttons
+		function do_broadcast() {
+
 			$("has_form_row").style.display = "inline-block";
 			$("has_message_row").style.display = "none";
 			document.has_form.has_text.focus()
@@ -1386,6 +1439,9 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 			<SPAN ID = 'term'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick = "go_there('mobile.php', this.id);"><?php print get_text("Mobile"); ?></SPAN>	<!-- 7/27/10 -->
 <!-- ================== -->
+			<SPAN ID = 'files'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
+				onClick = "do_files();"><?php print get_text("Files");?></SPAN>	<!-- 9/10/13 -->
+<!-- ================== -->
 			<SPAN ID = 'reqs'  CLASS = 'plain' style='display: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick = "go_there('./portal/requests.php', this.id);"></SPAN>	<!-- 10/23/12 -->
 
@@ -1408,13 +1464,22 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 ?>				
 			</TD>
 			</TR>
+		<TR ID='file_buts_row' WIDTH='100%' STYLE="display: none; text-align: center;">	<!-- 9/10/13 -->
+			<TD ALIGN=CENTER WIDTH='100%'><CENTER>
+				<SPAN STYLE = "margin-left:150px; ">
+					<SPAN id='file_list' style='display: inline; float: none;'></SPAN>
+					<SPAN id='can_files' class='plain' style='float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='hide_files();'>Cancel</SPAN>
+					<SPAN id='file_list2' style='display: inline; float: right;'></SPAN>
+				</SPAN>
+			</TD></CENTER>
+		</TR>
 		<TR ID = 'has_form_row' STYLE = "display:none;">
 			<TD ALIGN=CENTER>				
 				<SPAN ID = "has_span" >
 				<FORM NAME = 'has_form' METHOD = post ACTION = "javascript: void(0)">
 				<INPUT TYPE = 'text' NAME = 'has_text' ID = 'has_text' CLASS = '' size=90 value = "" STYLE = "margin-left:6px;" placeholder="<?php print gettext('enter your broadcast message');?>" />
-				<BUTTON VALUE="Send" onclick = "has_check ( this.form.has_text.value.trim() )" STYLE = "margin-left:16px;"><?php print gettext('Send');?></BUTTON>
-				<BUTTON VALUE="Cancel" onclick = "can_has ();" STYLE = "margin-left:24px;"><?php print gettext('Cancel');?></BUTTON>
+				<BUTTON VALUE="Send" onclick = "has_check(this.form.has_text.value.trim())" STYLE = "margin-left:16px;"><?php print gettext('Send');?></BUTTON>
+				<BUTTON VALUE="Cancel" onclick = "can_has();" STYLE = "margin-left:24px;"><?php print gettext('Cancel');?></BUTTON>
 				</FORM>
 				</SPAN>			
 			</TD>
@@ -1425,12 +1490,13 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 				<SPAN ID = "msg_span" STYLE = "margin-left:50px; " >
 					<SPAN ID = "has_message_text"></SPAN>
 					<BUTTON VALUE="OK" onclick = "end_message_show();"  STYLE = "margin-left:20px"><?php print gettext('OK');?></BUTTON>
-				</SPAN>			
+				</SPAN>	
 			</TD>
 			</TR>		
 
 			
 	</TABLE>
+	
 	<FORM NAME="go" action="#" TARGET = "main"></FORM>
 	
 	<FORM NAME="gout_form" action="main.php" TARGET = "main">

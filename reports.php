@@ -720,7 +720,8 @@ p.page { page-break-after: always; }
 				$caption .= "\t<TD ALIGN='CENTER'>&nbsp;&nbsp;" . shorten($the_status, 12) . "&nbsp;&nbsp;</TD>\n";
 				}
 			}
-		$caption .=  "<TD ALIGN='center'><U>{$incident}</U></TD></TR>\n";
+		$caption .=  "<TD ALIGN='center'><U>{$incident}</U></TD>";
+		$caption .=  "<TD ALIGN='left'><U>" . gettext('Comment') . "</U></TD></TR>\n";	//	9/10/13
 		$blank = $statuses;
 
 		$where = " WHERE `when` >= '" . $from_to[0] . "' AND `when` < '" . $from_to[1] . "'";
@@ -734,7 +735,7 @@ p.page { page-break-after: always; }
 			`ticket_id` AS `incident`
 			FROM `$GLOBALS[mysql_prefix]log`
 			LEFT JOIN `$GLOBALS[mysql_prefix]responder` r ON (`$GLOBALS[mysql_prefix]log`.responder_id = r.id) ".
-			$where . $which_unit. " AND `code` = " . $GLOBALS['LOG_UNIT_STATUS'] . " ORDER BY `name` ASC, `incident` ASC, `status` ASC, `when` ASC" ;
+			$where . $which_unit. " AND ((`code` = " . $GLOBALS['LOG_UNIT_STATUS'] . ") OR (`code` = " . $GLOBALS['LOG_COMMENT'] . ")) ORDER BY `name` ASC, `incident` ASC, `status` ASC, `when` ASC" ;	//	9/10/13
 //		dump($query);
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 		$i = 0;
@@ -752,42 +753,60 @@ p.page { page-break-after: always; }
 					$theIncident_id = $row['incident'];
 					}
 				else {														// no, flush, initialize and populate
-					print "<TR CLASS='" . $evenodd[$i%2] . "'>";
-					$theUnitName = (array_key_exists($curr_unit, $unit_names))? shorten($unit_names[$curr_unit], 16): "#" . $curr_unit ;
-					print (array_key_exists($curr_unit, $unit_names))? "<TD onClick = 'viewU(" .$curr_unit . ")'><B>" . $theUnitName . "</B></TD>":	"<TD>[#" . $curr_unit . "]</TD>";
-					if (!empty($do_date)) {
-						print "<TD>" . date ('D, M j', strtotime($do_date)) . "</TD>";
-						$do_date = "";
-						}
-					else {
-						print "<TD></TD>";
-						}
-					if(((date ('z', strtotime($row['when_num']))) != $curr_date_test)) {		// date change?
-						$do_date=$row['when_num'];
-						$curr_date_test = date ('z', strtotime($row['when_num']));
-						}
-					$theUnitName = (array_key_exists($curr_unit, $unit_names))? shorten($unit_names[$curr_unit], 16): "#" . $curr_unit ;
+					if($row['code'] != $GLOBALS['LOG_COMMENT']) {	//	9/10/13
+						print "<TR CLASS='" . $evenodd[$i%2] . "'>";
+						$theUnitName = (array_key_exists($curr_unit, $unit_names))? shorten($unit_names[$curr_unit], 16): "#" . $curr_unit ;
+						print (array_key_exists($curr_unit, $unit_names))? "<TD onClick = 'viewU(" .$curr_unit . ")'><B>" . $theUnitName . "</B></TD>":	"<TD>[#" . $curr_unit . "]</TD>";
+						if (!empty($do_date)) {
+							print "<TD>" . date ('D, M j', strtotime($do_date)) . "</TD>";
+							$do_date = "";
+							}
+						else {
+							print "<TD></TD>";
+							}
+						if(((date ('z', strtotime($row['when_num']))) != $curr_date_test)) {		// date change?
+							$do_date=$row['when_num'];
+							$curr_date_test = date ('z', strtotime($row['when_num']));
+							}
+						$theUnitName = (array_key_exists($curr_unit, $unit_names))? shorten($unit_names[$curr_unit], 16): "#" . $curr_unit ;
 
-					foreach($statuses as $key => $val) {
-						print "<TD ALIGN='center'> $val </TD>";
-						}
-					if ($row['incident']>0) {				// 6/6/08
-						$theIncidentName = (array_key_exists($row['incident'], $incidents))? $incidents[$row['incident']]: "#" . $row['incident'] ;
-						$theSeverity = (array_key_exists($row['incident'], $severity))? $severity[$row['incident']]: 0;
-						print (array_key_exists($row['incident'], $incidents))?	"<TD CLASS='" . $priorities[$theSeverity] . "' onClick = 'viewT(" . $row['incident'] . ")'><B>" . shorten($theIncidentName, 20) . "</B></TD>":	"<TD>#" . $row['incident']. " ??</TD>";
-						}
-					else {
+						foreach($statuses as $key => $val) {
+							print "<TD ALIGN='center'> $val </TD>";
+							}
+						if ($row['incident']>0) {				// 6/6/08
+							$theIncidentName = (array_key_exists($row['incident'], $incidents))? $incidents[$row['incident']]: "#" . $row['incident'] ;
+							$theSeverity = (array_key_exists($row['incident'], $severity))? $severity[$row['incident']]: 0;
+							print (array_key_exists($row['incident'], $incidents))?	"<TD CLASS='" . $priorities[$theSeverity] . "' onClick = 'viewT(" . $row['incident'] . ")'><B>" . shorten($theIncidentName, 20) . "</B></TD>":	"<TD>#" . $row['incident']. " ??</TD>";
+							}
+						else {
+							print "<TD></TD>";
+							}
+						print "<TD></TD>";					
+						$statuses = $blank;															// initalize
+						$statuses[$row['status']] = date('H:i', strtotime($row['when_num']));					// MySQL format
+						$curr_unit = $row['unit'];
+						$curr_inc = $row['incident'];
+						$i++;
+						$theIncident_id = $row['incident'];
+						} else {	//	9/10/13
+						print "<TR CLASS='" . $evenodd[$i%2] . "'>";
+						$theUnitName = (array_key_exists($curr_unit, $unit_names))? shorten($unit_names[$curr_unit], 16): "#" . $curr_unit ;
+						print (array_key_exists($curr_unit, $unit_names))? "<TD onClick = 'viewU(" .$curr_unit . ")'><B>" . $theUnitName . "</B></TD>":	"<TD>[#" . $curr_unit . "]</TD>";
+						if (!empty($do_date)) {
+							print "<TD>" . date ('D, M j', strtotime($do_date)) . "</TD>";
+							$do_date = "";
+							} else {
+							print "<TD></TD>";
+							}
+						foreach($statuses as $key => $val) {
+							print "<TD ALIGN='center'>&nbsp;</TD>";
+							}
 						print "<TD></TD>";
+						print "<TD ALIGN='left'>" . $row['info'] . "</TD>";
+						$i++;					
 						}
-					print "</TR>\n";
-					$statuses = $blank;															// initalize
-					$statuses[$row['status']] = date('H:i', strtotime($row['when_num']));					// MySQL format
-					$curr_unit = $row['unit'];
-					$curr_inc = $row['incident'];
-					$i++;
-					$theIncident_id = $row['incident'];
-
 					}
+				print "</TR>\n";
 				}		// end while($row...)		 main loop - bottom
 
 			print "\n<TR CLASS='" . $evenodd[$i%2] . "'>";
@@ -811,7 +830,7 @@ p.page { page-break-after: always; }
 			else {
 				print "<TD></TD>";
 				}
-			print "</TR>\n";
+			print "<TD></TD></TR>\n";
 			}		// end if (mysql_affected_rows()>0)
 		else {
 			print "\n<TR CLASS='odd'><TD COLSPAN='99' ALIGN='center'><br /><I>" . gettext('No') . " " . get_text("Unit") . " " . gettext('data for this period') . "</I><BR /></TD></TR>\n";
@@ -988,13 +1007,13 @@ p.page { page-break-after: always; }
 //		dump ($query);
 
 		$titles = array ();
-		$titles['dr'] = "<B>" . gettext('Incidents') . "</B> Daily Report - ";
-		$titles['cm'] = "<B>" . gettext('Incidents') . "</B> Report - Current Month-to-date - ";
-		$titles['lm'] = "<B>" . gettext('Incidents') . "</B> Report - Last Month - ";
-		$titles['cy'] = "<B>" . gettext('Incidents') . "</B> Report - Current Year-to-date - ";
-		$titles['ly'] = "<B>" . gettext('Incidents') . "</B> Report - Last Year - ";
-		$titles['cw'] = "<B>" . gettext('Incidents') . "</B> Report - Current Week-to-date - ";
-		$titles['lw'] = "<B>" . gettext('Incidents') . "</B> Report - Last Week - ";
+		$titles['dr'] = "<B>" . gettext('Incidents') . "</B> " . gettext('Daily Report') . " - ";
+		$titles['cm'] = "<B>" . gettext('Incidents') . "</B> " . gettext('Report - Current Month-to-date') . " - ";
+		$titles['lm'] = "<B>" . gettext('Incidents') . "</B> " . gettext('Report - Last Month') . " - ";
+		$titles['cy'] = "<B>" . gettext('Incidents') . "</B> " . gettext('Report - Current Year-to-date') . " - ";
+		$titles['ly'] = "<B>" . gettext('Incidents') . "</B> " . gettext('Report - Last Year') . " - ";
+		$titles['cw'] = "<B>" . gettext('Incidents') . "</B> " . gettext('Report - Current Week-to-date') . " - ";
+		$titles['lw'] = "<B>" . gettext('Incidents') . "</B> " . gettext('Report - Last Week') . " - ";
 
 		$i = 0;
 		print "\n<TABLE ALIGN='left' BORDER = 0 width=800>\n";
@@ -1431,7 +1450,7 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 				print do_ticket_wm($row_ticket, $the_width, FALSE, FALSE);	//	2/4/13
 		//		print "<TR><TD ALIGN='center'><HR COLOR='blue'><BR /></TD></TR>";
 				print "<BR />";
-				print "<p class='page'>" . gettext('Page') . " " . $page_num . " " . gettext('of') . " " . $numrows . "</p>";
+				print "<p class='page'>" . gettext('Page {$page_num} of {$numrows}') . "</p>";
 				$page_num++;
 				}			// end while ()
 //			print "</TD></TR></TABLE>";		

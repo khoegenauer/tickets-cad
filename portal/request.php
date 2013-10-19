@@ -1,5 +1,8 @@
 <?php
-if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
+/*
+9/10/13 - request.php - file for view and edit of portal user request
+*/
+if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}
 error_reporting (E_ALL  ^ E_DEPRECATED);
 @session_start();
 if (empty($_SESSION)) {
@@ -9,40 +12,43 @@ require_once '../incs/functions.inc.php';
 do_login(basename(__FILE__));
 $requester = get_owner($_SESSION['user_id']);
 $id = (isset($_GET['id'])) ? $_GET['id'] : $_REQUEST['id'];
-
-$can_edit = (is_service_user()) ? TRUE : FALSE;
-
-$query = "SELECT *, UNIX_TIMESTAMP(`request_date`) AS `request_date` FROM `$GLOBALS[mysql_prefix]requests` WHERE `id` = " . $id . " LIMIT 1";
+$only_view = ((isset($_GET['func'])) && ($_GET['func'] == "view")) ? TRUE : FALSE;
+$can_edit = ((is_service_user()) && (!$only_view)) ? TRUE : FALSE;
+$query = "SELECT *, 
+		`r`.`id` AS `request_id`,
+		`a`.`id` AS `assigns_id`,
+		`a`.`start_miles` AS `start_miles`,
+		`a`.`end_miles` AS `end_miles`,
+		`r`.`comments` AS `comments`,
+		`a`.`comments` AS `assigns_comments`,
+		`request_date` AS `request_date`,
+		`tentative_date` AS `tentative_date`,		
+		`accepted_date` AS `accepted_date`,
+		`declined_date` AS `declined_date`,		
+		`resourced_date` AS `resourced_date`,
+		`completed_date` AS `completed_date`,	
+		`closed` AS `closed`,
+		`_on` AS `_on`,
+		`a`.`dispatched` AS `dispatched`,
+		`a`.`clear` AS `clear`		
+		FROM `$GLOBALS[mysql_prefix]requests` `r`
+		LEFT JOIN `$GLOBALS[mysql_prefix]assigns` `a` ON `a`.`ticket_id`=`r`.`ticket_id` 			
+		WHERE `r`.`id` = " . $id . " LIMIT 1";
 $result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
 $row = stripslashes_deep(mysql_fetch_assoc($result));
-
-$query_fc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";
-$result_fc = mysql_query($query_fc) or do_error($query_fc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-$rec_fac_menu = "<SELECT NAME='frm_rec_fac'>";
-$rec_fac_menu .= "<OPTION VALUE=0 selected>" . gettext('Receiving Facility') . "</OPTION>";
-while ($row_fc = mysql_fetch_array($result_fc, MYSQL_ASSOC)) {
-		$sel = ($row_fc['id'] == $row['rec_facility']) ? "SELECTED" : "";
-		$rec_fac_menu .= "<OPTION VALUE=" . $row_fc['id'] . " " . $sel . ">" . shorten($row_fc['name'], 30) . "</OPTION>";
-		}
-$rec_fac_menu .= "<SELECT>";
-
-$query_fc2 = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";
-$result_fc2 = mysql_query($query_fc2) or do_error($query_fc2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-$orig_fac_menu = "<SELECT NAME='frm_orig_fac'>";
-$orig_fac_menu .= "<OPTION VALUE=0 selected>" . gettext('Receiving Facility') . "</OPTION>";
-while ($row_fc2 = mysql_fetch_array($result_fc2, MYSQL_ASSOC)) {
-		$sel = ($row_fc2['id'] == $row['orig_facility']) ? "SELECTED" : "";
-		$orig_fac_menu .= "<OPTION VALUE=" . $row_fc2['id'] . " " . $sel . ">" . shorten($row_fc2['name'], 30) . "</OPTION>";
-		}
-$orig_fac_menu .= "<SELECT>";
-
-$status_array = array(gettext('Open'), gettext('Accepted'), gettext('Resourced'), gettext('Complete'));
-$status_sel = "<SELECT NAME='frm_status'>";
-foreach($status_array AS $val) {
-	$sel = ($val == $row['status']) ? "SELECTED": "";
-	$status_sel .= "<OPTION VALUE='" . $val . "' " . $sel . ">" . $val . "</OPTION>";
+$tentative_date = $row['tentative_date'];			
+$accepted_date = $row['accepted_date'];	
+$declined_date = $row['declined_date'];	
+$resourced_date = (($row['dispatched'] != "") || ($row['dispatched'] != NULL)) ? $row['dispatched'] : $row['resourced_date'];
+if(($row['dispatched'] != "") && ($row['dispatched'] != NULL) && ($row['resourced_date'] == NULL)) {
+	$update = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `resourced_date` = '" . mysql_format_date($row['dispatched']) . " WHERE `id` = " . $id;
 	}
-$status_sel .= "</SELECT>";
+$completed_date = (($row['clear'] != "") || ($row['clear'] != NULL)) ? $row['clear'] : $row['completed_date'];
+if(($row['clear'] != "") && ($row['clear'] != NULL) && ($row['completed_date'] == NULL)) {
+	$update = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `completed_date` = '" . mysql_format_date($row['clear']) . " WHERE `id` = " . $id;
+	}		
+$closed_date = $row['closed'];			
+$updated_by = get_owner($row['_by']);
 
 /**
  * get_contact_details
@@ -111,10 +117,30 @@ function get_user_name($the_id) {
 function get_facilityname($value) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = " . $value . " LIMIT 1";		 
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-	$row = stripslashes_deep(mysql_fetch_assoc($result));
-	return $row['name'];
+	if(mysql_num_rows($result) != 0) {
+		$row = stripslashes_deep(mysql_fetch_assoc($result));
+		return $row['name'];
+		} else {
+		return "";
+		}
 	}
-
+	
+function get_facilitydetails($value) {
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = " . $value . " LIMIT 1";		 
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+	if(mysql_num_rows($result) != 0) {
+		$row = stripslashes_deep(mysql_fetch_assoc($result));
+		$return = array();
+		$return['street'] = $row['street'];
+		$return['city'] = $row['city'];
+		$return['state'] = $row['state'];
+		} else {
+		$return['street'] = "";
+		$return['city'] = "";
+		$return['state'] = "";		
+		}
+	return $return;
+	}
 ?>
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 	<html xmlns="http://www.w3.org/1999/xhtml">
@@ -126,10 +152,23 @@ function get_facilityname($value) {
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<LINK REL=StyleSheet HREF="../stylesheet.php?version=<?php print time();?>" TYPE="text/css">
 	<SCRIPT SRC="../js/misc_function.js" TYPE="text/javascript"></SCRIPT>
+	<SCRIPT TYPE="text/javascript" SRC="../js/domready.js"></script>
+	<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry,weather&sensor=false"></SCRIPT>
 	<SCRIPT>
 	var randomnumber;
 	var the_string;
 	var theClass = "background-color: #CECECE";
+	var fac_lat = [];
+	var fac_lng = [];
+	var fac_street = [];
+	var fac_city = [];
+	var fac_state = [];
+	var rec_fac_lat = [];
+	var rec_fac_lng = [];
+	var rec_fac_street = [];
+	var rec_fac_city = [];
+	var rec_fac_state = [];
+
 /**
  * 
  * @returns {Array}
@@ -264,6 +303,75 @@ function get_facilityname($value) {
 		$('view').style.display = 'none';
 		$('edit').style.display = 'inline';
 		}
+
+function validate(theForm) {
+	var err_msg = "";
+	var street = theForm.frm_street.value;
+	var city = theForm.frm_city.value;
+	var state = theForm.frm_state.value;
+	var theDescription = theForm.frm_description.value
+	var requestDate = theForm.frm_year_request_date.value + "-" + theForm.frm_month_request_date.value + "-" + theForm.frm_day_request_date.value + " " + theForm.frm_hour_request_date.value + " " + theForm.frm_minute_request_date.value + ":00";
+	var thePhone = (theForm.frm_phone.value != "") ? theForm.frm_phone.value : "none";
+	var ToAddress = theForm.frm_toaddress.value;
+	var dest_address_array = ToAddress.split(",");
+	if(dest_address_array[0] == "") {
+		ToAddress = "";
+		}
+	var thePatient = theForm.frm_patient.value;
+	var origFac = theForm.frm_orig_fac.value;
+	var recFac = theForm.frm_rec_fac.value;	
+	var theScope = theForm.frm_scope.value;
+	var theComments = theForm.frm_comments.value;
+	if(thePatient == "") { err_msg += "\tName of person required\n"; }
+	if(theScope == "") { err_msg += "\tRequest title required\n"; }
+	if(street == "") { err_msg += "\tStreet address required\n"; }
+	if(city == "") { err_msg += "\tCity is required\n"; }
+	if(state == "") { err_msg += "\tState required, for UK State is UK\n"; }
+	if(theDescription == "") { err_msg += "\tDescription of job required\n"; }
+	if(requestDate == "") { err_msg += "\tRequest date required\n"; }
+	if(err_msg != "") {
+		alert ("Please correct the following and re-submit:\n\n" + err_msg);
+		return;
+		} else {
+		var geocoder = new google.maps.Geocoder();
+		var myAddress = theForm.frm_street.value.trim() + ", " +theForm.frm_city.value.trim() + " "  +theForm.frm_state.value.trim();
+		geocoder.geocode( { 'address': myAddress}, function(results, status) {		
+		if (status == google.maps.GeocoderStatus.OK) {
+			theForm.frm_lat.value = results[0].geometry.location.lat();
+			theForm.frm_lng.value = results[0].geometry.location.lng();
+			}
+		});				// end geocoder.geocode()
+		theForm.submit();
+		}
+	}
+		
+	function do_cancel(req_id) {
+		randomnumber=Math.floor(Math.random()*99999999);
+		$('view').style.display="none";
+		$('edit').style.display = 'none';	
+		$('waiting').style.display='block';
+		$('waiting').innerHTML = "Please Wait, Cancelling request<BR /><IMG style='vertical-align: middle;' src='../images/progressbar3.gif'/>";
+		var url ="./ajax/cancel_request.php?id=" + req_id + "&version=" + randomnumber;
+		sendRequest (url, requests_cb, "");
+		function requests_cb(req) {
+			var the_response=JSON.decode(req.responseText);
+			if(the_response[0] == 999) {
+				$('waiting').style.display='none';			
+				$('result').style.display = 'inline-block';
+				var the_link = "Request could not be cancelled, please try again.<BR /><BR /><BR /><BR />";		
+				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
+				$('done').innerHTML = the_link;
+				} else {
+				$('waiting').style.display='none';			
+				$('result').style.display = 'inline-block';
+				var the_link = "The Request has been cancelled and the controllers have been informed. You will receive an email confirmation.<BR /><BR /><BR /><BR />";		
+				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
+				$('done').innerHTML = the_link;
+				}
+			}
+		window.opener.get_requests();			
+		}	
+		
 /**
  * 
  * @param {type} id
@@ -271,15 +379,22 @@ function get_facilityname($value) {
  */		
 	function accept(id) {
 		randomnumber=Math.floor(Math.random()*99999999);
+		$('view').style.display = 'none';
+		$('edit').style.display = 'none';	
+		$('waiting').style.display='block';
+		$('waiting').innerHTML = "Please Wait, Accepting request<BR /><IMG style='vertical-align: middle;' src='../images/progressbar3.gif'/>";
 		var url ="./ajax/insert_ticket.php?id=" + id + "&version=" + randomnumber;
 		sendRequest (url, requests_cb, "");
 		function requests_cb(req) {
 			var the_response=JSON.decode(req.responseText);
 			if(the_response[0] == 0) {
-				alert("Could not insert new Ticket, please try again");
+				$('waiting').style.display='none';		
+				$('result').style.display = 'inline-block';
+				var the_link = "Could not insert new Ticket, please try again<BR /><BR /><BR /><BR />";		
+				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
+				$('done').innerHTML = the_link;
 				} else {
-				$('view').style.display = 'none';
-				$('edit').style.display = 'none';			
+				$('waiting').style.display='none';		
 				$('result').style.display = 'inline-block';
 				var the_link = "<?php print gettext('A New Ticket has been inserted. click the link below to view.');?><BR /><BR /><BR /><BR />";		
 				the_link += "<SPAN id='the_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.opener.parent.frames[\"main\"].location=\"../edit.php?id=" + the_response[0] + "\"; window.close();'><?php print gettext('Go to Ticket');?></SPAN>";			
@@ -287,6 +402,7 @@ function get_facilityname($value) {
 				$('done').innerHTML = the_link;
 				}
 			}
+		window.opener.get_requests();
 		}
 /**
  * 
@@ -295,22 +411,30 @@ function get_facilityname($value) {
  * @returns {Boolean}
  */
 	function status_update(the_id, the_val) {									// write unit status data via ajax xfer
+		$('view').style.display="none";
+		$('edit').style.display = 'none';
+		$('waiting').style.display='block';
+		$('waiting').innerHTML = "Please Wait, Updating Status<BR /><IMG style='vertical-align: middle;' src='../images/progressbar3.gif'/>";
 		var querystr = "the_id=" + the_id;
 		querystr += "&status=" + the_val;
 		var url = "up_status.php?" + querystr;			// 
+		alert(url);
 		var payload = syncAjax(url);						// 
 		if (payload.substring(0,1)=="-") {	
-			alert ("<?php print __LINE__;?>: msg failed ");
+			$('view').style.display="inline_block";
+			$('waiting').style.display='none';
+			$('waiting').innerHTML = "";
+			alert ("Could not update status");
 			return false;
 			}
 		else {
-			$('view').style.display = 'none';
-			$('edit').style.display = 'none';			
+			$('waiting').style.display='none';				
 			$('result').style.display = 'inline-block';
 			var the_link = "<?php print gettext('Status has been updated.');?><BR /><BR /><BR /><BR />";		
 			the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'><?php print gettext('Close');?></SPAN>";
 			$('done').innerHTML = the_link;
 			}
+		window.opener.get_requests();
 		}		// end function status_update()
 /**
  *  
@@ -319,15 +443,22 @@ function get_facilityname($value) {
  */		
 	function tentative(id) {
 		randomnumber=Math.floor(Math.random()*99999999);
+		$('view').style.display="none";
+		$('edit').style.display = 'none';
+		$('waiting').style.display='block';
+		$('waiting').innerHTML = "Please Wait, Tentatively accepting request<BR /><IMG style='vertical-align: middle;' src='../images/progressbar3.gif'/>";
 		var url ="./ajax/insert_ticket_tentative.php?id=" + id + "&version=" + randomnumber;
 		sendRequest (url, requests_cb, "");
 		function requests_cb(req) {
 			var the_response=JSON.decode(req.responseText);
 			if(the_response[0] == 0) {
-				alert("Could not insert new Ticket, please try again");
+				$('waiting').style.display='none';					
+				$('result').style.display = 'inline-block';
+				var the_link = "Could not insert new Ticket, please try again<BR /><BR /><BR /><BR />";		
+				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
+				$('done').innerHTML = the_link;
 				} else {
-				$('view').style.display = 'none';
-				$('edit').style.display = 'none';			
+				$('waiting').style.display='none';					
 				$('result').style.display = 'inline-block';
 				var the_link = "<?php print gettext('A New Ticket has been inserted. click the link below to view.');?><BR /><BR /><BR /><BR />";		
 				the_link += "<SPAN id='the_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.opener.parent.frames[\"main\"].location=\"../edit.php?id=" + the_response[0] + "\"; window.close();'><?php print gettext('Go to Ticket');?></SPAN>";			
@@ -335,6 +466,7 @@ function get_facilityname($value) {
 				$('done').innerHTML = the_link;
 				}
 			}
+		window.opener.get_requests();
 		}
 /**
  * 
@@ -343,21 +475,29 @@ function get_facilityname($value) {
  */	
 	function decline(id) {
 		randomnumber=Math.floor(Math.random()*99999999);
+		$('view').style.display="none";
+		$('edit').style.display = 'none';	
+		$('waiting').style.display='block';
+		$('waiting').innerHTML = "Please Wait, Declining request<BR /><IMG style='vertical-align: middle;' src='../images/progressbar3.gif'/>";
 		var url ="./ajax/decline.php?id=" + id + "&version=" + randomnumber;
 		sendRequest (url, requests_cb, "");
 		function requests_cb(req) {
 			var the_response=JSON.decode(req.responseText);
 			if(the_response[0] == 200) {
-				alert("Error, please try again");
+				$('waiting').style.display='none';				
+				$('result').style.display = 'inline-block';
+				var the_link = "There was an error, please try again<BR /><BR /><BR /><BR />";		
+				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
+				$('done').innerHTML = the_link;
 				} else {
-				$('view').style.display = 'none';
-				$('edit').style.display = 'none';			
+				$('waiting').style.display='none';				
 				$('result').style.display = 'inline-block';
 				var the_link = "<?php print gettext('The request has been declined.');?><BR /><BR /><BR /><BR />";		
 				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'><?php print gettext('Close');?></SPAN>";
 				$('done').innerHTML = the_link;
 				}
 			}
+		window.opener.get_requests();
 		}
 /**
  * 
@@ -369,20 +509,100 @@ function get_facilityname($value) {
 		$('view').style.display = 'inline';	
 		}
 
+	function do_lat (lat) {
+		document.edit_frm.frm_lat.value=lat;			// 9/9/08
+		}
+	function do_lng (lng) {
+		document.edit_frm.frm_lng.value=lng;
+		}
+
+	function do_fac_to_loc(text, index){			// 9/22/09
+		var theFaclat = fac_lat[index];
+		var theFaclng = fac_lng[index];
+		var theFacstreet = fac_street[index];
+		var theFaccity = fac_city[index];
+		var theFacstate = fac_state[index];
+		do_lat(theFaclat);
+		do_lng(theFaclng);
+		document.edit_frm.frm_street.value = theFacstreet
+		document.edit_frm.frm_city.value = theFaccity;
+		document.edit_frm.frm_state.value = theFacstate;	
+		}					// end function do_fac_to_loc
+		
+	function do_rec_fac_to_loc(text, index){			// 9/22/09
+		var recFaclat = rec_fac_lat[index];
+		var recFaclng = rec_fac_lng[index];
+		var recFacstreet = rec_fac_street[index];
+		var recFaccity = rec_fac_city[index];
+		var recFacstate = rec_fac_state[index];
+		do_lat(recFaclat);
+		do_lng(recFaclng);
+		document.edit_frm.frm_toaddress = recFacstreet + ", " + recFaccity + ", " + recFacstate;
+		}					// end function do_fac_to_loc		
+
 	</SCRIPT>
 	</HEAD>
+	<SCRIPT>
 	<!-- <BODY onLoad = "ck_frames();"> -->
 
 <?php
-	$rec_facility = ($row['rec_facility'] != 0) ? get_facilityname($row['rec_facility']) : gettext("Not Set");
-	$orig_facility = ($row['orig_facility'] != 0) ? get_facilityname($row['orig_facility']) : gettext("Not Set");	
-	$onload_str = "load(" .  get_variable('def_lat') . ", " . get_variable('def_lng') . "," . get_variable('def_zoom') . ");";
-	$now = time() - (intval(get_variable('delta_mins')*60));
-	$the_details = get_contact_details($row['requester']);	
-	$contact_email_p = $the_details[1];
-	$contact_email_s = $the_details[2];			
-	$contact_phone_p = $the_details[3];
-	$contact_phone_s = $the_details[4];		
+
+$query_fc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";
+$result_fc = mysql_query($query_fc) or do_error($query_fc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+$rec_fac_menu = "<SELECT NAME='frm_rec_fac' onChange='do_rec_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim())'>";
+$rec_fac_menu .= "<OPTION VALUE=0 selected>Receiving Facility</OPTION>";
+while ($row_fc = mysql_fetch_array($result_fc, MYSQL_ASSOC)) {
+		$sel = ($row_fc['id'] == $row['rec_facility']) ? "SELECTED" : "";
+		$rec_fac_menu .= "<OPTION VALUE=" . $row_fc['id'] . " " . $sel . ">" . shorten($row_fc['name'], 30) . "</OPTION>";
+		$rf_street = ($row_fc['street'] != "") ? $row_fc['street'] : "Empty";
+		$rf_city = ($row_fc['city'] != "") ? $row_fc['city'] : "Empty";
+		$rf_state = ($row_fc['state'] != "") ? $row_fc['state'] : "Empty";
+		print "\trec_fac_lat[" . $row_fc['id'] . "] = " . $row_fc['lat'] . " ;\n";
+		print "\trec_fac_lng[" . $row_fc['id'] . "] = " . $row_fc['lng'] . " ;\n";	
+		print "\trec_fac_street[" . $row_fc['id'] . "] = '" . $rf_street . "' ;\n";	
+		print "\trec_fac_city[" . $row_fc['id'] . "] = '" . $rf_city . "' ;\n";
+		print "\trec_fac_state[" . $row_fc['id'] . "] = '" . $rf_state . "' ;\n";	
+		}
+$rec_fac_menu .= "<SELECT>";
+
+$query_fc2 = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";
+$result_fc2 = mysql_query($query_fc2) or do_error($query_fc2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+$orig_fac_menu = "<SELECT NAME='frm_orig_fac' onChange='do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim())'>";
+$orig_fac_menu .= "<OPTION VALUE=0 selected>Receiving Facility</OPTION>";
+while ($row_fc2 = mysql_fetch_array($result_fc2, MYSQL_ASSOC)) {
+		$sel = ($row_fc2['id'] == $row['orig_facility']) ? "SELECTED" : "";
+		$orig_fac_menu .= "<OPTION VALUE=" . $row_fc2['id'] . " " . $sel . ">" . shorten($row_fc2['name'], 30) . "</OPTION>";
+		$street = ($row_fc2['street'] != "") ? $row_fc2['street'] : "Empty";
+		$city = ($row_fc2['city'] != "") ? $row_fc2['city'] : "Empty";
+		$state = ($row_fc2['state'] != "") ? $row_fc2['state'] : "Empty";
+		print "\tfac_lat[" . $row_fc2['id'] . "] = " . $row_fc2['lat'] . " ;\n";
+		print "\tfac_lng[" . $row_fc2['id'] . "] = " . $row_fc2['lng'] . " ;\n";	
+		print "\tfac_street[" . $row_fc2['id'] . "] = '" . $street . "' ;\n";	
+		print "\tfac_city[" . $row_fc2['id'] . "] = '" . $city . "' ;\n";
+		print "\tfac_state[" . $row_fc2['id'] . "] = '" . $state . "' ;\n";		
+		}
+$orig_fac_menu .= "<SELECT>";
+
+?>
+</SCRIPT>
+<?php
+$status_array = array('Open', 'Accepted', 'Resourced', 'Complete');
+$status_sel = "<SELECT NAME='frm_status'>";
+foreach($status_array AS $val) {
+	$sel = ($val == $row['status']) ? "SELECTED": "";
+	$status_sel .= "<OPTION VALUE='" . $val . "' " . $sel . ">" . $val . "</OPTION>";
+	}
+$status_sel .= "</SELECT>";
+
+$rec_facility = ($row['rec_facility'] != 0) ? get_facilityname($row['rec_facility']) : "Not Set";
+$orig_facility = ($row['orig_facility'] != 0) ? get_facilityname($row['orig_facility']) : "Not Set";	
+$onload_str = "load(" .  get_variable('def_lat') . ", " . get_variable('def_lng') . "," . get_variable('def_zoom') . ");";
+$now = time() - (intval(get_variable('delta_mins')*60));
+$the_details = get_contact_details($row['requester']);	
+$contact_email_p = $the_details[1];
+$contact_email_s = $the_details[2];			
+$contact_phone_p = $the_details[3];
+$contact_phone_s = $the_details[4];		
 
 if(!empty($_POST)) {
 	$meridiem_request_date = ((empty($_POST) || ((!empty($_POST)) && (empty ($_POST['frm_meridiem_request_date'])))) ) ? "" : $_POST['frm_meridiem_request_date'] ;
@@ -393,29 +613,41 @@ if(!empty($_POST)) {
 		`state` = " . quote_smart(trim($_POST['frm_state'])) . ",
 		`the_name` = " . quote_smart(trim($_POST['frm_patient'])) . ",
 		`phone` = " . quote_smart(trim($_POST['frm_phone'])) . ",
+		`to_address` = " . quote_smart(trim($_POST['frm_toaddress'])) . ",
 		`orig_facility` = " . quote_smart(trim($_POST['frm_orig_fac'])) . ",		
 		`rec_facility` = " . quote_smart(trim($_POST['frm_rec_fac'])) . ",
 		`scope` = " . quote_smart(trim($_POST['frm_scope'])) . ",
 		`description` = " . quote_smart(trim($_POST['frm_description'])) . ",		
 		`comments` = " . quote_smart(trim($_POST['frm_comments'])) . ",	
 		`request_date` = " . quote_smart(trim($request_date)) . ",	
-		`status` = " . quote_smart(trim($_POST['frm_status'])) . ",	
-		`description` = " . quote_smart(trim($_POST['frm_description'])) . "
+		`status` = " . quote_smart(trim($_POST['frm_status'])) . "
 		WHERE `id` = " . $_POST['id'];
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);	
-print "Done";
+	do_log($GLOBALS['LOG_EDIT_REQUEST'], $_POST['id']);	
+
 ?>
 	<BODY>
+		<CENTER>
+		<DIV id='confirmation'>
+			<BR /><BR /><BR />
+			<DIV><?php print gettext('Request Updated');?></DIV>
+			<BR /><BR />
+			<SPAN id='finish_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.opener.get_requests(); window.close();">Finish</SPAN>		
+		</DIV>
+		</CENTER>
+	</BODY>
+	</HTML>
 <?php	
 	} else {	
-	
+	$orig_fac_details = get_facilitydetails($row['orig_facility']);
+	$rec_fac_details = get_facilitydetails($row['rec_facility']);
 ?>
 	<BODY onLoad="startup(); location.href = '#top';">
 
 	<DIV id='view' style='position: absolute; width: 95%; text-align: center; margin: 10px;'>
-		<DIV id='banner' class='heading' style='font-size: 20px; position: relative: top: 5%; width: 100%; border: 1px outset #000000;'><?php print gettext('Tickets Service User Request');?></DIV><BR /><BR />
+		<DIV id='banner' class='heading' style='font-size: 20px; position: relative; top: 5%; width: 100%; border: 1px outset #000000;'>Tickets Service User Request</DIV><BR /><BR />
 		<DIV id='leftcol' style='position: fixed; left: 2%; top: 8%; width: 96%; height: 90%;'>
-			<DIV id='left_scroller' style='position: relative; top: 0px; left: 0px; height: 80%; overflow-y: auto; overflow-x: hidden; border: 1px outset #000000;'>
+			<DIV id='left_scroller' style='position: relative; top: 0px; left: 0px; height: 90%; overflow-y: auto; overflow-x: hidden; border: 1px outset #000000;'>
 				<TABLE style='width: 100%;'>
 					<TR class='odd'>	
 						<TD class='td_label' style='text-align: left;'><?php print gettext('Requested By');?></TD><TD class='td_data' style='text-align: left;'><?php print get_user_name($row['requester']);?></TD>
@@ -427,7 +659,7 @@ print "Done";
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Status');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['status'];?></TD>
 					</TR>					
 					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Patient');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['the_name'];?></TD>
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Service User');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['the_name'];?></TD>
 					</TR>	
 					<TR class='odd'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Street');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['street'];?></TD>
@@ -439,42 +671,76 @@ print "Done";
 						<TD class='td_label' style='text-align: left;'><?php print get_text('State');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['state'];?></TD>
 					</TR>	
 					<TR class='even'>	
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Destination Address');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['to_address'];?></TD>
+					</TR>	
+					<TR class='odd'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Phone');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['phone'];?></TD>
 					</TR>
-					<TR class='odd'>	
+					<TR class='even'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Email');?></TD><TD class='td_data' style='text-align: left;'><?php print $contact_email_p;?></TD>
 					</TR>	
-					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Receiving Facility');?></TD><TD class='td_data' style='text-align: left;'><?php print $orig_facility;?></TD>
-					</TR>					
 					<TR class='odd'>	
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Originating Facility');?></TD><TD class='td_data' style='text-align: left;'><?php print $orig_facility;?></TD>
+					</TR>					
+					<TR class='even'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Receiving Facility');?></TD><TD class='td_data' style='text-align: left;'><?php print $rec_facility;?></TD>
 					</TR>
-					<TR class='even'>	
+					<TR class='odd'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Scope');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['scope'];?></TD>
 					</TR>	
-					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Description');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['description'];?></TD>
-					</TR>		
 					<TR class='even'>	
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Description');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['description'];?></TD>
+					</TR>
+					<TR class='odd'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Comments');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['comments'];?></TD>
-					</TR>			
+					</TR>
+					<TR class='spacer'>
+						<TD class='spacer' COLSPAN=99></TD>
+					</TR>	
+					<TR class='heading'>	
+						<TD COLSPAN='2' class='heading' style='text-align: left;'>Status Times and Dates</TD>
+					</TR>
+					<TR class='even'>	
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Tentative Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print $tentative_date;?></TD>
+					</TR>	
+					<TR class='odd'>	
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Accepted Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print $accepted_date;?></TD>
+					</TR>
+					<TR class='even'>	
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Declined Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print $declined_date;?></TD>
+					</TR>					
+					<TR class='odd'>	
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Resourced Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print $resourced_date;?></TD>
+					</TR>	
+					<TR class='even'>	
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Completed Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print $completed_date;?></TD>
+					</TR>
+					<TR class='odd'>	
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Closed Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print $closed_date;?></TD>
+					</TR>
+					<TR class='even'>	
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Updated by');?></TD><TD class='td_data' style='text-align: left;'><?php print $updated_by;?></TD>
+					</TR>	
+					<TR class='spacer'>
+						<TD class='spacer' COLSPAN=99></TD>
+					</TR>	
 				</TABLE>
 			</DIV><BR /><BR />
 <?php
 	if($can_edit) {
 ?>
-			<SPAN id='edit_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "do_edit();"><?php print gettext('Edit');?></SPAN>	
+			<SPAN id='edit_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "do_edit();">Edit</SPAN>
+			<SPAN id='req_can_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "do_cancel(<?php print $row['request_id'];?>);">Cancel Request</SPAN>			
 <?php
 	}
-	if((!is_service_user()) && ($row['status'] == 'Open')) {
+	if((!is_service_user()) && (($row['status'] == 'Open') || ($row['status'] == 'Declined'))) {
 ?>
-			<SPAN id='tent_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "tentative(<?php print $id;?>);"><?php print gettext('Tentatively Accept and open Ticket');?></SPAN>
+			<SPAN id='tent_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "tentative(<?php print $id;?>);">Tentatively Accept and open Ticket</SPAN>
 <?php
 	}
-	if((!is_service_user()) && ($row['status'] == 'Open')) {
+	if((!is_service_user()) && (($row['status'] == 'Open') || ($row['status'] == 'Declined'))) {
 ?>
-			<SPAN id='accept_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "accept(<?php print $id;?>);"><?php print gettext('Accept and open Ticket');?></SPAN>
+			<SPAN id='accept_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "accept(<?php print $id;?>);">Accept and open Ticket</SPAN>
 <?php
 	}
 	if((!is_service_user()) && ($row['status'] == 'Tentative')) {
@@ -488,11 +754,11 @@ print "Done";
 <?php
 	}
 ?>
-			<SPAN id='close_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.close();"><?php print gettext('Cancel');?></SPAN><BR /><BR />		
+			<SPAN id='close_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.close();"><?php print gettext('Close');?></SPAN><BR /><BR />		
 		</DIV>
 	</DIV>
 	<DIV id='edit' style='position: absolute; width: 95%; text-align: center; margin: 10px;'>
-		<DIV id='edit_banner' class='heading' style='font-size: 20px; position: relative: top: 5%; width: 100%; border: 1px outset #000000;'><?php print gettext('Edit Tickets Service User Request');?></DIV><BR /><BR />
+		<DIV id='edit_banner' class='heading' style='font-size: 20px; position: relative; top: 5%; width: 100%; border: 1px outset #000000;'><?php print gettext('Edit Tickets Service User Request');?></DIV><BR /><BR />
 		<DIV id='edit_leftcol' style='position: fixed; left: 2%; top: 8%; width: 96%; height: 90%;'>
 			<DIV id='edit_left_scroller' style='position: relative; top: 0px; left: 0px; height: 90%; overflow-y: auto; overflow-x: hidden; border: 1px outset #000000;'>
 				<FORM NAME='edit_frm' METHOD='POST' ACTION = "<?php print basename( __FILE__); ?>">
@@ -501,7 +767,7 @@ print "Done";
 						<TD class='td_label' style='text-align: left;'><?php print gettext('Requested By');?></TD><TD class='td_data' style='text-align: left;'><?php print get_user_name($row['requester']);?></TD>
 					</TR>
 					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;'><?php print gettext('Request Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print generate_date_dropdown('request_date',$row['request_date'],FALSE);?></TD>
+						<TD class='td_label' style='text-align: left;'>Request Date and Time</TD><TD class='td_data' style='text-align: left;'><?php print generate_date_dropdown('request_date',strtotime($row['request_date']),FALSE);?></TD>
 					</TR>	
 					<TR class='odd'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Status');?></TD><TD class='td_data' style='text-align: left;'><?php print $status_sel;?></TD>
@@ -519,37 +785,46 @@ print "Done";
 						<TD class='td_label' style='text-align: left;'><?php print get_text('State');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_state' TYPE='TEXT' SIZE='4' MAXLENGTH='4' VALUE="<?php print $row['state'];?>"></TD>
 					</TR>	
 					<TR class='even'>	
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Destination Address');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_toaddress' TYPE='TEXT' SIZE='24' MAXLENGTH='128' VALUE="<?php print $row['to_address'];?>"></TD>
+					</TR>	
+					<TR class='odd'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Phone');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_phone' TYPE='TEXT' SIZE='16' MAXLENGTH='16' VALUE="<?php print $row['phone'];?>"></TD>
 					</TR>
-					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Receiving Facility');?></TD><TD class='td_data' style='text-align: left;'><?php print $orig_fac_menu;?></TD>
-					</TR>					
 					<TR class='even'>	
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Originating Facility');?></TD><TD class='td_data' style='text-align: left;'><?php print $orig_fac_menu;?></TD>
+					</TR>					
+					<TR class='odd'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Receiving Facility');?></TD><TD class='td_data' style='text-align: left;'><?php print $rec_fac_menu;?></TD>
 					</TR>
-					<TR class='odd'>	
+					<TR class='even'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Scope');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_scope' TYPE='TEXT' SIZE='24' MAXLENGTH='64' VALUE="<?php print $row['scope'];?>"></TD>
 					</TR>	
-					<TR class='even'>	
+					<TR class='odd'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Description');?></TD><TD class='td_data' style='text-align: left;'><TEXTAREA NAME="frm_description" COLS="45" ROWS="2" WRAP="virtual"><?php print $row['description'];?></TEXTAREA></TD>
 					</TR>		
-					<TR class='odd'>	
+					<TR class='even'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Comments');?></TD><TD class='td_data' style='text-align: left;'><TEXTAREA NAME="frm_comments" COLS="45" ROWS="2" WRAP="virtual"><?php print $row['comments'];?></TEXTAREA></TD>
-					</TR>				
+					</TR>
+					<TR class='spacer'>
+						<TD class='spacer' COLSPAN=99></TD>
+					</TR>	
 				</TABLE>
 				<INPUT NAME='requester' TYPE='hidden' SIZE='24' VALUE="<?php print $_SESSION['user_id'];?>">
 				<INPUT NAME='id' TYPE='hidden' SIZE='24' VALUE="<?php print $id;?>">
+				<INPUT NAME='frm_lat' TYPE='hidden' SIZE='10' VALUE="<?php print $row['lat'];?>">
+				<INPUT NAME='frm_lng' TYPE='hidden' SIZE='10' VALUE="<?php print $row['lng'];?>">
 			</DIV><BR /><BR />
-			<SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.forms['edit_frm'].submit();"><?php print gettext('Update');?></SPAN>
-			<SPAN id='close_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.close();"><?php print gettext('Cancel');?></SPAN><BR /><BR />	
+			<SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "validate(document.edit_frm);">Update</SPAN>
+			<SPAN id='close_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.opener.get_requests(showall); window.close();">Cancel</SPAN><BR /><BR />	
 			</FORM>		
 		</DIV>
-	</DIV>
+	</DIV>		
+	<DIV id='waiting' style='display: none; text-align: center;'></DIV>
 	<DIV id='result' style='position: absolute; width: 95%; text-align: center; margin: 10px;'>
 		<DIV id='done'></DIV>
 	</DIV>
-	</BODY>
-	</HTML>
 <?php
 }
 ?>
+</BODY>
+</HTML>

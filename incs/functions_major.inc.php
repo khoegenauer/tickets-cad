@@ -159,6 +159,8 @@ $iw_width = 	"300px";		// map infowindow with
 5/31/2013 tracking speed display corrections made
 6/1/2013 revised 'contact us' addr to user setting value
 7/2/2013 revised to take responder as-of timestamp per server time
+7/30/13 Revised to solve issue with showing and hiding individual Facility categories
+9/10/13 Added "Address About" and "To Address" fields, fixed on click event in maps mode for ticket entered in no maps mode.
 */
 
 $nature = get_text("Nature");			// 12/03/10
@@ -498,9 +500,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 					    paths: 			points,
 					    strokeColor: 	add_hash("<?php echo $line_color;?>"),
 					    strokeOpacity: 	<?php echo $line_opacity;?>,
-					    strokeWeight: 	<?php echo $line_width;?>,
-					    fillColor: 		add_hash("<?php echo $fill_color;?>"),
-					    fillOpacity: 	<?php echo $fill_opacity;?>
+					    strokeWeight: 	<?php echo $line_width;?>
 						});
 <?php			} ?>				        
 					polyline.setMap(map);		
@@ -609,7 +609,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 			return false;
 			}
 		else {
-			parent.frames['upper'].show_msg ('<?php print get_text("Units status update applied!");?>')
+			parent.frames['upper'].show_msg ('<?php print gettext("Units status update applied!");?>')
 			return true;
 			}				// end if/else (payload.substring(... )
 		}		// end function to_server()
@@ -647,6 +647,18 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 			return false;
 			}																						 
 		}		// end function sync Ajax(strURL)
+
+	function unit_log(id) {										// 9/10/13
+		var url = "unit_ticket_log.php?responder="+ id + "&ticket=0";
+		var ulWindow = window.open(url, 'unitLogWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100');
+		setTimeout(function() { ulWindow.focus(); }, 1);
+		}
+		
+	function view_log_entry(id) {										// 9/10/13
+		var url = "unit_log_view.php?id=" + id;
+		var ulvWindow = window.open(url, 'unitLogWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100');
+		setTimeout(function() { ulvWindow.focus(); }, 1);
+		}		
 
 	var starting = false;
 	
@@ -1350,8 +1362,8 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
 
 				var fac_category = fac_curr_cats[i];
 				if ($(fac_category).checked == true) {
-					if($('fac_table').style.display == 'none') {
-						$('fac_table').style.display = 'inline-block';
+					if($('side_bar_f').style.display == 'none') {	//	7/30/13
+//						$('fac_table').style.display = 'inline-block';	//	7/30/13
 						$('side_bar_f').style.display = 'inline-block';
 						}
 					x++;
@@ -1771,14 +1783,14 @@ var divarea;
 		location.href = "#top";
 		}
 
-	function do_sidebar (instr, id, sym, myclass, tip_str) {		// sidebar_string, sidebar_index, row_class, icon_info, mouseover_str - 1/7/09
+	function do_sidebar (instr, id, sym, myclass, tip_str) {		// sidebar_string, sidebar_index, row_class, icon_info, mouseover_str - 1/7/09, 9/10/13 removed onClick event for row.
 		var tr_id = tr_id_fixed_part + id;		// e.g., 'tr_id_n'
-		side_bar_html += "<TR onClick = 'myclick(" + id + ");' ID =  '" + tr_id + "' onMouseover=\"Tip('" + tip_str + "');\" onmouseout=\"UnTip();\" CLASS='" + colors[id%2] +"'>";
+		side_bar_html += "<TR ID =  '" + tr_id + "' onMouseover=\"Tip('" + tip_str + "');\" onmouseout=\"UnTip();\" CLASS='" + colors[id%2] +"'>";
 		side_bar_html += "<TD CLASS='" + myclass + "' ALIGN = 'left'>" + (sym) + "</TD>"+ instr +"</TR>\n";		// 1/3/10 added tip param		
 		}		// end function do sidebar ()
 
-	function do_sidebar_t_ed (instr, line_no, rcd_id, letter, tip_str) {		// ticket edit, tip str added 1/3/10
-		side_bar_html += "<TR onMouseover=\"Tip('" + tip_str.replace("'", "") + "');\" onmouseout=\"UnTip();\" CLASS='" + colors[(line_no)%2] +"'>";		
+	function do_sidebar_t_ed (instr, line_no, rcd_id, letter, tip_str) {		// ticket edit, tip str added 1/3/10, 9/10/13 Added missing click event
+		side_bar_html += "<TR onClick = 'myclick_ed_tick(" + rcd_id + ");' onMouseover=\"Tip('" + tip_str.replace("'", "") + "');\" onmouseout=\"UnTip();\" CLASS='" + colors[(line_no)%2] +"'>";		
 		side_bar_html += "<TD CLASS='td_data'>" + letter + "</TD>" + instr +"</TR>\n";		// 2/13/09, 10/29/09 removed period
 		}
 
@@ -2120,9 +2132,24 @@ function cs_handleResult(req) {					// the 'called-back' function for show curre
 
 	var icon_file = "./markers/crosshair.png";
 
+	function find_warnings(tick_lat, tick_lng) {	//	9/10/13
+		randomnumber=Math.floor(Math.random()*99999999);
+		var theurl ="../ajax/loc_warn_list.php?version=" + randomnumber + "&lat=" + tick_lat + "&lng=" + tick_lng;
+		sendRequest (theurl, loc_w, "");
+		function loc_w(req) {
+			var the_warnings=JSON.decode(req.responseText);
+			var the_count = the_warnings[0]
+			if(the_count != 0) {
+				$('loc_warnings').innerHTML = the_warnings[1];
+				$('loc_warnings').style.display = 'block';
+				}
+			}			
+		}	
+
 	function call_back (in_obj){				// callback function - from polyline()
 		do_lat(in_obj.lat);			// set form values
 		do_lng(in_obj.lng);
+		find_warnings(in_obj.lat, in_obj.lng);	//	9/10/13
 		do_ngs();	
 		}
 //				2058
@@ -2261,9 +2288,7 @@ function cs_handleResult(req) {					// the 'called-back' function for show curre
 				    paths: 			points,
 				    strokeColor: 	add_hash("<?php echo $line_color;?>"),
 				    strokeOpacity: 	<?php echo $line_opacity;?>,
-				    strokeWeight: 	<?php echo $line_width;?>,
-				    fillColor: 		add_hash("<?php echo $fill_color;?>"),
-				    fillOpacity: 	<?php echo $fill_opacity;?>
+				    strokeWeight: 	<?php echo $line_width;?>
 					});
 <?php		} ?>				        
 			polyline.setMap(map);		
@@ -2436,8 +2461,7 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 			$grp_names .= $counter;
 			$y++;
 			}
-		$onclick_str = "onClick = '{$js_func}({$row['tick_id']});'";		// onClick = to_wherever(999);  -6/23/11
-
+		$onclick_str = "onClick = '{$js_func}({$sb_indx});'";		// onClick = to_wherever(999);  -6/23/11, 9/10/13, changed ticket id to sb_indx
 /*
 		dump(__LINE__);
 		dump($onclick_str);
@@ -2622,8 +2646,9 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 */		
 			var myinfoTabs = "<?php echo nl2brr($tab_1);?>";
 <?php
-
+			$tick_nm = false;	//	9/10/13
 			if ((($row['lat'] == $GLOBALS['NM_LAT_VAL']) && ($row['lng'] == $GLOBALS['NM_LAT_VAL'])) || (($row['lat'] == "") || ($row['lat'] == NULL)) || (($row['lng'] == "") || ($row['lng'] == NULL))) {	// check for lat and lng values set in no maps state, or errors 7/28/10, 10/23/12
+				$tick_nm = true;
 ?>			
 				var point = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);	// for each ticket
 				bounds.extend(point);
@@ -2661,7 +2686,7 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 			}		// end if (my_is_float($row['lat']))
 		$use_quick = (((integer)$func == 0) || ((integer)$func == 10)) ? FALSE : TRUE ;	//	11/29/10
 			
-		if (($quick) || ($use_quick)) {		// 5/18/10, 11/29/10
+		if (($quick) || ($use_quick) || ($tick_nm)) {		// 5/18/10, 11/29/10
 			print "\t\t	do_sidebar_t_ed (\"{$sidebar_line}\", ({$the_offset} + {$sb_indx}), {$row['tick_id']}, sym, \"{$tip}\");\n";
 			}
 		else {
@@ -2715,7 +2740,7 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 				$link_str .= "<SPAN onClick = 'document.to_closed.frm_offset.value={$temp}; document.to_closed.submit();'><U>" . ($j+1) . "K</U></SPAN>{$sep}";
 				}				
 			}
-		$sev_string = "" . get_text("Severities") . ": <SPAN CLASS='severity_normal'>" . get_text("Normal") . " ({$by_severity[$GLOBALS['SEVERITY_NORMAL']]})</SPAN>,&nbsp;&nbsp;<SPAN CLASS='severity_medium'>" . get_text("Medium") . " ({$by_severity[$GLOBALS['SEVERITY_MEDIUM']]})</SPAN>,&nbsp;&nbsp;<SPAN CLASS='severity_high'>" . get_text("High") . " ({$by_severity[$GLOBALS['SEVERITY_HIGH']]})</SPAN>";
+		$sev_string = "<SPAN class='sev_infobar'><B>" . get_text("Severities") . ":</B> <SPAN CLASS='severity_normal'>" . get_text("Normal") . " ({$by_severity[$GLOBALS['SEVERITY_NORMAL']]})</SPAN>,&nbsp;&nbsp;<SPAN CLASS='severity_medium'>" . get_text("Medium") . " ({$by_severity[$GLOBALS['SEVERITY_MEDIUM']]})</SPAN>,&nbsp;&nbsp;<SPAN CLASS='severity_high'>" . get_text("High") . " ({$by_severity[$GLOBALS['SEVERITY_HIGH']]})</SPAN></SPAN>";	//	9/10/13
 
 		unset($acts_ary, $pats_ary, $result_temp, $result_cl);
 //		snap(__LINE__, round((microtime(true) - $time), 3));
@@ -2871,9 +2896,7 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 			    paths: 			points,
 			    strokeColor: 	add_hash("<?php echo $line_color;?>"),
 			    strokeOpacity: 	<?php echo $line_opacity;?>,
-			    strokeWeight: 	<?php echo $line_width;?>,
-			    fillColor: 		add_hash("<?php echo $fill_color;?>"),
-			    fillOpacity: 	<?php echo $fill_opacity;?>
+			    strokeWeight: 	<?php echo $line_width;?>
 				});
 <?php	} ?>				        
 
@@ -2926,9 +2949,7 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 			    paths: 			points,
 			    strokeColor: 	add_hash("<?php echo $line_color;?>"),
 			    strokeOpacity: 	<?php echo $line_opacity;?>,
-			    strokeWeight: 	<?php echo $line_width;?>,
-			    fillColor: 		add_hash("<?php echo $fill_color;?>"),
-			    fillOpacity: 	<?php echo $fill_opacity;?>
+			    strokeWeight: 	<?php echo $line_width;?>
 				});
 <?php	} ?>				        
 
@@ -2978,7 +2999,7 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 //		print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD></TD><TD><B>" . gettext('Unit') . "</B> ({$units_ct}) </TD>	<TD onClick = 'do_mail_win(null, null); ' ALIGN = 'center'><IMG SRC='mail_red.png' /></TD><TD>&nbsp; <B>" . gettext('Status') . "</B></TD><TD ALIGN='left' COLSPAN='2'><B>{$incident}</B></TD><TD><B>" . gettext('M') . "</B></TD><TD><B>&nbsp;" . gettext('As of') . "</B></TD></TR>\"\n" ;
 		}
 
-	$aprs = $instam = $locatea = $gtrack = $glat = $t_tracker = $ogts = FALSE;		//7/23/09
+	$aprs = $instam = $locatea = $gtrack = $glat = $t_tracker = $ogts = $mob_tracker = FALSE;		//7/23/09
 
 	$utc = gmdate ("U");				// 3/25/09
 
@@ -3008,16 +3029,19 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 
 		$name = $row['name'];			//	10/8/09
 		$index = $row['icon_str'];	// 4/27/11
-		
+		$track_type = get_remote_type($row) ;				// 7/8/11		
 		print "\t\tvar sym = \"$index\";\n";				// for sidebar and icon 10/8/09	- 4/22/11
 												// 2/13/09
 		$todisp = ((is_guest()) || (is_unit()))? "": "&nbsp;&nbsp;<A HREF='{$_SESSION['unitsfile']}?func=responder&view=true&disp=true&id=" . $row['unit_id'] . "'><U>" . gettext('Dispatch') . "</U></A>&nbsp;&nbsp;";		// 08/8/02
 		$toedit = ((is_guest()) || (is_user()) || (is_unit()) )? "" :"&nbsp;&nbsp;<A HREF='{$_SESSION['unitsfile']}?func=responder&edit=true&id=" . $row['unit_id'] . "'><U>" . gettext('Edit') . "</U></A>&nbsp;&nbsp;" ;	// 7/27/10
-		$totrack  = ((intval($row['mobile'])==0)||(empty($row['callsign'])))? "" : "&nbsp;&nbsp;<SPAN onClick = do_track('" .$row['callsign']  . "');><B><U>" . gettext('Tracks') . "</B></U>&nbsp;&nbsp;</SPAN>" ;
+
+		$callsign = ($track_type == 8) ? "999_" . $row['unit_id']: $row['callsign'];
+		$totrack  = ((intval($row['mobile'])==0) || (($track_type != 8) && (empty($row['callsign']))))? "" : "&nbsp;&nbsp;<SPAN class = 'span_link' onClick = do_track('" .$callsign  . "');><U>" . gettext('Tracks') . "</U>&nbsp;&nbsp;</SPAN>" ;
+		$to_log = (is_guest()) ? "" : "<SPAN CLASS = 'span_link' onclick = 'unit_log({$row['unit_id']});'><U>" . gettext('Log') . "</U></SPAN>";	//	9/10/13
 		$tofac = (is_guest())? "": "<A HREF='{$_SESSION['unitsfile']}?func=responder&view=true&dispfac=true&id=" . $row['unit_id'] . "'><U>" . gettext('To Facility') . "</U></A>&nbsp;&nbsp;";	// 08/8/02
 
 		$hide_unit = ($row['hide']=="y")? "1" : "0" ;		// 3/8/10
-		$track_type = get_remote_type($row) ;				// 7/8/11
+
 //		print "Track Type = " . $track_type;
 		$row_track = FALSE;
 		if ($track_type > 0 ) {				// get most recent mobile track data
@@ -3143,7 +3167,7 @@ if(count($al_groups == 0)) {	//	catch for errors - no entries in allocates for t
 			if (array_key_exists($row['unit_id'], $assigns_ary)) {
 				$tab_1 .= "<TR CLASS='even'><TD ALIGN='left' CLASS='emph'>" . gettext('Dispatched to') . ":</TD><TD ALIGN='left' CLASS='emph'><A HREF='main.php?id=" . $tickets[$row['unit_id']] . "'>" . shorten($assigns[$row['unit_id']], 20) . "</A></TD></TR>";
 				}
-			$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . $tofac . $todisp . $totrack . $toedit . "&nbsp;&nbsp;<A HREF='{$_SESSION['unitsfile']}?func=responder&view=true&id=" . $row['unit_id'] . "'><U>" . gettext('View') . "</U></A></TD></TR>";	// 08/8/02
+			$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . $tofac . $todisp . $totrack . $to_log . $toedit . "&nbsp;&nbsp;<A HREF='{$_SESSION['unitsfile']}?func=responder&view=true&id=" . $row['unit_id'] . "'><U>" . gettext('View') . "</U></A></TD></TR>";	// 08/8/02
 			$tab_1 .= "</TABLE>";
 
 // tab 2
@@ -3404,9 +3428,7 @@ function createfacMarker(fac_point, fac_tabs, id, fac_icon, type, region) {		// 
 			    paths: 			points,
 			    strokeColor: 	add_hash("<?php echo $line_color;?>"),
 			    strokeOpacity: 	<?php echo $line_opacity;?>,
-			    strokeWeight: 	<?php echo $line_width;?>,
-			    fillColor: 		add_hash("<?php echo $fill_color;?>"),
-			    fillOpacity: 	<?php echo $fill_opacity;?>
+			    strokeWeight: 	<?php echo $line_width;?>
 				});
 <?php	} ?>				        
 
@@ -3630,7 +3652,7 @@ function createfacMarker(fac_point, fac_tabs, id, fac_icon, type, region) {		// 
 	
 	side_bar_html ="<TABLE border='0' VALIGN='top' ALIGN='center' CLASS='sidebar' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> >";	//	11/29/10, 3/15/11
 	side_bar_html +="<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR>";	//	11/29/10, 3/15/11
-	side_bar_html +="<TR class='even'><TD ALIGN='center' COLSPAN=99><B><?php print gettext(' Legend');?></B></TD></TR>";		// legend row, 11/29/10, 3/15/11
+	side_bar_html +="<TR class='even'><TD ALIGN='center' COLSPAN=99><B><?php print gettext('Facilities Legend');?></B></TD></TR>";		// legend row, 11/29/10, 3/15/11
 	side_bar_html +="<TR class='even'><TD ALIGN='center' COLSPAN=99><?php print get_facilities_legend();?></TD></TR></TABLE>\n";	//	3/15/11
 	$("facs_legend").innerHTML = side_bar_html + "</TABLE>";	//side_bar_html to facilities legend div
 
@@ -3939,7 +3961,13 @@ print get_buttons_inner2();	//	4/12/12
 	
 		print "<TR CLASS='print_TD' ><TD ALIGN='left'>" . get_text("Protocol") . ":</TD> <TD ALIGN='left'>{$row['protocol']}</TD></TR>\n";		// 7/16/09
 		print "<TR CLASS='print_TD' ><TD ALIGN='left'>" . get_text("Addr") . ":</TD>	
-				<TD ALIGN='left'>" .  $row['tick_street'] . "</TD></TR>\n";
+				<TD ALIGN='left'>" .  $row['tick_street'];
+		print "<DIV id='loc_warnings' style='z-index: 1000; display: none; height: 100px; width: 300px; font-size: 1.5em; font-weight: bold; border: 2px outset #707070;'></DIV>";	
+		print "</TD></TR>\n";		
+		print "<TR CLASS='print_TD' ><TD ALIGN='left'>" . get_text("About Address") . ":</TD>	
+				<TD ALIGN='left'>" .  $row['address_about'] . "</TD></TR>\n";	//	9/10/13
+		print "<TR CLASS='print_TD' ><TD ALIGN='left'>" . get_text("To Address") . ":</TD>	
+				<TD ALIGN='left'>" .  $row['to_address'] . "</TD></TR>\n";	//	9/10/13
 		print "<TR CLASS='print_TD' ><TD ALIGN='left'>" . get_text("City") . ":</TD>		
 				<TD ALIGN='left'>" .  $row['tick_city'];
 		print 		"&nbsp;&nbsp;" .  $row['tick_state'] . "</TD></TR>\n";
@@ -4098,6 +4126,8 @@ print get_buttons_inner2();	//	4/12/12
 ?>
 	<TABLE BORDER="0" ID = "outer" ALIGN="left">
 	<TR VALIGN="top"><TD CLASS="print_TD, even" ALIGN="left" style='<?php print get_variable('map_width');?>px;'>
+	<DIV id='loc_warnings' style='z-index: 1000; display: none; height: 100px; width: 100%; font-size: 1.5em; font-weight: bold; border: 2px outset #707070;'></DIV>	
+
 <?php
 
 	print do_ticket($row, $col_width, $search) ;				// 2/25/09
@@ -4196,6 +4226,40 @@ print get_buttons_inner2();	//	4/12/12
 		starting = false;
 		}		// end function sv win()
 
+	function find_warnings(tick_lat, tick_lng) {	//	9/10/13
+		randomnumber=Math.floor(Math.random()*99999999);
+		var theurl ="./ajax/loc_warn_list.php?version=" + randomnumber + "&lat=" + tick_lat + "&lng=" + tick_lng;
+		sendRequest(theurl, loc_w_cb, "");
+		function loc_w_cb(req) {
+			var the_warnings=JSON.decode(req.responseText);
+			var the_count = the_warnings[0]
+			if(the_count != 0) {
+				$('loc_warnings').innerHTML = the_warnings[1];
+				$('loc_warnings').style.display = 'block';
+				}
+			}			
+		}
+
+	var start_wl = false;
+	function wl_win(the_Id) {				// 2/11/09
+		if(start_wl) {return;}				// dbl-click proof
+		start_wl = true;					
+		var url = "warnloc_popup.php?id=" + the_Id;
+		newwindow_wl=window.open(url, "sta_log",  "titlebar=no, location=0, resizable=1, scrollbars, height=600,width=750,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
+		if (!(newwindow_wl)) {
+			alert ("Locations warning operation requires popups to be enabled. Please adjust your browser options - or else turn off the Call Board option.");
+			return;
+			}
+		newwindow_wl.focus();
+		start_wl = false;
+		}		// end function sv win()		
+
+	function file_window(id) {										// 9/10/13
+		var url = "file_upload.php?ticket_id="+ id;
+		var nfWindow = window.open(url, 'NewFileWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100');
+		setTimeout(function() { nfWindow.focus(); }, 1);
+		}
+
 	var grid_bool = false;		
 	function toglGrid() {						// toggle
 		grid_bool = !grid_bool;
@@ -4282,7 +4346,7 @@ else {
 			'<?php echo $icon_file;?>',  
 			<?php echo get_variable('maptype');?>, 
 			true);		
-
+		find_warnings(<?php print $lat;?>, <?php print $lng;?>);	//	9/10/13
 	
 // ====================================Add Responding Units to Map 8/1/09================================================
 
@@ -4338,7 +4402,7 @@ function createMarker(unit_point, number) {		// unit marker
 			echo "unit_marker.setMap(map);\n";
 			echo "\n";
 		} else {
-			echo "var unit_icon = new GIcon(baseIcon);		// 4214\n";
+//			echo "var unit_icon = new GIcon(baseIcon);		// 4214\n";
 			echo "var unit_icon_url = \"./our_icons/gen_icon.php?blank=4&text=RU\";\n";
 			echo "unit_icon.image = unit_icon_url;\n";
 			echo "var unit_point = new google.maps.LatLng(" . $row_unit['lat'] . "," . $row_unit['lng'] . ");\n";
@@ -4550,6 +4614,13 @@ function createfacMarker(fac_point, fac_name, id, fac_icon) {
 		}
 
 	</SCRIPT>
+	<SPAN id='s_fl' class='plain' style='position: fixed; top: 10px; right: 0px; height: 20px; width: 100px; font-size: 1.2em; float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'block'; $('s_fl').style.display='none'; $('h_fl').style.display='inline-block';"><?php print gettext('Files');?></SPAN>
+	<DIV id='file_list' style='position: fixed; right: 10px; top: 10px; width: 400px; height: 600px; border: 2px outset #707070; text-align: center; display: none;'>
+		<SPAN id='h_fl' class='plain' style='float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'none'; $('h_fl').style.display='none'; $('s_fl').style.display='inline-block';"><?php print gettext('Hide');?></SPAN>
+		<DIV class='heading' style='text-align: center;'><?php print gettext('FILE LIST');?></DIV><BR />
+		<SPAN id='nf_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='file_window(<?php print $id;?>);'><?php print gettext('Add file');?></SPAN><BR /><BR />
+		<DIV style='width: 100%; height: 100%; overflow-y: auto; text-align: left;'><?php print list_files($id, 0, 0, 0, 0);?></DIV>
+	</DIV>
 <?php
 
 	}				// end function show_ticket() =======================================================
@@ -4585,6 +4656,8 @@ function do_ticket($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						// retu
 	$print = "<TABLE BORDER='0' ID='left' width='" . $theWidth . "'>\n";		//
 	$print .= "<TR CLASS='even'><TD ALIGN='left' CLASS='td_data' COLSPAN=2 ALIGN='center'><B>{$incident}: <I>" . highlight($search,$theRow['scope']) . "</B>" . $tickno . "</TD></TR>\n";
 	$print .= "<TR CLASS='odd' ><TD ALIGN='left'>" . get_text("Addr") . ":</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['tick_street']) . "</TD></TR>\n";
+	$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("About Address") . ":</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['address_about']) . "</TD></TR>\n";	//	9/10/13
+	$print .= "<TR CLASS='odd' ><TD ALIGN='left'>" . get_text("To Address") . ":</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['to_address']) . "</TD></TR>\n";	//	9/10/13
 	$print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("City") . ":</TD>			<TD ALIGN='left'>" . highlight($search, $theRow['tick_city']);
 	$print .=	"&nbsp;&nbsp;" . highlight($search, $theRow['tick_state']) . "</TD></TR>\n";
 	$print .= "<TR CLASS='odd' ><TD ALIGN='left'>" . get_text("Priority") . ":</TD> <TD ALIGN='left' CLASS='" . $severityclass . "'>" . get_severity($theRow['severity']);

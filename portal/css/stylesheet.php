@@ -1,8 +1,7 @@
 <?php
 header('Content-type: text/css');
 /* 
-3/15/11 new file - dynamic css file
-10/23/12 Added styles for messaging
+9/10/13 - Portal CSS file
 */
 require_once('../../incs/functions.inc.php');
 session_start();
@@ -14,7 +13,7 @@ BODY {
 	background-color: <?php print get_css("page_background", $day_night);?>;
 	margin:0;
 	font-weight: normal; 
-	font-size: 0.75em; 
+	font-size: 0.8em; 
 	color: <?php print get_css("normal_text", $day_night);?>; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none; 
@@ -97,7 +96,7 @@ TD {
 	background-color: inherit;
 	color: <?php print get_css("label_text", $day_night);?>; 
 	font-weight: bold; 
-	font-size: .9em; 
+	font-size: 1em; 
 	font-style: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none;
@@ -106,13 +105,45 @@ TD {
 .td_data { 
 	white-space:nowrap; 
 	background-color: inherit;
-	font-size: .9em; 
+	font-size: 1em; 
+	color: #000000; 
+	font-style: normal; 
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	text-decoration: none; 
+	}
+	
+#td_wrapper {
+	white-space:nowrap; 
+	background-color: inherit;
+	font-size: 1em; 
 	color: #000000; 
 	font-style: normal; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	text-decoration: none; 
 	}
 
+.inside_td_label { 
+	background-color: inherit;
+	color: <?php print get_css("label_text", $day_night);?>; 
+	width: 35%;
+	font-weight: bold; 
+	font-size: 1em; 
+	font-style: normal; 
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	text-decoration: none;
+	}
+	
+.inside_td_data { 
+	white-space:nowrap; 
+	background-color: inherit;
+	font-size: 1em; 
+	color: #000000; 
+	width: 65%;
+	font-style: normal; 
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	text-decoration: none; 
+	}
+	
 .emph { 
 	background-color: #99b2cc;
 	font-size: 0.75em; 
@@ -327,7 +358,7 @@ tr.plain {
 tr.heading { 
 	background-color: <?php print get_css("row_heading_background", $day_night);?>;
 	color: <?php print get_css("row_heading_text", $day_night);?>;	
-	font-size: 0.875em; 
+	font-size: 1em; 
 	font-weight: bold; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 	
 	}
@@ -335,7 +366,7 @@ tr.heading {
 .heading { 
 	background-color: <?php print get_css("row_heading_background", $day_night);?>;
 	color: <?php print get_css("row_heading_text", $day_night);?>;	
-	font-size: 0.7em; 
+	font-size: 1em; 
 	font-weight: bold; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 	
 	}	
@@ -343,13 +374,13 @@ tr.heading {
 .list_heading { 
 	background-color: <?php print get_css("row_heading_background", $day_night);?>;
 	color: <?php print get_css("row_heading_text", $day_night);?>;	
-	font-size: 0.8em; 
+	font-size: 1em; 
 	font-weight: bold; 
-	font-family: Verdana, Arial, Helvetica, sans-serif; 	
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	}	
 	
 .list_entry {
-	font-size: 0.6em; 
+	font-size: 1em; 
 	font-weight: bold; 
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	white-space: normal; 
@@ -596,7 +627,7 @@ select.sit {
 	
 .plain 	{ 
 	margin-left: 4px;  
-	font: normal 0.6em Arial, Helvetica, sans-serif; 
+	font: normal 1em Arial, Helvetica, sans-serif; 
 	color:#000000; 
 	border: 1px outset #FFFFFF;
 	padding: 4px 0.5em;
@@ -609,7 +640,7 @@ select.sit {
 	
 .hover 	{ 
 	margin-left: 4px;  
-	font: normal 0.6em Arial, Helvetica, sans-serif; 
+	font: normal 1em Arial, Helvetica, sans-serif; 
 	color:#000000; 
 	border: 1px inset #FFFFFF;
 	padding: 4px 0.5em;
@@ -620,4 +651,12 @@ select.sit {
 	cursor: pointer;
 	}
 
-
+.infowindow-content {
+	width: 300px;
+	padding: 10px;
+	overflow: auto;
+	}
+	
+#map_canvas {
+	line-height: normal
+	}

@@ -1,4 +1,7 @@
 <?php
+/*
+9/10/13 - Major re-write to previous versions
+*/
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
 error_reporting (E_ALL  ^ E_DEPRECATED);
 @session_start();
@@ -35,6 +38,14 @@ function get_user_name($the_id) {
 		}
 	return $the_ret;
 	}
+
+if ($_SESSION['internet']) {				// 8/22/10
+	$api_key = trim(get_variable('gmaps_api_key'));
+	$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
+	} else {
+	$api_key = "";
+	$key_str = "";	
+	}
 	
 $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 
@@ -55,10 +66,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 <SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 1/29/2013 -->
 <SCRIPT TYPE="text/javascript" SRC="./js/misc_function.js"></SCRIPT>	<!-- 5/3/11 -->	
 <SCRIPT TYPE="text/javascript" SRC="./js/domready.js"></script>
-
-
-
-
+<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js"></script>
 <SCRIPT>
 var randomnumber;
 var the_string;
@@ -72,12 +80,55 @@ var fac_lng = [];
 var fac_street = [];
 var fac_city = [];
 var fac_state = [];
-var showall = "yes";
+var showall = "no";
 var point;
-/**
- * 
- * @returns {undefined}
- */
+var theLat;
+var theLng;
+var showhide = 1;
+var summary_interval;
+var msgs_interval;
+var markers_interval;
+var iwMaxWidth = 500;
+
+window.onresize=function(){set_size()};
+
+function set_size() {
+	var viewportwidth;
+	var viewportheight;
+	if (typeof window.innerWidth != 'undefined') {
+		viewportwidth = window.innerWidth,
+		viewportheight = window.innerHeight
+		} else if (typeof document.documentElement != 'undefined'	&& typeof document.documentElement.clientWidth != 'undefined' && document.documentElement.clientWidth != 0) {
+		viewportwidth = document.documentElement.clientWidth,
+		viewportheight = document.documentElement.clientHeight
+		} else {
+		viewportwidth = document.getElementsByTagName('body')[0].clientWidth,
+		viewportheight = document.getElementsByTagName('body')[0].clientHeight
+		}
+	var mapWidth = viewportwidth * .5;
+	var mapHeight = viewportheight * .6;
+	var listWidth = viewportwidth * .97;	
+	var listHeight = viewportheight * .4;
+	var controlsWidth = viewportwidth * .4;
+	var controlsHeight = viewportheight * .4;
+	var bannerwidth = viewportwidth * .97;
+	var bannerheight = viewportheight * .03;
+	$('outer').style.width = viewportwidth + "px";
+	$('outer').style.height = viewportheight + "px";
+	$('map_outer').style.width = mapWidth + "px";
+	$('map_outer').style.height = mapHeight + "px";
+	$('map_canvas').style.width = mapWidth + "px";
+	$('map_canvas').style.height = mapHeight + "px";
+	$('requests_list').style.width = listWidth + "px";
+	$('requests_list').style.height = listHeight + "px";
+	$('leftcol').style.width = controlsWidth + "px";
+	$('leftcol').style.height = controlsHeight + "px";
+	$('banner').style.width = bannerwidth + "px";		
+	$('banner').style.height = bannerheight + "px";	
+	$('list_header').style.width = bannerwidth + "px";		
+	$('list_header').style.height = bannerheight + "px";		
+	}
+
 function out_frames() {		//  onLoad = "out_frames()"
 	if (top.location != location) top.location.href = document.location.href;
 	}		// end function out_frames()
@@ -146,7 +197,6 @@ function sendRequest(url,callback,postData) {
 	if (!req) return;
 	var method = (postData) ? "POST" : "GET";
 	req.open(method,url,true);
-	req.setRequestHeader('User-Agent','XMLHTTP/1.0');
 	if (postData)
 		req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	req.onreadystatechange = function () {
@@ -213,17 +263,15 @@ function syncAjax(strURL) {
  * @param {type} showall
  * @returns {undefined}
  */	
-function requests_get(showall) {
-	showall = showall;
-	msgs_interval = window.setInterval('do_requests_loop("' + showall + '")', 60000);
+function requests_get() {
+	msgs_interval = window.setInterval('do_requests_loop()', 60000);
 	}
 /**
  * 
  * @param {type} showall
  * @returns {undefined}
  */	
-function do_requests_loop(showall) {
-	showall == showall;
+function do_requests_loop() {
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./portal/ajax/list_requests.php?id=<?php print $_SESSION['user_id'];?>&showall=" + showall + "&version=" + randomnumber;
 	sendRequest (url, requests_cb2, "");
@@ -237,6 +285,10 @@ function logged_in() {								// returns boolean
 	return temp;
 	}	
 	
+function isNull(val) {								// checks var stuff = null;
+	return val === null;
+	}
+	
 var newwindow = null;
 var starting;
 /**
@@ -249,48 +301,69 @@ function do_window(id) {				// 1/19/09
 	if (logged_in()) {
 		if(starting) {return;}						// 6/6/08
 		starting=true;	
-		newwindow=window.open("./portal/request.php?id=" + id, "view_request",  "titlebar, location=0, resizable=1, scrollbars=yes, height=600, width=600, status=0, toolbar=0, menubar=0, location=0, left=100, top=300, screenX=100, screenY=300");
+		newwindow=window.open("./portal/request.php?id=" + id, "view_request",  "titlebar, location=0, resizable=1, scrollbars=yes, height=700, width=600, status=0, toolbar=0, menubar=0, location=0, left=100, top=100, screenX=100, screenY=100");
 		if (isNull(newwindow)) {
-			alert ("<?php print gettext('Station log operation requires popups to be enabled. Please adjust your browser options.');?>");
+			alert ("<?php print gettext('Portal operation requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 		newwindow.focus();
 		starting = false;
 		}
 	}		// end function do_window()
-/**
- * 
- * @param {type} req
- * @returns {undefined}
- */	
+
+var viewwindow = null;
+var starting;
+function do_viewwindow(id) {				// 1/19/09
+	if ((viewwindow) && (!(viewwindow.closed))) {viewwindow.focus(); return;}		// 7/28/10	
+	if (logged_in()) {
+		if(starting) {return;}						// 6/6/08
+		starting=true;	
+		viewwindow=window.open("./portal/request.php?func=view&id=" + id, "view_request",  "titlebar, location=0, resizable=1, scrollbars=yes, height=700, width=600, status=0, toolbar=0, menubar=0, location=0, left=100, top=100, screenX=100, screenY=100");
+		if (isNull(viewwindow)) {
+			alert ("Portal operation requires popups to be enabled. Please adjust your browser options.");
+			return;
+			}
+		viewwindow.focus();
+		starting = false;
+		}
+	}		// end function do_window()
+	
+var newreq = null;
+var starting;
+function do_newreq() {				// 1/19/09
+	if ((newreq) && (!(newreq.closed))) {newreq.focus(); return;}		// 7/28/10	
+	if (logged_in()) {
+		if(starting) {return;}						// 6/6/08
+		starting=true;	
+		newreq=window.open("./portal/new_request.php", "view_request",  "titlebar, location=0, resizable=1, scrollbars=yes, height=700, width=600, status=0, toolbar=0, menubar=0, location=0, left=100, top=300, screenX=100, screenY=300");
+		if (isNull(newreq)) {
+			alert ("Portal operation requires popups to be enabled. Please adjust your browser options.");
+			return;
+			}
+		newreq.focus();
+		starting = false;
+		}
+	}		// end function do_window()
+	
 function requests_cb2(req) {
 	var the_requests=JSON.decode(req.responseText);
 	if(the_requests[0][0] == "No Current Requests") {
-		width = "width: 6%; ";
+		var columnWidth = (window.innerWidth * .97) / 8;
+		width = "width: " + columnWidth + "px; ";
 		} else {
 		width = "";
 		}
 	theClass = "background-color: #CECECE";
 	the_string = "<TABLE cellspacing='0' cellpadding='1' style='width: 100%; table-layout: fixed;'>";
-	the_string += "<TR class='list_heading'>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('ID');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Patient');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Phone');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Contact');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Scope');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Description');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Comments');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Status');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Requested');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Tentative');?></TD>";	
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Accepted');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Declined');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Resourced');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Completed');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Closed');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Updated');?></TD>";
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('By');?></TD>";			
-	the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Mileage');?></TD>";		
+	the_string += "<TR class='list_heading' style='text-align: left;'>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Service User');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Phone');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Contact');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Scope');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Comments');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'<?php print get_text('>Status');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Updated');?></TD>";
+	the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('By');?></TD>";		
 	the_string += "</TR>";			
 	for(var key in the_requests) {
 		if(the_requests[key][0] == "No Current Requests") {
@@ -300,25 +373,20 @@ function requests_cb2(req) {
 			} else {
 			$('export_but').style.display = "inline-block";				
 			var the_request_id = the_requests[key][0];
-			the_string += "<TR class='list_row' title='" + the_requests[key][13] + "' style='" + the_requests[key][17] + ";'>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][0] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][2] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][3] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][4] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][13] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][14] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][15] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][16] + "</TD>";	
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][18] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][19] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][20] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][21] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][22] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][23] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][24] + "</TD>";	
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][25] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][26] + "</TD>";
-			the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][27] + "</TD>";
+			if(the_requests[key][16] == "Open") {
+				var the_onclick = "onClick='do_window(" + the_request_id + ");'";
+				} else {
+				var the_onclick = "onClick='do_viewwindow(" + the_request_id + ");'";
+				}
+			the_string += "<TR class='list_row' title='" + the_requests[key][13] + "' style='" + the_requests[key][17] + ";' " + the_onclick + ">";
+			the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][2] + "</TD>";
+			the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][3] + "</TD>";
+			the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][4] + "</TD>";
+			the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][13] + "</TD>";
+			the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][15] + "</TD>";
+			the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][16] + "</TD>";	
+			the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][25] + "</TD>";
+			the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][26] + "</TD>";
 			the_string += "</TR>";
 			if(the_requests[key][16] == "Accepted"){
 				the_color = 3;
@@ -329,9 +397,15 @@ function requests_cb2(req) {
 				}
 			if((the_requests[key][29] != .999999) && (the_requests[key][30] != .999999) && (the_color != 3)) {
 				request_lat = the_requests[key][29];
-				request_lng = the_requests[key][20];
+				request_lng = the_requests[key][30];
 				point = new google.maps.LatLng(request_lat, request_lng);
-				createMarker(point, the_color, the_request_id);
+				var info = "<DIV class='infowindow-content'><H1>" + the_requests[key][13] + "</H1>";
+				info += "<TABLE BORDER=1 WIDTH='80%'>";
+				info += "<TR class='even'><TD class='td_label'><B><?php print get_text('Service User');?></B></TD><TD class='td_data'>" + the_requests[key][2] + "</TD></TR>";
+				info += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Status');?></B></TD><TD class='td_data'>" + the_requests[key][16] + "</TD></TR>";
+				info += "<TR class='even'><TD class='td_label'><B><?php print get_text('Updated');?></B></TD><TD class='td_data'>" + the_requests[key][25] + "</TD></TR>";
+				info += "<TR class='odd'><TD class='td_label'><B><?php print get_text('By');?></B></TD><TD class='td_data'>" + the_requests[key][26] + "</TD></TR></TABLE></DIV>";
+				createMarker(point, the_color, the_request_id, info);
 				}		
 			}
 		}
@@ -343,7 +417,7 @@ function requests_cb2(req) {
  * @param {type} showall
  * @returns {undefined}
  */
-function get_requests(showall) {
+function get_requests() {
 	var width = "";	
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./portal/ajax/list_requests.php?id=<?php print $_SESSION['user_id'];?>&showall=" + showall + "&version=" + randomnumber;
@@ -351,31 +425,22 @@ function get_requests(showall) {
 	function requests_cb(req) {
 		var the_requests=JSON.decode(req.responseText);
 		if(the_requests[0][0] == "No Current Requests") {
-			width = "width: 6%; ";
+			var columnWidth = (window.innerWidth * .97) / 8;
+			width = "width: " + columnWidth + "px; ";
 			} else {
 			width = "";
 			}
 		theClass = "background-color: #CECECE";
 		the_string = "<TABLE cellspacing='0' cellpadding='1' style='width: 100%; table-layout: fixed;'>";
-		the_string += "<TR class='list_heading'>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('ID');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Patient');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Phone');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Contact');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Scope');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Description');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Comments');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Status');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Requested');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Tentative');?></TD>";	
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Accepted');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Declined');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Resourced');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Completed');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Closed');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Updated');?></TD>";
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('By');?></TD>";			
-		the_string += "<TD class='list_heading' style='" + width + "'><?php print gettext('Mileage');?></TD>";		
+		the_string += "<TR class='list_heading' style='text-align: left;'>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Service User');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Phone');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Contact');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Scope');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Comments');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'<?php print get_text('>Status');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Updated');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('By');?></TD>";			
 		the_string += "</TR>";			
 		for(var key in the_requests) {
 			if(the_requests[key][0] == "No Current Requests") {
@@ -384,26 +449,21 @@ function get_requests(showall) {
 				the_string += "<TD COLSPAN=99 class='list_entry' width='100%'><?php print gettext('No Current Requests');?></TD></TR>";
 				} else {
 				$('export_but').style.display = "inline-block";						
-				var the_request_id = the_requests[key][0];	
-				the_string += "<TR class='list_row' title='" + the_requests[key][13] + "' style='" + the_requests[key][17] + ";'>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][0] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][2] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][3] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][4] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][13] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][14] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][15] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][16] + "</TD>";	
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][18] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][19] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][20] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][21] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][22] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][23] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][24] + "</TD>";	
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][25] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][26] + "</TD>";
-				the_string += "<TD class='list_entry' onClick='do_window(" + the_request_id + ");'>" + the_requests[key][27] + "</TD>";
+				var the_request_id = the_requests[key][0];
+				if(the_requests[key][16] == "Open") {
+					var the_onclick = "onClick='do_window(" + the_request_id + ");'";
+					} else {
+					var the_onclick = "onClick='do_viewwindow(" + the_request_id + ");'";
+					}
+				the_string += "<TR class='list_row' title='" + the_requests[key][13] + "' style='" + the_requests[key][17] + ";' " + the_onclick + ">";
+				the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][2] + "</TD>";
+				the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][3] + "</TD>";
+				the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][4] + "</TD>";
+				the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][13] + "</TD>";
+				the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][15] + "</TD>";
+				the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][16] + "</TD>";	
+				the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][25] + "</TD>";
+				the_string += "<TD class='list_entry' style='" + the_requests[key][17] + ";'>" + the_requests[key][26] + "</TD>";
 				the_string += "</TR>";
 				if(the_requests[key][16] == "Accepted"){
 					the_color = 3;
@@ -416,13 +476,19 @@ function get_requests(showall) {
 					request_lat = the_requests[key][29];
 					request_lng = the_requests[key][30];
 					point = new google.maps.LatLng(request_lat, request_lng);
-					createMarker(point, the_color, the_request_id);
+					var info = "<DIV class='infowindow-content'><H1>" + the_requests[key][13] + "</H1>";
+					info += "<TABLE BORDER=1 WIDTH='80%'>";
+					info += "<TR class='even'><TD class='td_label'><B><?php print get_text('Service User');?></B></TD><TD class='td_data'>" + the_requests[key][2] + "</TD></TR>";
+					info += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Status');?></B></TD><TD class='td_data'>" + the_requests[key][16] + "</TD></TR>";
+					info += "<TR class='even'><TD class='td_label'><B><?php print get_text('Updated');?></B></TD><TD class='td_data'>" + the_requests[key][25] + "</TD></TR>";
+					info += "<TR class='odd'><TD class='td_label'><B><?php print get_text('By');?></B></TD><TD class='td_data'>" + the_requests[key][26] + "</TD></TR></TABLE></DIV>";
+					createMarker(point, the_color, the_request_id, info);
 					}	
 				}
 			}
 			the_string += "</TABLE>";
 			$('all_requests').innerHTML = the_string;
-			requests_get(showall);
+			requests_get();
 		}
 	}		
 /**
@@ -430,7 +496,7 @@ function get_requests(showall) {
  * @returns {undefined}
  */
 function markers_get() {
-	msgs_interval = window.setInterval('do_markers_loop()', 60000);
+	markers_interval = window.setInterval('do_markers_loop()', 60000);
 	}	
 /**
  * 
@@ -441,6 +507,17 @@ function do_markers_loop() {
 	var url ="./portal/ajax/list_ticketsandresponders.php?id=<?php print $_SESSION['user_id'];?>&version=" + randomnumber;
 	sendRequest (url, markers_cb2, "");
 	}
+	
+function do_filelist() {
+	randomnumber=Math.floor(Math.random()*99999999);
+	var url ="./portal/ajax/file_list.php?id=<?php print $_SESSION['user_id'];?>&version=" + randomnumber;
+	sendRequest (url, file_cb, "");
+	function file_cb(req) {
+		var the_files=req.responseText;
+		$('file_list').innerHTML = the_files;
+		}
+	}
+
 /**
  * 
  * @param {type} req
@@ -448,18 +525,31 @@ function do_markers_loop() {
  */
 function markers_cb2(req) {
 	var the_markers=JSON.decode(req.responseText);
-	for (var key in the_markers) {
-		var the_lat = the_markers[key].lat;
-		var the_lng = the_markers[key].lng;
-		point = new google.maps.LatLng(the_lat, the_lng);			
-		createMarker(point, 2, "T");
-
-		for(var elements in the_markers[key].responders) {
-			var r_lat = the_markers[key].responders[elements].lat;
-			var r_lng = the_markers[key].responders[elements].lng;		
-			createMarker(point, 1, "R");			
-			}
-		} 	
+	if(the_markers[0] != -1) {
+		for (var key in the_markers) {
+			var the_lat = the_markers[key].lat;
+			var the_lng = the_markers[key].lng;
+			var the_scope = the_markers[key].scope;
+			var the_description = the_markers[key].description;
+			var info_t = "<DIV class='infowindow-content'><CENTER><SPAN style='text-align: center; width: 100%; font-size: 1.5em; font-weight: bold;'><?php print get_text('Ticket');?></SPAN></CENTER><BR />";
+			info_t += "<TABLE BORDER=1 WIDTH='80%'>";
+			info_t += "<TR class='even'><TD class='td_label'><B><?php print get_text('Synopsis');?></B></TD><TD class='td_data'>" + the_scope + "</TD></TR>";
+			info_t += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Description');?></B></TD><TD class='td_data'>" + the_description + "</TD></TR></TABLE></DIV>";
+			point = new google.maps.LatLng(the_lat, the_lng);			
+			createMarker(point, 2, "T", info_t);
+			for(var elements in the_markers[key].responders) {
+				var r_lat = the_markers[key].responders[elements].lat;
+				var r_lng = the_markers[key].responders[elements].lng;	
+				var r_handle = the_markers[key].responders[elements].handle;	
+				var info_r = "<DIV class='infowindow-content'><CENTER><SPAN style='text-align: center; width: 100%; font-size: 1.5em; font-weight: bold;'><?php print get_text('Responder');?></SPAN></CENTER><BR />";
+				info_r += "<TABLE BORDER=1 WIDTH='80%'>";
+				info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('On Job');?></B></TD><TD class='td_data'>" + the_scope + "</TD></TR>";
+				info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('Responder Handle');?></B></TD><TD class='td_data'>" + r_handle + "</TD></TR>";
+				info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('Description');?></B></TD><TD class='td_data'>" + the_description + "</TD></TR></TABLE></DIV>";
+				createMarker(point, 1, "R", info_r);			
+				}
+			} 
+		}
 	}
 /**
  * 
@@ -471,118 +561,76 @@ function get_the_markers() {
 	sendRequest (url, markers_cb, "");
 	function markers_cb(req) {
 		var the_markers=JSON.decode(req.responseText);
-		for (var key in the_markers) {
-			var the_lat = the_markers[key].lat;
-			var the_lng = the_markers[key].lng;	
-			point = new google.maps.LatLng(the_lat, the_lng);			
-			createMarker(point, 2, "T");
-
-			for(var elements in the_markers[key].responders) {
-				var r_lat = the_markers[key].responders[elements].lat;
-				var r_lng = the_markers[key].responders[elements].lng;	
-				point = new google.maps.LatLng(r_lat, r_lng);				
-				createMarker(point, 1, "R");			
-
+		if(the_markers[0] != -1) {
+			for (var key in the_markers) {
+				var the_lat = the_markers[key].lat;
+				var the_lng = the_markers[key].lng;	
+				var the_scope = the_markers[key].scope;
+				var the_description = the_markers[key].description;
+				var info_t = "<DIV class='infowindow-content'><CENTER><SPAN style='text-align: center; width: 100%; font-size: 1.5em; font-weight: bold;'><?php print get_text('Ticket');?></SPAN></CENTER><BR />";
+				info_t += "<TABLE BORDER=1 WIDTH='80%'>";
+				info_t += "<TR class='even'><TD class='td_label'><B><?php print get_text('Synopsis');?></B></TD><TD class='td_data'>" + the_scope + "</TD></TR>";
+				info_t += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Description');?></B></TD><TD class='td_data'>" + the_description + "</TD></TR></TABLE></DIV>";
+				point = new google.maps.LatLng(the_lat, the_lng);			
+				createMarker(point, 2, "T", info_t);
+				for(var elements in the_markers[key].responders) {
+					var r_lat = the_markers[key].responders[elements].lat;
+					var r_lng = the_markers[key].responders[elements].lng;	
+					var r_handle = the_markers[key].responders[elements].handle;	
+					var info_r = "<DIV class='infowindow-content'><CENTER><SPAN style='text-align: center; width: 100%; font-size: 1.5em; font-weight: bold;'><?php print get_text('Responder');?></SPAN></CENTER><BR />";
+					info_r += "<TABLE BORDER=1 WIDTH='80%'>";
+					info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('On Job');?></B></TD><TD class='td_data'>" + the_scope + "</TD></TR>";
+					info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('Responder Handle');?></B></TD><TD class='td_data'>" + r_handle + "</TD></TR>";
+					info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('Description');?></B></TD><TD class='td_data'>" + the_description + "</TD></TR></TABLE></DIV>";
+					point = new google.maps.LatLng(r_lat, r_lng);				
+					createMarker(point, 1, "R", info_r);			
+					}
 				}
-			} 		
+			}
 		}
 	markers_get();
 	}	
-/**
- * 
- * @param {type} inlat
- * @param {type} inlng
- * @returns {unresolved}
- */	
-function do_coords(inlat, inlng) { 										 //9/14/08
-	if((inlat.length==0)||(inlng.length==0)) {return;}
-	var str = inlat + ", " + inlng + "\n";
-	str += ll2dms(inlat) + ", " +ll2dms(inlng) + "\n";
-	str += lat2ddm(inlat) + ", " +lng2ddm(inlng);		
+
+function summary_get() {
+	summary_interval = window.setInterval('do_summary_loop()', 60000);
+	}	
+	
+function do_summary_loop() {
+	randomnumber=Math.floor(Math.random()*99999999);
+	var url ="./portal/ajax/requests_summary?id=<?php print $_SESSION['user_id'];?>&version=" + randomnumber;
+	sendRequest (url, summary_cb2, "");
 	}
-/**
- * 
- * @param {type} inval
- * @returns {String}
- */
-function ll2dms(inval) {				// lat/lng to degr, mins, sec's - 9/9/08
-	var d = new Number(Math.abs(inval));
-	d  = Math.floor(d);
-	var mi = (Math.abs(inval)-d)*60;	// fraction * 60
-	var m = Math.floor(mi)				// min's as fraction
-	var si = (mi-m)*60;					// to sec's
-	var s = si.toFixed(1);
-	return d + '\260 ' + Math.abs(m) +"' " + Math.abs(s) + '"';
+
+function summary_cb2(req) {
+	var the_summary=JSON.decode(req.responseText);
+	var the_output = "<TABLE style='font-size: 2.5em; text-align: center; border: 1px solid #707070;'>";
+	the_output += "<TR style='font-size: 0.8em;'><TH style='background-color: #707070; border: 1px solid #707070;'>&nbsp;</TH><TH style='border: 1px solid #707070;'><?php print get_text('Week');?></TH><TH style='border: 1px solid #707070;'><?php print get_text('Month');?></TH><TH style='border: 1px solid #707070;'><?php print get_text('Year');?></TH><TH style='border: 1px solid #707070;'><?php print get_text('Total')?></TH><TR>";
+	the_output += "<TR><TD style='text-align: left; border: 1px solid #707070;'><?php print get_text('Requests');?></TD><TD style='border: 1px solid #707070;'>" + the_summary[0] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[1] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[2] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[3] + "</TD></TR>";
+	the_output += "<TR><TD style='text-align: left; border: 1px solid #707070;'><?php print get_text('Accepted');?></TD><TD style='border: 1px solid #707070;'>" + the_summary[4] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[5] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[6] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[7] + "</TD></TR>";
+	the_output += "<TR><TD style='text-align: left; border: 1px solid #707070;'><?php print get_text('Declined');?></TD><TD style='border: 1px solid #707070;'>" + the_summary[8] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[9] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[10] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[11] + "</TD></TR>";
+	the_output += "<TR><TD style='text-align: left; border: 1px solid #707070;'><?php print get_text('Closed');?></TD><TD style='border: 1px solid #707070;'>" + the_summary[12] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[13] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[14] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[15] + "</TD></TR>";
+	the_output += "</TABLE>";
+	$('summary_table').innerHTML = the_output;		
 	}
-/**
- * 
- * @param {type} inlat
- * @returns {String}
- */
-function lat2ddm(inlat) {				//  lat to degr, dec.min's - 9/9/089/7/08
-	var x = new Number(Math.abs(inlat));
-	var degs  = Math.floor(x);				// degrees
-	var mins = ((Math.abs(x-degs)*60).toFixed(1));
-	var nors = (inlat>0.0)? " N":" S";
-	return degs + '\260'  + mins +"'" + nors;
-	}
-/**
- * 
- * @param {type} inlng
- * @returns {String}
- */
-function lng2ddm(inlng) {				//  lng to degr, dec.min's - 9/9/089/7/08
-	var x = new Number(Math.abs(inlng));
-	var degs  = Math.floor(x);				// degrees
-	var mins = ((Math.abs(x-degs)*60).toFixed(1));
-	var eorw = (inlng>0.0)? " E":" W";
-	return degs + '\260' + mins +"'" + eorw;
-	}
-/**
- * 
- * @param {type} inlat
- * @returns {String}
- */
-function do_lat_fmt(inlat) {				// 9/9/08
-	switch(lat_lng_frmt) {
-		case 0:
-			return inlat;
-			break;
-		case 1:
-			return ll2dms(inlat);
-			break;
-		case 2:
-			return lat2ddm(inlat);
-			break;
-		default:
-			alert ( "error <?php print __LINE__;?>");
-		}	
-	}
-/**
- * 
- * @param {type} inlng
- * @returns {String}
- */
-function do_lng_fmt(inlng) {
-	switch(lat_lng_frmt) {
-		case 0:
-			return inlng;
-			break;
-		case 1:
-			return ll2dms(inlng);
-			break;
-		case 2:
-			return lng2ddm(inlng);
-			break;
-		default:
-			alert ("error <?php print __LINE__;?>");
-		}	
-	}
-/**
- * 
- * @param {type} lat
- * @returns {undefined}
- */	
+	
+function get_summary() {
+	randomnumber=Math.floor(Math.random()*99999999);
+	var url ="./portal/ajax/requests_summary.php?id=<?php print $_SESSION['user_id'];?>&version=" + randomnumber;
+	sendRequest (url, summary_cb, "");
+	function summary_cb(req) {
+		var the_summary=JSON.decode(req.responseText);
+		var the_output = "<TABLE style='font-size: 2.5em; text-align: center; border: 1px solid #707070;'>";
+		the_output += "<TR style='font-size: 0.8em;'><TH style='background-color: #707070; border: 1px solid #707070;'>&nbsp;</TH><TH style='border: 1px solid #707070;'><?php print get_text('Week');?></TH><TH style='border: 1px solid #707070;'><?php print get_text('Month');?></TH><TH style='border: 1px solid #707070;'><?php print get_text('Year');?></TH><TH style='border: 1px solid #707070;'><?php print get_text('Total');?></TH><TR>";
+		the_output += "<TR><TD style='text-align: left; border: 1px solid #707070;'><?php print get_text('Requests');?></TD><TD style='border: 1px solid #707070;'>" + the_summary[0] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[1] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[2] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[3] + "</TD></TR>";
+		the_output += "<TR><TD style='text-align: left; border: 1px solid #707070;'><?php print get_text('Accepted');?></TD><TD style='border: 1px solid #707070;'>" + the_summary[4] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[5] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[6] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[7] + "</TD></TR>";
+		the_output += "<TR><TD style='text-align: left; border: 1px solid #707070;'><?php print get_text('Declined');?></TD><TD style='border: 1px solid #707070;'>" + the_summary[8] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[9] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[10] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[11] + "</TD></TR>";
+		the_output += "<TR><TD style='text-align: left; border: 1px solid #707070;'><?php print get_text('Closed');?></TD><TD style='border: 1px solid #707070;'>" + the_summary[12] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[13] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[14] + "</TD><TD style='border: 1px solid #707070;'>" + the_summary[15] + "</TD></TR>";
+		the_output += "</TABLE>";
+		$('summary_table').innerHTML = the_output;		
+		}
+	summary_get();
+	}	
+	
 function do_lat (lat) {
 	document.add.frm_lat.value=lat;			// 9/9/08
 	}
@@ -593,29 +641,6 @@ function do_lat (lat) {
  */  
 function do_lng (lng) {
 	document.add.frm_lng.value=lng;
-	}
-/**
- * 
- * @param {type} theForm
- * @returns {undefined}
- */
-function do_grids(theForm) {								// 12/13/10
-<?php															// 1/24/11
-		$locale = intval(trim(get_variable("locale"))); 
-		switch($locale) { 
-			case "0":
-				echo "\n\t\t do_usng(theForm);\n";
-				break;
-		
-			case "1":
-				echo "\n\t\t do_osgb(theForm);\n";
-
-
-				break;
-			default:																	// 8/10/09
-				echo "\n\t\t do_utm(theForm);\n";
-			}		// end switch
-?>
 	}
 /**
  * 
@@ -636,46 +661,11 @@ function do_fac_to_loc(text, index){			// 9/22/09
 	document.add.fac_city.value = curr_city;
 	document.add.fac_state.value = curr_state;	
 	}					// end function do_fac_to_loc
-/**
- * 
- * @param {type} theForm
- * @returns {undefined}
- */	
-function do_usng(theForm) {								// 8/23/08, 12/5/10
-	theForm.frm_grid.value = LLtoUSNG(theForm.frm_lat.value, theForm.frm_lng.value, 5);	// US NG
-	}
-/**
- * 
- * @param {type} theForm
- * @returns {undefined}
- */
-function do_utm (theForm) {
-	var ll_in = new LatLng(parseFloat(theForm.frm_lat.value), parseFloat(theForm.frm_lng.value));
-	var utm_out = ll_in.toUTMRef().toString();
-	temp_ary = utm_out.split(" ");
-	theForm.frm_grid.value = (temp_ary.length == 3)? temp_ary[0] + " " +  parseInt(temp_ary[1]) + " " + parseInt(temp_ary[2]) : "";
-	}
-/**
- * 
- * @param {type} theForm
- * @returns {undefined}
- */
-function do_osgb (theForm) {
-	theForm.frm_grid.value = LLtoOSGB(theForm.frm_lat.value, theForm.frm_lng.value);
-	}
-/**
- * 
- * @param {type} my_form
- * @param {type} lat
- * @param {type} lng
- * @returns {undefined}
- */	
+	
 function pt_to_map (my_form, lat, lng) {						// 7/5/10
 	myMarker.setMap(null);			// destroy predecessor
-
-	my_form.frm_lat.value=lat;	
-	my_form.frm_lng.value=lng;		
-
+	theLat = lat;
+	theLng = lng;
 	var loc = <?php print get_variable('locale');?>;
 	map.setCenter(new google.maps.LatLng(lat, lng), <?php print get_variable('def_zoom');?>);
 
@@ -691,7 +681,6 @@ function pt_to_map (my_form, lat, lng) {						// 7/5/10
 		map: map
 		});
 	myMarker.setMap(map);		// add marker with icon
-
 	}				// end function pt_to_map ()
 /**
  * 
@@ -709,38 +698,37 @@ function loc_lkup(my_form) {		   						// 7/5/10
 
 	geocoder.geocode( { 'address': myAddress}, function(results, status) {		
 		if (status == google.maps.GeocoderStatus.OK)	{ pt_to_map (my_form, results[0].geometry.location.lat(), results[0].geometry.location.lng());}					
-		else 											{ alert("<?php print gettext('Geocode lookup failed: " + status');?>");}
+		else 											{ alert("Geocode lookup failed: " + status);}
 		});				// end geocoder.geocode()
 	}				// end function loc_lkup()
-
+	
 // maps v3 stuff
 var map;
 var myMarker;
 var lat_var;
 var lng_var;
 var zoom_var;
-
 var icon_file = "./markers/crosshair.png";
-/**
- * 
- * @param {type} the_lat
- * @param {type} the_lng
- * @param {type} the_zoom
- * @returns {undefined}
- */
-function load(the_lat, the_lng, the_zoom) {	
-	function call_back (in_obj){
-		do_lat(in_obj.lat);
-		do_lng(in_obj.lng);
-		}
-    
-	map = gmaps_v3_init(call_back, 'map_canvas', 
-		<?php echo get_variable('def_lat');?>, 
-		<?php echo get_variable('def_lng');?>, 
-		<?php echo get_variable('def_zoom');?>, 
-		icon_file, 
-		<?php echo get_variable('maptype');?>, 
-		false);		
+
+function load() {	
+	var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
+	switch(<?php echo get_variable('maptype');?>) {
+			case (2): the_type= google.maps.MapTypeId.SATELLITE; 	break;
+			case (3): the_type= google.maps.MapTypeId.TERRAIN; 		break;
+			case (4): the_type= google.maps.MapTypeId.HYBRID; 		break;
+			default:  the_type= google.maps.MapTypeId.ROADMAP;
+			}		// end switch
+
+	var mapOptions = {
+		zoom: <?php print get_variable('def_zoom');?>,
+		center: myLatlng,
+		panControl: true,
+	    zoomControl: true,
+	    scaleControl: true,
+	    mapTypeId: the_type
+		}	
+				
+	map = new google.maps.Map($('map_canvas'), mapOptions);				// 
 	doTraffic();
 	doWeather();
 	}			// end function load()
@@ -752,24 +740,54 @@ icons[2] = "blue.png";	// blue
 icons[3] = "yellow.png";	// yellow
 icons[4] = "black.png";	// black
 var bounds = new google.maps.LatLngBounds();
-/**
- * 
- * @param {type} point
- * @param {type} color
- * @param {type} sym
- * @returns {unresolved}
- */
-function createMarker(point, color, sym) {
+function closeIW() {
+	}
+
+function createMarker(point, color, sym, html) {
 	var iconStr = sym;
 	var image_file = "./portal/markers/gen_icon.php?blank=" + color + "&text=" + iconStr;
 	var marker = new google.maps.Marker({position: point, map: map, icon: image_file});	
+	var infoBox = new InfoBox({
+		content: html,
+		maxWidth: 150,
+		pixelOffset: new google.maps.Size(-140, 0),
+		zIndex: null,
+		boxStyle: {
+			background: "#CECECE",
+			border: "3px outset #707070",
+			textAlign: "left",
+			fontSize: "8pt",
+			opacity: 0.9,
+			width: "300px"
+			},
+
+		closeBoxMargin: "10px 2px 2px 2px",
+		closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
+		infoBoxClearance: new google.maps.Size(1, 1)
+	});
+	
+	
+	// var infowindow = new google.maps.InfoWindow({
+		// content: html,
+		// maxWidth: iwMaxWidth
+		// });
+		
+	google.maps.event.addListener(marker, 'click', function() {
+		infoBox.open(map, marker);
+	});
+	
+	// google.maps.event.addListener(marker, 'click', function() {
+		// infowindow.open(map, marker);		
+		// });
+		
+	google.maps.event.addListener(infoBox, 'closeclick', closeIW);
 	bounds.extend(point);
+	map.fitBounds(bounds);
 	return marker;
 	}				// end function create Marker()
 	
 var trafficInfo = new google.maps.TrafficLayer();
 trafficInfo.setMap(map);
-
 var toggleState = true;
 /**
  * 
@@ -785,7 +803,7 @@ function doTraffic() {
 	toggleState = !toggleState;
 	}				// end function doTraffic()
 
-  var weatherLayer = new google.maps.weather.WeatherLayer({
+var weatherLayer = new google.maps.weather.WeatherLayer({
   temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
 });
 
@@ -820,8 +838,25 @@ function GUnload(){
  */
 function do_logout() {
 	document.gout_form.submit();
-	}		
+	}	
 
+function toggle_closed() {
+	if(showall == "yes") {
+		showall = "no";
+		$('showhide_but').innerHTML = "<?php print get_text('Show Closed');?>";
+		get_requests();
+		} else {
+		showall = "yes";
+		$('showhide_but').innerHTML = "<?php print get_text('Hide Closed');?>";
+		get_requests();
+		}
+	}
+		
+function do_unload() {
+	window.clearInterval(summary_interval);
+	window.clearInterval(msgs_interval);
+	window.clearInterval(markers_interval);
+	}
 <?php
 $query_fc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";
 $result_fc = mysql_query($query_fc) or do_error($query_fc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -860,203 +895,108 @@ $orig_fac_menu .= "<SELECT>";
 if((!isset($_SESSION)) && (empty($_POST))) {
 	print "Not Logged in";
 } elseif((isset($_SESSION)) && (empty($_POST))) {
-	$onload_str = "load(" .  get_variable('def_lat') . ", " . get_variable('def_lng') . "," . get_variable('def_zoom') . ");";
+	$onload_str = "load();";
 	$now = time() - (intval(get_variable('delta_mins')*60));
 ?>
 
-<BODY onLoad="out_frames(); location.href = '#top'; get_requests('yes'); get_the_markers(); <?php print $onload_str;?>;">
-	<FORM NAME="go" action="#" TARGET = "main"></FORM>
-	<DIV id='outer' style='position: absolute; width: 95%; text-align: center; margin: 10px;'>
-		<DIV id='banner' class='heading' style='font-size: 1.6em; position: relative: top: 5%; width: 100%; border: 1px outset #000000; height: 35px; vertical-align: middle;'><?php print gettext('Tickets Service User Portal');?>
-			<SPAN ID='gout' CLASS='plain' style='float: right; font-size: 0.6em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="do_logout()"><?php print gettext('Logout');?></SPAN>
-			<SPAN ID='upload_but' CLASS='plain' style='float: right; font-size: 0.6em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/import_requests.php','Import Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')" TITLE='Import Request from CSV File'><?php print gettext('Import');?></SPAN>
-			<SPAN ID='export_but' CLASS='plain' style='float: right; display: none; font-size: 0.6em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/csv_export.php','Export Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')"><?php print gettext('Export Requests to CSV');?></SPAN>
-		</DIV>
-		<DIV id='leftcol' style='position: fixed; left: 2%; top: 10%; width: 45%; height: 40%;'>
-			<DIV id='the_heading' class='heading' style='font-size: 1.25em; height: 30px;'><?php print gettext('ADD A NEW REQUEST');?>
-				<SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.add.submit();"><?php print gettext('Submit');?></SPAN>
-			</DIV>		
-			<DIV id='left_scroller' style='height: 100%; overflow-y: auto; overflow-x: hidden; border: 1px outset #000000;'>
-				<FORM NAME='add' METHOD='POST' ACTION = "<?php print basename( __FILE__); ?>">
-				<TABLE style='width: 100%;'>
-					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;'><?php print gettext('Requested By');?></TD><TD class='td_data' style='text-align: left;'><?php print get_user_name($_SESSION['user_id']);?></TD>
+	<BODY onLoad="out_frames(); set_size(); location.href = '#top'; get_requests(); get_the_markers(); do_filelist(); get_summary(); <?php print $onload_str;?>;" onUnload='do_unload();'>
+		<FORM NAME="go" action="#" TARGET = "main"></FORM>
+		<DIV id='outer' style='text-align: center; margin: 10px;'>
+			<DIV id='banner' class='heading' style='font-size: 1.6em; border: 1px outset #000000; vertical-align: middle;'>Tickets <?php print get_text('Service User');?> <?php print get_text('Portal');?>
+				<SPAN ID='gout' CLASS='plain' style='float: right; font-size: 0.6em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="do_logout()"><?php print get_text('Logout');?></SPAN>
+			</DIV>
+			<DIV id='leftcol' style='position: absolute; left: 2%; top: 10%; font-size: 1em; z-index: 9999;'>
+				<TABLE WIDTH='100%' HEIGHT='100%' style='font-size: 1em; border: 3px outset #707070;'>
+					<TR style='font-size: 1em;'>
+						<TD WIDTH='50%' style='font-size: 1em; border: 3px outset #707070; vertical-align: top;'>
+							<CENTER>
+							<TABLE style='width: 100%;'>
+								<TR style='font-size: 1em;'>
+									<TD style='font-size: 1em;'><SPAN id='sub_but' CLASS ='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "do_newreq();"><?php print get_text('New Request');?></SPAN></TD>
+								</TR>
+								<TR style='font-size: 1em;'>
+									<TD style='font-size: 1em;'><SPAN ID='upload_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/import_requests.php','Import Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')" TITLE='Import Request from CSV File'><?php print get_text('Import');?></SPAN></TD>
+								</TR>
+								<TR style='font-size: 1em;'>
+									<TD style='font-size: 1em;'><SPAN ID='export_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.location.href='./portal/csv_export.php'"><?php print get_text('Export Requests to CSV');?></SPAN></TD>
+								</TR>
+								<TR style='font-size: 1em;'>
+									<TD style='font-size: 1em;'><SPAN ID='showhide_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_closed();"><?php print get_text('Show Closed');?></SPAN></TD>
+								</TR>
+							</TABLE><BR /><BR />
+							<DIV style='border: 2px outset #707070;'>
+								<DIV class='heading' style='font-size: 1.1em;'><?php print get_text('Useful Documents');?></DIV><BR />
+								<DIV id='file_list' style='font-size: 1em; height: 100%; overflow-y: auto;'></DIV>
+							</DIV>
+							</CENTER>
+						</TD>
+						<TD WIDTH='50%' style='font-size: 1em; border: 3px outset #707070; text-align: left;'>
+							<TABLE WIDTH='100%'>
+								<TR CLASS="heading" style='font-size: 1em;'>
+									<TD CLASS='heading' style='font-size: 1.1em;'><?php print get_text('Contact Us');?></TD>
+								<TR>
+								<TR style='font-size: 1em;'>
+									<TD style='font-size: 1em;'>&nbsp;</TD>
+								</TR>
+									<TD style='font-size: 1em;'><?php print get_text('Telephone');?>: <?php print get_variable('portal_contact_phone');?></TD>
+								</TR>
+								<TR style='font-size: 1em;'>
+									<TD style='font-size: 1em;'><?php print get_text('Email');?>: <?php print get_variable('portal_contact_email');?></TD>
+								</TR>
+								<TR style='font-size: 1em;'>
+									<TD style='font-size: 1em;'>&nbsp;</TD>
+								</TR>
+								<TR style='font-size: 1em;'>
+									<TD style='font-size: 1em;'>&nbsp;</TD>
+								</TR>
+								<TR class='heading' style='font-size: 1.1em;'>
+									<TD class='heading' style='font-size: 1.1em;'>Your Request Statistics - <?php print get_user_name($_SESSION['user_id']);?></TD>
+								</TR>
+								<TR style='font-size: 1em;'>
+									<TD style='font-size: 1em;'>&nbsp;</TD>
+								</TR>
+								<TR>
+									<TD id='summary_table' ALIGN='center'></TD>
+								</TR>
+							</TABLE>
+						</TD>
 					</TR>
-					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;'><?php print gettext('Request Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print generate_date_dropdown('request_date',0,FALSE);?></TD>
-					</TR>			
-					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Patient');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_patient' TYPE='TEXT' SIZE='24' MAXLENGTH='64' VALUE=""></TD>
-					</TR>	
-					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Street');?>&nbsp;&nbsp;<BUTTON type="button" onClick="Javascript:loc_lkup(document.add);return false;"><img src="./markers/glasses.png" alt="Lookup location." /></BUTTON>&nbsp;&nbsp;</TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_street' TYPE='TEXT' SIZE='48' MAXLENGTH='128' VALUE=""></TD>
-					</TR>	
-					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('City');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_city' TYPE='TEXT' SIZE='48' MAXLENGTH='48' VALUE=""></TD>
-					</TR>			
-					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('State');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_state' TYPE='TEXT' SIZE='4' MAXLENGTH='4' VALUE="<?php print get_variable('def_st');?>"></TD>
-					</TR>	
-					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Phone');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_phone' TYPE='TEXT' SIZE='16' MAXLENGTH='16' VALUE=""></TD>
-					</TR>
-					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Originating Facility');?></TD><TD class='td_data' style='text-align: left;'><?php print $orig_fac_menu;?></TD>
-					</TR>					
-					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Receiving Facility');?></TD><TD class='td_data' style='text-align: left;'><?php print $rec_fac_menu;?></TD>
-					</TR>
-					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Scope');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_scope' TYPE='TEXT' SIZE='48' MAXLENGTH='64' VALUE=""></TD>
-					</TR>	
-					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Description');?></TD><TD class='td_data' style='text-align: left;'><TEXTAREA NAME="frm_description" COLS="45" ROWS="2" WRAP="virtual"></TEXTAREA></TD>
-					</TR>		
-					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Comments');?></TD><TD class='td_data' style='text-align: left;'><TEXTAREA NAME="frm_comments" COLS="45" ROWS="2" WRAP="virtual"></TEXTAREA></TD>
-					</TR>
-					<TR class='odd'>	
-						<TD COLSPAN='2' class='td_label' style='text-align: center;'><?php print get_text('Lat');?><INPUT NAME='frm_lat' TYPE='TEXT' SIZE='10' MAXLENGTH='10' VALUE="">&nbsp;&nbsp;<?php print get_text('Lng');?><INPUT NAME='frm_lng' TYPE='TEXT' SIZE='10' MAXLENGTH='10' VALUE=""></TD>
-					</TR>	
-					<TR class='odd'>	
-						<TD COLSPAN='2' class='heading' style='text-align: left;'><?php print gettext('Originating Facility Details');?></TD>
-					</TR>						
-					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Facility Street');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='fac_street' TYPE='TEXT' SIZE='48' MAXLENGTH='64' VALUE=""></TD>
-					</TR>		
-					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Facility City');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='fac_city' TYPE='TEXT' SIZE='48' MAXLENGTH='64' VALUE=""></TD>
-					</TR>		
-					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Facility State');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='fac_state' TYPE='TEXT' SIZE='4' MAXLENGTH='4' VALUE=""></TD>
-					</TR>						
 				</TABLE>
-				<INPUT NAME='requester' TYPE='hidden' SIZE='24' VALUE="<?php print $_SESSION['user_id'];?>">
-<!--			<INPUT NAME='fac_street' TYPE='hidden' SIZE='48' VALUE="">			
-				<INPUT NAME='fac_city' TYPE='hidden' SIZE='48' VALUE="">	
-				<INPUT NAME='fac_state' TYPE='hidden' SIZE='48' VALUE="">	-->				
-				</FORM>
 			</DIV>
-		</DIV>
-		<DIV style='position: fixed; left: 2%; bottom: 2%; width: 95%; height: 30%; max-height: 30%;'>
-			<DIV class='heading' style='width: 100%; text-align: left;'><?php print gettext('Current Requests');?>
-				<SPAN id='hide_closed' style='float: right;' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="get_requests('no'); $('hide_closed').style.display ='none'; $('show_closed').style.display = 'inline-block';"><?php print gettext('Hide Closed');?></SPAN>
-				<SPAN id='show_closed' style='float: right; display: none;' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="get_requests('yes'); $('hide_closed').style.display ='inline-block'; $('show_closed').style.display = 'none';"><?php print gettext('Show All');?></SPAN>			
-			</DIV>
-			<DIV id='the_bottom' style='width: 98%; height: 70%; border: 2px outset #CECECE; padding: 10px; overflow-y: scroll;'>
-				<DIV ID='all_requests' style='width: 100%;'></DIV>
-			</DIV>	
-		</DIV>
-<?php
-		if(get_variable('map_in_portal') == 1) {
-?>
-			<DIV id='map_outer' style='position: fixed; right: 2%; top: 9%; width: 45%; height: 45%; border: 2px outset #CECECE; padding: 10px; float: right;'>
-				<DIV id='map_wrapper' style='width: 100%; height: 95%; overflow: auto;'>
-					<DIV id='map_canvas' style='width: 500px; height: 450px;'></DIV>
+			<DIV id='requests_list' style='position: absolute; bottom: 15%; max-height: 15%;'>
+				<DIV id='color_key'>
+					<SPAN id='open' style='background-color: #FFFF00; color: #000000;'><?php print get_text('Open');?></SPAN>
+					<SPAN id='open' style='background-color: #CC9900; color: #000000;'><?php print get_text('Tentative');?></SPAN>
+					<SPAN id='open' style='background-color: #33CCFF; color: #000000;'><?php print get_text('Accepted');?></SPAN>
+					<SPAN id='open' style='background-color: #00FF00; color: #000000;'><?php print get_text('Resourced');?></SPAN>
+					<SPAN id='open' style='background-color: #FFFFFF; color: #00FF00;'><?php print get_text('Completed');?></SPAN>
+					<SPAN id='open' style='background-color: #FF0000; color: #FFFF00;'><?php print get_text('Declined');?></SPAN>
+					<SPAN id='open' style='background-color: #000000; color: #FFFFFF;'><?php print get_text('Closed');?></SPAN>
+					<SPAN id='open' style='background-color: #FF0000; color: #FFFF00;'><?php print get_text('Cancelled');?></SPAN>			
+				</DIV>			
+				<DIV id='list_header' class='heading' style='font-size: 16px; border: 1px outset #000000; vertical-align: middle; height: 18px;'><?php print get_text('Current Requests');?></DIV>
+				<DIV id='the_bottom' style='border: 2px outset #CECECE; padding: 10px; max-height: 100%; overflow-y: scroll;'>
+					<DIV ID='all_requests' style='width: 100%;'></DIV>
 				</DIV>
-				<DIV id='map_controls'>
-					<CENTER><A HREF='#' onClick='doTraffic()'><U><?php print gettext('Traffic');?></U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doWeather()'><U><?php print gettext('Weather');?></U></A>
-				</DIV>					
 			</DIV>
-		
 <?php
-			}
+			if(get_variable('map_in_portal') == "1") {
 ?>
-	<FORM METHOD='POST' NAME="gout_form" action="index.php">
-	<INPUT TYPE='hidden' NAME = 'logout' VALUE = 1 />
-	</FORM>
-	</DIV>
-	</BODY>
+				<DIV id='map_outer' style='position: absolute; top: 6%; right: 20px;'>
+					<DIV id='map_canvas'></DIV>
+					<DIV id='map_controls'>
+						<CENTER><A HREF='#' onClick='doTraffic()'><U>Traffic</U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doWeather()'><U><?php print get_text('Weather');?></U></A>
+					</DIV>
+				</DIV>
 <?php
-} elseif((isset($_SESSION)) && (!empty($_POST))) {
+				}
 ?>
-	<BODY>
+		<FORM METHOD='POST' NAME="gout_form" action="index.php">
+		<INPUT TYPE='hidden' NAME = 'logout' VALUE = 1 />
+		</FORM>
+		</DIV>
+		</BODY>
 <?php
-	$now = mysql_format_date(time() - (intval(get_variable('delta_mins')*60))); // 6/20/10
-	$where = $_SERVER['REMOTE_ADDR'];
-	$street = ((isset($_POST['orig_facility'])) && ($_POST['orig_facility'] != 0)) ? quote_smart(trim($_POST['fac_street'])) : quote_smart(trim($_POST['frm_street']));
-	$city = ((isset($_POST['orig_facility'])) && ($_POST['orig_facility'] != 0)) ? quote_smart(trim($_POST['fac_city'])) : quote_smart(trim($_POST['frm_city']));
-	$state = ((isset($_POST['orig_facility'])) && ($_POST['orig_facility'] != 0)) ? quote_smart(trim($_POST['fac_state'])) : quote_smart(trim($_POST['frm_state']));	
-	$lat = ($_POST['frm_lat'] != "") ? $_POST['frm_lat'] : '0';
-	$lng = ($_POST['frm_lng'] != "") ? $_POST['frm_lng'] : '0';	
-	$description = ((isset($_POST['orig_facility'])) && ($_POST['orig_facility'] != 0)) ? quote_smart(trim($_POST['frm_street'] . "/n " . $_POST['frm_city'] . "/n" . $_POST['frm_state'] . "/n" . $_POST['frm_description'])) : $_POST['frm_description'];
-	$meridiem_request_date = ((empty($_POST) || ((!empty($_POST)) && (empty ($_POST['frm_meridiem_request_date'])))) ) ? "" : $_POST['frm_meridiem_request_date'] ;
-	$request_date = "$_POST[frm_year_request_date]-$_POST[frm_month_request_date]-$_POST[frm_day_request_date] $_POST[frm_hour_request_date]:$_POST[frm_minute_request_date]:00$meridiem_request_date";	
-	$phone = ((isset($_POST['frm_phone'])) && ($_POST['frm_phone'] != "")) ? $_POST['frm_phone'] : "none";
-	$query = "INSERT INTO `$GLOBALS[mysql_prefix]requests` (
-				`org`,
-				`contact`, 
-				`street`, 
-				`city`, 
-				`state`, 
-				`the_name`, 
-				`phone`, 
-				`orig_facility`,
-				`rec_facility`, 
-				`scope`, 
-				`description`, 
-				`comments`, 
-				`lat`,
-				`lng`,
-				`request_date`, 
-				`status`, 
-				`accepted_date`,
-				`declined_date`, 
-				`resourced_date`, 
-				`completed_date`, 
-				`closed`, 
-				`requester`, 
-				`_by`, 
-				`_on`, 
-				`_from` 
-				) VALUES (
-				" . 0 . ",
-				'" . addslashes(get_user_name($_SESSION['user_id'])) . "',
-				'" . addslashes($street) . "',	
-				'" . addslashes($city) . "',	
-				'" . addslashes($state) . "',	
-				'" . addslashes($_POST['frm_patient']) . "',
-				'" . addslashes($phone) . "',		
-				" . $_POST['frm_orig_fac'] . ",					
-				" . $_POST['frm_rec_fac'] . ",	
-				'" . addslashes($_POST['frm_scope']) . "',	
-				'" . addslashes($description) . "',					
-				'" . addslashes($_POST['frm_comments']) . "',		
-				'" . $lat . "',		
-				'" . $lng . "',				
-				'" . $request_date . "',
-				'Open',
-				NULL,
-				NULL,
-				NULL,
-				NULL,
-				NULL,
-				" . $_SESSION['user_id'] . ",
-				" . $_SESSION['user_id'] . ",				
-				'" . $now . "',
-				'" . $where . "')";
-	$result	= mysql_query($query) or do_error($query,'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
-	$addrs = notify_newreq($_SESSION['user_id']);		// returns array of adddr's for notification, or FALSE
-	if ($addrs) {				// any addresses?
-		$to_str = implode("|", $addrs);
-		$smsg_to_str = "";
-		$subject_str = '"'. gettext('New') . " " . get_text('Service User') . " " . gettext('Request') . '"';
-		$text_str = '"' . gettext('A new request has been loaded by') . " \n\n" . get_user_name($_SESSION['user_id']) . "\n\n" . gettext('Dated') . " " . $now . "\n\n" . gettext('Please log on to Tickets and check') . '"'; 
-		do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
-		}				// end if/else ($addrs)	
-	
-	$host  = $_SERVER['HTTP_HOST'];
-	$uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');	
-	$extra = 'portal.php';		
-	$url = "http://" . $host . $uri . "/" . $extra;
-	redir($url);	
-?>
-	<FORM METHOD='POST' NAME="gout_form" action="index.php">
-	<INPUT TYPE='hidden' NAME = 'logout' VALUE = 1 />
-	</FORM>
-	</BODY>
-<?php
-} else {
-}
+	}
 ?> 
 </HTML>

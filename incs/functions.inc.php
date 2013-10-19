@@ -176,6 +176,10 @@
 6/10/2013 fix to set_u_updated () re _from 
 7/3/2013 function mail_it () subject line corrected 
 7/10/13 Revisions to function show_actions( to correct failure to show patients if no actions.
+8/9/13 Added globals colors for Warn Locations
+8/28/13 Added Mail list notifies to function notify user
+9/6/13 Added tracking type - mobile tracker for mobile screen
+9/10/13 Added function show_unit_log() and function list_files(...)
 */
 error_reporting(E_ALL);
 
@@ -296,6 +300,17 @@ $GLOBALS['LOG_EMAIL_CONNECT']		=1010;		// 10/23/12
 $GLOBALS['LOG_EMAIL_SEND']			=1011;		// 10/23/12
 $GLOBALS['LOG_EMAIL_RECEIVE']		=1012;		// 10/23/12
 
+$GLOBALS['LOG_NEW_REQUEST']			=2010;		// 26/7/13
+$GLOBALS['LOG_EDIT_REQUEST']		=2011;		// 26/7/13
+$GLOBALS['LOG_CANCEL_REQUEST']		=3012;		// 26/7/13
+$GLOBALS['LOG_ACCEPT_REQUEST']		=3013;		// 26/7/13
+$GLOBALS['LOG_TENTATIVE_REQUEST']	=3014;		// 26/7/13
+$GLOBALS['LOG_DECLINE_REQUEST']		=3015;		// 26/7/13
+
+$GLOBALS['LOG_WARNLOCATION_ADD']	=4010;		// 8/9/13
+$GLOBALS['LOG_WARNLOCATION_CHANGE']	=4013;		// 8/9/13
+$GLOBALS['LOG_WARNLOCATION_DELETE']	=4014;		// 8/9/13
+
 $GLOBALS['icons'] = array("black.png", "blue.png", "green.png", "red.png", "white.png", "yellow.png", "gray.png", "lt_blue.png", "orange.png");
 $GLOBALS['sm_icons']	= array("sm_black.png", "sm_blue.png", "sm_green.png", "sm_red.png", "sm_white.png", "sm_yellow.png", "sm_gray.png", "sm_lt_blue.png", "sm_orange.png");
 $GLOBALS['fac_icons'] = array("square_red.png", "square_black.png", "square_white.png", "square_yellow.png", "square_blue.png", "square_green.png", "shield_red.png", "shield_grey.png", "shield_green.png", "shield_blue.png", "shield_orange.png");
@@ -313,9 +328,10 @@ $GLOBALS['TRACK_LOCATEA']		=4;
 $GLOBALS['TRACK_GLAT']			=5;   
 $GLOBALS['TRACK_OGTS']			=6;     	// 7/6/11
 $GLOBALS['TRACK_T_TRACKER']		=7;  	 	//	5/11/11
+$GLOBALS['TRACK_MOBILE']		=8;  	 	//	9/6/13
 
-$GLOBALS['TRACK_2L']		= array("", "AP", "IN", "GT", "LO", "GL", "OG", "TT" ); 	// 7/6/11
-$GLOBALS['TRACK_NAMES']		= array("", "APRS", "Instamapper", "GTrack", "LocateA", "Latitude", "OpenGTS", "Internal" ); 	// 7/6/11
+$GLOBALS['TRACK_2L']		= array("", "AP", "IN", "GT", "LO", "GL", "OG", "TT", "MT" ); 	// 7/6/11, 9/6/13
+$GLOBALS['TRACK_NAMES']		= array("", "APRS", "Instamapper", "GTrack", "LocateA", "Latitude", "OpenGTS", "Internal", "Mobile Tracker" ); 	// 7/6/11, 9/16/13
 
 $GLOBALS['UNIT_TYPES_BG']	= array("#000000", "#5A59FF", "#63DB63", "#FF3C4A", "#FFFFFF", "#F7F363", "#C6C3C6", "#00FFFF");	// keyed to unit_types - 2/8/10
 $GLOBALS['UNIT_TYPES_TEXT']	= array("#FFFFFF", "#FFFFFF", "#000000", "#000000", "#000000", "#000000", "#000000", "#000000");	// 2/8/10
@@ -338,6 +354,9 @@ $GLOBALS['MSGTYPE_IC_SMS_DR']	= 5;	//	10/23/12
 $GLOBALS['MSGTYPE_IC_SMS_DF']	= 6;	//	10/23/12
 
 $GLOBALS['NM_LAT_VAL'] 		= 0.999999;												// 3/27/2013	
+
+$GLOBALS['LOC_TYPES_BG']	= '#FF0000';	//	8/9/13
+$GLOBALS['LOC_TYPES_TEXT']	= '#FFFFFF';	//	8/9/13
 
 $evenodd = array ("even", "odd", "heading");	// class names for alternating table row css colors
 
@@ -1030,6 +1049,56 @@ function show_log ($theid, $show_cfs=FALSE) {								// 11/20/09, 10/20/12
 	}		// end function get_log ()
 //	} -- dummy
 
+function show_unit_log ($theid, $show_cfs=FALSE) {								// 9/10/13
+	global $evenodd ;	// class names for alternating table row colors
+	require('./incs/log_codes.inc.php');
+		
+	$query = "
+		SELECT *, 
+		`when` AS `when`,
+		`l`.`id` AS `log_id`,
+		`t`.`scope` AS `tickname`,
+		`r`.`handle` AS `unitname`,
+		`l`.`info` AS `comment`,
+		`s`.`status_val` AS `theinfo`,
+		`u`.`user` AS `thename` 
+		FROM `$GLOBALS[mysql_prefix]log` l
+		LEFT JOIN `$GLOBALS[mysql_prefix]ticket` t 		ON (l.ticket_id = t.id)
+		LEFT JOIN `$GLOBALS[mysql_prefix]responder` r 	ON (l.responder_id = r.id)
+		LEFT JOIN `$GLOBALS[mysql_prefix]un_status` s 	ON (l.info = s.id)
+		LEFT JOIN `$GLOBALS[mysql_prefix]user` u 		ON (l.who = u.id)
+		WHERE `l`.`responder_id` = {$theid} 
+		ORDER BY `when` ASC";								// 10/2/12
+	$result = mysql_query($query) or do_error($query, $query, mysql_error(), basename( __FILE__), __LINE__);
+	$i = 0;
+	$print = "<TABLE ALIGN='left' CELLSPACING = 1 WIDTH='100%'>";
+
+	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
+		if ($i==0) {				// 11/20/09
+			$print .= "<TR CLASS='heading'><TD CLASS='heading' TITLE = \"{$row['tickname']}\" COLSPAN=99 ALIGN='center'><U>Log: <I>". shorten($row['tickname'], 32) . "</I></U></TD></TR>";
+			$cfs_head = ($show_cfs)? "<TD ALIGN='center'>CFS</TD>" : ""  ;
+			$print .= "<TR CLASS='odd'><TD ALIGN='left'>Code</TD>" . $cfs_head . "<TD ALIGN='left'>Unit</TD><TD ALIGN='left'>Status</TD><TD ALIGN='left'>Comment</TD><TD ALIGN='left'>When</TD><TD ALIGN='left'>By</TD></TR>";
+			}
+		$print .= "<TR CLASS='" . $evenodd[$i%2] . "' onClick = 'view_log_entry({$row['log_id']});'>" .				// 11/20/09
+			"<TD TITLE =\"{$types[$row['code']]}\">". shorten($types[$row['code']], 20) . "</TD>"; // 
+		if ($show_cfs) {
+			$print .= "<TD TITLE =\"{$row['tickname']}\">". shorten($row['tickname'], 16) . "</TD>";	// 2009-11-07 22:37:41 - substr($row['when'], 11, 5)
+			}
+		$theComment = (!is_numeric($row['comment'])) ? $row['comment'] : "";
+		$print .= 
+			"<TD TITLE =\"{$row['unitname']}\">". 	shorten($row['unitname'], 16) . "</TD>".
+			"<TD TITLE =\"{$row['theinfo']}\">". 	shorten($row['theinfo'], 16) . "</TD>".
+			"<TD TITLE =\"{$row['comment']}\">". 	shorten($theComment, 24) . "</TD>".
+			"<TD TITLE =\"" . format_date_2(strtotime($row['when'])) . "\">". format_date_2(strtotime($row['when'])) . "</TD>".
+			"<TD TITLE =\"{$row['thename']}\">". 	shorten($row['thename'], 8) . "</TD>".
+			"</TR>";
+			$i++;
+		}
+	$print .= "</TABLE>";
+	return $print;
+	}		// end function show_unit_log ()
+//	} -- dummy
+
 /**
  * set_ticket_status
  * Insert description here
@@ -1137,7 +1206,7 @@ function get_tickets_allocated($group) {	//	6/10/11
 function get_all_group_butts($curr_grps) {		//	6/10/11
 	$query1 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` ORDER BY `id` ASC";		//	6/10/11
 	$result1 = mysql_query($query1) or do_error($query1, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-	$al_buttons="<DIV ID='groups_sh' style='width: 100%; align: left; display: none;'>";
+	$al_buttons="<DIV ID='groups_sh' style='width: 100%; text-align: left; display: none;'>";
 	while ($row_gp = stripslashes_deep(mysql_fetch_assoc($result1))) {
 		if(in_array($row_gp['id'], $curr_grps)) {
 			$al_buttons.="<DIV style='float: left;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row_gp['id']}'></INPUT>{$row_gp['group_name']}&nbsp;&nbsp;</DIV>";
@@ -1165,7 +1234,7 @@ function get_all_group_butts($curr_grps) {		//	6/10/11
 function get_all_group_butts_chkd($curr_grps) {		//	6/10/11
 	$query1 = "SELECT * FROM `$GLOBALS[mysql_prefix]region` ORDER BY `id` ASC";		//	6/10/11
 	$result1 = mysql_query($query1) or do_error($query1, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-	$al_buttons="<DIV ID='groups_sh' style='width: 100%; align: left; display: none;'>";
+	$al_buttons="<DIV ID='groups_sh' style='width: 100%; text-align: left; display: none;'>";
 	while ($row_gp = stripslashes_deep(mysql_fetch_assoc($result1))) {
 		if(in_array($row_gp['id'], $curr_grps)) {
 			$al_buttons.="<DIV style='float: left;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row_gp['id']}'></INPUT>{$row_gp['group_name']}&nbsp;&nbsp;</DIV>";
@@ -1201,7 +1270,7 @@ function get_sub_group_butts($user_id, $resource, $resource_id) {		//	6/10/11
 		}
 	$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id';";		//	6/10/11
 	$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-	$al_buttons="<DIV ID='groups_sh' style='width: 100%; align: left; display: none;'>";	
+	$al_buttons="<DIV ID='groups_sh' style='width: 100%; text-align: left; display: none;'>";	
 	while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{		//	6/10/11
 			if(in_array($row2['group'], $al_groups)) {
 				$al_buttons.="<DIV style='float: left;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
@@ -1237,7 +1306,7 @@ function get_sub_group_butts_readonly($user_id, $resource, $resource_id) {		//	6
 		}
 	$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id';";		//	6/10/11
 	$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-	$al_buttons="<DIV ID='groups_sh' style='width: 100%; align: left; display: none;'>";	
+	$al_buttons="<DIV ID='groups_sh' style='width: 100%; text-align: left; display: none;'>";	
 	while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{		//	6/10/11
 			if(in_array($row2['group'], $al_groups)) {
 				$al_buttons.="<DIV style='float: left;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' OnClick='javascript:return ReadOnlyCheckBox()' onkeydown='javascript:return ReadOnlyCheckBox()' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
@@ -1265,7 +1334,7 @@ function get_sub_group_butts_readonly($user_id, $resource, $resource_id) {		//	6
 function get_user_group_butts($user_id) {		//	6/10/11
 	$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id'";			//	6/10/11
 	$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-	$al_buttons="<DIV ID='groups_sh' style='width: 100%; align: left; display: none;'>";	
+	$al_buttons="<DIV ID='groups_sh' style='width: 100%; text-align: left; display: none;'>";	
 	while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{		//	6/10/11
 		$al_buttons.="<DIV style='float: left;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
 	}
@@ -1289,7 +1358,7 @@ function get_user_group_butts($user_id) {		//	6/10/11
 function get_user_group_butts_readonly($user_id) {		//	6/10/11
 	$query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 4 AND `resource_id` = '$user_id'";			//	6/10/11
 	$result2 = mysql_query($query2) or do_error($query2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-	$al_buttons="<DIV ID='groups_sh' style='width: 100%; align: left; display: none;'>";	
+	$al_buttons="<DIV ID='groups_sh' style='width: 100%; text-align: left; display: none;'>";	
 	while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) 	{		//	6/10/11
 		$al_buttons.="<DIV style='float: left;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' OnClick='javascript:return ReadOnlyCheckBox()' onkeydown='javascript:return ReadOnlyCheckBox()' VALUE='{$row2['group']}'></INPUT>" . get_groupname($row2['group']) . "&nbsp;&nbsp;</DIV>";
 	}
@@ -1311,7 +1380,7 @@ function get_user_group_butts_readonly($user_id) {		//	6/10/11
  * @since
  */
 function get_user_group_butts_no_regions($user_id) {		//	6/10/11
-	$al_buttons="<DIV ID='groups_sh' style='width: 100%; align: left; display: none;'>";	
+	$al_buttons="<DIV ID='groups_sh' style='width: 100%; text-align: left; display: none;'>";	
 	$al_buttons.="<DIV style='float: left; display: none;'><INPUT TYPE='checkbox' CHECKED name='frm_group[]' OnClick='javascript:return ReadOnlyCheckBox()' onkeydown='javascript:return ReadOnlyCheckBox()' VALUE='1'></INPUT></DIV>";
 	$al_buttons .= "</DIV>";
 	return $al_buttons;
@@ -1634,7 +1703,7 @@ function get_status($status){							/* return status text from code */
  * @since
  */
 function get_owner($id){								/* get owner name from id */
-	$result	= mysql_query("SELECT user FROM `$GLOBALS[mysql_prefix]user` WHERE `id`='$id' LIMIT 1") or do_error("get_owner(i:$id)::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+	$result	= mysql_query("SELECT user FROM `$GLOBALS[mysql_prefix]user` WHERE `id`= '$id' LIMIT 1") or do_error("get_owner(i:$id)::mysql_query()", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$row	= stripslashes_deep(mysql_fetch_assoc($result));
 	return (mysql_affected_rows()==0 )? "unk?" : $row['user'];
 //	return $row['user'];
@@ -1821,7 +1890,7 @@ function get_css($element, $day_night){								/* get hex color string from db c
 				$css[$name] = $value;
 				}
 			}
-	}	
+	}
 	return (array_key_exists($element, $css))? "#" . $css[$element] : FALSE ;
 	}	
 /* raise an error event
@@ -3633,7 +3702,7 @@ function do_send ($to_str, $smsg_to_str, $subject_str, $text_str, $ticket_id, $r
 		//								($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_str, $my_from_ary, $my_replyto_str)	
 				if (count($my_smtp_ary)>1) {
 					$count_ll = do_swift_mail ($my_smtp_ary, $ary_ll_addrs, $subject_str, $text_str, $my_from_ary, $my_replyto_str );	
-					store_email(1, $the_responders, "email", $subject_str, $text_str, $ticket_id, $the_resp_ids, date("Y/m/d H:i:s", $now), $my_replyto_str, 'Tickets');	// 7/9/12		
+					store_email(1, $the_responders, "email", $subject_str, $text_str, $ticket_id, $the_resp_ids, date("Y/m/d H:i:s", $now), $my_replyto_str, 'Tickets');	// 7/9/12	
 					}
 				else {
 		//								($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_str, $my_from_ary, $my_replyto_str)
@@ -3722,32 +3791,114 @@ function is_email($email){		   //  validate email, code courtesy of Jerrett Tayl
  */
 function notify_user($ticket_id, $action_id) {								// 10/20/08, 5/22/11
 	if (get_variable('allow_notify') != '1') return FALSE;						//should we notify?
-	
-	$query = "SELECT `severity` FROM `$GLOBALS[mysql_prefix]ticket` WHERE (`id`=$ticket_id)";
+	$query = "SELECT `severity`, `facility`, `rec_facility`, `in_types_id` FROM `$GLOBALS[mysql_prefix]ticket` WHERE (`id`=$ticket_id)";
 	$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 	$row = stripslashes_deep(mysql_fetch_assoc($result));
-
+	$facility = $row['facility'];
+	$rec_facility = $row['rec_facility'];
+	$in_types_id = $row['in_types_id'];
+	
 	$fields = array();
 	$fields[$GLOBALS['NOTIFY_TICKET_CHG']] = "on_ticket";
 	$fields[$GLOBALS['NOTIFY_ACTION_CHG']] = "on_action";
 	$fields[$GLOBALS['NOTIFY_PERSON_CHG']] = "on_patient";
-	
 	$addrs = array();															// 
 	
 	$severity_filter = (intval($row['severity']) == $GLOBALS['SEVERITY_NORMAL'])? "(`severities` = 1 )" : "(`severities`= 3) OR (`severities`= 1)";		// 5/22/11	
 
-//	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]notify` WHERE (`ticket_id`='$ticket_id' OR `ticket_id`=0)  AND `" .$fields[$action_id] ."` = '1'";	// all notifies for given ticket - or any ticket 10/22/08
-
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]notify` WHERE (
 		{$severity_filter} AND
-		(`ticket_id`='{$ticket_id}' OR `ticket_id`=0)  AND
+		(`ticket_id`={$ticket_id} OR `ticket_id`=0)  AND
 		`{$fields[$action_id]}` = '1')";			// all notifies for given ticket - or any ticket 10/22/08
 
 	$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 	while($row = stripslashes_deep(mysql_fetch_assoc($result))) {		//is it the right action?
 		if (is_email($row['email_address'])) {
 			array_push($addrs, $row['email_address']); // save for emailing
-			}		
+			}
+		if($row['mailgroup'] != 0) {	//	8/28/13	Checks for maillist notifies
+			$query_mg = "SELECT * FROM `$GLOBALS[mysql_prefix]mailgroup_x` WHERE `mailgroup` = " . $row['mailgroup'];
+			$result_mg	= mysql_query($query_mg) or do_error($query_mg,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
+			while($row_mg = stripslashes_deep(mysql_fetch_assoc($result_mg))) {
+				if($row_mg['contacts'] != 0) {
+					$query_c = "SELECT * FROM `$GLOBALS[mysql_prefix]contacts` WHERE `id` = " . $row_mg['contacts'] . " LIMIT 1";
+					$result_c	= mysql_query($query_c) or do_error($query_c,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);	
+					$row_c = stripslashes_deep(mysql_fetch_assoc($result_c));
+					if (is_email($row_c['email'])) {
+						array_push($addrs, $row_c['email']); // save for emailing
+						}
+					} elseif($row_mg['responder'] != 0) {
+					$query_r = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `id` = " . $row_mg['responder'] . " LIMIT 1";
+					$result_r	= mysql_query($query_r) or do_error($query_r,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);	
+					$row_r = stripslashes_deep(mysql_fetch_assoc($result_r));
+					if (is_email($row_r['contact_via'])) {
+						array_push($addrs, $row_r['contact_via']); // save for emailing
+						}
+					}
+				}
+			}
+		}
+	if((get_variable('notify_facilities') == "1") && (($facility != 0) || ($rec_facility != 0))) {	//	8/28/13
+		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = " . strip_tags($facility) . " OR `id` = " . strip_tags($rec_facility);
+		$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
+		while($row = stripslashes_deep(mysql_fetch_assoc($result))) {		//is it the right action?
+			if($row['notify_email'] != "") {
+				if (is_email($row['notify_email'])) {
+					array_push($addrs, $row['notify_email']); // save for emailing
+					}
+				} elseif($row['notify_mailgroup'] != 0) {	//	8/28/13	Checks for maillist notifies
+				$query_mg = "SELECT * FROM `$GLOBALS[mysql_prefix]mailgroup_x` WHERE `mailgroup` = " . $row['notify_mailgroup'];
+				$result_mg	= mysql_query($query_mg) or do_error($query_mg,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
+				while($row_mg = stripslashes_deep(mysql_fetch_assoc($result_mg))) {
+					if($row_mg['contacts'] != 0) {
+						$query_c = "SELECT * FROM `$GLOBALS[mysql_prefix]contacts` WHERE `id` = " . $row_mg['contacts'] . " LIMIT 1";
+						$result_c	= mysql_query($query_c) or do_error($query_c,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);	
+						$row_c = stripslashes_deep(mysql_fetch_assoc($result_c));
+						if (is_email($row_c['email'])) {
+							array_push($addrs, $row_c['email']); // save for emailing
+							}
+						} elseif($row_mg['responder'] != 0) {
+						$query_r = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `id` = " . $row_mg['responder'] . " LIMIT 1";
+						$result_r	= mysql_query($query_r) or do_error($query_r,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);	
+						$row_r = stripslashes_deep(mysql_fetch_assoc($result_r));
+						if (is_email($row_r['contact_via'])) {
+							array_push($addrs, $row_r['contact_via']); // save for emailing
+							}
+						}
+					}
+				}
+			}	
+		}
+	if(get_variable('notify_in_types') == "1") {	//	9/10/13
+		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]in_types` WHERE `id` = " . strip_tags($in_types_id);
+		$result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
+		while($row = stripslashes_deep(mysql_fetch_assoc($result))) {		//is it the right action?
+			if($row['notify_email'] != "") {
+				if (is_email($row['notify_email'])) {
+					array_push($addrs, $row['notify_email']); // save for emailing
+					}
+				} elseif($row['notify_mailgroup'] != 0) {	//	8/28/13	Checks for maillist notifies
+				$query_mg = "SELECT * FROM `$GLOBALS[mysql_prefix]mailgroup_x` WHERE `mailgroup` = " . $row['notify_mailgroup'];
+				$result_mg	= mysql_query($query_mg) or do_error($query_mg,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
+				while($row_mg = stripslashes_deep(mysql_fetch_assoc($result_mg))) {
+					if($row_mg['contacts'] != 0) {
+						$query_c = "SELECT * FROM `$GLOBALS[mysql_prefix]contacts` WHERE `id` = " . $row_mg['contacts'] . " LIMIT 1";
+						$result_c	= mysql_query($query_c) or do_error($query_c,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);	
+						$row_c = stripslashes_deep(mysql_fetch_assoc($result_c));
+						if (is_email($row_c['email'])) {
+							array_push($addrs, $row_c['email']); // save for emailing
+							}
+						} elseif($row_mg['responder'] != 0) {
+						$query_r = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `id` = " . $row_mg['responder'] . " LIMIT 1";
+						$result_r	= mysql_query($query_r) or do_error($query_r,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);	
+						$row_r = stripslashes_deep(mysql_fetch_assoc($result_r));
+						if (is_email($row_r['contact_via'])) {
+							array_push($addrs, $row_r['contact_via']); // save for emailing
+							}
+						}
+					}
+				}
+			}	
 		}
 	$temp = array_values(array_unique($addrs));		// 5/22/10	
 	return (empty($temp))? FALSE: $temp;
@@ -4787,6 +4938,26 @@ function get_disp_status ($row_in) {			// 4/26/11
 	if (is_date($responding))	{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[1]}&nbsp;" . elapsed ($responding) . "</SPAN>";}
 	if (is_date($dispatched))	{ return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[0]}&nbsp;" . elapsed ($dispatched) . "</SPAN>";}
 	}
+	
+function auto_disp_status($disp_status, $responder) {	//	8/22/13
+	$now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]auto_disp_status` WHERE `id` = " . $disp_status . " LIMIT 1";
+	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
+	if(mysql_num_rows($result) >= 1) {
+		$row = stripslashes_deep(mysql_fetch_assoc($result));
+		$the_val = intval($row['status_val']);
+		$query2 = "UPDATE `$GLOBALS[mysql_prefix]responder` SET `un_status_id` = " . $the_val . ", `user_id` = '999999', `status_updated` = '" . $now . "', `updated`= '" . $now . "' WHERE `id`=" . $responder;
+		$result2 = mysql_query($query2) or do_error($query2, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
+		if($result2) {
+			$the_ret = $the_val;
+			} else {
+			$the_ret = 0;
+			}
+		} else {
+		$the_ret = 0;
+		}
+	return $the_ret;
+	}
 														
 // 5/11/2013 fix to remove '_on'  change ' _by' to 'user_id' from set_u_updated () sql  - 6/10/2013
 /**
@@ -5099,14 +5270,15 @@ function get_buttons_inner2(){		//	4/12/12
  * @since
  */
 function get_remote_type ($inrow) { 							// returns type of remote - 12/3/10
-	if ($inrow['aprs'] == 1) 				{ return $GLOBALS['TRACK_APRS']; }
-	elseif ((int)$inrow['instam'] == 1) 	{ return $GLOBALS['TRACK_INSTAM']; }
-	elseif ((int)$inrow['locatea'] == 1)	{ return $GLOBALS['TRACK_LOCATEA']; }
-	elseif ((int)$inrow['gtrack'] == 1)		{ return $GLOBALS['TRACK_GTRACK']; }
-	elseif ((int)$inrow['glat'] == 1)		{ return $GLOBALS['TRACK_GLAT']; }
-	elseif ((int)$inrow['t_tracker'] == 1)	{ return $GLOBALS['TRACK_T_TRACKER']; }
-	elseif ((int)$inrow['ogts'] == 1)		{ return $GLOBALS['TRACK_OGTS']; }		// 7/5/11
-	else 									{ return $GLOBALS['TRACK_NONE']; }
+	if ($inrow['aprs'] == 1) 				 { return $GLOBALS['TRACK_APRS']; }
+	elseif ((int)$inrow['instam'] == 1) 	 { return $GLOBALS['TRACK_INSTAM']; }
+	elseif ((int)$inrow['locatea'] == 1)	 { return $GLOBALS['TRACK_LOCATEA']; }
+	elseif ((int)$inrow['gtrack'] == 1)		 { return $GLOBALS['TRACK_GTRACK']; }
+	elseif ((int)$inrow['glat'] == 1)		 { return $GLOBALS['TRACK_GLAT']; }
+	elseif ((int)$inrow['t_tracker'] == 1)	 { return $GLOBALS['TRACK_T_TRACKER']; }
+	elseif ((int)$inrow['ogts'] == 1)		 { return $GLOBALS['TRACK_OGTS']; }		// 7/5/11
+	elseif ((int)$inrow['mob_tracker'] == 1) { return $GLOBALS['TRACK_MOBILE']; }		// 9/6/13
+	else 									 { return $GLOBALS['TRACK_NONE']; }
 	}  				// end function
 
 /**
@@ -5310,5 +5482,55 @@ function get_contact_addr () {		// 6/1/2013 - returns user email addr if availab
 	if (!($contact_addr)) {$contact_addr = 	is_email(get_variable('email_from'))? get_variable('email_from') :  FALSE; }
 	if (!($contact_addr)) {$contact_addr =	"info@TicketsCAD.org"; }			// default to project home
 	return trim($contact_addr);
+	}
+	
+function list_files($ticket_id=0, $responder_id=0, $facility_id=0, $type=0, $portaluser=0) {	//	9/10/13, list stored files
+	if($ticket_id != 0) {
+		$where = " WHERE `ticket_id` = " . $ticket_id;
+		} elseif($responder_id != 0) {
+		$where = " WHERE `responder_id` = " . $responder_id;
+		} elseif($facility_id != 0) {
+		$where = " WHERE `facility_id` = " . $facility_id;
+		} elseif($type != 0) {
+		$where = " WHERE `type` = " . $type;
+		} else {
+		$where = "";
+		}
+	
+	if($portaluser!=0) {
+		$query = "SELECT *, 
+			`fx`.`id` AS fx_id, 
+			`f`.`id` AS file_id
+			FROM `$GLOBALS[mysql_prefix]files_x` `fx`  
+			LEFT JOIN `$GLOBALS[mysql_prefix]files` `f`	ON (`f`.`id` = `fx`.`file_id`)
+			WHERE `fx`.`user_id` = " . $portaluser . " ORDER BY `f`.`id` ASC"; 
+		$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
+		} else {
+		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]files`" . $where . " ORDER BY `id` ASC";
+		$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
+		}
+	$bgcolor = "#EEEEEE";
+	if (($result) && (mysql_num_rows($result) >=1)) {
+		$print = "<TABLE style='width: 100%;'>";
+		$print .= "<TR style='width: 100%; font-weight: bold; background-color: #707070;'><TD style='color: #FFFFFF;'>File Name</TD><TD style='color: #FFFFFF;'>Uploaded By</TD><TD style='color: #FFFFFF;'>Date</TD></TR>";		
+		while ($row = stripslashes_deep(mysql_fetch_assoc($result))){	
+			$print .= "<TR>";
+			$filename = $row['filename'];
+			$origfilename = $row['orig_filename'];
+			$title = $row['title'];
+			$print .= "<TD><A HREF='./ajax/download.php?filename=" . $filename . "&origname=" . $origfilename . "'>" . $row['title'] . "</A></TD>";
+			$print .= "<TD>" . get_owner($row['_by']) . "</TD>";
+			$print .= "<TD>" . format_date_2(strtotime($row['_on'])) . "</TD>";		
+			$print .= "</TR>";
+			$bgcolor = ($bgcolor == "#EEEEEE") ? "#FEFEFE" : "#EEEEEE";
+			}				// end while
+			$print .= "</TABLE>";
+		} else {
+		$print = "<TABLE style='width: 100%;'>";
+		$print .= "<TR class='spacer'><TD COLSPAN=99 class='spacer'>&nbsp;</TD></TR>";			
+		$print .="<TR style='width: 100%;'><TD style='width: 100%; text-align: center;'>No Files</TD></TR></TABLE>";
+		}	//	end else
+		
+	return $print;
 	}
 ?>

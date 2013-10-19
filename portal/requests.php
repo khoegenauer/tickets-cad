@@ -1,5 +1,8 @@
 <?php
-if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
+/*
+9/10/13 - requests.php - lists pending / open requests for Tickets user
+*/
+if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}
 error_reporting (E_ALL  ^ E_DEPRECATED);
 @session_start();
 if (empty($_SESSION)) {
@@ -240,7 +243,7 @@ function get_requests() {
 	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print gettext('By');?></TD>";			
 	the_string += "</TR>";			
 	randomnumber=Math.floor(Math.random()*99999999);
-	var url ="./ajax/list_requests.php?version=" + randomnumber;
+	var url ="./ajax/list_requests.php?showall=yes&version=" + randomnumber;
 	sendRequest (url, requests_cb, "");
 	function requests_cb(req) {
 		var the_requests=JSON.decode(req.responseText);
@@ -295,7 +298,7 @@ function requests_get() {
  */	
 function do_requests_loop() {
 	randomnumber=Math.floor(Math.random()*99999999);
-	var url ="./ajax/list_requests.php?version=" + randomnumber;
+	var url ="./ajax/list_requests.php?showall=yesversion=" + randomnumber;
 	sendRequest (url, requests_cb2, "");
 	}
 /**
@@ -306,23 +309,23 @@ function do_requests_loop() {
 function requests_cb2(req) {
 	the_string = "<TABLE cellspacing='0' cellpadding='1' style='width: 100%; table-layout: fixed;'>";
 	the_string += "<TR class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('ID');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Patient');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Phone');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Contact');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Scope');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Description');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Comments');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Status');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Requested');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Tentative');?></TD>";	
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Accepted');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Declined');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Resourced');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Completed');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Closed');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('Updated');?></TD>";
-	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px; color: #FFFFFF;'><?php print gettext('By');?></TD>";					
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('ID');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Patient');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Phone');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Contact');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Scope');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Description');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Comments');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Status');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Requested');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Tentative');?></TD>";	
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Accepted');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Declined');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Resourced');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Completed');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Closed');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('Updated');?></TD>";
+	the_string += "<TD class='heading' style='font-weight: bold; font-size: 12px;'><?php print get_text('By');?></TD>";							
 	the_string += "</TR>";		
 	var the_requests=JSON.decode(req.responseText);
 	theClass = "background-color: #CECECE";
@@ -366,9 +369,6 @@ function requests_cb2(req) {
  * @returns {undefined}
  */
 function do_logout() {
-	// clearInterval(mu_interval);
-	// mu_interval = null;
-	// is_initialized = false;
 	document.gout_form.submit();			// send logout 
 	}		
 	

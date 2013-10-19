@@ -79,10 +79,10 @@ function get_current() {		// 3/16/09, 6/10/11, 7/25/09
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		}
 
-	$aprs = $instam = $locatea = $gtrack = $glat = $ogts = $t_tracker = FALSE;		// 6/10/11, 7/6/11
+	$aprs = $instam = $locatea = $gtrack = $glat = $ogts = $t_tracker = $mob_tracker = FALSE;		// 6/10/11, 7/6/11
 	$ts_threshold = strtotime('now - 24 hour');				// discard inputs older than this - 4/25/11
 	
-	$query = "SELECT `id`, `aprs`, `instam`, `locatea`, `gtrack`, `glat`, `ogts`, `t_tracker` FROM `$GLOBALS[mysql_prefix]responder` WHERE ((`aprs` = 1) OR (`instam` = 1) OR (`locatea` = 1) OR (`gtrack` = 1) OR (`glat` = 1) OR (`ogts` = 1) OR (`t_tracker` = 1))";	
+	$query = "SELECT `id`, `aprs`, `instam`, `locatea`, `gtrack`, `glat`, `ogts`, `t_tracker`, `mob_tracker` FROM `$GLOBALS[mysql_prefix]responder` WHERE ((`aprs` = 1) OR (`instam` = 1) OR (`locatea` = 1) OR (`gtrack` = 1) OR (`glat` = 1) OR (`ogts` = 1) OR (`t_tracker` = 1))";	
 	$result = mysql_query($query) or do_error($query, ' mysql error=', mysql_error(), basename( __FILE__), __LINE__);
 	
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
@@ -93,6 +93,7 @@ function get_current() {		// 3/16/09, 6/10/11, 7/25/09
 		if ($row['glat'] == 1) { $glat = TRUE;}			//7/29/09
 		if ($row['ogts'] == 1) { $ogts = TRUE;}					// 7/6/11
 		if ($row['t_tracker'] == 1) { $t_tracker = TRUE;}		// 6/10/11		
+		if ($row['mob_tracker'] == 1) { $mob_tracker = TRUE;}		// 9/6/11	
 		}		// end while ()
 	unset($result);
 	if ($aprs) 		{do_aprs();}
@@ -108,7 +109,8 @@ function get_current() {		// 3/16/09, 6/10/11, 7/25/09
 	if ($glat) 		{do_glat();}					//7/29/09
 	if ($ogts) 		{do_ogts();}					// 7/6/11
 	if ($t_tracker) {do_t_tracker();}				// 6/10/11	
-	return array("aprs" => $aprs, "instam" => $instam, "locatea" => $locatea, "gtrack" => $gtrack, "glat" => $glat, "ogts" => $ogts, "t_tracker" => $t_tracker);		//7/29/09, 7/6/11, 6/10/11
+	if ($mob_tracker) {do_mob_tracker();}				// 6/10/11	
+	return array("aprs" => $aprs, "instam" => $instam, "locatea" => $locatea, "gtrack" => $gtrack, "glat" => $glat, "ogts" => $ogts, "t_tracker" => $t_tracker, "mob_tracker" => $mob_tracker);		//7/29/09, 7/6/11, 6/10/11
 	}		// end get_current() 
 
 /**
@@ -766,4 +768,7 @@ function do_t_tracker() {		//	6/10/11
 			}	// end while	
 		}	// end while
 	}	//	end function do_t_tracker	
+	
+function do_mob_tracker() {	//	9/6/13
+	}
 ?>

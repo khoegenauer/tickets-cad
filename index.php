@@ -7,7 +7,7 @@ if(!(file_exists("./incs/mysql.inc.php"))) {
 
 require_once('./incs/functions.inc.php');	
 
-$version = "2.40D Beta - 7/17/2013";	
+$version = "2.41A Beta - 10/16/13";	
 
 /*
 10/1/08 added error reporting
@@ -93,6 +93,8 @@ $version = "2.40D Beta - 7/17/2013";
 6/6/2013 revisions to allocates schema re indexing, field size
 6/14/2013 Added line to empty the $_SESSION array on first load of Index
 5/7/13 Added new "status_updated" field to responder table
+8/1/13 Added Mobile redirect for mobile devices
+9/10/13 Added Warnings, mailgroups, personnel and various settings to support those features and mobile
 */
 
 //snap(basename(__FILE__) . " " . __LINE__  , count($_SESSION));
@@ -140,10 +142,14 @@ function count_responders() {	//	5/11/12 For quick start.
 function table_exists($name) {			//	3/15/11
 	$tablename = "$GLOBALS[mysql_prefix]" . "$name";
 	$query 	= "SELECT COUNT(*) FROM $tablename";
-      	$result 	= mysql_query($query);
-	$num_rows 	= @mysql_num_rows($result);
-	if($num_rows > 0) {
-		return true;
+    $result = mysql_query($query);
+	if($result) {
+		$num_rows = mysql_num_rows($result);
+		if($num_rows > 0) {
+			return true;
+			} else {
+			return false;
+			}
 		} else {
 		return false;
 		}
@@ -1327,61 +1333,7 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 				$result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	10/23/12
 				}
 
-			if (table_exists("msg_settings")) {		//	01/08/13, 7/10/13
-				$email_server = (get_msg_variable('email_server') != "") ? get_msg_variable('email_server') : "";
-				$email_port = (get_msg_variable('email_port') != "") ? get_msg_variable('email_port') : "995";
-				$email_protocol = (get_msg_variable('email_protocol') != "") ? get_msg_variable('email_protocol') : "POP3";
-				$email_addon = (get_msg_variable('email_addon') != "") ? get_msg_variable('email_addon') : "notls";
-				$email_folder = (get_msg_variable('email_folder') != "") ? get_msg_variable('email_folder') : "INBOX";
-				$email_userid = (get_msg_variable('email_userid') != "") ? get_msg_variable('email_userid') : "";
-				$email_password = (get_msg_variable('email_password') != "") ? get_msg_variable('email_password') : "";
-				$email_svr_simple = (get_msg_variable('email_svr_simple') != "") ? get_msg_variable('email_svr_simple') : "0";
-				$smsg_provider = (get_msg_variable('smsg_provider') != "") ? get_msg_variable('smsg_provider') : "0";
-				$smsg_server = (get_msg_variable('smsg_server') != "") ? get_msg_variable('smsg_server') : "http://gate1.sms-responder.com/external/smsrcheck.asp";
-				$smsg_server2 = (get_msg_variable('smsg_server2') != "") ? get_msg_variable('smsg_server2') : "http://gate2.sms-responder.com/external/smsrcheck.asp";				
-				$smsg_og_serv1 = (get_msg_variable('smsg_og_serv1') != "") ? get_msg_variable('smsg_og_serv1') : "http://gate1.sms-responder.com/external/smsrsend.asp";
-				$smsg_og_serv2 = (get_msg_variable('smsg_og_serv2') != "") ? get_msg_variable('smsg_og_serv2') : "http://gate2.sms-responder.com/external/smsrsend.asp";		
-				$smsg_server_inuse = (get_msg_variable('smsg_server_inuse') != "") ? get_msg_variable('smsg_server_inuse') : "1";	
-				$smsg_force_sec = (get_msg_variable('smsg_force_sec') != "") ? get_msg_variable('smsg_force_sec') : "0";					
-				$smsg_orgcode = (get_msg_variable('smsg_orgcode') != "") ? get_msg_variable('smsg_orgcode') : ""; 
-				$smsg_apipin = (get_msg_variable('smsg_apipin') != "") ? get_msg_variable('smsg_apipin') : ""; 	
-				$smsg_mode = (get_msg_variable('smsg_mode') != "") ? get_msg_variable('smsg_mode') : "SENDXML"; 	
-				$smsg_replyto = (get_msg_variable('smsg_replyto') != "") ? get_msg_variable('smsg_replyto') : "07892012345"; 	
-				$smsg_replyto_2 = (get_msg_variable('smsg_replyto_2') != "") ? get_msg_variable('smsg_replyto_2') : "07537415550"; 		
-				$columns = (get_msg_variable('columns') != "") ? get_msg_variable('columns') : "1,2,3,4,5,6,7"; 		
-				$use_autostat = (get_msg_variable('use_autostat') != "") ? get_msg_variable('use_autostat') : "0"; 		
-				$start_tag = (get_msg_variable('start_tag') != "") ? get_msg_variable('start_tag') : "*"; 		
-				$end_tag = (get_msg_variable('end_tag') != "") ? get_msg_variable('end_tag') : "*"; 						
-				$query = "DROP TABLE IF EXISTS `$GLOBALS[mysql_prefix]msg_settings`";
-				$result = mysql_query($query);		// 11/28/12	
-				} else {
-				$email_server = "";
-				$email_port = "995";
-				$email_protocol = "POP3";
-				$email_addon = "notls";
-				$email_folder = "INBOX";
-				$email_userid = "";
-				$email_password = "";
-				$email_svr_simple = "0";
-				$smsg_provider = "0";
-				$smsg_server = "http://gate1.sms-responder.com/external/smsrcheck.asp";
-				$smsg_server2 = "http://gate2.sms-responder.com/external/smsrcheck.asp";				
-				$smsg_og_serv1 = "http://gate1.sms-responder.com/external/smsrsend.asp";
-				$smsg_og_serv2 = "http://gate2.sms-responder.com/external/smsrsend.asp";
-				$smsg_server_inuse = "1";		
-				$smsg_force_sec = "0";					
-				$smsg_orgcode = ""; 
-				$smsg_apipin = ""; 
-				$smsg_mode = "SENDXML"; 	
-				$smsg_replyto = "07892012345";
-				$smsg_replyto_2 = "07537415550";
-				$columns = "1,2,3,4,5,6,7";
-				$use_autostat = "0";
-				$start_tag = "*";
-				$end_tag = "*";				
-				}
-			
-			if (!table_exists("msg_settings")) {		//	11/28/12, 7/10/13
+			if (!table_exists("msg_settings")) {		//	11/28/12, 7/10/13, 9/10/13
 				$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]msg_settings` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
 				`name` tinytext,
@@ -1391,37 +1343,34 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 				$result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	10/23/12
 				
 				$query = "INSERT INTO `$GLOBALS[mysql_prefix]msg_settings` (`id`, `name`, `value`) VALUES
-					(1, 'email_server', '{$email_server}'),
-					(2, 'email_port', '{$email_port}'),
-					(3, 'email_protocol', '{$email_protocol}'),
-					(4, 'email_addon', '{$email_addon}'),
-					(5, 'email_folder', '{$email_folder}'),
-					(6, 'email_userid', '{$email_userid}'),
-					(7, 'email_password', '{$email_password}'),
-					(8, 'email_svr_simple', '{$email_svr_simple}'),
-					(9, 'smsg_provider', '{$smsg_provider}'),
-					(10, 'smsg_server', '{$smsg_server}'),
-					(11, 'smsg_server2', '{$smsg_server2}'),
-					(12, 'smsg_og_serv1', '{$smsg_og_serv1}'),
-					(13, 'smsg_og_serv2', '{$smsg_og_serv2}'),
-					(14, 'smsg_server_inuse', '{$smsg_server_inuse}'),
-					(15, 'smsg_force_sec', '{$smsg_force_sec}'),
-					(16, 'smsg_orgcode', '{$smsg_orgcode}'),
-					(17, 'smsg_apipin', '{$smsg_apipin}'),
-					(18, 'smsg_mode', '{$smsg_mode}'),
-					(19, 'smsg_replyto', '{$smsg_replyto}'),
-					(20, 'smsg_replyto_2', '{$smsg_replyto_2}'),
-					(21, 'columns', '{$columns}'),
-					(22, 'use_autostat', '{$use_autostat}'),
-					(23, 'start_tag', '{$start_tag}'),
-					(24, 'end_tag', '{$end_tag}');";
+					(1, 'email_server', ''),
+					(2, 'email_port', ''),
+					(3, 'email_protocol', 'POP3'),
+					(4, 'email_addon', 'notls'),
+					(5, 'email_folder', 'INBOX'),
+					(6, 'email_userid', ''),
+					(7, 'email_password', ''),
+					(8, 'email_svr_simple', '0'),
+					(9, 'smsg_provider', 'SMS Responder'),
+					(10, 'smsg_server', 'http://gate1.sms-responder.com/external/smsrcheck.asp'),
+					(11, 'smsg_server2', 'http://gate2.sms-responder.com/external/smsrcheck.asp'),
+					(12, 'smsg_og_serv1', 'http://gate1.sms-responder.com/external/smsrsend.asp'),
+					(13, 'smsg_og_serv2', 'http://gate2.sms-responder.com/external/smsrsend.asp'),
+					(14, 'smsg_server_inuse', '1'),
+					(15, 'smsg_force_sec', '0'),
+					(16, 'smsg_orgcode', '0'),
+					(17, 'smsg_apipin', '0'),
+					(18, 'smsg_mode', 'SENDXML'),
+					(19, 'smsg_replyto', ''),
+					(20, 'smsg_replyto_2', ''),
+					(21, 'columns', '1,2,3,4,5,6,7'),
+					(22, 'use_autostat', '0'),
+					(23, 'start_tag', '*'),
+					(24, 'end_tag', '*');";
 				$result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	10/23/12		
 				}
 
-			$query = "DROP TABLE IF EXISTS `$GLOBALS[mysql_prefix]requests`";
-			$result = mysql_query($query);		// 11/28/12	
-			
-			if (!table_exists("requests")) {		//	11/28/12
+			if (!table_exists("requests")) {		//	11/28/12, 9/10/13
 				$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]requests` (
 					`id` bigint(8) NOT NULL AUTO_INCREMENT,
 					`contact` varchar(48) NOT NULL DEFAULT '',
@@ -1547,7 +1496,7 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 			do_setting ('auto_refresh','1/1/1');			// 5/21/2013 auto-refresh for sitscr, fullscr, mobile
 			do_msg_setting ('no_whitelist','0');						// 5/21/2013 apply ICS button to top.php if == 1
 			do_caption("HAS");								// 'Hello all stations' button
-			
+
 			if (!table_exists("conditions")) {		//	7/9/13			
 				$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]conditions` (
 					`id` int(2) NOT NULL auto_increment,
@@ -1580,6 +1529,218 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 				$result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	7/9/13
 				}
 
+			do_setting ('use_responder_mobile','1');		// 9/10/13
+			do_setting ('responder_mobile_tracking','2');		// 9/10/13
+			do_setting ('local_maps','0');		// 8/5/13
+			do_setting ('cloudmade_api','');		// 8/5/13
+			do_setting ('responder_mobile_forcelogin','1');		//9/10/13
+			do_setting ('use_disp_autostat','0');		// 9/10/13
+			do_setting ('portal_contact_email','');		// 9/10/13
+			do_setting ('portal_contact_phone','');		// 9/10/13	
+			do_setting ('notify_facilities','0');		// 9/10/13	
+			do_setting ('notify_in_types','0');		// 9/10/13	
+			do_setting ('warn_proximity','1');		// 9/10/13				
+			do_setting ('warn_proximity_units','M');		// 9/10/13		
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `roster_user` INT( 7 ) NOT NULL DEFAULT '0' AFTER `id`";		// 9/10/13
+			$result = mysql_query($query);
+
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `status_about` VARCHAR( 512 ) NULL AFTER `un_status_id`";		// 9/10/13
+			$result = mysql_query($query);
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]facilities` ADD `status_about` VARCHAR( 512 ) NULL AFTER `status_id`";		// 9/10/13
+			$result = mysql_query($query);
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` ADD `address_about` VARCHAR( 512 ) NULL AFTER `street`";		// 9/10/13
+			$result = mysql_query($query);
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` ADD `to_address` VARCHAR( 1024 ) NULL AFTER `phone`";		// 9/10/13
+			$result = mysql_query($query);
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]requests` ADD `to_address` VARCHAR( 1024 ) NULL AFTER `phone`";		// 9/10/13
+			$result = mysql_query($query);
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]requests` ADD `cancelled` DATETIME NULL AFTER `closed`";		// 9/10/13
+			$result = mysql_query($query);
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]notify` ADD `mailgroup` INT( 4 ) NOT NULL DEFAULT '0' AFTER `email_address`";		// 9/10/13
+			$result = mysql_query($query);
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]facilities` ADD `notify_mailgroup` INT( 4 ) NOT NULL DEFAULT '0' AFTER `callsign`";		// 9/10/13
+			$result = mysql_query($query);
+
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]facilities` ADD `notify_email` VARCHAR( 256 ) NULL DEFAULT NULL AFTER `notify_mailgroup`";		// 9/10/13
+			$result = mysql_query($query);	
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `mob_tracker` TINYINT( 2 ) NOT NULL DEFAULT 0 COMMENT 'if 1 unit uses Mobile screen tracking - callsign set automatically' AFTER `t_tracker`;";
+			$result = mysql_query($query);		// 9/10/13
+			
+			if (!table_exists("warnings")) {		//	9/10/13			
+				$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]warnings` (
+					`id` int(7) NOT NULL auto_increment,
+					`title` text NOT NULL,
+					`street` varchar(96) NOT NULL,
+					`city` varchar(32) NOT NULL,
+					`state` char(4) NOT NULL,
+					`lat` double NOT NULL,
+					`lng` double NOT NULL,
+					`description` text NOT NULL,
+					`_by` int(7) default NULL,
+					`_on` datetime default NULL,
+					`_from` varchar(16) default NULL,
+					PRIMARY KEY  (`id`)
+					) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";		
+				$result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	7/9/13
+				}		
+
+			if (!table_exists("auto_disp_status")) {		//	9/10/13
+				$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]auto_disp_status` (
+					`id` int(3) NOT NULL auto_increment,
+					`name` varchar(128) NOT NULL,
+					`status_val` int(3) NOT NULL,
+					PRIMARY KEY  (`id`)
+					) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
+				$result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	8/22/13	
+				}
+				
+			if (!table_exists("mailgroup")) {		//	9/10/13		
+				$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]mailgroup` (
+					`id` int(4) NOT NULL auto_increment,
+					`name` varchar(128) NOT NULL,
+					`notes` text,
+					PRIMARY KEY  (`id`)
+					) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
+				$result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	8/22/13	
+				}
+
+			if (!table_exists("mailgroup_x")) {		//	9/10/13		
+				$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]mailgroup_x` (
+					`id` int(4) NOT NULL auto_increment,
+					`mailgroup` int(4) NOT NULL,
+					`contacts` int(4) default '0',
+					`responder` int(4) default '0',
+					PRIMARY KEY  (`id`)
+					) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
+				$result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	8/22/13	
+				}
+
+			if (!table_exists("personnel")) {		//	9/10/13	
+				$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]personnel` (
+					`id` int(4) NOT NULL auto_increment COMMENT 'table id',
+					`surname` varchar(48) default NULL,
+					`forenames` varchar(48) default NULL,
+					`address` varchar(128) default NULL,
+					`state` varchar(24) default NULL,
+					`latitude` double default NULL,
+					`longitude` double default NULL,
+					`map_grid` varchar(10) default NULL,
+					`date_of_birth` date default NULL,
+					`gender` varchar(48) default NULL,
+					`person_identifier` varchar(48) default NULL COMMENT 'linking field to responders',
+					`email` varchar(48) default NULL,
+					`cellphone` varchar(48) default NULL,
+					`homephone` varchar(48) default NULL,
+					`workphone` varchar(48) default NULL,
+					`next_of_kin_name` varchar(48) default NULL,
+					`next_of_kin_address` varchar(128) default NULL,
+					`next_of_kin_homephone` varchar(48) default NULL,
+					`next_of_kin_workphone` varchar(48) default NULL,
+					`next_of_kin_cellphone` varchar(48) default NULL,
+					`amateur_radio_callsign` varchar(48) default NULL,
+					`person_status` varchar(48) default NULL,
+					`team_name` varchar(48) default NULL,
+					`person_notes` longtext COMMENT 'combined field from various data inputs',
+					`person_capabilities` longtext COMMENT 'combined field from various data inputs',
+					`vehicle_identifier` varchar(48) default NULL,
+					`vehicle_callsign` varchar(48) default NULL,
+					`vehicle_owner` varchar(48) default NULL,
+					`vehicle_make` varchar(48) default NULL,
+					`vehicle_model` varchar(48) default NULL,
+					`vehicle_year` varchar(48) default NULL,
+					`vehicle_color` varchar(48) default NULL,
+					`vehicle_seats` varchar(48) default NULL,
+					`vehicle_notes` longtext COMMENT 'combined field from various data inputs',
+					`vehicle_capabilities` longtext COMMENT 'combined field from various data inputs',
+					`valid_training` longtext COMMENT 'combined field from various data inputs',
+					`_on` datetime NOT NULL COMMENT 'when updated',
+					`_from` varchar(16) NOT NULL COMMENT 'IP address',
+					`_by` int(7) default NULL COMMENT 'User ID',
+					PRIMARY KEY  (`id`)
+					) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='data from membership database' AUTO_INCREMENT=1 ;";			
+				$result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	8/22/13	
+				}
+				
+			if (!table_exists("files")) {		//	9/10/13	
+				$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]files` (
+					`id` mediumint(5) NOT NULL AUTO_INCREMENT,
+					`title` varchar(128) NOT NULL,
+					`filename` varchar(512) NOT NULL,
+					`orig_filename` varchar(512) NOT NULL,
+					`ticket_id` mediumint(6) NOT NULL DEFAULT '0',
+					`responder_id` mediumint(6) NOT NULL DEFAULT '0',
+					`facility_id` mediumint(6) NOT NULL,
+					`type` int(2) DEFAULT '0',
+					`filetype` varchar(128) NOT NULL,
+					`_by` int(7) NOT NULL,
+					`_on` datetime NOT NULL,
+					`_from` varchar(16) NOT NULL,
+					PRIMARY KEY (`id`)
+					) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";			
+				$result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	8/22/13	
+				}				
+				
+			if (!table_exists("files_x")) {		//	9/10/13	
+				$query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]files_x` (
+					`id` mediumint(6) NOT NULL AUTO_INCREMENT,
+					`file_id` mediumint(6) NOT NULL,
+					`user_id` int(4) NOT NULL,
+					PRIMARY KEY (`id`)
+					) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";			
+				$result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	8/22/13	
+				}				
+				
+			do_caption("To Address");		//	9/10/13	
+			do_caption("Address About", "About Address");			//	9/10/13	
+			do_caption("About Address");					//	9/10/13		
+			do_caption("Service User");			//	9/10/13		
+			do_caption("Originating Facility");				//	9/10/13	
+			do_caption("Receiving Facility");			//	9/10/13		
+			do_caption("Scope");			//	9/10/13		
+			do_caption("Title");			//	9/10/13	
+			do_caption("Comments");		//	9/10/13		
+			do_caption("Regions");			//	9/10/13		
+			do_caption("Destination");		//	9/10/13	
+			do_caption("Destination Address");		//	9/10/13	
+			do_caption("Start Address");			//	9/10/13		
+			do_caption("On Job");			//	9/10/13			
+			do_caption("Responder Handle");			//	9/10/13	
+			do_caption("Open");			//	9/10/13				
+			do_caption("Tentative");			//	9/10/13	
+			do_caption("Accepted");			//	9/10/13	
+			do_caption("Resourced");			//	9/10/13
+			do_caption("Completed");			//	9/10/13	
+			do_caption("Closed");			//	9/10/13	
+			do_caption("Cancelled");			//	9/10/13	
+			do_caption("Current Requests");			//	9/10/13
+			do_caption("Weather");			//	9/10/13		
+			do_caption("Contact Us");			//	9/10/13	
+			do_caption("Telephone");			//	9/10/13		
+			do_caption("Email");			//	9/10/13	
+			do_caption("Useful Documents");			//	9/10/13	
+			do_caption("Import");			//	9/10/13	
+			do_caption("New Request");			//	9/10/13	
+			do_caption("Export Requests to CSV");			//	9/10/13	
+			do_caption("Show Closed");			//	9/10/13	
+			do_caption("Hide Closed");			//	9/10/13	
+			do_caption("Portal");			//	9/10/13	
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]ticket` ADD `portal_user` INT( 4 ) NULL DEFAULT NULL AFTER `org` ;";		// 9/10/13
+			$result = mysql_query($query);	
+			
+			do_insert_day_colors('sev_background', 'EFEFEF');			//	9/10/13
+			do_insert_night_colors('sev_background', 'EFEFEF');			//	9/10/13	
+			do_insert_day_colors('sev_text', '000000');			//	9/10/13
+			do_insert_night_colors('sev_text', '000000');			//	9/10/13				
 		}		// end (!($version ==...) ==================================================			
 
 /**
@@ -1758,93 +1919,95 @@ if((count_responders()== 0) && (get_variable('title_string') == "") && ((!empty(
 //	cache buster and logout from statistics module.
 $_SESSION = array();	//	6/14/13
 
-// //	Mobile redirect
+// Mobile redirect
 
-// $text = $_SERVER['HTTP_USER_AGENT'];
-// $var[0] = 'Mozilla/4.';
-// $var[1] = 'Mozilla/3.0';
-// $var[2] = 'AvantGo';
-// $var[3] = 'ProxiNet';
-// $var[4] = 'Danger hiptop 1.0';
-// $var[5] = 'DoCoMo/';
-// $var[6] = 'Google CHTML Proxy/';
-// $var[7] = 'UP.Browser/';
-// $var[8] = 'SEMC-Browser/';
-// $var[9] = 'J-PHONE/';
-// $var[10] = 'PDXGW/';
-// $var[11] = 'ASTEL/';
-// $var[12] = 'Mozilla/1.22';
-// $var[13] = 'Handspring';
-// $var[14] = 'Windows CE';
-// $var[15] = 'PPC';
-// $var[16] = 'Mozilla/2.0';
-// $var[17] = 'Blazer/';
-// $var[18] = 'Palm';
-// $var[19] = 'WebPro/';
-// $var[20] = 'EPOC32-WTL/';
-// $var[21] = 'Tungsten';
-// $var[22] = 'Netfront/';
-// $var[23] = 'Mobile Content Viewer/';
-// $var[24] = 'PDA';
-// $var[25] = 'MMP/2.0';
-// $var[26] = 'Embedix/';
-// $var[27] = 'Qtopia/';
-// $var[28] = 'Xiino/';
-// $var[29] = 'BlackBerry';
-// $var[30] = 'Gecko/20031007';
-// $var[31] = 'MOT-';
-// $var[32] = 'UP.Link/';
-// $var[33] = 'Smartphone';
-// $var[34] = 'portalmmm/';
-// $var[35] = 'Nokia';
-// $var[36] = 'Symbian';
-// $var[37] = 'AppleWebKit/413';
-// $var[38] = 'UPG1 UP/';
-// $var[39] = 'RegKing';
-// $var[40] = 'STNC-WTL/';
-// $var[41] = 'J2ME';
-// $var[42] = 'Opera Mini/';
-// $var[43] = 'SEC-';
-// $var[44] = 'ReqwirelessWeb/';
-// $var[45] = 'AU-MIC/';
-// $var[46] = 'Sharp';
-// $var[47] = 'SIE-';
-// $var[48] = 'SonyEricsson';
-// $var[49] = 'Elaine/';
-// $var[50] = 'SAMSUNG-';
-// $var[51] = 'Panasonic';
-// $var[52] = 'Siemens';
-// $var[53] = 'Sony';
-// $var[54] = 'Verizon';
-// $var[55] = 'Cingular';
-// $var[56] = 'Sprint';
-// $var[57] = 'AT&T;';
-// $var[58] = 'Nextel';
-// $var[59] = 'Pocket PC';
-// $var[60] = 'T-Mobile';    
-// $var[61] = 'Orange';
-// $var[62] = 'Casio';
-// $var[63] = 'HTC';
-// $var[64] = 'Motorola';
-// $var[65] = 'Samsung';
-// $var[66] = 'NEC';
+if(get_variable('use_responder_mobile') == "1") {	//	8/1/13
+	$text = $_SERVER['HTTP_USER_AGENT'];
+	$var[0] = 'Mozilla/4.';
+	$var[1] = 'Mozilla/3.0';
+	$var[2] = 'AvantGo';
+	$var[3] = 'ProxiNet';
+	$var[4] = 'Danger hiptop 1.0';
+	$var[5] = 'DoCoMo/';
+	$var[6] = 'Google CHTML Proxy/';
+	$var[7] = 'UP.Browser/';
+	$var[8] = 'SEMC-Browser/';
+	$var[9] = 'J-PHONE/';
+	$var[10] = 'PDXGW/';
+	$var[11] = 'ASTEL/';
+	$var[12] = 'Mozilla/1.22';
+	$var[13] = 'Handspring';
+	$var[14] = 'Windows CE';
+	$var[15] = 'PPC';
+	$var[16] = 'Mozilla/2.0';
+	$var[17] = 'Blazer/';
+	$var[18] = 'Palm';
+	$var[19] = 'WebPro/';
+	$var[20] = 'EPOC32-WTL/';
+	$var[21] = 'Tungsten';
+	$var[22] = 'Netfront/';
+	$var[23] = 'Mobile Content Viewer/';
+	$var[24] = 'PDA';
+	$var[25] = 'MMP/2.0';
+	$var[26] = 'Embedix/';
+	$var[27] = 'Qtopia/';
+	$var[28] = 'Xiino/';
+	$var[29] = 'BlackBerry';
+	$var[30] = 'Gecko/20031007';
+	$var[31] = 'MOT-';
+	$var[32] = 'UP.Link/';
+	$var[33] = 'Smartphone';
+	$var[34] = 'portalmmm/';
+	$var[35] = 'Nokia';
+	$var[36] = 'Symbian';
+	$var[37] = 'AppleWebKit/413';
+	$var[38] = 'UPG1 UP/';
+	$var[39] = 'RegKing';
+	$var[40] = 'STNC-WTL/';
+	$var[41] = 'J2ME';
+	$var[42] = 'Opera Mini/';
+	$var[43] = 'SEC-';
+	$var[44] = 'ReqwirelessWeb/';
+	$var[45] = 'AU-MIC/';
+	$var[46] = 'Sharp';
+	$var[47] = 'SIE-';
+	$var[48] = 'SonyEricsson';
+	$var[49] = 'Elaine/';
+	$var[50] = 'SAMSUNG-';
+	$var[51] = 'Panasonic';
+	$var[52] = 'Siemens';
+	$var[53] = 'Sony';
+	$var[54] = 'Verizon';
+	$var[55] = 'Cingular';
+	$var[56] = 'Sprint';
+	$var[57] = 'AT&T;';
+	$var[58] = 'Nextel';
+	$var[59] = 'Pocket PC';
+	$var[60] = 'T-Mobile';    
+	$var[61] = 'Orange';
+	$var[62] = 'Casio';
+	$var[63] = 'HTC';
+	$var[64] = 'Motorola';
+	$var[65] = 'Samsung';
+	$var[66] = 'NEC';
+	$var[67] = 'Mobi';
+	
+	$result = count($var);
 
-// $result = count($var);
+	$host  = $_SERVER['HTTP_HOST'];
+	$uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+	$extra = 'rm/index.php';
+	$url = "http://" . $host . $uri . "/" . $extra;
 
-// $host  = $_SERVER['HTTP_HOST'];
-// $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-// $extra = './mobile/index.php';
-// $url = "http://" . $host . $uri . "/" . $extra;
-
-// for ($i=0;$i<$result;$i++) {    
-    // $ausg = stristr($text, $var[$i]);    
-    // if(strlen($ausg)>0) {
-        // header("location: $url");
-        // exit;
-		// }
-	// }
-
-// //	End of Mobile redirect
+	for ($i=0;$i<$result;$i++) {    
+		$ausg = stristr($text, $var[$i]);    
+		if((strlen($ausg)>0) && (!stristr($text, 'MSIE'))) {
+			echo '<meta http-equiv="refresh" content="', 0, ';URL=', $url, '">';
+			exit;
+			}
+		}
+	//	End of Mobile redirect
+	}
 
 if(isset($_POST['logout'])) {
 	$buster = strval(rand()) . "&logout=1";
@@ -1855,8 +2018,7 @@ if (get_variable('call_board') == 2) {
 ?>
 	<FRAMESET ID = 'the_frames' ROWS="<?php print (get_variable('framesize') + 25);?>, 0 ,*" BORDER="<?php print get_variable('frameborder');?>" BORDERCOLOR="#ff0000">
 	<FRAME SRC="top.php?stuff=<?php print $buster;?>" NAME="upper" SCROLLING="no" />
-	<FRAME SRC='board.php?stuff=<?php print $buster;?>' ID = 'what' NAME='calls' SCROLLING='AUTO' />	
-  <FRAME SRC="main.php?stuff=<?php print $buster;?>" NAME="main" />
+	<FRAME SRC='board.php?stuff=<?php print $buster;?>' ID = 'what' NAME='calls' SCROLLING='AUTO' />	<FRAME SRC="main.php?stuff=<?php print $buster;?>" NAME="main" />
 	<FRAME SRC="main.php?stuff=<?php print $buster;?>" NAME="main" />
 <?php 
 	}

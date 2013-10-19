@@ -136,10 +136,11 @@ function do_logout($return=FALSE){						/* logout - destroy session data */
  * @see
  * @since
  */
-	function set_filenames($internet) {
-		$normal = (($internet == 1) || (($internet == 3) && (check_conn ())));		// check_conn()  returns TRUE/FALSE = 8/31/10			
-	
-		$_SESSION['internet'] = $normal;                        
+	function set_filenames($internet, $userchoice) {
+		$internet_good = (($internet == 1) || (($internet == 3) && (check_conn ())));		// check_conn()  returns TRUE/FALSE = 8/31/10			
+		$normal = ($internet_good && $userchoice == "Show") ? true : false; 
+		$_SESSION['internet'] = $normal;   
+		$_SESSION['good_internet'] = $internet_good;
 //		$_SESSION['fip'] =($normal)? "./incs/functions.inc.php":	"./incs/functions_nm.inc.php";                        
 		$_SESSION['fip'] ="./incs/functions.inc.php";                        // 8/27/10
 		$_SESSION['fmp'] = ($normal)? "./incs/functions_major.inc.php": "./incs/functions_major_nm.inc.php";                              
@@ -149,6 +150,7 @@ function do_logout($return=FALSE){						/* logout - destroy session data */
 		$_SESSION['facilitiesfile'] = ($normal)?	"facilities.php": "facilities_nm.php";		                    
 		$_SESSION['routesfile'] = ($normal)?	"routes.php": "routes_nm.php";						        
 		$_SESSION['facroutesfile'] = ($normal)? "fac_routes.php": "fac_routes_nm.php";
+		$_SESSION['warnlocationsfile'] = ($normal)? "warn_locations.php": "warn_locations_nm.php";
 		}
 
 // ==========================================================================
@@ -292,7 +294,8 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 					WHERE `id` = {$row['id']} LIMIT 1";
 					
 				$result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-
+				$userchoice = $_POST['frm_maps'];
+				
 				$_SESSION['id'] = 			$sid;
 				$_SESSION['expires'] = 		time();
 				$_SESSION['user_id'] = 		$row['id'];
@@ -317,6 +320,7 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 				$_SESSION['list_type'] = 0;		// 12/2/10			
 				$_SESSION['show_hide_Deployed'] = "s";	// Show all deployed tickets 3/15/11
 				$_SESSION['day_night'] = $_POST['frm_daynight'];	// 01/20/11 Set Day or Night Colors
+				$_SESSION['maps_sh'] = $_POST['frm_maps'];	// 9/10/13 Show or Hide Maps
 				$_SESSION['hide_controls'] = "s";		// 3/15/11
 				$_SESSION['incs_list'] = "s";		// 3/15/11
 				$_SESSION['resp_list'] = "s";		// 3/15/11
@@ -336,7 +340,7 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 					}
 //				$temp = implode(";",  $_SESSION);
 
-				set_filenames($internet);			// 8/31/10
+				set_filenames($internet, $userchoice);			// 8/31/10
 	
 				do_log($GLOBALS['LOG_SIGN_IN'],0,0,"{$browser}");		// log it - 12/1/2012
 																		
@@ -547,16 +551,45 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 		
 // End of code to check for guest account existence
 ?>
-		<TR CLASS='even'><TD ROWSPAN=6 VALIGN='middle' ALIGN='left' bgcolor=#EFEFEF><BR /><BR />&nbsp;&nbsp;<IMG BORDER=0 SRC='open_source_button.png' <?php print $my_click; ?>><BR /><BR />
-		&nbsp;&nbsp;<img src="php.png" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD CLASS="td_label"><?php print get_text("User"); ?>:</TD>
-			<TD><INPUT TYPE="text" NAME="frm_user" MAXLENGTH="255" SIZE="30" onChange = "document.login_form.frm_user.value = document.login_form.frm_user.value.trim();" VALUE=""></TD></TR>
-		<TR CLASS='odd'><TD CLASS="td_label"><?php print get_text("Password"); ?>: &nbsp;&nbsp;</TD>
-			<TD><INPUT TYPE="password" NAME="frm_passwd" MAXLENGTH="255" SIZE="30" onChange = "document.login_form.frm_passwd.value = document.login_form.frm_passwd.value.trim();"  VALUE=""></TD></TR>
-		<TR CLASS="even"><TD COLSPAN=2>&nbsp;&nbsp;</TD></TR>
-			<TR CLASS='odd'><TD CLASS="td_label">Colors: &nbsp;&nbsp;</TD>
-			<TD><INPUT TYPE="radio" NAME="frm_daynight" VALUE="Day" checked>Day&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="radio" NAME="frm_daynight" value="Night">Night</TD></TR>
-		<TR CLASS="even"><TD COLSPAN=2>&nbsp;&nbsp;</TD></TR>
-		<TR CLASS='even'><TD></TD><TD><INPUT TYPE="submit" VALUE="<?php print get_text("Log In"); ?>"></TD></TR>
+		<TR CLASS='even'>
+			<TD ROWSPAN=7 VALIGN='middle' ALIGN='left' bgcolor=#EFEFEF><BR /><BR />&nbsp;&nbsp;<IMG BORDER=0 SRC='open_source_button.png' <?php print $my_click; ?>><BR /><BR />
+			&nbsp;&nbsp;<img src="php.png" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD CLASS="td_label"><?php print get_text("User"); ?>:</TD>
+			<TD><INPUT TYPE="text" NAME="frm_user" MAXLENGTH="255" SIZE="30" onChange = "document.login_form.frm_user.value = document.login_form.frm_user.value.trim();" VALUE=""></TD>
+		</TR>
+		<TR CLASS='even'>
+			<TD CLASS="td_label"><?php print get_text("Password"); ?>: &nbsp;&nbsp;</TD>
+			<TD><INPUT TYPE="password" NAME="frm_passwd" MAXLENGTH="255" SIZE="30" onChange = "document.login_form.frm_passwd.value = document.login_form.frm_passwd.value.trim();"  VALUE=""></TD>
+		</TR>
+		<TR CLASS="even">
+			<TD COLSPAN=2>&nbsp;&nbsp;</TD>
+		</TR>
+		<TR CLASS='even'>
+			<TD CLASS="td_label"><?php print gettext('Colors');?>: &nbsp;&nbsp;</TD>
+			<TD><INPUT TYPE="radio" NAME="frm_daynight" VALUE="Day" checked><?php print gettext('Day');?>&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="radio" NAME="frm_daynight" value="Night"><?php print gettext('Night');?></TD>
+		</TR>
+		<TR CLASS="even">
+			<TD COLSPAN=2>&nbsp;&nbsp;</TD>
+		</TR>
+<?php
+	if(get_variable("internet") != 2) {
+?>
+		<TR CLASS='even'>
+			<TD CLASS="td_label">Maps: &nbsp;&nbsp;</TD>
+			<TD><INPUT TYPE="radio" NAME="frm_maps" VALUE="Show" checked>Show Maps&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="radio" NAME="frm_maps" value="Hide">Hide Maps</TD>
+		</TR>
+<?php
+		} else {
+?>
+			<INPUT type="hidden" NAME="frm_maps" VALUE="Show">
+<?php
+		}
+?>
+		<TR CLASS="even">
+			<TD COLSPAN=2>&nbsp;&nbsp;</TD>
+		</TR>
+		<TR CLASS='even'>
+			<TD COLSPAN=3 ALIGN='center'><INPUT TYPE="submit" VALUE="<?php print get_text("Log In"); ?>"></TD>
+		</TR>
 <?php
 		if($guest_exists) {	//	6/1/12
 ?>

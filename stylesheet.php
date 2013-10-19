@@ -825,3 +825,8 @@ select.sit {
 	word-wrap: break-word; 
 	display: block;
 	}
+	
+.sev_infobar {
+	background-color: <?php print get_css("sev_background", $day_night);?>;
+	color: <?php print get_css("sev_text", $day_night);?>;
+	}

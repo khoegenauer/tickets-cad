@@ -53,6 +53,7 @@ require_once($the_inc);
 10/23/12 Added code for Messaging
 3/26/2013 revised per RC Charlie
 5/26/2013 made auto_refresh conditional on setting value
+9/10/13 Changed logic to show full screen button, now shows if internet is available but maps are switched off by user choice.
 */
 
 if (isset($_GET['logout'])) {
@@ -155,7 +156,7 @@ parent.calls.location.href = 'board.php';							// 7/21/10
 <?php
 	}		// end if ( get_variable('call_board') == 2) 
 	
-if (!($_SESSION['internet'])) {				// 8/25/10 
+if ((!($_SESSION['internet'])) && (!$_SESSION['good_internet'])) {				// 8/25/10, 9/10/13
 ?>
 	parent.frames["upper"].$("full").style.display  = "none";		// hide 'full screen' button
 <?php
@@ -993,10 +994,10 @@ if (is_guest()) {													// 8/25/10
 	function do_watch() {								// monitor for changes
 //		alert(697);
 		if (							// any change?
-			($("div_ticket_id").innerHTML != parent.frames["upper"].$("div_ticket_id").innerHTML) ||
-			($("div_assign_id").innerHTML != parent.frames["upper"].$("div_assign_id").innerHTML) ||
-			($("div_action_id").innerHTML != parent.frames["upper"].$("div_action_id").innerHTML) ||
-			($("div_patient_id").innerHTML != parent.frames["upper"].$("div_patient_id").innerHTML)			
+			(($("div_ticket_id").innerHTML != "") && ($("div_ticket_id").innerHTML != parent.frames["upper"].$("div_ticket_id").innerHTML)) ||
+			(($("div_assign_id").innerHTML != "") && ($("div_assign_id").innerHTML != parent.frames["upper"].$("div_assign_id").innerHTML)) ||
+			(($("div_action_id").innerHTML != "") && ($("div_action_id").innerHTML != parent.frames["upper"].$("div_action_id").innerHTML)) ||
+			(($("div_patient_id").innerHTML != "") && ($("div_patient_id").innerHTML != parent.frames["upper"].$("div_patient_id").innerHTML))			
 			)
 				{			  // a change
 				end_watch();
@@ -1074,8 +1075,8 @@ if (is_guest()) {													// 8/25/10
 		get_all_messagelist(ticket_id,'',sortby, sort, filter, 'ticket');
 		}
 <?php
-	$do_blink_str = ($do_blink)? "start_blink()" : "";
-	$end_blink_str = ($do_blink)? "end_blink()" : "";
+	$do_blink_str = ($do_blink)? "start_blink();" : "";
+	$end_blink_str = ($do_blink)? "end_blink();" : "";
 ?>
 </SCRIPT>
 </HEAD>
@@ -1106,7 +1107,7 @@ if (is_guest()) {													// 8/25/10
 	$set_regions_control = ((!($get_id)) && ((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))) ? "set_regions_control();" : "";	//	6/1/12
 	$get_messages = ($get_id) ? "get_mainmessages(" . $get_id . " ,'',sortby, sort, '', 'ticket');" : "";
 ?>
-<BODY onLoad = "ck_frames(); <?php print $ld_ticker;?> <?php print $set_regions_control;?> <?php print $get_messages;?> <?php print $set_showhide;?> <?php print $set_bnds;?> parent.frames['upper'].document.getElementById('gout').style.display  = 'inline'; start_watch(); location.href = '#top'; <?php print $do_mu_init;?> <?php print $fences;?> <?php print $do_blink_str;?> " onUnload = "end_watch(); end_blink(); <?php print $gunload;?>";>	<!-- 3/15/11, 10/23/12 -->
+<BODY onLoad = "ck_frames(); <?php print $ld_ticker;?> <?php print $set_regions_control;?> <?php print $get_messages;?> <?php print $set_showhide;?> <?php print $set_bnds;?> parent.frames['upper'].document.getElementById('gout').style.display  = 'inline'; location.href = '#top'; <?php print $do_mu_init;?> <?php print $fences;?> <?php print $do_blink_str;?> start_watch(); " onUnload = "end_watch(); end_blink(); <?php print $gunload;?>";>	<!-- 3/15/11, 10/23/12 -->
 <?php
 	include("./incs/links.inc.php");		// 8/13/10
 ?>

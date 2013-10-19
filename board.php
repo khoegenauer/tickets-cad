@@ -491,7 +491,7 @@ $evenodd = array ("even", "odd");	// CLASS names for alternating table row color
 		var method = (postData) ? "POST" : "GET";
 //		req.open(method,url,true);
 		req.open(method,url,false);		// synchronous, 7/27/09
-		req.setRequestHeader('User-Agent','XMLHTTP/1.0');
+////		req.setRequestHeader('User-Agent','XMLHTTP/1.0');
 		if (postData)
 			req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 		req.onreadystatechange = function () {
@@ -1837,7 +1837,7 @@ setTimeout('do_post()', 1000);
 			$i = 1;	
 	
 			print "<TABLE BORDER=0 ALIGN='left' WIDTH='88%'  cellspacing = 1 CELLPADDING = 1 ID='call_board' STYLE='display:block'>\n";	// 5/24/09
- 			print "<TR CLASS='even'><TD COLSPAN=18 ALIGN = 'center'><B>" . gettext('Call Board') . "</B><FONT SIZE='-3'>&nbsp;&nbsp;&nbsp;&nbsp;" . $regs_string . "&nbsp;&nbsp;&nbsp;&nbsp;<I>(mouseover/click for details)</I></FONT></TD><TD WIDTH=150px></TD></TR>\n";	// 5/24/09
+ 			print "<TR CLASS='even'><TD COLSPAN=18 ALIGN = 'center'><B>" . gettext('Call Board') . "</B><FONT SIZE='-3'>&nbsp;&nbsp;&nbsp;&nbsp;" . $regs_string . "&nbsp;&nbsp;&nbsp;&nbsp;<I>(" . gettext('mouseover/click for details') . ")</I></FONT></TD><TD WIDTH=150px></TD></TR>\n";	// 5/24/09
 			 
 			$doUnit = (($guest)||($user))? "viewU" : "editU";		// 5/11/10
 			$doTick = ($guest)? "viewT" : "editT";				// 06/26/08
@@ -2309,10 +2309,10 @@ setTimeout('do_post()', 1000);
 		function validate_ed(theForm) {
 			var errmsg="";
 			if (theForm.frm_unit_id) {						// defined?
-				if (theForm.frm_unit_id.value == 0)			{errmsg+= "\t<?php print gettext('Select');?> <?php print get_text("Units");?>\n";}
+				if (theForm.frm_unit_id.value == 0)			{errmsg+= "\t<?php print gettext('Select') . " " . get_text("Units");?>\n";}
 				}
 			if (theForm.frm_unit_status_id) {
-				if (theForm.frm_unit_status_id.value == 0)	{errmsg+= "\t<?php print gettext('Select');?> <?php print get_text("Units");?> <?php print gettext('Status');?>\n";}
+				if (theForm.frm_unit_status_id.value == 0)	{errmsg+= "\t<?php print gettext('Select') . " " . get_text("Units");?> <?php print gettext('Status');?>\n";}
 				}
 			if (theForm.frm_comments.value == "")			{errmsg+= "\t<?php print gettext('Comments required');?>\n";}
 	

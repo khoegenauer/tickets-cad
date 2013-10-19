@@ -53,47 +53,47 @@ function optimize_db(){
 /* reset database to defaults */
 function reset_db($user=0,$ticket=0,$responders=0,$facilities=0,$settings=0,$messages=0,$purge=0){
 	if($ticket)	{
-	 	print '<LI> ' . gettext('Deleting actions.') . '..';
+	 	print '<LI> ' . gettext('Deleting actions.') . '..</LI>';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]action") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-	 	print '<LI> ' . gettext('Deleting assigns.') . '..';
+	 	print '<LI> ' . gettext('Deleting assigns.') . '..</LI>';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]assigns") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-	 	print '<LI> ' . gettext('Deleting chat_messages.') . '..';
+	 	print '<LI> ' . gettext('Deleting chat_messages.') . '..</LI>';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]chat_messages") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-	 	print '<LI> ' . gettext('Deleting log.') . '..';
+	 	print '<LI> ' . gettext('Deleting log.') . '..</LI>';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]log") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-	 	print '<LI> ' . gettext('Deleting notifies.') . '..';
+	 	print '<LI> ' . gettext('Deleting notifies.') . '..</LI>';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]notify") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-	 	print '<LI> ' . gettext('Deleting patient.') . '..';
+	 	print '<LI> ' . gettext('Deleting patient.') . '..</LI>';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]patient") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-		print '<LI> ' . gettext('Deleting tickets.') . '..';
+		print '<LI> ' . gettext('Deleting tickets.') . '..</LI>';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]ticket") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]allocates WHERE `type` = 1") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);		
 		}
 		
 	if($responders) {
-	 	print '<LI> ' . gettext('Deleting responder.') . '..';
+	 	print '<LI> ' . gettext('Deleting responder.') . '..</LI>';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]responder") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]allocates WHERE `type` = 2") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);	
-	 	print '<LI> ' . gettext('Deleting tracks.') . '..';
+	 	print '<LI> ' . gettext('Deleting tracks.') . '..</LI>';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]tracks") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]tracks_hh") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);		
 		}
 		
 	if($facilities) {
-	 	print '<LI> ' . gettext('Deleting facilities.') . '..';
+	 	print '<LI> ' . gettext('Deleting facilities.') . '..</LI>';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]facilities") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]allocates WHERE `type` = 3") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);		
 		}
 		
 	if($messages) {
-	 	print '<LI> ' . gettext('Deleting messages.') . '..';
+	 	print '<LI> ' . gettext('Deleting messages.') . '..</LI>';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]messages") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);		
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]messages_bin") or do_error("", 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);				
 		}
 		
 	if($user)	{
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]notify") or do_error('reset_db()::mysql_query(delete notifies)', 'mysql query failed', mysql_error(), __FILE__, __LINE__);
-		print '<LI> ' . gettext('Deleting users and notifies.') . '..';
+		print '<LI> ' . gettext('Deleting users and notifies.') . '..</LI>';
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]user") or do_error('reset_db()::mysql_query(delete users)', 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]allocates WHERE `type` = 4") or do_error("",'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
 		//	add admin user
@@ -104,10 +104,10 @@ function reset_db($user=0,$ticket=0,$responders=0,$facilities=0,$settings=0,$mes
 		//	add allocation for new admin user to region / group 1
 		$query = "INSERT INTO `$GLOBALS[mysql_prefix]allocates` (`group`,`type`,`al_as_of`,`al_status`,`resource_id`,`sys_comments`,`user_id`) VALUES (1,4,'$now',0,$new_id,'Allocated to Group after reset operation',$new_id)";				
 		$result = mysql_query($query) or do_error(query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
-		print '<LI> ' . gettext('Admin account created with password') . ' \'admin\'';
+		print '<LI> ' . gettext('Admin account created with password') . ' \'admin\'</LI>';
 		}
 	if($settings) {		//reset all default settings
-		print '<LI> ' . gettext('Deleting settings.') . '..';
+		print '<LI> ' . gettext('Deleting settings.') . '..</LI>';
 
 		$result = mysql_query("DELETE FROM $GLOBALS[mysql_prefix]settings") or do_error('reset_db()::mysql_query(delete settings)', 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 		do_insert_settings('_aprs_time','0');
@@ -193,7 +193,7 @@ function reset_db($user=0,$ticket=0,$responders=0,$facilities=0,$settings=0,$mes
 		}	//
 
 
-	print '<LI> ' . gettext('Database reset done') . '<BR /><BR />';
+	print '<LI> ' . gettext('Database reset done') . '</LI><BR /><BR />';
 	}
 
 /**
@@ -497,7 +497,7 @@ function get_setting_help($setting){/* get help for settings */
 		case "allow_custom_tags": 		return gettext("Enable/disable use of custom tags for rowbreak, italics etc."); break;
 		case "allow_notify": 			return gettext("Allow/deny notification of ticket updates"); break;
 		case "auto_poll":				return gettext("APRS/Instamapper will be polled every n minutes.  Use 0 for no poll"); break;
-		case "auto_route": 				return gettext("Do/don&#39;t (1/0) use routing for new tickets"); break;												// 9/13/08
+		case "auto_route": 				return gettext("Do/Do Not (1/0) use routing for new tickets"); break;												// 9/13/08
 		case "call_board":				return gettext("Call Board - 0, 1, 2 - for none, floating window, fixed frame"); break;
 		case "chat_time":				return gettext("Keep n hours of Chat"); break;
 		case "date_format": 			return gettext("Format dates according to php function date() variables"); break;	
@@ -515,7 +515,7 @@ function get_setting_help($setting){/* get help for settings */
 		case "gmaps_api_key":			return gettext("Google maps API key - see HELP/README re how to obtain"); break;	
 		case "guest_add_ticket": 		return gettext("Allow guest users to add tickets - NOT RECOMMENDED"); break;
 		case "host": 					return gettext("Hostname where Tickets is run"); break;
-		case "kml_files":  				return gettext("Do/don&#39;t (1/0) display KML files"); break;
+		case "kml_files":  				return gettext("Do/Do Not (1/0) display KML files"); break;
 		case "lat_lng":					return gettext("Lat/lng display: (0) for DDD.ddddd, (1) for DDD MMM SS.ss, (2) for DDD MM.mm"); break;		// 9/13/08
 		case "link_capt":				return gettext("Caption to be used for external link button"); break;
 		case "link_url":				return gettext("URL of external page link"); break;
@@ -567,6 +567,17 @@ function get_setting_help($setting){/* get help for settings */
 		case "auto_refresh": 			return gettext("Do/don&#39;t (1/0) Automatic refresh for Sit scr, Full scr, Mobile; slash-separated, with 1 = Yes.  (Default is 1/1/1.)");	 break;	// 5/21/2013	
 		case "broadcast": 				return gettext("Do/don&#39;t (1/0) use &#39;broadcast to other users&#39; - aka HAS, for Hello-All-Stations  (Default is 0, for \"No\")");	 break;	// 5/21/2013	
 		case "hide_booked": 			return gettext("Booked/scheduled runs don&#39;t appear on the situation screen until they are this-many hours from 'now'.  (Default is 48 hours.)");	 break;	// 5/21/2013	
+		case "use_responder_mobile": 	return gettext("Use Responder Mobile (rm) page - provides for auto redirect to mobile page for smartphone devices");	 break;	// 9/10/13	
+		case "responder_mobile_tracking": 	return gettext("Use inbuilt tracking from Responder Mobile (rm) page. 0 is switched off, a positive whole number is the number of minutes between updates.");	 break;	// 9/10/13	
+		case "local_maps": 			return gettext("Use local maps (OSM) for Responder Mobile (rm) page. Requires download of map tiles from config page");	 break;	// 9/10/13	
+		case "cloudmade_api": 			return gettext("Cloudmade API code. Used to provide night mode on Responder Mobile (rm) page.");	 break;	// 9/10/13	
+		case "responder_mobile_forcelogin": 	return gettext("Booked/scheduled runs don&#39;t appear on the situation screen until they are this-many hours from 'now'.  (Default is 48 hours.)");	 break;	// 9/10/13	
+		case "use_disp_autostat": 		return gettext("Use Automatic Status updates for Responder status based on changes in ispatch status - Needs setup through config page.");	 break;	// 9/10/13	
+		case "portal_contact_email": 	return gettext("Contact Us email address that appears on the Portal Page");	 break;	// 9/10/13	
+		case "portal_contact_phone": 	return gettext("Contact Us phone number that appears on the Portal Page.");	 break;	// 9/10/13	
+		case "notify_facilities": 		return gettext("Do Notifies to specified address / address list when Receiving Facility or Incident at Facility set.");	 break;	// 9/10/13	
+		case "notify_in_types": 		return gettext("Do Notifies to specified address for a particular incident type.");	 break;	// 9/10/13	
+		case "warn_proximity": 			return gettext("For Location Warnings - proximity of warnings selected for current location");	 break;	// 9/10/13	
 		default: 						return gettext("No help for '$setting'"); break;	//	 ics_top
 		}
 	}

@@ -1759,6 +1759,7 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 ?>
 	<TABLE BORDER="0" ID = "outer" ALIGN="left">
 	<TR VALIGN="top"><TD CLASS="print_TD" ALIGN="left">
+	<DIV id='loc_warnings' style='z-index: 1000; display: none; height: 100px; width: 100%; font-size: 1.5em; font-weight: bold; border: 2px outset #707070;'></DIV>	
 <?php
 	print do_ticket($row, max(320, intval($_SESSION['scr_width']* 0.4)), $search) ;				// 2/25/09
 	print show_actions($row['id'], "date", FALSE, TRUE);		/* lists actions and patient data belonging to ticket */
@@ -1779,6 +1780,34 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
 	function isNull(val) {								// checks var stuff = null;
 		return val === null;
 		}
+		
+	function find_warnings(tick_lat, tick_lng) {	//	9/10/13
+		randomnumber=Math.floor(Math.random()*99999999);
+		var theurl ="./ajax/loc_warn_list.php?version=" + randomnumber + "&lat=" + tick_lat + "&lng=" + tick_lng;
+		sendRequest(theurl, loc_w_cb, "");
+		function loc_w_cb(req) {
+			var the_warnings=JSON.decode(req.responseText);
+			var the_count = the_warnings[0]
+			if(the_count != 0) {
+				$('loc_warnings').innerHTML = the_warnings[1];
+				$('loc_warnings').style.display = 'block';
+				}
+			}			
+		}
+
+	var start_wl = false;
+	function wl_win(the_Id) {				// 2/11/09
+		if(start_wl) {return;}				// dbl-click proof
+		start_wl = true;					
+		var url = "warnloc_popup.php?id=" + the_Id;
+		newwindow_wl=window.open(url, "sta_log",  "titlebar=no, location=0, resizable=1, scrollbars, height=600,width=750,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
+		if (!(newwindow_wl)) {
+			alert ("Locations warning operation requires popups to be enabled. Please adjust your browser options - or else turn off the Call Board option.");
+			return;
+			}
+		newwindow_wl.focus();
+		start_wl = false;
+		}		// end function sv win()	
 	</SCRIPT>
 <?php
 

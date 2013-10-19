@@ -136,7 +136,7 @@
 11/29/10 case "2"
 11/30/10 get_text Patient added
 7/10/13 Revisions to function show_actions( to correct failure to show patients if no actions.
-
+9/10/13 Added function show_unit_log()
 */
 error_reporting(E_ALL);
 
@@ -693,6 +693,57 @@ function show_log ($theid, $show_cfs=FALSE) {								// 11/20/09
 	return $print;
 	}		// end function get_log ()
 //	} -- dummy
+
+function show_unit_log ($theid, $show_cfs=FALSE) {								// 9/10/13
+	global $evenodd ;	// class names for alternating table row colors
+	require('./incs/log_codes.inc.php');
+		
+	$query = "
+		SELECT *, 
+		`when` AS `when`,
+		`l`.`id` AS `log_id`,
+		`t`.`scope` AS `tickname`,
+		`r`.`handle` AS `unitname`,
+		`l`.`info` AS `comment`,
+		`s`.`status_val` AS `theinfo`,
+		`u`.`user` AS `thename` 
+		FROM `$GLOBALS[mysql_prefix]log` l
+		LEFT JOIN `$GLOBALS[mysql_prefix]ticket` t 		ON (l.ticket_id = t.id)
+		LEFT JOIN `$GLOBALS[mysql_prefix]responder` r 	ON (l.responder_id = r.id)
+		LEFT JOIN `$GLOBALS[mysql_prefix]un_status` s 	ON (l.info = s.id)
+		LEFT JOIN `$GLOBALS[mysql_prefix]user` u 		ON (l.who = u.id)
+		WHERE `l`.`responder_id` = {$theid} 
+		ORDER BY `when` ASC";								// 10/2/12
+	$result = mysql_query($query) or do_error($query, $query, mysql_error(), basename( __FILE__), __LINE__);
+	$i = 0;
+	$print = "<TABLE ALIGN='left' CELLSPACING = 1 WIDTH='100%'>";
+
+	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
+		if ($i==0) {				// 11/20/09
+			$print .= "<TR CLASS='heading'><TD CLASS='heading' TITLE = \"{$row['tickname']}\" COLSPAN=99 ALIGN='center'><U>Log: <I>". shorten($row['tickname'], 32) . "</I></U></TD></TR>";
+			$cfs_head = ($show_cfs)? "<TD ALIGN='center'>CFS</TD>" : ""  ;
+			$print .= "<TR CLASS='odd'><TD ALIGN='left'>Code</TD>" . $cfs_head . "<TD ALIGN='left'>Unit</TD><TD ALIGN='left'>Status</TD><TD ALIGN='left'>Comment</TD><TD ALIGN='left'>When</TD><TD ALIGN='left'>By</TD></TR>";
+			}
+		$print .= "<TR CLASS='" . $evenodd[$i%2] . "' onClick = 'view_log_entry({$row['log_id']});'>" .				// 11/20/09
+			"<TD TITLE =\"{$types[$row['code']]}\">". shorten($types[$row['code']], 20) . "</TD>"; // 
+		if ($show_cfs) {
+			$print .= "<TD TITLE =\"{$row['tickname']}\">". shorten($row['tickname'], 16) . "</TD>";	// 2009-11-07 22:37:41 - substr($row['when'], 11, 5)
+			}
+		$theComment = (!is_numeric($row['comment'])) ? $row['comment'] : "";
+		$print .= 
+			"<TD TITLE =\"{$row['unitname']}\">". 	shorten($row['unitname'], 16) . "</TD>".
+			"<TD TITLE =\"{$row['theinfo']}\">". 	shorten($row['theinfo'], 16) . "</TD>".
+			"<TD TITLE =\"{$row['comment']}\">". 	shorten($theComment, 24) . "</TD>".
+			"<TD TITLE =\"" . format_date_2(strtotime($row['when'])) . "\">". format_date_2(strtotime($row['when'])) . "</TD>".
+			"<TD TITLE =\"{$row['thename']}\">". 	shorten($row['thename'], 8) . "</TD>".
+			"</TR>";
+			$i++;
+		}
+	$print .= "</TABLE>";
+	return $print;
+	}		// end function show_unit_log ()
+//	} -- dummy
+
 /**
  * set_ticket_status
  * Insert description here

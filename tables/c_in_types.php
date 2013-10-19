@@ -29,9 +29,21 @@
 		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Sort:</TD><TD><INPUT ID="ID6" MAXLENGTH=11 SIZE=11 TYPE= "text" NAME="frm_sort" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"/> <SPAN class='opt' >numeric</SPAN></TD></TR>
 		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Radius:</TD><TD><INPUT ID="ID7" MAXLENGTH=4 SIZE=4 TYPE= "text" NAME="frm_radius" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"/> <SPAN class='opt' >numeric</SPAN></TD></TR>
 		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Color:</TD>
-			<TD><INPUT  ID="ID8" CLASS="dirty" MAXLENGTH="8" SIZE="8" type="text" NAME="frm_color" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='opt' >text</SPAN></TD></TR>
+			<TD><INPUT ID="ID8" CLASS="dirty" MAXLENGTH="8" SIZE="8" type="text" NAME="frm_color" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='opt' >text</SPAN></TD></TR>
 	
 		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Opacity:</TD><TD><INPUT ID="ID9" MAXLENGTH=3 SIZE=3 TYPE= "text" NAME="frm_opacity" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"/> <SPAN class='opt' >numeric</SPAN></TD></TR>
+<?php
+		$mg_select = "<SELECT ID='ID10' NAME='frm_notify_mailgroup'>";
+		$mg_select .= "<OPTION VALUE=0>Select Mail List</OPTION>";
+		$query_mg = "SELECT * FROM `$GLOBALS[mysql_prefix]mailgroup`";		// 12/18/10
+		$result_mg = mysql_query($query_mg) or do_error($query_mg, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+		while ($row_mg = stripslashes_deep(mysql_fetch_assoc($result_mg))) {
+			$mg_select .= "<OPTION VALUE=" . $row_mg['id'] . ">" . $row_mg['name'] . "</OPTION>";
+			}
+		$mg_select .= "</SELECT>";
+?>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Notify Mailgroup:</TD><TD><?php print $mg_select;?></TD></TR>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Notify Email:</TD><TD><INPUT ID="ID11" MAXLENGTH=256 SIZE=60 TYPE="text" NAME="frm_notify_email" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"/> <SPAN class='opt' >text</SPAN></TD></TR>
 		<TR><TD COLSPAN="99" ALIGN="center">
 		<BR />
 		<INPUT TYPE="button"	VALUE="Cancel" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;

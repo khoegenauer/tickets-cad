@@ -41,7 +41,7 @@ function get_user_name($the_id) {
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-	<meta http-equiv=�X-UA-Compatible� content=�IE=EmulateIE7" />
+	<meta http-equiv=”X-UA-Compatible” content=”IE=EmulateIE7" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
 	<LINK REL=StyleSheet HREF="../stylesheet.php?version=<?php print time();?>" TYPE="text/css">
 	<SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
@@ -207,14 +207,14 @@ if(empty($_POST)) {	//	Upload a file for import
 			$to_str = implode("|", $addrs);
 			$smsg_to_str = "";
 			$subject_str = gettext("New Service User Requests");
-			$text_str = gettext("New requests have been loaded by") . ": \n\n" . get_user_name($_SESSION['user_id']) . "\n\nDated " . $now . "\n\n" . gettext('Please log on to Tickets and check'); 
+			$text_str = gettext("New requests have been loaded by") . ": \n\n" . get_user_name($_SESSION['user_id']) . "\n\n" . gettext('Dated') . $now . "\n\n" . gettext('Please log on to Tickets and check'); 
 			do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
 			}				// end if/else ($addrs)			
 ?>
 	<BODY style='background-color: #EFEFEF;'>
 	<CENTER>
 	<DIV id='outer' style='position: absolute; width: 100%;'>
-		<DIV style='position: relative; top: 5%; width: 60%; max-height: 350px; border: 2px outset #FFFFFF; background-color: #FEF7D6; padding: 20px;'>
+		<DIV style='position: relative; top: 5%; width: 60%; max-height: 350px; border: 2px outset #FFFFFF; background-color: #FEF7D6; padding: 20px; text-align: center;'>
 		<?php print gettext('Data successfully imported.');?><BR />
 		<SPAN ID = 'close_but' class = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.close();"><?php print gettext('Finish');?></SPAN>			
 		</DIV>
@@ -285,7 +285,7 @@ if(empty($_POST)) {	//	Upload a file for import
 	<DIV id='banner' class='heading' style='font-size: 20px; position: absolute: top: 5%; width: 95%; border: 1px outset #000000; text-align: center;'><?php print gettext('Upload requests as a csv file');?></DIV><BR /><BR />
 	<DIV id='outer' style='position: relative; top: 1%; left: 1%; width: 95%; text-align: center; margin: 10px;'>	
 		<DIV style='position: relative; top 0%; width: 80%; height: auto; text-align: center; background-color: #DEDEDE; color: #000000; font-weight: bold; border: 2px outset #FFFFFF; padding: 20px;'>
-			<DIV><?php print gettext('Number of rows in original file is');?> <?php print $row;?>&nbsp;&nbsp;&nbsp;<?php print gettext('Number of columns in original file is');?> <?php print $num;?></DIV>
+			<DIV><?php print gettext('Number of rows in original file is');?> <?php print $row;?>&nbsp;&nbsp;&nbsp;<?php print gettext('Number of columns in original file is {$num}';?></DIV>
 			<DIV><B><?php print gettext('Columns from original file are');?></B></DIV><BR />
 			<DIV style='text-align: center; font-size: 0.9em; padding: 5px; max-height: 50px; overflow-y: scroll;'>
 <?php

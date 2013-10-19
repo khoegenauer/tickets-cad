@@ -1476,16 +1476,16 @@ switch ($func) {		// ================================== case "c" ===============
 //dump($row_count);
 if (($row_count > 0) || (array_key_exists('srch_str', $_POST))) {
 ?>
-	<INPUT TYPE="button" VALUE="<?php print gettext('Search');?> <?php print ucfirst($tablename); ?>" 								onClick = "Javascript: document.retform.func.value='s'; document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp; <!-- 9/12/10 -->
+	<INPUT TYPE="button" VALUE="<?php print gettext('Search') . " " . ucfirst($tablename); ?>" 								onClick = "Javascript: document.retform.func.value='s'; document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp; <!-- 9/12/10 -->
 <?php
 	}		// end if ($row_count > 0)
 ?>	
 
-	<INPUT TYPE="button" VALUE="<?php print ucfirst($tablename); ?> <?php print gettext('Properties');?>" 							onClick = "Javascript: document.retform.func.value='p'; document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE="button" VALUE="<?php print ucfirst($tablename) . " " . gettext('Properties');?>" 							onClick = "Javascript: document.retform.func.value='p'; document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
 <?php				// 3/19/11
 		if ($can_edit) {
 ?>		
-	<INPUT TYPE="button" VALUE="<?php print gettext('Add new');?> <?php print str_replace( "_", " ", ucfirst($tablename)); ?> entry" 	onclick= "this.form.func.value='c'; this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE="button" VALUE="<?php print gettext('Add new') . " " .  str_replace( "_", " ", ucfirst($tablename)); ?> entry" 	onclick= "this.form.func.value='c'; this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php				// 3/19/11
 		}
 ?>	
@@ -1534,7 +1534,7 @@ case "u":	// =======================================  Update 	==================
 	
 
 	<TABLE BORDER="0" ALIGN="center">
-	<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext('Table');?> '<?php print $tablename?>' - <?php print gettext('Update/Delete Entry');?></FONT></TD></TR>
+	<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext('Table \'{$tablename}\' - Update/Delete Entry');?></FONT></TD></TR>
 	<TR><TD>&nbsp;</TD></TR>
 <?php
 	for ($i = 0; $i < mysql_num_fields($result); $i++) {
@@ -1677,7 +1677,7 @@ case "u":	// =======================================  Update 	==================
 	<INPUT TYPE="button" 	VALUE="<?php print gettext('Cancel');?>" onClick = "Javascript: document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
 	<INPUT TYPE="reset" 	VALUE="<?php print gettext('Reset');?>"/>&nbsp;&nbsp;&nbsp;&nbsp;
 	<INPUT TYPE="button" 	NAME="sub_but" VALUE="               <?php print gettext('Submit');?>                " onclick="this.disabled=true; JSfnCheckInput(this.form, this )"/>&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE="button" 	NAME="del_but" VALUE="<?php print gettext('Delete this entry');?>" onclick="if (confirm('Please confirm DELETE action')) {this.form.func.value='d'; this.form.submit();}"/></TD></TR>
+	<INPUT TYPE="button" 	NAME="del_but" VALUE="<?php print gettext('Delete this entry');?>" onclick="if (confirm('<?php print gettext('Please confirm DELETE action');?>')) {this.form.func.value='d'; this.form.submit();}"/></TD></TR>
 	</FORM>
 	</TD></TR></TABLE>
 <?php
@@ -1981,7 +1981,7 @@ case "u":	// =======================================  Update 	==================
 <?php				// 3/19/11
 		if ($can_edit) {
 ?>	
-	<INPUT TYPE="button" VALUE="<?php print gettext('Add new');?> <?php print str_replace( "_", " ", ucfirst($tablename)); ?> entry" onclick= "this.form.func.value='c'; this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE="button" VALUE="<?php print gettext('Add new {str_replace( "_", " ", ucfirst($tablename))} entry'); ?>" onclick= "this.form.func.value='c'; this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php			
 		}
 ?>	
@@ -2143,10 +2143,10 @@ function fnTables () {							/// displays tables comprising db $mysql_db
 	$pref_lgth = strlen($mysql_prefix);
 	
 	$sql = "SHOW TABLES ";
-	$result = mysql_query($sql) or die ('"'. gettext('DB Error') . ": " . $mysql_db . " " . gettext('inaccessible') . "\n" . '"');	// $mysql_db  
+	$result = mysql_query($sql) or die (gettext('DB Error: {$mysql_db} inaccessible') . "\n");	// $mysql_db  
 	while ($row = mysql_fetch_row($result)) {
 		$sql ="SELECT * FROM `$row[0]` LIMIT 1";
-		$result2 = mysql_query($sql) or die ('"'. gettext('DB Error') . ": " . $mysql_db . " " . gettext('inaccessible') . "\n" . '"');	// $mysql_db  
+		$result2 = mysql_query($sql) or die (gettext('DB Error: {$mysql_db} inaccessible') . "\n");	// $mysql_db  
 		$row2 = mysql_fetch_array($result2);
 		$gotit = FALSE;
 		for ($i = 0; $i < mysql_num_fields($result2); $i++) {			// look at each field - substr ( string, start, 999)
@@ -2166,7 +2166,7 @@ function fnTables () {							/// displays tables comprising db $mysql_db
 			}				
 		}
 	mysql_free_result($result);
-	print "<BR /><BR /><BR /><TABLE ALIGN=\"center\" BORDER=0><TR CLASS=\"even\"><TD ALIGN=\"center\" CLASS=\"td_link\" COLSPAN=\"2\"><FONT SIZE=\"+1\">" . gettext('Available') . " '$mysql_db ' " . gettext('tables') . "</FONT></TD></TR>";
+	print "<BR /><BR /><BR /><TABLE ALIGN=\"center\" BORDER=0><TR CLASS=\"even\"><TD ALIGN=\"center\" CLASS=\"td_link\" COLSPAN=\"2\"><FONT SIZE=\"+1\">" . gettext("Available '{$mysql_db}' tables") . "</FONT></TD></TR>";
 
 	print "<TR VALIGN=\"top\"><TD><B><nobr>" . gettext('Primary Tables') . ":</nobr></B></TD><TD ALIGN='center'>";
 	for($i = 0; $i < $ctrp; $i++) {

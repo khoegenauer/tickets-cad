@@ -91,6 +91,7 @@ if($istest) {print "_POST"; dump($_POST);}
 1/1/11 Titles array added, scheduled incidents revised
 5/5/11 added get_new_colors()	
 6/4/2013 added broadcast()
+10/11/2013 - corrected auto incident numbering - relocated else {} closure
 */
 
 $api_key = get_variable('gmaps_api_key');
@@ -307,11 +308,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 				if (((int) $inc_num_ary[0])>0) {		// step to next no. if scheme in use
 					$inc_num_ary[3]++;				// do the deed for next use
 					}
-				$out_str = serialize ($inc_num_ary);
-				$query = "UPDATE`$GLOBALS[mysql_prefix]settings` SET `value` = '$out_str' WHERE `name` = '_inc_num'";
-				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
-				}
-
+				}			// end if/else - 10/11/2013
+			$out_str = serialize ($inc_num_ary);
+			$query = "UPDATE`$GLOBALS[mysql_prefix]settings` SET `value` = '$out_str' WHERE `name` = '_inc_num'";
+			$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
 			return $name_rev;
 			}				// end function updt ticket() 
 			

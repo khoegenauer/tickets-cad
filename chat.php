@@ -11,6 +11,7 @@ $list_length = 99;		// chat list length maximum
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 3/15/11 changed stylesheet.php to stylesheet.php
 5/4/11 get_new_colors() added
+9/10/13 Changed logged in users to AJAX to refresh when new users join.
 */
 @session_start();	
 require_once('./incs/functions.inc.php');		//7/28/10
@@ -54,6 +55,7 @@ $signals_list .= "</SELECT>\n";
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="8/24/08" />
 	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
+	<script src="./js/misc_function.js" type="text/javascript"></script>	
 <SCRIPT>
 
 	try {
@@ -259,7 +261,7 @@ $signals_list .= "</SELECT>\n";
 		if (!req) return;
 		var method = (postData) ? "POST" : "GET";
 		req.open(method,url,true);
-		req.setRequestHeader('User-Agent','XMLHTTP/1.0');
+//		req.setRequestHeader('User-Agent','XMLHTTP/1.0');
 		if (postData)
 			req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 		req.onreadystatechange = function () {
@@ -418,6 +420,7 @@ $signals_list .= "</SELECT>\n";
 		rd_chat_msg();
 		set_to();												// set timeout again
 		do_focus ();
+		get_chatusers();		//	9/10/13
 		}
 /**
  * 
@@ -451,32 +454,28 @@ $signals_list .= "</SELECT>\n";
 		$('can_butt').style.display='none';
 		document.chat_form.chat_invite.options[0].selected = true;
 		}		// end function do_can ()
+		
+	function get_chatusers() {	//	9/10/13
+		$('whos_chatting').innerHTML = "Checking ......";
+		var randomnumber=Math.floor(Math.random()*99999999);
+		var url ="chat_wl.php?version=" + randomnumber;
+		sendRequest (url, chatusers_cb, "");
+		function chatusers_cb(req) {
+			var chatusers=JSON.decode(req.responseText);
+			$('whos_chatting').innerHTML = chatusers[0];
+			}
+		}
 
 	</SCRIPT>
 </HEAD>
 <BODY onLoad = "if (!(window.opener)) {window.close();};announce();getMessages(true); set_to(); do_focus();" onUnload="wr_chat_msg(document.chat_form_2); clearTimeout(the_to);"> 
 <TABLE ID="person" border="0" width='60%' STYLE = 'margin-left:100px;'>
 </TABLE>
-<?php
-					// who's logged-in?
-	$now = mysql_format_date(time() - (get_variable('delta_mins')*60));		// 1/23/10
-					
-	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user`  WHERE `id` <> {$_SESSION['user_id']} AND `expires` >'{$now}' ORDER BY `user`";	// 1/23/10 
-
-	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-	$who = $sep = "";
-	while ($row = stripslashes_deep(mysql_fetch_array($result))) {
-//		$who .=  $sep . $row['user_name'] . " " . ($row['last_in'] - (get_variable('delta_mins')*60)) . $sep;			// 2/3/09
-		$who .=  $sep . $row['user'] ;		// 1/23/10
-		$sep = ", ";
-		}
-	if (mysql_affected_rows()==0) { $who = "no others";};
-?>
 		<DIV  STYLE = 'margin-left:100px;'>
 		<FONT CLASS="header"><?php print gettext('Chat') . "</FONT> <I>(" . gettext('logged-in');?> : <?php print $who; ?>)</I><BR /><BR />
 		<FORM METHOD="post" NAME='chat_form' onSubmit="return false;">
 		<NOBR>
-		<INPUT TYPE="text" NAME="frm_message" SIZE=80 value = "" onFocus = "clear_to()"; onBlur = 'set_to()'; >
+		<INPUT TYPE="text" NAME="frm_message" SIZE=80 value = "" onChange = "clear_to()"; onBlur = 'set_to()'; >
 
 		<INPUT TYPE="button" VALUE = "Send" onClick="wr_chat_msg(document.forms[0]);set_to()"  style='margin-left:20px;' >
 		<INPUT TYPE="Reset" VALUE = "Reset" style='margin-left:20px;'  onClick="this.form.reset(); document.chat_form.frm_message.value='';" />

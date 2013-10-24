@@ -174,7 +174,7 @@ function get_files() {
 				the_files += "<TD style='font-size: 1em;'>" + theFiles[key]['_by'] + "</TD>";	
 				the_files += "<TD style='font-size: 1em;'>" + theFiles[key]['_on'] + "</TD>";
 				the_files += "<TD style='font-size: 1em;'>" + theFiles[key]['user_id'] + "</TD>";
-				the_files += "<TD style='font-size: 1em; vertical-align: middle;'><A id='view_" + the_id +"' CLASS='plain' HREF='./ajax/download.php?filename=" + theFiles[key]['target_filename'] + "&origname=" + theFiles[key]['filename'] + "' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);'>View</A></TD>";	
+				the_files += "<TD style='font-size: 1em; vertical-align: middle;'><A id='view_" + the_id +"' CLASS='plain' HREF='./ajax/download.php?filename=" + theFiles[key]['target_filename'] + "&origname=" + theFiles[key]['filename'] + "&type=" + theFiles[key]['type'] + "' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);'>View</A></TD>";	
 				the_files += "<TD style='font-size: 1em; vertical-align: middle;'><SPAN id='file_" + the_id + "' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='do_delete(" + the_id + ");'>Del</SPAN></TD>";	
 				the_files += "</TR>";
 				the_color = (the_color == "#CECECE") ? "#DEDEDE" : "#CECECE";

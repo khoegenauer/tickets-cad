@@ -881,8 +881,9 @@ setTimeout('do_post()', 1000);
 				if (array_key_exists($unit_row['id'], $assigns)) 	{ return " DISABLED ";}
 				else 												{ return "";}		
 				}				// end function get_cd_str ()
-					
-			print "\n<SCRIPT>\n";
+?>
+		<SCRIPT>
+<?php		
 			print "\t\tassigns = new Array();\n";
 			
 			$query = "SELECT *,`as_of` AS `as_of` FROM `$GLOBALS[mysql_prefix]assigns` WHERE `clear` IS NULL OR DATE_FORMAT(`clear`,'%y') = '00' ORDER BY `as_of` DESC";	// 12/13/09
@@ -892,7 +893,7 @@ setTimeout('do_post()', 1000);
 				print "\t\tassigns['" .$row['ticket_id'] .":" . $row['responder_id'] . "']=true;\n";	// build assoc array of ticket:unit pairs
 				}
 ?>
-		<SCRIPT>	
+	
 /**
  * 
  * @param {type} theForm
@@ -1214,7 +1215,7 @@ setTimeout('do_post()', 1000);
 				$tot_mi = (empty($temp))? 0: $temp ;		//	10/23/12			
 																// 12/9/10
 				$query  = sprintf("INSERT INTO `$GLOBALS[mysql_prefix]assigns` (`as_of`, `dispatched`, `ticket_id`, `responder_id`, `comments`, `start_miles`, `on_scene_miles`, `end_miles`, `miles`, `user_id`)
-								VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+								VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
 									quote_smart($now),
 									quote_smart($now),
 									quote_smart($frm_ticket_id),

@@ -2221,6 +2221,14 @@ function mail_it ($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_on
 					$str .= (empty($t_row['city']))? 	""  : $t_row['city'] . " " ;
 					$str .= (empty($t_row['state']))? 	""  : $t_row['state'];
 					$message .= empty($str) ? "" : "{$gt}: " . $str . $eol;
+					$gt = get_text("About Address");
+					$str2 = "";
+					$str2 .= (empty($t_row['address_about']))? 	""  : $t_row['address_about'] . " " ;
+					$message .= empty($str2) ? "" : "{$gt}: " . $str2 . $eol;
+					$gt = get_text("To Address");
+					$str3 = "";
+					$str3 .= (empty($t_row['to_address']))? 	""  : $t_row['to_address'] . " " ;
+					$message .= empty($str3) ? "" : "{$gt}: " . $str3 . $eol;
 				    break;
 				case "K":
 					$gt = get_text("Description");

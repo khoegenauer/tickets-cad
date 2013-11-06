@@ -67,6 +67,6 @@ set_u_updated ($_POST['frm_id']); 								// set unit 'updated' time - 9/1/10
 $use_status_update = get_variable("use_disp_autostat");
 // 8/22/13 - Update unit status to reflect dispatch status
 if($use_status_update == "1") {
-	print auto_disp_status($disp_status, $frm_unit);
+	auto_disp_status($disp_status, $frm_unit);
 	}
 ?>

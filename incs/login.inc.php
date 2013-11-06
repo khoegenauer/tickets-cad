@@ -136,8 +136,8 @@ function check_conn () {				// returns TRUE/FALSE
  * @see
  * @since
  */
-	function set_filenames($internet, $userchoice) {
-		$internet_good = (($internet == 1) || (($internet == 3) && (check_conn ())));		// check_conn()  returns TRUE/FALSE = 8/31/10			
+function set_filenames($internet, $userchoice) {
+	$internet_good = (($internet == 1) || (($internet == 3) && (check_conn()))) ? true: false;		// check_conn()  returns TRUE/FALSE = 8/31/10
 	if(($internet_good) && ($userchoice == "Show")) {	//	10/29/13
 		$normal = true;
 		} elseif(($internet_good) && ($userchoice == "Hide")) {

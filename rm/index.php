@@ -1619,6 +1619,7 @@ function do_send_inv(in_val) {
 	show_hide('sent_msg');
 	wr_invite(in_val);
 	$('send_butt').style.display='none';
+	if(!the_to) {window.setTimeout('set_to()',10000);}	//	10/29/13
 	do_can ();			// hide some buttons and reset select
 	}
 
@@ -1631,9 +1632,11 @@ function trim_list(ctr) {			// delete oldest rows from display
 	}
 
 function do_can () {
+	$('help').innerHTML = "";
 	$('send_butt').style.display='none';
 	$('can_butt').style.display='none';
 	document.chat_form.chat_invite.options[0].selected = true;
+	if(!the_to) {set_to();}	//	10/29/13	
 	}		// end function do_can ()
 	
 function chat_start() {
@@ -1653,6 +1656,11 @@ function chat_stop() {
 		wr_chat_msg(document.chat_form_2);
 		clearTimeout(the_to);
 		}
+	}
+	
+function pause_messages() {	//	10/29/13
+	clear_to();
+	$('help').innerHTML = "Click Cancel to return to chat messages";
 	}
 // 	end of chat functions
 </script>

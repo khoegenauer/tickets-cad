@@ -311,6 +311,8 @@ $GLOBALS['LOG_WARNLOCATION_ADD']	=4010;		// 8/9/13
 $GLOBALS['LOG_WARNLOCATION_CHANGE']	=4013;		// 8/9/13
 $GLOBALS['LOG_WARNLOCATION_DELETE']	=4014;		// 8/9/13
 
+$GLOBALS['LOG_SPURIOUS']			=127;		// 10/24/13 Added to catch failed logs
+
 $GLOBALS['icons'] = array("black.png", "blue.png", "green.png", "red.png", "white.png", "yellow.png", "gray.png", "lt_blue.png", "orange.png");
 $GLOBALS['sm_icons']	= array("sm_black.png", "sm_blue.png", "sm_green.png", "sm_red.png", "sm_white.png", "sm_yellow.png", "sm_gray.png", "sm_lt_blue.png", "sm_orange.png");
 $GLOBALS['fac_icons'] = array("square_red.png", "square_black.png", "square_white.png", "square_yellow.png", "square_blue.png", "square_green.png", "shield_red.png", "shield_grey.png", "shield_green.png", "shield_blue.png", "shield_orange.png");
@@ -2339,7 +2341,7 @@ function generate_dateonly_dropdown($date_suffix,$default_date=0, $disabled=FALS
 	switch($locale) { 
 		case "0":
 			print "<SELECT name='frm_year_$date_suffix' $dis_str>";
-			for($i = date("Y")-1; $i < date("Y")+1; $i++){
+			for($i = date("Y")-70; $i < date("Y")+1; $i++){
 				print "<OPTION VALUE='$i'";
 				$year == $i ? print " SELECTED>$i</OPTION>" : print ">$i</OPTION>";
 				}
@@ -2377,7 +2379,7 @@ function generate_dateonly_dropdown($date_suffix,$default_date=0, $disabled=FALS
 
 			print "</SELECT>";
 			print "&nbsp;<SELECT name='frm_year_$date_suffix' $dis_str>";
-			for($i = date("Y")-1; $i < date("Y")+1; $i++){
+			for($i = date("Y")-70; $i < date("Y")+1; $i++){
 				print "<OPTION VALUE='$i'";
 				$year == $i ? print " SELECTED>$i</OPTION>" : print ">$i</OPTION>";
 				}
@@ -2401,7 +2403,7 @@ function generate_dateonly_dropdown($date_suffix,$default_date=0, $disabled=FALS
 
 			print "</SELECT>";
 			print "&nbsp;<SELECT name='frm_year_$date_suffix' $dis_str>";
-			for($i = date("Y")-1; $i < date("Y")+1; $i++){
+			for($i = date("Y")-70; $i < date("Y")+1; $i++){
 				print "<OPTION VALUE='$i'";
 				$year == $i ? print " SELECTED>$i</OPTION>" : print ">$i</OPTION>";
 				}

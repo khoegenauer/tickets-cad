@@ -106,13 +106,12 @@ function set_size() {
 		viewportheight = document.getElementsByTagName('body')[0].clientHeight
 		}
 	var mapWidth = viewportwidth * .5;
-	var mapHeight = viewportheight * .6;
+	var mapHeight = viewportheight * .55;
 	var listWidth = viewportwidth * .97;	
 	var listHeight = viewportheight * .4;
-	var controlsWidth = viewportwidth * .4;
+	var controlsWidth = viewportwidth * .35;
 	var controlsHeight = viewportheight * .4;
 	var bannerwidth = viewportwidth * .97;
-	var bannerheight = viewportheight * .03;
 	$('outer').style.width = viewportwidth + "px";
 	$('outer').style.height = viewportheight + "px";
 	$('map_outer').style.width = mapWidth + "px";
@@ -121,12 +120,18 @@ function set_size() {
 	$('map_canvas').style.height = mapHeight + "px";
 	$('requests_list').style.width = listWidth + "px";
 	$('requests_list').style.height = listHeight + "px";
-	$('leftcol').style.width = controlsWidth + "px";
-	$('leftcol').style.height = controlsHeight + "px";
+	$('tophalf').style.width = viewportwidth + "px";
+	$('tophalf').style.height = viewportheight * .55 + "px";
+	$('bottomhalf').style.width = viewportwidth + "px";
+	$('bottomhalf').style.height = viewportheight * .4 + "px";
+	$('controls').style.width = viewportwidth * .4 + "px";
+	$('controls').style.height = viewportheight * .55 + "px";
+	$('map_wrapper').style.width = viewportwidth * .5 + "px";
+	$('map_wrapper').style.height = viewportheight * .55 + "px";
 	$('banner').style.width = bannerwidth + "px";		
-	$('banner').style.height = bannerheight + "px";	
+	$('banner').style.height = "2em";	
 	$('list_header').style.width = bannerwidth + "px";		
-	$('list_header').style.height = bannerheight + "px";		
+	$('list_header').style.height = "2em";		
 	}
 
 function out_frames() {		//  onLoad = "out_frames()"
@@ -902,95 +907,101 @@ if((!isset($_SESSION)) && (empty($_POST))) {
 	<BODY onLoad="out_frames(); set_size(); location.href = '#top'; get_requests(); get_the_markers(); do_filelist(); get_summary(); <?php print $onload_str;?>;" onUnload='do_unload();'>
 		<FORM NAME="go" action="#" TARGET = "main"></FORM>
 		<DIV id='outer' style='text-align: center; margin: 10px;'>
-			<DIV id='banner' class='heading' style='font-size: 1.6em; border: 1px outset #000000; vertical-align: middle;'>Tickets <?php print get_text('Service User');?> <?php print get_text('Portal');?>
-				<SPAN ID='gout' CLASS='plain' style='float: right; font-size: 0.6em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="do_logout()"><?php print get_text('Logout');?></SPAN>
-			</DIV>
-			<DIV id='leftcol' style='position: absolute; left: 2%; top: 10%; font-size: 1em; z-index: 9999;'>
-				<TABLE WIDTH='100%' HEIGHT='100%' style='font-size: 1em; border: 3px outset #707070;'>
-					<TR style='font-size: 1em;'>
-						<TD WIDTH='50%' style='font-size: 1em; border: 3px outset #707070; vertical-align: top;'>
-							<CENTER>
-							<TABLE style='width: 100%;'>
-								<TR style='font-size: 1em;'>
-									<TD style='font-size: 1em;'><SPAN id='sub_but' CLASS ='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "do_newreq();"><?php print get_text('New Request');?></SPAN></TD>
-								</TR>
-								<TR style='font-size: 1em;'>
-									<TD style='font-size: 1em;'><SPAN ID='upload_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/import_requests.php','Import Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')" TITLE='Import Request from CSV File'><?php print get_text('Import');?></SPAN></TD>
-								</TR>
-								<TR style='font-size: 1em;'>
-									<TD style='font-size: 1em;'><SPAN ID='export_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.location.href='./portal/csv_export.php'"><?php print get_text('Export Requests to CSV');?></SPAN></TD>
-								</TR>
-								<TR style='font-size: 1em;'>
-									<TD style='font-size: 1em;'><SPAN ID='showhide_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_closed();"><?php print get_text('Show Closed');?></SPAN></TD>
-								</TR>
-							</TABLE><BR /><BR />
-							<DIV style='border: 2px outset #707070;'>
-								<DIV class='heading' style='font-size: 1.1em;'><?php print get_text('Useful Documents');?></DIV><BR />
-								<DIV id='file_list' style='font-size: 1em; height: 100%; overflow-y: auto;'></DIV>
+			<DIV id='tophalf' style='width: 100%; font-size: 1em; z-index: 998;'>
+				<DIV id='banner' style='background-color: #707070; vertical-align: middle;'><SPAN class='heading' style='font-size: 1.5em; vertical-align: middle;'>Tickets <?php print get_text('Service User');?> <?php print get_text('Portal');?></SPAN>
+					<SPAN ID='gout' CLASS='plain' style='float: right; font-size: 1em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="do_logout()"><?php print get_text('Logout');?></SPAN>
+				</DIV>
+				<DIV id='controls' style='position: absolute; top: 50px; left: 2%;'>
+					<TABLE WIDTH='100%' HEIGHT='100%' style='font-size: 1em; border: 3px outset #707070;'>
+						<TR style='font-size: 1em;'>
+							<TD WIDTH='50%' style='font-size: 1em; border: 3px outset #707070; vertical-align: top;'>
+								<CENTER>
+								<TABLE style='width: 100%;'>
+									<TR style='font-size: 1em;'>
+										<TD style='font-size: 1em;'><SPAN id='sub_but' CLASS ='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "do_newreq();"><?php print get_text('New Request');?></SPAN></TD>
+									</TR>
+									<TR style='font-size: 1em;'>
+										<TD style='font-size: 1em;'><SPAN ID='upload_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/import_requests.php','Import Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')" TITLE='Import Request from CSV File'><?php print get_text('Import');?></SPAN></TD>
+									</TR>
+									<TR style='font-size: 1em;'>
+										<TD style='font-size: 1em;'><SPAN ID='export_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.location.href='./portal/csv_export.php'"><?php print get_text('Export Requests to CSV');?></SPAN></TD>
+									</TR>
+									<TR style='font-size: 1em;'>
+										<TD style='font-size: 1em;'><SPAN ID='showhide_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_closed();"><?php print get_text('Show Closed');?></SPAN></TD>
+									</TR>
+								</TABLE><BR /><BR />
+								<DIV style='border: 2px outset #707070;'>
+									<DIV class='heading' style='font-size: 1.1em;'><?php print get_text('Useful Documents');?></DIV><BR />
+									<DIV id='file_list' style='font-size: 1em; height: 100%; overflow-y: auto;'></DIV>
+								</DIV>
+								</CENTER>
+							</TD>
+							<TD WIDTH='50%' style='font-size: 1em; border: 3px outset #707070; text-align: left;'>
+								<TABLE WIDTH='100%'>
+									<TR CLASS="heading" style='font-size: 1em;'>
+										<TD CLASS='heading' style='font-size: 1.1em;'><?php print get_text('Contact Us');?></TD>
+									<TR>
+									<TR style='font-size: 1em;'>
+										<TD style='font-size: 1em;'>&nbsp;</TD>
+									</TR>
+										<TD style='font-size: 1em;'><?php print get_text('Telephone');?>: <?php print get_variable('portal_contact_phone');?></TD>
+									</TR>
+									<TR style='font-size: 1em;'>
+										<TD style='font-size: 1em;'><?php print get_text('Email');?>: <?php print get_variable('portal_contact_email');?></TD>
+									</TR>
+									<TR style='font-size: 1em;'>
+										<TD style='font-size: 1em;'>&nbsp;</TD>
+									</TR>
+									<TR style='font-size: 1em;'>
+										<TD style='font-size: 1em;'>&nbsp;</TD>
+									</TR>
+									<TR class='heading' style='font-size: 1.1em;'>
+										<TD class='heading' style='font-size: 1.1em;'>Your Request Statistics - <?php print get_user_name($_SESSION['user_id']);?></TD>
+									</TR>
+									<TR style='font-size: 1em;'>
+										<TD style='font-size: 1em;'>&nbsp;</TD>
+									</TR>
+									<TR>
+										<TD id='summary_table' ALIGN='center'></TD>
+									</TR>
+								</TABLE>
+							</TD>
+						</TR>
+					</TABLE>
+				</DIV>
+				<DIV id='map_wrapper' style='position: absolute; top: 50px; right: 2%;'>
+<?php
+					if(get_variable('map_in_portal') == "1") {
+?>
+						<DIV id='map_outer'>
+							<DIV id='map_canvas'></DIV>
+							<DIV id='map_controls'>
+								<CENTER><A HREF='#' onClick='doTraffic()'><U>Traffic</U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doWeather()'><U><?php print get_text('Weather');?></U></A>
 							</DIV>
-							</CENTER>
-						</TD>
-						<TD WIDTH='50%' style='font-size: 1em; border: 3px outset #707070; text-align: left;'>
-							<TABLE WIDTH='100%'>
-								<TR CLASS="heading" style='font-size: 1em;'>
-									<TD CLASS='heading' style='font-size: 1.1em;'><?php print get_text('Contact Us');?></TD>
-								<TR>
-								<TR style='font-size: 1em;'>
-									<TD style='font-size: 1em;'>&nbsp;</TD>
-								</TR>
-									<TD style='font-size: 1em;'><?php print get_text('Telephone');?>: <?php print get_variable('portal_contact_phone');?></TD>
-								</TR>
-								<TR style='font-size: 1em;'>
-									<TD style='font-size: 1em;'><?php print get_text('Email');?>: <?php print get_variable('portal_contact_email');?></TD>
-								</TR>
-								<TR style='font-size: 1em;'>
-									<TD style='font-size: 1em;'>&nbsp;</TD>
-								</TR>
-								<TR style='font-size: 1em;'>
-									<TD style='font-size: 1em;'>&nbsp;</TD>
-								</TR>
-								<TR class='heading' style='font-size: 1.1em;'>
-									<TD class='heading' style='font-size: 1.1em;'>Your Request Statistics - <?php print get_user_name($_SESSION['user_id']);?></TD>
-								</TR>
-								<TR style='font-size: 1em;'>
-									<TD style='font-size: 1em;'>&nbsp;</TD>
-								</TR>
-								<TR>
-									<TD id='summary_table' ALIGN='center'></TD>
-								</TR>
-							</TABLE>
-						</TD>
-					</TR>
-				</TABLE>
-			</DIV>
-			<DIV id='requests_list' style='position: absolute; bottom: 15%; max-height: 15%;'>
-				<DIV id='color_key'>
-					<SPAN id='open' style='background-color: #FFFF00; color: #000000;'><?php print get_text('Open');?></SPAN>
-					<SPAN id='open' style='background-color: #CC9900; color: #000000;'><?php print get_text('Tentative');?></SPAN>
-					<SPAN id='open' style='background-color: #33CCFF; color: #000000;'><?php print get_text('Accepted');?></SPAN>
-					<SPAN id='open' style='background-color: #00FF00; color: #000000;'><?php print get_text('Resourced');?></SPAN>
-					<SPAN id='open' style='background-color: #FFFFFF; color: #00FF00;'><?php print get_text('Completed');?></SPAN>
-					<SPAN id='open' style='background-color: #FF0000; color: #FFFF00;'><?php print get_text('Declined');?></SPAN>
-					<SPAN id='open' style='background-color: #000000; color: #FFFFFF;'><?php print get_text('Closed');?></SPAN>
-					<SPAN id='open' style='background-color: #FF0000; color: #FFFF00;'><?php print get_text('Cancelled');?></SPAN>			
-				</DIV>			
-				<DIV id='list_header' class='heading' style='font-size: 16px; border: 1px outset #000000; vertical-align: middle; height: 18px;'><?php print get_text('Current Requests');?></DIV>
-				<DIV id='the_bottom' style='border: 2px outset #CECECE; padding: 10px; max-height: 100%; overflow-y: scroll;'>
-					<DIV ID='all_requests' style='width: 100%;'></DIV>
+						</DIV>
+<?php
+						}
+?>
 				</DIV>
 			</DIV>
-<?php
-			if(get_variable('map_in_portal') == "1") {
-?>
-				<DIV id='map_outer' style='position: absolute; top: 6%; right: 20px;'>
-					<DIV id='map_canvas'></DIV>
-					<DIV id='map_controls'>
-						<CENTER><A HREF='#' onClick='doTraffic()'><U>Traffic</U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doWeather()'><U><?php print get_text('Weather');?></U></A>
+			<DIV id='bottomhalf'>
+				<DIV id='requests_list' style='position: absolute; bottom: 15%; max-height: 15%;'>
+					<DIV id='color_key'>
+						<SPAN id='open' style='background-color: #FFFF00; color: #000000;'><?php print get_text('Open');?></SPAN>
+						<SPAN id='open' style='background-color: #CC9900; color: #000000;'><?php print get_text('Tentative');?></SPAN>
+						<SPAN id='open' style='background-color: #33CCFF; color: #000000;'><?php print get_text('Accepted');?></SPAN>
+						<SPAN id='open' style='background-color: #00FF00; color: #000000;'><?php print get_text('Resourced');?></SPAN>
+						<SPAN id='open' style='background-color: #FFFFFF; color: #00FF00;'><?php print get_text('Completed');?></SPAN>
+						<SPAN id='open' style='background-color: #FF0000; color: #FFFF00;'><?php print get_text('Declined');?></SPAN>
+						<SPAN id='open' style='background-color: #000000; color: #FFFFFF;'><?php print get_text('Closed');?></SPAN>
+						<SPAN id='open' style='background-color: #FF0000; color: #FFFF00;'><?php print get_text('Cancelled');?></SPAN>			
+					</DIV>			
+					<DIV id='list_header' class='heading' style='font-size: 16px; border: 1px outset #000000; vertical-align: middle; height: 18px;'><?php print get_text('Current Requests');?></DIV>
+					<DIV id='the_bottom' style='border: 2px outset #CECECE; padding: 10px; height: 100%; overflow-y: scroll;'>
+						<DIV ID='all_requests' style='width: 100%;'></DIV>
 					</DIV>
 				</DIV>
-<?php
-				}
-?>
+			</DIV>
 		<FORM METHOD='POST' NAME="gout_form" action="index.php">
 		<INPUT TYPE='hidden' NAME = 'logout' VALUE = 1 />
 		</FORM>

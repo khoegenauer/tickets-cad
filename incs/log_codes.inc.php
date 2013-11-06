@@ -71,5 +71,18 @@ $types = array();
 	$types[$GLOBALS['LOG_EMAIL_CONNECT']]					="Email Connection Error";
 	$types[$GLOBALS['LOG_EMAIL_SEND']]						="Email Send Error";
 	$types[$GLOBALS['LOG_EMAIL_RECEIVE']]					="Email Receive Error";
+	
+	$types[$GLOBALS['LOG_NEW_REQUEST']]						="New Request from Portal";				// 10/24/13
+	$types[$GLOBALS['LOG_EDIT_REQUEST']]					="Edited Portal Request";				// 10/24/13
+	$types[$GLOBALS['LOG_CANCEL_REQUEST']]					="Cancelled Request from Portal";		// 10/24/13
+	$types[$GLOBALS['LOG_ACCEPT_REQUEST']]					="Portal Request accepted";				// 10/24/13
+	$types[$GLOBALS['LOG_TENTATIVE_REQUEST']]				="Portal Request Tenatively accepted";	// 10/24/13
+	$types[$GLOBALS['LOG_DECLINE_REQUEST']]					="Portal Request Declined";				// 10/24/13
+
+	$types[$GLOBALS['LOG_WARNLOCATION_ADD']]				="Location Warning Added";				// 10/24/13
+	$types[$GLOBALS['LOG_WARNLOCATION_CHANGE']]				="Location Warning Changed";			// 10/24/13
+	$types[$GLOBALS['LOG_WARNLOCATION_DELETE']]				="Location Warning Deleted";			// 10/24/13
+	
+	$types[$GLOBALS['LOG_SPURIOUS']]						="Logged incorrectly - Ignore";			//	10/24/13
 
 ?>

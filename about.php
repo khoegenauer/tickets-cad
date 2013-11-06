@@ -719,10 +719,57 @@ Changes for Tickets 2.40D
 
 222.  Various fixes including messaging, auto unit status and some map functions.
 
+Changes for Tickets 2.41A
+
+223.  Major revisions to Portal - revised main screen, added statistics, new request now in a popup, added ability to 
+      specifiy multiple address requests, provided marker infowindows.
+	 
+224.  Requests via the portal are now acknowledged by email back to the user - needs user email address set. Also status
+      changes (acceptance, decline) are also notified.
+
+225.  Added Mail Lists (mailgroups). These are added and edited via config and collect potential entries from users, units
+      and contacts. Mail Lists are currently only used for system messages (notifies etc) rather than normal mail functionality.
+	  
+226.  Added "Responder Mobile" page. This is accessed directly via ./rm off your tickets directory or automatically if system
+      setting "use responder mobile" is set to 1. The screen is set up for unit rather than admin use and provided specific
+	  unit functions such as inbuilt tracking, messaging, chat, status updates (on-scene etc).
+	  
+227.  The "Responder mobile" page uses Open Streetmaps and supports the use of maps downloaded to the Tickets server. To download
+      map tiles go to the main tickets config page and see the link to "download map tiles". (please note that this can take a 
+	  long time depending on the area chosen.
+	  
+228.  Addition of some new fields to Incident screen ("About address" and "to address") and to units and facilities screens ("About Status
+      and for facilities email or email list). For Facilities the email and email list send a notify of a new job dispatched to or from
+	  that facility.
+	  
+229.  Added location warnings. You can add new locations to be warned about (previous incidents etc) and when adding a new incident
+      Tickets will look at that table and present warnings about any locations within a user definable distance (see config / edit settings).
+	  
+230.  Revision to chat to correctly update logged in users during a current chat - checked on a regualr basis.
+
+231.  Revision to the "Cleanse Regions" routine to enhance the ability to resolve regions based issues and correct any tickets, units etc
+      that have not been allocated to a region or where there are duplicate entries.
+	  
+232.  Auto Dispatch Status - Tickets can be set to automatically update the unit status based on a change in the dispatch status - the
+      specific status values are user definable in config.
+	  
+233.  Per session selection of show or hide maps available at login.
+
+234.  Files - the ability to store files (documents / pictures) securely against Tickets, Units, Facilities, general tickets use and specific
+      portal users. For portal users this could be to store client / service user specific training or contractual documents which are then only
+	  viewable to that user. Can also set global Tickets or portal documents which could be generic processes, contact lists etc. File types can
+	  be documents or pictures, executable scripts are excluded by the file upload script. The directory is protected and barred for direct access.
+
+234.  Various other fixes as normal including coping where a logged in user has no allocated regions.
+
+Changes for Tickets 2.41B
+
+235.  Various fixes, no new functionality
+
 Let us know if the above is too terse and where further expansion wd be useful.
 <A NAME = 'bottom'></A>
 
-July '13
+October '13
 Arnie Shore
 Andy Harvey, UK
 

@@ -9,6 +9,7 @@
 12/18/10 set signals added
 3/15/11 changed stylesheet.php to stylesheet.php
 4/20/11 corrections re military time false
+10/24/13 Added Auto Dispatch status to close incident script
 */
 error_reporting(E_ALL);
 @session_start();
@@ -296,6 +297,7 @@ function do_is_start($in_row) {				// 3/22/10
  * @since
  */
 	function do_is_finished(){
+		$use_status_update = get_variable("use_disp_autostat");		//	10/24/13
 		if (!get_variable('military_time'))	{			//put together date from the dropdown box and textbox values
 			if ((array_key_exists('frm_meridiem_problemstart', $_POST)) && ($_POST['frm_meridiem_problemstart'] == 'pm')){		// 4/20/11
 				$_POST['frm_hour_problemstart'] = ($_POST['frm_hour_problemstart'] + 12) % 24;
@@ -327,15 +329,24 @@ function do_is_start($in_row) {				// 3/22/10
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 										
 		foreach ($_POST as $VarName=>$VarValue) {			// set clear time each assign record - 8/10/10
-			if (substr($VarName, 0, 8) == "frm_ckbx" ) {			
-		
+			if (substr($VarName, 0, 8) == "frm_ckbx" ) {		
+				//	Get Responder ID for auto dispatch status
+				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` = {$VarValue} LIMIT 1";	//	10/24/13
+				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);	//	10/24/13
+				$row = mysql_fetch_assoc($result);	//	10/24/13
+				$un_id = $row['responder_id'];	//	10/24/13
+				//	Clear assigns entry
 				$query = "UPDATE `$GLOBALS[mysql_prefix]assigns` SET 
 					`clear` = '{$now}',
 					`as_of` = '{$now}'
 					WHERE `id` = {$VarValue} LIMIT 1;";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 				$work_ary = explode("_", $VarName);			// see checkbox name construct above
-				$assign_id = $work_ary[2];								
+				$assign_id = $work_ary[2];	
+				//	Do auto dispatch status if switched on.
+				if($use_status_update == "1") {	//	10/24/13
+					auto_disp_status(6, $un_id);
+					}					
 				do_log($GLOBALS['LOG_CALL_CLR'], $_POST['frm_ticket_id'], $assign_id);				// write log record					
 				}
 			}		// end foreach () ...

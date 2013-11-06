@@ -169,6 +169,10 @@ function get_facilitydetails($value) {
 	var rec_fac_city = [];
 	var rec_fac_state = [];
 
+	String.prototype.trim = function () {
+		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
+		};
+
 /**
  * 
  * @returns {Array}

@@ -89,6 +89,10 @@ function $() {									// 1/21/09
 		}
 	return elements;
 	}
+	
+String.prototype.trim = function () {
+	return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
+	};
 		
 function go_there (where, the_id) {		//
 	document.go.action = where;
@@ -155,7 +159,7 @@ function sub_request(theForm) {
 	var theField2 = document.getElementsByName("frm_to_city_extra[]");
 	var theField3 = document.getElementsByName("frm_to_state_extra[]");	
 	for (var i = 0; i < theField.length; i++ ){
-		theAddAddress += theField[i].value + ", " + theField2[i].value + ", " + theField3[i].value + "<BR />";
+		theAddAddress += theField[i].value + ", " + theField2[i].value + ", " + theField3[i].value + " - \n";
 		}
 	var err_msg = "";
 	var street = theForm.frm_street.value;
@@ -163,7 +167,7 @@ function sub_request(theForm) {
 	var state = theForm.frm_state.value;
 	var theDescription = theForm.frm_description.value;
 	if(theAddAddress != "") {
-		theDescription += "<BR /><U>Additional Addresses:</U><BR />" + theAddAddress;
+		theDescription += "\n Additional Addresses:\n\n" + theAddAddress;
 		}
 	var requestDate = theForm.frm_year_request_date.value + "-" + theForm.frm_month_request_date.value + "-" + theForm.frm_day_request_date.value + " " + theForm.frm_hour_request_date.value + " " + theForm.frm_minute_request_date.value + ":00";
 	var thePhone = (theForm.frm_phone.value != "") ? theForm.frm_phone.value : "none";
@@ -179,11 +183,11 @@ function sub_request(theForm) {
 	var theScope = theForm.frm_scope.value;
 	var theComments = theForm.frm_comments.value;
 	if(thePatient == "") { err_msg += "\tName of person required\n"; }
-	if(theScope == "") { err_msg += "\tRequest title required\n"; }
-	if(street == "") { err_msg += "\tStreet address required\n"; }
-	if(city == "") { err_msg += "\tCity is required\n"; }
-	if(state == "") { err_msg += "\tState required, for UK State is UK\n"; }
-	if(theDescription == "") { err_msg += "\tDescription of job required\n"; }
+	if(theScope == "") { err_msg += "\t<?php print get_text('Scope');?> required\n"; }
+	if(street == "") { err_msg += "\t<?php print get_text('Street Address');?> required\n"; }
+	if(city == "") { err_msg += "\t<?php print get_text('City');?> is required\n"; }
+	if(state == "") { err_msg += "\t<?php print get_text('State');?> is required, for UK State is UK\n"; }
+	if(theDescription == "") { err_msg += "\t<?php print get_text('Description');?>\n"; }
 	if(requestDate == "") { err_msg += "\tRequest date required\n"; }
 	if(err_msg != "") {
 		alert ("Please correct the following and re-submit:\n\n" + err_msg);
@@ -418,22 +422,22 @@ $orig_fac_menu .= "<SELECT>";
 						<TD class='spacer' COLSPAN=99></TD>
 					</TR>							
 					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;' TITLE='When job is required - if this is a pickup, state arrival time.'>Request Date and Time</TD><TD class='td_data' style='text-align: left;'><?php print generate_date_dropdown('request_date',0,FALSE);?></TD>
+						<TD class='td_label' style='text-align: left;' TITLE='When job is required - if this is a pickup, state arrival time.'>Request Date and Time:&nbsp;<FONT COLOR='RED' SIZE='-1'>*</FONT></TD><TD class='td_data' style='text-align: left;'><?php print generate_date_dropdown('request_date',0,FALSE);?></TD>
 					</TR>
 					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;' TITLE='Who is the service user - if this is a pickup, who is being picked up'><?php print get_text('Service User');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_patient' TYPE='TEXT' SIZE='24' MAXLENGTH='64' VALUE=""></TD>
+						<TD class='td_label' style='text-align: left;' TITLE='Who is the service user - if this is a pickup, who is being picked up'><?php print get_text('Service User');?>:&nbsp;<FONT COLOR='RED' SIZE='-1'>*</FONT></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_patient' TYPE='TEXT' SIZE='24' MAXLENGTH='64' VALUE=""></TD>
 					</TR>
 					<TR class='spacer'>
 						<TD class='spacer' COLSPAN=99 style='height: 15px; font-size: 14px;'><?php print get_text('Start Address');?></TD>
 					</TR>
 					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;' TITLE='Street Address including building number or name'><?php print get_text('Street');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_street' TYPE='TEXT' SIZE='48' MAXLENGTH='128' VALUE=""></TD>
+						<TD class='td_label' style='text-align: left;' TITLE='Street Address including building number or name'><?php print get_text('Street');?>:&nbsp;<FONT COLOR='RED' SIZE='-1'>*</FONT></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_street' TYPE='TEXT' SIZE='48' MAXLENGTH='128' VALUE=""></TD>
 					</TR>	
 					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;' TITLE='City including postcode'><?php print get_text('City');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_city' TYPE='TEXT' SIZE='48' MAXLENGTH='48' VALUE=""></TD>
+						<TD class='td_label' style='text-align: left;' TITLE='City including postcode'><?php print get_text('City');?>:&nbsp;<FONT COLOR='RED' SIZE='-1'>*</FONT></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_city' TYPE='TEXT' SIZE='48' MAXLENGTH='48' VALUE=""></TD>
 					</TR>			
 					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;' TITLE='State - for UK this is UK'><?php print get_text('State');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_state' TYPE='TEXT' SIZE='4' MAXLENGTH='4' VALUE="<?php print get_variable('def_st');?>"></TD>
+						<TD class='td_label' style='text-align: left;' TITLE='State - for UK this is UK'><?php print get_text('State');?>:&nbsp;<FONT COLOR='RED' SIZE='-1'>*</FONT></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_state' TYPE='TEXT' SIZE='4' MAXLENGTH='4' VALUE="<?php print get_variable('def_st');?>"></TD>
 					</TR>	
 					<TR class='odd'>	
 						<TD class='td_label' style='text-align: left;' TITLE='Contact number of person being served'><?php print get_text('Phone');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_phone' TYPE='TEXT' SIZE='16' MAXLENGTH='16' VALUE=""></TD>
@@ -494,16 +498,19 @@ $orig_fac_menu .= "<SELECT>";
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Receiving Facility');?></TD><TD class='td_data' style='text-align: left;'><?php print $rec_fac_menu;?></TD>
 					</TR>
 					<TR class='even'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Scope');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_scope' TYPE='TEXT' SIZE='48' MAXLENGTH='64' VALUE=""></TD>
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Scope');?>:&nbsp;<FONT COLOR='RED' SIZE='-1'>*</FONT></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_scope' TYPE='TEXT' SIZE='48' MAXLENGTH='64' VALUE=""></TD>
 					</TR>	
 					<TR class='odd'>	
-						<TD class='td_label' style='text-align: left;'><?php print get_text('Description');?></TD><TD class='td_data' style='text-align: left;'><TEXTAREA NAME="frm_description" COLS="45" ROWS="2" WRAP="virtual"></TEXTAREA></TD>
+						<TD class='td_label' style='text-align: left;'><?php print get_text('Description');?>:&nbsp;<FONT COLOR='RED' SIZE='-1'>*</FONT></TD><TD class='td_data' style='text-align: left;'><TEXTAREA NAME="frm_description" COLS="45" ROWS="2" WRAP="virtual"></TEXTAREA></TD>
 					</TR>		
 					<TR class='even'>	
 						<TD class='td_label' style='text-align: left;'><?php print get_text('Comments');?></TD><TD class='td_data' style='text-align: left;'><TEXTAREA NAME="frm_comments" COLS="45" ROWS="2" WRAP="virtual"></TEXTAREA></TD>
 					</TR>
 					<TR class='spacer'>
 						<TD class='spacer' COLSPAN=99></TD>
+					</TR>	
+					<TR class='odd'>	
+						<TD class='td_label' COLSPAN=2 style='text-align: center;'><FONT COLOR='RED' SIZE='-1'>*</FONT>&nbsp;&nbsp;&nbsp;<B>Required</B></TD></TD>
 					</TR>	
 				</TABLE>
 				<INPUT NAME='requester' TYPE='hidden' SIZE='24' VALUE="<?php print $_SESSION['user_id'];?>">

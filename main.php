@@ -54,6 +54,8 @@ require_once($the_inc);
 3/26/2013 revised per RC Charlie
 5/26/2013 made auto_refresh conditional on setting value
 9/10/13 Changed logic to show full screen button, now shows if internet is available but maps are switched off by user choice.
+10/23/13 Revisions for user selectable maps
+10/31/13 Revisions for user selectable maps
 */
 
 if (isset($_GET['logout'])) {
@@ -842,7 +844,9 @@ if (is_guest()) {													// 8/25/10
 ?>
 		<SCRIPT SRC='./js/usng.js' 			TYPE='text/javascript'></SCRIPT>		<!-- 10/14/08 -->
 		<SCRIPT SRC="./js/graticule_V3.js" 	TYPE="text/javascript"></SCRIPT>
-<?php 
+<?php
+	}
+	if($_SESSION['good_internet']) {	//	10/31/13
 		$sit_scr = (array_key_exists('id', ($_GET)))? $_GET['id'] :	NULL;	 	//	10/23/12
 		if((module_active("Ticker")==1) && (!($sit_scr))) {	//	6/1/12, 10/23/12
 ?>
@@ -1086,7 +1090,7 @@ if (is_guest()) {													// 8/25/10
 	$get_sort_by_field = 	(array_key_exists('sort_by_field', ($_GET)))?	$_GET['sort_by_field']:	NULL;
 	$get_sort_value = 		(array_key_exists('sort_value', ($_GET)))?		$_GET['sort_value']:	NULL;	
 	
-	if((!(is_guest())) && ($_SESSION['internet']) && (!($get_id))) {	//	4/6/11 Added for add on modules, 6/1/12 only on situation screen, not on ticket detail.
+	if((!(is_guest())) && ($_SESSION['good_internet']) && (!($get_id))) {	//	4/6/11 Added for add on modules, 6/1/12 only on situation screen, not on ticket detail.
 		if(file_exists("./incs/modules.inc.php")) {
 			get_modules('main');
 			}
@@ -1165,7 +1169,7 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
 		}
 		
 	$sit_scr = (array_key_exists('id', ($_GET)))? $_GET['id'] :	NULL;		//	10/23/12	
-	if((module_active("Ticker")==1) && (!($sit_scr))) {			//	10/23/12
+	if(($_SESSION['good_internet']) && (module_active("Ticker")==1) && (!($sit_scr))) {			//	10/23/12
 		require_once('./modules/Ticker/incs/ticker.inc.php');
 		$the_markers = buildmarkers();
 		foreach($the_markers AS $value) {

@@ -21,7 +21,8 @@ if (mysql_affected_rows() == 0) {
 		$filename = $row['filename'];
 		$orig_filename = $row['orig_filename'];
 		$title = $row['title'];
-		$print .= "<OPTION VALUE='./ajax/download.php?filename=" . $filename . "&origname=" . $orig_filename . "'>" . $title . "</OPTION>";
+		$type =  $row['type'];
+		$print .= "<OPTION VALUE='./ajax/download.php?filename=" . $filename . "&origname=" . $orig_filename . "&type=" . $type . "'>" . $title . "</OPTION>";
 		}
 		$print .= "</SELECT>";
 	}	//	end else

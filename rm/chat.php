@@ -74,24 +74,24 @@ $signals_list .= "</SELECT>\n";
 					<B>Invite</B>
 				</DIV>
 				<DIV style='width: 80%; display: inline-block;'>					
-					<SELECT NAME='chat_invite' 
-							onChange = "$('send_butt').style.display='inline';$('can_butt').style.display='inline';"> 
-					<OPTION VALUE="" SELECTED>Select</OPTION>	
-					<OPTION VALUE=0>All</OPTION>	
+					<SELECT NAME='chat_invite' onFocus = "pause_messages(); $('can_butt').style.display='inline';" onChange = "$('send_butt').style.display='inline';;"> 
+						<OPTION VALUE="" SELECTED>Select</OPTION>	
+						<OPTION VALUE=0>All</OPTION>	
 
 <?php
-					$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `id` != {$_SESSION['user_id']} ";
-					$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
+						$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `id` != {$_SESSION['user_id']} ";
+						$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 
-					while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
-						print "\t\t<OPTION VALUE={$row['id']}>{$row['user']}</OPTION>\n";	
-						}
-					print "\t</SELECT>\n";
+						while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+							print "\t\t<OPTION VALUE={$row['id']}>{$row['user']}</OPTION>\n";	
+							}
+						print "\t</SELECT>\n";
 ?>
-				<INPUT ID = 'send_butt' TYPE='button' VALUE = 'Send invite' style='margin-left:10px; display:none' onClick = "do_send_inv(document.chat_form.chat_invite.value);">
-				<SPAN ID= 'sent_msg' STYLE = 'margin-left:60px; display:none;'><B>Invitation Sent!</B></span>
-				<INPUT ID = 'can_butt' TYPE='button' VALUE = 'Cancel' style='margin-left:10px; display:none' onClick = "$('send_butt').style.display='none';$('can_butt').style.display='none';document.chat_form.chat_invite.options[0].selected = true;">
-			</DIV>
+					<INPUT ID = 'send_butt' TYPE='button' VALUE = 'Send invite' style='margin-left:10px; display:none' onClick = "do_send_inv(document.chat_form.chat_invite.value);">
+					<SPAN ID= 'sent_msg' STYLE = 'margin-left:60px; display:none;'><B>Invitation Sent!</B></span>
+					<INPUT ID = 'can_butt' TYPE='button' VALUE = 'Cancel' style='margin-left:10px; display:none' onClick = "do_can();">
+					<BR /><SPAN ID= 'help' STYLE = 'margin-left:150px; color: red; background-color: #FFFFFF;'><B></B></SPAN>
+				</DIV>
 <?php
 				}
 ?>

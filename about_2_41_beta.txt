@@ -728,6 +728,10 @@ Changes for Tickets 2.41A
 
 234.  Various other fixes as normal including coping where a logged in user has no allocated regions.
 
+Changes for Tickets 2.41B
+
+235.  Various fixes, no new functionality
+
 October '13
 Arnie Shore
 Andy Harvey, UK

@@ -40,6 +40,7 @@
 6/3/2013 - made HAS button appearance conditional on setting
 7/2/2013 include setting internet in HAS include 
 7/16/13 Revisions to strings for top bars which fail on intial load after install and stop buttons from showing.
+10/25/13 Revised get_filelist and associated timer.
 */
 
 error_reporting(E_ALL);
@@ -164,6 +165,7 @@ if(file_exists("./incs/modules.inc.php")) {
 	var nm_interval = null;			//	10/23/12
 	var msgs_interval = null;		//	10/23/12
 	var emsgs_interval = null;		//	10/23/12
+	var file_interval = null;
 	var lit=new Array();
 
 	var chat_id = 0;				// new chat invite - 8/25/10
@@ -219,7 +221,6 @@ if(file_exists("./incs/modules.inc.php")) {
  * @returns {undefined}
  */		
 	function do_loop() {								// monitor for changes - 4/10/10, 6/10/11
-		do_filelist();	//	9/10/13
 		var randomnumber=Math.floor(Math.random()*99999999);		
 		sendRequest ('get_latest_id.php?version=' + randomnumber,get_latest_id_cb, "");	
 		}			// end function do_loop()	
@@ -799,6 +800,8 @@ if(file_exists("./incs/modules.inc.php")) {
 		msgs_interval = null;	//	10/23/12
 		clearInterval(emsgs_interval);	//	10/23/12
 		emsgs_interval = null;	//	10/23/12
+		clearInterval(file_interval);	//	10/25/13
+		file_interval = null;	//	10/25/13
 		$('whom').innerHTML=NOT_STR; 
 		is_initialized = false;
 		nmis_initialized = false;	//	10/23/12
@@ -886,14 +889,41 @@ if(file_exists("./incs/modules.inc.php")) {
 		
 		}
 		
-	function do_filelist() {	//	9/10/13
+	function do_filelist() {	//	9/10/13, 10/25/13
 		randomnumber=Math.floor(Math.random()*99999999);
 		var url ="./ajax/gen_file_list.php?version=" + randomnumber;
 		sendRequest (url, genfile_cb, "");
 		function genfile_cb(req) {
 			var the_files=JSON.decode(req.responseText);
-			$('file_list').innerHTML = the_files[0];
-			$('file_list2').innerHTML = the_files[1];
+			if(the_files[0] != "") {
+				$('files').style.display = "inline-block";
+				$('file_list').innerHTML = the_files[0];
+				$('file_list2').innerHTML = the_files[1];
+				} else {
+				$('files').style.display = "none";
+				}
+			}
+		do_filelist2();
+		}
+	
+	function do_filelist2() {	//	10/25/13
+		if (file_interval!=null) {return;}
+		file_interval = window.setInterval('file_loop()', 60000);
+		}
+	
+	function file_loop() {	//	10/25/13
+		randomnumber=Math.floor(Math.random()*99999999);
+		var url ="./ajax/gen_file_list.php?version=" + randomnumber;
+		sendRequest (url, genfile_cb, "");
+		function genfile_cb(req) {
+			var the_files=JSON.decode(req.responseText);
+			if(the_files[0] != "") {
+				$('files').style.display = "inline-block";
+				$('file_list').innerHTML = the_files[0];
+				$('file_list2').innerHTML = the_files[1];
+				} else {
+				$('files').style.display = "none";
+				}
 			}
 		}
 
@@ -1189,6 +1219,7 @@ function get_daynight() {
 				window.clearInterval(nm_interval);	//	10/23/12
 				window.clearInterval(msgs_interval);	//	10/23/12
 				window.clearInterval(emsgs_interval);	//	10/23/12
+				window.clearInterval(file_interval);	//	10/23/12
 				get_new_colors();								// reloads top				
 				}									// end function day_night_callback()				
 		}
@@ -1436,10 +1467,10 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 			<SPAN ID = 'call'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick = "starting=false;do_callBoard()" STYLE = 'display:<?php print $call_disp_attr; ?>'><?php print get_text("Board"); ?></SPAN> <!-- 5/12/10 -->
 <!-- ================== -->
-			<SPAN ID = 'term'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
+			<SPAN ID = 'term'  CLASS = 'plain' style='display: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick = "go_there('mobile.php', this.id);"><?php print get_text("Mobile"); ?></SPAN>	<!-- 7/27/10 -->
 <!-- ================== -->
-			<SPAN ID = 'files'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
+			<SPAN ID = 'files'  CLASS = 'plain' style='display: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick = "do_files();"><?php print get_text("Files");?></SPAN>	<!-- 9/10/13 -->
 <!-- ================== -->
 			<SPAN ID = 'reqs'  CLASS = 'plain' style='display: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"

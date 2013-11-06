@@ -34,7 +34,7 @@
 		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Opacity:</TD><TD><INPUT ID="ID9" MAXLENGTH=3 SIZE=3 TYPE= "text" NAME="frm_opacity" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"/> <SPAN class='opt' >numeric</SPAN></TD></TR>
 <?php
 		$mg_select = "<SELECT ID='ID10' NAME='frm_notify_mailgroup'>";
-		$mg_select .= "<OPTION VALUE=0>Select Mail List</OPTION>";
+		$mg_select .= "<OPTION VALUE=0 SELECTED>Select Mail List</OPTION>";
 		$query_mg = "SELECT * FROM `$GLOBALS[mysql_prefix]mailgroup`";		// 12/18/10
 		$result_mg = mysql_query($query_mg) or do_error($query_mg, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 		while ($row_mg = stripslashes_deep(mysql_fetch_assoc($result_mg))) {

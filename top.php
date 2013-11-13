@@ -1467,7 +1467,7 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 			<SPAN ID = 'call'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick = "starting=false;do_callBoard()" STYLE = 'display:<?php print $call_disp_attr; ?>'><?php print get_text("Board"); ?></SPAN> <!-- 5/12/10 -->
 <!-- ================== -->
-			<SPAN ID = 'term'  CLASS = 'plain' style='display: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
+			<SPAN ID = 'term'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick = "go_there('mobile.php', this.id);"><?php print get_text("Mobile"); ?></SPAN>	<!-- 7/27/10 -->
 <!-- ================== -->
 			<SPAN ID = 'files'  CLASS = 'plain' style='display: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"

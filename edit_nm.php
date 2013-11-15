@@ -320,8 +320,8 @@ function edit_ticket($id) {							/* post changes */
 		for (var i=0 ; i < words.length ; i++){ 
 			var testwd = words[i]; 
 			var firLet = testwd.substr(0,1); 
-			var rest = testwd.substr(1, testwd.length -1) 
-			words[i] = firLet.toUpperCase() + rest 
+			var rest = testwd.substr(1, testwd.length -1); 
+			words[i] = firLet.toUpperCase() + rest;
 	  	 	} 
 		return( words.join(" ")); 
 		} 
@@ -371,7 +371,7 @@ function edit_ticket($id) {							/* post changes */
 			var curr_lng = fac_lng[index];
 			do_lat(curr_lat);
 			do_lng(curr_lng);
-			pt_to_map (document.edit, curr_lat, curr_lng)
+			pt_to_map (document.edit, curr_lat, curr_lng);
 	}					// end function do_fac_to_loc
 /**
  * 
@@ -514,7 +514,7 @@ function edit_ticket($id) {							/* post changes */
 		}
 		
 ?>		
-<BODY onLoad = "do_notify(); ck_frames()" >
+<BODY onLoad = "do_notify(); ck_frames();" >
 <?php
 require_once('./incs/links.inc.php');
  
@@ -687,7 +687,7 @@ require_once('./incs/links.inc.php');
 			else {	
 				$query_fc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";		
 				$result_fc = mysql_query($query_fc) or do_error($query_fc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-				$pulldown = '<option>" . gettext('Incident at Facility?') . "</option>';
+				$pulldown = '<option>'. gettext('Incident at Facility?') . '</option>';
 				while ($row_fc = mysql_fetch_array($result_fc, MYSQL_ASSOC)) {
 					$pulldown .= "<option value=\"{$row_fc['id']}\">{$row_fc['name']}</option>\n";
 					print "\n<SCRIPT>fac_lat[" . $row_fc['id'] . "] = " . $row_fc['lat'] . " ;</SCRIPT>\n";
@@ -925,7 +925,7 @@ require_once('./incs/links.inc.php');
 				return;
 				}
 			callback(req);
-			}
+			};
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
@@ -934,10 +934,10 @@ require_once('./incs/links.inc.php');
  * @type Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -987,7 +987,7 @@ require_once('./incs/links.inc.php');
 		if (goodno.length<10) {
 			alert("<?php print gettext('10-digit phone no. required - any format');?>");
 			return;}
-		var params = "phone=" + URLEncode(goodno)
+		var params = "phone=" + URLEncode(goodno);
 		sendRequest (document.edit, 'wp_lkup.php',handleResult, params);		//1/17/09
 		}
 		
@@ -1018,7 +1018,7 @@ require_once('./incs/links.inc.php');
 //			 mail_it ($to_str, $text, $ticket_id, $text_sel=1;, $txt_only = FALSE)
 		
 //		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + escape(theId) + "&text_sel=1";		// ($to_str, $text, $ticket_id)   10/15/08
-		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId ;		// ($to_str, $text, $ticket_id)   10/15/08
+		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId;		// ($to_str, $text, $ticket_id)   10/15/08
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 		}			// end function do notify()
 /**
@@ -1061,10 +1061,10 @@ require_once('./incs/links.inc.php');
  * @type Array|Array|Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 

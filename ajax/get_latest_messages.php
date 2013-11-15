@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package get_latest_messages.php
+ * 
+ * @since version
+ * @version string
+ * @author John Doe <john.doe@example.com>
+ */
 require_once('../incs/functions.inc.php');
 require_once('../incs/messaging.inc.php');
 

@@ -33,6 +33,7 @@ function loc_format_date($date){
 	if (get_variable('locale')==1)	{return date("j/n/y H:i",$date);}					// 08/27/10 - Revised to show UK format for locale = 1	
 	else 							{return date(get_variable("date_format"),$date);}	// return date(get_variable("date_format"),strtotime($date));
 	}				// end function fac format date
+
 function isempty($arg) {
 	return (bool) (strlen($arg) == 0) ;
 	}
@@ -44,14 +45,14 @@ $osgb = get_text('OSGB');
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Warn Locations Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Warn Locations Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 	<META HTTP-EQUIV="Expires" CONTENT="0" />
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
 <?php
 $api_key = trim(get_variable('gmaps_api_key'));
 $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
@@ -86,7 +87,10 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 
 	var lat_lng_frmt = <?php print get_variable('lat_lng'); ?>;
 	var map;								// map object
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -99,29 +103,51 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			}
 		return elements;
 		}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function get_new_colors() {								// 5/4/11
 		window.location.href = '<?php print basename(__FILE__);?>';
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
 			}
 		}		// end function ck_frames()
-
+/**
+ * 
+ * @param {type} instr
+ * @returns {String|@exp;@call;to_char}
+ */
 	function to_str(instr) {
 		function ord( string ) {
 		    return (string+'').charCodeAt(0);
 			}
-
+/**
+ * 
+ * @param {type} ascii
+ * @returns {@exp;String@call;fromCharCode}
+ */
 		function chr( ascii ) {
 		    return String.fromCharCode(ascii);
 			}
+/**
+ * 
+ * @param {type} val
+ * @returns {unresolved}
+ */
 		function to_char(val) {
 			return(chr(ord("A")+val));
 			}
@@ -131,7 +157,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		return hop+to_char(lop);
 		}
 
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function do_usng_conv(theForm){						// usng to LL array
 		tolatlng = new Array();
 		USNGtoLL(theForm.frm_ngs.value, tolatlng);
@@ -147,13 +177,22 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		do_ngs(theForm);
 		domap();			// show it
 		}				// end function
-		
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */		
 	function do_unlock_pos(theForm) {
 		theForm.frm_ngs.disabled=false;
 		$("lock_p").style.visibility = "hidden";
 		$("usng_link").style.textDecoration = "underline";
 		}
-
+/**
+ * 
+ * @param {type} inlat
+ * @param {type} inlng
+ * @returns {unresolved}
+ */
 	function do_coords(inlat, inlng) {
 		if(inlat.toString().length==0) return;
 		var str = inlat + ", " + inlng + "\n";
@@ -161,7 +200,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		str += lat2ddm(inlat) + ", " +lng2ddm(inlng);
 		alert(str);
 		}
-
+/**
+ * 
+ * @param {type} inval
+ * @returns {String}
+ */
 	function ll2dms(inval) {				// lat/lng to degr, mins, sec's
 		var d = new Number(inval);
 		d  = (inval>0)?  Math.floor(d):Math.round(d);
@@ -171,7 +214,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		var s = si.toFixed(1);
 		return d + '\260 ' + Math.abs(m) +"' " + Math.abs(s) + '"';
 		}
-
+/**
+ * 
+ * @param {type} inlat
+ * @returns {String}
+ */
 	function lat2ddm(inlat) {				// lat to degr, dec min's
 		var x = new Number(inlat);
 		var y  = (inlat>0)?  Math.floor(x):Math.round(x);
@@ -179,7 +226,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		var nors = (inlat>0.0)? " N":" S";
 		return Math.abs(y) + '\260 ' + z +"'" + nors;
 		}
-
+/**
+ * 
+ * @param {type} inlng
+ * @returns {String}
+ */
 	function lng2ddm(inlng) {				// lng to degr, dec min's
 		var x = new Number(inlng);
 		var y  = (inlng>0)?  Math.floor(x):Math.round(x);
@@ -187,7 +238,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		var eorw = (inlng>0.0)? " E":" W";
 		return Math.abs(y) + '\260 ' + z +"'" + eorw;
 		}
-
+/**
+ * 
+ * @param {type} inlat
+ * @returns {String}
+ */
 	function do_lat_fmt(inlat) {
 		switch(lat_lng_frmt) {
 		case 0:
@@ -200,10 +255,14 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			return lat2ddm(inlat);
 		 	break;
 		default:
-			alert ("invalid LL format selector");
+			alert ("<?php print gettext('invalid LL format selector');?>");
 			}
 		}
-
+/**
+ * 
+ * @param {type} inlng
+ * @returns {String}
+ */
 	function do_lng_fmt(inlng) {
 		switch(lat_lng_frmt) {
 		case 0:
@@ -216,24 +275,35 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			return lng2ddm(inlng);
 		 	break;
 		default:
-			alert ("invalid LL format selector");
+			alert ("<?php print gettext('invalid LL format selector');?>");
 			}
 		}
 
 	var grid_bool = false;		
+/**
+ * 
+ * @returns {undefined}
+ */  
 	function toglGrid() {						// toggle
 		grid_bool = !grid_bool;
 		if (grid_bool)	{ grid = new Graticule(map); }
 		else 			{ grid.setMap(null); }
 		}		// end function toglGrid()
-
+/**
+ * 
+ * @param {type} val
+ * @returns {Boolean}
+ */
 	function isNull(val) {								// checks var stuff = null;
 		return val === null;
 		}
 
 	var type;					// Global variable - identifies browser family
 	BrowserSniffer();
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function BrowserSniffer() {													//detects the capabilities of the browser
 		if (navigator.userAgent.indexOf("Opera")!=-1 && $) type="OP";	//Opera
 		else if (document.all) type="IE";										//Internet Explorer e.g. IE4 upwards
@@ -243,25 +313,45 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		}
 
 	var starting = false;
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function whatBrows() {									//Displays the generic browser type
 		window.alert("Browser is : " + type);
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @param {type} action
+ * @returns {undefined}
+ */
 	function ShowLayer(id, action){							// Show and hide a span/layer -- Seems to work with all versions NN4 plus other browsers
 		if (type=="IE") 				eval("document.all." + id + ".style.display='" + action + "'");  	// id is the span/layer, action is either hidden or visible
 		if (type=="NN") 				eval("document." + id + ".display='" + action + "'");
 		if (type=="MO" || type=="OP") 	eval("$('" + id + "').style.display='" + action + "'");
 		}
-
+/**
+ * 
+ * @param {type} elid
+ * @returns {undefined}
+ */
 	function hideit (elid) {
 		ShowLayer(elid, "none");
 		}
-
+/**
+ * 
+ * @param {type} elid
+ * @returns {undefined}
+ */
 	function showit (elid) {
 		ShowLayer(elid, "block");
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function validate(theForm) {						// Facility form contents validation
 		if (theForm.frm_remove) {
 			if (theForm.frm_remove.checked) {
@@ -274,12 +364,12 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			}
 
 		var errmsg="";
-		if (theForm.frm_name.value.trim()=="")											{errmsg+="Location NAME is required.\n";}
-		if (theForm.frm_descr.value.trim()=="")											{errmsg+="Location DESCRIPTION is required.\n";}
-		if ((theForm.frm_lat.value=="") || (theForm.frm_lng.value==""))					{errmsg+="Location LOCATION must be set - click map location to set.\n";}	// 11/11/09 position mandatory
+		if (theForm.frm_name.value.trim()=="")											{errmsg+="<?php print gettext('Location NAME is required.');?>\n";}
+		if (theForm.frm_descr.value.trim()=="")											{errmsg+="<?php print gettext('Location DESCRIPTION is required.');?>\n";}
+		if ((theForm.frm_lat.value=="") || (theForm.frm_lng.value==""))					{errmsg+="<?php print gettext('Location LOCATION must be set - click map location to set.');?>\n";}	// 11/11/09 position mandatory
 		
 		if (errmsg!="") {
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {														// good to go!
@@ -288,7 +378,10 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 //			return true;
 			}
 		}				// end function va lidate(theForm)
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function add_res () {		// turns on add responder form
 		showit('loc_add_form');
 		hideit('tbl_locations');
@@ -297,6 +390,13 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		}
 
 // *********************************************************************
+/**
+ * 
+ * @param {type} my_form
+ * @param {type} lat
+ * @param {type} lng
+ * @returns {undefined}
+ */
 	function pt_to_map (my_form, lat, lng) {
 		myMarker.setMap(null);			// destroy predecessor
 		my_form.frm_lat.value=lat;	
@@ -325,10 +425,14 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			});
 		myMarker.setMap(map);		// add marker with icon
 		}				// end function pt_to_map ()
-
+/**
+ * 
+ * @param {type} my_form
+ * @returns {Boolean}
+ */
 	function loc_lkup(my_form) {
 		if ((my_form.frm_city.value.trim()==""  || my_form.frm_state.value.trim()=="")) {
-			alert ("City and State are required for location lookup.");
+			alert ("<?php print gettext('City and State are required for location lookup.');?>");
 			return false;
 			}
 		var geocoder = new google.maps.Geocoder();
@@ -336,7 +440,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 
 		geocoder.geocode( { 'address': myAddress}, function(results, status) {		
 			if (status == google.maps.GeocoderStatus.OK)	{ pt_to_map (my_form, results[0].geometry.location.lat(), results[0].geometry.location.lng());}					
-			else 											{ alert("Geocode lookup failed: " + status);}
+			else 											{ alert("<?php print gettext('Geocode lookup failed');?>: " + status);}
 			});				// end geocoder.geocode()
 
 		}				// end function loc_lkup()
@@ -430,35 +534,54 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 				}
 			});
 		}		
-
+/**
+ * 
+ * @param {type} str
+ * @returns {@exp;words@call;join}
+ */
 	function capWords(str){ 
 		var words = str.split(" "); 
 		for (var i=0 ; i < words.length ; i++){ 
 			var testwd = words[i]; 
 			var firLet = testwd.substr(0,1); 
-			var rest = testwd.substr(1, testwd.length -1) 
-			words[i] = firLet.toUpperCase() + rest 
+			var rest = testwd.substr(1, testwd.length -1); 
+			words[i] = firLet.toUpperCase() + rest; 
 	  	 	} 
 		return( words.join(" ")); 
 		} 
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function hideIcons() {
 		map.clearOverlays();
 		}				// end function hideicons()
-
+/**
+ * 
+ * @param {type} lat
+ * @returns {undefined}
+ */
 	function do_lat (lat) {
 		document.forms[0].frm_lat.value=lat.toFixed(6);
 		document.forms[0].show_lat.disabled=false;
 		document.forms[0].show_lat.value=do_lat_fmt(document.forms[0].frm_lat.value);
 		document.forms[0].show_lat.disabled=true;
 		}
+/**
+ * 
+ * @param {type} lng
+ * @returns {undefined}
+ */
 	function do_lng (lng) {
 		document.forms[0].frm_lng.value=lng.toFixed(6);
 		document.forms[0].show_lng.disabled=false;
 		document.forms[0].show_lng.value=do_lng_fmt(document.forms[0].frm_lng.value);
 		document.forms[0].show_lng.disabled=true;
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_ngs() {											// LL to USNG
 		var loc = <?php print get_variable('locale');?>;
 		document.forms[0].frm_ngs.disabled=false;
@@ -473,7 +596,10 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			}			
 		document.forms[0].frm_ngs.disabled=true;
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function collect(){				// constructs a string of id's for deletion
 		var str = sep = "";
 		for (i=0; i< document.del_Form.elements.length; i++) {
@@ -484,7 +610,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			}
 		document.del_Form.idstr.value=str;
 		}
-
+/**
+ * 
+ * @param {type} bool_val
+ * @returns {undefined}
+ */
 	function all_ticks(bool_val) {									// set checkbox = true/false
 		for (i=0; i< document.del_Form.elements.length; i++) {
 			if (document.del_Form.elements[i].type == 'checkbox') {
@@ -492,35 +622,62 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 				}
 			}			// end for (...)
 		}				// end function all ticks()
-
+/**
+ * 
+ * @param {type} the_form
+ * @returns {undefined}
+ */
 	function do_add_reset(the_form) {
 //		map.clearOverlays();
 		the_form.reset();
 		do_ngs();
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function to_top() {
 		location.href = '#top';
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function to_bottom() {
 		location.href = '#bottom';
 		}
-		
+/**
+ * 
+ * @param {type} in_str
+ * @returns {String|add_hash.in_str}
+ */		
 	function add_hash(in_str) { // prepend # if absent
 		return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
 		}		
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_hover (the_id) {
 		CngClass(the_id, 'hover');
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_plain (the_id) {
 		CngClass(the_id, 'plain');
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
@@ -537,7 +694,7 @@ function list_locations($addon = '', $start) {
 
 ?>
 
-<SCRIPT >
+<SCRIPT>
 	var map = null;				// the map object - note GLOBAL
 	var myMarker;					// the marker object
 	var lat_var;						// see init.js
@@ -545,7 +702,11 @@ function list_locations($addon = '', $start) {
 	var zoom_var;
 
 	var icon_file = "./markers/crosshair.png";
-
+/**
+ * 
+ * @param {type} in_obj
+ * @returns {undefined}
+ */
 	function call_back (in_obj){				// callback function - from gmaps_v3_init()
 		do_lat(in_obj.lat);			// set form values
 		do_lng(in_obj.lng);
@@ -563,7 +724,13 @@ function list_locations($addon = '', $start) {
 
 	var color=0;
 	var colors = new Array ('odd', 'even');
-
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */
 	function hideDiv(div_area, hide_cont, show_cont) {
 		if (div_area == "buttons_sh") {
 			var controlarea = "hide_controls";
@@ -583,7 +750,13 @@ function list_locations($addon = '', $start) {
 		var url = "persist2.php";
 		sendRequest (url, gb_handleResult, params);			
 		} 
-
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */
 	function showDiv(div_area, hide_cont, show_cont) {
 		if (div_area == "buttons_sh") {
 			var controlarea = "hide_controls";
@@ -591,9 +764,9 @@ function list_locations($addon = '', $start) {
 		if (div_area == "locs_list_sh") {
 			var controlarea = "locs_list";
 			}
-		var divarea = div_area
-		var hide_cont = hide_cont 
-		var show_cont = show_cont 
+		var divarea = div_area;
+		var hide_cont = hide_cont; 
+		var show_cont = show_cont; 
 		if($(divarea)) {
 			$(divarea).style.display = '';
 			$(hide_cont).style.display = '';
@@ -603,10 +776,19 @@ function list_locations($addon = '', $start) {
 		var url = "persist2.php";
 		sendRequest (url, gb_handleResult, params);					
 		} 	
-		
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */		
 	function gb_handleResult(req) {							// 12/03/10	The persist callback function
 		}
-
+/**
+ * 
+ * @param {type} form
+ * @param {type} arrayName
+ * @returns {Array}
+ */
 	function checkArray(form, arrayName)	{
 		var retval = new Array();
 		for(var i=0; i < form.elements.length; i++) {
@@ -617,7 +799,13 @@ function list_locations($addon = '', $start) {
 		}
 	return retval;
 	}		
-		
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */		
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -637,12 +825,15 @@ function list_locations($addon = '', $start) {
 		}
 
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -656,7 +847,14 @@ function list_locations($addon = '', $start) {
 			}
 		return xmlhttp;
 		}
-
+/**
+ * 
+ * @param {type} point
+ * @param {type} tabs
+ * @param {type} id
+ * @param {type} loc_id
+ * @returns {unresolved}
+ */
 	function createMarker(point, tabs, id, loc_id) {
 		got_points = true;													// at least one
 		var fac_image = "./our_icons/gen_icon.php?blank=" + color + "&text=" + loc_id;
@@ -677,7 +875,15 @@ function list_locations($addon = '', $start) {
 		bounds.extend(point);
 		return marker;
 		}				// end function create Marker()
-
+/**
+ * 
+ * @param {type} point
+ * @param {type} tabs
+ * @param {type} color
+ * @param {type} id
+ * @param {type} loc_id
+ * @returns {unresolved}
+ */
 	function createdummyMarker(point,tabs, color, id, loc_id) {
 		got_points = true;
 		var image_file = "./our_icons/question1.png";
@@ -685,7 +891,7 @@ function list_locations($addon = '', $start) {
 		dummymarker.id = color;				// for hide/unhide - unused
 		google.maps.event.addListener(dummymarker, "click", function() {		// here for both side bar and icon click
 			if (dummymarker) {
-				try {open_iw.close()} catch(err) {;}
+				try {open_iw.close();} catch(err) {;}
 				map.setZoom(8);
 				map.setCenter(point);
 				infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});	 
@@ -701,37 +907,71 @@ function list_locations($addon = '', $start) {
 			}
 		return dummymarker;
 		}				// end function create dummy Marker()
-		
+/**
+ * 
+ * @param {type} sidebar
+ * @param {type} id
+ * @param {type} the_class
+ * @param {type} loc_id
+ * @returns {undefined}
+ */		
 	function do_sidebar (sidebar, id, the_class, loc_id) {
 		var loc_id = loc_id;
 		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"'>";
 		side_bar_html += "<TD CLASS='" + the_class + "' onClick = myclick(" + id + "); >" + loc_id + sidebar +"</TD></TR>\n";		// 3/15/11
 		}
-
+/**
+ * 
+ * @param {type} sidebar
+ * @param {type} line_no
+ * @param {type} id
+ * @param {type} loc_id
+ * @returns {undefined}
+ */
 	function do_sidebar_nm (sidebar, line_no, id, loc_id) {	
 		var loc_id = loc_id;	
 		var letter = to_str(line_no);	
 		side_bar_html += "<TR CLASS='" + colors[(line_no)%2] +"'>";
 		side_bar_html += "<TD onClick = myclick_nm(" + id + "); >" + loc_id + sidebar +"</TD></TR>\n";		// 1/23/09, 10/29/09 removed period, 11/11/09, 3/15/11
 		}
-
+/**
+ * 
+ * @param {type} v_id
+ * @returns {undefined}
+ */
 	function myclick_nm(v_id) {				// Responds to sidebar click - view responder data
 		document.view_form.id.value=v_id;
 		document.view_form.submit();
 		}
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 	function myclick(id) {					// Responds to sidebar click, then triggers listener above -  note [id]
 		google.maps.event.trigger(gmarkers[id], "click");
 		location.href = '#top';		// 11/11/090
 		}
-
+/**
+ * 
+ * @param {type} lat
+ * @returns {undefined}
+ */
 	function do_lat (lat) {
 		document.forms[0].frm_lat.value=lat.toFixed(6);
 		}
+/**
+ * 
+ * @param {type} lng
+ * @returns {undefined}
+ */    
 	function do_lng (lng) {
 		document.forms[0].frm_lng.value=lng.toFixed(6);
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function do_ngs() {											// LL to USNG
 		var loc = <?php print get_variable('locale');?>;
 		document.forms[0].frm_ngs.disabled=false;
@@ -746,14 +986,18 @@ function list_locations($addon = '', $start) {
 			}			
 		document.forms[0].frm_ngs.disabled=true;
 		}
-
+/**
+ * 
+ * @param {type} loc_id
+ * @returns {Array}
+ */
 		function get_info_win_ary( loc_id) { 					// gmaps API V3
 				var contentString = [
 				  '<div id="tabs">',
 				  '<ul>',
-					'<li><a href="#tab-1"><span>One</span></a></li>',
-					'<li><a href="#tab-2"><span>Two</span></a></li>',
-					'<li><a href="#tab-3"><span>Three</span></a></li>',
+					'<li><a href="#tab-1"><span><?php print gettext('One');?></span></a></li>',
+					'<li><a href="#tab-2"><span><?php print gettext('Two');?></span></a></li>',
+					'<li><a href="#tab-3"><span><?php print gettext('Three');?></span></a></li>',
 				  '</ul>',
 				  '<div id="tab-1">',
 					'<p>Tab 1</p>',
@@ -779,7 +1023,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 ?>
 	var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_locations' WIDTH='100%'>";
-	side_bar_html += "<TR class='even'>	<TD WIDTH='5%'><B>ID</B></TD><TD WIDTH='30%' ALIGN='left'><B>Name</B></TD>";
+	side_bar_html += "<TR class='even'>	<TD WIDTH='5%'><B>ID</B></TD><TD WIDTH='30%' ALIGN='left'><B><?php print gettext('Name');?></B></TD>";
 	side_bar_html += "<TD WIDTH='40%' ALIGN='left'><B><?php print get_text("Street"); ?></B></TD><TD WIDTH='25%' ALIGN='left'><B><?php print get_text("As of"); ?></B></TD></TR>";
 	var gmarkers = [];
 	var infoTabs = [];
@@ -796,7 +1040,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 	    zoomControl: true,
 	    scaleControl: true,
 	    mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
-		}	
+		};	
 
 	var map = new google.maps.Map($('map_canvas'), mapOptions);				// 1145
 
@@ -832,9 +1076,9 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			$toedit = $tomail = $toroute = "";
 			}
 		else {
-			$toedit = "&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='{$_SESSION['warnlocationsfile']}?func=location&edit=true&id=" . $row['id'] . "'><U>Edit</U></A>" ;
-			$tomail = "&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = 'do_mail_in_win({$row['id']})'><U><B>Email</B></U></SPAN>" ;
-			$toroute = "&nbsp;<A HREF='{$_SESSION['facroutesfile']}?loc_id=" . $row['id'] . "'><U>Route To Facility</U></A>";	
+			$toedit = "&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='{$_SESSION['warnlocationsfile']}?func=location&edit=true&id=" . $row['id'] . "'><U>" . gettext('Edit') . "</U></A>" ;
+			$tomail = "&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = 'do_mail_in_win({$row['id']});'><U><B>" . gettext('Email') . "</B></U></SPAN>" ;
+			$toroute = "&nbsp;<A HREF='{$_SESSION['facroutesfile']}?loc_id=" . $row['id'] . "'><U>" . gettext('Route To Facility') . "</U></A>";	
 			}		
 
 		if (!($got_point) && ((my_is_float($row['lat'])))) {
@@ -868,9 +1112,9 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			$line_ctr = 0;
 			$tab_1 = "<TABLE CLASS='infowin' width='{$iw_width}'>";
 			$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . addslashes(shorten($display_name, 48)) . "</B></TD></TR>";
-			$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . $toedit . "&nbsp;&nbsp;<A HREF='{$_SESSION['warnlocationsfile']}?func=location&view=true&id=" . $row['id'] . "'><U>View</U></A></TD></TR>";	// 08/8/02
-			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>Description:&nbsp;</TD><TD ALIGN='left'>" . addslashes(shorten(str_replace($eols, " ", $row['description']), 32)) . "</TD></TR>";
-			$tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>As of:&nbsp;</TD><TD ALIGN='left'>" . format_date(strtotime($row['_on'])) . "</TD></TR>";
+			$tab_1 .= "<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'>" . $toedit . "&nbsp;&nbsp;<A HREF='{$_SESSION['warnlocationsfile']}?func=location&view=true&id=" . $row['id'] . "'><U>" . gettext('View') . "</U></A></TD></TR>";	// 08/8/02
+			$tab_1 .= "<TR CLASS='odd'><TD ALIGN='right'>" . gettext('Description') . ":&nbsp;</TD><TD ALIGN='left'>" . addslashes(shorten(str_replace($eols, " ", $row['description']), 32)) . "</TD></TR>";
+			$tab_1 .= "<TR CLASS='even'><TD ALIGN='right'>" . gettext('As of') . ":&nbsp;</TD><TD ALIGN='left'>" . format_date(strtotime($row['_on'])) . "</TD></TR>";
 			$tab_1 .= "</TABLE>";
 ?>
 			var myinfoTabs = "<?php echo $tab_1;?>";
@@ -947,14 +1191,17 @@ var buttons_html = "";
 <?php
 	}				// end function list_locations() ===========================================================
 
-
+/**
+ * 
+ * @param type $caption
+ */
 	function finished ($caption) {
 		print "</HEAD><BODY><!--" . __LINE__ . " -->";
 		require_once('./incs/links.inc.php');	// 10/6/09
-		print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:50px; height: 12px; width: 10px;' onclick = 'to_bottom()'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
+		print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:50px; height: 12px; width: 10px;' onclick = 'to_bottom();'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
 		print "<FORM NAME='fin_form' METHOD='get' ACTION='" . basename(__FILE__) . "'>";
-		print "<INPUT TYPE='hidden' NAME='caption' VALUE='" . $caption . "'>";
-		print "<INPUT TYPE='hidden' NAME='func' VALUE='location'>";
+		print "<INPUT TYPE='hidden' NAME='caption' VALUE='" . $caption . "'/>";
+		print "<INPUT TYPE='hidden' NAME='func' VALUE='location'/>";
 		print "</FORM>\n<A NAME='bottom' />\n</BODY></HTML>";
 		}
 
@@ -1058,19 +1305,19 @@ var buttons_html = "";
 		<TABLE BORDER=0 ID='outer' WIDTH='80%'><TR><TD WIDTH='50%'>
 		<TABLE BORDER="0" ID='addform' WIDTH='98%'>
 		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'><?php print get_text("Add Warn Location"); ?></FONT></FONT><BR /><BR />
-		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>		
+		<FONT SIZE=-1>(<?php print gettext('mouseover caption for help information');?>)</FONT></FONT><BR /><BR /></TD></TR>		
 		<FORM NAME= "loc_add_form" METHOD="POST" ACTION="<?php print basename(__FILE__);?>?func=location&goadd=true">
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Location Name - fill in with Name of the Location"><?php print get_text("Name"); ?></A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Location Name - fill in with Name of the Location');?>"><?php print get_text("Name"); ?></A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
 			<TD COLSPAN=3 ><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="" /></TD>
 		</TR>
 		<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>			
-		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Street Address - type in street address in fields or click location on map "><?php print get_text("Street"); ?></A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="" MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.loc_add_form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
-		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print get_variable('def_city'); ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2></TEXTAREA></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Latitude and Longitude - set from map click">
-			<SPAN onClick = 'javascript: do_coords(document.loc_add_form.frm_lat.value ,document.loc_add_form.frm_lng.value)'>
+		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Street Address - type in street address in fields or click location on map');?>"><?php print get_text("Street"); ?></A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="" MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('City - defaults to default city set in configuration. Type in City if required');?>"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.loc_add_form);"><img src="./markers/glasses.png" alt="<?php print gettext('Lookup location.');?>" /></button></TD> <!-- 7/5/10 -->
+		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print get_variable('def_city'); ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value);"/> <!-- 7/5/10 -->
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="<?php print gettext('State - US State or non-US Country code e.g. UK for United Kingdom');?>"><?php print gettext('St');?></A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Facility Description - additional details about unit');?>"><?php print gettext('Description');?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2></TEXTAREA></TD></TR>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Latitude and Longitude - set from map click');?>">
+			<SPAN onClick = 'javascript: do_coords(document.loc_add_form.frm_lat.value ,document.loc_add_form.frm_lng.value);'>
 				<?php print get_text("Lat/Lng"); ?></A></SPAN>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<IMG ID='lock_p' BORDER=0 SRC='./markers/unlock2.png' STYLE='vertical-align: middle'
 					onClick = 'do_unlock_pos(document.loc_add_form);'><TD COLSPAN=3>
@@ -1081,7 +1328,7 @@ var buttons_html = "";
 	switch($locale) { 
 		case "0":
 ?>
-		<SPAN ID = 'usng_link' onClick = "do_usng_conv(loc_add_form)" style='font-weight: bold;'>USNG:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled /></TD></TR>
+		<SPAN ID = 'usng_link' onClick = "do_usng_conv(loc_add_form);" style='font-weight: bold;'>USNG:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled /></TD></TR>
 <?php
 		break;
 
@@ -1099,7 +1346,7 @@ var buttons_html = "";
 	}
 ?>
 
-		<TR CLASS='even'><TD COLSPAN=4 ALIGN='center'><font color='red' size='-1'>*</FONT> Required</TD></TR>
+		<TR CLASS='even'><TD COLSPAN=4 ALIGN='center'><font color='red' size='-1'>*</FONT> <?php print gettext('Required');?></TD></TR>
 		<TR CLASS = "odd"><TD COLSPAN='2' ALIGN='center'>
 			<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();" STYLE = 'margin-left: 50px' >
 			<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick = "do_add_reset(this.form);" STYLE = 'margin-left: 20px' />
@@ -1110,8 +1357,8 @@ var buttons_html = "";
 		</FORM></TABLE> <!-- end inner left -->
 		</TD><TD ALIGN='center' WIDTH='50%'>
 		<DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
-		<BR /><BR /><B>Drag/Click to unit location</B>
-		<BR /><A HREF='#' onClick='toglGrid()'><u>Grid</U></A>
+		<BR /><BR /><B><?php print gettext('Drag/Click to unit location');?></B>
+		<BR /><A HREF='#' onClick='toglGrid();'><U><?php print gettext('Grid');?></U></A>
 
 		<BR /><BR />
 		</TD></TR></TABLE><!-- end outer -->
@@ -1128,7 +1375,11 @@ var buttons_html = "";
 		var zoom_var;
 
 		var icon_file = "./markers/crosshair.png";
-
+/**
+ * 
+ * @param {type} in_obj
+ * @returns {undefined}
+ */
 		function call_back (in_obj){				// callback function - from gmaps_v3_init()
 			do_lat(in_obj.lat);			// set form values
 			do_lng(in_obj.lng);
@@ -1177,32 +1428,32 @@ var buttons_html = "";
 ?>
 		<TABLE BORDER=0 ID='outer' WIDTH='80%'><TR><TD WIDTH='50%'>
 		<TABLE BORDER=0 ID='editform'>
-		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'>&nbsp;Edit Warn Location '<?php print $row['title'];?>' data</FONT>&nbsp;&nbsp;(#<?php print $id; ?>)</FONT></FONT><BR /><BR />
-		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>
+		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'>&nbsp;<?php print gettext('Edit Warn Location');?> '<?php print $row['title'];?>' data</FONT>&nbsp;&nbsp;(#<?php print $id; ?>)</FONT></FONT><BR /><BR />
+		<FONT SIZE=-1>(<?php print gettext('mouseover caption for help information');?>)</FONT></FONT><BR /><BR /></TD></TR>
 		<FORM METHOD="POST" NAME= "res_edit_Form" ACTION="<?php print  basename(__FILE__);?>?func=location&goedit=true">
 
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Location Name - fill in with Name of location">Name</A>:&nbsp;<font color='red' size='-1'>*</font></TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="<?php print $row['title'] ;?>" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Location Name - fill in with Name of location');?>"><?php print gettext('Name');?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="<?php print $row['title'] ;?>" /></TD></TR>
 		<TR class='spacer'><TD class='spacer' COLSPAN='2'>&nbsp;</TD></TR>
 
 <?php
 	$dis_rmv = " ENABLED";
 ?>
 			</TD></TR>
-		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Street Address - type in street address in fields or click location on map ">Location</A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="<?php print $row['street'] ;?>"  MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_edit_Form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
-		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
+		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Street Address - type in street address in fields or click location on map');?>"><?php print gettext('Location');?></A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="<?php print $row['street'] ;?>"  MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('City - defaults to default city set in configuration. Type in City if required');?>"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_edit_Form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
+		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value);"> <!-- 7/5/10 -->
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="<?php print gettext('State - US State or non-US Country code e.g. UK for United Kingdom');?>"><?php print gettext('St');?></A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Facility Description - additional details about unit');?>"><?php print gettext('Description');?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
 <?php
-		$map_capt = "<BR /><BR /><CENTER><B><FONT CLASS = 'normal_text'>Click Map to revise location</FONT></B>";
+		$map_capt = "<BR /><BR /><CENTER><B><FONT CLASS = 'normal_text'>" . gettext('Click Map to revise location') . "</FONT></B>";
 		$lock_butt ="<IMG ID='lock_p' BORDER=0 SRC='./markers/unlock2.png' STYLE='vertical-align: middle' onClick = 'do_unlock_pos(document.res_edit_Form);'>";
-		$usng_link = "<SPAN ID = 'usng_link' onClick = 'do_usng_conv(res_edit_Form)'>{$usng}:</SPAN>";
+		$usng_link = "<SPAN ID = 'usng_link' onClick = 'do_usng_conv(res_edit_Form);'>{$usng}:</SPAN>";
 		$osgb_link = "<SPAN ID = 'osgb_link'>{$osgb}:</SPAN>";		
 ?>
 		<TR CLASS = "odd">
 			<TD CLASS="td_label">
-				<SPAN onClick = 'javascript: do_coords(document.res_edit_Form.frm_lat.value ,document.res_edit_Form.frm_lng.value  )' ><A HREF="#" TITLE="Latitude and Longitude - set from map click">
-				Lat/Lng</A></SPAN>:&nbsp;&nbsp;&nbsp;&nbsp;<?php print $lock_butt;?>
+				<SPAN onClick = 'javascript: do_coords(document.res_edit_Form.frm_lat.value ,document.res_edit_Form.frm_lng.value);' ><A HREF="#" TITLE="<?php print gettext('Latitude and Longitude - set from map click');?>">
+				<?php print gettext('Lat/Lng');?></A></SPAN>:&nbsp;&nbsp;&nbsp;&nbsp;<?php print $lock_butt;?>
 				</TD>
 			<TD COLSPAN=3>
 				<INPUT TYPE="text" NAME="show_lat" VALUE="<?php print get_lat($lat);?>" SIZE=11 disabled />&nbsp;
@@ -1233,12 +1484,12 @@ var buttons_html = "";
 		}
 ?>
 		<TR><TD>&nbsp;</TD></TR>
-		<TR CLASS="even" VALIGN='baseline'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Delete Facility from system">Remove Facility</A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>>
+		<TR CLASS="even" VALIGN='baseline'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Delete Facility from system');?>"><?php print gettext('Remove Facility');?></A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>/>
 		</TD></TR>
 		<TR CLASS = "odd">
 			<TD ALIGN='center'><BR>
 			<TD ALIGN='center'><BR><INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- 11/27/09 -->
-				<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick="map_reset()";>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick="map_reset();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>" onClick="validate(document.res_edit_Form);"></TD></TR>
 				</TD></TR>
 
@@ -1248,7 +1499,7 @@ var buttons_html = "";
 		<INPUT TYPE="hidden" NAME = "frm_log_it" VALUE=""/>
 		</FORM></TABLE>
 		</TD><TD ALIGN='center' WIDTH='50%'><DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: inset'></DIV>
-		<BR /><A HREF='#' onClick='toglGrid()'><u>Grid</U></A><BR />
+		<BR /><A HREF='#' onClick='toglGrid();'><u>Grid</U></A><BR />
 
 		<?php print $map_capt; ?></TD></TR></TABLE>
 <?php
@@ -1260,7 +1511,11 @@ var buttons_html = "";
 ?>
 <script>
 		var icon_file = "./markers/crosshair.png";
-
+/**
+ * 
+ * @param {type} in_obj
+ * @returns {undefined}
+ */
 		function call_back (in_obj){				// callback function - from gmaps_v3_init()
 			do_lat(parseFloat(in_obj.lat));			// set form values
 			do_lng(parseFloat(in_obj.lng));
@@ -1303,7 +1558,11 @@ var buttons_html = "";
 ?>
 			<SCRIPT >
 			var starting = false;
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {unresolved}
+ */
 			function sv_win(theForm) {
 				if(starting) {return;}				// dbl-click proof
 				starting = true;
@@ -1313,7 +1572,7 @@ var buttons_html = "";
 				var url = "street_view.php?thelat=" + thelat + "&thelng=" + thelng;
 				newwindow_sl=window.open(url, "sta_log",  "titlebar=no, location=0, resizable=1, scrollbars, height=450,width=640,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 				if (!(newwindow_sl)) {
-					alert ("Street view operation requires popups to be enabled. Please adjust your browser options - or else turn off the Call Board option.");
+					alert ("<?php print gettext('Street view operation requires popups to be enabled. Please adjust your browser options - or else turn off the Call Board option.');?>");
 					return;
 					}
 				newwindow_sl.focus();
@@ -1324,10 +1583,10 @@ var buttons_html = "";
 			</SCRIPT>
 			</HEAD>	<!-- <?php echo __LINE__; ?> -->
 <?php
-			print "\t<BODY onLoad = 'ck_frames()' > <!-- " . __LINE__ . "-->\n";
+			print "\t<BODY onLoad = 'ck_frames();' > <!-- " . __LINE__ . "-->\n";
 			print "<A NAME='top'>\n";			// 11/11/09
 			require_once('./incs/links.inc.php');
-			print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:50px; height: 12px; width: 10px;' onclick = 'to_bottom()'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
+			print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:50px; height: 12px; width: 10px;' onclick = 'to_bottom();'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
 
 ?>
 			<FONT CLASS="header">Warn Location'<?php print $row['title'] ;?>' Data</FONT> (#<?php print $row['id'];?>) <BR /><BR />
@@ -1341,7 +1600,7 @@ var buttons_html = "";
 <?php
 			if (my_is_float($lat)) {
 ?>		
-				<TR CLASS = "even"><TD CLASS="td_label"  onClick = 'javascript: do_coords(<?php print "$lat,$lng";?>)'><U>Lat/Lng</U>:</TD><TD>
+				<TR CLASS = "even"><TD CLASS="td_label"  onClick = 'javascript: do_coords(<?php print "$lat,$lng";?>);'><U><?php print gettext('Lat/Lng');?></U>:</TD><TD>
 					<?php print get_lat($lat);?> <?php print get_lng($lng);?>&nbsp;
 
 <?php
@@ -1378,8 +1637,8 @@ var buttons_html = "";
 				<TR CLASS = "even">
 					<TD COLSPAN=99 ALIGN='center'>
 						<DIV style='text-align: center;'>
-							<SPAN id='edit_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick= 'to_edit_Form.submit();'>Edit</SPAN>
-							<SPAN id='can_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick= 'document.can_Form.submit();'>Cancel</SPAN>
+							<SPAN id='edit_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick= 'to_edit_Form.submit();'><?php print gettext('Edit');?></SPAN>
+							<SPAN id='can_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick= 'document.can_Form.submit();'><?php print gettext('Cancel');?></SPAN>
 						</DIV>
 					</TD>
 				</TR>
@@ -1389,10 +1648,10 @@ var buttons_html = "";
 ?>
 			</TD><TD ALIGN='center'><DIV ID='map_canvas' style="width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: inset;"></DIV>
 			<BR />
-			<BR /><SPAN onClick='toglGrid()'><u>Grid</U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<SPAN onClick='doTraffic()'><U>Traffic</U></SPAN>
+			<BR /><SPAN onClick='toglGrid();'><U><?php print gettext('Grid');?></U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN onClick='doTraffic();'><U><?php print gettext('Traffic');?></U></SPAN>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<SPAN ID='do_sv' onClick = 'sv_win(document.res_view_Form)'><u>Street view</U></SPAN>
+				<SPAN ID='do_sv' onClick = 'sv_win(document.res_view_Form);'><U><?php print gettext('Street view');?></U></SPAN>
 				<BR /><BR />
 			</TD></TR></TABLE>
 			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
@@ -1463,11 +1722,11 @@ var buttons_html = "";
 					<TD WIDTH = '50%'>
 						<TABLE ID = 'sidebar' BORDER = 0 WIDTH='98%'>
 							<TR class='even'>
-								<TD ALIGN='center'><B>Warn Locations (<DIV id="num_locations" style="display: inline;"></DIV>)</B>
+								<TD ALIGN='center'><B><?php print gettext('Warn Locations');?> (<DIV id="num_locations" style="display: inline;"></DIV>)</B>
 								</TD>
 							</TR>
 							<TR class='odd'>	
-								<TD ALIGN='center'>Click line or icon for details
+								<TD ALIGN='center'><?php print gettext('Click line or icon for details');?>
 								</TD>
 							</TR>			
 							<TR>
@@ -1502,7 +1761,7 @@ var buttons_html = "";
 							</TR>
 							<TR class = 'odd'>
 								<TD ALIGN='center' class='td_label'>
-									<SPAN CLASS="legend" STYLE="font-size: 14px; text-align: center; vertical-align: middle; width: <?php print get_variable('map_width');?>-25px;"><B>Facility Legend:</B></SPAN>
+									<SPAN CLASS="legend" STYLE="font-size: 14px; text-align: center; vertical-align: middle; width: <?php print get_variable('map_width');?>-25px;"><B><?php print gettext('Facility Legend');?>:</B></SPAN>
 								</TD>
 							</TR>  <!-- 3/15/11 -->
 						</TABLE>
@@ -1511,14 +1770,14 @@ var buttons_html = "";
 			</TABLE>
 		</DIV>	<!-- end of outer -->
 		<FORM NAME='view_form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
-		<INPUT TYPE='hidden' NAME='func' VALUE='location'>
-		<INPUT TYPE='hidden' NAME='view' VALUE='true'>
-		<INPUT TYPE='hidden' NAME='id' VALUE=''>
+		<INPUT TYPE='hidden' NAME='func' VALUE='location'/>
+		<INPUT TYPE='hidden' NAME='view' VALUE='true'/>
+		<INPUT TYPE='hidden' NAME='id' VALUE=''/>
 		</FORM>
 
 		<FORM NAME='add_Form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
-		<INPUT TYPE='hidden' NAME='func' VALUE='location'>
-		<INPUT TYPE='hidden' NAME='add' VALUE='true'>
+		<INPUT TYPE='hidden' NAME='func' VALUE='location'/>
+		<INPUT TYPE='hidden' NAME='add' VALUE='true'/>
 		</FORM>
 
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print  basename(__FILE__);?>?func=location"></FORM>
@@ -1529,7 +1788,7 @@ var buttons_html = "";
 <?php
 		$buttons = "<TR><TD COLSPAN=99 ALIGN='center'>";
 		if ((!(is_guest())) && (!(is_unit()))) {		// 7/27/10
-			$buttons .="<INPUT TYPE='button' value= 'Add a Location'  onClick ='document.add_Form.submit();'  STYLE = 'margin-left: 60px;'>";
+			$buttons .="<INPUT TYPE='button' value= '" . gettext('Add a Location') . "  onClick ='document.add_Form.submit();'  STYLE = 'margin-left: 60px;'/>";
 			}
 		$buttons .= "</TD></TR>";
 

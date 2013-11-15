@@ -412,7 +412,7 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 		input		{background-color:transparent;}		/* Benefit IE radio buttons */
 	  	</STYLE>
 
-		<SCRIPT defer="defer">	<!-- 11/18/10 -->
+		<SCRIPT defer="defer">	// 11/18/10
 		String.prototype.trim = function () {
 			return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 			};

@@ -153,19 +153,19 @@ if (empty ($_POST)) {
 		
 ?>
 		<INPUT TYPE = "hidden" NAME="frm_to_str" VALUE="">
-		<INPUT TYPE = "hidden" NAME="frm_subj" VALUE= "<?php print shorten($t_row['scope'], 48); ?>">
+		<INPUT TYPE = "hidden" NAME="frm_subj" VALUE= "<?php print shorten($t_row['scope'], 48); ?>"/>
 		</FORM>
 	<FORM NAME='dummy' METHOD='get'>
 	<TR CLASS='even'><TD COLSPAN=2 ALIGN="center"><BR />
 <?php if ($got_addr) { ?>
 
-		<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>" onClick = "document.mail_Form.reset();">
+		<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>" onClick = "document.mail_Form.reset();"/>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="button" VALUE="<?php print gettext('Send');?>" onClick="do_val(document.mail_Form);">
+		<INPUT TYPE="button" VALUE="<?php print gettext('Send');?>" onClick="do_val(document.mail_Form);"/>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php	} ?>
 
-		<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="self.close();" >
+		<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="self.close();"/>
 		</FORM>
 		</TD></TR>
 	</TABLE>
@@ -263,16 +263,16 @@ function sendRequest(url,callback,postData) {		// 10/15/08
 		var params = "frm_to="+ theAddresses + "&frm_text=" + theText + "&frm_ticket_id=" + theId ;		// ($to_str, $text, $ticket_id)   10/15/08
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 //		alert ("208 " + params);
-*/	
+	
 		}
-
+*/
 </SCRIPT>
 
 	</HEAD>
 	<BODY>
 	<CENTER><BR /><BR /><BR /><BR /><BR /><h3><?php print gettext('Sent!');?></h3><BR /><BR />
 	<FORM NAME='can_Form' METHOD="get" ACTION = "<?php print basename( __FILE__); ?>" >
-	<INPUT TYPE="button" VALUE = "<?php print gettext('Close');?>" onClick = "self.close()"></CENTER>
+	<INPUT TYPE="button" VALUE = "<?php print gettext('Close');?>" onClick = "self.close();"/></CENTER>
 	</FORM>		
 	</BODY></HTML>
 <?php

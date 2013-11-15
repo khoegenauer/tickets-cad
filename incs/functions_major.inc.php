@@ -337,7 +337,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 	</TD></TR>
 	<TR><TD align = 'left' VALIGN='TOP'  >
 		<TABLE>
-			<TR class = 'heading'><TH width = <?php print $col_width;?> ALIGN='center' COLSPAN='99'><?php print gettext('Incidents');?> <SPAN ID='sched_flag'></SPAN>
+			<TR class='heading'><TH width = '<?php print $col_width;?>' ALIGN='center' COLSPAN='99'><?php print gettext('Incidents');?> <SPAN ID='sched_flag'></SPAN>
 				<SPAN id='collapse_incs' onClick="hideDiv('incs_list_sh', 'collapse_incs', 'expand_incs')" style = 'display: "";'><IMG SRC = './markers/collapse.png' ALIGN='right'></SPAN>
 			<SPAN id='expand_incs' onClick="showDiv('incs_list_sh', 'collapse_incs', 'expand_incs')" style = 'display: none;'><IMG SRC = './markers/expand.png' ALIGN='right'></SPAN>
 			</TH></TR>
@@ -348,7 +348,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 			</TD></TR>
 		</TABLE>
 		<TABLE>
-			<TR class = 'heading'><TH width = <?php print $col_width;?> ALIGN='center' COLSPAN='99'><?php print get_text("Units");?> 
+			<TR class='heading'><TH width = '<?php print $col_width;?>' ALIGN='center' COLSPAN='99'><?php print get_text("Units");?> 
 				<SPAN id='collapse_resp' onClick="hideDiv('resp_list_sh', 'collapse_resp', 'expand_resp')" style = "display: <?php print $resp_col_butt;?>;"><IMG SRC = './markers/collapse.png' ALIGN='right'></SPAN>
 				<SPAN id='expand_resp' onClick="showDiv('resp_list_sh', 'collapse_resp', 'expand_resp')" style = "display: <?php print $resp_exp_butt;?>;"><IMG SRC = './markers/expand.png' ALIGN='right'></SPAN>
 			</TH></TR>
@@ -362,9 +362,9 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 			</TD></TR>
 		</TABLE>
 		<TABLE>
-			<TR class = 'heading'><TH width = <?php print $col_width;?> ALIGN='center' COLSPAN='99'><?php print gettext('Facilities');?> 
-				<SPAN id='collapse_facs' onClick="hideDiv('facs_list_sh', 'collapse_facs', 'expand_facs')" style = "display: <?php print $facs_col_butt;?>;"><IMG SRC = './markers/collapse.png' ALIGN='right'></SPAN>
-				<SPAN id='expand_facs' onClick="showDiv('facs_list_sh', 'collapse_facs', 'expand_facs')" style = "display: <?php print $facs_exp_butt;?>;"><IMG SRC = './markers/expand.png' ALIGN='right'></SPAN>
+			<TR class = 'heading'><TH width='<?php print $col_width;?>' ALIGN='center' COLSPAN='99'><?php print gettext('Facilities');?> 
+				<SPAN id='collapse_facs' onClick="hideDiv('facs_list_sh', 'collapse_facs', 'expand_facs');" style = "display: <?php print $facs_col_butt;?>;"><IMG SRC = './markers/collapse.png' ALIGN='right'></SPAN>
+				<SPAN id='expand_facs' onClick="showDiv('facs_list_sh', 'collapse_facs', 'expand_facs');" style = "display: <?php print $facs_exp_butt;?>;"><IMG SRC = './markers/expand.png' ALIGN='right'></SPAN>
 			</TH></TR>
 			<TR><TD>			
 				<DIV ID='facs_list_sh' style='display: <?php print $show_facs;?>'>
@@ -378,7 +378,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 	<TD></TD>
 	<TD CLASS='td_label'>
 	<TABLE>		<!-- 341 -->
-		<TR><TD ALIGN='center' padding="0">
+		<TR><TD ALIGN='center'>
 			<DIV ID='map_canvas' STYLE='WIDTH: <?php print round ($map_factor * get_variable('map_width'));?>PX; HEIGHT: <?php print round ($map_factor * get_variable('map_height'));?>PX; z-index: 999;'></DIV>
 		</TD></TR>
 		<TR><TD ALIGN='center' style='padding: 0'>
@@ -398,19 +398,19 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 								<TABLE>
 									<TR class='heading_2'><TH ALIGN='center' WIDTH='<?php print $ctrls_width;?>'><?php print gettext('Incidents');?></TH></TR>
 									<TR><TD>				<!-- 3/15/11 -->
-										<DIV class='pri_button' onClick="set_pri_chkbox('normal'); hideGroup(1, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' STYLE = 'vertical-align: middle'BORDER=0>&nbsp;&nbsp;<?php print gettext('Normal');?>: <input type=checkbox id='normal'  onClick="set_pri_chkbox('normal')"/>&nbsp;&nbsp;</DIV>
+										<DIV class='pri_button' onClick="set_pri_chkbox('normal'); hideGroup(1, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' STYLE = 'vertical-align: middle' BORDER=0>&nbsp;&nbsp;<?php print gettext('Normal');?>: <input type=checkbox id='normal'  onClick="set_pri_chkbox('normal')"/>&nbsp;&nbsp;</DIV>
 										<DIV class='pri_button' onClick="set_pri_chkbox('medium'); hideGroup(2, 'Incident');"><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;<?php print gettext('Medium');?>: <input type=checkbox id='medium'  onClick="set_pri_chkbox('medium')"/>&nbsp;&nbsp;</DIV>
 										<DIV class='pri_button' onClick="set_pri_chkbox('high'); hideGroup(3, 'Incident');"><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;<?php print gettext('High');?>: <input type=checkbox id='high'  onClick="set_pri_chkbox('high')"/>&nbsp;&nbsp;</DIV>
-										<DIV class='pri_button' ID = 'pri_all' class='pri_button' STYLE = 'display: none; width: 70px;' onClick="set_pri_chkbox('all'); hideGroup(4, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' BORDER=0 STYLE = 'vertical-align: middle'><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle'><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;All <input type=checkbox id='all'  STYLE = 'display:none;' onClick="set_pri_chkbox('all')"/>&nbsp;&nbsp;</DIV>
-										<DIV class='pri_button' ID = 'pri_none' class='pri_button' STYLE = 'width: 60px;' onClick="set_pri_chkbox('none'); hideGroup(5, 'Incident');"><IMG SRC = './our_icons/sm_white.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;None <input type=checkbox id='none' STYLE = 'display:none;' onClick="set_pri_chkbox('none')"/>&nbsp;&nbsp;</DIV>
+										<DIV class='pri_button' ID = 'pri_all' STYLE = 'display: none; width: 70px;' onClick="set_pri_chkbox('all'); hideGroup(4, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' BORDER=0 STYLE = 'vertical-align: middle'><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle'><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;All <input type=checkbox id='all'  STYLE = 'display:none;' onClick="set_pri_chkbox('all')"/>&nbsp;&nbsp;</DIV>
+										<DIV class='pri_button' ID = 'pri_none' STYLE = 'width: 60px;' onClick="set_pri_chkbox('none'); hideGroup(5, 'Incident');"><IMG SRC = './our_icons/sm_white.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;None <input type=checkbox id='none' STYLE = 'display:none;' onClick="set_pri_chkbox('none')"/>&nbsp;&nbsp;</DIV>
 									</TD></TR>
 								</TABLE>
 							</TD></TR>
 							<TR CLASS='odd'><TD>
-								<DIV ID = 'boxes' ALIGN='center' VALIGN='middle' style='text-align: center; vertical-align: middle;'></DIV>
+								<DIV ID='boxes' ALIGN='center' VALIGN='middle' style='text-align: center; vertical-align: middle;'></DIV>
 							</TD></TR>		<!-- 12/03/10, 3/15/11 -->
 							<TR CLASS='odd'><TD>
-								<DIV ID = 'fac_boxes' ALIGN='center' VALIGN='middle' style='text-align: center; vertical-align: middle;'></DIV>
+								<DIV ID='fac_boxes' ALIGN='center' VALIGN='middle' style='text-align: center; vertical-align: middle;'></DIV>
 							</TD></TR>		<!-- 12/03/10, 3/15/11 -->
 							<TR CLASS='odd'><TD>
 								<DIV ID = 'poly_boxes' ALIGN='center' VALIGN='middle' style='text-align: center; vertical-align: middle;'></DIV>
@@ -421,34 +421,34 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
 			</TABLE>
 		</TD></TR>
 		<TR><TD CLASS='td_label' COLSPAN=99 ALIGN='CENTER'>
-			&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="mailto:<?php echo get_contact_addr ();?>?subject=Question/Comment on Tickets Dispatch System"><u><?php print gettext('Contact us');?></u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom"></A>
+			&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="mailto:<?php echo get_contact_addr();?>?subject=Question/Comment on Tickets Dispatch System"><u><?php print gettext('Contact us');?></u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom"></A>
 		</TD></TR>
 	</TABLE>
 	</TD></TR>
 </TABLE>
 </DIV>
 <FORM NAME='unit_form' METHOD='get' ACTION="<?php print $_SESSION['unitsfile'];?>">				<!-- 7/28/10 -->
-<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
-<INPUT TYPE='hidden' NAME='view' VALUE=''>
-<INPUT TYPE='hidden' NAME='edit' VALUE=''>
-<INPUT TYPE='hidden' NAME='id' VALUE=''>
+<INPUT TYPE='hidden' NAME='func' VALUE='responder'/>
+<INPUT TYPE='hidden' NAME='view' VALUE=''/>
+<INPUT TYPE='hidden' NAME='edit' VALUE=''/>
+<INPUT TYPE='hidden' NAME='id' VALUE=''/>
 </FORM>
 
 <FORM NAME='tick_form' METHOD='get' ACTION='<?php print $_SESSION['editfile'];?>'>				<!-- 11/27/09 7/28/10 -->
-<INPUT TYPE='hidden' NAME='id' VALUE=''>
+<INPUT TYPE='hidden' NAME='id' VALUE=''/>
 </FORM>
 
 <FORM NAME='sort_form' METHOD='post' ACTION='main.php'>				<!-- 6/11/10 -->
-<INPUT TYPE='hidden' NAME='order' VALUE=''>
+<INPUT TYPE='hidden' NAME='order' VALUE=''/>
 </FORM>
 
 <FORM NAME='fac_sort_form' METHOD='post' ACTION='main.php'>				<!-- 3/15/11 -->
-<INPUT TYPE='hidden' NAME='forder' VALUE=''>
+<INPUT TYPE='hidden' NAME='forder' VALUE=''/>
 </FORM>	
 
 <FORM NAME='facy_form_ed' METHOD='get' ACTION='<?php print $_SESSION['facilitiesfile'];?>'>		<!-- 8/3/10 -->
-<INPUT TYPE='hidden' NAME='id' VALUE=''>
-<INPUT TYPE='hidden' NAME='edit' VALUE='true'>
+<INPUT TYPE='hidden' NAME='id' VALUE=''/>
+<INPUT TYPE='hidden' NAME='edit' VALUE='true'/>
 </FORM>
 <SCRIPT>
 	var boundary = new Array();	
@@ -3468,10 +3468,10 @@ function createfacMarker(fac_point, fac_tabs, id, fac_icon, type, region) {		// 
 		$fs_checked[$_SESSION['fac_flag_2']] = " CHECKED";
 ?>
 		side_bar_html += "<TR CLASS = 'even'><TD COLSPAN=99 ALIGN='center'>";	//	3/15/11
-		side_bar_html += "<I><B>" . gettext('Sort') . "</B>:&nbsp;&nbsp;&nbsp;&nbsp;";
-		side_bar_html += gettext('Handle') . "&raquo; 	<input type = radio name = 'frm_order' value = 1 <?php print $fs_checked[1];?> onClick = 'do_fac_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";	//	3/15/11, 5/3/11
-		side_bar_html += gettext('Type') . " &raquo; 	<input type = radio name = 'frm_order' value = 2 <?php print $fs_checked[2];?> onClick = 'do_fac_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";	//	3/15/11, 5/3/11
-		side_bar_html += gettext('Status') . " &raquo; <input type = radio name = 'frm_order' value = 3 <?php print $fs_checked[3];?> onClick = 'do_fac_sort_sub(this.value);' />";	//	3/15/11, 5/3/11
+		side_bar_html += "<I><B><?php print gettext('Sort');?></B>:&nbsp;&nbsp;&nbsp;&nbsp;";
+		side_bar_html += "<?php print gettext('Handle');?>&raquo; 	<input type = radio name = 'frm_order' value = 1 <?php print $fs_checked[1];?> onClick = 'do_fac_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";	//	3/15/11, 5/3/11
+		side_bar_html += "<?php print gettext('Type');?>&raquo; 	<input type = radio name = 'frm_order' value = 2 <?php print $fs_checked[2];?> onClick = 'do_fac_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";	//	3/15/11, 5/3/11
+		side_bar_html += "<?php print gettext('Status');?>&raquo; <input type = radio name = 'frm_order' value = 3 <?php print $fs_checked[3];?> onClick = 'do_fac_sort_sub(this.value);' />";	//	3/15/11, 5/3/11
 		side_bar_html += "</I></TD></TR>";	//	3/15/11
 <?php
 	
@@ -4911,7 +4911,7 @@ function popup_ticket($id,$print='false', $search = FALSE) {								/* 7/9/09 - 
 
 	$row = stripslashes_deep(mysql_fetch_assoc($result));
 ?>
-	<TABLE BORDER="0" ID = "outer" ALIGN="left">	<!-- 4502 -->
+	<TABLE BORDER="0" ID="outer" ALIGN="left">	<!-- 4502 -->
 <?php
 
 	print "<TD ALIGN='left'>";
@@ -4919,8 +4919,8 @@ function popup_ticket($id,$print='false', $search = FALSE) {								/* 7/9/09 - 
 		<DIV ID='map_canvas' STYLE='WIDTH:" . get_variable('map_width') . "px; HEIGHT: " . get_variable('map_height') . "PX'></DIV>
 		</TD></TR>";	// 11/29/08
 
-	print "<FORM NAME='sv_form' METHOD='post' ACTION=''><INPUT TYPE='hidden' NAME='frm_lat' VALUE=" .$row['lat'] . ">";		// 2/11/09
-	print "<INPUT TYPE='hidden' NAME='frm_lng' VALUE=" .$row['lng'] . "></FORM>";
+	print "<FORM NAME='sv_form' METHOD='post' ACTION=''><INPUT TYPE='hidden' NAME='frm_lat' VALUE=" .$row['lat'] . "/>";		// 2/11/09
+	print "<INPUT TYPE='hidden' NAME='frm_lng' VALUE=" .$row['lng'] . "/></FORM>";
 
 	print "<TR ID='pointl1' CLASS='print_TD' STYLE = 'display:none;'>
 		<TD ALIGN='center'><B>" . gettext('Range') . ":</B>&nbsp;&nbsp; <SPAN ID='range'></SPAN>&nbsp;&nbsp;<B>" . gettext('Brng') . "</B>:&nbsp;&nbsp;
@@ -4932,10 +4932,11 @@ function popup_ticket($id,$print='false', $search = FALSE) {								/* 7/9/09 - 
 	print "</TD></TR>";
 	print "<TR CLASS='odd' ><TD COLSPAN='2' CLASS='print_TD'>";
 	$lat = $row['lat']; $lng = $row['lng'];
-	print "</TABLE>\n";
-
-
 ?>
+</TABLE>
+
+
+
 	<SCRIPT SRC='../js/usng.js' TYPE='text/javascript'></SCRIPT>
 	<SCRIPT SRC="../js/graticule.js" type="text/javascript"></SCRIPT>
 	<SCRIPT>

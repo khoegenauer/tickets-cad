@@ -162,21 +162,21 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 
 <!-- 3/29/11 Marker controls -->	
 	<DIV ID = 'buttons_sh' class='fs_buttons' style='display: none; background: #CECECE; width: 300px; overflow-y: hidden; overflow-x: hidden; position: fixed; right: 10%; top: 20%; z-index:4; border: 3px outset #505050;'>
-	<DIV class='heading' style='text-align: center; height: 20px;' style='z-index:4; padding: 3px;'><?php print gettext('Show / Hide Markers');?><DIV style='float: right'><SPAN id='collapse_buttons' STYLE = 'text-align: right' onClick="hideDiv('buttons_sh', 'collapse_buttons', 'expand_buttons'); CngMenuClass('marker_but', 'right_menu');"><IMG SRC = './buttons/close.png' BORDER=0 STYLE = 'vertical-align: middle'></SPAN></DIV></DIV>
+	<DIV class='heading' style='text-align: center; height: 20px; z-index:4; padding: 3px;'><?php print gettext('Show / Hide Markers');?><DIV style='float: right'><SPAN id='collapse_buttons' STYLE = 'text-align: right' onClick="hideDiv('buttons_sh', 'collapse_buttons', 'expand_buttons'); CngMenuClass('marker_but', 'right_menu');"><IMG SRC = './buttons/close.png' BORDER=0 STYLE = 'vertical-align: middle'></SPAN></DIV></DIV>
 	<DIV ID = 'incidents_sh' style='display: block; position: relative; padding: 10px; overflow-y: scroll; overflow-x: scroll;'>
-	<DIV class='heading' style='text-align: center; height: 20px; ' style='z-index:4; padding: 3px;'><?php print get_text('Incidents');?></DIV>
-	<DIV class='pri_button_fs' onClick="set_pri_chkbox('normal'); hideGroup(1, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' STYLE = 'vertical-align: middle'BORDER=0>&nbsp;&nbsp;<?php print gettext('Normal');?>: <input type=checkbox id='normal'  onClick="set_pri_chkbox('normal')"/>&nbsp;&nbsp;</DIV>
-	<DIV class='pri_button_fs' onClick="set_pri_chkbox('medium'); hideGroup(2, 'Incident');"><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;<?php print gettext('Medium');?>: <input type=checkbox id='medium'  onClick="set_pri_chkbox('medium')"/>&nbsp;&nbsp;</DIV>
-	<DIV class='pri_button_fs' onClick="set_pri_chkbox('high'); hideGroup(3, 'Incident');"><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;<?php print gettext('High');?>: <input type=checkbox id='high'  onClick="set_pri_chkbox('high')"/>&nbsp;&nbsp;</DIV>
-	<DIV class='pri_button_fs' ID = 'pri_all' class='pri_button' STYLE = 'display: none;' onClick="set_pri_chkbox('all'); hideGroup(4, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' BORDER=0 STYLE = 'vertical-align: middle'><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle'><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle'><?php print gettext('All');?> <input type=checkbox id='all'  STYLE = 'display:none;' onClick="set_pri_chkbox('all')"/>&nbsp;&nbsp;</DIV>
-	<DIV class='pri_button_fs' ID = 'pri_none' class='pri_button' onClick="set_pri_chkbox('none'); hideGroup(5, 'Incident');"><IMG SRC = './our_icons/sm_white.png' BORDER=0 STYLE = 'vertical-align: middle'> <?php print gettext('None');?> <input type=checkbox id='none' STYLE = 'display:none;' onClick="set_pri_chkbox('none')"/></DIV></b>
+	<DIV class='heading' style='text-align: center; height: 20px; z-index:4; padding: 3px;'><?php print get_text('Incidents');?></DIV>
+	<DIV class='pri_button_fs' onClick="set_pri_chkbox('normal'); hideGroup(1, 'Incident');"><IMG SRC='./our_icons/sm_blue.png' STYLE='vertical-align: middle' BORDER=0>&nbsp;&nbsp;<?php print gettext('Normal');?>: <input type=checkbox id='normal'  onClick="set_pri_chkbox('normal');"/>&nbsp;&nbsp;</DIV>
+	<DIV class='pri_button_fs' onClick="set_pri_chkbox('medium'); hideGroup(2, 'Incident');"><IMG SRC='./our_icons/sm_green.png' BORDER=0 STYLE='vertical-align: middle'>&nbsp;&nbsp;<?php print gettext('Medium');?>: <input type=checkbox id='medium'  onClick="set_pri_chkbox('medium');"/>&nbsp;&nbsp;</DIV>
+	<DIV class='pri_button_fs' onClick="set_pri_chkbox('high'); hideGroup(3, 'Incident');"><IMG SRC='./our_icons/sm_red.png' BORDER=0 STYLE='vertical-align: middle'>&nbsp;&nbsp;<?php print gettext('High');?>: <input type=checkbox id='high'  onClick="set_pri_chkbox('high');"/>&nbsp;&nbsp;</DIV>
+	<DIV class='pri_button_fs, pri_button' ID = 'pri_all' STYLE = 'display: none;' onClick="set_pri_chkbox('all'); hideGroup(4, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' BORDER=0 STYLE = 'vertical-align: middle'><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle'><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle'><?php print gettext('All');?> <input type=checkbox id='all'  STYLE = 'display:none;' onClick="set_pri_chkbox('all');"/>&nbsp;&nbsp;</DIV>
+	<DIV class='pri_button_fs, pri_button' ID = 'pri_none' onClick="set_pri_chkbox('none'); hideGroup(5, 'Incident');"><IMG SRC = './our_icons/sm_white.png' BORDER=0 STYLE = 'vertical-align: middle'> <?php print gettext('None');?> <input type=checkbox id='none' STYLE = 'display:none;' onClick="set_pri_chkbox('none');"/></DIV><BR>
 	</DIV><BR />
 	<DIV ID = 'units_sh' style='display: block; position: relative; padding: 10px; overflow-y: scroll; overflow-x: scroll;'>
-	<DIV class='heading' style='text-align: center; height: 20px;' style='z-index:4; padding: 3px;'><?php print get_text('Units');?></DIV>
+	<DIV class='heading' style='text-align: center; height: 20px; z-index:4; padding: 3px;'><?php print get_text('Units');?></DIV>
 	<DIV ID = 'boxes' style='position: relative; padding: 3px;'></DIV>		<!-- 2/16/11 Units show and hide -->
 	</DIV><BR />
 	<DIV ID = 'facs_sh' style='display: block; position: relative; padding: 10px; overflow-y: scroll; overflow-x: scroll;'>
-	<DIV class='heading' style='text-align: center; height: 20px;' style='z-index:4; padding: 3px;'><?php print get_text('Facilities');?></DIV>	
+	<DIV class='heading' style='text-align: center; height: 20px; z-index:4; padding: 3px;'><?php print get_text('Facilities');?></DIV>	
 	<DIV ID = 'fac_boxes' style='position: relative; padding: 3px;'></DIV>		<!-- 2/16/11 Facilities show and hide -->
 	</DIV><BR />
 	</DIV>
@@ -228,7 +228,7 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 		<INPUT TYPE='hidden' NAME='id' VALUE=''>
 		</FORM>
 	
-	<DIV style='position: fixed; top: 0px; left: 0px, z-index: 1'>
+	<DIV style='position: fixed; top: 0px; left: 0px; z-index: 1;'>
 	<TABLE BORDER=1 STYLE= "margin-top:0;">
 		<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header'><?php print get_variable('map_caption') . " - " .  $heading;?> <SPAN ID='sev_counts' STYLE = 'margin-left: 40px'></SPAN></FONT></TD></TR>	<!-- 1/17/09 -->
 
@@ -1600,7 +1600,7 @@ function fs_get_disp_status ($row_in) {			// 3/25/11
 				}				// end tickets while ($row = ...)
 			} else {
 ?>
-				sidebar_line += "<DIV CLASS='even' style='width: 100%;'><DIV style='text-align: center; color: #FF0000; font-size: 12px; font-weight: bold;'>" . gettext('No Current Incidents for selected time period') . "</DIV></DIV><BR />";
+				sidebar_line += "<DIV CLASS='even' style='width: 100%;'><DIV style='text-align: center; color: #FF0000; font-size: 12px; font-weight: bold;'><?php print gettext('No Current Incidents for selected time period');?></DIV></DIV><BR />";
 <?php
 			}
 			$sev_string = "Severities: normal ({$by_severity[$GLOBALS['SEVERITY_NORMAL']]}), Medium ({$by_severity[$GLOBALS['SEVERITY_MEDIUM']]}), High ({$by_severity[$GLOBALS['SEVERITY_HIGH']]})";

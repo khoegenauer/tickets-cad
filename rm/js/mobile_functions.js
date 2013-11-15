@@ -1,12 +1,20 @@
+/**
+ * 
+ * @param {type} the_status
+ * @returns {undefined}
+ */
 function do_sub(the_status) {				// form submitted
 	var params = "frm_id="+the_assigns_id;
 	params += "&frm_tick="+tick_id;
 	params += "&frm_unit="+responder_id;
 	params += "&frm_vals="+ the_status;
 	sendRequest ('./ajax/update_assigns.php',handleResult, params);			// does the work
-	get_ticket(tick_id) 	
+	get_ticket(tick_id); 	
 	}			// end function do_sub()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function start_miles() {
 	var value = prompt("Enter your start miles", "");
 	randomnumber=Math.floor(Math.random()*99999999);
@@ -21,7 +29,10 @@ function start_miles() {
 			}
 		}
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function end_miles() {
 	var value = prompt("Enter your end miles", "");
 	randomnumber=Math.floor(Math.random()*99999999);
@@ -36,7 +47,10 @@ function end_miles() {
 			}
 		}	
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function os_miles() {
 	var value = prompt("Enter your on scene miles", "");
 	randomnumber=Math.floor(Math.random()*99999999);
@@ -51,7 +65,10 @@ function os_miles() {
 			}	
 		}	
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */
 function notes() {
 	user_id = <?php print $the_user;?>;
 	var value = prompt("Enter call notes", "");
@@ -67,7 +84,10 @@ function notes() {
 		}	
 	get_ticket(tick_id);
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function get_messages() {
 	randomnumber=Math.floor(Math.random()*99999999);
 	url ='./ajax/messagelist.php?version=' + randomnumber;
@@ -78,7 +98,10 @@ function get_messages() {
 		setTimeout(function() {$('message_list').innerHTML = the_messages;},1000);
 		}
 	}	
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function get_alerts() {
 	randomnumber=Math.floor(Math.random()*99999999);
 	url ='./ajax/alertlist.php?version=' + randomnumber;
@@ -89,7 +112,11 @@ function get_alerts() {
 		setTimeout(function() {$('alert_list').innerHTML = the_alerts;},1000);
 		}
 	}	
-
+/**
+ * 
+ * @param {type} user_id
+ * @returns {undefined}
+ */
 function get_tickets(user_id) {
 	randomnumber=Math.floor(Math.random()*99999999);
 	url ='./ajax/ticket_list.php?user_id=' + user_id + '&version=' + randomnumber;
@@ -100,7 +127,11 @@ function get_tickets(user_id) {
 		setTimeout(function() {$('ticket_list').innerHTML = the_tickets;},1000);
 		}
 	}	
-	
+/**
+ * 
+ * @param {type} user_id
+ * @returns {undefined}
+ */	
 function get_ticket_markers(user_id) {
 	randomnumber=Math.floor(Math.random()*99999999);
 	url ='./ajax/ticket_markers.php?user_id=' + user_id + '&version=' + randomnumber;
@@ -122,7 +153,11 @@ function get_ticket_markers(user_id) {
 			}
 		}
 	}
-
+/**
+ * 
+ * @param {type} ticket_id
+ * @returns {undefined}
+ */
 function get_ticket(ticket_id) {
 	tick_id = ticket_id;
 	randomnumber=Math.floor(Math.random()*99999999);
@@ -178,7 +213,11 @@ function get_ticket(ticket_id) {
 		setTimeout(function() {$('ticket_detail').innerHTML = the_ticket[11];},1000);
 		}
 	}	
-	
+/**
+ * 
+ * @param {type} message_id
+ * @returns {undefined}
+ */	
 function get_message(message_id) {
 	randomnumber=Math.floor(Math.random()*99999999);
 	url ='./ajax/message_detail.php?message_id=' + message_id + '&version=' + randomnumber;
@@ -194,7 +233,11 @@ function get_message(message_id) {
 		setTimeout(function() {if(the_return_add != tickets_address) { $('reply_but').style.display = "inline";}},1000);		
 		}
 	}	
-
+/**
+ * 
+ * @param {type} to_address
+ * @returns {undefined}
+ */
 function do_reply(to_address) {
 	var user_email = "<?php print $the_email;?>";
 	$('message_detail').style.display = "none";
@@ -202,7 +245,11 @@ function do_reply(to_address) {
 	document.reply_form.frm_to.value =	to_address;
 	document.reply_form.frm_from.value = user_email;	
 	}
-
+/**
+ * 
+ * @param {type} alert_id
+ * @returns {undefined}
+ */
 function get_alert(alert_id) {
 	randomnumber=Math.floor(Math.random()*99999999);
 	url ='./ajax/alert_detail.php?alert_id=' + alert_id + '&version=' + randomnumber;
@@ -215,24 +262,38 @@ function get_alert(alert_id) {
 		setTimeout(function() {$('alert_detail').innerHTML = the_ticket;},1000);
 		}
 	}	
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function close_alert_detail() {
 	$('close_alert_detail').style.display = "none";
 	$('alert_detail').style.display = "none";
 	$('alert_list').style.display = "block";	
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */
 function close_ticket_detail() {
 	$('ticket_detail').style.display = "none";
 	$('ticket_detail_wrapper').style.display = "none";	
 	$('ticket_list').style.display = "block";	
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function close_message_detail() {
 	$('message_detail').style.display = "none";
 	$('message_list').style.display = "block";	
 	}
-
+/**
+ * 
+ * @param {type} theDiv
+ * @param {type} theButton
+ * @returns {undefined}
+ */
 function slideIt(theDiv, theButton) {
 	var slidingDiv = $(theDiv);
 	var stopPosition = 0;
@@ -240,12 +301,16 @@ function slideIt(theDiv, theButton) {
 		slidingDiv.style.left = parseInt(slidingDiv.style.left) + 4 + "px";
 //		setTimeout(slideIt(theDiv, theButton), .5);
 		setTimeout(function(){slideIt(theDiv, theButton)}, .5);
-		
 		}
 	$(theButton).setAttribute( "onClick", 'javascript: slideIn("' + theDiv + '", this.id);' );	
 	$(theButton).innerHTML = "Hide Menu";	
 	}
-
+/**
+ * 
+ * @param {type} theDiv
+ * @param {type} theButton
+ * @returns {undefined}
+ */
 function slideIn(theDiv, theButton) {
 	var slidingDiv = $(theDiv);
 	var stopPosition = -150;
@@ -257,7 +322,10 @@ function slideIn(theDiv, theButton) {
 	$(theButton).setAttribute( "onClick", 'javascript: slideIt("' + theDiv + '", this.id);' );	
 	$(theButton).innerHTML = "Show Menu";		
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */
 function get_advert() {
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./ajax/advert.php?version=" + randomnumber;
@@ -278,7 +346,10 @@ function get_advert() {
 			}
 		}
 	}	
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function get_conditions() {
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./ajax/infolist2.php?version=" + randomnumber;
@@ -307,7 +378,16 @@ function get_conditions() {
 		get_geo();
 		}
 	}
-
+/**
+ * 
+ * @param {type} title
+ * @param {type} description
+ * @param {type} address
+ * @param {type} lat
+ * @param {type} lng
+ * @param {type} type
+ * @returns {undefined}
+ */
 function sub_data(title,description,address,lat,lng,type) {
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./ajax/submit_entry.php?id=0&version=" + randomnumber + "&type=" + type + "&address=" + address + "&title=" + title + "&description=" + description + "&lat=" + lat + "&lng=" + lng;
@@ -323,7 +403,13 @@ function sub_data(title,description,address,lat,lng,type) {
 		}
 	the_location();
 	}
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 function sendRequest(url,callback,postData) {
 	var req = createXMLHTTPObject();
 	if (!req) return;
@@ -344,12 +430,15 @@ function sendRequest(url,callback,postData) {
 	}
 
 var XMLHttpFactories = [
-	function () {return new XMLHttpRequest()	},
-	function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-	function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-	function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+	function () {return new XMLHttpRequest();	},
+	function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+	function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+	function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 	];	//	10/23/12
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 function createXMLHTTPObject() {	//	10/23/12
 	var xmlhttp = false;
 	for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -363,7 +452,11 @@ function createXMLHTTPObject() {	//	10/23/12
 		}
 	return xmlhttp;
 	}
-
+/**
+ * 
+ * @param {type} strURL
+ * @returns {Boolean|@exp;AJAX@pro;responseText}
+ */
 function syncAjax(strURL) {	//	10/23/12
 	if (window.XMLHttpRequest) {						 
 		AJAX=new XMLHttpRequest();						 
@@ -381,30 +474,58 @@ function syncAjax(strURL) {	//	10/23/12
 		return false;
 		}																						 
 	}		// end function sync Ajax()
-	
+/**
+ * 
+ * @param {type} array
+ * @param {type} item
+ * @returns {Boolean}
+ */	
 function contains(array, item) {
 	for (var i = 0, I = array.length; i < I; ++i) {
 		if (array[i] == item) return true;
 		}
 	return false;
 	}
-
+/**
+ * 
+ * @param {type} lat
+ * @param {type} lon
+ * @param {type} info
+ * @param {type} icon
+ * @param {type} title
+ * @returns {undefined}
+ */
 function createMarker(lat, lon, info, icon, title){
 	L.marker([lat, lon]).addTo(map);
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function closeIW() {
 //	$('adverts').style.display = 'inline-block';
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function alert_coords() {
 	alert(the_lat + ", " + the_lng);
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function alert_location() {
 	alert(place);
 	}	
-	
+/**
+ * 
+ * @param {type} status
+ * @param {type} title
+ * @param {type} description
+ * @returns {undefined}
+ */	
 function the_status(status, title, description) {
 	if (confirm("Are you sure you want submit this " + title + " report?")) { 
 		sub_data(title,description,form_add,the_lat,the_lng,status)
@@ -413,39 +534,65 @@ function the_status(status, title, description) {
 		slideIn();
 		}
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function refresh_screen() {
 	initialise();
 	get_conditions();		
 	slideIn();
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_hover (the_id) {
 	CngClass(the_id, 'hover');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_plain (the_id) {
 	CngClass(the_id, 'plain');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_sb_hover (the_id) {
 	CngClass(the_id, 'screen_but_hover');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_sb_plain (the_id) {
 	CngClass(the_id, 'screen_but_plain');
 	return true;
 	}
-	
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */	
 function CngClass(obj, the_class){
 	$(obj).className=the_class;
 	return true;
 	}
-	
+/**
+ * 
+ * @returns {Array}
+ */	
 function $() {
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -456,11 +603,14 @@ function $() {
 		}
 	return elements;
 	}
-	
+/**
+ * 
+ * @param {type} msg
+ * @returns {undefined}
+ */	
 function show_msg (msg) {
 	$('msg_span').style.display = "block";
 	$('msg_span').innerHTML = msg;			
 	setTimeout("$('msg_span').innerHTML =''", 6000);	// show for 3 seconds
 	$('msg_span').style.display = "none";	
 	}
-

@@ -34,7 +34,7 @@ if(!((isset($_GET['user'])) || (isset($_GET['username'])))) {
  */
 function write_track_log() {
 	if (!$fp = fopen('tracker_log.txt', 'a'))
-		print '<LI> <FONT CLASS="warn">' . gettext("Cannot open Tracker Log for writing") . '</FONT>';
+		print '<LI><FONT CLASS="warn">' . gettext("Cannot open Tracker Log for writing") . '</FONT></LI>';
 	else {
 		$iclog = "";
         $iclog = "<pre>"; 
@@ -124,7 +124,7 @@ function raw2long_dez($degree) {
 
 
 if(isset($_GET['pw'])) {	// is the client GPSGate	
-	print "Client is GPSGate<br />";
+	print gettext('Client is GPSGate') . "<br />";
 	$alt_m = isset($_GET['altitude']) ? $_GET['altitude'] : "0";	//	Altitude in Meters
 	$vel_kt = isset($_GET['speed']) ? $_GET['speed'] : "0";	//	Speed in Knots
 	$head = isset($_GET['heading']) ? $_GET['heading']: "0.0";	//	 Heading in degrees

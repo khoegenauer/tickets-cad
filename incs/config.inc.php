@@ -366,7 +366,7 @@ function list_users(){		/* list users */
 		WHERE `passwd` <> '55606758fdb765ed015f0612112a6ca7'	
 		ORDER BY `u`.`user` ASC ";																// 5/25/09, 1/16/08
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-	if (mysql_affected_rows()==0) 	 { print '<B>[' gettext('no users found') . ']</B><BR />'; return; 	}
+	if (mysql_affected_rows()==0) 	 { print '<B>[' . gettext('no users found') . ']</B><BR />'; return; 	}
 
 //	if (!check_for_rows("SELECT id FROM `$GLOBALS[mysql_prefix]user`")==0) { print '<B>[no users found]</B><BR />'; return; 	}
 	$now = mysql_format_date(time() - (get_variable('delta_mins')*60));		// 1/23/10
@@ -550,7 +550,7 @@ function get_setting_help($setting){/* get help for settings */
 		case "func_key2": 				return gettext("User Defined Function key 2 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."); break;	//08/05/09
 		case "func_key3": 				return gettext("User Defined Function key 3 - Insert URL or File- URL to include http:// followed by Text to display on button. Separate values with comma."); break;	//08/05/09
 		case "reverse_geo": 			return gettext("Use Reverse Geocoding when setting location for an incident. 1 for yes, 0 for no. Default is 0"); break;	//11/01/09
-		case "logo": 					return gettext("Enter filename of your site logo file here"; break;	//8/13/10
+		case "logo": 					return gettext("Enter filename of your site logo file here"); break;	//8/13/10
 		case "regions_control": 		return gettext("Regions select / view control floating over map (0) or docked to top bar (1)"); break;												// 9/13/08
 		case "pie_charts": 				return gettext("Severity/Incident types/Location pie chart diameters, in pixels"); break;	// 3/21/10
 		case "internet": 				return gettext("Internet/network connection available: 1 (default) for Yes, 2 for No, 3 for maybe - will check network dynamically"); break;	// 8/13/10		

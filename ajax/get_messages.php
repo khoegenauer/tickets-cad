@@ -1,8 +1,11 @@
 <?php
-/*
-get_messages.php - AJAX file gets email and SMS Gateway messages in background - called from top.php
-10/23/12 - new file
-*/
+/**
+ * @package get_messages.php
+ * AJAX file gets email and SMS Gateway messages in background - called from top.php
+ * @since 10/23/12
+ * @version 10/23/12
+ * @author John Doe <john.doe@example.com>
+ */
 require_once('../incs/functions.inc.php');
 require_once('../incs/messaging.inc.php');
 require_once '../lib/xpm/POP3.php';

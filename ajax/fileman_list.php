@@ -1,7 +1,11 @@
 <?php
-/*
-9/10/13 - New file - popup window to vie details of Location warnings
-*/
+/**
+ * @package fileman_list.php
+ * popup window to vie details of Location warnings
+ * @since 09/10/13
+ * @version 09/10/13
+ * @author John Doe <john.doe@example.com>
+ */
 error_reporting(E_ALL);
 
 @session_start();

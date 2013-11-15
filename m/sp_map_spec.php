@@ -141,6 +141,16 @@ if (intval(get_variable('broadcast'))==1) {
 			[<?php echo $my_position_arr[0];?>, <?php echo $my_position_arr[1];?>]);		
 
 <?php	
+/**
+ * 
+ * @param type $lat
+ * @param type $lng
+ * @param type $layer
+ * @param type $icon
+ * @param type $table
+ * @param type $id
+ * @param type $sb_index
+ */
 	function do_marker ($lat, $lng, $layer, $icon, $table, $id, $sb_index) {
 		$label_val = ".bindLabel('!', { noHide: true })";	
 		$label_act = ".showLabel()";				
@@ -150,8 +160,19 @@ if (intval(get_variable('broadcast'))==1) {
 		markers_ary.push(markers_work);														// indexed by $side_bar_index
 		my_bounds.extend(markers_work.getLatLng());											// to bounding box
 <?php
-		}		// end function do_do_marker()
-
+		}		// end function do_marker()
+/**
+ * 
+ * @global array $icons
+ * @global array $layers
+ * @param type $the_lat
+ * @param type $the_lng
+ * @param type $the_layer
+ * @param type $the_icon
+ * @param type $the_table
+ * @param type $the_id
+ * @param type $side_bar_index
+ */
 	function do_do_marker ($the_lat, $the_lng, $the_layer , $the_icon, $the_table, $the_id, $side_bar_index) {
 		global $icons, $layers;
 		if ( is_ok_position ( $the_lat , $the_lng ) ) {
@@ -211,7 +232,12 @@ if (intval(get_variable('broadcast'))==1) {
 	 	   }
 		$side_bar_index = 0;		// used only with sidebar page
 // ==============================================================================================
-
+/**
+ * 
+ * @global int $_limit
+ * @param type $where_cl
+ * @return type
+ */
 	function x_get_resp_sql ($where_cl) {
 		global $_limit;
 		return "SELECT `r`.`id` AS `unit_id`, `icon_str`, `handle`, `lat`, `lng`, `type`, `un_status_id`, `dispatch`,
@@ -226,7 +252,12 @@ if (intval(get_variable('broadcast'))==1) {
 				ORDER BY `handle` ASC LIMIT {$_limit}
 				";			
 		}			// end function x_get_resp_sql		
-
+/**
+ * 
+ * @global int $_limit
+ * @param type $where_cl
+ * @return type
+ */
 	function get_facy_sql ($where_cl) {
 		global $_limit;
 		return "SELECT `f`.`id` AS `facy_id`, `icon_str`, `handle`, `type`, `lat`, `lng`, `status_id`, 
@@ -243,7 +274,12 @@ if (intval(get_variable('broadcast'))==1) {
 				";
 				}		// end function get facy_sql
 
-
+/**
+ * 
+ * @global int $_limit
+ * @param type $where_cl
+ * @return type
+ */
 	function get_local_tick_sql ($where_cl) {
 		global $_limit;
 

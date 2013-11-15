@@ -1,7 +1,7 @@
 <?php 
 error_reporting(E_ALL);		// 10/1/08
 if(!(file_exists("./incs/mysql.inc.php"))) {
-	print gettext('This appears to be a new Tickets installation; file 'mysql.inc.inc' is absent. Please run <a href=\"install.php\">install.php</a> with valid database configuration information.');
+	print gettext("This appears to be a new Tickets installation; file 'mysql.inc.inc' is absent. Please run <a href=\"install.php\">install.php</a> with valid database configuration information.");
 	exit();
 	}
 

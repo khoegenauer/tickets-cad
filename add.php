@@ -935,10 +935,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  */
 	function writeConsole(content) {
 		top.consoleRef=window.open('','myconsole',
-			'width=800,height=250' +',menubar=0' +',toolbar=0' +',status=0' +',scrollbars=1' +',resizable=1')
-	 	top.consoleRef.document.writeln('<html><head><title>' . gettext('Console') . '</title></head>'
-			+'<body bgcolor=white onLoad="self.focus()">' +content +'</body></html>'
-			)				// end top.consoleRef.document.writeln()
+			'width=800,height=250' +',menubar=0' +',toolbar=0' +',status=0' +',scrollbars=1' +',resizable=1');
+	 	top.consoleRef.document.writeln('<html><head><title><?php print gettext('Console');?></title></head>'
+			+'<body bgcolor=white onLoad="self.focus();">' +content +'</body></html>'
+			);				// end top.consoleRef.document.writeln()
 	 	top.consoleRef.document.close();
 		}				// end function writeConsole(content)
 /**

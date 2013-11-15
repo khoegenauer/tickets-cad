@@ -821,77 +821,77 @@ if ((isset($_GET['stats'])) && ($_GET['stats'] == "stats") && (!isset($_GET['frm
 				out_threshold(the_id_arr[7], "stats7", t8, tw8, tf8, tt8);
 				if(type1 == "int") {
 					if($('stats0_inner')) {$('stats0_inner').innerHTML = the_id_arr[0];}
-					if($('hint1')) {$('hint1').innerHTML = '"' . gettext('Integer - input a number') . '"';}				
+					if($('hint1')) {$('hint1').innerHTML = "<?php print gettext('Integer - input a number');?>";}				
 					} else if (type1 == "avg") {
 					if($('stats0_inner')) {$('stats0_inner').innerHTML = the_id_arr[0].timeLeft();}
-					if($('hint1')) {$('hint1').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+					if($('hint1')) {$('hint1').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 					} else {
-					if($('hint1')) {$('hint1').innerHTML = '"' . gettext('Not Used') . '"';}				
+					if($('hint1')) {$('hint1').innerHTML = "<?php print gettext('Not Used');?>";}				
 					}
 				if(type2 == "int") {				
 					if($('stats1_inner')) {$('stats1_inner').innerHTML = the_id_arr[1];}
-					if($('hint2')) {$('hint2').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+					if($('hint2')) {$('hint2').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 					} else if (type2 == "avg") {
 					if($('stats1_inner')) {$('stats1_inner').innerHTML = the_id_arr[1].timeLeft();}	
-					if($('hint2')) {$('hint2').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+					if($('hint2')) {$('hint2').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 					} else {
-					if($('hint2')) {$('hint2').innerHTML = '"' . gettext('Not Used') . '"';}			
+					if($('hint2')) {$('hint2').innerHTML = "<?php print gettext('Not Used');?>";}			
 					}
 				if(type3 == "int") {				
 					if($('stats2_inner')) {$('stats2_inner').innerHTML = the_id_arr[2];}
-					if($('hint3')) {$('hint3').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+					if($('hint3')) {$('hint3').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 					} else if (type3 == "avg") {
 					if($('stats2_inner')) {$('stats2_inner').innerHTML = the_id_arr[2].timeLeft();}
-					if($('hint3')) {$('hint3').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}	
+					if($('hint3')) {$('hint3').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}	
 					} else {
-					if($('hint3')) {$('hint3').innerHTML = '"' . gettext('Not Used') . '"';}		
+					if($('hint3')) {$('hint3').innerHTML = "<?php print gettext('Not Used');?>";}		
 					}
 				if(type4 == "int") {				
 					if($('stats3_inner')) {$('stats3_inner').innerHTML = the_id_arr[3];}
-					if($('hint4')) {$('hint4').innerHTML = '"' . gettext('Integer - input a number') . '"';}	
+					if($('hint4')) {$('hint4').innerHTML = "<?php print gettext('Integer - input a number');?>";}	
 					} else if (type4 == "avg") {
 					if($('stats3_inner')) {$('stats3_inner').innerHTML = the_id_arr[3].timeLeft();}
-					if($('hint4')) {$('hint4').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+					if($('hint4')) {$('hint4').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 					} else {
-					if($('hint4')) {$('hint4').innerHTML = '"' . gettext('Not Used') . '"';}	
+					if($('hint4')) {$('hint4').innerHTML = "<?php print gettext('Not Used');?>";}	
 					}
 				if(type5 == "int") {					
 					if($('stats4_inner')) {$('stats4_inner').innerHTML = the_id_arr[4];}
-					if($('hint5')) {$('hint5').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+					if($('hint5')) {$('hint5').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 					} else if (type5 == "avg") {
 					if($('stats4_inner')) {$('stats4_inner').innerHTML = the_id_arr[4].timeLeft();}
-					if($('hint5')) {$('hint5').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}	
+					if($('hint5')) {$('hint5').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}	
 					} else {
-					if($('hint5')) {$('hint5').innerHTML = '"' . gettext('Not Used') . '"';}	
+					if($('hint5')) {$('hint5').innerHTML = "<?php print gettext('Not Used');?>";}	
 					}
 				if(type6 == "int") {
 					if($('stats5_inner')) {$('stats5_inner').innerHTML = the_id_arr[5];}
-					if($('hint6')) {$('hint6').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+					if($('hint6')) {$('hint6').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 					} else if (type6 == "avg") {
 					if($('stats5_inner')) {$('stats5_inner').innerHTML = the_id_arr[5].timeLeft();}
-					if($('hint6')) {$('hint6').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}	
+					if($('hint6')) {$('hint6').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}	
 					} else {
-					if($('hint6')) {$('hint6').innerHTML = '"' . gettext('Not Used') . '"';}	
+					if($('hint6')) {$('hint6').innerHTML = "<?php print gettext('Not Used');?>";}	
 					}
 				if(type7 == "int") {				
 					if($('stats6_inner')) {$('stats6_inner').innerHTML = the_id_arr[6];}
-					if($('hint7')) {$('hint7').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+					if($('hint7')) {$('hint7').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 					} else if (type7 == "avg") {
 					if($('stats6_inner')) {$('stats6_inner').innerHTML = the_id_arr[6].timeLeft();}
-					if($('hint7')) {$('hint7').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+					if($('hint7')) {$('hint7').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 					} else {
-					if($('hint7')) {$('hint7').innerHTML = '"' . gettext('Not Used') . '"';}	
+					if($('hint7')) {$('hint7').innerHTML = "<?php print gettext('Not Used');?>";}	
 					}
 				if(type8 == "int") {				
 					if($('stats7_inner')) {$('stats7_inner').innerHTML = the_id_arr[7];}
-					if($('hint8')) {$('hint8').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+					if($('hint8')) {$('hint8').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 					} else if (type8 == "avg") {
 					if($('stats7_inner')) {$('stats7_inner').innerHTML = the_id_arr[7].timeLeft();}
-					if($('hint8')) {$('hint8').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+					if($('hint8')) {$('hint8').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 					} else {
-					if($('hint8')) {$('hint8').innerHTML = '"' . gettext('Not Used') . '"';}
+					if($('hint8')) {$('hint8').innerHTML = "<?php print gettext('Not Used');?>";}
 					}
-				if($('stats8_inner')) {$('stats8_inner').innerHTML = '"' . gettext('Current date and time') . ": " . '"' + the_id_arr[8]};				
+				if($('stats8_inner')) {$('stats8_inner').innerHTML = "<?php print gettext('Current date and time');?>: " + the_id_arr[8]};				
 			}			// end function get_statistics_cb()		
 /**
  * 
@@ -940,61 +940,61 @@ if ((isset($_GET['stats'])) && ($_GET['stats'] == "stats") && (!isset($_GET['frm
 						out_threshold(the_id_arr[7], "stats7", t8, tw8, tf8, tt8);
 						if(type1 == "int") {
 							if($('stats0_inner')) {$('stats0_inner').innerHTML = the_id_arr[0];}
-							if($('hint1')) {$('hint1').innerHTML = '"' . gettext('Integer - input a number') . '"';}				
+							if($('hint1')) {$('hint1').innerHTML = "<?php print gettext('Integer - input a number');?>";}				
 							} else {
 							if($('stats0_inner')) {$('stats0_inner').innerHTML = the_id_arr[0].timeLeft();}
-							if($('hint1')) {$('hint1').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+							if($('hint1')) {$('hint1').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 							}
 						if(type2 == "int") {				
 							if($('stats1_inner')) {$('stats1_inner').innerHTML = the_id_arr[1];}
-							if($('hint2')) {$('hint2').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+							if($('hint2')) {$('hint2').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 							} else {
 							if($('stats1_inner')) {$('stats1_inner').innerHTML = the_id_arr[1].timeLeft();}	
-							if($('hint2')) {$('hint2').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+							if($('hint2')) {$('hint2').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 							}
 						if(type3 == "int") {				
 							if($('stats2_inner')) {$('stats2_inner').innerHTML = the_id_arr[2];}
-							if($('hint3')) {$('hint3').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+							if($('hint3')) {$('hint3').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 							} else {
 							if($('stats2_inner')) {$('stats2_inner').innerHTML = the_id_arr[2].timeLeft();}
-							if($('hint3')) {$('hint3').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}	
+							if($('hint3')) {$('hint3').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}	
 							}
 						if(type4 == "int") {				
 							if($('stats3_inner')) {$('stats3_inner').innerHTML = the_id_arr[3];}
-							if($('hint4')) {$('hint4').innerHTML = '"' . gettext('Integer - input a number') . '"';}	
+							if($('hint4')) {$('hint4').innerHTML = "<?php print gettext('Integer - input a number');?>";}	
 							} else {
 							if($('stats3_inner')) {$('stats3_inner').innerHTML = the_id_arr[3].timeLeft();}
-							if($('hint4')) {$('hint4').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+							if($('hint4')) {$('hint4').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 							}
 						if(type5 == "int") {					
 							if($('stats4_inner')) {$('stats4_inner').innerHTML = the_id_arr[4];}
-							if($('hint5')) {$('hint5').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+							if($('hint5')) {$('hint5').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 							} else {
 							if($('stats4_inner')) {$('stats4_inner').innerHTML = the_id_arr[4].timeLeft();}
-							if($('hint5')) {$('hint5').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}	
+							if($('hint5')) {$('hint5').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}	
 							}
 						if(type6 == "int") {
 							if($('stats5_inner')) {$('stats5_inner').innerHTML = the_id_arr[5];}
-							if($('hint6')) {$('hint6').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+							if($('hint6')) {$('hint6').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 							} else {
 							if($('stats5_inner')) {$('stats5_inner').innerHTML = the_id_arr[5].timeLeft();}
-							if($('hint6')) {$('hint6').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}	
+							if($('hint6')) {$('hint6').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}	
 							}
 						if(type7 == "int") {				
 							if($('stats6_inner')) {$('stats6_inner').innerHTML = the_id_arr[6];}
-							if($('hint7')) {$('hint7').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+							if($('hint7')) {$('hint7').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 							} else {
 							if($('stats6_inner')) {$('stats6_inner').innerHTML = the_id_arr[6].timeLeft();}
-							if($('hint7')) {$('hint7').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+							if($('hint7')) {$('hint7').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 							}
 						if(type8 == "int") {				
 							if($('stats7_inner')) {$('stats7_inner').innerHTML = the_id_arr[7];}
-							if($('hint8')) {$('hint8').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+							if($('hint8')) {$('hint8').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 							} else {
 							if($('stats7_inner')) {$('stats7_inner').innerHTML = the_id_arr[7].timeLeft();}
-							if($('hint8')) {$('hint8').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+							if($('hint8')) {$('hint8').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 							}
-						if($('stats8_inner')) {$('stats8_inner').innerHTML = '"' . gettext('Current date and time') . ": " . '"' + the_id_arr[8]};				
+						if($('stats8_inner')) {$('stats8_inner').innerHTML = "<?php print gettext('Current date and time');?>: " + the_id_arr[8]};				
 						}
 					mu_get();				// start loop
 					}				// end function init_cb()
@@ -1024,8 +1024,8 @@ if ((isset($_GET['stats'])) && ($_GET['stats'] == "stats") && (!isset($_GET['frm
 			<DIV class='header_row'>
 				<DIV id='stats8_inner' class='date_time'></DIV>
 				<DIV class='button_bar'>
-					<SPAN id='links' class='buttons' onclick="window.location='stats_scr.php?config=config' "><?php print gettext('Configuration');?></SPAN>
-					<SPAN ID='gout' CLASS='buttons' onClick="do_logout()"><?php print gettext('Logout');?></SPAN>
+					<SPAN id='links' class='buttons' onclick="window.location='stats_scr.php?config=config';"><?php print gettext('Configuration');?></SPAN>
+					<SPAN ID='gout' CLASS='buttons' onClick="do_logout();"><?php print gettext('Logout');?></SPAN>
 				</DIV>
 			</DIV>
 		</DIV>
@@ -1180,60 +1180,60 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
  */	
 	function set_init_cfg() {
 		if(type1 == "int") {
-			if($('hint1')) {$('hint1').innerHTML = '"' . gettext('Integer - input a number') . '"';}				
+			if($('hint1')) {$('hint1').innerHTML = "<?php print gettext('Integer - input a number');?>";}				
 			} else if (type1 == "avg") {
-			if($('hint1')) {$('hint1').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+			if($('hint1')) {$('hint1').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 			} else {
-			if($('hint1')) {$('hint1').innerHTML = '"' . gettext('Not Used') . '"';}
+			if($('hint1')) {$('hint1').innerHTML = "<?php print gettext('Not Used');?>";}
 			}
 		if(type2 == "int") {				
-			if($('hint2')) {$('hint2').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+			if($('hint2')) {$('hint2').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 			} else if (type2 == "avg") {
-			if($('hint2')) {$('hint2').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+			if($('hint2')) {$('hint2').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 			} else {
-			if($('hint2')) {$('hint2').innerHTML = '"' . gettext('Not Used') . '"';}
+			if($('hint2')) {$('hint2').innerHTML = "<?php print gettext('Not Used');?>";}
 			}
 		if(type3 == "int") {				
-			if($('hint3')) {$('hint3').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+			if($('hint3')) {$('hint3').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 			} else if (type3 == "avg") {
-			if($('hint3')) {$('hint3').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}	
+			if($('hint3')) {$('hint3').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}	
 			} else {
-			if($('hint3')) {$('hint3').innerHTML = '"' . gettext('Not Used') . '"';}
+			if($('hint3')) {$('hint3').innerHTML = "<?php print gettext('Not Used');?>";}
 			}
 		if(type4 == "int") {				
-			if($('hint4')) {$('hint4').innerHTML = '"' . gettext('Integer - input a number') . '"';}	
+			if($('hint4')) {$('hint4').innerHTML = "<?php print gettext('Integer - input a number');?>";}	
 			} else if (type4 == "avg") {
-			if($('hint4')) {$('hint4').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+			if($('hint4')) {$('hint4').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 			} else {
-			if($('hint4')) {$('hint4').innerHTML = '"' . gettext('Not Used') . '"';}	
+			if($('hint4')) {$('hint4').innerHTML = "<?php print gettext('Not Used');?>";}	
 			}
 		if(type5 == "int") {					
-			if($('hint5')) {$('hint5').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+			if($('hint5')) {$('hint5').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 			} else if (type5 == "avg") {
-			if($('hint5')) {$('hint5').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}	
+			if($('hint5')) {$('hint5').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}	
 			} else {
-			if($('hint5')) {$('hint5').innerHTML = '"' . gettext('Not Used') . '"';}	
+			if($('hint5')) {$('hint5').innerHTML = "<?php print gettext('Not Used');?>";}	
 			}
 		if(type6 == "int") {
-			if($('hint6')) {$('hint6').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+			if($('hint6')) {$('hint6').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 			} else if (type6 == "avg") {
-			if($('hint6')) {$('hint6').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}	
+			if($('hint6')) {$('hint6').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}	
 			} else {
-			if($('hint6')) {$('hint6').innerHTML = '"' . gettext('Not Used') . '"';}	
+			if($('hint6')) {$('hint6').innerHTML = "<?php print gettext('Not Used');?>";}	
 			}
 		if(type7 == "int") {				
-			if($('hint7')) {$('hint7').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+			if($('hint7')) {$('hint7').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 			} else if (type7 == "avg") {
-			if($('hint7')) {$('hint7').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+			if($('hint7')) {$('hint7').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 			} else {
-			if($('hint7')) {$('hint7').innerHTML = '"' . gettext('Not Used') . '"';}
+			if($('hint7')) {$('hint7').innerHTML = "<?php print gettext('Not Used');?>";}
 			}
 		if(type8 == "int") {				
-			if($('hint8')) {$('hint8').innerHTML = '"' . gettext('Integer - input a number') . '"';}					
+			if($('hint8')) {$('hint8').innerHTML = "<?php print gettext('Integer - input a number');?>";}					
 			} else if (type8 == "avg") {
-			if($('hint8')) {$('hint8').innerHTML = '"' . gettext('Date time, input as Days-Hours-Minutes-Seconds') . '"';}					
+			if($('hint8')) {$('hint8').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 			} else {
-			if($('hint8')) {$('hint8').innerHTML = '"' . gettext('Not Used') . '"';}	
+			if($('hint8')) {$('hint8').innerHTML = "<?php print gettext('Not Used');?>";}	
 			}
 		}			// end function get_statistics_cb()			
 </SCRIPT>
@@ -1248,8 +1248,8 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 		<DIV class='header_row'>
 			<DIV id='stats8_inner' class='date_time'></DIV>
 			<DIV class='button_bar'>
-				<SPAN id='links' class='buttons' onclick="window.location='stats_scr.php?stats=stats' "><?php print gettext('Statistics');?></SPAN>
-				<SPAN ID='gout' CLASS='buttons' onClick="do_logout()"><?php print gettext('Logout');?></SPAN>
+				<SPAN id='links' class='buttons' onclick="window.location='stats_scr.php?stats=stats';"><?php print gettext('Statistics');?></SPAN>
+				<SPAN ID='gout' CLASS='buttons' onClick="do_logout();"><?php print gettext('Logout');?></SPAN>
 			</DIV>
 		</DIV>
 	</DIV>
@@ -1301,7 +1301,7 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 ?>
 		<DIV class='config_row'>
 			<DIV class='config_cell_title' style='width: 15%;'><?php print gettext('Box 1');?></DIV>
-			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box1" onChange='set_hint(this.form, "frm_box1", "hint1")'><?php print $menu1;?></DIV>
+			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box1" onChange='set_hint(this.form, "frm_box1", "hint1");'><?php print $menu1;?></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_t1" VALUE="<?php print ($type1 == 'avg') ? parsedate($t1) : $t1;?>"></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tw1" VALUE="<?php print ($type1 == 'avg') ? parsedate($tw1) : $tw1;?>"></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tf1" VALUE="<?php print ($type1 == 'avg') ? parsedate($tf1) : $tf1;;?>"></DIV>
@@ -1334,7 +1334,7 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 ?>		
 		<DIV class='config_row'>
 			<DIV class='config_cell_title' style='width: 15%;'><?php print gettext('Box 2');?></DIV>
-			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box2" onChange='set_hint(this.form, "frm_box2", "hint2")'><?php print $menu1;?></DIV>
+			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box2" onChange='set_hint(this.form, "frm_box2", "hint2");'><?php print $menu1;?></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_t2" VALUE="<?php print ($type2 == 'avg') ? parsedate($t2) : $t2;?>"></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tw2" VALUE="<?php print ($type2 == 'avg') ? parsedate($tw2) : $tw2;?>"></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tf2" VALUE="<?php print ($type2 == 'avg') ? parsedate($tf2) : $tf2;?>"></DIV>	
@@ -1367,7 +1367,7 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 ?>		
 		<DIV class='config_row'>
 			<DIV class='config_cell_title' style='width: 15%;'><?php print gettext('Box 3');?></DIV>
-			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box3" onChange='set_hint(this.form, "frm_box3", "hint3")'><?php print $menu1;?></DIV>
+			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box3" onChange='set_hint(this.form, "frm_box3", "hint3");'><?php print $menu1;?></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_t3" VALUE="<?php print ($type3 == 'avg') ? parsedate($t3) : $t3;?>"></DIV>	
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tw3" VALUE="<?php print ($type3 == 'avg') ? parsedate($tw3) : $tw3;?>"></DIV>	
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tf3" VALUE="<?php print ($type3 == 'avg') ? parsedate($tf3) : $tf3;?>"></DIV>
@@ -1400,7 +1400,7 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 ?>		
 		<DIV class='config_row'>
 			<DIV class='config_cell_title' style='width: 15%;'><?php print gettext('Box 4'); ?></DIV>
-			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box4" onChange='set_hint(this.form, "frm_box4", "hint4")'><?php print $menu1;?></DIV>
+			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box4" onChange='set_hint(this.form, "frm_box4", "hint4");'><?php print $menu1;?></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_t4" VALUE="<?php print ($type4 == 'avg') ? parsedate($t4) : $t4;?>"></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tw4" VALUE="<?php print ($type4 == 'avg') ? parsedate($tw4) : $tw4;?>"></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tf4" VALUE="<?php print ($type4 == 'avg') ? parsedate($tf4) : $tf4;?>"></DIV>
@@ -1433,7 +1433,7 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 ?>		
 		<DIV class='config_row'>
 			<DIV class='config_cell_title' style='width: 15%;'><?php print gettext('Box 5');?></DIV>
-			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box5" onChange='set_hint(this.form, "frm_box5", "hint5")'><?php print $menu1;?></DIV>
+			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box5" onChange='set_hint(this.form, "frm_box5", "hint5");'><?php print $menu1;?></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_t5" VALUE="<?php print ($type5 == 'avg') ? parsedate($t5) : $t5;?>"></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tw5" VALUE="<?php print ($type5 == 'avg') ? parsedate($tw5) : $tw5;?>"></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tf5" VALUE="<?php print ($type5 == 'avg') ? parsedate($tf5) : $tf5;?>"></DIV>
@@ -1466,7 +1466,7 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 ?>		
 		<DIV class='config_row'>
 			<DIV class='config_cell_title' style='width: 15%;'><?php print gettext('Box 6');?></DIV>
-			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box6" onChange='set_hint(this.form, "frm_box6", "hint6")'><?php print $menu1;?></DIV>
+			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box6" onChange='set_hint(this.form, "frm_box6", "hint6");'><?php print $menu1;?></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_t6" VALUE="<?php print ($type6 == 'avg') ? parsedate($t6) : $t6;?>"></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tw6" VALUE="<?php print ($type6 == 'avg') ? parsedate($tw6) : $tw6;?>"></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tf6" VALUE="<?php print ($type6 == 'avg') ? parsedate($tf6) : $tf6;?>"></DIV>
@@ -1499,7 +1499,7 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 ?>		
 		<DIV class='config_row'>
 			<DIV class='config_cell_title' style='width: 15%;'><?php print gettext('Box 7');?></DIV>
-			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box7" onChange='set_hint(this.form, "frm_box7", "hint7")'><?php print $menu1;?></DIV>
+			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box7" onChange='set_hint(this.form, "frm_box7", "hint7");'><?php print $menu1;?></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_t7" VALUE="<?php print ($type7 == 'avg') ? parsedate($t7) : $t7;?>"></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tw7" VALUE="<?php print ($type7 == 'avg') ? parsedate($tw7) : $tw7;?>"></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tf7" VALUE="<?php print ($type7 == 'avg') ? parsedate($tf7) : $tf7;?>"></DIV>
@@ -1532,7 +1532,7 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 ?>		
 		<DIV class='config_row'>
 			<DIV class='config_cell_title' style='width: 15%;'><?php print gettext('Box 8');?></DIV>
-			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box8" onChange='set_hint(this.form, "frm_box8", "hint8")'><?php print $menu1;?></DIV>
+			<DIV class='config_cell_data' style='width: 15%;'><SELECT NAME="frm_box8" onChange='set_hint(this.form, "frm_box8", "hint8");'><?php print $menu1;?></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_t8" VALUE="<?php print ($type8 == 'avg') ? parsedate($t8) : $t8;?>"></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tw8" VALUE="<?php print ($type8 == 'avg') ? parsedate($tw8) : $tw8;?>"></DIV>
 			<DIV class='config_cell_data' style='width: 10%;'><INPUT MAXLENGTH="12" SIZE="12" type="text" NAME="frm_tf8" VALUE="<?php print ($type8 == 'avg') ? parsedate($tf8) : $tf8;?>"></DIV>
@@ -1541,7 +1541,7 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 		</DIV>
 		</FORM>
 		<DIV class='config_row'>
-			<DIV class='config_cell_butts' style='width: 96%; text-align: center;'><INPUT TYPE="button" VALUE="Cancel"  onClick="window.location='stats_scr.php?stats=stats'">
+			<DIV class='config_cell_butts' style='width: 96%; text-align: center;'><INPUT TYPE="button" VALUE="Cancel"  onClick="window.location='stats_scr.php?stats=stats';">
 			&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="button" VALUE="Submit" onClick="document.stats_config.submit()">
 			</DIV>
 		</DIV> 
@@ -1562,9 +1562,9 @@ if((!isset($_GET['stats'])) && (!isset($_GET['config'])) && (!isset($_GET['fm_su
 		<DIV class='header_row'>
 			<DIV id='stats8_inner' class='date_time'></DIV>
 			<DIV class='button_bar'>
-				<SPAN id='links' class='buttons' onclick="window.location='stats_scr.php?stats=stats' "><?php print gettext('Statistics');?></SPAN>			
-				<SPAN id='links' class='buttons' onclick="window.location='stats_scr.php?config=config' "><?php print gettext('Configuration');?></SPAN>
-				<SPAN ID='gout' CLASS='buttons' onClick="do_logout()"><?php print gettext('Logout');?></SPAN>
+				<SPAN id='links' class='buttons' onclick="window.location='stats_scr.php?stats=stats';"><?php print gettext('Statistics');?></SPAN>			
+				<SPAN id='links' class='buttons' onclick="window.location='stats_scr.php?config=config';"><?php print gettext('Configuration');?></SPAN>
+				<SPAN ID='gout' CLASS='buttons' onClick="do_logout();"><?php print gettext('Logout');?></SPAN>
 			</DIV>
 		</DIV>
 	</DIV>

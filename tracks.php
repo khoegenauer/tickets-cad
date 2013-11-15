@@ -163,13 +163,13 @@ global $u_types;
  */
 	function do_track(callsign) {
 		if (parent.frames["upper"].logged_in()) {
-			try  {open_iw.close()} catch (e) {;}
+			try  {open_iw.close();} catch (e) {;}
 			var width = <?php print get_variable('map_width');?>+360;
 			var spec ="titlebar, resizable=1, scrollbars, height=640,width=" + width + ",status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300";
 			var url = "track_u.php?source="+callsign;
 			newwindow=window.open(url, callsign,  spec);
 			if (isNull(newwindow)) {
-				alert (""<?php print gettext('Track display requires popups to be enabled. Please adjust your browser options.');?>");
+				alert ("<?php print gettext('Track display requires popups to be enabled. Please adjust your browser options.');?>");
 				return;
 				}
 //			starting = false;
@@ -224,7 +224,7 @@ global $u_types;
 //				alert(99);
 				var marker = new google.maps.Marker({position: point, map: map, icon: starticon});
 				google.maps.event.addListener(marker, "click", function() {		// here for both side bar and icon click
-					try {open_iw.close()} catch(err) {;}
+					try {open_iw.close();} catch(err) {;}
 					map.setCenter(point);
 					infowindow = new google.maps.InfoWindow({ content: html, maxWidth: 300});	 
 					open_iw = infowindow;
@@ -235,7 +235,7 @@ global $u_types;
 //				alert(106);
 				var marker = new google.maps.Marker({position: point, map: map, icon: endicon});
 				google.maps.event.addListener(marker, "click", function() {		// here for both side bar and icon click
-					try {open_iw.close()} catch(err) {;}
+					try {open_iw.close();} catch(err) {;}
 					map.setCenter(point);
 					infowindow = new google.maps.InfoWindow({ content: html, maxWidth: 300});	 
 					open_iw = infowindow;
@@ -246,7 +246,7 @@ global $u_types;
 				var infoicon = "./markers/" + direcs[heading];
 				var marker = new google.maps.Marker({position: point, map: map, icon: infoicon});		
 				google.maps.event.addListener(marker, "click", function() {		// here for both side bar and icon click
-					try {open_iw.close()} catch(err) {;}
+					try {open_iw.close();} catch(err) {;}
 					map.setCenter(point);
 					infowindow = new google.maps.InfoWindow({ content: html, maxWidth: 300});	 
 					open_iw = infowindow;
@@ -272,7 +272,7 @@ global $u_types;
 		var marker = new google.maps.Marker({position: point, map: map, icon: icon});
 
 		google.maps.event.addListener(marker, "click", function() {		// here for both side bar and icon click
-			try {open_iw.close()} catch(err) {;}
+			try {open_iw.close();} catch(err) {;}
 			map.setCenter(point);
 			infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});	 
 			open_iw = infowindow;

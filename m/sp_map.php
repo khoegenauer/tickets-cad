@@ -535,15 +535,15 @@ array(2) {
 <form name = 'toTickets' method = 'post' action = 'totickets.php'></form>	
 
 <table id="context" cellpadding = 4 style="position: fixed; top: <?php echo round ( .1 * $_SESSION['SP']['scr_height'] );?>px; left: <?php echo round (.25 * $_SESSION['SP']['scr_width'] );?>px; display: none; ">
-<tr><td class = 'my_hover' onclick = 'do_stop_cycle(); navTo("sp_lout.php", "")'>	<?php echo get_text("Logout");?></td></tr>
+<tr><td class = 'my_hover' onclick = 'do_stop_cycle(); navTo("sp_lout.php", "");'>	<?php echo get_text("Logout");?></td></tr>
 <tr><td class = 'my_hover' onclick = 'canContext();'>				Cancel</td></tr>
-<tr><td class = 'my_hover' onclick = 'navTo("sp_calls.php", "")'>	<?php echo get_text("Calls");?></td></tr>
-<tr><td class = 'my_hover' onclick = 'navTo("sp_tick.php", "")'>	<?php echo get_text("Incidents");?></td></tr>
-<tr><td class = 'my_hover' onclick = 'navTo("sp_resp.php", "")'>	<?php echo get_text("Responders");?></td></tr>
-<tr><td class = 'my_hover' onclick = 'navTo("sp_fac.php", "")'>		<?php echo get_text("Facilities");?></td></tr>
-<tr><td class = 'my_hover' onclick = 'navTo("sp_mail.php", "")'>	<?php echo get_text("Email");?></td></tr>
-<tr><td class = 'my_hover' onclick = 'to_tickets ();'>				to Tickets</td></tr>
-<tr><td class = 'my_hover' onclick = 'location.reload();'>			Map refresh</td></tr>
+<tr><td class = 'my_hover' onclick = 'navTo("sp_calls.php", "");'>	<?php echo get_text("Calls");?></td></tr>
+<tr><td class = 'my_hover' onclick = 'navTo("sp_tick.php", "");'>	<?php echo get_text("Incidents");?></td></tr>
+<tr><td class = 'my_hover' onclick = 'navTo("sp_resp.php", "");'>	<?php echo get_text("Responders");?></td></tr>
+<tr><td class = 'my_hover' onclick = 'navTo("sp_fac.php", "");'>		<?php echo get_text("Facilities");?></td></tr>
+<tr><td class = 'my_hover' onclick = 'navTo("sp_mail.php", "");'>	<?php echo get_text("Email");?></td></tr>
+<tr><td class = 'my_hover' onclick = 'to_tickets ();'>				<?php print gettext('to Tickets');?></td></tr>
+<tr><td class = 'my_hover' onclick = 'location.reload();'>			<?php print gettext('Map refresh');?></td></tr>
 </table>
 
 </body>

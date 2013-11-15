@@ -404,9 +404,8 @@ $name = ($row_callsign['name']);				// 7/29/09
 	
 	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
 	<SCRIPT src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
-
+<SCRIPT>
 <?php
-	print "<SCRIPT>\n";
 //	print "var user = '";
 //	print $_SESSION['user'];
 //	print "'\n";
@@ -422,18 +421,16 @@ $name = ($row_callsign['name']);				// 7/29/09
 //			}
 		}		// end function ck_frames()
 	</SCRIPT>
-
-</SCRIPT>
 	</HEAD>
-	<BODY onLoad = "ck_frames()" onUnload="GUnload()">
-	<A NAME='top'>
+	<BODY onLoad="ck_frames();" onUnload="GUnload();">
+	<A NAME='top'/>
 		<TABLE ID='outer'><TR CLASS='even'><TD ALIGN='center' colspan=2><B><FONT SIZE='+1'><?php print gettext('Mobile Unit');?> <?php print $handle;?> : <?php print $name;?> - <?php print gettext('Tracks');?></FONT></B></TD></TR><TR><TD>
 			<DIV ID='side_bar'></DIV>
 			</TD><TD ALIGN='center'>
 			<DIV ID='map' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
 			<BR><BR>
-			<CENTER><SPAN onClick = 'self.close()'><B><U><?php print gettext('Close');?></U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href="javascript:location.reload(true)"><B><U><?php print gettext('Refresh');?></U>
+			<CENTER><SPAN onClick = 'self.close();'><B><U><?php print gettext('Close');?></U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="javascript:location.reload(true);"><B><U><?php print gettext('Refresh');?></U>
 			</TD></TR>
 			</TABLE><!-- end outer -->
 			
@@ -459,8 +456,4 @@ $name = ($row_callsign['name']);				// 7/29/09
 <CENTER><img src="<?php print $alt_urlstr;?>" border=0 />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <br><br>
 <CENTER><A HREF='#top'><U><?php print gettext('to top');?></U></A>
-<?php
-
-		print "\n</BODY></HTML>\n";
-
-?>
+</BODY></HTML>

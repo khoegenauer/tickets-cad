@@ -1964,8 +1964,8 @@ if(get_num_groups()) {
 			<TR CLASS = "odd" VALIGN='top'><TD CLASS="td_label" ><?php print gettext('Tracking');?>:</TD>
 				<TD><?php print $GLOBALS['TRACK_NAMES'][$track_type];?></TD></TR>&nbsp;&nbsp;&nbsp;&nbsp;<!-- 7/10/09 -->
 			<TR CLASS = "even" VALIGN='top'>
-					<TD CLASS="td_label">Callsign/License/Key: </TD>	<TD><?php print $row['callsign'];?></TD></TR>
-			<TR CLASS = "odd"><TD CLASS="td_label">Status:</TD>		<TD><SPAN STYLE='background-color:{$row['bg_color']}; color:{$row['text_color']};'><?php print $un_st_val;?>
+					<TD CLASS="td_label"><?php print gettext('Callsign/License/Key');?>: </TD>	<TD><?php print $row['callsign'];?></TD></TR>
+			<TR CLASS = "odd"><TD CLASS="td_label"><?php print gettext('Status');?>:</TD>		<TD><SPAN STYLE="background-color:<?php print $row['bg_color'];?>; color:<?php print $row['text_color'];?>;"><?php print $un_st_val;?>
 				</SPAN>
 <?php
 		$dispatch_arr = array("Yes", "No, not enforced", "No, enforced");
@@ -1974,26 +1974,26 @@ if(get_num_groups()) {
 				</TD></TR>
 			<TR CLASS = "even"><TD CLASS="td_label">About Status</TD>  <TD><?php print $row['status_about'] ;?></TD></TR>	<!-- 9/6/13 -->
 			<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>
-			<TR CLASS='even'><TD CLASS="td_label"><A HREF="#" TITLE="Location - type in location in fields or click location on map ">Location</A>:</TD><TD><?php print $row['street'] ;?></TD></TR> <!-- 7/5/10 -->
-			<TR CLASS='odd'><TD CLASS="td_label"><A HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required">City</A>:</TD> <!-- 7/5/10 -->
+			<TR CLASS='even'><TD CLASS="td_label"><A HREF="#" TITLE="<?php print gettext('Location - type in location in fields or click location on map');?>"><?php print gettext('Location');?></A>:</TD><TD><?php print $row['street'] ;?></TD></TR> <!-- 7/5/10 -->
+			<TR CLASS='odd'><TD CLASS="td_label"><A HREF="#" TITLE="<?php print gettext('City - defaults to default city set in configuration. Type in City if required');?>"><?php print gettext('City');?></A>:</TD> <!-- 7/5/10 -->
 			<TD><?php print $row['city'] ;?> <!-- 7/5/10 -->
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<?php print $row['state'] ;?></TD></TR> <!-- 7/5/10 -->
-			<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="Phone number">Phone</A>:&nbsp;</TD><TD COLSPAN=3><?php print $row['phone'] ;?></TD></TR> <!-- 7/5/10 -->
-			<TR CLASS = "odd"><TD CLASS="td_label">Description: </TD>	<TD><?php print $row['description'];?></TD></TR>
-			<TR CLASS = "even"><TD CLASS="td_label">Capability: </TD>	<TD><?php print $row['capab'];?></TD></TR>
-			<TR CLASS = "odd"><TD CLASS="td_label">Contact name:</TD>	<TD><?php print $row['contact_name'] ;?></TD></TR>
-			<TR CLASS = "even"><TD CLASS="td_label">Contact via:</TD>	<TD><?php print $row['contact_via'] ;?></TD></TR>
-			<TR CLASS = "odd"><TD CLASS="td_label"><?php get_provider_name(get_msg_variable('smsg_provider'));?> ID:</TD>	<TD><?php print $row['smsg_id'] ;?></TD></TR>	<!-- 10/23/12 -->		
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="#" TITLE="<?php print gettext('State - US State or non-US Country code e.g. UK for United Kingdom');?>"><?php print gettext('St');?></A>:&nbsp;&nbsp;<?php print $row['state'] ;?></TD></TR> <!-- 7/5/10 -->
+			<TR CLASS = "even"><TD CLASS="td_label"><A HREF="#" TITLE="<?php print gettext('Phone number');?>"><?php print gettext('Phone');?></A>:&nbsp;</TD><TD COLSPAN=3><?php print $row['phone'] ;?></TD></TR> <!-- 7/5/10 -->
+			<TR CLASS = "odd"><TD CLASS="td_label"><?php print gettext('Description');?>: </TD>	<TD><?php print $row['description'];?></TD></TR>
+			<TR CLASS = "even"><TD CLASS="td_label"><?php print gettext('Capability');?>: </TD>	<TD><?php print $row['capab'];?></TD></TR>
+			<TR CLASS = "odd"><TD CLASS="td_label"><?php print gettext('Contact name');?>:</TD>	<TD><?php print $row['contact_name'] ;?></TD></TR>
+			<TR CLASS = "even"><TD CLASS="td_label"><?php print gettext('Contact via');?>:</TD>	<TD><?php print $row['contact_via'] ;?></TD></TR>
+			<TR CLASS = "odd"><TD CLASS="td_label"><?php get_provider_name(get_msg_variable('smsg_provider'));?> <?php print gettext('ID');?>:</TD>	<TD><?php print $row['smsg_id'] ;?></TD></TR>	<!-- 10/23/12 -->		
 			
-			<TR CLASS = 'even'><TD CLASS="td_label">As of:</TD>	<TD><?php print format_date_2($row['updated']); ?></TD></TR>
+			<TR CLASS = 'even'><TD CLASS="td_label"><?php print gettext('As of');?>:</TD>	<TD><?php print format_date_2($row['updated']); ?></TD></TR>
 			<TR><TD>&nbsp;</TD></TR>
 			<TR CLASS = "odd"><TD COLSPAN=2 ALIGN='center'>
 				<INPUT TYPE="button" VALUE="Cancel" onClick="document.can_Form.submit();" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <?php		// 1/2/10
-			print (is_administrator() || is_super())? 	"<INPUT TYPE='button' VALUE='to Edit' onClick= 'to_edit_Form.submit();'>\n": "" ;
-			print (is_guest())? "" : 					"<INPUT TYPE='button' VALUE='to Dispatch' onClick= \"$('incidents').style.display='block'; $('view_unit').style.display='none';\" STYLE = 'margin-left:12px;'>"; //  8/1/09
-			print (is_guest())? "" : 					"<INPUT TYPE='button' VALUE='Log' onclick = 'unit_log({$row['unit_id']});'>";	//	9/10/13
+			print (is_administrator() || is_super())? 	"<INPUT TYPE='button' VALUE='" . gettext('to Edit') . "' onClick= 'to_edit_Form.submit();'/>\n": "" ;
+			print (is_guest())? "" : 					"<INPUT TYPE='button' VALUE='" . gettext('to Dispatch') . "' onClick= \"$('incidents').style.display='block'; $('view_unit').style.display='none';\" STYLE = 'margin-left:12px;'/>"; //  8/1/09
+			print (is_guest())? "" : 					"<INPUT TYPE='button' VALUE='" . gettext('Log') . "' onclick = 'unit_log({$row['unit_id']});'/>";	//	9/10/13
 
 ?>
 			<INPUT TYPE="hidden" NAME="frm_lat" VALUE="<?php print $lat;?>" />
@@ -2091,7 +2091,7 @@ if(get_num_groups()) {
 			$i++;
 			}				// end while ($row_t ... )
 
-			print ($i>0)? "" : "<TR><TD COLSPAN=99 ALIGN='center'><BR />No incidents available</TD></TR>\n";
+			print ($i>0)? "" : "<TR><TD COLSPAN=99 ALIGN='center'><BR />" . gettext('No incidents available') . "</TD></TR>\n";
 ?>
 			<TR><TD ALIGN="center" COLSPAN=99><BR /><BR />
 				<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick = "$('incidents').style.display='none'; $('view_unit').style.display='block';">
@@ -2109,7 +2109,7 @@ if(get_num_groups()) {
 							// major while ... starts here
 		$ff=0;
 		while ($row_fa = stripslashes_deep(mysql_fetch_array($result_fa))) 	{
-			print "\t<TR CLASS ='" .  $evenodd[($ff+1)%2] . "' onClick = 'to_fac_routes(\"" . $row_fa['id'] . "\")'>\n";
+			print "\t<TR CLASS ='" .  $evenodd[($ff+1)%2] . "' onClick = 'to_fac_routes(\"" . $row_fa['id'] . "\");'>\n";
 			print "\t\t<TD>" . $row_fa['id'] . "</TD>\n";
 			print "\t\t<TD TITLE ='{$row_fa['name']}'>" . shorten($row_fa['name'], 24) . "</TD>\n";
 			print "\t\t<TD TITLE ='{$row_fa['description']}'>" . shorten($row_fa['description'], 40) . "</TD>\n";
@@ -2137,11 +2137,11 @@ if(get_num_groups()) {
 							<!-- END UNIT VIEW -->
 							
 			<!-- 9/10/13 File List -->
-			<SPAN id='s_fl' class='plain' style='position: fixed; top: 10px; right: 0px; height: 20px; width: 100px; font-size: 1.2em; float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'block'; $('s_fl').style.display='none'; $('h_fl').style.display='inline-block';">Files</SPAN>
+			<SPAN id='s_fl' class='plain' style='position: fixed; top: 10px; right: 0px; height: 20px; width: 100px; font-size: 1.2em; float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'block'; $('s_fl').style.display='none'; $('h_fl').style.display='inline-block';"><?php print gettext('Files');?></SPAN>
 			<DIV id='file_list' style='position: fixed; right: 10px; top: 10px; width: 400px; height: 600px; border: 2px outset #707070; text-align: center; display: none;'>
-				<SPAN id='h_fl' class='plain' style='float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'none'; $('h_fl').style.display='none'; $('s_fl').style.display='inline-block';">Hide</SPAN>
-				<DIV class='heading' style='text-align: center;'>FILE LIST</DIV><BR />
-				<SPAN id='nf_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='file_window(<?php print $id;?>);'>Add file</SPAN><BR /><BR />
+				<SPAN id='h_fl' class='plain' style='float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'none'; $('h_fl').style.display='none'; $('s_fl').style.display='inline-block';"><?php print gettext('Hide');?></SPAN>
+				<DIV class='heading' style='text-align: center;'><?php print gettext('FILE LIST');?></DIV><BR />
+				<SPAN id='nf_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='file_window(<?php print $id;?>);'><?php print gettext('Add file');?></SPAN><BR /><BR />
 				<DIV id='the_file_list' style='width: 100%; height: 100%; overflow-y: auto; text-align: left;'></DIV>
 			</DIV>
 			<!-- 9/10/13 File List -->			
@@ -2265,7 +2265,7 @@ if(get_num_groups()) {
 			<DIV id="boxB" class="box" style="z-index:1000;">
 				<DIV class="bar_header" class="heading_2" style='white-space: nowrap;'>	
 				<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
-					onmousedown="dragStart(event, 'boxB')"><i><?php print gettext('Drag me');?></i>
+					onmousedown="dragStart(event, 'boxB');"><i><?php print gettext('Drag me');?></i>
 					<DIV id="collapse_regs" class='plain' style ="display: inline; z-index:1001; cursor: pointer; float: right; margin-left: 0px; font-size: 10px;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';"><?php print gettext('Dock');?></DIV><BR /><BR />
 				</DIV>
 				<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV>
@@ -2278,14 +2278,14 @@ if(get_num_groups()) {
 		print get_buttons_inner2();	//	3/28/12		
 ?>
 			<FORM NAME='view_form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
-			<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
-			<INPUT TYPE='hidden' NAME='<?php echo $the_func;?>' VALUE='true'>
-			<INPUT TYPE='hidden' NAME='id' VALUE=''>
+			<INPUT TYPE='hidden' NAME='func' VALUE='responder'/>
+			<INPUT TYPE='hidden' NAME='<?php echo $the_func;?>' VALUE='true'/>
+			<INPUT TYPE='hidden' NAME='id' VALUE=''/>
 			</FORM>
 			
 			<FORM NAME='add_Form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
-			<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
-			<INPUT TYPE='hidden' NAME='add' VALUE='true'>
+			<INPUT TYPE='hidden' NAME='func' VALUE='responder'/>
+			<INPUT TYPE='hidden' NAME='add' VALUE='true'/>
 			</FORM>
 
 			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php echo basename(__FILE__);?>?func=responder"></FORM>

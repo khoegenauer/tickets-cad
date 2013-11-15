@@ -10,16 +10,14 @@ require_once($_SESSION['fip']);
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Tickets Log Processing</TITLE>
-<META NAME="Author" CONTENT="">
-<META NAME="Keywords" CONTENT="">
+<TITLE><?php print gettext('Tickets Log Processing');?></TITLE>
 <META NAME="Description" CONTENT="Tickets Log Entry"">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 <STYLE>
 .box { background-color: transparent; border: 0px solid #000000; color: #000000; padding: 0px; position: absolute; z-index:1000; }
 .bar { background-color: #DEE3E7; color: #000000; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; }
@@ -28,10 +26,17 @@ require_once($_SESSION['fip']);
 <SCRIPT SRC="./js/misc_function.js" type="text/javascript"></SCRIPT>
 
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */  
 function get_new_colors() {								// 4/5/11
 	window.location.href = '<?php print basename(__FILE__);?>';
 	}
-	
+/**
+ * 
+ * @returns {Array}
+ */	
 function $() {															// 12/20/08
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -44,17 +49,30 @@ function $() {															// 12/20/08
 		}
 	return elements;
 	}
-	
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */	
 function CngClass(obj, the_class){
 	$(obj).className=the_class;
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_hover (the_id) {
 	CngClass(the_id, 'hover');
 	return true;
 	}
-	
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */	
 function do_plain (the_id) {				// 8/21/10
 	CngClass(the_id, 'plain');
 	return true;
@@ -65,8 +83,8 @@ function do_plain (the_id) {				// 8/21/10
 <?php
 if (is_guest()) {
 ?>
-	<CENTER><BR /><BR /><BR /><BR /><BR /><H3>Guests not allowed Log access. </CENTER><BR /><BR />
-	<INPUT TYPE='button' value='Cancel' onClick = 'window.exit();'>
+	<CENTER><BR /><BR /><BR /><BR /><BR /><H3><?php print gettext('Guests not allowed Log access.');?></H3></CENTER><BR /><BR />
+  <INPUT TYPE='button' value='<?php print gettext('Cancel');?>' onClick = 'window.exit();'/>
 <?php
 	exit();
 	} else {
@@ -94,14 +112,14 @@ if (is_guest()) {
 	$row = stripslashes_deep(mysql_fetch_assoc($result));
 	$theComment = (!is_numeric($row['comment'])) ? $row['comment'] : "";
 ?>
-	<TR CLASS = 'even' ><TH COLSPAN=2>Log View</TH></TR>
-	<TR CLASS = 'odd'><TD>Unit Name:</TD><TD><?php print $row['unitname'];?></TD></TR>
-	<TR CLASS = 'even'><TD>Status Val:</TD><TD><?php print $row['theinfo'];?></TD></TR>
-	<TR CLASS = 'odd'><TD>By Who:</TD><TD><?php print $row['thename'];?></TD></TR>
-	<TR CLASS = 'even'><TD>When:</TD><TD><?php print format_date_2(strtotime($row['logwhen']));?></TD></TR>
-	<TR CLASS = 'odd'><TD>Comment:</TD><TD><?php print $theComment;?></TD></TR>
+	<TR CLASS = 'even' ><TH COLSPAN=2><?php print gettext('Log View');?></TH></TR>
+	<TR CLASS = 'odd'><TD><?php print gettext('Unit Name');?>:</TD><TD><?php print $row['unitname'];?></TD></TR>
+	<TR CLASS = 'even'><TD><?php print gettext('Status Val');?>:</TD><TD><?php print $row['theinfo'];?></TD></TR>
+	<TR CLASS = 'odd'><TD><?php print gettext('By Who');?>:</TD><TD><?php print $row['thename'];?></TD></TR>
+	<TR CLASS = 'even'><TD><?php print gettext('When');?>:</TD><TD><?php print format_date_2(strtotime($row['logwhen']));?></TD></TR>
+	<TR CLASS = 'odd'><TD><?php print gettext('Comment');?>:</TD><TD><?php print $theComment;?></TD></TR>
 	<TR CLASS = 'even'><TD COLSPAN=2 ALIGN='center'>
-	<SPAN class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.close()" />Close</SPAN>
+	<SPAN class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.close();"><?php print gettext('Close');?></SPAN>
 	</TD></TR>
 	</TABLE>
 <?php 

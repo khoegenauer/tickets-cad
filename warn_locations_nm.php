@@ -37,14 +37,14 @@ $osgb = get_text('OSGB');
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets - Warn Locations Module</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets - Warn Locations Module');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 	<META HTTP-EQUIV="Expires" CONTENT="0" />
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"/>
+	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
 <?php
 $api_key = trim(get_variable('gmaps_api_key'));
 $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
@@ -169,7 +169,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			return lat2ddm(inlat);
 		 	break;
 		default:
-			alert ("invalid LL format selector");
+			alert ("<?php print gettext('invalid LL format selector');?>");
 			}
 		}
 
@@ -185,7 +185,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			return lng2ddm(inlng);
 		 	break;
 		default:
-			alert ("invalid LL format selector");
+			alert ("<?php print gettext('invalid LL format selector');?>");
 			}
 		}
 
@@ -236,11 +236,11 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			}
 
 		var errmsg="";
-		if (theForm.frm_name.value.trim()=="")											{errmsg+="Location NAME is required.\n";}
-		if (theForm.frm_descr.value.trim()=="")											{errmsg+="Location DESCRIPTION is required.\n";}
+		if (theForm.frm_name.value.trim()=="")											{errmsg+="<?php print gettext('Location NAME is required.');?>\n";}
+		if (theForm.frm_descr.value.trim()=="")											{errmsg+="<?php print gettext('Location DESCRIPTION is required.');?>\n";}
 		
 		if (errmsg!="") {
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {														// good to go!
@@ -262,8 +262,8 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 		for (var i=0 ; i < words.length ; i++){ 
 			var testwd = words[i]; 
 			var firLet = testwd.substr(0,1); 
-			var rest = testwd.substr(1, testwd.length -1) 
-			words[i] = firLet.toUpperCase() + rest 
+			var rest = testwd.substr(1, testwd.length -1); 
+			words[i] = firLet.toUpperCase() + rest; 
 	  	 	} 
 		return( words.join(" ")); 
 		} 
@@ -353,7 +353,7 @@ function list_locations($addon = '', $start) {
 
 	$query = "SELECT `id` FROM `$GLOBALS[mysql_prefix]warnings`";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
-	$locations = mysql_affected_rows()>0 ?  mysql_affected_rows(): "<I>none</I>";
+	$locations = mysql_affected_rows()>0 ?  mysql_affected_rows(): "<I>" . gettext('none') . "</I>";
 	unset($result);
 
 ?>
@@ -369,9 +369,9 @@ function list_locations($addon = '', $start) {
 		if (div_area == "locs_list_sh") {
 			var controlarea = "locs_list";
 			}
-		var divarea = div_area 
-		var hide_cont = hide_cont 
-		var show_cont = show_cont 
+		var divarea = div_area; 
+		var hide_cont = hide_cont; 
+		var show_cont = show_cont; 
 		if($(divarea)) {
 			$(divarea).style.display = 'none';
 			$(hide_cont).style.display = 'none';
@@ -389,9 +389,9 @@ function list_locations($addon = '', $start) {
 		if (div_area == "locs_list_sh") {
 			var controlarea = "locs_list";
 			}
-		var divarea = div_area
-		var hide_cont = hide_cont 
-		var show_cont = show_cont 
+		var divarea = div_area;
+		var hide_cont = hide_cont; 
+		var show_cont = show_cont; 
 		if($(divarea)) {
 			$(divarea).style.display = '';
 			$(hide_cont).style.display = '';
@@ -435,10 +435,10 @@ function list_locations($addon = '', $start) {
 		}
 
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 
 	function createXMLHTTPObject() {
@@ -505,7 +505,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 ?>
 	var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_locations' WIDTH='100%'>";
-	side_bar_html += "<TR class='even'>	<TD WIDTH='5%'><B>ID</B></TD><TD WIDTH='30%' ALIGN='left'><B>Name</B></TD>";
+	side_bar_html += "<TR class='even'>	<TD WIDTH='5%'><B>ID</B></TD><TD WIDTH='30%' ALIGN='left'><B><?php print gettext('Name');?></B></TD>";
 	side_bar_html += "<TD WIDTH='40%' ALIGN='left'><B><?php print get_text("Street"); ?></B></TD><TD WIDTH='25%' ALIGN='left'><B><?php print get_text("As of"); ?></B></TD></TR>";
 	var i = <?php print $start; ?>;					// sidebar/icon index
 
@@ -530,8 +530,8 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			}
 		else {
 			$toedit = "&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='{$_SESSION['warnlocationsfile']}?func=location&edit=true&id=" . $row['id'] . "'><U>Edit</U></A>" ;
-			$tomail = "&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = 'do_mail_in_win({$row['id']})'><U><B>Email</B></U></SPAN>" ;
-			$toroute = "&nbsp;<A HREF='{$_SESSION['facroutesfile']}?loc_id=" . $row['id'] . "'><U>Route To Facility</U></A>";	
+			$tomail = "&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = 'do_mail_in_win({$row['id']});'><U><B>" . gettext('Email') . "</B></U></SPAN>" ;
+			$toroute = "&nbsp;<A HREF='{$_SESSION['facroutesfile']}?loc_id=" . $row['id'] . "'><U>" . gettext('Route To Facility') . "</U></A>";	
 			}		
 
 		if (!($got_point) && ((my_is_float($row['lat'])))) {
@@ -588,8 +588,8 @@ var buttons_html = "";
 		require_once('./incs/links.inc.php');	// 10/6/09
 		print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:50px; height: 12px; width: 10px;' onclick = 'to_bottom()'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
 		print "<FORM NAME='fin_form' METHOD='get' ACTION='" . basename(__FILE__) . "'>";
-		print "<INPUT TYPE='hidden' NAME='caption' VALUE='" . $caption . "'>";
-		print "<INPUT TYPE='hidden' NAME='func' VALUE='location'>";
+		print "<INPUT TYPE='hidden' NAME='caption' VALUE='" . $caption . "'/>";
+		print "<INPUT TYPE='hidden' NAME='func' VALUE='location'/>";
 		print "</FORM>\n<A NAME='bottom' />\n</BODY></HTML>";
 		}
 
@@ -688,24 +688,24 @@ var buttons_html = "";
 <?php
 		require_once('./incs/links.inc.php');
 ?>		
-		<DIV ID='to_bottom' style='position:fixed; top:2px; left:50px; height: 12px; width: 10px;' onclick = 'to_bottom()'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>
+		<DIV ID='to_bottom' style='position:fixed; top:2px; left:50px; height: 12px; width: 10px;' onclick = 'to_bottom();'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>
 		<TABLE BORDER=0 ID='outer' WIDTH='80%'><TR><TD WIDTH='100%'>
 		<TABLE BORDER="0" ID='addform' WIDTH='98%'>
 		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'><?php print get_text("Add Warn Location"); ?></FONT></FONT><BR /><BR />
-		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>		
+		<FONT SIZE=-1>(<?php print gettext('mouseover caption for help information');?>)</FONT></FONT><BR /><BR /></TD></TR>		
 		<FORM NAME= "loc_add_form" METHOD="POST" ACTION="<?php print basename(__FILE__);?>?func=location&goadd=true">
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Location Name - fill in with Name of the Location"><?php print get_text("Name"); ?></A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Location Name - fill in with Name of the Location');?>"><?php print get_text("Name"); ?></A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
 			<TD COLSPAN=3 ><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="" /></TD>
 		</TR>
 		<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>			
-		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Street Address - type in street address in fields or click location on map "><?php print get_text("Street"); ?></A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="" MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.loc_add_form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
-		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print get_variable('def_city'); ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2></TEXTAREA></TD></TR>
-		<TR CLASS='even'><TD COLSPAN=4 ALIGN='center'><font color='red' size='-1'>*</FONT> Required</TD></TR>
+		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Street Address - type in street address in fields or click location on map');?>"><?php print get_text("Street"); ?></A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="" MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('City - defaults to default city set in configuration. Type in City if required');?>"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.loc_add_form);"><img src="./markers/glasses.png" alt="<?php print gettext('Lookup location.');?>" /></button></TD> <!-- 7/5/10 -->
+		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print get_variable('def_city'); ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value);"> <!-- 7/5/10 -->
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="<?php print gettext('State - US State or non-US Country code e.g. UK for United Kingdom');?>"><?php print gettext('St');?></A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Facility Description - additional details about unit');?>"><?php print gettext('Description');?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2></TEXTAREA></TD></TR>
+		<TR CLASS='even'><TD COLSPAN=4 ALIGN='center'><font color='red' size='-1'>*</FONT> <?php print gettext('Required');?></TD></TR>
 		<TR CLASS = "odd"><TD COLSPAN='2' ALIGN='center'>
-			<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();" STYLE = 'margin-left: 50px' >
+			<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();" STYLE = 'margin-left: 50px' />
 			<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick = "do_add_reset(this.form);" STYLE = 'margin-left: 20px' />
 			<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>"  onClick="validate(document.loc_add_form);"  STYLE = 'margin-left: 20px' /></TD></TR>
 		<INPUT TYPE='hidden' NAME = 'frm_lat' VALUE=''/>

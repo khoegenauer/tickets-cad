@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package delfile.php
+ * @since version
+ * @version string
+ * 
+ * @author John Doe <john.doe@example.com>
+ */
 // $failed = "failed";
 // if(empty($_GET)) {
 	// print $failed;

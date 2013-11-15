@@ -1,8 +1,11 @@
 <?php
-/*
-del_messages.php - puts all current messages into the wastebasket - the del_all function.
-10/23/12 - new file
-*/
+/**
+ * @package del_messages.php 
+ * puts all current messages into the wastebasket - the del_all function.
+ * @since 10/23/12
+ * @version 10/23/12
+ * @author John Doe <john.doe@example.com>
+ */
 require_once('../incs/functions.inc.php');
 
 $query = "SELECT * FROM `$GLOBALS[mysql_prefix]messages`";

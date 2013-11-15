@@ -88,10 +88,10 @@ function directory_empty($path) {
 		var btm_rt_lat = document.map_tiles_form.br_lat.value;
 		var btm_rt_lon = document.map_tiles_form.br_lon.value;	
 		for (var zoom = zoom_top; zoom<=zoom_btm;  zoom++) {
-			var temp = calc_tile_name (zoom, top_left_lat, top_left_lon) ;		// get tile names for each zoom level
+			var temp = calc_tile_name (zoom, top_left_lat, top_left_lon);		// get tile names for each zoom level
 			var col_first = temp[0];
 			var row_first = temp[1];
-			var temp2 = calc_tile_name (zoom, btm_rt_lat, btm_rt_lon) ;
+			var temp2 = calc_tile_name (zoom, btm_rt_lat, btm_rt_lon);
 			col_last = temp2[0];
 			row_last = temp2[1];
 			for (var col = col_first; col<col_last;  col++) {	
@@ -227,10 +227,10 @@ function directory_empty($path) {
 		}
 
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 
 	function createXMLHTTPObject() {
@@ -260,7 +260,7 @@ function directory_empty($path) {
 			return AJAX.responseText;																				 
 			} 
 		else {
-			alert ("201: failed")
+			alert ("201: failed");
 			return false;
 			}																						 
 		}		// end function sync Ajax()		
@@ -345,7 +345,7 @@ if((!directory_empty($local)) && (!isset($_GET['getgo']))) {
 		function initialise() {
 			map = L.map('map_canvas').setView([<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>], 1);
 			L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>[…]',
+			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery ï¿½ <a href="http://cloudmade.com">CloudMade</a>[ï¿½]',
 			maxZoom: 18
 			}).addTo(map);
 			}
@@ -362,7 +362,6 @@ if((!directory_empty($local)) && (!isset($_GET['getgo']))) {
 <FORM NAME='to_config_Form' METHOD="post" ACTION = "config.php"></FORM>	
 <FORM NAME='reset_Form' METHOD="post" ACTION = "get_tiles.php"></FORM>
 <FORM NAME='go_Form' METHOD="post" ACTION = "get_tiles.php?getgo=yes"></FORM>	
-<SCRIPT>
 
 </BODY>
 </HTML>

@@ -237,7 +237,7 @@ function new_line3() {
 	the_text +=	"</DIV>";
 	div3.innerHTML = the_text;
 	document.getElementById('formline3').appendChild(div3);
-	jscolor.init()	
+	jscolor.init();	
 	}
 /**
  * 
@@ -278,29 +278,29 @@ function page_changer(divid) {
 		}
 	switch(theID) {
 		case "country_sel":
-			the_help = "<?php print $help1;?>"
+			the_help = "<?php print $help1;?>";
 			break
 		case "state_sel":
-			the_help = "<?php print $help2;?>"
+			the_help = "<?php print $help2;?>";
 			break
 		case "titles":
-			the_help = "<?php print $help3;?>"
+			the_help = "<?php print $help3;?>";
 			break
 		case "inc_types":
-			the_help = "<?php print $help4;?>"
+			the_help = "<?php print $help4;?>";
 			break
 		case "responders":
-			the_help = "<?php print $help5;?>"
+			the_help = "<?php print $help5;?>";
 			break
 		case "resp_types":
-			the_help = "<?php print $help6;?>"
+			the_help = "<?php print $help6;?>";
 			break	
 		case "resp_stats":
-			the_help = "<?php print $help7;?>"
+			the_help = "<?php print $help7;?>";
 			break	
 		}	
 	if($('help_inner')) {
-		$('help_inner').innerHTML = the_help
+		$('help_inner').innerHTML = the_help;
 		}
 	if($('country_sel')) {$('country_sel').style.display = 'none';}
 	if($('state_sel')) {$('state_sel').style.display = 'none';}
@@ -672,7 +672,7 @@ elseif((!empty($_POST)) && (isset($_POST['country']))) {
 							<OPTION value='-12.1667,44.2500,Comoros,KM,2'><?php print gettext('Comoros');?></OPTION>
 							<OPTION value='-16.0833,-161.5833,Cook Islands,CK,2'><?php print gettext('Cook Islands');?></OPTION> 
 							<OPTION value='10.0000,-84.0000,Costa Rica,CR,2'><?php print gettext('Costa Rica');?></OPTION> 
-							<OPTION value="8.0000,-5.0000,Cote d'Ivoire,CI,2"><?php print gettext('Cote d'Ivoire');?></OPTION> 
+							<OPTION value="8.0000,-5.0000,Cote d'Ivoire,CI,2"><?php print gettext('Cote d\'Ivoire');?></OPTION> 
 							<OPTION value='45.1667,15.5000,Croatia,HR,2'><?php print gettext('Croatia');?></OPTION>
 							<OPTION value='22.0000,-79.5000,Cuba,CU,2'><?php print gettext('Cuba');?></OPTION>
 							<OPTION value='12.1667,-69.0000,Curaçao,CW,2'><?php print gettext('Curaçao');?></OPTION>

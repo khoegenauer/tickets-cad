@@ -48,19 +48,21 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 
 </SCRIPT>
 
-</HEAD><BODY onLoad = "ck_frames()">
+</HEAD><BODY onLoad = "ck_frames();">
 <FONT CLASS="header"><?php print gettext('Tickets Help');?></FONT><BR /><BR />
-<LI> <A HREF="help.php?q=tickets"><?php print gettext('Background');?></A>
-<LI> <A HREF="help.php?q=tickets"><?php print $patient . gettext('Actions, and') . $patient . gettext('Data');?></A>
-<LI> <A HREF="help.php?q=config"><?php print gettext('Configuration');?></A>
-<LI> <A HREF="help.php?q=notify"><?php print gettext('Notifies');?></A>
-<LI> <A HREF="help.php?q=develop"><?php print gettext('Developer Notes');?></A>
-<LI> <A HREF="help.php?q=changelog"><?php print gettext('ChangeLog');?></A>
-<LI> <A HREF="help.php?q=install"><?php print gettext('Installing/Upgrading');?></A>
-<LI> <A HREF="help.php?q=readme"><?php print gettext('ReadMe');?></A>
-<LI> <A HREF="help.php?q=todo"><?php print gettext('ToDo');?></A>
-<LI> <A HREF="help.php?q=licensing"><?php print gettext('Licensing');?></A>
-<LI> <A HREF="help.php?q=credits"><?php print gettext('Credits');?></A>
+<UL>
+<LI> <A HREF="help.php?q=tickets"><?php print gettext('Background');?></A></LI>
+<LI> <A HREF="help.php?q=tickets"><?php print $patient . gettext('Actions, and') . $patient . gettext('Data');?></A></LI>
+<LI> <A HREF="help.php?q=config"><?php print gettext('Configuration');?></A></LI>
+<LI> <A HREF="help.php?q=notify"><?php print gettext('Notifies');?></A></LI>
+<LI> <A HREF="help.php?q=develop"><?php print gettext('Developer Notes');?></A></LI>
+<LI> <A HREF="help.php?q=changelog"><?php print gettext('ChangeLog');?></A></LI>
+<LI> <A HREF="help.php?q=install"><?php print gettext('Installing/Upgrading');?></A></LI>
+<LI> <A HREF="help.php?q=readme"><?php print gettext('ReadMe');?></A></LI>
+<LI> <A HREF="help.php?q=todo"><?php print gettext('ToDo');?></A></LI>
+<LI> <A HREF="help.php?q=licensing"><?php print gettext('Licensing');?></A></LI>
+<LI> <A HREF="help.php?q=credits"><?php print gettext('Credits');?></A></LI>
+</UL>
 <BR /><BR />
 <?php
 	if ((array_key_exists('q', ($_GET))) && ($_GET['q']== 'tickets')) {

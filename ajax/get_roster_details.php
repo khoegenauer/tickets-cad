@@ -1,8 +1,12 @@
 <?php
-/*
-9/10/13 - New file, lists personnel for Roster user functionality
-*/
-*/
+/**
+ * @package get_roster_details.php
+ * Lists personnel for Roster user functionality
+ * @since 09/10/13
+ * @version 09/10/13
+ * @author John Doe <john.doe@example.com> 
+ */
+
 @session_start();
 require_once('../incs/functions.inc.php');
 

@@ -1,8 +1,10 @@
 <?php
-/*
-empty_wastebasket.php - empties messages wastebasket table - uses truncate to reset id to 0.
-10/23/12 - new file
-*/
+/**
+ * @package empty_wastebasket.php 
+ * Empties messages wastebasket table - uses truncate to reset id to 0.
+ * @since 10/23/12
+ * @version 10/23/12
+ */
 require_once('../incs/functions.inc.php');
 
 $query = "TRUNCATE TABLE `$GLOBALS[mysql_prefix]messages_bin`";

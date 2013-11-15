@@ -14,7 +14,7 @@ $id = 0;			// now look for updates
 do 		{ sleep (5);} 						// loop waiting for login
 while 	( ! ( array_key_exists ( 'SP', $_SESSION ) ) );
 
-sendMsg($id , "Hello world") 
+sendMsg($id , "Hello world"); 
 
 // now get latest values
 
@@ -38,7 +38,13 @@ if (mysql_num_rows($result_max)==1)  {
 		}
 else {$_SESSION['SP']['last_dispatch'] = 0;}		
 
-
+/**
+ * sendMsg
+ * Insert Description
+ * 
+ * @param type $id
+ * @param type $msg
+ */
 function sendMsg($id, $msg) {
 	echo "id: $id" . PHP_EOL;
 	echo "data: $msg" . PHP_EOL;

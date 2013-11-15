@@ -97,7 +97,7 @@ function get_user_name($the_id) {
 if(empty($_POST)) {	//	Upload a file for import
 ?>
 	<BODY>
-		<DIV id='banner' class='heading' style='font-size: 20px; position: absolute: top: 5%; width: 95%; border: 1px outset #000000; text-align: center;'><?php print gettext('Upload requests as a csv file');?>
+		<DIV id='banner' class='heading' style='font-size: 20px; position: absolute; top: 5%; width: 95%; border: 1px outset #000000; text-align: center;'><?php print gettext('Upload requests as a csv file');?>
 			<SPAN ID='close_but' CLASS='plain' style='float: right;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.close();"><?php print gettext('Close');?></SPAN>
 		</DIV><BR /><BR />
 		<DIV id='outer' style='position: relative; top: 1%; left: 1%; width: 95%; text-align: center; margin: 10px;'>
@@ -282,10 +282,10 @@ if(empty($_POST)) {	//	Upload a file for import
 ?>
 	<BODY>
 	<CENTER>
-	<DIV id='banner' class='heading' style='font-size: 20px; position: absolute: top: 5%; width: 95%; border: 1px outset #000000; text-align: center;'><?php print gettext('Upload requests as a csv file');?></DIV><BR /><BR />
+	<DIV id='banner' class='heading' style='font-size: 20px; position: absolute; top: 5%; width: 95%; border: 1px outset #000000; text-align: center;'><?php print gettext('Upload requests as a csv file');?></DIV><BR /><BR />
 	<DIV id='outer' style='position: relative; top: 1%; left: 1%; width: 95%; text-align: center; margin: 10px;'>	
-		<DIV style='position: relative; top 0%; width: 80%; height: auto; text-align: center; background-color: #DEDEDE; color: #000000; font-weight: bold; border: 2px outset #FFFFFF; padding: 20px;'>
-			<DIV><?php print gettext('Number of rows in original file is');?> <?php print $row;?>&nbsp;&nbsp;&nbsp;<?php print gettext('Number of columns in original file is {$num}';?></DIV>
+		<DIV style='position: relative; top: 0%; width: 80%; height: auto; text-align: center; background-color: #DEDEDE; color: #000000; font-weight: bold; border: 2px outset #FFFFFF; padding: 20px;'>
+			<DIV><?php print gettext('Number of rows in original file is');?> <?php print $row;?>&nbsp;&nbsp;&nbsp;<?php print gettext('Number of columns in original file is {$num}');?></DIV>
 			<DIV><B><?php print gettext('Columns from original file are');?></B></DIV><BR />
 			<DIV style='text-align: center; font-size: 0.9em; padding: 5px; max-height: 50px; overflow-y: scroll;'>
 <?php

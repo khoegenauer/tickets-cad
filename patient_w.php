@@ -80,13 +80,13 @@ $facilitycontact = 	get_text("Facility contact");
  */  
 	function ck_window() {		//
 		window.resizeTo(<?php echo "{$w}, {$h}";?>);
-		if (window.opener == null) { alert ("<?php print __LINE__;?>")}
+		if (window.opener == null) { alert("<?php print __LINE__;?>");}
 		}		// end function ck_window()
 	
 	if(document.all && !document.getElementById) {		// accomodate IE							
 		document.getElementById = function(id) {							
 			return document.all[id];							
-			}							
+			};						
 		}				
 
 	try {
@@ -204,7 +204,7 @@ $facilitycontact = 	get_text("Facility contact");
  * @returns {undefined}
  */
 	function do_unlock(theForm) {									// 8/10/08
-		do_asof(theForm, false)
+		do_asof(theForm, false);
 		document.getElementById("lock").style.visibility = "hidden";		
 		}
 /**
@@ -213,7 +213,7 @@ $facilitycontact = 	get_text("Facility contact");
  * @returns {undefined}
  */		
 	function do_lock(theForm) {										// 8/10/08
-		do_asof(theForm, true)
+		do_asof(theForm, true);
 		document.getElementById("lock").style.visibility = "visible";
 		}
 /**
@@ -254,7 +254,7 @@ $facilitycontact = 	get_text("Facility contact");
 		if ($_GET['ticket_id'] == '' OR $_GET['ticket_id'] <= 0 OR !check_for_rows("SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE id='$_GET[ticket_id]' LIMIT 1"))
 			print "<FONT CLASS='warn'>" . gettext('Invalid Ticket ID') . ": '$_GET[ticket_id]'</FONT>";
 		elseif ($_POST['frm_description'] == '')
-			print '<FONT CLASS="warn">" . gettext('Please enter Description.') . "</FONT><BR />';
+			print '<FONT CLASS="warn">' . gettext('Please enter Description.') . '</FONT><BR />';
 		else {
 			$_POST['frm_description'] = strip_html($_POST['frm_description']); 				//fix formatting, custom tags etc.
 
@@ -678,9 +678,9 @@ document.list_form.submit();
 			</TD></TR>
 		<TR CLASS='odd' VALIGN='bottom'><TD CLASS="td_label">As of: &nbsp;&nbsp;</TD><TD><?php print generate_date_dropdown('asof',0,TRUE);?>&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.patientAdd);'></TD></TR>
 
-		<TR CLASS='odd'><TD></TD><TD><BR /><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="do_cancel();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>" onClick = 'do_asof(theForm, false) reset();do_asof(theForm, true); reset(); '>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>" onclick = "validate(this.form);"></TD></TR>
+		<TR CLASS='odd'><TD></TD><TD><BR /><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="do_cancel();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>" onClick = 'do_asof(theForm, false); reset(); do_asof(theForm, true); reset(); '/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>" onclick = "validate(this.form);"/></TD></TR>
 		</TABLE><BR />
 			<INPUT TYPE = 'hidden' NAME = 'frm_ins_id' VALUE = 0 />
 			<INPUT TYPE = 'hidden' NAME = 'frm_gender_val' VALUE = 0 />

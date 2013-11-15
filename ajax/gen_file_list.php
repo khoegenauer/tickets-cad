@@ -1,7 +1,11 @@
 <?php
-/*
-9/10/13 - new file, lists stored files allocated to General Tickets use
-*/
+/**
+ * @package gen_file_list.php
+ * lists stored files allocated to General Tickets use
+ * @since 09/10/13
+ * @version 09/10/13
+ * @author John Doe <john.doe@example.com> 
+ */
 @session_start();
 require_once('../incs/functions.inc.php');
 

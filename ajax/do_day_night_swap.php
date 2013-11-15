@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package do_day_night_swap.php
+ * 
+ * @since version
+ * @version string
+ * @author John Doe <john.doe@example.com>
+ */
 /*
 5/4/11 initial release
 */

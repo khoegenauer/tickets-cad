@@ -678,7 +678,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 			
 		<TR CLASS='odd'>
 			<TD CLASS="td_label"><?php print gettext('Facility');?>:</TD><TD COLSPAN='2' class='td_label'>
-				<SELECT NAME="frm_facility_id"  tabindex=11 onChange="this.options[selectedIndex].value.trim())"><?php print $pulldown; ?></SELECT>&nbsp;&nbsp;&nbsp;
+				<SELECT NAME="frm_facility_id"  tabindex=11 onChange="this.options[selectedIndex].value.trim();"><?php print $pulldown; ?></SELECT>&nbsp;&nbsp;&nbsp;
 			<?php echo $facilitycontact;?>:&nbsp;&nbsp;<INPUT TYPE = 'text' NAME = 'frm_fac_cont' VALUE='' SIZE = '32' /></TD></TR>
 <?php
 		}		// end 	if($num_rows>0) 

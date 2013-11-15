@@ -469,12 +469,8 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		newwindow_sl.focus();
 		starting = false;
 		}		// end function sv win()
-/**
- * 
- * @param {type} theForm
- * @returns {undefined}
- */
-	function do_usng() {														// 5/2/09
+
+ function do_usng() {														// 5/2/09
 		alert(279);
 		if (document.edit.frm_ngs.value.trim().length>6) {do_usng_conv();}
 		}
@@ -492,7 +488,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		do_lat (point.lat());
 		do_lng (point.lng());
 		do_grids(document.edit);
-		pt_to_map (document.edit, point.lat(), point.lng())
+		pt_to_map (document.edit, point.lat(), point.lng());
 		}				// end function
 		
 /**
@@ -517,7 +513,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		var d = new Number(inval);
 		d  = (inval>0)?  Math.floor(d):Math.round(d);
 		var mi = (inval-d)*60;
-		var m = Math.floor(mi)				// min's
+		var m = Math.floor(mi);				// min's
 		var si = (mi-m)*60;
 		var s = si.toFixed(1);
 		return d + '\260 ' + Math.abs(m) +"' " + Math.abs(s) + '"';
@@ -658,7 +654,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		var curr_lng = fac_lng[index];
 		do_lat(curr_lat);
 		do_lng(curr_lng);
-		pt_to_map (document.edit, curr_lat, curr_lng)
+		pt_to_map (document.edit, curr_lat, curr_lng);
 		find_warnings(curr_lat, curr_lng);	//	9/10/13
 		}					// end function do_fac_to_loc
 
@@ -1036,7 +1032,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 
 			print "<TR CLASS='even'>
 				<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_phone']}');\">" . get_text("Phone") . ":</TD>";
-			print 		"<TD><button type='button'  onClick='Javascript:phone_lkup(document.edit.frm_phone.value);'><img src='./markers/glasses.png' alt='" . gettext('Lookup phone number') , "' /></button>";	// 1/19/09
+			print 		"<TD><button type='button'  onClick='Javascript:phone_lkup(document.edit.frm_phone.value);'><img src='./markers/glasses.png' alt='" . gettext('Lookup phone number') . "' /></button>";	// 1/19/09
 			print 		"</TD><TD><INPUT SIZE='48' TYPE='text' NAME='frm_phone' VALUE='" . $row['phone'] . "' MAXLENGTH='16' {$dis}></TD></TR>\n";
 
 			if (!(empty($row['phone']))) {					// 3/13/10
@@ -1716,12 +1712,12 @@ if (!$disallow) {
 
 	var the_form;
 /**
- * 
+ * @param {type} my_form 
  * @param {type} url
  * @param {type} callback
  * @param {type} postData
  * @returns {unresolved}
- */  
+ */
 	function sendRequest(my_form, url,callback,postData) {		// ajax function set - 1/17/09
 		the_form = my_form;
 		var req = createXMLHTTPObject();
@@ -1804,7 +1800,7 @@ if (!$disallow) {
 		if (goodno.length<10) {
 			alert("<?php print gettext('10-digit phone no. required - any format');?>");
 			return;}
-		var params = "phone=" + URLEncode(goodno)
+		var params = "phone=" + URLEncode(goodno);
 		sendRequest (document.edit, 'wp_lkup.php',handleResult, params);		//1/17/09
 		}
 		
@@ -1897,10 +1893,10 @@ if (!$disallow) {
 		}
 
 	var doXMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 
 	function docreateXMLHTTPObject() {
@@ -2052,7 +2048,7 @@ if (!$disallow) {
 //			 		 ($to_str, $text, $ticket_id, $text_sel=1;, $txt_only = FALSE)
 // 12/10/2012
 //		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId ;		// ($to_str, $text, $ticket_id)   10/15/08
-		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId + "&text_sel=1" ;		// ($to_str, $text, $ticket_id)   10/15/08
+		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId + "&text_sel=1";		// ($to_str, $text, $ticket_id)   10/15/08
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 		}			// end function do notify()
 /**
@@ -2095,10 +2091,10 @@ if (!$disallow) {
  * @type Array|Array|Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 

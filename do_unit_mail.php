@@ -284,10 +284,10 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
  * @type Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -348,7 +348,7 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 				<TR CLASS='odd'><TH COLSPAN=2><?php print gettext('Mail to');?>: <?php print $row['name']; ?></TH></TR> <!-- 7/2/10 -->
 				
 				<FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
-				<INPUT TYPE='hidden' NAME='frm_step' VALUE='3'>	
+				<INPUT TYPE='hidden' NAME='frm_step' VALUE='3'/>	
 				<TR VALIGN = 'TOP' CLASS='even'><TD ALIGN='right'  CLASS="td_label">To');?>: </TD>
 					<TD><INPUT TYPE='text' NAME='frm_add_str' VALUE='<?php print $row['contact_via']; ?>' SIZE = 36></TD></TR>	
 			
@@ -392,9 +392,9 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 				</TR>
 				<TR VALIGN = 'TOP' CLASS='even'>
 					<TD ALIGN='center' COLSPAN=2><BR /><BR />
-						<INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
-						<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'>&nbsp;&nbsp;&nbsp;&nbsp;
-						<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
+						<INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+						<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'/>&nbsp;&nbsp;&nbsp;&nbsp;
+						<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/><BR /><BR />
 					</TD>
 				</TR>
 				<TR><TD>&nbsp;</TD></TR>	
@@ -403,8 +403,8 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 ?>				
 					<TR>
 						<TD ALIGN='left' COLSPAN=2>
-							<input type="radio" name="use_smsg" VALUE="0" checked> <?php print gettext('Use Email');?><br>	<!-- 10/23/12 -->
-							<input type="radio" name="use_smsg" VALUE="1"> <?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?<br>	<!-- 10/23/12 -->
+							<input type="radio" name="use_smsg" VALUE="0" checked/> <?php print gettext('Use Email');?><br>	<!-- 10/23/12 -->
+							<input type="radio" name="use_smsg" VALUE="1"/> <?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?<br>	<!-- 10/23/12 -->
 						</TD>
 					</TR>
 <?php
@@ -467,8 +467,8 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 ?>
 	</SELECT></FORM></P>
 	<BR /><BR />
-	<INPUT TYPE='button' VALUE='<?php print gettext('Next');?>' onClick = "do_step_1()">&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'>
+	<INPUT TYPE='button' VALUE='<?php print gettext('Next');?>' onClick = "do_step_1();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/>
 	</CENTER>
 	
 <?php
@@ -552,8 +552,8 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 ?>
 			<TR><TD COLSPAN=99 ALIGN='center'>
 
-			<SPAN ID='clr_spn' STYLE = 'display:none' onClick = 'do_clear()'>&raquo; <U><?php print gettext('Un-check all');?></U></SPAN>
-			<SPAN ID='chk_spn' STYLE = 'display:block'  onClick = 'do_check()'>&raquo; <U><?php print gettext('Check all');?></U></SPAN>
+			<SPAN ID='clr_spn' STYLE = 'display:none' onClick = 'do_clear();'>&raquo; <U><?php print gettext('Un-check all');?></U></SPAN>
+			<SPAN ID='chk_spn' STYLE = 'display:block'  onClick = 'do_check();'>&raquo; <U><?php print gettext('Check all');?></U></SPAN>
 			</TD></TR>
 <?php
 		}
@@ -561,8 +561,8 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 			<P>
 			
 			<FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
-			<INPUT TYPE='hidden' NAME='frm_step' VALUE='3'>	<!-- '3' = select units, '3' = send to selected units -->
-			<INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''>	<!-- for pipe-delim'd addr string -->
+			<INPUT TYPE='hidden' NAME='frm_step' VALUE='3'/>	<!-- '3' = select units, '3' = send to selected units -->
+			<INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''/>	<!-- for pipe-delim'd addr string -->
 
 <?php			
 				if($no_rows>0) {
@@ -689,9 +689,9 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 			$count = do_send ($address_str, $smsg_ids, $_POST['frm_subj'], $_POST['frm_text'], $tik_id, $_POST['frm_resp_ids']);	// ($to_str, $to_smsr, $subject_str, $text_str, $ticket_id, $responder_id )
 //			snap(__LINE__, $count);
 ?>
-<BODY scroll='auto' onLoad = "reSizeScr(2)"><CENTER>		<!-- 1/14/10 -->
-<CENTER><BR /><BR /><BR /><H3><?php print gettext("Messages sent" . ": " . $count;?></H3>
-<BR /><BR /><BR /><INPUT TYPE='button' VALUE='Finished' onClick = 'window.close();'><BR /><BR />
+<BODY scroll='auto' onLoad = "reSizeScr(2);"><CENTER>		<!-- 1/14/10 -->
+<CENTER><BR /><BR /><BR /><H3><?php print gettext("Messages sent") . ": " . $count;?></H3>
+<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext("Finished");?>' onClick = 'window.close();'><BR /><BR />
 
 <?php
 			break;

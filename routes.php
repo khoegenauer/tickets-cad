@@ -1289,7 +1289,7 @@ function toggle_div(theDiv, theButton, theText) {
 			<TR class='even'><TD><INPUT SIZE='48' TYPE='text' NAME='capabilities' VALUE='<?php print $capabilities;?>' MAXLENGTH='64'></TD></TR>	<!-- 3/15/11 -->
 			<INPUT TYPE='hidden' NAME='ticket_id' 	VALUE='<?php print get_ticket_id (); ?>' />
 			<INPUT TYPE='hidden' NAME='unit_id' 	VALUE='<?php print $unit_id; ?>' />
-			<TR class='odd'><TD align="center"><input type="button" OnClick="filterSubmit();" VALUE="<?php  print gettext('Filter');?>"/>&nbsp;&nbsp;<input type="button" OnClick="filterReset();" VALUE="<?pphp print gettext('Reset Filter');?>" <?php print $disabled;?>/></TD></TR>	<!-- 3/15/11 -->	
+			<TR class='odd'><TD align="center"><input type="button" OnClick="filterSubmit();" VALUE="<?php  print gettext('Filter');?>"/>&nbsp;&nbsp;<input type="button" OnClick="filterReset();" VALUE="<?php print gettext('Reset Filter');?>" <?php print $disabled;?>/></TD></TR>	<!-- 3/15/11 -->	
 			</FORM></TABLE></DIV></TD>
 		<?php }
 	?>
@@ -1422,11 +1422,11 @@ function toggle_div(theDiv, theButton, theText) {
 			print "<INPUT TYPE='hidden' NAME='frm_tick_id' VALUE='" . get_ticket_id() . "' />"; // 3/29/2013	
 			print "<INPUT TYPE='submit' value='" . gettext('Mail Directions') . "' ID = 'mail_dir_but' STYLE = 'visibility: hidden;' />";	//10/6/09
 			print "</FORM>";	
-			print "<INPUT TYPE='button' VALUE='" . gettext('Reset') . ' onClick = 'show_butts(to_hidden) ; doReset()' ID = 'reset_but' STYLE = 'visibility: hidden;'  />";
+			print "<INPUT TYPE='button' VALUE='" . gettext('Reset') . " onClick = 'show_butts(to_hidden); doReset();' ID = 'reset_but' STYLE = 'visibility: hidden;'  />";
 			print "</SPAN>";			
-			print "<INPUT TYPE='button' VALUE='" . gettext('Cancel') . '  onClick='history.back();'  ID = 'can_but'  STYLE = 'visibility: hidden;' />";
+			print "<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "  onClick='history.back();'  ID = 'can_but'  STYLE = 'visibility: hidden;' />";
 			if ($nr_units>0) {			
-				print "<BR /><INPUT TYPE='button' value='" . gettext('DISPATCH\nUNITS') . ' onClick = '" . $thefunc . "' ID = 'disp_but'  STYLE = 'visibility: hidden;' />\n";	// 6/14/09
+				print "<BR /><INPUT TYPE='button' value='" . gettext('DISPATCH\nUNITS') . " onClick = '" . $thefunc . "' ID = 'disp_but'  STYLE = 'visibility: hidden;' />\n";	// 6/14/09
 				}
 			print "<BR /><BR /><SPAN STYLE='display: 'inline-block' class='normal_text'><NOBR><H3><?php print gettext('to');?>:<BR /><I>{$addr}</I></H3></NOBR></SPAN>\n";
 ?>
@@ -1523,10 +1523,10 @@ function toggle_div(theDiv, theButton, theText) {
  * @type Array|Array|Array|Array|Array|Array|Array|Array|Array|Array|Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 

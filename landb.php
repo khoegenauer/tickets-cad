@@ -784,7 +784,7 @@ function buildMap_c() {															// 'create' version - 691
 <?php
 	print (array_key_exists("caption", $_POST))? "<H3>{$_POST['caption']}</H3>" : "";
 
-	$type_ary = array( '"p" =>"' . gettext('Polygon') . '",	"c" => "' gettext('Circle') . '", "t" => "' . gettext('Banner') . '", "k" => "' . gettext('kml') . '"');
+	$type_ary = array( '"p" =>"Polygon",	"c" => "Circle", "t" => "Banner", "k" => "kml"');
 	$capt_ary = array( '"p" =>"' . gettext('click map - drag icons') . '",	"c" => "' . gettext('Click map and enter form values') . '", "t" => "' . gettext('Click map and enter form values') . '",  "k" => "' . gettext('kml') . '"');
 	$line_ary = array( '"p" =>"' . gettext('Line') . '", "c" =>"' . gettext('Circle') . '", "t" =>"' . gettext('Banner') . '", "k" => "' . gettext('kml') . '"');
 
@@ -870,7 +870,7 @@ function buildMap_c() {															// 'create' version - 691
 			<INPUT TYPE='hidden' NAME = 'frm_use_with_f' VALUE='0' />
 			<INPUT TYPE='hidden' NAME = 'frm_use_with_u_ex' VALUE='0' />
 			<INPUT TYPE='hidden' NAME = 'frm_use_with_u_rf' VALUE='0' />
-			<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" STYLE = 'width:auto;'  onClick = "location.href='<?php echo basename(__FILE__);?>'"/>
+			<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" STYLE = 'width:auto;'  onClick = "location.href='<?php echo basename(__FILE__);?>';"/>
 			<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>"  STYLE = 'width:auto; margin-left:40px;' onClick = "do_un_checked();this.form.reset(); clearMap();buildMap_c();"/>
 			<INPUT TYPE="button" NAME="sub_but" VALUE="<?php print gettext('Next');?>" STYLE = 'width:120px; margin-left:40px;' onclick="this.disabled=true; JSfnCheckInput(this.form, this);"/> 			
 			</TD></TR>
@@ -1013,7 +1013,7 @@ function buildMap_c() {															// 'create' version - 691
 			zoomControl: true,
 			scaleControl: true,
 			mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
-			}	
+			};	
 
 		map = new google.maps.Map($('map_canvas'), mapOptions);				// 481
 		map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
@@ -1095,7 +1095,7 @@ function buildMap_c() {															// 'create' version - 691
 			draggableCursor:"auto",
 			draggingCursor:"move",			
 			mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
-			}	
+			};
 
 		map = new google.maps.Map($('map_canvas'), mapOptions);				// 705		
 							// Add dummy listener for the click event
@@ -1209,8 +1209,8 @@ else {
 							<SPAN STYLE = 'margin-left:10px'><?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_is_vis' <?php echo $visible_true;?> DISABLED /></SPAN>
 							<SPAN STYLE = 'margin-left:20px'><?php print gettext('No');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_not_vis' <?php echo $visible_false;?> DISABLED /></SPAN>
 			<?php			} else {?>		
-							<SPAN STYLE = 'margin-left:10px'><?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_is_vis' <?php echo $visible_true;?> onClick = "document.u.frm_line_not_vis.checked = false;document.u.frm_line_status.value=0" /></SPAN>
-							<SPAN STYLE = 'margin-left:20px'><?php print gettext('No');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_not_vis' <?php echo $visible_false;?> onClick = "document.u.frm_line_is_vis.checked = false;document.u.frm_line_status.value=1" /></SPAN>
+							<SPAN STYLE = 'margin-left:10px'><?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_is_vis' <?php echo $visible_true;?> onClick = "document.u.frm_line_not_vis.checked = false;document.u.frm_line_status.value=0;" /></SPAN>
+							<SPAN STYLE = 'margin-left:20px'><?php print gettext('No');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_not_vis' <?php echo $visible_false;?> onClick = "document.u.frm_line_is_vis.checked = false;document.u.frm_line_status.value=1;" /></SPAN>
 			<?php }?>	
 			</SPAN></TD></TR>
 
@@ -1283,9 +1283,9 @@ else {
 			<INPUT TYPE='hidden' NAME = 'frm_use_with_u_rf' VALUE='<?php print $row['use_with_u_rf'];?>' />			
 			<BR />
 <?php if (is_administrator() || is_super()) { ?>	
-			<INPUT TYPE="button" VALUE="<?php print gettext('Delete');?>" STYLE = 'width:auto;'  onClick = "do_delete(<?php echo $row['id'];?>)"/>
+			<INPUT TYPE="button" VALUE="<?php print gettext('Delete');?>" STYLE = 'width:auto;'  onClick = "do_delete(<?php echo $row['id'];?>);"/>
 <?php	} ?>			
-			&nbsp;&nbsp;<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" STYLE = 'width:auto;'  onClick = "location.href='<?php echo basename(__FILE__);?>'"/>
+			&nbsp;&nbsp;<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" STYLE = 'width:auto;'  onClick = "location.href='<?php echo basename(__FILE__);?>';"/>
 <?php
 		if ($_func == "r") {
 ?>

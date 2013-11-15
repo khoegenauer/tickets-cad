@@ -1,7 +1,10 @@
 <?php
-/*
-del_message.php - deletes single message - called from messages window.
-10/23/12 - new file
+/**
+ * @package del_message.php
+ * deletes single message - called from messages window.
+ * @since 10/23/12
+ * @version 10/23/12
+ * @author John Doe <john.doe@example.com>
 */
 require_once('../incs/functions.inc.php');
 

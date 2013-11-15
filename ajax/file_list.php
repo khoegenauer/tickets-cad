@@ -1,7 +1,11 @@
 <?php
-/*
-9/10/13 - new file, lists tickets that are assigned to the mobile user
-*/
+/**
+ * @package file_list.php
+ * Lists tickets that are assigned to the mobile user
+ * @since 09/10/13
+ * @version 09/10/13
+ * @author John Doe <john.doe@example.com>
+ */
 @session_start();
 require_once('../incs/functions.inc.php');
 function br2nl($input) {

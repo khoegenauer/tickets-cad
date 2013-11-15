@@ -218,7 +218,7 @@ function get_structure($structurefile) {
 function write_path($filepath, $tickets_dir) {
 	global $docRoot, $tickets_dir;
 	if (!$fp = fopen($tickets_dir.$filepath . '/path.inc.php', 'a')) {
-       	print '<LI> <FONT CLASS="warn">" . gettext('Cannot open path.inc.php for writing') . "</FONT>';
+       	print '<LI> <FONT CLASS="warn">' . gettext('Cannot open path.inc.php for writing') . '</FONT>';
 	} else {
 		ftruncate($fp,0);			
 		fwrite($fp, "<?php\n");

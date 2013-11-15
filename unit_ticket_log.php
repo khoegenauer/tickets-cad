@@ -29,16 +29,14 @@ if(!isset($_POST)) {
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<TITLE>Tickets Log Processing</TITLE>
-<META NAME="Author" CONTENT="">
-<META NAME="Keywords" CONTENT="">
-<META NAME="Description" CONTENT="Tickets Log Entry"">
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<TITLE><?php print gettext('Tickets Log Processing');?></TITLE>
+<META NAME="Description" CONTENT="Tickets Log Entry""/>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"/>
+<META HTTP-EQUIV="Expires" CONTENT="0"/>
+<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE"/>
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE"/>
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript"/>
+<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 <STYLE>
 .box { background-color: transparent; border: 0px solid #000000; color: #000000; padding: 0px; position: absolute; z-index:1000; }
 .bar { background-color: #DEE3E7; color: #000000; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; }
@@ -47,20 +45,30 @@ if(!isset($_POST)) {
 <SCRIPT SRC="./js/misc_function.js" type="text/javascript"></SCRIPT>
 
 <SCRIPT>
+/**
+ * 
+ * @returns {Boolean}
+ */
 function validate_del() {
 	if (document.del_form.frm_days_val.value==0) { 
-		alert("check days value");
+		alert("<?php print gettext('check days value');?>");
 		return false;
 		}
 	else {
 		return true;
 		}
 	}			// end function
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function get_new_colors() {								// 4/5/11
 	window.location.href = '<?php print basename(__FILE__);?>';
 	}
-
+/**
+ * 
+ * @returns {Array}
+ */
 function $() {															// 12/20/08
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -73,17 +81,30 @@ function $() {															// 12/20/08
 		}
 	return elements;
 	}
-	
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */	
 function CngClass(obj, the_class){
 	$(obj).className=the_class;
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_hover (the_id) {
 	CngClass(the_id, 'hover');
 	return true;
 	}
-	
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */	
 function do_plain (the_id) {				// 8/21/10
 	CngClass(the_id, 'plain');
 	return true;
@@ -96,9 +117,9 @@ function do_plain (the_id) {				// 8/21/10
 if (empty($_POST)) {
 	if (is_guest()) {
 ?>
-		<CENTER><BR /><BR /><BR /><BR /><BR /><H3>Guests not allowed Log access. </CENTER><BR /><BR />
+		<CENTER><BR /><BR /><BR /><BR /><BR /><H3><?php print gettext('Guests not allowed Log access.');?></H3></CENTER><BR /><BR />
 
-		<INPUT TYPE='button' value='Cancel' onClick = 'window.exit();'>
+    <INPUT TYPE='button' value='<?php print gettext('Cancel');?>' onClick = 'window.exit();'/>
 <?php
 		} 
 ?>
@@ -115,25 +136,25 @@ if (empty($_POST)) {
 		$theTag = "";
 		}
 ?>
-	<TR CLASS = 'even' ><TH COLSPAN=2><?php print $theTag;?> Log</TH></TR>
+	<TR CLASS = 'even' ><TH COLSPAN=2><?php print $theTag;?> <?php print gettext('Log');?></TH></TR>
 	<TR CLASS = 'odd'><TD>Log entry:</TD><TD><TEXTAREA NAME="frm_comment" COLS="70" ROWS="10" WRAP="virtual"></TEXTAREA></TD></TR>
 	<TR CLASS = 'even'><TD COLSPAN=2 ALIGN='center'>
-	<INPUT TYPE = 'button' VALUE='Submit' onClick="document.log_form.submit()" />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE = 'button' VALUE='Reset' onClick="document.log_form.reset()" />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE = 'button' VALUE='Cancel' onClick="window.close()" />
+	<INPUT TYPE = 'button' VALUE='<?php print gettext('Submit');?>' onClick="document.log_form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE = 'button' VALUE='<?php print gettext('Reset');?>' onClick="document.log_form.reset();" />&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE = 'button' VALUE='<?php print gettext('Cancel');?>' onClick="window.close();" />
 	</TD></TR>
 	</TABLE>
-	<INPUT TYPE='hidden' NAME='func' VALUE='add'>
-	<INPUT TYPE='hidden' NAME='responder' VALUE=<?php print $responder;?>>
-	<INPUT TYPE='hidden' NAME='ticket' VALUE=<?php print $ticket;?>>
+	<INPUT TYPE='hidden' NAME='func' VALUE='add'/>
+	<INPUT TYPE='hidden' NAME='responder' VALUE=<?php print $responder;?>/>
+	<INPUT TYPE='hidden' NAME='ticket' VALUE=<?php print $ticket;?>/>
 	</FORM>
 <?php 
 	} else {										// not empty
 	extract($_POST);
 	do_log($GLOBALS['LOG_COMMENT'], $ticket, $responder, strip_tags(trim($_POST['frm_comment'])));
 ?>
-	<DIV style='width: 100%; text-align: center;'><BR /><BR /><BR /><BR /><BR /><BR />Log entry inserted
-	<BR /><BR /><BR /><SPAN id='close_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.close()" />Close</SPAN>
+	<DIV style='width: 100%; text-align: center;'><BR /><BR /><BR /><BR /><BR /><BR /><?php print gettext('Log entry inserted');?>
+	<BR /><BR /><BR /><SPAN id='close_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.close();"><?php print gettext('Close');?></SPAN>
 	</DIV>
 <?php
 	} 

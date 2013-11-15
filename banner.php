@@ -1140,7 +1140,7 @@ switch ($_POST["_func"]) {
 			zoomControl: true,
 			scaleControl: true,
 			mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
-			}	
+			};	
 
 		map = new google.maps.Map($('map_canvas'), mapOptions);				// 481
 		map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
@@ -1195,7 +1195,7 @@ switch ($_POST["_func"]) {
 		google.maps.event.addListener(marker, "click", function() {		
 			for(var n = 0; n < markers.length; n++) {		// Find out which marker to remove
 				if(markers[n] == marker) {
-					markers[n].setMap(null)
+					markers[n].setMap(null);
 					break;
 					}
 				}

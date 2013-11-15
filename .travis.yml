@@ -129,7 +129,7 @@ script:
 #PHP-LOC (Works local, Pt 1 only)(<1min)
   - phploc ./ > ./DEV/build/PHPQATools/PHP-LOC/phploc-output.txt
 #  - phploc --log-csv ./DEV/build/PHPQATools/PHP-LOC/phploc-gitlog.csv --progress ./
-#PHPCallGraph (Failed Local)(0)
+#PHPCallGraph (Failed Local)(0) (Use Higher-Order-PHP Call Graph instead. Also convert dot to graphML.)
 #  - php ./DEV/tools/phpcallgraph-0.8.0/bin/phpcallgraph -f png -o ./DEV/build/PHP-CallGraph/callgraph.png -r -p ./
 #  - php ./DEV/tools/phpcallgraph-0.8.0/bin/phpcallgraph -r -f deadcode ./ > ./DEV/build/PHP-CallGraph/phpcallgraph-deadcode.txt
 #PHPCodeBrowser (Works local)(<1min)

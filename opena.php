@@ -16,12 +16,12 @@ $call = (empty($_GET))? "": $_GET['frm_call'];				// 10/1/08
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <HEAD><TITLE><?php print gettext('Tickets - Test APRS');?></TITLE>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"/>
+<META HTTP-EQUIV="Expires" CONTENT="0"/>
+<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE"/>
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE"/>
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript"/>
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 <STYLE>
 td { background-color: inherit; FONT-WEIGHT: normal; FONT-SIZE: x-small; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: Courier new, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; VERTICAL-ALIGN: top;  }
 
@@ -89,7 +89,7 @@ $the_key = trim(get_variable('aprs_fi_key'));
 ?>
 <FORM NAME = "aprs_form" METHOD="get" ACTION="<?php print basename(__FILE__); ?>">
 <B>aprs.fi key:&nbsp;&nbsp;</B><INPUT TYPE="text" NAME="frm_key" SIZE="30" VALUE="<?php print trim($the_key);?>" /><BR /><BR /><BR />
-<B>Callsign:&nbsp;&nbsp;</B> <INPUT TYPE="text" NAME="frm_call" SIZE="16" VALUE="" /><BR /><BR /><BR />
-<INPUT TYPE="button" VALUE = "<?php print gettext('Finished');?>" onClick = "self.close()">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-<INPUT TYPE="submit" VALUE='<?php print gettext('Do test');?>'> 
+<B><?php print gettext('Callsign');?>:&nbsp;&nbsp;</B> <INPUT TYPE="text" NAME="frm_call" SIZE="16" VALUE="" /><BR /><BR /><BR />
+<INPUT TYPE="button" VALUE = "<?php print gettext('Finished');?>" onClick = "self.close();"/>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<INPUT TYPE="submit" VALUE='<?php print gettext('Do test');?>'/> 
 </BODY></HTML>

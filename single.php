@@ -53,7 +53,8 @@ require_once($_SESSION['fmp']);		// 7/28/10, 8/10/10
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" /> <!-- 7/7/09 -->
-<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
+<LINK REL="StyleSheet" HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
+</HEAD>
 <BODY>
 <?php
 	$the_width = 600;
@@ -67,7 +68,7 @@ require_once($_SESSION['fmp']);		// 7/28/10, 8/10/10
 <BR /><CENTER>
 <INPUT TYPE = 'button' VALUE = '<?php print gettext('Finished');?>' onClick = 'self.close();' />
 <?php if (!(is_guest())) { ?>
-	<INPUT TYPE = 'button' STYLE = 'margin-left: 200px;' VALUE = '<?php print gettext('Edit');?>' onClick = 'window.opener.parent.frames["main"].location="edit.php?id=<?php print $_GET['ticket_id'];?>"' />
+	<INPUT TYPE = 'button' STYLE = 'margin-left: 200px;' VALUE = '<?php print gettext('Edit');?>' onClick = 'window.opener.parent.frames["main"].location="edit.php?id=<?php print $_GET['ticket_id'];?>";' />
 <?php } ?>
 </CENTER>
 </BODY></HTML>

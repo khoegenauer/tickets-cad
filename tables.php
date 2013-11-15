@@ -384,7 +384,7 @@ function fnDoCal($id) {
  */
 function fnCalButt ($id) {									// displays the calendar gif button
 	print "<img src='./markers/img.gif' id='ft$id' style='cursor: pointer; border: 1px solid red;' title='" . gettext('Date selector') . "'";
-    print " onmouseover=\"this.style.background='red';\" onmouseout=\"this.style.background=''\" />";
+    print " onmouseover=\"this.style.background='red';\" onmouseout=\"this.style.background='';\" />";
 	}
 
 $calstuff="";						// JS calendar string gets built here
@@ -423,9 +423,9 @@ unset ($result2);
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE"/>
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE"/>
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript"/>
-<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
+<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"/> <!-- 7/7/09 -->
 </HEAD>
-<!--  onFocus="LL_showinfo(1)" onBlur="LL_hideallinfo()" -->
+<!--  onFocus="LL_showinfo(1);" onBlur="LL_hideallinfo();" -->
 <STYLE>
 /* comment */
 A:hover 					{text-decoration: underline; color: red;}
@@ -560,7 +560,7 @@ if (($func == "c")||($func == "u")) {			// not required for all functions
 		var the_sm_image = icons_dir + sm_icons[the_index];
 //		alert(the_sm_image);
 		var the_title = icons[the_index].substr (0, icons[the_index].length-4).toUpperCase();	// extract color name
-		return "<IMG SRC='" + the_sm_image + "' onClick  = 'icon_to_form(" + the_index + ")' TITLE='" + the_title +"' />";
+		return "<IMG SRC='" + the_sm_image + "' onClick  = 'icon_to_form(" + the_index + ");' TITLE='" + the_title +"' />";
 		}
 <?php
 		if ($row) {
@@ -990,9 +990,9 @@ if (($func == "c")||($func == "u")) {			// Create and Update funcs only
  * @returns {unresolved}
  */
 function do_onload() {
-	if		(document.c){do_focus(document.c)}
-	else if (document.u){do_focus(document.u)}
-	else if (document.s){do_focus(document.s)}
+	if		(document.c){do_focus(document.c);}
+	else if (document.u){do_focus(document.u);}
+	else if (document.s){do_focus(document.s);}
 	return;
 	}
 /**
@@ -1017,9 +1017,9 @@ if(array_key_exists('srch_str', $_POST)) {		//	3/18/11
 	$search_str = "";
 	}
 ?>
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 
-<BODY onLoad = "do_onload()">	<!-- 9/21/08 -->
+<BODY onLoad = "do_onload();">	<!-- 9/21/08 -->
 <?php $the_table = (strlen($tablename)>0)? $tablename : "tbd"; ?>
 <CENTER><BR /><H3>Table: <SPAN STYLE="background: white">&nbsp;<?php print $the_table; ?>&nbsp;</SPAN> <BR /></H3></CENTER>
 <FORM NAME="detail" METHOD="post" 	ACTION="<?php print $_SERVER['PHP_SELF'] ?>">
@@ -1266,7 +1266,7 @@ switch ($func) {		// ================================== case "c" ===============
 	
 		$breakat = 24;
 		if (strlen($thestring) > $breakat) {
-			$return = " CLASS='" . $theclass . "' onmouseover =\"document.getElementById('b" . $theid . "').style.visibility='hidden' ; document.getElementById('c" . $theid . "').style.visibility='visible';\" onmouseout = \"document.getElementById('c" . $theid . "').style.visibility='hidden'; document.getElementById('b" . $theid . "').style.visibility='visible' ; \" >\n";
+			$return = " CLASS='" . $theclass . "' onmouseover =\"document.getElementById('b" . $theid . "').style.visibility='hidden'; document.getElementById('c" . $theid . "').style.visibility='visible';\" onmouseout = \"document.getElementById('c" . $theid . "').style.visibility='hidden'; document.getElementById('b" . $theid . "').style.visibility='visible'; \" >\n";
 			$return .= substr($thestring, 0, $breakat) . "<SPAN id=\"b" . $theid . "\" style=\"visibility:visible\">" ;
 			$return .= substr($thestring, $breakat) . "</SPAN><SPAN id=\"c" . $theid . "\" style=\"visibility: hidden\">\n";
 			$return .= ". . . <IMG SRC='markers/view.png' BORDER=0 TITLE = '" . gettext('click to view this') . "' onclick = \"JSfnToFunc('v', '" . $theid . "');\">";
@@ -1376,7 +1376,7 @@ switch ($func) {		// ================================== case "c" ===============
 			$thecolumn = mysql_field_name($result, $links_col);		// column name
 			$arrow = (mysql_field_name($result, $i) == $sortby) ? $arrowdir[$sortdir] : "";
 			$theclass=($i==$links_col)? " CLASS='ul'": "";
-			$head2 .= "<TH VALIGN='top'$theclass onClick =\"JSfnToSort('" . mysql_field_name($result, $i) . "')\" >" . str_replace( "_", " ", ucfirst(mysql_field_name($result, $i))) . " $arrow</TH>\n";
+			$head2 .= "<TH VALIGN='top'$theclass onClick =\"JSfnToSort('" . mysql_field_name($result, $i) . "');\" >" . str_replace( "_", " ", ucfirst(mysql_field_name($result, $i))) . " $arrow</TH>\n";
 			}
 		$head2 .= "</TR>\n";										// end table heading
 		print $head1 . "<U>" . str_replace( "_", " ", ucfirst($thecolumn)) . "</U> " . gettext('data for functions') . ")</FONT></TH></TR>\n" . $head2;
@@ -1443,17 +1443,17 @@ switch ($func) {		// ================================== case "c" ===============
 		unset ($subst);
 
 		for($page = 1; $page <= $maxPage; $page++) {  				// set link to each page no.
-			$nav .= ($page == $pageNum)? " <font color='red'><b>$page</b></font>&nbsp;&nbsp;" : " <a href=\"Javascript: JSfnToNav($page)\">$page</a>&nbsp;&nbsp;" ;
+			$nav .= ($page == $pageNum)? " <font color='red'><b>$page</b></font>&nbsp;&nbsp;" : " <a href=\"Javascript: JSfnToNav($page);\">$page</a>&nbsp;&nbsp;" ;
 			}
 
 		if ($pageNum > 1) {											// create prior/next links
 			$page = $pageNum - 1;
-			$prev = "&nbsp;&nbsp;<a href='Javascript: JSfnToNav($page)'><IMG SRC='./markers/prev.png' height='16' width= '16' border='0'></a> ";
+			$prev = "&nbsp;&nbsp;<a href='Javascript: JSfnToNav($page);'><IMG SRC='./markers/prev.png' height='16' width= '16' border='0'></a> ";
 			}
 
 		if ($pageNum < $maxPage) {									// if not on last
 			$page = $pageNum + 1;
-			$next = " <a href='Javascript: JSfnToNav($page)'><IMG SRC='./markers/next.png'  height='16' width= '16' border='0'></a>&nbsp;&nbsp;&nbsp;&nbsp;";	// ************
+			$next = " <a href='Javascript: JSfnToNav($page);'><IMG SRC='./markers/next.png'  height='16' width= '16' border='0'></a>&nbsp;&nbsp;&nbsp;&nbsp;";	// ************
 			}
 		print "<TR VALIGN=\"top\"><TD ALIGN=\"center\" COLSPAN=\"99\"><BR />" . $prev . $nav . $next . "</TD></TR>";			// print the navigation links
 		}					// end got rows
@@ -1617,7 +1617,7 @@ case "u":	// =======================================  Update 	==================
 					if (!$gotit) {
 //						dump(__LINE__);
 //						dump($max);
-						print "<TD><INPUT MAXLENGTH=$max SIZE=$max TYPE= \"text\" NAME=\"frm_" . mysql_field_name($result, $i) . "\" VALUE=\"$row[$i]\" onChange = \"this.value=JSfnTrim(this.value)\"$disabled/> ";
+						print "<TD><INPUT MAXLENGTH=$max SIZE=$max TYPE= \"text\" NAME=\"frm_" . mysql_field_name($result, $i) . "\" VALUE=\"$row[$i]\" onChange = \"this.value=JSfnTrim(this.value);\"$disabled/> ";
 //						print ($do_hints)? "<SPAN class='$mand_opt' >" . $hints[mysql_field_type($result, $i)] . "</SPAN>": "";
 						$hint_str = (empty($comments_ar[mysql_field_name($result, $i)]))? "" : "&nbsp;&laquo;&nbsp;<SPAN CLASS='hint'>{$comments_ar[mysql_field_name($result, $i)]}" ;
 						print "{$hint_str}</TD></TR>\n\t"; 
@@ -1676,7 +1676,7 @@ case "u":	// =======================================  Update 	==================
 	<BR />
 	<INPUT TYPE="button" 	VALUE="<?php print gettext('Cancel');?>" onClick = "Javascript: document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
 	<INPUT TYPE="reset" 	VALUE="<?php print gettext('Reset');?>"/>&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE="button" 	NAME="sub_but" VALUE="               <?php print gettext('Submit');?>                " onclick="this.disabled=true; JSfnCheckInput(this.form, this )"/>&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE="button" 	NAME="sub_but" VALUE="               <?php print gettext('Submit');?>                " onclick="this.disabled=true; JSfnCheckInput(this.form, this);"/>&nbsp;&nbsp;&nbsp;&nbsp;
 	<INPUT TYPE="button" 	NAME="del_but" VALUE="<?php print gettext('Delete this entry');?>" onclick="if (confirm('<?php print gettext('Please confirm DELETE action');?>')) {this.form.func.value='d'; this.form.submit();}"/></TD></TR>
 	</FORM>
 	</TD></TR></TABLE>
@@ -1813,7 +1813,7 @@ case "u":	// =======================================  Update 	==================
 		} 			// end for ($i = ... )
 	unset ($result);
 	if ($func == "pc") 	{
-		print "<TR><TD COLSPAN=\"2\" ALIGN=\"CENTER\"><BR /><INPUT TYPE=\"button\" VALUE=\"" . gettext('Another') . "\" onclick=\"document.pc.func.value='c';document.pc.submit()\";/></TD></TR>";
+		print "<TR><TD COLSPAN=\"2\" ALIGN=\"CENTER\"><BR /><INPUT TYPE=\"button\" VALUE=\"" . gettext('Another') . "\" onclick=\"document.pc.func.value='c';document.pc.submit();\"/></TD></TR>";
 		}
 	}			// end else ... 
 ?>
@@ -2010,11 +2010,11 @@ case "u":	// =======================================  Update 	==================
 				}
 		
 			var errmsg="";
-			if (JSfnTrim(theForm.argument.value) == "")	{errmsg+= "\tSearch value is required\n";}
-			if (str == "")								{errmsg+= "\tField(s) to search is required\n" ;}
+			if (JSfnTrim(theForm.argument.value) == "")	{errmsg+= "\t<?php print gettext('Search value is required');?>\n";}
+			if (str == "")								{errmsg+= "\t<?php print gettext('Field(s) to search is required');?>\n" ;}
 
 			if (errmsg!="") {
-				alert ("Please correct the following and re-submit:\n\n" + errmsg);
+				alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 				return false;
 				}
 			else {
@@ -2103,9 +2103,9 @@ function do_check(the_bool) {
 	</B><BR /><BR /></TD></TR>
 <?php
 	print "<TR CLASS='{$evenodd[($i) % 2]}'><TD COLSPAN=99 ALIGN='center'><BR />
-			<INPUT TYPE='button' VALUE='" . gettext('Reset') . "' 	onClick = 'this.form.reset()' >
-			<INPUT TYPE='button' VALUE='" . gettext('Next') . "' 	onClick = 'validate_s(this.form)' STYLE='margin-left:40PX;'>
-			<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "' onClick = \"Javascript: document.retform.func.value='r'; document.retform.submit();\" STYLE='margin-left:40PX;'>	
+			<INPUT TYPE='button' VALUE='" . gettext('Reset') . "' 	onClick = 'this.form.reset();' />
+			<INPUT TYPE='button' VALUE='" . gettext('Next') . "' 	onClick = 'validate_s(this.form);' STYLE='margin-left:40PX;'/>
+			<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "' onClick = \"Javascript: document.retform.func.value='r'; document.retform.submit();\" STYLE='margin-left:40PX;'/>	
 		</TD></TR>";
 		
 	print "</TABLE></TABLE></FORM>\n";		
@@ -2172,11 +2172,11 @@ function fnTables () {							/// displays tables comprising db $mysql_db
 	for($i = 0; $i < $ctrp; $i++) {
 		print "<A HREF=\"#\" ONCLICK=\"Javascript: document.l.tablename.value='$primaries[$i]'; document.l.indexname.value='id'; document.l.submit();\"> $primaries[$i] </A>&nbsp;&nbsp;&nbsp;\n";
 		}
-	print "</TD></TR>\n\n<TR>\n<TD>&nbsp;</TD></TR>\n\n<TR VALIGN=\"top\">\n<TD><A HREF='#'onclick = \"Javascript:JSfnShowit('support')\"> <B>" . gettext('Support') . ":</A>&nbsp;&nbsp;</B></TD>\n<TD ALIGN='center'><SPAN ID='support' STYLE = 'visibility: hidden'>";
+	print "</TD></TR>\n\n<TR>\n<TD>&nbsp;</TD></TR>\n\n<TR VALIGN=\"top\">\n<TD><A HREF='#'onclick = \"Javascript:JSfnShowit('support');\"> <B>" . gettext('Support') . ":</A>&nbsp;&nbsp;</B></TD>\n<TD ALIGN='center'><SPAN ID='support' STYLE = 'visibility: hidden'>";
 	for($i = 0; $i < $ctrs; $i++) {
 		print "<A HREF=\"#\" ONCLICK=\"Javascript: document.l.tablename.value='$secondaries[$i]'; document.l.indexname.value='id'; document.l.submit();\"> $secondaries[$i] </A>&nbsp;&nbsp;&nbsp;\n";
 		}
-	print "<A HREF='#'onclick = \"Javascript:JSfnHideit('support')\"> <B>:" . gettext('Hide') . "</A></SPAN></TD></TR></TABLE>";
+	print "<A HREF='#'onclick = \"Javascript:JSfnHideit('support');\"> <B>:" . gettext('Hide') . "</A></SPAN></TD></TR></TABLE>";
 	}
 ?>
 <!-- ----------Common--------------- -->
@@ -2217,7 +2217,7 @@ if ($calstuff!="") {
 ?>
 <CENTER>
 <FORM NAME = 'finform' METHOD = 'post' ACTION = 'config.php'>
-<INPUT TYPE='button' VALUE = '<?php print gettext('Finished');?>' onClick = 'this.form.submit()'>
+<INPUT TYPE='button' VALUE = '<?php print gettext('Finished');?>' onClick = 'this.form.submit();'>
 </FORM>
 </BODY>
 </HTML>

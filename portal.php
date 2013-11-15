@@ -58,7 +58,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-<LINK REL=StyleSheet HREF="./portal/css/stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+<LINK REL="StyleSheet" HREF="./portal/css/stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
 <SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
 <SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry,weather&sensor=false"></SCRIPT>
 <SCRIPT  TYPE="text/javascript"SRC="./js/epoly.js"></SCRIPT>
@@ -90,20 +90,20 @@ var msgs_interval;
 var markers_interval;
 var iwMaxWidth = 500;
 
-window.onresize=function(){set_size()};
+window.onresize=function(){set_size();};
 
 function set_size() {
 	var viewportwidth;
 	var viewportheight;
 	if (typeof window.innerWidth != 'undefined') {
-		viewportwidth = window.innerWidth,
-		viewportheight = window.innerHeight
+		viewportwidth = window.innerWidth;
+		viewportheight = window.innerHeight;
 		} else if (typeof document.documentElement != 'undefined'	&& typeof document.documentElement.clientWidth != 'undefined' && document.documentElement.clientWidth != 0) {
-		viewportwidth = document.documentElement.clientWidth,
-		viewportheight = document.documentElement.clientHeight
+		viewportwidth = document.documentElement.clientWidth;
+		viewportheight = document.documentElement.clientHeight;
 		} else {
-		viewportwidth = document.getElementsByTagName('body')[0].clientWidth,
-		viewportheight = document.getElementsByTagName('body')[0].clientHeight
+		viewportwidth = document.getElementsByTagName('body')[0].clientWidth;
+		viewportheight = document.getElementsByTagName('body')[0].clientHeight;
 		}
 	var mapWidth = viewportwidth * .5;
 	var mapHeight = viewportheight * .55;
@@ -219,10 +219,10 @@ function sendRequest(url,callback,postData) {
  * @type Array
  */
 var XMLHttpFactories = [
-	function () {return new XMLHttpRequest()	},
-	function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-	function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-	function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+	function () {return new XMLHttpRequest();	},
+	function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+	function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+	function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 	];
 /**
  * 
@@ -265,17 +265,15 @@ function syncAjax(strURL) {
 	}
 /**
  * 
- * @param {type} showall
  * @returns {undefined}
- */	
+ */
 function requests_get() {
 	msgs_interval = window.setInterval('do_requests_loop()', 60000);
 	}
 /**
  * 
- * @param {type} showall
  * @returns {undefined}
- */	
+ */
 function do_requests_loop() {
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./portal/ajax/list_requests.php?id=<?php print $_SESSION['user_id'];?>&showall=" + showall + "&version=" + randomnumber;
@@ -289,7 +287,11 @@ function logged_in() {								// returns boolean
 	var temp = <?php print $logged_in;?>;
 	return temp;
 	}	
-	
+/**
+ * 
+ * @param {type} val
+ * @returns {Boolean}
+ */	
 function isNull(val) {								// checks var stuff = null;
 	return val === null;
 	}
@@ -318,6 +320,11 @@ function do_window(id) {				// 1/19/09
 
 var viewwindow = null;
 var starting;
+/**
+ * 
+ * @param {type} id
+ * @returns {unresolved}
+ */
 function do_viewwindow(id) {				// 1/19/09
 	if ((viewwindow) && (!(viewwindow.closed))) {viewwindow.focus(); return;}		// 7/28/10	
 	if (logged_in()) {
@@ -325,7 +332,7 @@ function do_viewwindow(id) {				// 1/19/09
 		starting=true;	
 		viewwindow=window.open("./portal/request.php?func=view&id=" + id, "view_request",  "titlebar, location=0, resizable=1, scrollbars=yes, height=700, width=600, status=0, toolbar=0, menubar=0, location=0, left=100, top=100, screenX=100, screenY=100");
 		if (isNull(viewwindow)) {
-			alert ("Portal operation requires popups to be enabled. Please adjust your browser options.");
+			alert ("<?php print gettext('Portal operation requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 		viewwindow.focus();
@@ -335,6 +342,10 @@ function do_viewwindow(id) {				// 1/19/09
 	
 var newreq = null;
 var starting;
+/**
+ * 
+ * @returns {unresolved}
+ */
 function do_newreq() {				// 1/19/09
 	if ((newreq) && (!(newreq.closed))) {newreq.focus(); return;}		// 7/28/10	
 	if (logged_in()) {
@@ -342,14 +353,18 @@ function do_newreq() {				// 1/19/09
 		starting=true;	
 		newreq=window.open("./portal/new_request.php", "view_request",  "titlebar, location=0, resizable=1, scrollbars=yes, height=700, width=600, status=0, toolbar=0, menubar=0, location=0, left=100, top=300, screenX=100, screenY=300");
 		if (isNull(newreq)) {
-			alert ("Portal operation requires popups to be enabled. Please adjust your browser options.");
+			alert ("<?php print gettext('Portal operation requires popups to be enabled. Please adjust your browser options.');?>");
 			return;
 			}
 		newreq.focus();
 		starting = false;
 		}
 	}		// end function do_window()
-	
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */	
 function requests_cb2(req) {
 	var the_requests=JSON.decode(req.responseText);
 	if(the_requests[0][0] == "No Current Requests") {
@@ -595,17 +610,27 @@ function get_the_markers() {
 		}
 	markers_get();
 	}	
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function summary_get() {
 	summary_interval = window.setInterval('do_summary_loop()', 60000);
 	}	
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function do_summary_loop() {
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./portal/ajax/requests_summary?id=<?php print $_SESSION['user_id'];?>&version=" + randomnumber;
 	sendRequest (url, summary_cb2, "");
 	}
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 function summary_cb2(req) {
 	var the_summary=JSON.decode(req.responseText);
 	var the_output = "<TABLE style='font-size: 2.5em; text-align: center; border: 1px solid #707070;'>";
@@ -617,7 +642,10 @@ function summary_cb2(req) {
 	the_output += "</TABLE>";
 	$('summary_table').innerHTML = the_output;		
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function get_summary() {
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./portal/ajax/requests_summary.php?id=<?php print $_SESSION['user_id'];?>&version=" + randomnumber;
@@ -635,7 +663,11 @@ function get_summary() {
 		}
 	summary_get();
 	}	
-	
+/**
+ * 
+ * @param {type} lat
+ * @returns {undefined}
+ */	
 function do_lat (lat) {
 	document.add.frm_lat.value=lat;			// 9/9/08
 	}
@@ -666,7 +698,13 @@ function do_fac_to_loc(text, index){			// 9/22/09
 	document.add.fac_city.value = curr_city;
 	document.add.fac_state.value = curr_state;	
 	}					// end function do_fac_to_loc
-	
+/**
+ * 
+ * @param {type} my_form
+ * @param {type} lat
+ * @param {type} lng
+ * @returns {undefined}
+ */	
 function pt_to_map (my_form, lat, lng) {						// 7/5/10
 	myMarker.setMap(null);			// destroy predecessor
 	theLat = lat;
@@ -714,7 +752,10 @@ var lat_var;
 var lng_var;
 var zoom_var;
 var icon_file = "./markers/crosshair.png";
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function load() {	
 	var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
 	switch(<?php echo get_variable('maptype');?>) {
@@ -745,9 +786,20 @@ icons[2] = "blue.png";	// blue
 icons[3] = "yellow.png";	// yellow
 icons[4] = "black.png";	// black
 var bounds = new google.maps.LatLngBounds();
+/**
+ * 
+ * @returns {undefined}
+ */
 function closeIW() {
 	}
-
+/**
+ * 
+ * @param {type} point
+ * @param {type} color
+ * @param {type} sym
+ * @param {type} html
+ * @returns {unresolved}
+ */
 function createMarker(point, color, sym, html) {
 	var iconStr = sym;
 	var image_file = "./portal/markers/gen_icon.php?blank=" + color + "&text=" + iconStr;
@@ -814,7 +866,7 @@ var weatherLayer = new google.maps.weather.WeatherLayer({
 
 var cloudLayer = new google.maps.weather.CloudLayer();	
 
-var toggleWeather = true
+var toggleWeather = true;
 /**
  * 
  * @returns {undefined}
@@ -844,7 +896,10 @@ function GUnload(){
 function do_logout() {
 	document.gout_form.submit();
 	}	
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function toggle_closed() {
 	if(showall == "yes") {
 		showall = "no";
@@ -856,7 +911,10 @@ function toggle_closed() {
 		get_requests();
 		}
 	}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 function do_unload() {
 	window.clearInterval(summary_interval);
 	window.clearInterval(msgs_interval);
@@ -874,7 +932,7 @@ $rec_fac_menu .= "<SELECT>";
 
 $query_fc2 = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";
 $result_fc2 = mysql_query($query_fc2) or do_error($query_fc2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-$orig_fac_menu = "<SELECT NAME='frm_orig_fac' onChange='do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim())'>";
+$orig_fac_menu = "<SELECT NAME='frm_orig_fac' onChange='do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim());'>";
 $orig_fac_menu .= "<OPTION VALUE=0 selected>" . gettext('Originating Facility') . "</OPTION>";
 while ($row_fc2 = mysql_fetch_array($result_fc2, MYSQL_ASSOC)) {
 		$orig_fac_menu .= "<OPTION VALUE=" . $row_fc2['id'] . ">" . shorten($row_fc2['name'], 30) . "</OPTION>";
@@ -909,7 +967,7 @@ if((!isset($_SESSION)) && (empty($_POST))) {
 		<DIV id='outer' style='text-align: center; margin: 10px;'>
 			<DIV id='tophalf' style='width: 100%; font-size: 1em; z-index: 998;'>
 				<DIV id='banner' style='background-color: #707070; vertical-align: middle;'><SPAN class='heading' style='font-size: 1.5em; vertical-align: middle;'>Tickets <?php print get_text('Service User');?> <?php print get_text('Portal');?></SPAN>
-					<SPAN ID='gout' CLASS='plain' style='float: right; font-size: 1em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="do_logout()"><?php print get_text('Logout');?></SPAN>
+					<SPAN ID='gout' CLASS='plain' style='float: right; font-size: 1em; vertical-align: middle;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="do_logout();"><?php print get_text('Logout');?></SPAN>
 				</DIV>
 				<DIV id='controls' style='position: absolute; top: 50px; left: 2%;'>
 					<TABLE WIDTH='100%' HEIGHT='100%' style='font-size: 1em; border: 3px outset #707070;'>
@@ -921,10 +979,10 @@ if((!isset($_SESSION)) && (empty($_POST))) {
 										<TD style='font-size: 1em;'><SPAN id='sub_but' CLASS ='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "do_newreq();"><?php print get_text('New Request');?></SPAN></TD>
 									</TR>
 									<TR style='font-size: 1em;'>
-										<TD style='font-size: 1em;'><SPAN ID='upload_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/import_requests.php','Import Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')" TITLE='Import Request from CSV File'><?php print get_text('Import');?></SPAN></TD>
+										<TD style='font-size: 1em;'><SPAN ID='upload_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.open('./portal/import_requests.php','Import Requests','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, height=600,width=600,status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300');" TITLE='<?php print gettext('Import Request from CSV File');?>'><?php print get_text('Import');?></SPAN></TD>
 									</TR>
 									<TR style='font-size: 1em;'>
-										<TD style='font-size: 1em;'><SPAN ID='export_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.location.href='./portal/csv_export.php'"><?php print get_text('Export Requests to CSV');?></SPAN></TD>
+										<TD style='font-size: 1em;'><SPAN ID='export_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.location.href='./portal/csv_export.php';"><?php print get_text('Export Requests to CSV');?></SPAN></TD>
 									</TR>
 									<TR style='font-size: 1em;'>
 										<TD style='font-size: 1em;'><SPAN ID='showhide_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_closed();"><?php print get_text('Show Closed');?></SPAN></TD>
@@ -956,7 +1014,7 @@ if((!isset($_SESSION)) && (empty($_POST))) {
 										<TD style='font-size: 1em;'>&nbsp;</TD>
 									</TR>
 									<TR class='heading' style='font-size: 1.1em;'>
-										<TD class='heading' style='font-size: 1.1em;'>Your Request Statistics - <?php print get_user_name($_SESSION['user_id']);?></TD>
+										<TD class='heading' style='font-size: 1.1em;'><?php print gettext('Your Request Statistics');?> - <?php print get_user_name($_SESSION['user_id']);?></TD>
 									</TR>
 									<TR style='font-size: 1em;'>
 										<TD style='font-size: 1em;'>&nbsp;</TD>
@@ -976,7 +1034,7 @@ if((!isset($_SESSION)) && (empty($_POST))) {
 						<DIV id='map_outer'>
 							<DIV id='map_canvas'></DIV>
 							<DIV id='map_controls'>
-								<CENTER><A HREF='#' onClick='doTraffic()'><U>Traffic</U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doWeather()'><U><?php print get_text('Weather');?></U></A>
+								<CENTER><A HREF='#' onClick='doTraffic();'><U><?php print gettext('Traffic');?></U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doWeather();'><U><?php print get_text('Weather');?></U></A>
 							</DIV>
 						</DIV>
 <?php

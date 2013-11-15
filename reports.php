@@ -165,11 +165,11 @@ else {
 	<META HTTP-EQUIV="Pragma" 				CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date($full_date_fmt, filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->	
-	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
+	<LINK REL="StyleSheet" HREF="stylesheet.php" TYPE="text/css"/>	<!-- 3/15/11 -->
 <style type="text/css">
 .hovermenu ul{font:bold 13px arial;padding-left:0;margin-left:0;height:20px;}
 .hovermenu ul li{ list-style:none; display:inline;}
-.hovermenu ul li { padding:2px 0.5em; float:left; color:black; background-color:##DEE3E7; border:2px solid #EFEFEF; width:81px;text-align: center}
+.hovermenu ul li { padding:2px 0.5em; float:left; color:black; background-color:#DEE3E7; border:2px solid #EFEFEF; width:81px;text-align: center}
 .hovermenu ul li:hover{ background-color:#DEE3E7; border-style:outset;text-decoration: underline }
 .hovermenu2 ul{font:bold 13px arial;padding-left:0;margin-left:0;height:20px;}
 .hovermenu2 ul li{ list-style:none; display:inline;}
@@ -318,7 +318,7 @@ p.page { page-break-after: always; }
 	</SCRIPT>
 
 	</HEAD>
-<BODY onLoad = "ck_frames()">
+<BODY onLoad = "ck_frames();">
 <SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT> <!-- 10/2/10 -->
 
 <A NAME="top" />
@@ -591,7 +591,7 @@ p.page { page-break-after: always; }
 			$header= "<TR CLASS = '{$evenodd[1]} {highest}'>
 				<TH ALIGN='center'>" . get_text("Unit") . "&nbsp;</TH>
 				<TH ALIGN='center'>" . get_text("Incident") . "&nbsp;</TH>
-				<TH ALIGN='center'>Start</TH>
+				<TH ALIGN='center'>" . gettext('Start') . "</TH>
 				<TH ALIGN='center'>{$temp[0]}&nbsp;</TH>
 				<TH ALIGN='center'>{$temp[1]}&nbsp;</TH>
 				<TH ALIGN='center'>{$temp[2]}&nbsp;</TH>
@@ -688,13 +688,13 @@ p.page { page-break-after: always; }
 			}
 		$priorities = array("text_black","text_blue","text_red" );
 		$titles = array ();
-		$titles['dr'] = get_text("Units") . " - Daily Report - ";
-		$titles['cm'] = get_text("Units") . " - Current Month-to-date - ";
-		$titles['lm'] = get_text("Units") . " - Last Month - ";
-		$titles['cw'] = get_text("Units") . " - Current Week-to-date - ";
-		$titles['lw'] = get_text("Units") . " - Last Week - ";
-		$titles['cy'] = get_text("Units") . " - Current Year-to-date - ";
-		$titles['ly'] = get_text("Units") . " - Last Year - ";
+		$titles['dr'] = get_text("Units") . " - " . gettext('Daily Report') . " - ";
+		$titles['cm'] = get_text("Units") . " - " . gettext('Current Month-to-date') . " - ";
+		$titles['lm'] = get_text("Units") . " - " . gettext('Last Month') . " - ";
+		$titles['cw'] = get_text("Units") . " - " . gettext('Current Week-to-date') . " - ";
+		$titles['lw'] = get_text("Units") . " - " . gettext('Last Week') . " - ";
+		$titles['cy'] = get_text("Units") . " - " . gettext('Current Year-to-date') . " - ";
+		$titles['ly'] = get_text("Units") . " - " . gettext('Last Year') . " - ";
 		$to_str = ($func_in=="dr")? "": " to " . $from_to[3];
 		print "\n<TABLE ALIGN='left' BORDER = 0 WIDTH='800px'>\n<TR CLASS='even' style='height: 24px'>\n";
 		print "<TH COLSPAN=99 ALIGN = 'center'>" . $titles[$func_in] . $from_to[2] . $to_str . "</TH></TR>\n";
@@ -791,7 +791,7 @@ p.page { page-break-after: always; }
 						} else {	//	9/10/13
 						print "<TR CLASS='" . $evenodd[$i%2] . "'>";
 						$theUnitName = (array_key_exists($curr_unit, $unit_names))? shorten($unit_names[$curr_unit], 16): "#" . $curr_unit ;
-						print (array_key_exists($curr_unit, $unit_names))? "<TD onClick = 'viewU(" .$curr_unit . ")'><B>" . $theUnitName . "</B></TD>":	"<TD>[#" . $curr_unit . "]</TD>";
+						print (array_key_exists($curr_unit, $unit_names))? "<TD onClick = 'viewU(" .$curr_unit . ");'><B>" . $theUnitName . "</B></TD>":	"<TD>[#" . $curr_unit . "]</TD>";
 						if (!empty($do_date)) {
 							print "<TD>" . date ('D, M j', strtotime($do_date)) . "</TD>";
 							$do_date = "";
@@ -824,8 +824,8 @@ p.page { page-break-after: always; }
 				$theIncidentName = (array_key_exists($theIncident_id, $incidents))? $incidents[$theIncident_id]: "#" . $theIncident_id ;
 				$theSeverity = (array_key_exists($theIncident_id, $severity))? $severity[$theIncident_id]: 0;
 
-//				print "<TD CLASS='" . $priorities[$severity[$theIncident_id]] . "' onClick = 'viewT(" . $theIncident_id . ")'><B>" . shorten($incidents[$theIncident_id],20) . "</B></TD>";
-				print "<TD CLASS='" . $priorities[$theSeverity] . "' onClick = 'viewT(" . $theIncident_id . ")'>" . shorten($theIncidentName,20) . "</TD>";
+//				print "<TD CLASS='" . $priorities[$severity[$theIncident_id]] . "' onClick = 'viewT(" . $theIncident_id . ");'><B>" . shorten($incidents[$theIncident_id],20) . "</B></TD>";
+				print "<TD CLASS='" . $priorities[$theSeverity] . "' onClick = 'viewT(" . $theIncident_id . ");'>" . shorten($theIncidentName,20) . "</TD>";
 				}
 			else {
 				print "<TD></TD>";
@@ -868,7 +868,7 @@ p.page { page-break-after: always; }
 		$from_to = date_range($date_in,$func_in);	// get date range as array
 //		dump ($from_to);
 
-		$types[$GLOBALS['LOG_ERRONEOUS']]			= "Bad Log entry";	//	3/15/11
+		$types[$GLOBALS['LOG_ERRONEOUS']]			= gettext("Bad Log entry");	//	3/15/11
 		$where = " WHERE `when` >= '" . $from_to[0] . "' AND `when` < '" . $from_to[1] . "'";
 																				// 1/14/10, 5/29/12
 		$query = "
@@ -885,13 +885,13 @@ p.page { page-break-after: always; }
 		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
 
 		$titles = array ();
-		$titles['dr'] = "Station Daily Report - ";
-		$titles['cm'] = "Station Report - Current Month-to-date - ";
-		$titles['lm'] = "Station Report - Last Month - ";
-		$titles['cy'] = "Station Report - Current Year-to-date - ";
-		$titles['ly'] = "Station Report - Last Year - ";
-		$titles['cw'] = "Station Report - Current Week-to-date - ";
-		$titles['lw'] = "Station Report - Last Week - ";
+		$titles['dr'] = gettext("Station Daily Report") . " - ";
+		$titles['cm'] = gettext("Station Report") . " - " . gettext("Current Month-to-date") . " - ";
+		$titles['lm'] = gettext("Station Report") . " - " . gettext("Last Month") . " - ";
+		$titles['cy'] = gettext("Station Report") . " - " . gettext("Current Year-to-date") . " - ";
+		$titles['ly'] = gettext("Station Report") . " - " . gettext("Last Year") . " - ";
+		$titles['cw'] = gettext("Station Report") . " - " . gettext("Current Week-to-date") . " - ";
+		$titles['lw'] = gettext("Station Report") . " - " . gettext("Last Week") . " - ";
 
 		$i = 0;
 		$curr_date="";
@@ -1719,7 +1719,7 @@ function my_stripslashes_deep($value) {
 					</TR>";
 		
 			if (mysql_num_rows ($result) == 0) {												// empty?			
-				print "<TR CLASS = 'even'><TH COLSPAN=99>none</TH></TR>\n";
+				print "<TR CLASS = 'even'><TH COLSPAN=99>" . gettext('none') . "</TH></TR>\n";
 				print "<TR CLASS = 'odd'><TD COLSPAN=99><BR /><BR /></TD></TR>\n";
 				}
 			else {
@@ -1960,15 +1960,15 @@ function my_stripslashes_deep($value) {
 	<TD COLSPAN=99 ALIGN='center'>
 	<SPAN STYLE='WIDTH:100px; FLOAT:left;'>&nbsp;</SPAN>
 	<FONT SIZE="-1"><I><?php print gettext('Mouseover for buttons');?></I><SPAN STYLE='WIDTH:100px; FLOAT:right;'>
-		<INPUT TYPE='checkbox' NAME='full' onclick = 'do_full_w (this.form)' /><?php print gettext('full width');?></SPAN></FONT><BR />
+		<INPUT TYPE='checkbox' NAME='full' onclick = 'do_full_w(this.form);' /><?php print gettext('full width');?></SPAN></FONT><BR />
 
 <?php
 
 	print "\n<span class='hovermenu' style='background-color:#DEE3E7'><ul>\n";
-	print "<nobr><li onClick= \"do_ugr('lw')\">" . gettext('Last Week') . "</li>";
+	print "<nobr><li onClick= \"do_ugr('lw');\">" . gettext('Last Week') . "</li>";
 	for ($j = -13; $j < 1; $j++)  {
 		$temp = mktime(0,0,0,date('m'), date('d')+$j, date('Y'));
-		print "<LI onClick = \"toUDRnav('" . date ('m,d,Y', $temp) . "')\">";
+		print "<LI onClick = \"toUDRnav('" . date ('m,d,Y', $temp) . "');\">";
 
 $locale = get_variable('locale');	// 08/03/09
 	switch($locale) { 
@@ -1994,7 +1994,7 @@ $locale = get_variable('locale');	// 08/03/09
 	}
 
 		if ($j== -7) {
-			print "<BR /><BR /><nobr><li onClick= \"do_ugr('cw')\">" . gettext('This Week') . "</li><nobr>";
+			print "<BR /><BR /><nobr><li onClick= \"do_ugr('cw');\">" . gettext('This Week') . "</li><nobr>";
 			$i++;
 			}
 		}				// end for ($j...)
@@ -2007,46 +2007,46 @@ $locale = get_variable('locale');	// 08/03/09
 	<TR CLASS='even' width='100%'><TD ALIGN='center' colspan=99>
 	<span class="hovermenu2"><nobr>
 	<ul>
-	<li onClick= "do_ugr('lm')"><?php print date("M `y", mktime(0, 0, 0, date("m")-1, 15,   date("Y")));?></li>
-	<li onClick= "do_ugr('cm')"><?php print date("M `y");?></li>
-	<li onClick= "do_ugr('ly')"><?php print date("Y", mktime(0, 0, 0, 1, 1,  date("Y")-1));?></li>
-	<li onClick= "do_ugr('cy')"><?php print date("Y", mktime(0, 0, 0, 1, 1,  date("Y")));?></li>
+	<li onClick= "do_ugr('lm');"><?php print date("M `y", mktime(0, 0, 0, date("m")-1, 15,   date("Y")));?></li>
+	<li onClick= "do_ugr('cm');"><?php print date("M `y");?></li>
+	<li onClick= "do_ugr('ly');"><?php print date("Y", mktime(0, 0, 0, 1, 1,  date("Y")-1));?></li>
+	<li onClick= "do_ugr('cy');"><?php print date("Y", mktime(0, 0, 0, 1, 1,  date("Y")));?></li>
 	</ul>
 	</nobr>
 	</span>
 	</TD></TR>
 
 	</TABLE>
-	<INPUT TYPE='hidden' NAME='frm_func' VALUE='dr'>
-	<INPUT TYPE='hidden' NAME='frm_date' VALUE='<?php print date('m,d,Y'); ?>'>
-	<INPUT TYPE='hidden' NAME='frm_group' VALUE='<?php print $group;?>'>
-	<INPUT TYPE='hidden' NAME='frm_resp_sel' VALUE=''>									<!-- 2/8/09 -->
-	<INPUT TYPE='hidden' NAME='frm_tick_sel' VALUE=''>
-	<INPUT TYPE='hidden' NAME='frm_full_w' VALUE=0>
+	<INPUT TYPE='hidden' NAME='frm_func' VALUE='dr'/>
+	<INPUT TYPE='hidden' NAME='frm_date' VALUE='<?php print date('m,d,Y'); ?>'/>
+	<INPUT TYPE='hidden' NAME='frm_group' VALUE='<?php print $group;?>'/>
+	<INPUT TYPE='hidden' NAME='frm_resp_sel' VALUE=''/>									<!-- 2/8/09 -->
+	<INPUT TYPE='hidden' NAME='frm_tick_sel' VALUE=''/>
+	<INPUT TYPE='hidden' NAME='frm_full_w' VALUE=0/>
 	</FORM>
 	<FORM NAME='ugr_form' METHOD='post' ACTION = '<?php print basename(__FILE__); ?>'>	<!-- generic, date-driven -->
-	<INPUT TYPE='hidden' NAME='frm_func' VALUE='w'>
-	<INPUT TYPE='hidden' NAME='frm_date' VALUE='<?php print date('m,d,Y'); ?>'>
-	<INPUT TYPE='hidden' NAME='frm_group' VALUE='<?php print $group;?>'>
-	<INPUT TYPE='hidden' NAME='frm_resp_sel' VALUE=''>
-	<INPUT TYPE='hidden' NAME='frm_tick_sel' VALUE=''>
-	<INPUT TYPE='hidden' NAME='frm_full_w' VALUE=0>
+	<INPUT TYPE='hidden' NAME='frm_func' VALUE='w'/>
+	<INPUT TYPE='hidden' NAME='frm_date' VALUE='<?php print date('m,d,Y'); ?>'/>
+	<INPUT TYPE='hidden' NAME='frm_group' VALUE='<?php print $group;?>'/>
+	<INPUT TYPE='hidden' NAME='frm_resp_sel' VALUE=''/>
+	<INPUT TYPE='hidden' NAME='frm_tick_sel' VALUE=''/>
+	<INPUT TYPE='hidden' NAME='frm_full_w' VALUE=0/>
 	</FORM>
 	
 	 <FORM NAME='log_form' METHOD='post' ACTION = '<?php print basename(__FILE__); ?>'>
-	 <INPUT TYPE='hidden' NAME='frm_group' VALUE='l'><!-- incident log -->
-	 <INPUT TYPE='hidden' NAME='frm_tick_sel' VALUE=''>
-     <INPUT TYPE='hidden' NAME='frm_full_w' VALUE=0>
+	 <INPUT TYPE='hidden' NAME='frm_group' VALUE='l'/><!-- incident log -->
+	 <INPUT TYPE='hidden' NAME='frm_tick_sel' VALUE=''/>
+   <INPUT TYPE='hidden' NAME='frm_full_w' VALUE=0/>
 	 </FORM>
 
 	<FORM NAME='T_nav_form' METHOD='get' TARGET = 'main' ACTION = "main.php">
-	<INPUT TYPE='hidden' NAME='id' VALUE=''>
+	<INPUT TYPE='hidden' NAME='id' VALUE=''/>
 	</FORM>
 
 	<FORM NAME='U_nav_form' METHOD='get' TARGET = 'main' ACTION = "units.php">
-	<INPUT TYPE='hidden' 	NAME='id' VALUE=''>
-	<INPUT TYPE='hidden' 	NAME='func' VALUE='responder'>
-	<INPUT TYPE='hidden' 	NAME='view' VALUE='true'>
+	<INPUT TYPE='hidden' 	NAME='id' VALUE=''/>
+	<INPUT TYPE='hidden' 	NAME='func' VALUE='responder'/>
+	<INPUT TYPE='hidden' 	NAME='view' VALUE='true'/>
 	</FORM>
 
 	<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename(__FILE__); ?>"></FORM>

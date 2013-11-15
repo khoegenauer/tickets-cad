@@ -14,13 +14,13 @@ extract ($_POST);
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Test OpenGTS');?></TITLE>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">			<!-- 3/15/11 -->
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"/>
+<META HTTP-EQUIV="Expires" CONTENT="0"/>
+<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE"/>
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE"/>
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript"/>
+<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"/> <!-- 7/7/09 -->
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>			<!-- 3/15/11 -->
 </HEAD>
 <BODY>
 
@@ -120,7 +120,7 @@ switch ($_func) {
 ?>
 
 <FORM NAME= 'frm_og' METHOD='get' ACTION = '<?php print basename(__FILE__);?>'>
-<input type = hidden name = '_func' value = 'test'>
+<input type = hidden name = '_func' value = 'test'/>
 <TABLE ALIGN='center' STYLE = 'margin-top:40px;'>
 <TR CLASS  = 'even'>
 	<TH COLSPAN=2><?php echo '"' . gettext('OpenGTS Test Fails for') . "<br /><br /> 
@@ -142,7 +142,7 @@ switch ($_func) {
 	else {
 ?>
 <FORM NAME= 'frm_og' METHOD='get' ACTION = '<?php print basename(__FILE__);?>'>
-<input type = hidden name = '_func' value = 'form'>
+<input type = hidden name = '_func' value = 'form'/>
 <TABLE ALIGN='center' STYLE = 'margin-top:40px;'>
 <TR CLASS  = 'even'><TD COLSPAN=2 ALIGN='center'>
 	<B><?php echo "OpenGTS Test succeeds for <br /><br />URL: '{$_POST['frm_url']}',  Account: '{$_POST['frm_account']}', PW:'{$_POST['frm_pw']}'";?></B>
@@ -180,15 +180,15 @@ case("form") :
 <TR CLASS  = 'odd'><TD>&nbsp;</TD></TR>	
 <TR CLASS  = 'odd'>
 	<TD><?php print gettext('Server URL');?>:</TD>
-	<TD><INPUT NAME = 'frm_url' TYPE = 'text' SIZE = '60' VALUE='<?php echo $init_url;?>'></TD>	
+	<TD><INPUT NAME = 'frm_url' TYPE = 'text' SIZE = '60' VALUE='<?php echo $init_url;?>'/></TD>	
 	</TR>
 <TR CLASS = 'even'>
 	<TD><?php print gettext('Account');?>:</TD>
-	<TD><INPUT NAME = 'frm_account' TYPE = 'text' SIZE = '20' VALUE='<?php echo $init_acct;?>'></TD>	
+	<TD><INPUT NAME = 'frm_account' TYPE = 'text' SIZE = '20' VALUE='<?php echo $init_acct;?>'/></TD>	
 	</TR>
 <TR CLASS  = 'odd'>
 	<TD><?php print gettext('Password');?>:</TD>
-	<TD><INPUT NAME = 'frm_pw' TYPE = 'text' SIZE = '20' VALUE='<?php echo $init_pw;?>'></TD>	
+	<TD><INPUT NAME = 'frm_pw' TYPE = 'text' SIZE = '20' VALUE='<?php echo $init_pw;?>'/></TD>	
 	</TR>
 <TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR />
 	<INPUT TYPE='button' VALUE = '<?php print gettext('Run test');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;

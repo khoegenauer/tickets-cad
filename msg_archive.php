@@ -45,7 +45,7 @@ if(mysql_num_rows($result) != 0) {
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
 <SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
 <SCRIPT>
 /**
@@ -72,7 +72,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		}
 	else {
 		parent.upper.show_butts();										// 1/21/09
-		parent.upper.do_day_night("<?php print $_SESSION['day_night'];?>")
+		parent.upper.do_day_night("<?php print $_SESSION['day_night'];?>");
 		}
 	}		// end function ck_frames()
 /**
@@ -137,7 +137,7 @@ if(empty($_POST)) {
 	$num_messages = mysql_num_rows($result);
 ?>
 	<DIV id='outer' style='position: absolute; width: 95%; text-align: center; margin: 10px;'>
-		<DIV id='banner' class='heading' style='font-size: 28px; position: relative: top: 5%; width: 100%; border: 1px outset #000000;'><?php print gettext('MESSAGE ARCHIVING');?></DIV><BR /><BR />
+		<DIV id='banner' class='heading' style='font-size: 28px; position: relative; top: 5%; width: 100%; border: 1px outset #000000;'><?php print gettext('MESSAGE ARCHIVING');?></DIV><BR /><BR />
 		<DIV id='leftcol' style='position: relative; left: 2%; top: 5%; width: 45%; float: left; border: 1px outset #000000;'>
 <?php 
 		if($num_messages != 0) {
@@ -145,7 +145,7 @@ if(empty($_POST)) {
 			<FORM NAME='archive_form' METHOD='POST' ACTION = "<?php print basename( __FILE__); ?>">
 			<TABLE style='width: 100%;'>
 				<TR class='heading'>
-					<TH class='heading' COLSPAN=99 style='font-size: 18px;'></php print gettext('ARCHIVE MESSAGES');?> (<?php print $num_messages;?> <?php print gettext('messages stored');?>)</TH>
+					<TH class='heading' COLSPAN=99 style='font-size: 18px;'><?php print gettext('ARCHIVE MESSAGES');?> (<?php print $num_messages . gettext('messages stored');?>)</TH>
 				</TR>
 				<TR class='spacer'>
 					<TD COLSPAN=99 class='spacer'>&nbsp;</TD>
@@ -157,7 +157,7 @@ if(empty($_POST)) {
 					<TD class='td_label' style='text-align: left;'>&nbsp;&nbsp;<?php print gettext('End Date');?></TD><TD class='td_data'><?php print generate_dateonly_dropdown('end',strtotime($newest_date),FALSE);?></TD>
 				</TR>
 				<TR class='odd'>	
-					<TD class='td_label' COLSPAN=99><?php print gettext('DELETE MESSAGES');?><input type="checkbox" name="del_messages" value="yes"></TD>
+					<TD class='td_label' COLSPAN=99><?php print gettext('DELETE MESSAGES');?><input type="checkbox" name="del_messages" value="yes"/></TD>
 				</TR>			
 				<TR class='spacer'>
 					<TD COLSPAN=99 class='spacer'>&nbsp;</TD>
@@ -196,7 +196,7 @@ if(empty($_POST)) {
 						$thefile = "./message_archives/" . $val;
 ?>
 						<TR class='<?php print $class;?>'>
-							<TD class='td_label' style='font-size: 12px; text-align: left;'><INPUT TYPE='checkbox' name='files[]' value=<?php print $val;?>></TD>
+							<TD class='td_label' style='font-size: 12px; text-align: left;'><INPUT TYPE='checkbox' name='files[]' value=<?php print $val;?>/></TD>
 							<TD class='td_data' style='font-size: 12px; text-align: left;'><A HREF='<?php print $thefile;?>'><?php print $val;?></TD>
 						</TR>
 <?php

@@ -176,7 +176,7 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" /> 
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/> 
 	
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+	<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
     <STYLE TYPE="text/css">
 		body 				{font-family: Verdana, Arial, sans serif;font-size: 11px;margin: 2px;}
 		table 				{border-collapse: collapse; }
@@ -489,9 +489,9 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 		if (div_area == "region_boxes") {
 			var controlarea = "region_boxes";
 			}			
-		var divarea = div_area 
-		var hide_cont = hide_cont 
-		var show_cont = show_cont 
+		var divarea = div_area; 
+		var hide_cont = hide_cont; 
+		var show_cont = show_cont; 
 		if($(divarea)) {
 			$(divarea).style.display = 'none';
 			$(hide_cont).style.display = 'none';
@@ -524,9 +524,9 @@ function get_icon_legend (){			// returns legend string - 1/1/09
 		if (div_area == "region_boxes") {
 			var controlarea = "region_boxes";
 			}				
-		var divarea = div_area
-		var hide_cont = hide_cont 
-		var show_cont = show_cont 
+		var divarea = div_area;
+		var hide_cont = hide_cont; 
+		var show_cont = show_cont; 
 		if($(divarea)) {
 			$(divarea).style.display = '';
 			$(hide_cont).style.display = '';
@@ -748,10 +748,10 @@ if((array_key_exists('func', $_REQUEST)) && ($_REQUEST['func'] == "do_db")) {	//
  * @type Array|Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -845,11 +845,11 @@ else {
 	</H3>
 	<NOBR>
 	<FORM NAME='more_form' METHOD = 'get' ACTION = "<?php print basename(__FILE__); ?>" style="display: inline;"><!-- 7/9/10 -->
-	<INPUT TYPE='button' VALUE='<?php print gettext('More');?>' onClick = "document.more_form.submit()" />
-	<INPUT TYPE = 'hidden' NAME = 'ticket_id' VALUE="<?php print get_ticket_id ();?>">
+	<INPUT TYPE='button' VALUE='<?php print gettext('More');?>' onClick = "document.more_form.submit();" />
+	<INPUT TYPE = 'hidden' NAME = 'ticket_id' VALUE="<?php print get_ticket_id ();?>"/>
 	</FORM>
 	<FORM NAME='cont_form' METHOD = 'get' ACTION = "main.php" STYLE = 'margin-left:20px; display: inline;'><!-- 8/30/10  -->
-	<INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = "document.cont_form.submit()" />
+	<INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = "document.cont_form.submit();" />
 	</FORM>
 	</NOBR>
 	</BODY></HTML>
@@ -1188,10 +1188,10 @@ function sendRequest(url,callback,postData) {	//	6/10/11
  * @type Array|Array|Array|Array|Array|Array
  */
 var XMLHttpFactories = [
-	function () {return new XMLHttpRequest()	},
-	function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-	function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-	function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+	function () {return new XMLHttpRequest();	},
+	function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+	function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+	function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 	];
 /**
  * 
@@ -1259,7 +1259,7 @@ function toggle_div(theDiv, theButton, theText) {
 		
 </SCRIPT>
 </HEAD>
-<BODY onLoad = "get_position(); do_notify(); ck_frames()" >
+<BODY onLoad = "get_position(); do_notify(); ck_frames();" >
 <SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT>		<!-- 3/4/11 -->
 
 <A NAME='page_top' />
@@ -1404,7 +1404,7 @@ function toggle_div(theDiv, theButton, theText) {
 ?>
 		<div id='boxB' class='box' style='left:<?php print $from_left;?>px;top:<?php print $from_top;?>px; position:fixed;' > <!-- 9/23/10 -->
 		<div class="bar" STYLE="width:12em; color:red; background-color : transparent; text-align: center "
-			 onmousedown="dragStart(event, 'boxB')"><I><?php  print gettext('Drag me');?></I></div><!-- drag bar - 2/5/11 -->
+			 onmousedown="dragStart(event, 'boxB');"><I><?php  print gettext('Drag me');?></I></div><!-- drag bar - 2/5/11 -->
 		<div style = "margin-top:10px;">
 		<IMG SRC="markers/down.png" BORDER=0  onclick = "location.href = '#page_bottom';" STYLE = 'margin-left:2px;' />		
 		<IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#page_top';" STYLE = 'margin-left:40px;'/><br />

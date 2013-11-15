@@ -14,16 +14,13 @@ require_once($_SESSION['fip']);		//7/28/10
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Test Instamapper');?></TITLE>
-<META NAME="Author" CONTENT="">
-<META NAME="Keywords" CONTENT="">
-<META NAME="Description" CONTENT="">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 </HEAD>
 <BODY>
 
@@ -113,7 +110,7 @@ for ($i = 1; $i<(count($ary) - 2); $i++) {
 <TR CLASS='even'><TD><?php print gettext('Course');?>:</TD><TD><?php print $tmp_ary[5];?></TD></TR>
 <TR CLASS='odd'><TD><?php print gettext('Speed');?>:</TD><TD><?php print $tmp_ary[6];?></TD></TR>
 <TR CLASS='even'><TD><?php print gettext('Alt');?>:</TD><TD><?php print $tmp_ary[7];?></TD></TR>
-<TR ><TD COLSPAN = 2 ALIGN='center'><HR SIZE=1 COLOR='blue'WIDTH='75%'></TD</TR>
+<TR><TD COLSPAN = 2 ALIGN='center'><HR SIZE=1 COLOR='blue' WIDTH='75%'/></TD</TR>
 
 <?php
 	}

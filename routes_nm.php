@@ -365,9 +365,9 @@ function hideDiv(div_area, hide_cont, show_cont) {	//	3/15/11
 	if (div_area == "region_boxes") {
 		var controlarea = "region_boxes";
 		}			
-	var divarea = div_area 
-	var hide_cont = hide_cont 
-	var show_cont = show_cont 
+	var divarea = div_area; 
+	var hide_cont = hide_cont; 
+	var show_cont = show_cont; 
 	if($(divarea)) {
 		$(divarea).style.display = 'none';
 		$(hide_cont).style.display = 'none';
@@ -400,9 +400,9 @@ function showDiv(div_area, hide_cont, show_cont) {	//	3/15/11
 	if (div_area == "region_boxes") {
 		var controlarea = "region_boxes";
 		}				
-	var divarea = div_area
-	var hide_cont = hide_cont 
-	var show_cont = show_cont 
+	var divarea = div_area;
+	var hide_cont = hide_cont; 
+	var show_cont = show_cont; 
 	if($(divarea)) {
 		$(divarea).style.display = '';
 		$(hide_cont).style.display = '';
@@ -487,10 +487,10 @@ if (!empty($_POST)) {				// 77-200
  * @type Array|Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -565,12 +565,12 @@ if (!empty($_POST)) {				// 77-200
 <?php
 	if ((array_key_exists('frm_mode', $_POST)) && ($_POST['frm_mode']==1)) {
 ?>	
-	<INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = "window.close()">
+	<INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = "window.close();"/>
 <?php
 		}
 	else {
 ?>
-	<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>' onClick = "document.cont_form.submit()">
+	<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>' onClick = "document.cont_form.submit();"/>
 
 <?php	
 		}
@@ -834,7 +834,7 @@ function checkForm(form)	{	//	5/4/11
 		sendRequest (url, fvg_handleResult, params);				
 //			form.submit();
 	} else {
-		errmsg+= "\tYou cannot Hide all the regions\n";
+		errmsg+= "\t<?php print gettext('You cannot Hide all the regions');?>\n";
 		if (errmsg!="") {
 			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
@@ -888,10 +888,10 @@ function sendRequest(url,callback,postData) {	//	5/4/11
  * @type Array|Array|Array|Array|Array|Array
  */
 var XMLHttpFactories = [
-	function () {return new XMLHttpRequest()	},
-	function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-	function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-	function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+	function () {return new XMLHttpRequest();	},
+	function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+	function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+	function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 	];
 /**
  * 
@@ -997,7 +997,7 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 ?>
 		<div id='boxB' class='box' style='left:<?php print $from_left;?>px;top:<?php print $from_top;?>px; position:fixed;' > <!-- 9/23/10 -->
 		<div class="bar" style="width:12em;"
-			 onmousedown="dragStart(event, 'boxB')"><?php print gettext('Drag me');?></div><!-- drag bar -->
+			 onmousedown="dragStart(event, 'boxB');"><?php print gettext('Drag me');?></div><!-- drag bar -->
 		<div style = "margin-top:10px;">
 		<IMG SRC="markers/down.png" BORDER=0  onclick = "location.href = '#page_bottom';" STYLE = 'margin-left:2px;' />		
 		<IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#page_top';" STYLE = 'margin-left:40px;'/><br />
@@ -1008,12 +1008,12 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
 
 			print "<SPAN ID=\"mail_button\" STYLE=\"display: 'none'\">";	//10/6/09
 			print "<FORM NAME='email_form' METHOD = 'post' ACTION='do_direcs_mail.php' target='_blank' onsubmit='return mail_direcs(this);'>";	//10/6/09
-			print "<INPUT TYPE='hidden' NAME='frm_direcs' VALUE=''>";	//10/6/09
-			print "<INPUT TYPE='hidden' NAME='frm_u_id' VALUE=''>";	//10/6/09
-			print "<INPUT TYPE='hidden' NAME='frm_mail_subject' VALUE='Directions to Incident'>";	//10/6/09
-			print "<INPUT TYPE='hidden' NAME='frm_scope' VALUE=''>"; // 10/29/09
+			print "<INPUT TYPE='hidden' NAME='frm_direcs' VALUE=''/>";	//10/6/09
+			print "<INPUT TYPE='hidden' NAME='frm_u_id' VALUE=''/>";	//10/6/09
+			print "<INPUT TYPE='hidden' NAME='frm_mail_subject' VALUE='" . gettext('Directions to Incident') . "'/>";	//10/6/09
+			print "<INPUT TYPE='hidden' NAME='frm_scope' VALUE=''/>"; // 10/29/09
 			print "</FORM>";	
-			print "<INPUT TYPE='button' VALUE='" . gettext('Reset') . "' onClick = 'doReset()' />";
+			print "<INPUT TYPE='button' VALUE='" . gettext('Reset') . "' onClick = 'doReset();' />";
 			print "</SPAN>";			
 			print "<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "'  onClick='history.back();' />";
 			if ($nr_units>0) {			
@@ -1111,10 +1111,10 @@ $disabled = ($capabilities=="")? "disabled" : "" ;	// 11/18/10
  * @type Array|Array|Array|Array|Array|Array|Array|Array|Array|Array|Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -1309,7 +1309,7 @@ function do_list($unit_id ="", $capabilities ="", $searchtype) {
  * @returns {undefined}
  */
 		function guest () {
-			alert ("Demonstration only.  Guests may not commit dispatch!");
+			alert ("<?php print gettext('Demonstration only.  Guests may not commit dispatch!');?>");
 			}
 /**
  * 

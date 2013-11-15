@@ -20,7 +20,7 @@ require_once($_SESSION['fip']);
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <META HTTP-EQUIV="Script-date" CONTENT="6/13/09">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 <STYLE>
 #.plain 	{ background-color: #FFFFFF;}
 </STYLE>
@@ -146,7 +146,7 @@ if (empty($_POST)) {
 <?php		
 	if(count($rows)>0) {
 ?>
-	<BODY onLoad = "reSizeScr(<?php print count($rows);?>)"><CENTER>		<!-- 1/12/09 -->
+	<BODY onLoad = "reSizeScr(<?php print count($rows);?>);"><CENTER>		<!-- 1/12/09 -->
 	<CENTER><H3><?php print gettext('Mail to Users');?></H3>
 <?php
 	if(count($rows)>2) {
@@ -158,13 +158,13 @@ if (empty($_POST)) {
 ?>		
 	<P>
 		<FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
-		<INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''>	<!-- for pipe-delim'd addr string -->
+		<INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''/>	<!-- for pipe-delim'd addr string -->
 <?php		
 		print "<TABLE ALIGN = 'center' BORDER=0 WIDTH=500>\n";
 		for ($i=0; $i < count($rows); $i++) {
 			$row = stripslashes_deep($rows[$i]);
 			print "\t<TR CLASS= '{$evenodd[($i)%2]}'>
-				<TD ALIGN='right'><INPUT TYPE='checkbox' CHECKED NAME='cb{($i+1)}'VALUE='{$row['email']}'> </TD>
+				<TD ALIGN='right'><INPUT TYPE='checkbox' CHECKED NAME='cb{($i+1)}'VALUE='{$row['email']}'/> </TD>
 				<TD><SPAN style = \"background-color:{$colors[$row['level']]}\"> &nbsp;{$row['user']}&nbsp;</SPAN>
 					(<I>{$row['email']}</I>) </TD>
 				<TD ALIGN='left'>{$row['name_f']} {$row['name_mi']} {$row['name_l']}</TD>
@@ -175,9 +175,9 @@ if (empty($_POST)) {
 		<TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
 		<TR CLASS='<?php print $evenodd[($i+1)%2]; ?>'><TD><?php print gettext('Message');?>:</TD><TD COLSPAN=2> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
 		<TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD ALIGN='center' COLSPAN=3><BR /><BR />
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'/>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/><BR /><BR />
 			</TD></TR>
 			</TABLE></FORM>
 
@@ -185,7 +185,7 @@ if (empty($_POST)) {
 			}		// end if(mysql_affected_rows()>0)
 		else {
 ?>
-	<BODY onLoad = "reSizeScr(2)"><CENTER>		<!-- 1/12/09 -->
+	<BODY onLoad = "reSizeScr(2);"><CENTER>		<!-- 1/12/09 -->
 	<CENTER><H3><?php print gettext('Mail to Users');?></H3>
 	<BR /><BR />
 	<H3><?php print gettext('No addresses available!');?></H3><BR /><BR />
@@ -199,9 +199,9 @@ if (empty($_POST)) {
 
 			do_send ($_POST['frm_add_str'], $_POST['frm_subj'], $_POST['frm_text'], 0, 0);	// ($to_str, $subject_str, $text_str )
 ?>
-	<BODY onLoad = "reSizeScr(2)"><CENTER>		<!-- 1/12/09 -->
+	<BODY onLoad = "reSizeScr(2);"><CENTER>		<!-- 1/12/09 -->
 	<CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
-	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'><BR /><BR />
+	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'/><BR /><BR />
 
 <?php
 

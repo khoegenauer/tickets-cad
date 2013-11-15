@@ -71,7 +71,7 @@ $facilitycontact = 	get_text("Facility contact");
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<META HTTP-EQUIV="Script-date" CONTENT="8/16/08">
-	<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css">	<!-- 3/15/11 -->
+	<LINK REL="StyleSheet" HREF="stylesheet.php" TYPE="text/css"/>	<!-- 3/15/11 -->
 
 <SCRIPT>
 /**
@@ -361,10 +361,10 @@ $facilitycontact = 	get_text("Facility contact");
  * @type Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -428,7 +428,7 @@ setTimeout("document.next_Form.submit()",1500);
 			$row = stripslashes_deep(mysql_fetch_assoc($result));
 			print "<FONT CLASS='header'>Really delete {$patient} record ' " .shorten($row['description'], 24) . "' ?</FONT><BR /><BR />";
 			print "<FORM METHOD='post' ACTION='patient_w.php?action=delete&id=$_GET[id]&ticket_id=$_GET[ticket_id]&confirm=1'>
-				<INPUT TYPE='Submit' VALUE='" . gettext('Yes') . "'>";
+				<INPUT TYPE='Submit' VALUE='" . gettext('Yes') . "'/>";
 			print "<INPUT TYPE = 'button' VALUE = '" . gettext('Cancel') . "' onClick = 'window.close();' STYLE = 'margin-left:40px' /></FORM>";
 			}
 		}
@@ -549,9 +549,9 @@ setTimeout("document.next_Form.submit()",1500);
 
 ?>
 
-		<TR CLASS='odd' ><TD ALIGN='center' COLSPAN=2><BR /><INPUT TYPE="button" VALUE="Cancel" onClick="do_cancel();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="Reset" VALUE="Reset"  onClick = "do_lock(this.form); this.form.reset();" <?php print $dis;?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="Submit" VALUE="Submit" <?php print $dis;?>></TD></TR>
+		<TR CLASS='odd' ><TD ALIGN='center' COLSPAN=2><BR /><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick="do_cancel();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <INPUT TYPE="Reset" VALUE="<?php print gettext('Reset');?>"  onClick = "do_lock(this.form); this.form.reset();" <?php print $dis;?>/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="Submit" VALUE="<?php print gettext('Submit');?>" <?php print $dis;?>/></TD></TR>
 		</TABLE><BR />
 			<INPUT TYPE = 'hidden' NAME = 'frm_gender_val' VALUE = <?php print $row['gender'];?> />
 			<INPUT TYPE = 'hidden' NAME = 'frm_ins_id' VALUE = <?php print $row['insurance_id'];?> />
@@ -596,8 +596,8 @@ document.list_form.submit();
 				}
 		echo "\n</TABLE>\n";
 ?>
-	<INPUT TYPE = "button" VALUE = "Cancel" onClick = "window.close();" STYLE = "margin-top:12px;">
-	<INPUT TYPE = "button" VALUE = "Add" onClick = "document.list_form.action.value='new'; document.list_form.submit();" STYLE = "margin-left:30px;">
+    <INPUT TYPE = "button" VALUE = "<?php print gettext('Cancel');?>" onClick = "window.close();" STYLE = "margin-top:12px;"/>
+    <INPUT TYPE = "button" VALUE = "<?php print gettext('Add');?>" onClick = "document.list_form.action.value='new'; document.list_form.submit();" STYLE = "margin-left:30px;"/>
 </CENTER>
 <script>
 /**
@@ -612,9 +612,9 @@ document.list_form.submit();
 </script>
 
 <FORM NAME = "list_form" METHOD = "get" ACTION = "<?php echo basename(__FILE__);?>">
-<INPUT TYPE="hidden" NAME = "ticket_id" VALUE = "<?php echo $_GET['ticket_id'];?>">
-<INPUT TYPE="hidden" NAME = "id" VALUE = "">
-<INPUT TYPE="hidden" NAME = "action" VALUE = "edit">
+<INPUT TYPE="hidden" NAME = "ticket_id" VALUE = "<?php echo $_GET['ticket_id'];?>"/>
+<INPUT TYPE="hidden" NAME = "id" VALUE = ""/>
+<INPUT TYPE="hidden" NAME = "action" VALUE = "edit"/>
 </FORM>
 
 <?php
@@ -622,7 +622,7 @@ document.list_form.submit();
 		
 	else {				// $get_action - NOTA - default
 ?>
-		<BR /><BR /><FONT CLASS="header" STYLE = 'margin-left:50px'>Add <?php print $patient; ?> Record</FONT><BR /><BR />
+		<BR /><BR /><FONT CLASS="header" STYLE = 'margin-left:50px'><?php print gettext('Add {$patient} Record');?></FONT><BR /><BR />
 		<FORM METHOD="post" NAME='patientAdd' onSubmit='return validate(document.patientAdd);'  ACTION="<?php echo basename(__FILE__);?>?ticket_id=<?php print $_GET['ticket_id'];?>&action=add">
 		<TABLE BORDER="0" CELLSPACING=2 CELLPADDING=2 STYLE = 'margin-left:50px;'>
 		<TR CLASS='even' ><TD><B><?php print get_text("Patient ID");?>:</B> <font color='red' size='-1'>*</font></TD><TD><INPUT TYPE="text" NAME="frm_name" value="" size="32"></TD></TR>
@@ -660,11 +660,11 @@ document.list_form.submit();
 ?>		
 
 
-		<TR CLASS='even' ><TD  CLASS="td_label">Description: <font color='red' size='-1'>*</font></TD><TD><TEXTAREA ROWS="6" COLS="62" NAME="frm_description" WRAP="virtual"></TEXTAREA></TD></TR> <!-- 10/19/08 -->
+		<TR CLASS='even' ><TD  CLASS="td_label"><?php print gettext('Description');?>: <font color='red' size='-1'>*</font></TD><TD><TEXTAREA ROWS="6" COLS="62" NAME="frm_description" WRAP="virtual"></TEXTAREA></TD></TR> <!-- 10/19/08 -->
 
 		<TR VALIGN = 'TOP' CLASS='even'>		<!-- 11/15/10 -->
 			<TD ALIGN='right' CLASS="td_label"></TD><TD>
-				<SPAN CLASS="td_label">Signal: </SPAN>
+				<SPAN CLASS="td_label"><?php print gettext('Signal');?>: </SPAN>
 				<SELECT NAME='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>	<!--  11/17/10 -->
 				<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
@@ -694,6 +694,6 @@ document.list_form.submit();
 	</FORM>
 
 <FORM NAME='can_Form' ACTION="main.php">
-<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['ticket_id'];?>">
+<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['ticket_id'];?>"/>
 </FORM>
 </HTML>

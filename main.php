@@ -97,7 +97,7 @@ $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_ni
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	
+	<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />	
 	<STYLE>
 		.disp_stat	{ FONT-WEIGHT: bold; FONT-SIZE: 9px; COLOR: #FFFFFF; BACKGROUND-COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;}
 	</STYLE>
@@ -777,10 +777,10 @@ if (is_guest()) {													// 8/25/10
  * @type Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -852,7 +852,7 @@ if (is_guest()) {													// 8/25/10
 ?>
 			<SCRIPT SRC='./modules/Ticker/js/mootools-1.2-core.js' type='text/javascript'></SCRIPT>
 			<SCRIPT SRC='./modules/Ticker/js/ticker_core.js' type='text/javascript'></SCRIPT>
-			<LINK REL=StyleSheet HREF="./modules/Ticker/css/ticker_css.php?version=<?php print time();?>" TYPE="text/css">
+			<LINK REL="StyleSheet" HREF="./modules/Ticker/css/ticker_css.php?version=<?php print time();?>" TYPE="text/css"/>
 <?php
 			$ld_ticker = "ticker_init();";	//	3/23/11 To support ticket module
 			}
@@ -1144,7 +1144,7 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
  				<DIV class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;"><?php print gettext('Viewed Regions');?>
  				<DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';"><?php print gettext('Dock');?></DIV><BR /><BR />
  				<DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
- 					onmousedown="dragStart(event, 'boxB')"><i><?php print gettext('Drag me');?></i></DIV>
+ 					onmousedown="dragStart(event, 'boxB');"><i><?php print gettext('Drag me');?></i></DIV>
 
 				<DIV id="region_boxes2" class="content" style="z-index: 1000;"></DIV> 
 				</DIV>

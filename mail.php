@@ -33,7 +33,7 @@ extract ($_GET);
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 <?php
 
 if (empty ($_POST)) {
@@ -152,7 +152,7 @@ if (empty ($_POST)) {
 			}
 		
 ?>
-		<INPUT TYPE = "hidden" NAME="frm_to_str" VALUE="">
+		<INPUT TYPE = "hidden" NAME="frm_to_str" VALUE=""/>
 		<INPUT TYPE = "hidden" NAME="frm_subj" VALUE= "<?php print shorten($t_row['scope'], 48); ?>"/>
 		</FORM>
 	<FORM NAME='dummy' METHOD='get'>

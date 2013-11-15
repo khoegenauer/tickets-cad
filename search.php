@@ -34,7 +34,7 @@ $evenodd = array ("even", "odd");
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 <SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry&sensor=false"></SCRIPT>	<!-- 4/23/13 -->
 <SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 4/23/13 -->
 <SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 4/23/13 -->
@@ -100,7 +100,7 @@ function validate(theForm) {
 </SCRIPT>
 </HEAD>
 
-<BODY onLoad = "ck_frames()">
+<BODY onLoad = "ck_frames();">
 <?php 
 	$post_frm_query = (array_key_exists('frm_query', $_POST)) ? strip_tags($_POST['frm_query']) : FALSE ;		// 1/6/2013
 
@@ -240,7 +240,7 @@ function validate(theForm) {
 		}
 ?>
 <BR /><BR />
-<FORM METHOD="post" NAME="queryForm" ACTION="search.php" onSubmit="return validate(document.queryForm)">
+<FORM METHOD="post" NAME="queryForm" ACTION="search.php" onSubmit="return validate(document.queryForm);">
 <TABLE CELLPADDING="2" BORDER="0" STYLE = 'margin-left:80px;'>
 <TR CLASS = "even"><TD VALIGN="top" CLASS="td_label"><?php print gettext('Query');?>: &nbsp;</TD><TD><INPUT TYPE="text" SIZE="40" MAXLENGTH="255" VALUE="<?php print $post_frm_query;?>" NAME="frm_query"></TD></TR>
 <TR CLASS = "odd"><TD VALIGN="top" CLASS="td_label"><?php print gettext('Search in');?>: &nbsp;</TD><TD>
@@ -271,6 +271,6 @@ function validate(theForm) {
 <INPUT TYPE="radio" NAME="frm_querytype" VALUE="<?php print $STATUS_OPEN;?>"> <?php print gettext('Open');?><BR />
 <INPUT TYPE="radio" NAME="frm_querytype" VALUE="<?php print $STATUS_CLOSED;?>"> <?php print gettext('Closed');?><BR />
 </TD></TR>
-<TR CLASS = "even"><TD></TD><TD ALIGN = "left"><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="history.back()" / ><INPUT TYPE="reset" VALUE="<?php print gettext('Reset');?>" STYLE ="margin-left:20px" /><INPUT TYPE="submit" VALUE="<?php print gettext('Next');?>"  STYLE ="margin-left:20px" /></TD></TR>
+<TR CLASS = "even"><TD></TD><TD ALIGN = "left"><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="history.back();" /><INPUT TYPE="reset" VALUE="<?php print gettext('Reset');?>" STYLE ="margin-left:20px" /><INPUT TYPE="submit" VALUE="<?php print gettext('Next');?>"  STYLE ="margin-left:20px" /></TD></TR>
 </TABLE></FORM>
 </BODY></HTML>

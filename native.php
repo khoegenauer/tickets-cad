@@ -8,12 +8,12 @@ require_once('./incs/functions.inc.php');
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Tickets mail test');?></TITLE>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"/>
+<META HTTP-EQUIV="Expires" CONTENT="0"/>
+<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE"/>
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE"/>
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript"/>
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
 <?php
 if (empty($_POST)) {
 ?>
@@ -42,7 +42,7 @@ function validateForm (theForm) {
 	if ( theForm.frm_message.value.trim().length == 0 ) 		{errstr += "<?php print gettext('Message text error');?>\n"}
 	if (errstr.length > 0) {alert ("<?php print gettext('Errors needing correction');?>:\n\n" + errstr); return false;}
 
-	else {mail_form.submit()}
+	else {mail_form.submit();}
 	}		// end function validateForm ()
 </SCRIPT>
 </HEAD>
@@ -54,31 +54,31 @@ function validateForm (theForm) {
 </TR>
 <TR VALIGN="middle" CLASS = 'odd'>
 	<TD ALIGN="right" CLASS="td_label" ><?php print gettext('E-mail from');?>:</TD>
-	<TD><INPUT TYPE = "text" NAME = "frm_from" SIZE = 48 MAXLENGTH = 48 VALUE = "" placeholder="<?php print gettext('test address here');?>"></TD>
+	<TD><INPUT TYPE = "text" NAME = "frm_from" SIZE = 48 MAXLENGTH = 48 VALUE = "" placeholder="<?php print gettext('test address here');?>"/></TD>
 </TR>
 <TR VALIGN="middle" CLASS = 'even'>
 	<TD ALIGN="right" CLASS="td_label" ><?php print gettext('To');?>:</TD>
-	<TD><INPUT TYPE = "text" NAME = "frm_to" SIZE = 48 MAXLENGTH = 48 VALUE = "" placeholder="<?php print gettext('test address here');?>"></TD>
+	<TD><INPUT TYPE = "text" NAME = "frm_to" SIZE = 48 MAXLENGTH = 48 VALUE = "" placeholder="<?php print gettext('test address here');?>"/></TD>
 </TR>
 <TR VALIGN="middle" CLASS = 'odd'>
 	<TD ALIGN="right" CLASS="td_label" ><?php print gettext('Reply-to');?>:</TD>
-	<TD><INPUT TYPE = "text" NAME = "frm_reply_to" SIZE = 48 MAXLENGTH = 48 VALUE = "" placeholder="<?php print gettext('test address here');?>"></TD>
+	<TD><INPUT TYPE = "text" NAME = "frm_reply_to" SIZE = 48 MAXLENGTH = 48 VALUE = "" placeholder="<?php print gettext('test address here');?>"/></TD>
 </TR>
 <TR VALIGN="middle" CLASS = 'even'>
 	<TD ALIGN="right" CLASS="td_label" > <?php print gettext('Subject');?>:</TD>
-	<TD><INPUT TYPE = "text" NAME = "frm_subject" SIZE = 48 MAXLENGTH = 48 VALUE = "Test Subject');?>"></TD>
+	<TD><INPUT TYPE = "text" NAME = "frm_subject" SIZE = 48 MAXLENGTH = 48 VALUE = "<?php print gettext('Test Subject');?>"/></TD>
 </TR>
 <TR VALIGN="middle" CLASS = 'odd'>
 	<TD ALIGN="right" CLASS="td_label" > <?php print gettext('Message');?>: </TD>
-	<TD><INPUT TYPE = "text" NAME = "frm_message" SIZE = 48 MAXLENGTH = 48 VALUE = "Test message text');?>" ></TD>
+	<TD><INPUT TYPE = "text" NAME = "frm_message" SIZE = 48 MAXLENGTH = 48 VALUE = "<?php print gettext('Test message text');?>" /></TD>
 </TR>
 </FORM>
 
 <TR VALIGN="middle" CLASS = 'even'>
 	<TD colspan = 2 align= "center"><br/>
-	<input type="button" value="<?php print gettext('Submit');?>" onclick = "validateForm (document.mail_form)">
-	<input type="button" value="<?php print gettext('Reset');?>" onclick = "document.mail_form.reset(); document.mail_form.frm_from.focus();"  STYLE = 'margin-left: 24px;'>
-	<input type="button" value="<?php print gettext('Cancel');?>" STYLE = 'margin-left: 24px;' onClick = "self.close();">
+	<input type="button" value="<?php print gettext('Submit');?>" onclick = "validateForm (document.mail_form)"/>
+	<input type="button" value="<?php print gettext('Reset');?>" onclick = "document.mail_form.reset(); document.mail_form.frm_from.focus();"  STYLE = 'margin-left: 24px;'/>
+	<input type="button" value="<?php print gettext('Cancel');?>" STYLE = 'margin-left: 24px;' onClick = "self.close();"/>
 	</TD>
 </TR>
 </TABLE>

@@ -36,7 +36,7 @@ $_GET = stripslashes_deep($_GET);
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+	<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
     <style type="text/css">
       body 					{font-family: Verdana, Arial, sans serif;font-size: 11px;margin: 2px;}
       table.directions th 	{background-color:#EEEEEE;}	  
@@ -83,7 +83,7 @@ catch(e) {
 	<CENTER><BR><BR><BR><BR><H3><?php print gettext('Call Assignments made to');?>:<BR /><?php print $_POST['frm_name_str'];?><BR><BR>
 	<?php print gettext('See call Board');?></H3>
 	<FORM NAME='cont_form' METHOD = 'get' ACTION = "main.php">
-	<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>' onClick = "document.cont_form.submit()">
+	<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>' onClick = "document.cont_form.submit();">
 	</FORM></BODY></HTML>
 <?php		
 	}		// end if (!empty($_POST))
@@ -241,7 +241,7 @@ function doReset() {
 	unset ($result);
 ?>
 <!--	<BODY onLoad = "ck_frames()" onUnload='GUnload()'> -->
-	<BODY onUnload='GUnload()'>
+	<BODY onUnload='GUnload();'>
 	<TABLE ID='outer' BORDER = 0>
 	<TR><TD VALIGN='top'><DIV ID='side_bar' STYLE='width: 400px'></DIV>
 		<BR>
@@ -259,19 +259,19 @@ function doReset() {
 			<DIV ID="directions" STYLE="width: <?php print get_variable('map_width');?>"></DIV>
 		</TD></TR></TABLE><!-- end outer -->
 	<FORM NAME='can_Form' ACTION="main.php">
-	<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['ticket_id'];?>">
+	<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['ticket_id'];?>"/>
 	</FORM>	
 	<FORM NAME='routes_Form' METHOD='post' ACTION="<?php print basename( __FILE__); ?>">
-	<INPUT TYPE='hidden' NAME='func' 			VALUE='do_db'>
-	<INPUT TYPE='hidden' NAME='frm_ticket_id' 	VALUE='<?php print $_GET['ticket_id']; ?>'>
-	<INPUT TYPE='hidden' NAME='frm_by_id' 		VALUE= "<?php print $_SESSION['user_id'];?>">
-	<INPUT TYPE='hidden' NAME='frm_id_str' 		VALUE= "">
-	<INPUT TYPE='hidden' NAME='frm_name_str' 	VALUE= "">
-	<INPUT TYPE='hidden' NAME='frm_status_id' 	VALUE= "1">
-	<INPUT TYPE='hidden' NAME='frm_comments' 	VALUE= "New">
+	<INPUT TYPE='hidden' NAME='func' 			VALUE='do_db'/>
+	<INPUT TYPE='hidden' NAME='frm_ticket_id' 	VALUE='<?php print $_GET['ticket_id']; ?>'/>
+	<INPUT TYPE='hidden' NAME='frm_by_id' 		VALUE= "<?php print $_SESSION['user_id'];?>"/>
+	<INPUT TYPE='hidden' NAME='frm_id_str' 		VALUE= ""/>
+	<INPUT TYPE='hidden' NAME='frm_name_str' 	VALUE= ""/>
+	<INPUT TYPE='hidden' NAME='frm_status_id' 	VALUE= "1"/>
+	<INPUT TYPE='hidden' NAME='frm_comments' 	VALUE= "New"/>
 	</FORM>
 	<FORM NAME='reLoad_Form' METHOD = 'get' ACTION="<?php print basename( __FILE__); ?>">
-	<INPUT TYPE='hidden' NAME='ticket_id' 	VALUE='<?php print $_GET['ticket_id']; ?>'>
+	<INPUT TYPE='hidden' NAME='ticket_id' 	VALUE='<?php print $_GET['ticket_id']; ?>'/>
 	</FORM>	
 	
 	</BODY>
@@ -345,7 +345,7 @@ function do_list($unit_id ="") {
 			gmarkers[id] = marker;							// marker to array for side_bar click function
 			infoTabs[id] = tabs;							// tabs to array
 	
-			side_bar_html += "<TR CLASS='" + colors[(id+1)%2] +"' VALIGN='bottom' onClick = myclick(" + id + ");><TD>";
+			side_bar_html += "<TR CLASS='" + colors[(id+1)%2] +"' VALIGN='bottom' onClick = 'myclick(" + id + ");'><TD>";
 			side_bar_html += "<IMG BORDER=0 SRC='rtarrow.gif' ID = \"R" + id + "\"  STYLE = 'visibility:hidden;'></TD>";
 			side_bar_html += "<TD CLASS='td_label'>" + (id) + ". "+ sidebar +"</TD></TR>\n";
 			bounds.extend(point);							// extend the bounding box
@@ -433,7 +433,7 @@ function do_list($unit_id ="") {
 					}
 				}
 			if (msgstr.length==0) {
-				var more = (nr_units>1)? "s": ""
+				var more = (nr_units>1)? "s": "";
 				alert ("<?php print gettext('Please select unit');?>" + more + ", <?php print gettext('or cancel');?>");
 				return false;
 				}
@@ -695,9 +695,9 @@ function do_list($unit_id ="") {
 <?php
 			$thefunc = (is_guest())? "guest()" : "validate()";		// reject guest attempts
 ?>
-			side_bar_html+= "<TR><TD COLSPAN=99 ALIGN='center'><INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>'  onClick='history.back();'>";
+			side_bar_html+= "<TR><TD COLSPAN=99 ALIGN='center'><INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>'  onClick='history.back();'/>";
 			side_bar_html+= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='button' value='<?php print gettext('DISPATCH SELECTED UNITS');?>' onClick = '<?php print $thefunc;?>' />";
-			side_bar_html+= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='RESET' VALUE='<?php print gettext('Reset');?>' onClick = 'doReset()'>";
+			side_bar_html+= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='RESET' VALUE='<?php print gettext('Reset');?>' onClick = 'doReset();'/>";
 			side_bar_html+= "</TD></TR>";
 			}
 	

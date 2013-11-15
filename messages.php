@@ -123,7 +123,7 @@ function get_sentmessages() {
  * @returns {undefined}
  */	
 function light_butt(btn_id) {				// 8/24/10 -     
-	CngClass(btn_id, 'signal_w')			// highlight this button
+	CngClass(btn_id, 'signal_w');			// highlight this button
 	if(!(current_butt_id == btn_id)) {
 		do_off_signal (current_butt_id);	// clear any prior one if different
 		}
@@ -135,7 +135,7 @@ function light_butt(btn_id) {				// 8/24/10 -
  * @returns {Boolean}
  */	
 function do_off_signal (the_id) {
-	CngClass(the_id, 'plain')
+	CngClass(the_id, 'plain');
 	return true;
 	}
 /**
@@ -290,14 +290,14 @@ thelevel = "<?php print can_delete_msg();?>";
 				<TR id='therow' style='padding-top: 3px; padding-bottom: 3px; background-color: #CECECE; color: #FFFFFF; width: 100%;'>
 <?php
 				$print = "";
-				$print .= (in_array('1', $columns_arr)) ? "<TD id='ticket' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`ticket_id`',filter)\">" . gettext('Tkt') . "</TD>" : "";					
-				$print .= (in_array('2', $columns_arr)) ? "<TD id='type' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`msg_type`',filter)\">" . gettext('Typ') . "</TD>" : "";				
-				$print .= (in_array('3', $columns_arr)) ? "<TD id='fromname' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`fromname`',filter)\">" . gettext('From') . "</TD>" : "";				
-				$print .= (in_array('4', $columns_arr)) ? "<TD id='recipients' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`recipients`',filter)\">" . gettext('To') . "</TD>" : "";
-				$print .= (in_array('5', $columns_arr)) ? "<TD id='subject' class='cols_h' NOWRAP style='width: 15.5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`subject`',filter)\">" . gettext('Subject') . "</TD>" : "";					
-				$print .= (in_array('6', $columns_arr)) ? "<TD id='message' class='cols_h' NOWRAP style='width: 40%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`message`',filter)\">" . gettext('Message') . "</TD>" : "";
-				$print .= (in_array('7', $columns_arr)) ? "<TD id='date' class='cols_h' style='width: 8%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`date`',filter)\">" . gettext('Date') . "</TD>" : "";
-				$print .= (in_array('8', $columns_arr)) ? "<TD id='owner' class='cols_h' NOWRAP style='width:7%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`_by`',filter)\">" . gettext('Owner') . "</TD>" : "";
+				$print .= (in_array('1', $columns_arr)) ? "<TD id='ticket' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`ticket_id`',filter);\">" . gettext('Tkt') . "</TD>" : "";					
+				$print .= (in_array('2', $columns_arr)) ? "<TD id='type' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`msg_type`',filter);\">" . gettext('Typ') . "</TD>" : "";				
+				$print .= (in_array('3', $columns_arr)) ? "<TD id='fromname' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`fromname`',filter);\">" . gettext('From') . "</TD>" : "";				
+				$print .= (in_array('4', $columns_arr)) ? "<TD id='recipients' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`recipients`',filter);\">" . gettext('To') . "</TD>" : "";
+				$print .= (in_array('5', $columns_arr)) ? "<TD id='subject' class='cols_h' NOWRAP style='width: 15.5%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`subject`',filter);\">" . gettext('Subject') . "</TD>" : "";					
+				$print .= (in_array('6', $columns_arr)) ? "<TD id='message' class='cols_h' NOWRAP style='width: 40%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`message`',filter);\">" . gettext('Message') . "</TD>" : "";
+				$print .= (in_array('7', $columns_arr)) ? "<TD id='date' class='cols_h' style='width: 8%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`date`',filter);\">" . gettext('Date') . "</TD>" : "";
+				$print .= (in_array('8', $columns_arr)) ? "<TD id='owner' class='cols_h' NOWRAP style='width:7%;' onClick=\"sort_switcher('main', the_selected_ticket,'','`_by`',filter);\">" . gettext('Owner') . "</TD>" : "";
 				$print .= "<TD id='del' class='cols_h' NOWRAP style='width: 3%; color: red;'>" . gettext('DEL') . "</TD>";
 				print $print;
 ?>			

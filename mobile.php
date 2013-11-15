@@ -153,7 +153,7 @@ function adj_time($time_stamp) {
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print $vers;?>" TYPE="text/css" />	<!-- 3/15/11 -->
+	<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print $vers;?>" TYPE="text/css" />	<!-- 3/15/11 -->
 	<STYLE>
 		input.btn_chkd 		{ margin-top: <?php print $button_spacing;?>px; width: <?php print $button_width;?>px; height: <?php print $button_height;?>px; color:#050;  font: bold 120% 'trebuchet ms',helvetica,sans-serif; background-color:#EFEFEF;  border:1px solid;  border-color: #696 #363 #363 #696; border-width: 4px; border-STYLE: inset;text-align: center; } 
 		input.btn_not_chkd 	{ margin-top: <?php print $button_spacing;?>px; width: <?php print $button_width;?>px; height: <?php print $button_height;?>px; color:#050;  font: bold 120% 'trebuchet ms',helvetica,sans-serif; background-color:#DEE3E7;  border-color: #696 #363 #363 #696; border-width: 4px; border-STYLE: outset;text-align: center; } 
@@ -430,10 +430,10 @@ function replaceButtonText(buttonId, text) {
  * @type Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -594,7 +594,7 @@ if (mysql_affected_rows()==0) {
 
 <BR /><BR /><BR /><BR />
 <CENTER>
-<input id="b1" type="button" value="Hide Top Menu" CLASS='btn_not_chkd' onclick="showhideFrame(this)"><BR /><BR /> 
+<input id="b1" type="button" value="Hide Top Menu" CLASS='btn_not_chkd' onclick="showhideFrame(this);" /><BR /><BR /> 
 <H2><?php print $for_str;?>: <?php print gettext('no current calls as of');?> <?php print substr($now, 11,5);?></H2>
 <?php
 	if (can_edit()) {
@@ -691,7 +691,7 @@ else {						// set up $assigns_stack, $selected_indx - 2/14/12, 2/17/12
 		params += "&frm_vals=" + dbfns[which];
 		sendRequest ('assigns_t.php',handleResult, params);			// does the work
 		var curr_time = do_time();
-		replaceButtonText(btn_ids[which], btn_labels[which] + curr_time)
+		replaceButtonText(btn_ids[which], btn_labels[which] + curr_time);
 		CngClass(btn_ids[which], 'btn_chkd');				// CngClass(obj, the_class)
 		parent.frames['upper'].show_msg (btn_labels_full[which] + curr_time);
 <?php
@@ -819,7 +819,7 @@ $unload_str = ($_SESSION['internet'])? "GUnload(); end_watch();"  : "end_watch()
 	</TD>
 	<TD ID = 'ctr top' ALIGN='center'>
 		<TABLE BORDER=0 >
-		<TR><TD ALIGN='center'><input id="b1" type="button" value="<?php print gettext('Hide Menu');?>" CLASS='btn_not_chkd' onclick="showhideFrame(this)"></TD></TR>
+		<TR><TD ALIGN='center'><input id="b1" type="button" value="<?php print gettext('Hide Menu');?>" CLASS='btn_not_chkd' onclick="showhideFrame(this);"/></TD></TR>
 		<TR CLASS='spacer'><TD class='spacer'>&nbsp;</TD></TR>
 		<TR><TD ALIGN='left'>	<!-- 3/15/11 -->	
 <?php

@@ -45,7 +45,7 @@ $help7 .= '"' . gettext('Your own operation will determine what these are and ho
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
 <SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
 <SCRIPT SRC="./js/jscolor/jscolor.js"></SCRIPT>
 <STYLE type="text/css">
@@ -151,8 +151,8 @@ function new_line() {
 	the_text +=	"<TD style='width: 20%;'><INPUT NAME='frm_name[]' TYPE='text' SIZE='20' MAXLENGTH='20' VALUE=''></TD>";
 	the_text +=	"<TD style='width: 30%;'><TEXTAREA ROWS='2' COLS='24' NAME='frm_desc[]' STYLE='overflow-y: scroll;'></TEXTAREA></TD>";		
 	the_text +=	"<TD style='width: 20%;'><SELECT NAME='frm_sev[]'><OPTION VALUE=0 SELECTED><?php print gettext('Normal');?></OPTION><OPTION VALUE=1><?php print gettext('Medium');?></OPTION><OPTION VALUE=2><?php print gettext('High');?></OPTION></SELECT></TD>";	
-	the_text +=	"<TD style='width: 20%;'><INPUT NAME='frm_grp[]' TYPE='text' SIZE='24' VALUE=''></TD>";
-	the_text += '<TD style="width: 10%;"><SPAN id="a_line' + ct + '" class="plain" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="delIt(\'severity' + ct + '\')"><?php print gettext('Delete');?></SPAN></TD>';
+	the_text +=	"<TD style='width: 20%;'><INPUT NAME='frm_grp[]' TYPE='text' SIZE='24' VALUE=''/></TD>";
+	the_text += '<TD style="width: 10%;"><SPAN id="a_line' + ct + '" class="plain" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="delIt(\'severity' + ct + '\');"><?php print gettext('Delete');?></SPAN></TD>';
 	the_text +=	"</TR>";
 	the_text +=	"</TABLE>";
 	the_text +=	"</DIV>";
@@ -197,7 +197,7 @@ function new_line2() {
 	the_text +=	"</SELECT>";		
 	the_text +=	"</TD>";						
 	the_text +=	"<TD style='width: 10%; text-align: right; background-color: #FFFFFF; border: 1px inset #DEDEDE;'><DIV id='resp_icon_" + dt + "' style='width: 100%; text-align: right;'></DIV></TD>";
-	the_text += '<TD style="width: 20%;"><SPAN id="b_line' + dt + '" class="plain" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="delIt2(\'rtype' + dt + '\')"><?php print gettext('Delete');?></SPAN></TD>';
+	the_text += '<TD style="width: 20%;"><SPAN id="b_line' + dt + '" class="plain" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="delIt2(\'rtype' + dt + '\');"><?php print gettext('Delete');?></SPAN></TD>';
 	the_text +=	"</TR>";	
 	the_text +=	"</TABLE>";
 	the_text +=	"</DIV>";
@@ -226,12 +226,12 @@ function new_line3() {
 	var the_text = "<DIV style='width: 90%;'>";
 	the_text +=	"<TABLE style='width: 90%;'>";
 	the_text +=	"<TR style='width: 98%;'>";
-	the_text +=	"<TD style='width: 20%;'><INPUT NAME='frm_rstat_name[]' TYPE='text' SIZE='12' MAXLENGTH='20' VALUE=''></TD>";
+	the_text +=	"<TD style='width: 20%;'><INPUT NAME='frm_rstat_name[]' TYPE='text' SIZE='12' MAXLENGTH='20' VALUE=''/></TD>";
 	the_text +=	"<TD style='width: 30%;'><TEXTAREA ROWS='2' COLS='24' NAME='frm_rstat_desc[]' STYLE='overflow-y: scroll;'></TEXTAREA></TD>";		
-	the_text +=	"<TD style='width: 20%;'><INPUT NAME='frm_rstat_group[]' TYPE='text' SIZE='12' VALUE=''></TD>";					
-	the_text +=	"<TD style='width: 10%;'><INPUT CLASS='color' NAME='frm_rstat_bgcol[]' TYPE='text' SIZE='6' VALUE='FFFFFF'></TD>";
-	the_text +=	"<TD style='width: 10%;'><INPUT CLASS='color' NAME='frm_rstat_col[]' TYPE='text' SIZE='6' VALUE='000000'></TD>";						
-	the_text += '<TD style="width: 10%;"><SPAN id="c_line' + et + '" class="plain" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="delIt3(\'rstat' + et + '\')">Delete</SPAN></TD>';
+	the_text +=	"<TD style='width: 20%;'><INPUT NAME='frm_rstat_group[]' TYPE='text' SIZE='12' VALUE=''/></TD>";					
+	the_text +=	"<TD style='width: 10%;'><INPUT CLASS='color' NAME='frm_rstat_bgcol[]' TYPE='text' SIZE='6' VALUE='FFFFFF'/></TD>";
+	the_text +=	"<TD style='width: 10%;'><INPUT CLASS='color' NAME='frm_rstat_col[]' TYPE='text' SIZE='6' VALUE='000000'/></TD>";						
+	the_text += '<TD style="width: 10%;"><SPAN id="c_line' + et + '" class="plain" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="delIt3(\'rstat' + et + '\');"><?php print gettext('Delete');?></SPAN></TD>';
 	the_text +=	"</TR>";	
 	the_text +=	"</TABLE>";
 	the_text +=	"</DIV>";
@@ -971,7 +971,7 @@ elseif((!empty($_POST)) && (isset($_POST['country']))) {
 				</TR>
 			</TABLE>
 		</DIV>
-		<C/ENTER>		
+		</CENTER>		
 		<BR />
 		<BR />
 		<CENTER>
@@ -1167,11 +1167,11 @@ elseif((!empty($_POST)) && (isset($_POST['country']))) {
 						<TD style='width: 10%; font-size: 12px;'>&nbsp;</TD>						
 					</TR>
 					<TR style='width: 98%;'>
-						<TD style='width: 20%;'><INPUT NAME='frm_rstat_name[]' TYPE='text' SIZE='12' MAXLENGTH='20' VALUE='On Duty'></TD>
+						<TD style='width: 20%;'><INPUT NAME='frm_rstat_name[]' TYPE='text' SIZE='12' MAXLENGTH='20' VALUE='On Duty'/></TD>
 						<TD style='width: 30%;'><TEXTAREA ROWS='2' COLS='24' NAME='frm_rstat_desc[]' STYLE='overflow-y: scroll;'><?php print gettext('Responder on Duty');?></TEXTAREA></TD>		
-						<TD style='width: 20%;'><INPUT NAME='frm_rstat_group[]' TYPE='text' SIZE='12' MAXLENGTH='20' VALUE='Available'></TD>						
-						<TD style='width: 10%;'><INPUT CLASS='color' NAME='frm_rstat_bgcol[]' TYPE='text' SIZE='6' VALUE='1FFF1F'></TD>
-						<TD style='width: 10%;'><INPUT CLASS='color' NAME='frm_rstat_col[]' TYPE='text' SIZE='6' VALUE='FFFFFF'></TD>						
+						<TD style='width: 20%;'><INPUT NAME='frm_rstat_group[]' TYPE='text' SIZE='12' MAXLENGTH='20' VALUE='Available'/></TD>						
+						<TD style='width: 10%;'><INPUT CLASS='color' NAME='frm_rstat_bgcol[]' TYPE='text' SIZE='6' VALUE='1FFF1F'/></TD>
+						<TD style='width: 10%;'><INPUT CLASS='color' NAME='frm_rstat_col[]' TYPE='text' SIZE='6' VALUE='FFFFFF'/></TD>						
 						<TD style='width: 10%;'>&nbsp;</TD>
 					</TR>
 				</TABLE>
@@ -1189,14 +1189,14 @@ elseif((!empty($_POST)) && (isset($_POST['country']))) {
 		<BR />			
 	</DIV>	
 
-	<INPUT TYPE='hidden' NAME='resp_lat' VALUE='0.999999'>
-	<INPUT TYPE='hidden' NAME='resp_lng' VALUE='0.999999'>	
-	<INPUT TYPE='hidden' NAME='lat' VALUE=''>	
-	<INPUT TYPE='hidden' NAME='lng' VALUE=''>	
-	<INPUT TYPE='hidden' NAME='country' VALUE=''>	
-	<INPUT TYPE='hidden' NAME='state' VALUE=''>	
-	<INPUT TYPE='hidden' NAME='delta' VALUE=''>
-	<INPUT TYPE='hidden' NAME='locale' VALUE=''>	
+	<INPUT TYPE='hidden' NAME='resp_lat' VALUE='0.999999'/>
+	<INPUT TYPE='hidden' NAME='resp_lng' VALUE='0.999999'/>	
+	<INPUT TYPE='hidden' NAME='lat' VALUE=''/>	
+	<INPUT TYPE='hidden' NAME='lng' VALUE=''/>	
+	<INPUT TYPE='hidden' NAME='country' VALUE=''/>	
+	<INPUT TYPE='hidden' NAME='state' VALUE=''/>	
+	<INPUT TYPE='hidden' NAME='delta' VALUE=''/>
+	<INPUT TYPE='hidden' NAME='locale' VALUE=''/>	
 	</FORM>
 	
 	</DIV>

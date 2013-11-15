@@ -28,13 +28,12 @@ $title = (isset($row)) ? substr(stripslashes($row['scope']), 0, 60): $_POST['frm
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Email re');?>:  <?php print $title; ?></TITLE>
-<META NAME="Description" CONTENT="">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 <SCRIPT>
 /**
  * 
@@ -57,11 +56,11 @@ function reSizeScr(lines) {
  * @returns {Boolean}
  */
 function addrcheck(str) {
-	var at="@"
-	var dot="."
-	var lat=str.indexOf(at)
-	var lstr=str.length
-	var ldot=str.indexOf(dot)
+	var at="@";
+	var dot=".";
+	var lat=str.indexOf(at);
+	var lstr=str.length;
+	var ldot=str.indexOf(dot);
 	if (str.indexOf(at)==-1)													{return false;}
 	if (str.indexOf(at)==-1 || str.indexOf(at)==0 || str.indexOf(at)==lstr) 	{return false;}
 	if (str.indexOf(dot)==-1 || str.indexOf(dot)==0 || str.indexOf(dot)==lstr)	{return false;}
@@ -69,7 +68,7 @@ function addrcheck(str) {
 	if (str.substring(lat-1,lat)==dot || str.substring(lat+1,lat+2)==dot)		{return false;}
 	if (str.indexOf(dot,(lat+2))==-1)											{return false;}
 	if (str.indexOf(" ")!=-1)													{return false;}
-	return true					
+	return true;					
 	}
 var temp;
 var lines;
@@ -151,7 +150,7 @@ function do_val(theForm) {										// 2/28/09, 10/23/12
 </SCRIPT>
 </HEAD>
 
-<BODY onLoad = "reSizeScr(<?php print count($temp);?>)";><CENTER>
+<BODY onLoad = "reSizeScr(<?php print count($temp);?>);"><CENTER>
 <?php
 $use_messaging = get_variable('use_messaging');
 $the_other = ((isset($_GET['other'])) && ($_GET['other'] != "")) ? $_GET['other'] : "";
@@ -199,7 +198,7 @@ $the_other = ((isset($_GET['other'])) && ($_GET['other'] != "")) ? $_GET['other'
 	} else {
 ?>
 		<INPUT TYPE="hidden" NAME = 'frm_smsgaddrs' VALUE=""/> <!-- 10/23/12 -->
-		<INPUT TYPE='hidden' NAME = 'frm_use_smsg' VALUE = "0"> <!-- 10/23/12 -->
+		<INPUT TYPE='hidden' NAME = 'frm_use_smsg' VALUE = "0"/> <!-- 10/23/12 -->
 		<INPUT TYPE="hidden" NAME = 'frm_theothers' VALUE="<?php print $the_other;?>"/> <!-- 10/23/12 -->
 <?php
 	}
@@ -208,9 +207,9 @@ $the_other = ((isset($_GET['other'])) && ($_GET['other'] != "")) ? $_GET['other'
 		<TD COLSPAN=2 ALIGN = 'center'>
 			<INPUT TYPE="hidden" NAME = 'ticket_id' VALUE="<?php print $_GET['ticket_id'];?>"/> <!-- 10/23/12 -->
 			<INPUT TYPE="hidden" NAME = 'frm_title' VALUE="<?php print $row['scope'];?>"/>
-			<INPUT TYPE="button" VALUE="<?php print gettext('OK - mail this');?>" onClick = "do_val(document.mail_frm);">&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>" onClick = "document.mail_frm.reset();">&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="button" VALUE="<?php print gettext('Dont send');?>" onClick = "if(confirm('Confirm_do_not_send?')) {<?php print $finished_str;?>}">
+			<INPUT TYPE="button" VALUE="<?php print gettext('OK - mail this');?>" onClick = "do_val(document.mail_frm);"/>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>" onClick = "document.mail_frm.reset();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="button" VALUE="<?php print gettext('Dont send');?>" onClick = "if(confirm('Confirm_do_not_send?')) {<?php print $finished_str;?>}"/>
 		</TD>
 	</TR>
 </TABLE>

@@ -8,7 +8,6 @@ require_once('./incs/functions.inc.php');
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <HEAD>
-<META NAME="ROBOTS" CONTENT="INDEX,FOLLOW" />
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 <META HTTP-EQUIV="Expires" CONTENT="0" />
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -83,9 +82,9 @@ function do_plain (the_id) {
 	
 </SCRIPT>
 </HEAD>
-<BODY onLoad = 'ck_frames()'>
+<BODY onLoad = 'ck_frames();'>
 <FORM NAME='go_Form' ACTION=''>
-<INPUT TYPE='hidden' NAME='func' VALUE=''>
+<INPUT TYPE='hidden' NAME='func' VALUE=''/>
 </FORM>
 <FORM NAME='can_Form' ACTION='config.php'></FORM>
 <?php

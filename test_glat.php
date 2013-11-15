@@ -10,20 +10,20 @@ error_reporting(E_ALL);
 <HTML xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
 <HEAD>
 <TITLE><?php print gettext('Google Latitude Test');?></TITLE>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"/>
+<META HTTP-EQUIV="Expires" CONTENT="0"/>
+<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE"/>
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE"/>
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript"/>
+<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"/> <!-- 7/7/09 -->
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 <?php
 if (empty($_POST)) {
 ?>
 </HEAD>
 <BODY>
 <BR /><BR /><BR /><BR />
-<CENTER><H3><?php print gettext('Google Latitude Test');?></H3>
+<CENTER><H3><?php print gettext('Google Latitude Test');?></H3></CENTER>
 <BR />
 <BR />
 <FORM NAME='glat_form' METHOD = 'post' ACTION = '<?php print basename(__FILE__);?>'>
@@ -31,7 +31,7 @@ if (empty($_POST)) {
 <BR />
 <BR />
 <INPUT TYPE='submit' VALUE='<?php print gettext('Go');?>' />&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE="button" VALUE = "<?php print gettext('Finished');?>" onClick = "self.close()" /></FORM>
+<INPUT TYPE="button" VALUE = "<?php print gettext('Finished');?>" onClick = "self.close();" /></FORM>
 </BODY>
 </HTML>
 
@@ -165,7 +165,7 @@ $the_url = "http://www.google.com/latitude/apps/badge/api?user={$frm_badge}&type
 
     </script>
   </head>
-  <body onload="initialize()" onunload="GUnload()">
+  <body onload="initialize();" onunload="GUnload();">
 <?php
 		}
 	else {
@@ -174,14 +174,14 @@ $the_url = "http://www.google.com/latitude/apps/badge/api?user={$frm_badge}&type
 ?>		
   <CENTER>
   <br /><br />
-  <H3><?php print gettext('Google Latitude Test');?> <?php print $is_good? "Succeeds":"Fails"; ?></H3>
+  <H3><?php print gettext('Google Latitude Test');?> <?php print $is_good? gettext("Succeeds") : gettext("Fails"); ?></H3>
 	<H4><?php print gettext('using public location badge');?>: <?php print $_POST["frm_badge"]; ?></H4>
 <?php
 		if ($is_good) {print "<div id='map_canvas' style='width: 500px; height: 300px'></div>\n";}
 ?>
     <br />
-    <br /><br /><input type='button' value="<?php print gettext('Again');?>" onClick = 'location.href="<?php print basename(__FILE__); ?>"' />&nbsp;&nbsp;&nbsp;&nbsp;
-  </body><input type='button' value="<?php print gettext('Finished');?>" onClick = "self.close()" /><br /><br />
+    <br /><br /><input type='button' value="<?php print gettext('Again');?>" onClick = 'location.href="<?php print basename(__FILE__); ?>";' />&nbsp;&nbsp;&nbsp;&nbsp;
+  </body><input type='button' value="<?php print gettext('Finished');?>" onClick = "self.close();" /><br /><br />
   </body>
 </html>
 

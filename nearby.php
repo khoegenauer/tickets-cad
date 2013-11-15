@@ -26,12 +26,12 @@ $evenodd = array ("even", "odd");
 <HTML>
 <HEAD>
 <TITLE><?php echo LessExtension(basename(__FILE__));?></TITLE>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"/>
+<META HTTP-EQUIV="Expires" CONTENT="0"/>
+<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE"/>
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE"/>
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript"/>
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
 <SCRIPT>
 /**
  * 
@@ -75,7 +75,7 @@ $evenodd = array ("even", "odd");
 	}				// end if/else
 ?>
 </FORM>
-<BUTTON onclick = 'window.close()' STYLE = 'margin-top:32px;'><?php print gettext('Finished');?></BUTTON>
+<BUTTON onclick = 'window.close();' STYLE = 'margin-top:32px;'><?php print gettext('Finished');?></BUTTON>
 <script>
 //	document.write("<BUTTON onclick = 'javascript:history.go(-1)' STYLE = 'margin-top:32px;'>Back</BUTTON>");
 	</script>

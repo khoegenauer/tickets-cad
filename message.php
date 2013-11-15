@@ -147,7 +147,7 @@ function the_ticket($theRow, $theWidth=500, $search=FALSE, $dist=TRUE) {						//
 		print "ERROR in " . basename(__FILE__) . " " . __LINE__ . "<BR />";
 	}
 
-	$print .= "<TR CLASS='odd'><TD ALIGN='left' onClick = 'javascript: do_coords(" .$theRow['lat'] . "," . $theRow['lng']. ")'><U>" . get_text("Position") . "</U>: </TD>
+	$print .= "<TR CLASS='odd'><TD ALIGN='left' onClick = 'javascript: do_coords(" .$theRow['lat'] . "," . $theRow['lng']. ");'><U>" . get_text("Position") . "</U>: </TD>
 		<TD ALIGN='left'>" . get_lat($theRow['lat']) . "&nbsp;&nbsp;&nbsp;" . get_lng($theRow['lng']) . $grid_type . "</TD></TR>\n";		// 9/13/08
 
 	$print .= "<TR><TD colspan=2 ALIGN='left'>";
@@ -224,7 +224,7 @@ function get_tickname($theid) {	//	Gets responder ID from SMS Gateway ID
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
 <SCRIPT SRC="./js/messaging.js" TYPE="text/javascript"></SCRIPT>
 <SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
 <SCRIPT>
@@ -245,7 +245,7 @@ function reply_button() {
 	$("can_but").style.display="inline-block";		
 	$("send_but").style.display="inline-block";	
 	$("disp_but").style.display="none";	
-	$("send_but").onclick=function() {send_button('reply_frm')};
+	$("send_but").onclick=function() {send_button('reply_frm');};
 	}
 /**
  * 
@@ -263,7 +263,7 @@ function forward_button() {
 	$("can_but").style.display="inline-block";		
 	$("send_but").style.display="inline-block";	
 	$("disp_but").style.display="none";	
-	$("send_but").onclick=function() {send_button('forward_frm')};	
+	$("send_but").onclick=function() {send_button('forward_frm');};	
 	}
 /**
  * 
@@ -389,7 +389,7 @@ if(!empty($_POST)) {
 <?php
 		exit();		
 		} else {
-		$the_separator = "\n\n------------------Original Message  ------------------\n\n";
+		$the_separator = "\n\n------------------" . gettext('Original Message') . "  ------------------\n\n";
 		if((isset($_POST['frm_use_smsg'])) && ($_POST['frm_use_smsg'] == 1)) {
 			do_send ("", $_POST['frm_addrs'], "Tickets CAD",  $_POST['frm_reply'] . $the_separator . $_POST['frm_message'], $_POST['frm_ticket_id'], $_POST['frm_resp_id'] );		// - ($to_str, $to_smsr, $subject_str, $text_str, %ticket_id, $responder_id ) 
 			} else {
@@ -684,7 +684,7 @@ if(empty($_POST)) {
 ?>
 						<tr>
 							<td><?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?: </td>
-							<td><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE=1></td>
+							<td><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE=1 /></td>
 						</tr>		
 <?php			
 						}
@@ -711,15 +711,15 @@ if(empty($_POST)) {
 					</tr>      					
 					<tr>          
 						<td><?php print gettext('To');?>:</td>           
-						<td><INPUT TYPE='text' NAME='frm_addrs' size='60' VALUE=""></td>      
+						<td><INPUT TYPE='text' NAME='frm_addrs' size='60' VALUE="" /></td>      
 					</tr>      
 					<tr>           
 						<td><?php print gettext('Date');?>:</td>           
-						<td><INPUT TYPE='text' NAME='frm_date' size='60' VALUE="<?php print $now; ?>"></td>      
+						<td><INPUT TYPE='text' NAME='frm_date' size='60' VALUE="<?php print $now; ?>" /></td>      
 					</tr>     
 					<tr>           
 						<td><?php print gettext('Subject');?>:</td>           
-						<td><INPUT TYPE='text' NAME='frm_subject' size='60' VALUE="<?php print $row['subject']; ?>"></td>      
+						<td><INPUT TYPE='text' NAME='frm_subject' size='60' VALUE="<?php print $row['subject']; ?>" /></td>      
 					</tr> 	
 					<tr>   
 						<td><?php print gettext('Original Message');?>:</td>          					
@@ -734,7 +734,7 @@ if(empty($_POST)) {
 ?>
 						<tr>
 							<td><?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?: </td>
-							<td><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE=1></td>
+							<td><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE=1 /></td>
 						</tr>		
 <?php			
 						}
@@ -746,8 +746,8 @@ if(empty($_POST)) {
 				</table>
 			</DIV>
 			<FORM NAME="go_frm" METHOD="get" ACTION = "<?php print basename( __FILE__); ?>">	
-			<INPUT TYPE='hidden' NAME='id' VALUE=''>
-			<INPUT TYPE='hidden' NAME='screen' VALUE=''>			
+			<INPUT TYPE='hidden' NAME='id' VALUE='' />
+			<INPUT TYPE='hidden' NAME='screen' VALUE='' />			
 			</FORM>
 		</DIV>
 	</BODY>

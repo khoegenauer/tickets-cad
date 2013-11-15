@@ -12,7 +12,7 @@
     <title><?php print gettext('Google Maps');?></title>
     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAPDUET0Qt7p2VcSk6JNU1sBSM5jMcmVqUpI7aqV44cW1cEECiThQYkcZUPRJn9vy_TWxWvuLoOfSFBw" type="text/javascript"></script>
   </head>
-  <body onunload="GUnload()">
+  <body onunload="GUnload();">
 
 
     <div id="map" style="width: 550px; height: 450px"></div>
@@ -271,7 +271,7 @@
       var marker = createMarkeredLabel(point,'Some stuff to display in the Mississauga Info Window','Mississauga')
 */
       var point = new GLatLng(37.46619, -79.68957);
-      var marker = createMarkeredLabel(point,'<?php print gettext("Some Italic partially opaque text to place on a map");?>','<?php print gettext("Some  partially opaque text");?>')      
+      var marker = createMarkeredLabel(point,'<?php print gettext("Some Italic partially opaque text to place on a map");?>','<?php print gettext("Some  partially opaque text");?>');      
     }
     
     // display a warning if the browser was not compatible

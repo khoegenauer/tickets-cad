@@ -56,7 +56,7 @@ $facilitycontact = 	get_text("Facility contact");
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<META HTTP-EQUIV="Script-date" CONTENT="8/16/08">
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+	<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
 <?php
 	if ($gmaps) {		// 8/4/11
 ?>
@@ -232,7 +232,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
  * @returns {undefined}
  */
 	function do_unlock(theForm) {									// 8/10/08
-		do_asof(theForm, false)
+		do_asof(theForm, false);
 		document.getElementById("lock").style.visibility = "hidden";		
 		}
 /**
@@ -241,7 +241,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
  * @returns {undefined}
  */		
 	function do_lock(theForm) {										// 8/10/08
-		do_asof(theForm, true)
+		do_asof(theForm, true);
 		document.getElementById("lock").style.visibility = "visible";
 		}
 /**
@@ -379,10 +379,10 @@ function ck_frames() {		//  onLoad = "ck_frames()"
  * @type Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -556,9 +556,9 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 
 ?>
 
-		<TR CLASS='odd' ><TD></TD><TD ALIGN='center'><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick="do_cancel();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="Reset" VALUE="<?php print gettext('Reset');?>"  onClick = "do_lock(this.form); this.form.reset();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="Submit" VALUE="<?php print gettext('Submit');?>"></TD></TR>
+		<TR CLASS='odd' ><TD></TD><TD ALIGN='center'><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick="do_cancel();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE="Reset" VALUE="<?php print gettext('Reset');?>"  onClick = "do_lock(this.form); this.form.reset();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE="Submit" VALUE="<?php print gettext('Submit');?>"/></TD></TR>
 		</TABLE><BR />
 			<INPUT TYPE = 'hidden' NAME = 'frm_gender_val' VALUE = <?php print $row['gender'];?> />
 			<INPUT TYPE = 'hidden' NAME = 'frm_ins_id' VALUE = <?php print $row['insurance_id'];?> />
@@ -648,7 +648,7 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'><?php print gettext('Add') . " " . get_text("Patient") . gettext('Record');?></FONT></TD></TR>	<!-- 5/4/11 -->
 		<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR>				<!-- 5/4/11 -->			
 		<FORM METHOD="post" NAME='patientAdd' onSubmit='return validate(document.patientAdd);'  ACTION="patient.php?ticket_id=<?php print $_GET['ticket_id'];?>&action=add">
-		<TR CLASS='even'><TD class='td_label'><B><?php print get_text("Patient ID");?>:</B> <font color='red' size='-1'>*</font></TD><TD><INPUT TYPE="text" NAME="frm_name" value="" size="32"></TD></TR>
+		<TR CLASS='even'><TD class='td_label'><B><?php print get_text("Patient ID");?>:</B> <font color='red' size='-1'>*</font></TD><TD><INPUT TYPE="text" NAME="frm_name" value="" size="32"/></TD></TR>
 <?php
 
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]insurance` ORDER BY `sort_order` ASC, `ins_value` ASC";
@@ -703,9 +703,9 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 
 		<TR CLASS='odd' VALIGN='bottom'><TD CLASS="td_label"><?php print gettext('As of');?>: &nbsp;&nbsp;</TD><TD><?php print generate_date_dropdown('asof',0,TRUE);?>&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.patientAdd);'></TD></TR>
 
-		<TR CLASS='odd'><TD></TD><TD><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="do_cancel();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="Reset" VALUE="<?php print gettext('Reset');?>" onClick = "do_reset(this.form);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>" onclick = "validate(this.form);"></TD></TR>
+		<TR CLASS='odd'><TD></TD><TD><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="do_cancel();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="Reset" VALUE="<?php print gettext('Reset');?>" onClick = "do_reset(this.form);"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>" onclick = "validate(this.form);"/></TD></TR>
 		</TABLE><BR />
 			<INPUT TYPE = 'hidden' NAME = 'frm_ins_id' VALUE = 0 />
 			<INPUT TYPE = 'hidden' NAME = 'frm_gender_val' VALUE = 0 />
@@ -717,6 +717,6 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 		}
 ?>
 <FORM NAME='can_Form' ACTION="main.php">
-<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['ticket_id'];?>">
+<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['ticket_id'];?>"/>
 </FORM>
 </HTML>

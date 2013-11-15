@@ -167,7 +167,7 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+	<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
 	<STYLE>
 		.header_wrapper	{ position: absolute; left: 2%; top: 2%; display: table; width: 94%;}	
 		.header_wrapper2	{ position: absolute; left: 2%; top: 8%; display: table; width: 94%;}		
@@ -278,10 +278,10 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
  * @type Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -318,7 +318,7 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 			return AJAX.responseText;																				 
 			} 
 		else {
-			alert ("201: failed")
+			alert ("201: <?php print gettext('failed');?>");
 			return false;
 			}																						 
 		}		// end function sync Ajax()
@@ -475,9 +475,9 @@ if((isset($_GET['fm_sub'])) && ($_GET['fm_sub'])) {
 				print "<DIV class='header_row'>";
 					print "<DIV id='stats8_inner' class='date_time'></DIV>";
 					print "<DIV class='button_bar'>";
-						print "<SPAN id='links' class='buttons' onclick=\"window.location='stats_scr.php?stats=stats' \">" . gettext('Statistics') . "</SPAN>";
-						print "<SPAN id='links' class='buttons' onclick=\"window.location='stats_scr.php?config=config' \">" . gettext('Configuration') . "</SPAN>";						
-						print "<SPAN ID='gout' CLASS='buttons' onClick=\"do_logout()\">" . gettext('Logout') . "</SPAN>";
+						print "<SPAN id='links' class='buttons' onclick=\"window.location='stats_scr.php?stats=stats';\">" . gettext('Statistics') . "</SPAN>";
+						print "<SPAN id='links' class='buttons' onclick=\"window.location='stats_scr.php?config=config';\">" . gettext('Configuration') . "</SPAN>";						
+						print "<SPAN ID='gout' CLASS='buttons' onClick=\"do_logout();\">" . gettext('Logout') . "</SPAN>";
 					print "</DIV>";
 				print "</DIV>";
 			print "</DIV>";	
@@ -576,9 +576,9 @@ if((isset($_GET['fm_sub'])) && ($_GET['fm_sub'])) {
 				print "<DIV class='header_row'>";
 					print "<DIV id='stats8_inner' class='date_time'></DIV>";
 					print "<DIV class='button_bar'>";
-						print "<SPAN id='links' class='buttons' onclick=\"window.location='stats_scr.php?stats=stats' \">" . gettext('Statistics') . "</SPAN>";
-						print "<SPAN id='links' class='buttons' onclick=\"window.location='stats_scr.php?config=config' \">" . gettext('Configuration') . "</SPAN>";						
-						print "<SPAN ID='gout' CLASS='buttons' onClick=\"do_logout()\">" . gettext('Logout') . "</SPAN>";
+						print "<SPAN id='links' class='buttons' onclick=\"window.location='stats_scr.php?stats=stats';\">" . gettext('Statistics') . "</SPAN>";
+						print "<SPAN id='links' class='buttons' onclick=\"window.location='stats_scr.php?config=config';\">" . gettext('Configuration') . "</SPAN>";						
+						print "<SPAN ID='gout' CLASS='buttons' onClick=\"do_logout();\">" . gettext('Logout') . "</SPAN>";
 					print "</DIV>";
 				print "</DIV>";
 			print "</DIV>";	
@@ -994,7 +994,7 @@ if ((isset($_GET['stats'])) && ($_GET['stats'] == "stats") && (!isset($_GET['frm
 							if($('stats7_inner')) {$('stats7_inner').innerHTML = the_id_arr[7].timeLeft();}
 							if($('hint8')) {$('hint8').innerHTML = "<?php print gettext('Date time, input as Days-Hours-Minutes-Seconds');?>";}					
 							}
-						if($('stats8_inner')) {$('stats8_inner').innerHTML = "<?php print gettext('Current date and time');?>: " + the_id_arr[8]};				
+						if($('stats8_inner')) {$('stats8_inner').innerHTML = "<?php print gettext('Current date and time');?>: " + the_id_arr[8];}				
 						}
 					mu_get();				// start loop
 					}				// end function init_cb()
@@ -1107,8 +1107,6 @@ if ((isset($_GET['stats'])) && ($_GET['stats'] == "stats") && (!isset($_GET['frm
 if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 ?>
 <SCRIPT>
-
-
 	var is_initialized = false;
 	var mu_interval = 10000;
 <?php
@@ -1541,8 +1539,8 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 		</DIV>
 		</FORM>
 		<DIV class='config_row'>
-			<DIV class='config_cell_butts' style='width: 96%; text-align: center;'><INPUT TYPE="button" VALUE="Cancel"  onClick="window.location='stats_scr.php?stats=stats';">
-			&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="button" VALUE="Submit" onClick="document.stats_config.submit()">
+			<DIV class='config_cell_butts' style='width: 96%; text-align: center;'><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="window.location='stats_scr.php?stats=stats';"/>
+			&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="button" VALUE="Submit" onClick="document.stats_config.submit();"/>
 			</DIV>
 		</DIV> 
 

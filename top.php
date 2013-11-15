@@ -63,15 +63,12 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
 <HTML>
 <HEAD>
 <TITLE><?php print ucwords (LessExtension(basename(__FILE__)));?> </TITLE>
-<META NAME="Author" CONTENT="" />
-<META NAME="Keywords" CONTENT="" />
-<META NAME="Description" CONTENT="" />
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 <META HTTP-EQUIV="Expires" CONTENT="0" />
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
 
 <STYLE type="text/css">
 	table			{border-collapse:collapse;}
@@ -151,9 +148,9 @@ if(file_exists("./incs/modules.inc.php")) {
 		var today=new Date();
 		today.setDate(today.getSeconds()+7.5);		// half-adjust
 		var hours = today.getHours();
-		var h=(hours < 10)?  "0" + hours : hours ;
+		var h=(hours < 10)?  "0" + hours : hours;
 		var mins = today.getMinutes();
-		var m=(mins < 10)?  "0" + mins : mins ;
+		var m=(mins < 10)?  "0" + mins : mins;
 		$('time_of_day').innerHTML=h+":"+m;
 		}
 
@@ -552,10 +549,10 @@ if(file_exists("./incs/modules.inc.php")) {
  * @type Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -736,7 +733,7 @@ if(file_exists("./incs/modules.inc.php")) {
  * @returns {Boolean}
  */    
 	function do_off_signal (the_id) {
-		CngClass(the_id, 'plain')
+		CngClass(the_id, 'plain');
 		return true;
 		}
 /**
@@ -745,7 +742,7 @@ if(file_exists("./incs/modules.inc.php")) {
  * @returns {undefined}
  */
 	function light_butt(btn_id) {				// 8/24/10 -     
-		CngClass(btn_id, 'signal_w')			// highlight this button
+		CngClass(btn_id, 'signal_w');			// highlight this button
 		if(!(current_butt_id == btn_id)) {	
 			do_off_signal (current_butt_id);	// clear any prior one if different
 			}
@@ -758,7 +755,7 @@ if(file_exists("./incs/modules.inc.php")) {
  * @returns {undefined}
  */
 	function go_there (where, the_id) {		//
-		CngClass(the_id, 'signal_w')			// highlight this button
+		CngClass(the_id, 'signal_w');			// highlight this button
 		if(!(current_butt_id == the_id)) {	
 			do_off_signal (current_butt_id);	// clear any prior one if different
 			}
@@ -1056,12 +1053,12 @@ if(file_exists("./incs/modules.inc.php")) {
 			if(starting) {return;}                        // 4/15/10 fullscreen=no
 			do_set_sess_exp();		// session expiration update
 	
-			if(window.focus() && newwindow_fs) {newwindow_fs.focus()}    // if already exists
+			if(window.focus() && newwindow_fs) {newwindow_fs.focus();}    // if already exists
 			starting=true;
 	
 			params  = 'width='+screen.width;
 			params += ', height='+screen.height;
-			params += ', top=0, left=0', scrollbars = 1
+			params += ', top=0, left=0', scrollbars = 1;
 			params += ', fullscreen=no';
 			newwindow_fs=window.open("full_scr.php", "full_scr", params);
 			if (isNull(newwindow_fs)) {
@@ -1240,17 +1237,26 @@ function get_daynight() {
 		catch (e) {
 			}
 		}		// end do_manual()
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 		function do_files() {	//	9/10/13
 			hide_butts();								// hide buttons
 			$("file_buts_row").style.display = "inline-block";
 			}
-			
+/**
+ * 
+ * @returns {undefined}
+ */			
 		function hide_files() {	//	9/10/13
 			$("file_buts_row").style.display = "none";
 			show_butts();
 			}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 		function can_has () {							// cancel HAS function - return to normal display
 			$("has_form_row").style.display = "none";
 			show_butts();								// show buttons		
@@ -1270,11 +1276,14 @@ function get_daynight() {
 <?php				// 7/2/2013
 		if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 		// 
 ?>
+/**
+ * 
+ * @returns {undefined}
+ */  
 		function do_broadcast() {
-
 			$("has_form_row").style.display = "inline-block";
 			$("has_message_row").style.display = "none";
-			document.has_form.has_text.focus()
+			document.has_form.has_text.focus();
 			}
 /**
  * 
@@ -1285,7 +1294,7 @@ function get_daynight() {
 			if (inStr.trim().length == 0) { alert("<?php print gettext('Value required - try again.');?>"); return;}
 			else { 
 				var msg =  $("whom").innerHTML + " sends: " + inStr.trim(); // identify sender
-				
+        
 				broadcast(msg); 				// send it
 				setTimeout(function(){
 					CngClass("has_text", "heading");
@@ -1355,7 +1364,7 @@ function get_daynight() {
 				<SPAN ID="tagline" CLASS="titlebar_text"><?php print $title_string; ?></SPAN>	<!-- 3/15/11 -->
 				<SPAN ID="logged_in_txt" STYLE = 'margin-left: 8px;' CLASS="titlebar_text"><?php print get_text("Logged in"); ?>:</SPAN>	<!-- 3/15/11 -->
 				<SPAN ID="whom" CLASS="titlebar_text"><?php print NOT_STR ; ?></SPAN>
-				<SPAN ID="perms_txt" CLASS="titlebar_text">:<SPAN ID="level" CLASS="titlebar_text">na</SPAN>&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->
+				<SPAN ID="perms_txt" CLASS="titlebar_text">:<SPAN ID="level" CLASS="titlebar_text"><?php print gettext('N/A');?></SPAN>&nbsp;&nbsp;&nbsp;	<!-- 3/15/11 -->
 						
 <?php
 	$temp = get_variable('auto_poll');
@@ -1381,8 +1390,8 @@ function get_daynight() {
 				<SPAN ID='daynight' CLASS="titlebar_text"  STYLE = 'display:none'>
 					<FORM NAME = 'day_night_form' STYLE = 'display: inline-block'>
 											<!-- set in  above -->
-					<INPUT TYPE="radio" NAME="frm_daynight" VALUE="Day" <?php print "{$day_disabled} {$day_checked}" ;?> 		onclick = ' set_day_night(this.value);'><?php print gettext('Day');?>&nbsp;&nbsp;&nbsp;&nbsp;
-					<INPUT TYPE="radio" NAME="frm_daynight" value="Night" <?php print "{$night_disabled}  {$night_checked}" ;?> onclick = 'set_day_night(this.value);' ><?php print gettext('Night');?>&nbsp;&nbsp;&nbsp;&nbsp;
+					<INPUT TYPE="radio" NAME="frm_daynight" VALUE="Day" <?php print "{$day_disabled} {$day_checked}" ;?> 		onclick = ' set_day_night(this.value);'/><?php print gettext('Day');?>&nbsp;&nbsp;&nbsp;&nbsp;
+					<INPUT TYPE="radio" NAME="frm_daynight" value="Night" <?php print "{$night_disabled}  {$night_checked}" ;?> onclick = 'set_day_night(this.value);'/><?php print gettext('Night');?>&nbsp;&nbsp;&nbsp;&nbsp;
 					
 					</FORM>
 				</SPAN>
@@ -1409,7 +1418,7 @@ function get_daynight() {
 <?php
 			}
 ?>
-				<SPAN ID = 'gout' CLASS = 'hover_lo' onClick = "do_logout()" STYLE="display:none;" ><?php print get_text("Logout"); ?></SPAN> <!-- 7/28/10 -->
+				<SPAN ID = 'gout' CLASS = 'hover_lo' onClick = "do_logout();" STYLE="display:none;" ><?php print get_text("Logout"); ?></SPAN> <!-- 7/28/10 -->
 				
 <?php
 		if ($_SERVER['HTTP_HOST'] == "127.0.0.1") { print "&nbsp;&nbsp;&nbsp;&nbsp;DB:&nbsp;{$mysql_db}&nbsp;&nbsp;&nbsp;&nbsp;";}
@@ -1418,7 +1427,7 @@ function get_daynight() {
 				<SPAN ID='msg_span' CLASS = 'message'></SPAN>
 				<br />
 			</TD></TR>
-		<TR><TD ID = 'buttons' STYLE = "display:none">
+		<TR><TD ID = 'buttons' STYLE = "display:none;">
 			<SPAN ID = 'main'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick ="go_there('main.php', this.id);"><?php print get_text("Situation"); ?></SPAN>
 			<SPAN ID = 'add'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
@@ -1445,7 +1454,7 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 	if (!(empty($card_addr))) {
 ?>
 			<SPAN ID = 'card'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
-				onClick = "starting = false; do_emd_card('<?php print $card_addr; ?>')"><?php print get_text("SOP's"); ?></SPAN>	<!-- 7/3/10 -->
+				onClick = "starting = false; do_emd_card('<?php print $card_addr; ?>');"><?php print get_text("SOP's"); ?></SPAN>	<!-- 7/3/10 -->
 <?php
 			}
 		if (!intval(get_variable('chat_time')==0)) { 		
@@ -1461,11 +1470,11 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 			<SPAN ID = 'log'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick = "do_sta_log()"><?php print get_text("Log"); ?></SPAN>
 			<SPAN ID = 'full'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
-				onClick = "starting=false; do_full_scr()"><?php print get_text("Full scr"); ?></SPAN>			
+				onClick = "starting=false; do_full_scr();"><?php print get_text("Full scr"); ?></SPAN>			
 			<SPAN ID = 'links'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick = "light_butt('links'); parent.main.$('links').style.display='inline';"><?php print get_text("Links"); ?></SPAN>
 			<SPAN ID = 'call'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
-				onClick = "starting=false;do_callBoard()" STYLE = 'display:<?php print $call_disp_attr; ?>'><?php print get_text("Board"); ?></SPAN> <!-- 5/12/10 -->
+				onClick = "starting=false;do_callBoard();" STYLE = 'display:<?php print $call_disp_attr; ?>'><?php print get_text("Board"); ?></SPAN> <!-- 5/12/10 -->
 <!-- ================== -->
 			<SPAN ID = 'term'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick = "go_there('mobile.php', this.id);"><?php print get_text("Mobile"); ?></SPAN>	<!-- 7/27/10 -->
@@ -1482,7 +1491,7 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 
 <!-- ================== -->			<!-- 5/13/2013 -->				
 			<SPAN ID = 'ics'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
-				onClick = "starting=false;window.open('ics213.php', 'ics213')"><?php print get_text("ICS-213"); ?></SPAN> <!-- 5/13/2013 -->
+				onClick = "starting=false;window.open('ics213.php', 'ics213');"><?php print get_text("ICS-213"); ?></SPAN> <!-- 5/13/2013 -->
 <?php
 			}		// end if (ics_top)
 
@@ -1509,7 +1518,7 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 				<SPAN ID = "has_span" >
 				<FORM NAME = 'has_form' METHOD = post ACTION = "javascript: void(0)">
 				<INPUT TYPE = 'text' NAME = 'has_text' ID = 'has_text' CLASS = '' size=90 value = "" STYLE = "margin-left:6px;" placeholder="<?php print gettext('enter your broadcast message');?>" />
-				<BUTTON VALUE="Send" onclick = "has_check(this.form.has_text.value.trim())" STYLE = "margin-left:16px;"><?php print gettext('Send');?></BUTTON>
+				<BUTTON VALUE="Send" onclick = "has_check(this.form.has_text.value.trim());" STYLE = "margin-left:16px;"><?php print gettext('Send');?></BUTTON>
 				<BUTTON VALUE="Cancel" onclick = "can_has();" STYLE = "margin-left:24px;"><?php print gettext('Cancel');?></BUTTON>
 				</FORM>
 				</SPAN>			
@@ -1535,7 +1544,7 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 	</FORM>
 	<P>
 		<DIV ID = "log_div"></DIV>
-<!-- <button onclick = 'alert(getElementById("user_id"))'>Test</button> -->
+<!-- <button onclick = 'alert(getElementById("user_id"));'>Test</button> -->
 <?php
 	$the_wav_file = get_variable('sound_wav');		// browser-specific cabilities as of 6/12/10
 	$the_mp3_file = get_variable('sound_mp3');

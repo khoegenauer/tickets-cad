@@ -57,7 +57,7 @@ $ticket_start_str = format_date($row['problemstart']);		//
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<HEAD><TITLE><?php print gettext('Incident Popup') . " - " . gettext('Incident') .  $title . $ticket_updated;?></TITLE>
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+	<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 	<STYLE type="text/css">
 	.hover 	{ text-align: center; margin-left: 4px; float: none; font: normal 12px Arial, Helvetica, sans-serif; color:#FF0000; border-width: 1px; border-STYLE: inset; border-color: #FFFFFF;
   				  padding: 4px 0.5em;text-decoration: none; background-color: #DEE3E7; font-weight: bolder;}
@@ -234,10 +234,10 @@ echo "<CENTER><SPAN id='fin_button' class='plain' style='text-align: center;' on
 
 ?>
 <FORM NAME='to_closed' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'>
-<INPUT TYPE='hidden' NAME='status' VALUE='<?php print $GLOBALS['STATUS_CLOSED'];?>'>
+<INPUT TYPE='hidden' NAME='status' VALUE='<?php print $GLOBALS['STATUS_CLOSED'];?>'/>
 </FORM>
 <FORM NAME='to_all' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'>
-<INPUT TYPE='hidden' NAME='status' VALUE=''>
+<INPUT TYPE='hidden' NAME='status' VALUE=''/>
 </FORM>
 </TD></TR></TABLE>
 </BODY></HTML>

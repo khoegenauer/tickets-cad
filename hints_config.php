@@ -33,7 +33,7 @@
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+	<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 	<STYLE>
 	LI { margin-left: 20px;}
 	.spl { FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #000099; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none}
@@ -253,9 +253,9 @@ print "//" . date("n/j/y", filemtime(basename(__FILE__))) . "\n";
 			<IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#top';" STYLE = 'margin-left: 20px'></TD>
 
 				<DIV ID="foo"><DIV ID="bar">		<!-- 9/26/09 -->
-					<INPUT TYPE='button' VALUE='Cancel' onClick='history.back();'><BR /><BR />
-					<INPUT TYPE='button' VALUE='Reset form'  onClick='document.hints_Form.reset();'><BR /><BR />
-					<INPUT TYPE='button' VALUE='Apply changes'  onClick='document.hints_Form.submit();'>
+					<INPUT TYPE='button' VALUE='Cancel' onClick='history.back();'/><BR /><BR />
+					<INPUT TYPE='button' VALUE='Reset form'  onClick='document.hints_Form.reset();'/><BR /><BR />
+					<INPUT TYPE='button' VALUE='Apply changes'  onClick='document.hints_Form.submit();'/>
 				</DIV></DIV>
 		
 				<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename(__FILE__); ?>"></FORM>		
@@ -289,7 +289,7 @@ ul {
 }
 </STYLE>
 		</HEAD>
-	<BODY onLoad = 'ck_frames()'> <!-- 11/13/10 -->
+	<BODY onLoad = 'ck_frames();'> <!-- 11/13/10 -->
 <?php if (isset($top_notice)) print "<SPAN STYLE='margin-left: 100px;' CLASS='header' >{$top_notice}</SPAN><BR /><BR />"; ?>
 	
 	<FORM NAME='hints_select' METHOD = 'post' ACTION='hints_config.php?func=hints'>
@@ -306,7 +306,7 @@ ul {
 		print "\t<OPTION VALUE='{$row['group']}'>{$row['group']}</OPTION>\n";
 		}	?>
 	</SELECT></TD></TR>
-	<TR CLASS="spacer></TR>
+	<TR CLASS="spacer"></TR>
 	<TR CLASS="even"><TD COLSPAN="2"><INPUT TYPE='button' VALUE='<?php print gettext('Submit');?>'  onClick='document.hints_select.submit();'></TD></TR>
 	</TABLE>
 	<INPUT TYPE='hidden' NAME='func' VALUE='show_hints'>

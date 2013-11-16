@@ -13,9 +13,6 @@ require_once($_SESSION['fip']);
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Latitude');?></TITLE>
-<META NAME="Author" CONTENT="">
-<META NAME="Keywords" CONTENT="">
-<META NAME="Description" CONTENT="">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -32,7 +29,7 @@ if (empty($_POST)) {
 <BR />
 <BR />
 <BR />
-<CENTER><H3><?php print gettext('Google Latitude test');?></H3>
+<CENTER><H3><?php print gettext('Google Latitude test');?></H3></CENTER>
 <BR />
 <BR />
 <FORM NAME='glat_form' METHOD = 'post' ACTION = '<?php print basename(__FILE__);?>'>
@@ -40,7 +37,7 @@ if (empty($_POST)) {
 <BR />
 <BR />
 <INPUT TYPE='submit' VALUE='<?php print gettext('Go');?>' />&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE="button" VALUE = "<?php print gettext('Finished');?>" onClick = "self.close()" /></FORM>
+<INPUT TYPE="button" VALUE = "<?php print gettext('Finished');?>" onClick = "self.close();" /></FORM>
 </BODY>
 </HTML>
 
@@ -155,12 +152,12 @@ function do_glat_test($user) {				// given user id,  returns Google Latitude id,
 
     </script>
   </head>
-  <body onload="initialize()" onunload="GUnload()">
+  <body onload="initialize();" onunload="GUnload();">
   <CENTER>
   <H3><?php print gettext('Google Latitude Test') . $caption; ?><br />
 	<?php print gettext('with public location badge');?>: <?php print $_POST['frm_badge']; ?></H3>
-	<input type='button' value="<?php print gettext('Again');?>" onClick = 'location.href="<?php print basename(__FILE__); ?>"' />&nbsp;&nbsp;&nbsp;&nbsp;
-  </body><input type='button' value="<?php print gettext('Finished');?>" onClick = "self.close()" /><br /><br />
+	<input type='button' value="<?php print gettext('Again');?>" onClick = 'location.href="<?php print basename(__FILE__); ?>";' />&nbsp;&nbsp;&nbsp;&nbsp;
+  </body><input type='button' value="<?php print gettext('Finished');?>" onClick = "self.close();" /><br /><br />
 <?php	if ($results) { ?>	
     <div id="map_canvas" style="width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px"></div>
 <?php } ?>    

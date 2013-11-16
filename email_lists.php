@@ -11,7 +11,11 @@ if((empty($_REQUEST)) || ((!empty($_GET)) && (!isset($_GET['func'])))) {
 	
 $func = (isset($_GET['func'])) ? $_GET['func'] : 0;
 $id = (isset($_GET['id'])) ? strip_tags($_GET['id']) : 0 ;
-
+/**
+ * 
+ * @param type $theid
+ * @return type
+ */
 function get_mailgroup_name($theid) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mailgroup` WHERE `id` = " . $theid;
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -19,7 +23,11 @@ function get_mailgroup_name($theid) {
 	$the_ret = $row['name'];
 	return $the_ret;
 	}
-	
+/**
+ * 
+ * @param type $theid
+ * @return string
+ */
 function get_email_from_contacts($theid) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]contacts` WHERE `id` = " . $theid;
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -31,7 +39,11 @@ function get_email_from_contacts($theid) {
 		}		
 	return $the_ret;
 	}
-	
+/**
+ * 
+ * @param type $theid
+ * @return string
+ */	
 function get_email_from_responder($theid) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `id` = " . $theid;
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -84,7 +96,6 @@ if(!empty($_POST)) {
 	<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		<HEAD>
-		<META NAME="ROBOTS" CONTENT="INDEX,FOLLOW" />
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 		<META HTTP-EQUIV="Expires" CONTENT="0" />
 		<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -96,6 +107,10 @@ if(!empty($_POST)) {
 		<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
 		<link rel="shortcut icon" href="favicon.ico" />
 	<SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */    
 	function ck_frames() {
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
@@ -104,7 +119,10 @@ if(!empty($_POST)) {
 			parent.upper.show_butts();
 			}
 		}		// end function ck_frames()	
-		
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -115,17 +133,30 @@ if(!empty($_POST)) {
 			}
 		return elements;
 		}	
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */		
 	function do_hover (the_id) {
 		CngClass(the_id, 'hover');
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_plain (the_id) {				// 8/21/10
 		CngClass(the_id, 'plain');
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
@@ -136,7 +167,7 @@ if(!empty($_POST)) {
 	<DIV style='font-size: 14px; position: fixed; top: 150px; left: 100px;'>
 	<?php print $caption;?><BR />
 	Settings Saved<br /><br />
-	<A id='cont_but' class='plain' onMouseover='do_hover(this);' onMouseout='do_plain(this);' style='font-size: 14px;' href="email_lists.php?func=list">Continue</A>		
+	<A id='cont_but' class='plain' onMouseover='do_hover(this);' onMouseout='do_plain(this);' style='font-size: 14px;' href="email_lists.php?func=list"><?php print gettext('Continue');?></A>		
 	</DIV>
 	</BODY>
 	</HTML>
@@ -147,7 +178,6 @@ if(!empty($_POST)) {
 	<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		<HEAD>
-		<META NAME="ROBOTS" CONTENT="INDEX,FOLLOW" />
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 		<META HTTP-EQUIV="Expires" CONTENT="0" />
 		<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -155,7 +185,7 @@ if(!empty($_POST)) {
 		<META HTTP-EQUIV="expires" CONTENT="Wed, 26 Feb 1997 08:21:57 GMT" />
 		<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 		<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" />
-		<TITLE>Tickets - Email Lists Configuration</TITLE>
+		<TITLE><?php print gettext('Tickets - Email Lists Configuration');?></TITLE>
 		<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
 		<link rel="shortcut icon" href="favicon.ico" />
 		<STYLE>
@@ -171,6 +201,10 @@ if(!empty($_POST)) {
 			.flag 			{ border: 2px outset #707070; background: #CECECE; font-size: 20px; font-weight: bold; display: inline; position: fixed; right:30%; top: 5%;}				
 		</STYLE>			
 	<SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */
 	function ck_frames() {
 		if(self.location.href==parent.location.href) {
 			self.location.href = 'index.php';
@@ -179,7 +213,10 @@ if(!empty($_POST)) {
 			parent.upper.show_butts();
 			}
 		}		// end function ck_frames()	
-	
+/**
+ * 
+ * @returns {Array}
+ */	
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -190,27 +227,43 @@ if(!empty($_POST)) {
 			}
 		return elements;
 		}	
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
 	function myclick(id) {
 		document.go_form.id.value=id;
 		document.go_form.func.value='edit';
 		document.go_form.submit();
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function addnew() {
 		document.go_form.func.value='add';
 		document.go_form.submit();
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function goto_list() {
 		document.go_form.func.value='list';
 		document.go_form.submit();
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function goto_config() {
 		document.can_form.submit();
 		}
-		
+/**
+ * 
+ * @returns {Array}
+ */		
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -221,35 +274,52 @@ if(!empty($_POST)) {
 			}
 		return elements;
 		}	
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */		
 	function do_hover (the_id) {
 		CngClass(the_id, 'hover');
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_plain (the_id) {				// 8/21/10
 		CngClass(the_id, 'plain');
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function validate(theForm) {
 		var errmsg = "";
 		if(theForm.frm_mailgroup.value == 0) {
-			errmsg += "You need to select a Mailgroup (mailing list) for the entry.\n";	
+			errmsg += "<?php print gettext('You need to select a Mailgroup (mailing list) for the entry.');?>\n";	
 			}
 		if((theForm.frm_contacts.value > 0) && (theForm.frm_responder.value > 0)) {
-			errmsg += "You can only add one addess to an entry,/n you have selected both from the responder table and the contacts table.\n";
+			errmsg += "<?php print gettext('You can only add one addess to an entry,/n you have selected both from the responder table and the contacts table.');?>\n";
 			}
 		if((theForm.frm_contacts.value == 0) && (theForm.frm_responder.value == 0)) {
-			errmsg += "You haven't selected an email address\n";
+			errmsg += "<?php print gettext('You haven\'t selected an email address');?>\n";
 			}
 		if(errmsg != "") {
-			errmsg += "\n\nPlease correct the above and re-submit.\n";
+			errmsg += "\n\n<?php print gettext('Please correct the above and re-submit.');?>\n";
 			alert(errmsg);
 			return false;
 			} else {
@@ -268,17 +338,17 @@ if(!empty($_POST)) {
 		<BODY onLoad='ck_frames();'>
 
 			<DIV id='outer' style='position: absolute; top: 5%; width: 100%; height: 75%; border: 1px solid #FFFFFF;'>
-				<DIV class='heading' style='width: 100%; position: absolute; text-align: center;'>EMAIL LIST ADMIN</DIV>
+				<DIV class='heading' style='width: 100%; position: absolute; text-align: center;'><?php print gettext('EMAIL LIST ADMIN');?></DIV>
 				<DIV id='left_col' style='width: 45%; position: absolute; top: 60px; left: 2%; border: 3px outset #CECECE;'>
 					<FORM NAME='edit_form' METHOD="post" ACTION="<?php print basename(__FILE__);?>">
 					<TABLE style='width: 100%;'>
 						<TR class='spacer'>
 							<TD class='spacer' COLSPAN=99>&nbsp;</TD>
 						</TR>
-						<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Email List:</TD>
+						<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Email List');?>:</TD>
 							<TD CLASS="td_data">
-								<SELECT NAME="frm_mailgroup" onChange = "this.value=JSfnTrim(this.value)">
-									<OPTION VALUE=0>Select</OPTION>
+								<SELECT NAME="frm_mailgroup" onChange = "this.value=JSfnTrim(this.value);">
+									<OPTION VALUE=0><?php print gettext('Select');?></OPTION>
 <?php
 									$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mailgroup` ORDER BY `id` ASC";
 									$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -290,10 +360,10 @@ if(!empty($_POST)) {
 								</SELECT>
 							</TD>
 						</TR>	
-						<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">From Contacts:</TD>
+						<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('From Contacts');?>:</TD>
 							<TD CLASS="td_data">
-								<SELECT NAME="frm_contacts" onChange = "this.value=JSfnTrim(this.value)">
-									<OPTION VALUE=0>Select</OPTION>
+								<SELECT NAME="frm_contacts" onChange = "this.value=JSfnTrim(this.value);">
+									<OPTION VALUE=0><?php print gettext('Select');?></OPTION>
 <?php
 									$query = "SELECT * FROM `$GLOBALS[mysql_prefix]contacts` ORDER BY `id` ASC";
 									$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -305,10 +375,10 @@ if(!empty($_POST)) {
 								</SELECT>
 							</TD>
 						</TR>	
-						<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">From Responders:</TD>
+						<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('From Responders');?>:</TD>
 							<TD CLASS="td_data">
-								<SELECT NAME="frm_responder" onChange = "this.value=JSfnTrim(this.value)">
-									<OPTION VALUE=0>Select</OPTION>
+								<SELECT NAME="frm_responder" onChange = "this.value=JSfnTrim(this.value);">
+									<OPTION VALUE=0><?php print gettext('Select');?></OPTION>
 <?php
 									$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `id` ASC";		// 12/18/10
 									$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -324,25 +394,25 @@ if(!empty($_POST)) {
 							<TD class='spacer' COLSPAN=99>&nbsp;</TD>
 						</TR>	
 						<TR CLASS="odd" VALIGN='baseline'>
-							<TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Delete from mailing list.">Remove Entry</A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>>
+							<TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Delete from mailing list.');?>"><?php print gettext('Remove Entry');?></A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>>
 						</TR>
 					</TABLE>
 				</DIV>
 				<DIV id='right_col' style='width: 40%; height: 500px; position: absolute; top: 60px; right: 2%; border: 3px outset #DEDEDE; background-color: #F0F0F0;'>
 					<DIV class='heading' style='width: 100%;'>HELP</DIV>
-					<DIV style='width: 100%; word-wrap: break-word;'>
+					<DIV style='width: 100%; word-wrap: break-word;'><?php print gettext('
 					On the left is the form to edit an entry in a Email List.<BR /><BR />
 					Using the select menus, select the email address you want to edit, either from the contacts list or from configured responders.<BR />
-					You can only chose <B>one</B> email address from the select menus, if you select <B>something from both</B> you will get an error when you submit the form and will need to revise and resubmit.
+					You can only chose <B>one</B> email address from the select menus, if you select <B>something from both</B> you will get an error when you submit the form and will need to revise and resubmit.');?>
 					</DIV>
 				</DIV>
 				<DIV style='width: 100%; text-align: center; position: absolute; bottom: 10%; left: 20%;'>
 					<SPAN id='bsub_but' class='plain' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='validate(document.edit_form);'>Submit</SPAN>
 					<SPAN id='can_but' class='plain' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='goto_list();'>Back</SPAN>
 				</DIV>
-				<INPUT TYPE="hidden" NAME="frm_id" VALUE=<?php print $row['id'];?>>
-				<INPUT TYPE="hidden" NAME="frm_formname" VALUE="edit">
-				<INPUT TYPE='hidden' NAME='func' VALUE='list'>
+				<INPUT TYPE="hidden" NAME="frm_id" VALUE=<?php print $row['id'];?>/>
+				<INPUT TYPE="hidden" NAME="frm_formname" VALUE="edit"/>
+				<INPUT TYPE='hidden' NAME='func' VALUE='list'/>
 				</FORM>			
 			</DIV>
 <?php	
@@ -351,17 +421,17 @@ if(!empty($_POST)) {
 		<BODY onLoad='ck_frames();'>
 
 			<DIV id='outer' style='position: absolute; top: 5%; width: 100%; height: 75%; border: 1px solid #FFFFFF;'>
-				<DIV class='heading' style='width: 100%; position: absolute; text-align: center;'>EMAIL LIST ADMIN</DIV>
+				<DIV class='heading' style='width: 100%; position: absolute; text-align: center;'><?php print gettext('EMAIL LIST ADMIN');?></DIV>
 				<DIV id='left_col' style='width: 45%; position: absolute; top: 60px; left: 2%; border: 3px outset #CECECE;'>
 					<FORM NAME='add_form' METHOD="post" ACTION="<?php print basename(__FILE__);?>">
 					<TABLE style='width: 100%;'>
 						<TR class='spacer'>
 							<TD class='spacer' COLSPAN=99>&nbsp;</TD>
 						</TR>
-						<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Email List:</TD>
+						<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Email List');?>:</TD>
 							<TD CLASS="td_data">
-								<SELECT NAME="frm_mailgroup" onChange = "this.value=JSfnTrim(this.value)">
-									<OPTION VALUE=0>Select</OPTION>
+								<SELECT NAME="frm_mailgroup" onChange = "this.value=JSfnTrim(this.value);">
+									<OPTION VALUE=0><?php print gettext('Select');?></OPTION>
 <?php
 									$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mailgroup` ORDER BY `id` ASC";
 									$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -372,9 +442,9 @@ if(!empty($_POST)) {
 								</SELECT>
 							</TD>
 						</TR>	
-						<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">From Contacts:</TD>
+						<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('From Contacts');?>:</TD>
 							<TD CLASS="td_data">
-								<SELECT NAME="frm_contacts" onChange = "this.value=JSfnTrim(this.value)">
+								<SELECT NAME="frm_contacts" onChange = "this.value=JSfnTrim(this.value);">
 									<OPTION VALUE=0>Select</OPTION>
 <?php
 									$query = "SELECT * FROM `$GLOBALS[mysql_prefix]contacts` ORDER BY `id` ASC";
@@ -386,9 +456,9 @@ if(!empty($_POST)) {
 								</SELECT>
 							</TD>
 						</TR>	
-						<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">From Responders:</TD>
+						<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('From Responders');?>:</TD>
 							<TD CLASS="td_data">
-								<SELECT NAME="frm_responder" onChange = "this.value=JSfnTrim(this.value)">
+								<SELECT NAME="frm_responder" onChange = "this.value=JSfnTrim(this.value);">
 									<OPTION VALUE=0>Select</OPTION>
 <?php
 									$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `id` ASC";		// 12/18/10
@@ -407,18 +477,18 @@ if(!empty($_POST)) {
 				</DIV>
 				<DIV id='right_col' style='width: 40%; height: 500px; position: absolute; top: 60px; right: 2%; border: 3px outset #DEDEDE; background-color: #F0F0F0;'>
 					<DIV class='heading' style='width: 100%;'>HELP</DIV>
-					<DIV style='width: 100%; word-wrap: break-word;'>
+					<DIV style='width: 100%; word-wrap: break-word;'><?php print gettext('
 					On the left is the form to add a new email address to an existing Email List.<BR /><BR />
 					Using the select menus, select first the Email List that this entry is to be added to and then select the email address you want to add, either from the contacts list or from configured responders.<BR />
-					You can only chose <B>one</B> email address from the select menus, if you select <B>something from both</B> you will get an error when you submit the form and will need to revise and resubmit.
+					You can only chose <B>one</B> email address from the select menus, if you select <B>something from both</B> you will get an error when you submit the form and will need to revise and resubmit.');?>
 					</DIV>
 				</DIV>
 				<DIV style='width: 100%; text-align: center; position: absolute; bottom: 10%; left: 20%;'>
 					<SPAN id='bsub_but' class='plain' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='validate(document.add_form);'>Submit</SPAN>				
 					<SPAN id='back_but' class='plain' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='goto_list();'>Back</SPAN>
 				</DIV>
-				<INPUT TYPE="hidden" NAME="frm_formname" VALUE="add">
-				<INPUT TYPE='hidden' NAME='func' VALUE='list'>
+				<INPUT TYPE="hidden" NAME="frm_formname" VALUE="add"/>
+				<INPUT TYPE='hidden' NAME='func' VALUE='list'/>
 				</FORM>			
 			</DIV>
 <?php	
@@ -427,13 +497,13 @@ if(!empty($_POST)) {
 		<BODY onLoad='ck_frames();'>
 
 			<DIV id='outer' style='position: absolute; top: 5%; width: 100%; height: 75%; border: 1px solid #FFFFFF;'>
-				<DIV class='heading' style='width: 100%; position: absolute; text-align: center;'>EMAIL LIST ADMIN</DIV>
+				<DIV class='heading' style='width: 100%; position: absolute; text-align: center;'><?php print gettext('EMAIL LIST ADMIN');?></DIV>
 				<DIV id='left_col' style='width: 45%; position: absolute; top: 60px; left: 2%; border: 3px outset #CECECE;'>
 					<TABLE style='width: 100%;'>
 						<TR class='heading'>
-							<TH class='heading' style='text-align: left;'>Email List</TH>
-							<TH class='heading' style='text-align: left;'>Contact</TH>
-							<TH class='heading' style='text-align: left;'>Responder</TH>
+							<TH class='heading' style='text-align: left;'><?php print gettext('Email List');?></TH>
+							<TH class='heading' style='text-align: left;'><?php print gettext('Contact');?></TH>
+							<TH class='heading' style='text-align: left;'><?php print gettext('Responder');?></TH>
 						</TR>
 						<TR class='spacer'>
 							<TD class='spacer' COLSPAN='3'>&nbsp;</TD>
@@ -458,11 +528,11 @@ if(!empty($_POST)) {
 				</DIV>
 
 				<DIV id='right_col' style='width: 40%; height: 500px; position: absolute; top: 60px; right: 2%; border: 3px outset #DEDEDE; background-color: #F0F0F0;'>
-					<DIV class='heading' style='width: 100%;'>HELP</DIV>
-					<DIV style='width: 100%; word-wrap: break-word;'>
+					<DIV class='heading' style='width: 100%;'><?php print gettext('HELP');?></DIV>
+					<DIV style='width: 100%; word-wrap: break-word;'><?php print gettext('
 					On the left is a list of all Mailing list entries showing the email address and the Mailing list it belongs to.<BR /><BR /> Click <B>Add New</B> and then fill out the resulting form and submit,
 					to add a new entry to an existing Mailing list or <B>Back to Config</B> to return to the Tickets main configuration page.
-					You can click on an entry in the list to <B>edit</B> it.
+					You can click on an entry in the list to <B>edit</B> it.');?>
 					</DIV>
 				</DIV>
 				<DIV style='width: 100%; text-align: center; position: absolute; bottom: 10%; left: 20%;'>
@@ -475,13 +545,13 @@ if(!empty($_POST)) {
 		} else {
 ?>
 		<BODY onLoad='ck_frames();'>		
-		<p>Not Called correctly</p>
+		<p><?php print gettext('Not Called correctly');?></p>
 <?php
 		}
 ?>
 <FORM NAME='go_form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
-<INPUT TYPE='hidden' NAME='func' VALUE=''>
-<INPUT TYPE='hidden' NAME='id' VALUE=''>
+<INPUT TYPE='hidden' NAME='func' VALUE=''/>
+<INPUT TYPE='hidden' NAME='id' VALUE=''/>
 </FORM>
 <FORM NAME='can_form' METHOD='get' ACTION='config.php'>
 </FORM>

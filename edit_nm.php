@@ -538,7 +538,7 @@ require_once('./incs/links.inc.php');
 			list_tickets();
 			}
 		else {		//confirm deletion
-			print "<FONT CLASS='header'>Confirm ticket deletion</FONT><BR /><BR /><FORM METHOD='post' NAME = 'del_form' ACTION='{$this_file}?id=$id&delete=1&go=1'><INPUT TYPE='checkbox' NAME='frm_confirm' VALUE='1'>Delete ticket #$id &nbsp;<INPUT TYPE='Submit' VALUE='Confirm'></FORM>";	// 8/26/10
+			print "<FONT CLASS='header'>" . gettext('Confirm ticket deletion') . "</FONT><BR /><BR /><FORM METHOD='post' NAME = 'del_form' ACTION='{$this_file}?id=$id&delete=1&go=1'><INPUT TYPE='checkbox' NAME='frm_confirm' VALUE='1'>" . gettext('Delete ticket') . " #$id &nbsp;<INPUT TYPE='Submit' VALUE='" . gettext('Confirm') . "/></FORM>";	// 8/26/10
 			}
 		}
 	else {				// not ($_GET['delete'])
@@ -582,7 +582,7 @@ require_once('./incs/links.inc.php');
 			print "<TR CLASS='odd'><TD>&nbsp;</TD></TR>\n";	
 			print "<TR CLASS='even' valign='top'><TD CLASS='print_TD' ALIGN='left'>";
 	
-			print "<FORM NAME='edit' METHOD='post' onSubmit='return validate(document.edit)' ACTION='{$this_file}?id=$id&action=update'>";	// 8/26/10
+			print "<FORM NAME='edit' METHOD='post' onSubmit='return validate(document.edit);' ACTION='{$this_file}?id=$id&action=update'>";	// 8/26/10
 			print "<TABLE BORDER='0' ID='data'>\n";
 			print "<TR CLASS='odd'><TD ALIGN='center' COLSPAN=2><FONT CLASS='$theClass'><B>" . gettext('Edit Run Ticket') . "</FONT> (#" . $id . ")</B></TD></TR>";
 			print "<TR CLASS='odd'><TD ALIGN='center' COLSPAN=2><FONT CLASS='header'><FONT SIZE='-2'>(" . gettext('mouseover caption for help information') . ")</FONT></FONT><BR /><BR /></TD></TR>";
@@ -644,7 +644,7 @@ require_once('./incs/links.inc.php');
 				$result_cons = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 				if (mysql_affected_rows() > 0) {
 					$row_cons = stripslashes_deep(mysql_fetch_array($result_cons));
-					print "<TR CLASS='even'><TD CLASS='td_label'>Add'l:</TD><TD CLASS='td_label'>{$row_cons['miscellaneous']}</TD></TR>\n";		// 3/13/10
+					print "<TR CLASS='even'><TD CLASS='td_label'>" . gettext("Add'l") . ":</TD><TD CLASS='td_label'>{$row_cons['miscellaneous']}</TD></TR>\n";		// 3/13/10
 					}
 				unset($result_cons);
 				}				
@@ -818,7 +818,7 @@ require_once('./incs/links.inc.php');
 				print "</SPAN></TD></TR>\n";
 				}
 
-			print "<TR CLASS='even'><TD CLASS='td_label' onClick = 'javascript: do_coords(document.edit.frm_lat.value ,document.edit.frm_lng.value  )'><U><A HREF=\"#\" TITLE=\"" . gettext('Position - Lat and Lng for Incident position. Click to show all position data.') . "\">" . gettext('Position') . "</A>:</U>:</TD><TD>";
+			print "<TR CLASS='even'><TD CLASS='td_label' onClick = 'javascript: do_coords(document.edit.frm_lat.value ,document.edit.frm_lng.value);'><U><A HREF=\"#\" TITLE=\"" . gettext('Position - Lat and Lng for Incident position. Click to show all position data.') . "\">" . gettext('Position') . "</A>:</U>:</TD><TD>";
 			print "</TD></TR>\n";
 			print "<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Incident last updated - date & time.') . "\">" . gettext('Updated') . "</A>:</TD><TD>" . format_date($row['updated']) . "</TD></TR>\n";		// 10/21/08
 			$lat = $row['lat']; $lng = $row['lng'];	
@@ -999,7 +999,7 @@ require_once('./incs/links.inc.php');
 		}
 ?>
 <FORM NAME='can_Form' ACTION="main.php">
-<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['id'];?>">
+<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['id'];?>"/>
 </FORM>	
 
 </BODY>

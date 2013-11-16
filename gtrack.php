@@ -16,16 +16,13 @@ require_once($_SESSION['fip']);
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Gtrack');?></TITLE>
-<META NAME="Author" CONTENT="">
-<META NAME="Keywords" CONTENT="">
-<META NAME="Description" CONTENT="">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <META HTTP-EQUIV="Script-date" 			CONTENT="7/29/09">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 <?php
 if (empty($_POST)) {
 ?>
@@ -47,7 +44,7 @@ if (empty($_POST)) {
 <BR />
 <BR />
 <INPUT TYPE='submit' VALUE='<?php print gettext('Go');?>' />&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE="button" VALUE = "<?php print gettext('Finished');?>" onClick = "self.close()" /></FORM>
+<INPUT TYPE="button" VALUE = "<?php print gettext('Finished');?>" onClick = "self.close();" /></FORM>
 </BODY>
 </HTML>
 
@@ -138,14 +135,14 @@ function do_gt($user, $url) {
 
     </script>
   </head>
-  <body onload="initialize()" onunload="GUnload()">
+  <body onload="initialize();" onunload="GUnload();">
   <CENTER>
   <br /><br />
   <H3><?php print gettext('Gtrack Successful<br />
 	with public ID');?>: <?php print $user_id; ?></H3><br /><br />
     <div id="map_canvas" style="width: 500px; height: 300px"></div>
-    <br /><br /><input type='button' value="<?php print gettext('Again');?>" onClick = 'location.href="<?php print basename(__FILE__); ?>"' />&nbsp;&nbsp;&nbsp;&nbsp;
-  </body><input type='button' value="<?php print gettext('Finished');?>" onClick = "self.close()" /><br /><br />
+    <br /><br /><input type='button' value="<?php print gettext('Again');?>" onClick = 'location.href="<?php print basename(__FILE__); ?>";' />&nbsp;&nbsp;&nbsp;&nbsp;
+  </body><input type='button' value="<?php print gettext('Finished');?>" onClick = "self.close();" /><br /><br />
   </body>
 </html><?php
 		}

@@ -13,9 +13,6 @@ require_once($_SESSION['fip']);		//7/28/10
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Test Instamapper');?></TITLE>
-<META NAME="Author" CONTENT="">
-<META NAME="Keywords" CONTENT="">
-<META NAME="Description" CONTENT="">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -147,7 +144,7 @@ else {
 <TR CLASS  = 'even'><TD COLSPAN=2 ALIGN='center'>
 	<INPUT TYPE='button' VALUE = '<?php print gettext('Test');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
 	<INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
-	<INPUT TYPE='hidden' NAME = 'frm_locatea_url' SIZE = '40' value='www.locatea.net'>
+	<INPUT TYPE='hidden' NAME = 'frm_locatea_url' SIZE = '40' value='www.locatea.net'/>
 
 </TD></TR></TABLE>
 <?php

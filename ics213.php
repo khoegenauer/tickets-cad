@@ -282,7 +282,7 @@ switch ($step) {
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <META HTTP-EQUIV="Script-date" CONTENT="6/13/09">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 <SCRIPT>
 /**
  * 
@@ -393,14 +393,14 @@ switch ($step) {
 		<TABLE ALIGN='center'>
 		<TR CLASS = 'even'><TH>ICS Form to Contacts</TH></TR>
 		<TR CLASS = 'odd'><TD ALIGN = 'center'><BR />
-			<SPAN ID='clr_spn' STYLE = 'display:block' onClick = 'do_clear()'>&raquo; <U><?php print gettext('Un-check all');?></U></SPAN>
-			<SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check()'>&raquo; <U><?php print gettext('Check all');?></U></SPAN><BR />
+			<SPAN ID='clr_spn' STYLE = 'display:block' onClick = 'do_clear();'>&raquo; <U><?php print gettext('Un-check all');?></U></SPAN>
+			<SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check();'>&raquo; <U><?php print gettext('Check all');?></U></SPAN><BR />
 		</TD></TR>
 
 		
 		<FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
-		<INPUT TYPE='hidden' NAME='step' VALUE='1'>	
-		<INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''>	<!-- for pipe-delim'd addr string -->
+		<INPUT TYPE='hidden' NAME='step' VALUE='1'/>	
+		<INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''/>	<!-- for pipe-delim'd addr string -->
 <?php
 	$i=0;
 	while($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)){
@@ -412,9 +412,9 @@ switch ($step) {
 
 ?>
 		<TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD ALIGN='center' COLSPAN=3><BR /><BR />&nbsp;
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'>&nbsp;<BR /><BR />
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'/>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/>&nbsp;<BR /><BR />
 			</TD></TR>
 			</TABLE></FORM>
 		  
@@ -423,7 +423,7 @@ switch ($step) {
 		if (($i==0) || (mysql_affected_rows()==0)){
 ?>
 	<H3><?php print gettext('No Contact addresses!');?></H3><BR /><BR />
-	<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
+	<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/><BR /><BR />
 <?php
 			}
 		else {
@@ -588,7 +588,7 @@ addresses: $Result = preg_replace("/([\w\s]+)<([\S@._-]*)>/", "$2", $Input);
 		break;							/* end process form and address data */
 
 	default:							/* error????  */
-	    echo " error  error  error! ";
+	    echo gettext('Error') . gettext('Error') . gettext('Error');
 	}				// end switch
 
 ?>

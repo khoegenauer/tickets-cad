@@ -120,6 +120,10 @@ if ($istest) {											// 12/13/09
 SET @@global.sql_mode= '';
 sql-mode="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
 */
+/**
+ * 
+ * @return type
+ */
 function count_responders() {	//	5/11/12 For quick start.
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder`";
 	$result = mysql_query($query);	
@@ -1900,16 +1904,15 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 	
 if((count_responders()== 0) && (get_variable('title_string') == "") && ((!empty($_GET)) && ($_GET['first_start'] == "yes"))) {	//	5/11/12 For quick start routine
 	print '<BR /><BR /><BR /><B>' . gettext('Do you wish to use the Tickets Quick start routine?');
-	print '<BR /><BR /><A style="cursor: pointer;" onClick="document.quick.submit()"><< ' . gettext('Yes Please') . ' >></A>&nbsp;&nbsp;&nbsp;<A style="cursor: pointer;" HREF="index.php"><< No just start Tickets >></A>';
+	print '<BR /><BR /><A style="cursor: pointer;" onClick="document.quick.submit();"><< ' . gettext('Yes Please') . ' >></A>&nbsp;&nbsp;&nbsp;<A style="cursor: pointer;" HREF="index.php"><< No just start Tickets >></A>';
 	print "<FORM NAME='quick' METHOD='POST' ACTION='quick_start.php'>";
-	print "<INPUT TYPE='hidden' NAME='run_quick' VALUE='yes'></FORM>";
+	print "<INPUT TYPE='hidden' NAME='run_quick' VALUE='yes'/></FORM>";
 	}
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	<HEAD>
-	<META NAME="ROBOTS" CONTENT="INDEX,FOLLOW" />
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 	<META HTTP-EQUIV="Expires" CONTENT="0" />
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -1918,7 +1921,7 @@ if((count_responders()== 0) && (get_variable('title_string') == "") && ((!empty(
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" /> <!-- 7/7/09 -->
 	<TITLE>Tickets <?php print $disp_version;?></TITLE>
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+	<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
 	<link rel="shortcut icon" href="favicon.ico" />
 </HEAD>
 

@@ -604,8 +604,8 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		for (var i=0 ; i < words.length ; i++){ 
 			var testwd = words[i]; 
 			var firLet = testwd.substr(0,1); 
-			var rest = testwd.substr(1, testwd.length -1) 
-			words[i] = firLet.toUpperCase() + rest 
+			var rest = testwd.substr(1, testwd.length -1); 
+			words[i] = firLet.toUpperCase() + rest; 
 	  	 	} 
 		return( words.join(" ")); 
 		} 
@@ -823,7 +823,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		theRequest (theurl, loc_w, "");
 		function loc_w(req) {
 			var the_warnings=JSON.decode(req.responseText);
-			var the_count = the_warnings[0]
+			var the_count = the_warnings[0];
 			if(the_count != 0) {
 				$('loc_warnings').innerHTML = the_warnings[1];
 				$('loc_warnings').style.display = 'block';
@@ -838,7 +838,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		var url = "warnloc_popup.php?id=" + the_Id;
 		newwindow_wl=window.open(url, "sta_log",  "titlebar=no, location=0, resizable=1, scrollbars, height=600,width=750,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 		if (!(newwindow_wl)) {
-			alert ("Locations warning operation requires popups to be enabled. Please adjust your browser options - or else turn off the Call Board option.");
+			alert ("<?php print gettext('Locations warning operation requires popups to be enabled. Please adjust your browser options - or else turn off the Call Board option.');?>");
 			return;
 			}
 		newwindow_wl.focus();
@@ -996,7 +996,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			print "<TR CLASS='even' valign='top'><TD CLASS='print_TD' ALIGN='left' style='width: 100%;' COLSPAN=99>";
 			}
 	
-			print "<FORM NAME='edit' METHOD='post' onSubmit='return validate(document.edit)' ACTION='" . basename(__FILE__) . "?id=$id&action=update'>";
+			print "<FORM NAME='edit' METHOD='post' onSubmit='return validate(document.edit);' ACTION='" . basename(__FILE__) . "?id=$id&action=update'>";
 			if($gmaps) {	//	6/10/11
 				print "<TABLE BORDER='0' ID='data'>\n";
 				} else {
@@ -1006,32 +1006,32 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			print "<TR CLASS='odd'><TD ALIGN='center' COLSPAN=3><FONT CLASS='header'><FONT SIZE='-2'>(" . gettext('mouseover caption for help information') . ")</FONT></FONT><BR /><BR /></TD></TR>";
 
 			print "<TR CLASS='even'>
-					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_loca']}');\">" . get_text("Location") . ": </TD><TD><INPUT SIZE='48' TYPE='text' NAME='frm_street' VALUE=\"{$row['street']}\" MAXLENGTH='48' {$dis}></TD></TR>\n";
+					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_loca']}');\">" . get_text("Location") . ": </TD><TD><INPUT SIZE='48' TYPE='text' NAME='frm_street' VALUE=\"{$row['street']}\" MAXLENGTH='48' {$dis}></TD></TR>\n";
 			print "<TR CLASS='odd'><TD CLASS='td_label' onmouseout='UnTip()' onmouseover='Tip(\"Anout Address, for instance round the back or building number\");'>" . get_text('Address About') . "</A>:</TD>
 					<TD></TD>
 					<TD><INPUT NAME='frm_address_about' tabindex=1 SIZE='72' TYPE='text' VALUE=\"{$row['address_about']}\" MAXLENGTH='512'></TD>
 					</TR>";	//	9/10/13
 			print "<TR CLASS='even'>
-					<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_city']}');\">" . get_text("City") . ":</TD>";
+					<TD CLASS='td_label' onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_city']}');\">" . get_text("City") . ":</TD>";
 			print 		"<TD>";
 
 			if($gmaps) {	//	6/4/2013			
 				print "<button type='button' onClick='Javascript:loc_lkup(document.edit);'><img src='./markers/glasses.png' alt='" . gettext('Lookup location.') . "' /></button>";
 			 	}				// end if($gmaps)
 			print 		"</TD>";
-			print 		"<TD><INPUT SIZE='32' TYPE='text' 	NAME='frm_city' VALUE=\"{$row['city']}\" MAXLENGTH='32' onChange = 'this.value=capWords(this.value)' {$dis}>\n";
+			print 		"<TD><INPUT SIZE='32' TYPE='text' 	NAME='frm_city' VALUE=\"{$row['city']}\" MAXLENGTH='32' onChange = 'this.value=capWords(this.value);' {$dis}>\n";
 			$st_size = (get_variable("locale") ==0)?  2: 4;												// 11/23/10, 3/27/2013
 			
-			print 	"<SPAN STYLE='margin-left:24px'  onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_state']}');\">" . get_text("St") . "</SPAN>:&nbsp;&nbsp;<INPUT SIZE='{$st_size}' TYPE='text' NAME='frm_state' VALUE='" . $row['state'] . "' MAXLENGTH='{$st_size}' {$dis}>";
+			print 	"<SPAN STYLE='margin-left:24px'  onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_state']}');\">" . get_text("St") . "</SPAN>:&nbsp;&nbsp;<INPUT SIZE='{$st_size}' TYPE='text' NAME='frm_state' VALUE='" . $row['state'] . "' MAXLENGTH='{$st_size}' {$dis}>";
 
 			if ($gmaps) {						// 6/4/2013
-				print "<BUTTON type='button' onClick='Javascript:do_nearby(this.form); return false;'>Nearby?</BUTTON>";
+				print "<BUTTON type='button' onClick='Javascript:do_nearby(this.form); return false;'>" . gettext('Nearby?') . "</BUTTON>";
 				}		// end if ($gmaps)
 			print 		"<DIV id='loc_warnings' style='z-index: 1000; display: none; height: 100px; width: 300px; font-size: 1.5em; font-weight: bold; border: 2px outset #707070;'></DIV>";		
 			print 		"</TD></TR>\n";
 
 			print "<TR CLASS='even'>
-				<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_phone']}');\">" . get_text("Phone") . ":</TD>";
+				<TD CLASS='td_label' onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_phone']}');\">" . get_text("Phone") . ":</TD>";
 			print 		"<TD><button type='button'  onClick='Javascript:phone_lkup(document.edit.frm_phone.value);'><img src='./markers/glasses.png' alt='" . gettext('Lookup phone number') . "' /></button>";	// 1/19/09
 			print 		"</TD><TD><INPUT SIZE='48' TYPE='text' NAME='frm_phone' VALUE='" . $row['phone'] . "' MAXLENGTH='16' {$dis}></TD></TR>\n";
 
@@ -1041,18 +1041,18 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 				if (mysql_affected_rows() > 0) {
 					$row_cons = stripslashes_deep(mysql_fetch_array($result_cons));
 					print "<TR CLASS='even'>
-						<TD CLASS='td_label' COLSPAN=2 >Add'l:</TD>
+						<TD CLASS='td_label' COLSPAN=2 >" . gettext("Add'l") . ":</TD>
 						<TD CLASS='td_label'>{$row_cons['miscellaneous']}</TD></TR>\n";		// 3/13/10
 					}
 				unset($result_cons);
 				}	
-			print "<TR CLASS='odd'><TD CLASS='td_label' onmouseout='UnTip()' onmouseover='Tip(\"To Address, Not plotted on map, for information only\");'>" . get_text('To Address') . "</A>:</TD>
+			print "<TR CLASS='odd'><TD CLASS='td_label' onmouseout='UnTip();' onmouseover='Tip(\"To Address, Not plotted on map, for information only\");'>" . get_text('To Address') . "</A>:</TD>
 					<TD></TD>
 					<TD><INPUT NAME='frm_to_address' tabindex=1 SIZE='72' TYPE='text' VALUE=\"{$row['to_address']}\" MAXLENGTH='512'></TD>
 					</TR>";	//	9/10/13		
 			print "<TR CLASS='even'>
 				<TD CLASS='td_label' COLSPAN=2 >";
-			print "<SPAN CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_nature']}');\">{$nature}:</SPAN>\n";
+			print "<SPAN CLASS='td_label' onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_nature']}');\">{$nature}:</SPAN>\n";
 			print "</TD><TD>";
 	
 			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]in_types` ORDER BY `group` ASC, `sort` ASC, `type` ASC";
@@ -1085,7 +1085,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 				}
 			unset ($result);
 			print "</OPTGROUP></SELECT>";
-			print "<SPAN STYLE='margin-left: 30px;' onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_prio']}');\">" . get_text("Priority") . ": <SELECT NAME='frm_severity' {$dis}>";		// 2/21/09
+			print "<SPAN STYLE='margin-left: 30px;' onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_prio']}');\">" . get_text("Priority") . ": <SELECT NAME='frm_severity' {$dis}>";		// 2/21/09
 				$nsel = ($row['severity']==$GLOBALS['SEVERITY_NORMAL'])? "SELECTED" : "" ;
 				$msel = ($row['severity']==$GLOBALS['SEVERITY_MEDIUM'])? "SELECTED" : "" ;
 				$hsel = ($row['severity']==$GLOBALS['SEVERITY_HIGH'])? "SELECTED" : "" ;
@@ -1097,13 +1097,13 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 				print "</SPAN></TD></TR>";
 
 			print "<TR CLASS = 'odd'>
-					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_proto']}');\">" . get_text("Protocol") . ":</TD>";
+					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_proto']}');\">" . get_text("Protocol") . ":</TD>";
 			print 	"<TD ID='proto_cell'>{$row['protocol']}</TD></TR>\n";
 
 			if(get_num_groups()) {	//	3/28/12 - fixes incorrect display of Regions.		
 			if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 					print "<TR CLASS='even' VALIGN='top'>";
-					print "<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('" . gettext('Sets groups that Incident is allocated to - click + to expand, - to collapse') . "');\">" . get_text('Group') . "</A>: </TD>";
+					print "<TD CLASS='td_label' onmouseout='UnTip();' onmouseover=\"Tip('" . gettext('Sets groups that Incident is allocated to - click + to expand, - to collapse') . "');\">" . get_text('Group') . "</A>: </TD>";
 					print "<TD><SPAN id='expand_gps' onClick=\"$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';\" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>";
 					print "<SPAN id='collapse_gps' onClick=\"$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';\" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>";
 					print "<TD>";
@@ -1113,7 +1113,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 					
 				} elseif((is_admin()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11	
 					print "<TR CLASS='even' VALIGN='top'>";
-					print "<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('" . gettext('Sets groups that Incident is allocated to - click + to expand, - to collapse') . "');\">" . get_text('Group') . "</A>: </TD>";
+					print "<TD CLASS='td_label' onmouseout='UnTip();' onmouseover=\"Tip('" . gettext('Sets groups that Incident is allocated to - click + to expand, - to collapse') . "');\">" . get_text('Group') . "</A>: </TD>";
 					print "<TD><SPAN id='expand_gps' onClick=\"$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';\" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>";
 					print "<SPAN id='collapse_gps' onClick=\"$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';\" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>";
 					print "<TD>";
@@ -1123,7 +1123,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 					
 				} else {
 					print "<TR CLASS='even' VALIGN='top'>";
-					print "<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('" . gettext('Sets groups that Incident is allocated to - click + to expand, - to collapse') . "');\">" . get_text('Group') . "</A>: </TD>";
+					print "<TD CLASS='td_label' onmouseout='UnTip();' onmouseover=\"Tip('" . gettext('Sets groups that Incident is allocated to - click + to expand, - to collapse') . "');\">" . get_text('Group') . "</A>: </TD>";
 					print "<TD><SPAN id='expand_gps' onClick=\"$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';\" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>";
 					print "<SPAN id='collapse_gps' onClick=\"$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';\" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>";
 					print "<TD>";
@@ -1136,7 +1136,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			}
 			
 			print "<TR CLASS='odd' VALIGN='top'>
-					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_synop']}');\">" . get_text("Synopsis") . ":</TD>";
+					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_synop']}');\">" . get_text("Synopsis") . ":</TD>";
 			print 	"<TD CLASS='td_label'><TEXTAREA NAME='frm_description' COLS='45' ROWS='2' {$dis} >" . $row['tick_descr'] . "</TEXTAREA></TD></TR>\n";		// 8/8/09
 														// 2/11/11
 			$query_sigs = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
@@ -1185,11 +1185,11 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 <?php
 				}						// end if (mysql_num_rows()>0)
 			print "<TR CLASS='even'>
-				<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_911']}');\">" . get_text("911 Contacted") . ":&nbsp;</TD>
+				<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_911']}');\">" . get_text("911 Contacted") . ":&nbsp;</TD>
 				<TD><INPUT SIZE='56' TYPE='text' NAME='frm_nine_one_one' VALUE='{$row['nine_one_one']}' MAXLENGTH='96' {$dis}/></TD></TR>";
 
 			print "<TR CLASS='odd'>
-				<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_caller']}');\">" . get_text("Reported by") . ":</TD>
+				<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_caller']}');\">" . get_text("Reported by") . ":</TD>
 				<TD><INPUT SIZE='48' TYPE='text' NAME='frm_contact' VALUE=\"{$row['contact']}\" MAXLENGTH='48' {$dis}/></TD></TR>\n";
 
 			$portal_user_control = "<SELECT NAME='frm_portal_user'>";
@@ -1197,7 +1197,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			$result_pu = mysql_query($query_pu) or do_error($query_pu, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 			if(mysql_affected_rows() > 0) {
 				$has_portal = 1;
-				$portal_user_control .= "<OPTION VALUE = 0 SELECTED>Select User</OPTION>\n";
+				$portal_user_control .= "<OPTION VALUE = 0 SELECTED>" . gettext('Select User') . "</OPTION>\n";
 					while ($row_pu = mysql_fetch_array($result_pu, MYSQL_ASSOC)) {
 						$sel = $row_pu['id'] == $row['portal_user'] ? "SELECTED": "";
 						$theName = $row_pu['name_f'] . " " . $row_pu['name_l'] . " (" . $row_pu['user'] . ")";
@@ -1210,7 +1210,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			
 			if($has_portal == 1) {	
 				print "<TR CLASS='odd'>
-					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('Associated Portal User - this user can see this ticket as a request');\">" . get_text("Portal User") . ":</TD>
+					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('Associated Portal User - this user can see this ticket as a request');\">" . get_text("Portal User") . ":</TD>
 					<TD>";
 
 				print $portal_user_control;
@@ -1220,7 +1220,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 				}
 
 			print "<TR CLASS='even'>
-				<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_name']}');\">" . get_text("Incident name") . ":</TD>
+				<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_name']}');\">" . get_text("Incident name") . ":</TD>
 				<TD><INPUT TYPE='text' NAME='frm_scope' SIZE='48' VALUE='{$row['scope']}' MAXLENGTH='48' {$dis} /></TD></TR>\n"; 
 
 			print "<TR CLASS='odd'><TD COLSPAN='2'>&nbsp;</TD></TR>";
@@ -1233,7 +1233,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			$elapsed = my_date_diff($row['problemstart'], $end_date);		// 5/13/10
 
 			print "<TR CLASS='even'>
-				<TD CLASS='td_label' COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_status']}');\">" . get_text("Status") . ":</TD>
+				<TD CLASS='td_label' COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_status']}');\">" . get_text("Status") . ":</TD>
 				<TD><SELECT NAME='frm_status' {$dis}><OPTION VALUE='" . $GLOBALS['STATUS_OPEN'] . "' $selO>Open</OPTION><OPTION VALUE='" . $GLOBALS['STATUS_CLOSED'] . "'$selC>Closed</OPTION><OPTION VALUE='" . $GLOBALS['STATUS_SCHEDULED'] . "'$selP>Scheduled</OPTION></SELECT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$elapsed} </TD></TR>";
 //			print "<TR CLASS='odd'><TD CLASS='td_label'>Affected:</TD><TD><INPUT TYPE='text' SIZE='48' NAME='frm_affected' VALUE='" . $row['affected'] . "' MAXLENGTH='48' {$dis}></TD></TR>\n";
 
@@ -1283,13 +1283,13 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			if (!($row['facility'] == NULL)) {				// 9/22/09
 	
 				print "<TR CLASS='odd'>
-					<TD CLASS='td_label' COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_facy']}');\">" . gettext('Facility') . ": &nbsp;&nbsp;</TD>";		// 2/21/09
+					<TD CLASS='td_label' COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_facy']}');\">" . gettext('Facility') . ": &nbsp;&nbsp;</TD>";		// 2/21/09
 				$query_fc = "SELECT *, `f`.`id` AS `fac_id` FROM `$GLOBALS[mysql_prefix]facilities` `f`
 				LEFT JOIN `$GLOBALS[mysql_prefix]allocates` `a` ON ( `f`.`id` = `a`.`resource_id` )		
 				$where2 GROUP BY `fac_id` ORDER BY `name` ASC";		
 				$result_fc = mysql_query($query_fc) or do_error($query_fc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 				print "<TD><SELECT NAME='frm_facility_id'  {$dis} onChange='document.edit.frm_fac_chng.value = 1; do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim());'>";
-				print "<OPTION VALUE=0>Not using facility</OPTION>";
+				print "<OPTION VALUE=0>" . gettext('Not using facility') . "</OPTION>";
 	
 				print "\n<SCRIPT>fac_lat[" . 0 . "] = " . get_variable('def_lat') . " ;</SCRIPT>\n";
 				print "\n<SCRIPT>fac_lng[" . 0 . "] = " . get_variable('def_lng') . " ;</SCRIPT>\n";
@@ -1316,7 +1316,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 					}
 				unset ($result_fc);
 				print "<TR CLASS='odd'>
-					<TD CLASS='td_label' COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_facy']}');\">" . gettext('Facility?') . ":</TD>";
+					<TD CLASS='td_label' COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_facy']}');\">" . gettext('Facility?') . ":</TD>";
 				print "<TD><SELECT NAME='frm_facility_id'  {$dis} onChange='document.edit.frm_fac_chng.value = 1; do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim())'>$pulldown</SELECT>&nbsp;&nbsp;&nbsp;&nbsp;\n";
 				}
 //	receiving facility - 3/25/10
@@ -1351,13 +1351,13 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 
 			if (good_date($row['booked_date'])) {	//10/1/09
 				print "\n<TR CLASS='odd'>
-					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_booked']}');\">" . gettext('Scheduled Date') . ":</TD><TD>";
+					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_booked']}');\">" . gettext('Scheduled Date') . ":</TD><TD>";
 				generate_date_dropdown("booked_date",$row['booked_date'], $disallow);	// ($date_suffix,$default_date=0, $disabled=FALSE) 
 				print "</TD></TR>\n";
 				}
 			else {	//10/1/09
 				print "\n<TR CLASS='even' valign='middle'>
-					<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_booked']}');\">" . get_text("Scheduled Date") . ": </TD>
+					<TD CLASS='td_label' onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_booked']}');\">" . get_text("Scheduled Date") . ": </TD>
 					<TD ALIGN='center'><input type='radio' name='boo_but' onClick = 'do_booking(this.form);' {$dis} /></TD><TD>";
 				print "<SPAN style = 'visibility:hidden' ID = 'booked1'>";
 				generate_date_dropdown('booked_date',0, $disallow);
@@ -1368,19 +1368,19 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			print "<TR CLASS='odd'><TD COLSPAN=3 ALIGN='center'><HR SIZE=1 COLOR=BLUE WIDTH='67%' /></TD></TR>\n";			
 
 			print "\n<TR CLASS='even'>
-				<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_start']}');\">" . get_text("Run Start") . ":</TD><TD ALIGN='center'><img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'st_unlk(document.edit);'></TD><TD>";
+				<TD CLASS='td_label' onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_start']}');\">" . get_text("Run Start") . ":</TD><TD ALIGN='center'><img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'st_unlk(document.edit);'></TD><TD>";
 			print  generate_date_dropdown("problemstart",$row['problemstart'],0, $disallow);
 			print "&nbsp;&nbsp;&nbsp;&nbsp;</TD></TR>\n";
 			if (good_date($row['problemend'])) {
 
 				print "\n<TR CLASS='odd'>
-					<TD CLASS='td_label' COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_end']}');\">" . get_text("Run End") . ":</TD><TD>";
+					<TD CLASS='td_label' COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_end']}');\">" . get_text("Run End") . ":</TD><TD>";
 				generate_date_dropdown("problemend",$row['problemend'], $disallow);
 				print "</TD></TR>\n";
 				}
 			else {
 				print "\n<TR CLASS='odd' valign='middle'>
-					<TD CLASS='td_label' onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_end']}');\">" . gettext('Run End') . ": </TD>
+					<TD CLASS='td_label' onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_end']}');\">" . gettext('Run End') . ": </TD>
 					<TD ALIGN='center'><input type='radio' name='re_but'  {$dis} onClick ='do_end(this.form);' /></TD>";
 				print "<TD><SPAN style = 'visibility:hidden' ID = 'runend1'>";
 				generate_date_dropdown('problemend',0, $disallow);
@@ -1389,7 +1389,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 				}
 
 			print "<TR CLASS='even' VALIGN='top'>
-				<TD CLASS='td_label' COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_disp']}');\">{$disposition}:</TD>";				// 10/21/08, 8/8/09
+				<TD CLASS='td_label' COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_disp']}');\">{$disposition}:</TD>";				// 10/21/08, 8/8/09
 			print 	"<TD><TEXTAREA NAME='frm_comments' COLS='45' ROWS='2' {$dis} >" . $row['comments'] . "</TEXTAREA></TD></TR>\n";
 			$query_sigs = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
 			$result_sigs = mysql_query($query_sigs) or do_error($query_sigs, 'mysql query_sigs failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -1412,7 +1412,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 				}						// end if (mysql_num_rows($result_sigs)>0)
 
 			print "<TR CLASS='odd'>
-				<TD CLASS='td_label' COLSPAN=2 onClick = 'javascript: do_coords(document.edit.frm_lat.value ,document.edit.frm_lng.value  )'><U><A HREF=\"#\" TITLE=\"" . gettext('Position - Lat and Lng for Incident position. Click to show all position data.') . "\">" . gettext('Position') . "</A></U>:</TD><TD>";
+				<TD CLASS='td_label' COLSPAN=2 onClick = 'javascript: do_coords(document.edit.frm_lat.value ,document.edit.frm_lng.value);'><U><A HREF=\"#\" TITLE=\"" . gettext('Position - Lat and Lng for Incident position. Click to show all position data.') . "\">" . gettext('Position') . "</A></U>:</TD><TD>";
 			print	 "<INPUT SIZE='13' TYPE='text' NAME='show_lat' VALUE='" . get_lat($row['lat']) . "' DISABLED>\n";
 			print 	 "<INPUT SIZE='13' TYPE='text' NAME='show_lng' VALUE='" . get_lng($row['lng']) . "' DISABLED>&nbsp;&nbsp;";
 
@@ -1420,7 +1420,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			switch($locale) { 
 				case "0":
 					$usng = LLtoUSNG($row['lat'], $row['lng']);
-					print "<B><SPAN ID = 'USNG' onClick = 'do_usng()'><U><A HREF='#' TITLE='" . gettext('US National Grid Co-ordinates.') . "'>" . gettext('USNG') . "</A></U>:&nbsp;</SPAN></B><INPUT SIZE='19' TYPE='text' NAME='frm_ngs' VALUE='{$usng}'></TD></TR>";		// 9/13/08, 5/2/09
+					print "<B><SPAN ID = 'USNG' onClick = 'do_usng();'><U><A HREF='#' TITLE='" . gettext('US National Grid Co-ordinates.') . "'>" . gettext('USNG') . "</A></U>:&nbsp;</SPAN></B><INPUT SIZE='19' TYPE='text' NAME='frm_ngs' VALUE='{$usng}'></TD></TR>";		// 9/13/08, 5/2/09
 					break;
 			
 				case "1":
@@ -1438,7 +1438,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			print "</TD></TR>\n";
 			$by_str = "&nbsp;&nbsp;&nbsp;by '{$row['tick_user']}'";				// 4/1/11
 			print "<TR CLASS='even'>
-				<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip()' onmouseover=\"Tip('{$titles['_asof']}');\">" . gettext('Updated') . ":</TD><TD>" . format_date($row['updated']) . "{$by_str}</TD></TR>\n";		// 10/21/08
+				<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_asof']}');\">" . gettext('Updated') . ":</TD><TD>" . format_date($row['updated']) . "{$by_str}</TD></TR>\n";		// 10/21/08
 			$lat = $row['lat']; $lng = $row['lng'];	
 			if(($lat==$GLOBALS['NM_LAT_VAL']) && ($lng==$GLOBALS['NM_LAT_VAL'])) {	// check ticket entered in "no maps" Mode 7/28/10
 				$lat=get_variable('def_lat');
@@ -1469,8 +1469,8 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			if ($gmaps) {		// 1/1/11, 6/10/11
 				print "</TD><TD>";		
 				print "<TABLE ID='mymap' border = 0><TR><TD ALIGN='center'><DIV ID='map_canvas' STYLE='WIDTH: " . get_variable('map_width') . "PX; HEIGHT:" . get_variable('map_height') . "PX'></DIV>
-					<BR /><SPAN ID='do_grid' onClick='toglGrid()'><U>" . gettext('Grid') . "</U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;
-					<SPAN ID='do_sv' onClick = 'sv_win(document.edit)'><U>" . gettext('Street view') . "</U></SPAN>";
+					<BR /><SPAN ID='do_grid' onClick='toglGrid();'><U>" . gettext('Grid') . "</U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;
+					<SPAN ID='do_sv' onClick = 'sv_win(document.edit);'><U>" . gettext('Street view') . "</U></SPAN>";
 				print ($zoom_tight)? "<SPAN  onClick= 'zoom_in({$lat}, {$lng}, {$zoom_tight});' STYLE = 'margin-left:20px'><U>" . gettext('Zoom') . "</U></SPAN>\n" : "";	// 3/27/10
 					
 				print "</TD></TR></TABLE ID='mymap'>\n";
@@ -1488,17 +1488,17 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['id'];?>">
 			</FORM>	
 			<!-- 9/10/13 File List -->
-			<SPAN id='s_fl' class='plain' style='position: fixed; top: 10px; right: 0px; height: 20px; width: 100px; font-size: 1.2em; float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'block'; $('s_fl').style.display='none'; $('h_fl').style.display='inline-block';">Files</SPAN>
+			<SPAN id='s_fl' class='plain' style='position: fixed; top: 10px; right: 0px; height: 20px; width: 100px; font-size: 1.2em; float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'block'; $('s_fl').style.display='none'; $('h_fl').style.display='inline-block';"><?php print gettext('Files');?></SPAN>
 			<DIV id='file_list' style='position: fixed; right: 10px; top: 10px; width: 400px; height: 600px; border: 2px outset #707070; text-align: center; display: none;'>
-				<SPAN id='h_fl' class='plain' style='float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'none'; $('h_fl').style.display='none'; $('s_fl').style.display='inline-block';">Hide</SPAN>
-				<DIV class='heading' style='text-align: center;'>FILE LIST</DIV><BR />
-				<SPAN id='nf_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='file_window(<?php print $id;?>);'>Add file</SPAN><BR /><BR />
+				<SPAN id='h_fl' class='plain' style='float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'none'; $('h_fl').style.display='none'; $('s_fl').style.display='inline-block';"><?php print gettext('Hide');?></SPAN>
+				<DIV class='heading' style='text-align: center;'><?php print gettext('FILE LIST');?></DIV><BR />
+				<SPAN id='nf_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='file_window(<?php print $id;?>);'><?php print gettext('Add file');?></SPAN><BR /><BR />
 				<DIV id='the_file_list' style='width: 100%; height: 100%; overflow-y: auto; text-align: left;'></DIV>
 			</DIV>
 			<!-- 9/10/13 File List -->			
 					<DIV id='boxB' class='box' STYLE='left:<?php print $from_left;?>px;top:<?php print $from_top;?>px; position:fixed;' > <!-- 9/23/10 -->
 					<DIV class="bar" STYLE="width:12em; color:red; background-color : transparent;"
-						 onmousedown="dragStart(event, 'boxB')">&nbsp;&nbsp;&nbsp;&nbsp;<I><?php print gettext('Drag me');?></I></DIV><!-- drag bar - 2/5/11 -->
+						 onmousedown="dragStart(event, 'boxB');">&nbsp;&nbsp;&nbsp;&nbsp;<I><?php print gettext('Drag me');?></I></DIV><!-- drag bar - 2/5/11 -->
 						 <DIV STYLE = 'height:10px;'/>&nbsp;</DIV>
 							<INPUT TYPE='button' VALUE='<?php print get_text("Cancel");?>' onClick='history.back();'  STYLE = 'margin-left:20px;' /><BR />
 <?php
@@ -1745,10 +1745,10 @@ if (!$disallow) {
  * @type Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -1869,11 +1869,17 @@ if (!$disallow) {
 					find_warnings(tick_lat, tick_lng)					
 					}				
 				}					
-			else 											{ alert("Geocode lookup failed: " + status);}
+			else 											{ alert("<?php print gettext('Geocode lookup failed');?>: " + status);}
 			});				// end geocoder.geocode()
 
 		}				// end function loc lkup()
-		
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function theRequest(url,callback,postData) {
 		var req = docreateXMLHTTPObject();
 		if (!req) return;
@@ -1898,7 +1904,10 @@ if (!$disallow) {
 		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 	function docreateXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -1954,9 +1963,9 @@ if (!$disallow) {
 							document.edit.frm_state.value=temp[0].substring(0,3).trim() ;								// US state							
 							}
 						else {
-							var the_city = addr_pieces[(addr_pieces.length-3)] + ", " + addr_pieces[(addr_pieces.length-2)] ;
-							document.edit.frm_city.value=the_city.substring(0,33).trim() ;								// city						
-							document.edit.frm_state.value=addr_pieces[(addr_pieces.length-1)].substring(0,3).trim()		// country							
+							var the_city = addr_pieces[(addr_pieces.length-3)] + ", " + addr_pieces[(addr_pieces.length-2)];
+							document.edit.frm_city.value=the_city.substring(0,33).trim();								// city						
+							document.edit.frm_state.value=addr_pieces[(addr_pieces.length-1)].substring(0,3).trim();		// country							
 							}
 					}				// end switch
 				}

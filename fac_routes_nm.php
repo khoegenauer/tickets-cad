@@ -420,10 +420,10 @@ if (!empty($_POST)) {
  * @type Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -493,7 +493,7 @@ if (!empty($_POST)) {
 	<CENTER><BR><BR><BR><BR><H3><?php print gettext('Call Assignments made to');?>:<BR /><?php print substr((str_replace ( "\n", ", ", $_POST['frm_name_str'])) , 0, -2);?><BR><BR> <!-- 11/8/08 -->
 	<?php print gettext('See call Board');?></H3>
 	<FORM NAME='cont_form' METHOD = 'get' ACTION = "main.php">
-	<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>' onClick = "document.cont_form.submit()">
+	<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>' onClick = "document.cont_form.submit();">
 	</FORM></BODY></HTML>
 <?php		
 	}		// end if (!empty($_POST))
@@ -653,7 +653,7 @@ function doReset() {
 	print "var thelat = " . $row_fac['lat'] . ";\nvar thelng = " . $row_fac['lng'] . ";\n";		// set js-accessible location data
 ?>
 </SCRIPT>
-<BODY onLoad = "do_notify(); ck_frames()" >
+<BODY onLoad = "do_notify(); ck_frames();" >
 <?php
 require_once('./incs/links.inc.php');
 ?>
@@ -664,7 +664,7 @@ require_once('./incs/links.inc.php');
 		</TD>
 		<TD VALIGN="top" ALIGN='center'>
 			<DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
-			<BR /><A HREF='#' onClick='doGrid()'><U><?php print gettext('Grid');?></U>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doTraffic()'><U><?php print gettext('Traffic');?></U>
+			<BR /><A HREF='#' onClick='doGrid();'><U><?php print gettext('Grid');?></U>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doTraffic();'><U><?php print gettext('Traffic');?></U>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<A HREF='#' onClick = "sv_win('<?php print $row_fac['lat'];?>','<?php print $row_fac['lng'];?>' );"><U><?php print gettext('Street view');?></U></A>			
 			<BR />
@@ -686,13 +686,13 @@ require_once('./incs/links.inc.php');
 	<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['fac_id'];?>">
 	</FORM>	
 	<FORM NAME='routes_Form' METHOD='post' ACTION="<?php print basename( __FILE__); ?>">
-	<INPUT TYPE='hidden' NAME='func' 			VALUE='do_db'>
-	<INPUT TYPE='hidden' NAME='frm_fac_id' 	VALUE='<?php print $_GET['fac_id']; ?>'>
-	<INPUT TYPE='hidden' NAME='frm_by_id' 		VALUE= "<?php print $_SESSION['user_id'];?>">
-	<INPUT TYPE='hidden' NAME='frm_id_str' 		VALUE= "">
-	<INPUT TYPE='hidden' NAME='frm_name_str' 	VALUE= "">
-	<INPUT TYPE='hidden' NAME='frm_status_id' 	VALUE= "1">
-	<INPUT TYPE='hidden' NAME='frm_comments' 	VALUE= "New">
+	<INPUT TYPE='hidden' NAME='func' 			VALUE='do_db'/>
+	<INPUT TYPE='hidden' NAME='frm_fac_id' 	VALUE='<?php print $_GET['fac_id']; ?>'/>
+	<INPUT TYPE='hidden' NAME='frm_by_id' 		VALUE= "<?php print $_SESSION['user_id'];?>"/>
+	<INPUT TYPE='hidden' NAME='frm_id_str' 		VALUE= ""/>
+	<INPUT TYPE='hidden' NAME='frm_name_str' 	VALUE= ""/>
+	<INPUT TYPE='hidden' NAME='frm_status_id' 	VALUE= "1"/>
+	<INPUT TYPE='hidden' NAME='frm_comments' 	VALUE= "New"/>
 	</FORM>
 	<FORM NAME='reLoad_Form' METHOD = 'get' ACTION="<?php print basename( __FILE__); ?>">
 	<INPUT TYPE='hidden' NAME='fac_id' 	VALUE='<?php print $_GET['fac_id']; ?>'>
@@ -705,13 +705,13 @@ require_once('./incs/links.inc.php');
 
 	print "<SPAN ID=\"mail_button\" STYLE=\"display: 'none'\">";
 	print "<FORM NAME='email_form' METHOD = 'post' ACTION='do_direcs_mail.php' target='_blank' onsubmit='return mail_direcs(this);'>";
-	print "<INPUT TYPE='hidden' NAME='frm_direcs' VALUE=''>";
-	print "<INPUT TYPE='hidden' NAME='frm_u_id' VALUE=''>";
-	print "<INPUT TYPE='hidden' NAME='frm_mail_subject' VALUE='Directions to Facility'>";
-	print "<INPUT TYPE='hidden' NAME='frm_scope' VALUE=''>"; // 10/29/09
+	print "<INPUT TYPE='hidden' NAME='frm_direcs' VALUE=''/>";
+	print "<INPUT TYPE='hidden' NAME='frm_u_id' VALUE=''/>";
+	print "<INPUT TYPE='hidden' NAME='frm_mail_subject' VALUE='Directions to Facility'/>";
+	print "<INPUT TYPE='hidden' NAME='frm_scope' VALUE=''/>"; // 10/29/09
 	print "<INPUT TYPE='submit' value='" . gettext('Mail Direcs') . "' ID = 'mail_dir_but' />";
 	print "</FORM>";
-	print "<INPUT TYPE='button' VALUE='" . gettext('Reset') . "' onClick = 'doReset()' />";
+	print "<INPUT TYPE='button' VALUE='" . gettext('Reset') . "' onClick = 'doReset();' />";
 	print "</SPAN>";
 	print "<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "'  onClick='history.back();' />";
 	print "<SPAN ID=\"loading\" STYLE=\"display: 'inline-block'\">";
@@ -764,7 +764,7 @@ require_once('./incs/links.inc.php');
 		var theId = '<?php print $_GET['fac_id'];?>';
 		
 //		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_fac_id=" + escape(theId);		// ($to_str, $text, $fac_id)
-		var params = "frm_to="+ theAddresses + "&frm_text=" + theText + "&frm_fac_id=" + theId ;		// ($to_str, $text, $fac_id)
+		var params = "frm_to="+ theAddresses + "&frm_text=" + theText + "&frm_fac_id=" + theId;		// ($to_str, $text, $fac_id)
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $fac_id)
 		}			// end function do notify()
 /**
@@ -805,10 +805,10 @@ require_once('./incs/links.inc.php');
  * @type Array|Array|Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -937,7 +937,7 @@ function do_list($unit_id ="") {
  * @returns {Boolean}
  */
 		function mail_direcs(f) {
-			f.target = 'Mail Form'
+			f.target = 'Mail Form';
 			newwindow_mail=window.open('',f.target,'titlebar, location=0, resizable=1, scrollbars, height=360,width=600,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300');
 			if (isNull(newwindow_mail)) {
 				alert ("<?php print gettext('Email edit operation requires popups to be enabled -- please adjust your browser options.');?>");
@@ -981,7 +981,7 @@ function do_list($unit_id ="") {
  * @returns {GMarker}
  */
 		function createMarker(point,sidebar,tabs, color, id, unit_id) {		// Creates marker and sets up click event infowindow
-			do_sidebar(sidebar, color, id, unit_id)
+			do_sidebar(sidebar, color, id, unit_id);
 			var icon = new GIcon(listIcon);
 			var uid = unit_id;
 			var letter = ""+ id;	
@@ -1134,7 +1134,7 @@ function do_list($unit_id ="") {
 					}
 				}
 			if (msgstr.length==0) {
-				var more = (nr_units>1)? "s": ""
+				var more = (nr_units>1)? "s": "";
 				alert ("<?php print gettext('Please select unit');?>" + more + ", <?php print gettext('or cancel');?>");
 				return false;
 				}

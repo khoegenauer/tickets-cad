@@ -1239,7 +1239,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 				print "" . gettext('Please correct these entries and try again.') . "<BR /><BR />";
 ?>
 				<FORM NAME='db_error' METHOD='post' ACTION = 'install.php'>
-				<INPUT TYPE='submit' VALUE='<?php print gettext('Try again');?>'>
+				<INPUT TYPE='submit' VALUE='<?php print gettext('Try again');?>'/>
 				</FORM>
 				</BODY>
 				</HTML>
@@ -1347,19 +1347,19 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 		else {
 ?>
 			<?php print gettext('Complete this form to install Tickets version') . $version;?>. <?php print gettext('Make sure to read through the <A HREF="install.php?help=1"><U>help</U></A> information.');?><BR /><BR />
-			<FORM NAME = 'install_frm' METHOD="post" ACTION="install.php?go=1"  onSubmit='return validate(document.install_frm)' >
+			<FORM NAME = 'install_frm' METHOD="post" ACTION="install.php?go=1"  onSubmit='return validate(document.install_frm);' >
 			<FIELDSET style="width: 900px;"><LEGEND style="font-weight: bold; color: #000; font-family: verdana; font-size: 10pt;">&nbsp;&nbsp;&nbsp;&nbsp;<?php print gettext('From your MySQL installation');?>&nbsp;&nbsp;&nbsp;&nbsp;</LEGEND>
 			<TABLE BORDER="0">
-			<TR CLASS="even"><TD width="200px"><?php print gettext('MySQL Host');?>: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_host" VALUE=""></TD></TR>
-			<TR CLASS="odd"><TD><?php print gettext('MySQL Username');?>: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_user" VALUE=""></TD></TR>
-			<TR CLASS="even"><TD><?php print gettext('MySQL Password');?>: </TD><TD><INPUT TYPE="password" SIZE="45" MAXLENGTH="255" NAME="frm_db_password"  VALUE=""></TD></TR>
+			<TR CLASS="even"><TD width="200px"><?php print gettext('MySQL Host');?>: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_host" VALUE=""/></TD></TR>
+			<TR CLASS="odd"><TD><?php print gettext('MySQL Username');?>: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_user" VALUE=""/></TD></TR>
+			<TR CLASS="even"><TD><?php print gettext('MySQL Password');?>: </TD><TD><INPUT TYPE="password" SIZE="45" MAXLENGTH="255" NAME="frm_db_password"  VALUE=""/></TD></TR>
 			</TABLE>
 			</FIELDSET>
 			<br />
 			<FIELDSET style="width: 900px;"><LEGEND style="font-weight: bold; color: #000; font-family: verdana; font-size: 10pt;">&nbsp;&nbsp;&nbsp;&nbsp;Tickets Stuff&nbsp;&nbsp;&nbsp;&nbsp;</LEGEND>
 			<TABLE BORDER="0">
-			<TR CLASS="even"><TD width="200px"><?php print gettext('MySQL Database');?>: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_dbname" VALUE=""> <?php print gettext('your just-created MySQL database');?></TD></TR>
-			<TR CLASS="odd"><TD><?php print gettext('MySQL Table Prefix (optional)');?>: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_prefix" VALUE=""> <?php print gettext('your choice');?></TD></TR>
+			<TR CLASS="even"><TD width="200px"><?php print gettext('MySQL Database');?>: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_dbname" VALUE=""/> <?php print gettext('your just-created MySQL database');?></TD></TR>
+			<TR CLASS="odd"><TD><?php print gettext('MySQL Table Prefix (optional)');?>: </TD><TD><INPUT TYPE="text" SIZE="45" MAXLENGTH="255" NAME="frm_db_prefix" VALUE=""/> <?php print gettext('your choice');?></TD></TR>
 			<!-- 4/2/2013 -->
 			<TR CLASS="even"><TD><?php print gettext('Google API Key (optional)');?>:<BR /></TD><TD><INPUT TYPE="text" SIZE="70" MAXLENGTH="255" NAME="frm_api_key"  VALUE=""><BR>
 				&nbsp;&nbsp;&nbsp;&nbsp;<?php print gettext('Note: You may obtain your site\'s API key at');?> https://code.google.com/apis/console/
@@ -1370,7 +1370,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 	<!--	<INPUT TYPE="radio" VALUE="upgrade-0.65" NAME="frm_option"><?php print gettext('Upgrade');?> 0.65 -> 0.7<BR />	-->
 			<INPUT TYPE="radio" VALUE="writeconf" NAME="frm_option"><?php print gettext('Write Configuration File Only');?><BR /><BR>
 			</TD></TR>
-			<TR CLASS="even"><TD></TD><TD><INPUT TYPE="Reset" VALUE="Reset form">&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="Submit" VALUE="<?php print gettext('Do it');?>"></TD></TR>
+			<TR CLASS="even"><TD></TD><TD><INPUT TYPE="Reset" VALUE="<?php print gettext('Reset form');?>"/>&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="Submit" VALUE="<?php print gettext('Do it');?>"/></TD></TR>
 			</TABLE>
 			</FORM>
 			<?php

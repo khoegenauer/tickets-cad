@@ -23,12 +23,12 @@ function directory_empty($path) {
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Tickets Map Configuration</title>
+<title><?php print gettext('Tickets Map Configuration');?></title>
 <link rel="stylesheet" href="./js/leaflet/leaflet.css" />
 <!--[if lte IE 8]>
      <link rel="stylesheet" href="./js/leaflet/leaflet.ie.css" />
 <![endif]-->
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	
 <style type="text/css">
 	html, body { margin: 0; padding: 0; font-size: 75%;}
 	.hover 	{ margin-left: 4px;  font: normal 12px Arial, Helvetica, sans-serif; color:#FF0000; border-width: 1px; border-STYLE: inset; border-color: #FFFFFF;
@@ -47,23 +47,47 @@ function directory_empty($path) {
 <script src="./js/misc_function.js" type="text/javascript"></script>
 <script src="./js/leaflet/leaflet.js"></script>
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */  
 	window.onload = function() {
 		if($('map_canvas')) { initialise(); }
 		};
-
+/**
+ * 
+ * @param {type} angle
+ * @returns {Number}
+ */
 	function deg2rad(angle) {
 		return angle * .017453292519943295;
 		}
-		
+/**
+ * 
+ * @param {type} lon
+ * @param {type} zoom1
+ * @returns {@exp;Math@call;floor}
+ */		
 	function long2tile(lon,zoom1) { 
 		tt = Number(lon);
 		return (Math.floor((tt+180)/360*Math.pow(2,zoom1)));
 		}
-
+/**
+ * 
+ * @param {type} lat
+ * @param {type} zoom2
+ * @returns {@exp;Math@call;floor}
+ */
 	function lat2tile(lat,zoom2)  { 
 		return (Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom2))); 
 		}
-
+/**
+ * 
+ * @param {type} zoom
+ * @param {type} lat
+ * @param {type} lon
+ * @returns {Array}
+ */
 	function calc_tile_name(zoom, lat, lon) {
 		var xtile = long2tile(lon,zoom);
 		var ytile = lat2tile(lat,zoom);
@@ -72,8 +96,10 @@ function directory_empty($path) {
 		ret_arr[1] = ytile;
 		return ret_arr;
 		}				// end function calc_tile_name ()
-
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function get_tiles_required() {
 		$('help4').innerHTML = "<BR /><BR /><BR /><BR />";
 		$('file_list_header').style.display='block';
@@ -103,9 +129,12 @@ function directory_empty($path) {
 					}
 				}
 			}
-
 		}	
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 	function tile_cb(req) {
 		var the_ret_file=JSON.decode(req.responseText);
 		if(the_ret_file[0] == "Completed") {
@@ -118,7 +147,10 @@ function directory_empty($path) {
 		var finish_but = "<SPAN id='b6' class = 'plain' style='display: none; z-index: 999; float: none; width: 120px;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'document.forms[\"to_config_Form\"].submit();'>Back to Config</SPAN>";
 		if(the_ret_file[2] == "yes") { $('waiting').style.display='block'; $('waiting').innerHTML = "<CENTER>Complete<BR /><BR />" + finish_but + "</CENTER>"; $('b6').style.display='block'; $('b6').style.zindex = 999;}	
 		}				// end function tile_cb()	
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function get_bounds() {
 		var theBounds = map.getBounds();
 		document.map_tiles_form.tl_lon.value = theBounds.getNorthWest().lng;
@@ -126,50 +158,88 @@ function directory_empty($path) {
 		document.map_tiles_form.br_lon.value = theBounds.getSouthEast().lng;
 		document.map_tiles_form.br_lat.value = theBounds.getSouthEast().lat;		
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function get_zoom_max() {
 		document.map_tiles_form.zoom_bot.value = map.getZoom();
 		}	
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function get_zoom_min() {
 		document.map_tiles_form.zoom_top.value = map.getZoom();
 		}			
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
 		}
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */		
 	function do_hover (the_id) {
 		CngClass(the_id, 'hover');
 		return true;
 		}
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */		
 	function do_hover_centered (the_id) {
 		CngClass(the_id, 'hover_centered');
 		return true;
 		}
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */		
 	function do_lo_hover (the_id) {
 		CngClass(the_id, 'lo_hover');
 		return true;
 		}
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */		
 	function do_plain (the_id) {				// 8/21/10
 		CngClass(the_id, 'plain');
 		return true;
 		}
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */		
 	function do_plain_centered (the_id) {				// 8/21/10
 		CngClass(the_id, 'plain_centered');
 		return true;
 		}
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */		
 	function do_lo_plain (the_id) {
 		CngClass(the_id, 'lo_plain');
 		return true;
 		}	
-
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {															// 12/20/08
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -182,14 +252,17 @@ function directory_empty($path) {
 			}
 		return elements;
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function del_tiles() {
-		$('waiting').innerHTML = "Please Wait, Deleting existing tiles<BR /><IMG style='vertical-align: middle;' src='./images/progressbar3.gif'/>";
+		$('waiting').innerHTML = "<?php print gettext('Please Wait, Deleting existing tiles');?><BR /><IMG style='vertical-align: middle;' src='./images/progressbar3.gif'/>";
 		var url = "./ajax/deltiles.php?deltiles=yes";
 		sendRequest (url ,del_cb, "");			
 			function del_cb(req) {
 				$('waiting').style.display='block';
-				$('waiting').innerHTML = "<BR /><BR />Deleting existing tiles - please wait..";
+				$('waiting').innerHTML = "<BR /><BR /><?php print gettext('Deleting existing tiles - please wait.');?>";
 				var the_ret_arr=JSON.decode(req.responseText);
 				if(the_ret_arr == "Completed") {
 					$('waiting').innerHTML = "<BR /><BR />Complete";
@@ -202,11 +275,20 @@ function directory_empty($path) {
 					}
 			}				// end function del_cb()
 		}				// end function del_tiles()
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function go_toit() {
 		document.go_Form.submit();
 		}
-		
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -232,7 +314,10 @@ function directory_empty($path) {
 		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -246,7 +331,11 @@ function directory_empty($path) {
 			}
 		return xmlhttp;
 		}
-
+/**
+ * 
+ * @param {type} strURL
+ * @returns {@exp;AJAX@pro;responseText|Boolean}
+ */
 	function syncAjax(strURL) {							// synchronous ajax function
 		if (window.XMLHttpRequest) {						 
 			AJAX=new XMLHttpRequest();						 
@@ -299,49 +388,53 @@ if((!directory_empty($local)) && (!isset($_GET['getgo']))) {
 			<FORM METHOD="POST" NAME= "map_tiles_form" ACTION="get_tiles.php?func=get_tiles">
 				<TABLE style='width: 100%;'>
 					<TR>
-						<TD class='td_label'>Top Left (lon)</TD><TD class='td_data'><INPUT TYPE='text' SIZE='10' MAXLENGTH='10' NAME='tl_lon'></TD>
+						<TD class='td_label'><?php print gettext('Top Left (lon)');?></TD><TD class='td_data'><INPUT TYPE='text' SIZE='10' MAXLENGTH='10' NAME='tl_lon'/></TD>
 					</TR>
 					<TR>
-						<TD class='td_label'>Top Left (lat)</TD><TD class='td_data'><INPUT TYPE='text' SIZE='10' MAXLENGTH='10' NAME='tl_lat'></TD>
+						<TD class='td_label'><?php print gettext('Top Left (lat)');?></TD><TD class='td_data'><INPUT TYPE='text' SIZE='10' MAXLENGTH='10' NAME='tl_lat'/></TD>
 					</TR>
 					<TR>
-						<TD class='td_label'>Bottom Right (lon)</TD><TD class='td_data'><INPUT TYPE='text' SIZE='10' MAXLENGTH='10' NAME='br_lon'></TD>
+						<TD class='td_label'><?php print gettext('Bottom Right (lon)');?></TD><TD class='td_data'><INPUT TYPE='text' SIZE='10' MAXLENGTH='10' NAME='br_lon'/></TD>
 					</TR>
 					<TR>
-						<TD class='td_label'>Bottom Right (lat)</TD><TD class='td_data'><INPUT TYPE='text' SIZE='10' MAXLENGTH='10' NAME='br_lat'></TD>
+						<TD class='td_label'><?php print gettext('Bottom Right (lat)');?></TD><TD class='td_data'><INPUT TYPE='text' SIZE='10' MAXLENGTH='10' NAME='br_lat'/></TD>
 					</TR>
 					<TR>
-						<TD class='td_label'>Max-Zoom Out</TD><TD class='td_data'><INPUT TYPE='text' SIZE='10' MAXLENGTH='10' NAME='zoom_top'></TD>
+						<TD class='td_label'><?php print gettext('Max-Zoom Out');?></TD><TD class='td_data'><INPUT TYPE='text' SIZE='10' MAXLENGTH='10' NAME='zoom_top'/></TD>
 					</TR>
 					<TR>
-						<TD class='td_label'>Max-Zoom In</TD><TD class='td_data'><INPUT TYPE='text' SIZE='10' MAXLENGTH='10' NAME='zoom_bot'></TD>
+						<TD class='td_label'><?php print gettext('Max-Zoom In');?></TD><TD class='td_data'><INPUT TYPE='text' SIZE='10' MAXLENGTH='10' NAME='zoom_bot'/></TD>
 					</TR>
 				</TABLE>
 			</FORM>
 		</DIV><BR /><BR />
 	</DIV>
 	<DIV id='rightcol' style='width: 40%; position: absolute; top: 100px; right: 10%; background: #CECECE; height: 60%; font-size: 16px; font-weight: bold; border: 1px outset #707070; padding: 30px;'>
-		<DIV id='help1' style='display: block;'><CENTER>Help.</CENTER><BR /><BR />
-		This page allows you to collect local Open Streetmap tiles so that mapping will work whether on-line or off.<BR /><BR />
-		First, on the map zoom and move the map to the area you want local maps for. Once you have done this click the "Get Bounds" button.<BR />
+		<DIV id='help1' style='display: block;'><CENTER><?php print gettext('Help.');?></CENTER><BR /><BR />
+		<?php print gettext('This page allows you to collect local Open Streetmap tiles so that mapping will work whether on-line or off.<BR /><BR />
+		First, on the map zoom and move the map to the area you want local maps for. Once you have done this click the "Get Bounds" button.');?><BR />
 		</DIV>
-		<DIV id='help2' style='display: none;'><CENTER>Help.</CENTER><BR /><BR />
-		Next zoom in or out to the minimum amount of detail you will need - i.e. the most you would zoom out on the map.<BR /><BR />
-		Once you have got this as you want click on the "Get Zoom Out" button<BR />
+		<DIV id='help2' style='display: none;'><CENTER><?php print gettext('Help.');?></CENTER><BR /><BR />
+		<?php print gettext('Next zoom in or out to the minimum amount of detail you will need - i.e. the most you would zoom out on the map.<BR /><BR />
+		Once you have got this as you want click on the "Get Zoom Out" button');?><BR />
 		</DIV>
-		<DIV id='help3' style='display: none;'><CENTER>Help.</CENTER><BR /><BR />
-		Next zoom in or out to the maximum amount of detail you will need - i.e. the most you would zoom in on the map.<BR /><BR />
-		Once you have got this as you want click on the "Get Zoom In" button<BR />
+		<DIV id='help3' style='display: none;'><CENTER><?php print gettext('Help.');?></CENTER><BR /><BR />
+		<?php print gettext('Next zoom in or out to the maximum amount of detail you will need - i.e. the most you would zoom in on the map.<BR /><BR />
+		Once you have got this as you want click on the "Get Zoom In" button');?><BR />
 		</DIV>	
-		<DIV id='help4' style='display: none;'><CENTER>Help.</CENTER><BR /><BR />
-		Now click the "Next" button and the system will go away and collect the tiles appropriate for the settings you have provided.<BR />
+		<DIV id='help4' style='display: none;'><CENTER><?php print gettext('Help.');?></CENTER><BR /><BR />
+		<?php print gettext('Now click the "Next" button and the system will go away and collect the tiles appropriate for the settings you have provided.<BR />
 		Please note that this could take a considerable time. Do not navigate away from this page until the system alerts you that<BR />	
-		the collection of tiles is complete.<BR />		
+		the collection of tiles is complete.');?><BR />		
 		</DIV><BR /><BR />
 		<DIV id='file_list_header' class='heading' style='position: relative; left: 40%; width: 60%; text-align: center; display: none;'>Downloaded Tiles</DIV>
 		<DIV id='file_list' style='border: 1px solid #707070; position: relative; left: 40%; width: 60%; height: 200px; overflow-y: scroll; display: none; font-weight: normal; font-size: .8em;'></DIV>
 		<SCRIPT>
 		var map;
+/**
+ * 
+ * @returns {undefined}
+ */    
 		function initialise() {
 			map = L.map('map_canvas').setView([<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>], 1);
 			L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

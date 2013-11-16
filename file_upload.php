@@ -13,7 +13,7 @@ require_once('incs/functions.inc.php');
 
 $query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `id` ASC"; 
 $result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-$select_r = "<SELECT NAME='frm_responder_id'><OPTION VALUE=0 SELECTED>Select Responder</OPTION>";
+$select_r = "<SELECT NAME='frm_responder_id'><OPTION VALUE=0 SELECTED>" . gettext('Select Responder') . "</OPTION>";
 while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
 	$sel = ((!empty($_GET)) && (isset($_GET['responder_id'])) && ($_GET['responder_id'] != 0) && ($_GET['responder_id'] == $row['id'])) ? "SELECTED" : "";
 	$select_r .= "<OPTION VALUE=" . $row['id'] . " " . $sel . ">" . $row['name'] . " - " . $row['handle'] . "</OPTION>";
@@ -22,7 +22,7 @@ $select_r .= "</SELECT>";
 
 $query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` ORDER BY `id` ASC"; 
 $result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-$select_t = "<SELECT NAME='frm_ticket_id'><OPTION VALUE=0 SELECTED>Select Ticket</OPTION>";
+$select_t = "<SELECT NAME='frm_ticket_id'><OPTION VALUE=0 SELECTED>" . gettext('Select Ticket') . "</OPTION>";
 while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
 	$sel = ((!empty($_GET)) && (isset($_GET['ticket_id'])) && ($_GET['ticket_id'] != 0) && ($_GET['ticket_id'] == $row['id'])) ? "SELECTED" : "";
 	$select_t .= "<OPTION VALUE=" . $row['id'] . " " . $sel . ">" . $row['scope'] . "</OPTION>";
@@ -31,7 +31,7 @@ $select_t .= "</SELECT>";
 
 $query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `id` ASC"; 
 $result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-$select_f = "<SELECT NAME='frm_facility_id'><OPTION VALUE=0 SELECTED>Select Facility</OPTION>";
+$select_f = "<SELECT NAME='frm_facility_id'><OPTION VALUE=0 SELECTED>" . gettext('Select Facility') . "</OPTION>";
 while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
 	$sel = ((!empty($_GET)) && (isset($_GET['facility_id'])) && ($_GET['facility_id'] != 0) && ($_GET['facility_id'] == $row['id'])) ? "SELECTED" : "";
 	$select_f .= "<OPTION VALUE=" . $row['id'] . " " . $sel . ">" . $row['name'] . " - " . $row['handle'] . "</OPTION>";
@@ -40,7 +40,7 @@ $select_f .= "</SELECT>";
 
 $query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `level` = 7 ORDER BY `id` ASC"; 
 $result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-$select_u = "<SELECT NAME='frm_user_id'><OPTION VALUE=0 SELECTED>Select Portal User</OPTION>";
+$select_u = "<SELECT NAME='frm_user_id'><OPTION VALUE=0 SELECTED>" . gettext('Select Portal User') . "</OPTION>";
 while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
 	$sel = ((!empty($_GET)) && (isset($_GET['portaluser'])) && ($_GET['portaluser'] != 0) && ($_GET['portaluser'] == $row['id'])) ? "SELECTED" : "";
 	$select_u .= "<OPTION VALUE=" . $row['id'] . " " . $sel . ">" . $row['user'] . " - " . $row['name_f'] . " " . $row['name_l'] . "</OPTION>";
@@ -51,13 +51,13 @@ $select_u .= "</SELECT>";
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE>Tickets CAD - File Upload</TITLE>
+	<HEAD><TITLE><?php print gettext('Tickets CAD - File Upload');?></TITLE>
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 	<META HTTP-EQUIV="Expires" CONTENT="0">
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-	<meta http-equiv=”X-UA-Compatible” content=”IE=EmulateIE7" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
 	<STYLE type="text/css">
 	.hover 	{ margin-left: 4px;  font: normal 12px Arial, Helvetica, sans-serif; color:#FF0000; border-width: 1px; border-STYLE: inset; border-color: #FFFFFF;
@@ -65,25 +65,41 @@ $select_u .= "</SELECT>";
 	.plain 	{ margin-left: 4px;  font: normal 12px Arial, Helvetica, sans-serif; color:#000000;  border-width: 1px; border-STYLE: outset; border-color: #FFFFFF;
   				  padding: 4px 0.5em; text-decoration: none; float: left; background-color: #EFEFEF; font-weight: bolder; cursor: pointer; }	
   	</STYLE>
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+	<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
 	<script src="./js/misc_function.js" type="text/javascript"></script>
 	<script type="text/javascript">
-	
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */	
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
 		}
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_hover (the_id) {
 		CngClass(the_id, 'hover');
 		return true;
 		}
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 	function do_hover_centered (the_id) {
 		CngClass(the_id, 'hover_centered');
 		return true;
 		}
-		
+/**
+ * 
+ * @returns {Array}
+ */
 	function $() {
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -96,11 +112,18 @@ $select_u .= "</SELECT>";
 			}
 		return elements;
 		}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
-
+/**
+ * 
+ * @param {type} instr
+ * @returns {String|@exp;@call;to_char}
+ */
 	function to_str(instr) {
 		function ord( string ) {
 		    return (string+'').charCodeAt(0);
@@ -119,14 +142,21 @@ $select_u .= "</SELECT>";
 		}
 
 	var starting = false;
-
+/**
+ * 
+ * @param {type} val
+ * @returns {Boolean}
+ */
 	function isNull(val) {
 		return val === null;
 		}
 
 	var type;					// Global variable - identifies browser family
 	BrowserSniffer();
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function BrowserSniffer() {													//detects the capabilities of the browser
 		if (navigator.userAgent.indexOf("Opera")!=-1 && $) type="OP";	//Opera
 		else if (document.all) type="IE";										//Internet Explorer e.g. IE4 upwards
@@ -136,24 +166,31 @@ $select_u .= "</SELECT>";
 		}
 
 	var starting = false;
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function validate(theForm) {
 		var errmsg="";
-		if (theForm.frm_file.value.trim()=="")													{errmsg+="File selection is required.\n";}
-		if (theForm.frm_title.value.trim()=="")													{errmsg+="File title is required.\n";}
+		if (theForm.frm_file.value.trim()=="")													{errmsg+="<?php print gettext('File selection is required.');?>\n";}
+		if (theForm.frm_title.value.trim()=="")													{errmsg+="<?php print gettext('File title is required.');?>\n";}
 		if ((theForm.frm_type.value.trim()==0) && 
 			((theForm.frm_ticket_id.value.trim()==0) && (theForm.frm_responder_id.value.trim()==0) && (theForm.frm_facility_id.value.trim()==0))
 			) {
-				errmsg+="The file either needs to associated with a Ticket,\n Responder or Facility or set as a general Tickets or Portal type.\n";}
+				errmsg+="<?php print gettext('The file either needs to associated with a Ticket,\n Responder or Facility or set as a general Tickets or Portal type.');?>\n";}
 		if (errmsg!="") {
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
 			theForm.submit();
 			}
 		}				// end function va lidate(theForm)		
-		
+/**
+ * 
+ * @returns {undefined}
+ */
 	function resizeIt() {
 		var LwinW;
 		var RwinW;
@@ -174,7 +211,11 @@ $select_u .= "</SELECT>";
 		$('right_col').style.width = RwinW + "px";
 		$('map').style.width = RwinW + "px";	
 		}
-		
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */		
 	function show_portaluser(id) {
 		if(id==2) {
 			$('portal_user').style.display="";
@@ -182,7 +223,10 @@ $select_u .= "</SELECT>";
 			$('portal_user').style.display="none";	
 			}
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function close_win() {
 		try {
 			window.opener.get_files();
@@ -197,7 +241,7 @@ $select_u .= "</SELECT>";
 	<BODY>
 <?php
 if(!empty($_POST)) {	//	$_POST data exists, process the file
-	$print = "File Uploaded OK<BR />";
+	$print = gettext('File Uploaded OK') . "<BR />";
 	
 //	Has the file been uploaded correctly
 	
@@ -209,9 +253,9 @@ if(!empty($_POST)) {	//	$_POST data exists, process the file
 	foreach ($blacklist as $file) { 
 		if(preg_match("/$file\$/i", $_FILES['frm_file']['name'])) { 
 ?>
-			<DIV style='width: 100%; text-align: center;'><BR /><BR /><BR /><BR /><BR /><BR />File Type disallowed
-			<BR /><BR /><A HREF='file_upload.php' id='retry_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"/>Retry</A><BR /><BR />
-			<SPAN id='close_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.close()" />Close</SPAN>
+			<DIV style='width: 100%; text-align: center;'><BR /><BR /><BR /><BR /><BR /><BR /><?php print gettext('File Type disallowed');?>
+			<BR /><BR /><A HREF='file_upload.php' id='retry_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"/><?php print gettext('Retry');?></A><BR /><BR />
+			<SPAN id='close_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.close();" /><?php print gettext('Close');?></SPAN>
 			</DIV>
 <?php
 			exit; 
@@ -236,12 +280,12 @@ if(!empty($_POST)) {	//	$_POST data exists, process the file
 		if(mysql_affected_rows() == 0) {	//	file doesn't exist already
 			if (move_uploaded_file($_FILES['frm_file']['tmp_name'], $file)) {	// If file uploaded OK
 				if (strlen(filesize($file)) < 20000000) {
-					$print .= "File Size OK<BR />";
+					$print .= gettext('File Size OK') . "<BR />";
 					} else {
-					$print = "Attached file is too large!<BR />";
+					$print = gettext('Attached file is too large!') . "<BR />";
 					}
 				} else {
-				$print = "Error uploading file<BR />";
+				$print = gettext('Error uploading file') . "<BR />";
 				}
 			} else {
 			$row = stripslashes_deep(mysql_fetch_assoc($result));			
@@ -267,41 +311,41 @@ if(!empty($_POST)) {	//	$_POST data exists, process the file
 		$result_insert	= mysql_query($query_insert) or do_error($query_insert,'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
 		$last_id = mysql_insert_id();
 		if($result_insert) {	//	is the database insert successful
-			$print .= "Inserted in Database OK<BR />";
+			$print .= gettext('Inserted in Database OK') . "<BR />";
 			if($_POST['frm_type'] == 2) {
 				$query_user_insert  = "INSERT INTO `$GLOBALS[mysql_prefix]files_x` (`file_id` , `user_id`) VALUES (" . $last_id . ", " . $_POST['frm_user_id'] . ")";
 				$result_user_insert	= mysql_query($query_user_insert) or do_error($query_user_insert,'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);	
 				if($result_user_insert) {
-					$print .= "Inserted Portal User details in Database OK<BR />";
+					$print .= gettext('Inserted Portal User details in Database OK') . "<BR />";
 ?>
 					<DIV style='width: 100%; text-align: center;'><BR /><BR /><BR /><BR /><BR /><BR /><?php print $print;?>
-					<BR /><BR /><SPAN id='close_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="close_win();" />Finish</SPAN>
+					<BR /><BR /><SPAN id='close_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="close_win();" /><?php print gettext('Finish');?></SPAN>
 					</DIV>
 <?php
 					} else {
-					$print .= "Problem with inserting Portal User details in database<BR />";
+					$print .= gettext('Problem with inserting Portal User details in database') . "<BR />";
 					}
 				} else {
 ?>
 				<DIV style='width: 100%; text-align: center;'><BR /><BR /><BR /><BR /><BR /><BR /><?php print $print;?>
-				<BR /><BR /><SPAN id='close_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="close_win()" />Finish</SPAN>
+				<BR /><BR /><SPAN id='close_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="close_win();" /><?php print gettext('Finish');?></SPAN>
 				</DIV>
 <?php				
 				}
 			} else {	//	problem with the database insert
-			$print .= "Database Error<BR />";
+			$print .= gettext('Database Error') . "<BR />";
 ?>
 			<DIV style='width: 100%; text-align: center;'><BR /><BR /><BR /><BR /><BR /><BR /><?php print $print;?>
-			<BR /><BR /><A HREF='file_upload.php' id='retry_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"/>Retry</A><BR /><BR />
-			<SPAN id='close_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="close_win()" />Close</SPAN>
+			<BR /><BR /><A HREF='file_upload.php' id='retry_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"/><?php print gettext('Retry');?></A><BR /><BR />
+			<SPAN id='close_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="close_win();" /><?php print gettext('Close');?></SPAN>
 			</DIV>
 <?php		
 			}
 		} else {	// Problem with the file upload
 ?>
 			<DIV style='width: 100%; text-align: center;'><BR /><BR /><BR /><BR /><BR /><BR />File upload error
-			<BR /><BR /><A HREF='file_upload.php' id='retry_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"/>Retry</A><BR /><BR />
-			<SPAN id='close_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="close_win()" />Close</SPAN>
+			<BR /><BR /><A HREF='file_upload.php' id='retry_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"/><?php print gettext('Retry');?></A><BR /><BR />
+			<SPAN id='close_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="close_win();" /><?php print gettext('Close');?></SPAN>
 			</DIV>
 <?php
 		}
@@ -318,17 +362,17 @@ if(!empty($_POST)) {	//	$_POST data exists, process the file
 		<DIV style='width: 80%; border: 2px outset #606060; padding: 20px;'>
 			<TABLE style='width: 100%;'>
 				<TR class='heading'>
-					<TD COLSPAN='2' class='heading'>File Upload Form</TD>
+					<TD COLSPAN='2' class='heading'><?php print gettext('File Upload Form');?></TD>
 				</TR>
 				<TR class='odd'>
 					<TD COLSPAN='2' class='td_data'>&nbsp;</TD>
 				</TR>
 				<TR class='even'>
-					<TD class='td_label' style='text-align: left;'>Choose a file to upload:</TD>
+					<TD class='td_label' style='text-align: left;'><?php print gettext('Choose a file to upload:');?></TD>
 					<TD class='td_data' style='text-align: left;'><INPUT NAME="frm_file" TYPE="file" /></TD>
 				</TR>
 				<TR class='odd'>
-					<TD class='td_label' style='text-align: left;'>File Name</TD>
+					<TD class='td_label' style='text-align: left;'><?php print gettext('File Name');?></TD>
 					<TD class='td_data' style='text-align: left;'><INPUT NAME="frm_title" TYPE="text" SIZE="48" MAXLENGTH="128" VALUE=""></TD>
 				</TR>
 <?php
@@ -349,9 +393,9 @@ if(!empty($_POST)) {	//	$_POST data exists, process the file
 <?php
 					} else {
 ?>
-					<INPUT TYPE='hidden' NAME='frm_ticket_id' VALUE=<?php print $the_ticket;?>>
-					<INPUT TYPE='hidden' NAME='frm_responder_id' VALUE=<?php print $the_responder;?>>
-					<INPUT TYPE='hidden' NAME='frm_facility_id' VALUE=<?php print $the_facility;?>>
+					<INPUT TYPE='hidden' NAME='frm_ticket_id' VALUE=<?php print $the_ticket;?>/>
+					<INPUT TYPE='hidden' NAME='frm_responder_id' VALUE=<?php print $the_responder;?>/>
+					<INPUT TYPE='hidden' NAME='frm_facility_id' VALUE=<?php print $the_facility;?>/>
 <?php
 					}
 				if(($ticket_id) || ($responder_id) || ($facility_id)) {
@@ -361,17 +405,17 @@ if(!empty($_POST)) {	//	$_POST data exists, process the file
 					} else {
 ?>
 					<TR class='odd'>
-						<TD class='td_label' style='text-align: left;'>Available for</TD>
+						<TD class='td_label' style='text-align: left;'><?php print gettext('Available for');?></TD>
 						<TD class='td_data' style='text-align: left;'>
 							<SELECT NAME='frm_type' onChange='show_portaluser(this.options[this.selectedIndex].value);'>
-								<OPTION VALUE=0 SELECTED>Select File For</OPTION>
-								<OPTION VALUE=1>Tickets</OPTION>
-								<OPTION VALUE=2>Portal</OPTION>	
+								<OPTION VALUE=0 SELECTED><?php print gettext('Select File For');?></OPTION>
+								<OPTION VALUE=1><?php print gettext('Tickets');?></OPTION>
+								<OPTION VALUE=2><?php print gettext('Portal');?></OPTION>	
 							</SELECT>
 						</TD>
 					</TR>
 					<TR class='even' id='portal_user' style='display: none;'>
-						<TD class='td_label' style='text-align: left;'>Portal User</TD>
+						<TD class='td_label' style='text-align: left;'><?php print gettext('Portal User');?></TD>
 						<TD class='td_data' style='text-align: left;'><?php print $select_u;?></TD>
 					</TR>
 <?php
@@ -386,8 +430,8 @@ if(!empty($_POST)) {	//	$_POST data exists, process the file
 			</TABLE>
 		</DIV><BR /><BR /><BR /><BR />
 		<DIV style='text-align: center; width: 40%;'>
-			<SPAN id='sub_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='validate(document.file_frm);'>Submit</SPAN>
-			<SPAN id='can_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="close_win();" />Cancel</SPAN>
+			<SPAN id='sub_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='validate(document.file_frm);'><?php print gettext('Submit');?></SPAN>
+			<SPAN id='can_but' class='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="close_win();" /><?php print gettext('Cancel');?></SPAN>
 		</DIV>
 	</CENTER>
 	</DIV>

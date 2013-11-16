@@ -314,7 +314,7 @@ else {
 	var grid;
 	document.write (line_text);
 </SCRIPT>	
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 <style type="text/css">
 .box {
 	background-color: #CECECE;
@@ -375,7 +375,7 @@ else {
 	full_scr();
 ?>
 <FORM NAME='to_all' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'> <!-- 1/23/09 -->
-<INPUT TYPE='hidden' NAME='func' VALUE='0'>
+<INPUT TYPE='hidden' NAME='func' VALUE='0'/>
 </FORM>
 </TD></TR></TABLE>
 </BODY></HTML>

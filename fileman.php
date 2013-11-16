@@ -11,8 +11,8 @@ do_login(basename(__FILE__));
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<HEAD><TITLE>Tickets File Manager</TITLE>
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+<HEAD><TITLE><?php print gettext('Tickets File Manager');?></TITLE>
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
 <STYLE type="text/css">
 .hover 	{ text-align: center; margin-left: 4px; float: none; font: normal 12px Arial, Helvetica, sans-serif; color:#FF0000; border-width: 1px; border-STYLE: inset; border-color: #FFFFFF;
 			  padding: 4px 0.5em;text-decoration: none; background-color: #DEE3E7; font-weight: bolder;}
@@ -24,9 +24,16 @@ do_login(basename(__FILE__));
 </STYLE>	
 <SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */
 function ck_frames() {		// onLoad = "ck_frames()"
 	}		// end function ck_frames()
-
+/**
+ * 
+ * @returns {Array}
+ */
 function $() {
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -39,22 +46,41 @@ function $() {
 		}
 	return elements;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_hover (the_id) {
 	CngClass(the_id, 'hover');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_plain (the_id) {
 	CngClass(the_id, 'plain');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 function CngClass(obj, the_class){
 	$(obj).className=the_class;
 	return true;
 	}
-		
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 function sendRequest(url,callback,postData) {
 	var req = createXMLHTTPObject();
 	if (!req) return;
@@ -74,12 +100,15 @@ function sendRequest(url,callback,postData) {
 	}
 
 var XMLHttpFactories = [
-	function () {return new XMLHttpRequest()	},
-	function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-	function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-	function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+	function () {return new XMLHttpRequest();	},
+	function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+	function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+	function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 	];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 function createXMLHTTPObject() {
 	var xmlhttp = false;
 	for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -93,7 +122,11 @@ function createXMLHTTPObject() {
 		}
 	return xmlhttp;
 	}
-
+/**
+ * 
+ * @param {type} strURL
+ * @returns {Boolean|@exp;AJAX@pro;responseText}
+ */
 function syncAjax(strURL) {
 	if (window.XMLHttpRequest) {						 
 		AJAX=new XMLHttpRequest();						 
@@ -111,7 +144,11 @@ function syncAjax(strURL) {
 		return false;
 		}																						 
 	}
-	
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */	
 function do_delete(id) {
 	randomnumber=Math.floor(Math.random()*99999999);
 	$('waiting_wrapper').style.display='block';
@@ -129,12 +166,18 @@ function do_delete(id) {
 			}
 		}
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */
 function end_wait() {
 	$('waiting_wrapper').style.display = 'none';
 	get_files();
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function get_files() {
 	$('file_list').innerHTML = "Please Wait, loading files";
 	var the_files = "<TABLE BORDER=1>";
@@ -148,16 +191,16 @@ function get_files() {
 			the_files = "";
 			} else {
 			the_files += "<TR class='heading'>";
-			the_files += "<TD class='heading' style='font-size: 1em;'>ID</TD>";
-			the_files += "<TD class='heading' style='font-size: 1em;'>Filename</TD>";
-			the_files += "<TD class='heading' style='font-size: 1em;'>Ticket ID</TD>";
-			the_files += "<TD class='heading' style='font-size: 1em;'>Responder ID</TD>";
-			the_files += "<TD class='heading' style='font-size: 1em;'>Facility ID</TD>";
-			the_files += "<TD class='heading' style='font-size: 1em;'>Type</TD>";
-			the_files += "<TD class='heading' style='font-size: 1em;'>File Type</TD>";				
-			the_files += "<TD class='heading' style='font-size: 1em;'>Who By</TD>";	
-			the_files += "<TD class='heading' style='font-size: 1em;'>When</TD>";
-			the_files += "<TD class='heading' style='font-size: 1em;'>User ID</TD>";
+			the_files += "<TD class='heading' style='font-size: 1em;'><?php print gettext('ID');?></TD>";
+			the_files += "<TD class='heading' style='font-size: 1em;'><?php print gettext('Filename');?></TD>";
+			the_files += "<TD class='heading' style='font-size: 1em;'><?php print gettext('Ticket ID');?></TD>";
+			the_files += "<TD class='heading' style='font-size: 1em;'><?php print gettext('Responder ID');?></TD>";
+			the_files += "<TD class='heading' style='font-size: 1em;'><?php print gettext('Facility ID');?></TD>";
+			the_files += "<TD class='heading' style='font-size: 1em;'><?php print gettext('Type');?></TD>";
+			the_files += "<TD class='heading' style='font-size: 1em;'><?php print gettext('File Type');?></TD>";				
+			the_files += "<TD class='heading' style='font-size: 1em;'><?php print gettext('Who By');?></TD>";	
+			the_files += "<TD class='heading' style='font-size: 1em;'><?php print gettext('When');?></TD>";
+			the_files += "<TD class='heading' style='font-size: 1em;'><?php print gettext('User ID');?></TD>";
 			the_files += "<TD class='heading' style='font-size: 1em;'>&nbsp;</TD>";	
 			the_files += "<TD class='heading' style='font-size: 1em;'>&nbsp;</TD>";	
 			the_files += "</TR>";			
@@ -184,7 +227,10 @@ function get_files() {
 		$('file_list').innerHTML = the_files;		
 		}
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */
 function file_window() {										// 9/10/13
 	var url = "file_upload.php";
 	var nfWindow = window.open(url, 'NewFileWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100');
@@ -194,14 +240,14 @@ function file_window() {										// 9/10/13
 </HEAD>
 <BODY onLoad = 'get_files(); ck_frames();'>
 <CENTER>
-<DIV CLASS='heading' style='width: 100%; text-align: center; font-size: 2em; color: #FFFFFF;'>FILE MANAGER</DIV> 
+<DIV CLASS='heading' style='width: 100%; text-align: center; font-size: 2em; color: #FFFFFF;'><?php print gettext('FILE MANAGER');?></DIV> 
 <BR /><BR /><BR /><BR />
 <DIV id='waiting_wrapper' style='position: fixed; top: 30%; left: 40%; width: 20%; height: 20%; background-color: yellow; display: none;'>
 	<DIV id='waiting'></DIV><BR /><BR />
-	<SPAN id='end_waiting' style='display: none;' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='end_wait();'>Continue</SPAN>
+	<SPAN id='end_waiting' style='display: none;' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='end_wait();'><?php print gettext('Continue');?></SPAN>
 </DIV>
 <DIV ID='file_list' style='width: 60%;'></DIV>
 <BR /><BR /><BR /><BR />
-<SPAN id='up_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='file_window();'>Upload File</SPAN>
+<SPAN id='up_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='file_window();'><?php print gettext('Upload File');?></SPAN>
 </CENTER>
 </BODY></HTML>

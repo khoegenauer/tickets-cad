@@ -15,7 +15,7 @@ $disposition = get_text("Disposition");				// 12/1/10
 ?>
 <HTML>
 <HEAD>
-<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+<LINK REL="StyleSheet" HREF="default.css" TYPE="text/css"/>
 <SCRIPT>
 /**
  * 
@@ -173,8 +173,8 @@ function ck_frames() {		//  onLoad = "ck_frames()"
 ?>
 		<FONT CLASS="header"><BR /><?php print gettext('Installing/Upgrading');?></FONT><BR /><blockquote><?php print gettext("
 		Tickets is installed and upgraded through <B>install.php</B>.") . "  " . gettext("You'll need valid information about the MySQL database installation.") . "  " . gettext("
-		More info on the install process can be found in <B>install.php</B>.") . "  " . gettext("
-		<FONT CLASS="warn">WARNING: Do NOT keep <B>install.php</B> accessible to everyone after installation/upgrading.</FONT>");?></blockquote>
+		More info on the install process can be found in <B>install.php</B>.") . "  
+		<FONT CLASS='warn'>" . gettext("WARNING: Do NOT keep <B>install.php</B> accessible to everyone after installation/upgrading.</FONT>");?></blockquote>
 <?php
 		}
 	else if ((array_key_exists('q', ($_GET))) && ($_GET['q']== 'changelog')) {

@@ -22,8 +22,6 @@ require_once($_SESSION['fip']);		//7/28/10
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Tickets Log Processing');?></TITLE>
-<META NAME="Author" CONTENT="">
-<META NAME="Keywords" CONTENT="">
 <META NAME="Description" CONTENT="Tickets Log Entry"">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
@@ -80,16 +78,16 @@ if (empty($_POST)) {
 <TR CLASS = 'even' ><TH COLSPAN=2><?php print gettext('Station Log');?></TH></TR>
 <TR CLASS = 'odd'><TD><?php print gettext('Log entry');?>:</TD><TD><TEXTAREA NAME="frm_comment" COLS="45" ROWS="2" WRAP="virtual"></TEXTAREA></TD></TR>
 <TR CLASS = 'even'><TD COLSPAN=2 ALIGN='center'>
-<INPUT TYPE = 'button' VALUE='<?php print gettext('Submit');?>' onClick="document.log_form.submit()" />&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE = 'button' VALUE='<?php print gettext('Reset');?>' onClick="document.log_form.reset()" />&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE = 'button' VALUE='<?php print gettext('Submit');?>' onClick="document.log_form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE = 'button' VALUE='<?php print gettext('Reset');?>' onClick="document.log_form.reset();" />&nbsp;&nbsp;&nbsp;&nbsp;
 <INPUT TYPE = 'button' VALUE='<?php print gettext('Review');?>' onClick="document.log_form.func.value='view';document.log_form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;
 <?php if (is_super()) { ?>
 	<INPUT TYPE = 'button' VALUE='<?php print gettext('Deletion');?>' onClick="document.log_form.func.value='del';document.log_form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;
 <?php 	} ?>
 </TD></TR>
-<TR><TD COLSPAN=2 ALIGN='center'><BR /><INPUT TYPE = 'button' VALUE='<?php print gettext('Cancel');?>' onClick="window.close()" /></TD></TR>
+<TR><TD COLSPAN=2 ALIGN='center'><BR /><INPUT TYPE = 'button' VALUE='<?php print gettext('Cancel');?>' onClick="window.close();" /></TD></TR>
 </TABLE>
-<INPUT TYPE='hidden' NAME='func' VALUE='add'>
+<INPUT TYPE='hidden' NAME='func' VALUE='add'/>
 </FORM>
 <?php 
 	}
@@ -124,9 +122,9 @@ else {										// not empty
 		$day_part="";
 		while ($row = stripslashes_deep(mysql_fetch_assoc($result))) 	{
 			if ($do_hdr) {
-				$print .= "<TR CLASS='even'><TH COLSPAN=99> Station Log</TH></TR>\n";
+				$print .= "<TR CLASS='even'><TH COLSPAN=99>" . gettext('Station Log') . "</TH></TR>\n";
 				$print .= "<TR CLASS='odd'><TD ROWSPAN=10000 ALIGN='right'><BR /><BR /><BR /><BR />
-					<INPUT TYPE='button' VALUE='" . gettext('Finished') . "' onClick = 'self.close()' STYLE = 'width:80px; margin-top:10px;margin-right:10px;' />&nbsp;&nbsp;<BR />
+					<INPUT TYPE='button' VALUE='" . gettext('Finished') . "' onClick = 'self.close();' STYLE = 'width:80px; margin-top:10px;margin-right:10px;' />&nbsp;&nbsp;<BR />
 					<INPUT TYPE='button' VALUE='" . gettext('Log entry') . "' STYLE = 'width:80px; margin-top:10px;margin-right:10px;' onClick = 'document.dummy_form.submit();' />&nbsp;&nbsp;</TD>
 					<TH ALIGN='center'>" . gettext('When') . "</TH><TH ALIGN='center'>" . gettext('Code') . "</TH><TH ALIGN='center'>" . gettext('By') . "</TH><TH ALIGN='center'>" . gettext('Info') . "</TH><TH ALIGN='center'>" . gettext('From') . "</TH></TR>\n";
 				$do_hdr = FALSE;
@@ -176,14 +174,14 @@ else {										// not empty
 	<FORM NAME="del_form" METHOD="post" ACTION = "<?php print basename(__FILE__); ?>">
 	<INPUT TYPE="hidden" NAME="func" VALUE="del_db" />
 
-	Delete log entries older than:
-		one day&raquo;<INPUT TYPE="radio" NAME="frm_del" VALUE = "1" onClick = "document.del_form.frm_days_val.value='this.value';" />&nbsp;&nbsp;&nbsp;&nbsp;
-		one week&raquo;<INPUT TYPE="radio" NAME="frm_del" VALUE = "7"  onClick = "document.del_form.frm_days_val.value='this.value';" />&nbsp;&nbsp;&nbsp;&nbsp;
-		two weeks&raquo;<INPUT TYPE="radio" NAME="frm_del" VALUE = "14" onClick = "document.del_form.frm_days_val.value='this.value';"  />&nbsp;&nbsp;&nbsp;&nbsp;
-		one month&raquo;<INPUT TYPE="radio" NAME="frm_del" VALUE = "30" onClick = "document.del_form.frm_days_val.value='this.value';"  /><BR /><BR /><BR />
+	<?php print gettext('Delete log entries older than:');?>
+		<?php print gettext('one day');?>&raquo;<INPUT TYPE="radio" NAME="frm_del" VALUE = "1" onClick = "document.del_form.frm_days_val.value='this.value';" />&nbsp;&nbsp;&nbsp;&nbsp;
+		<?php print gettext('one week');?>&raquo;<INPUT TYPE="radio" NAME="frm_del" VALUE = "7"  onClick = "document.del_form.frm_days_val.value='this.value';" />&nbsp;&nbsp;&nbsp;&nbsp;
+		<?php print gettext('two weeks');?>&raquo;<INPUT TYPE="radio" NAME="frm_del" VALUE = "14" onClick = "document.del_form.frm_days_val.value='this.value';"  />&nbsp;&nbsp;&nbsp;&nbsp;
+		<?php print gettext('one month');?>&raquo;<INPUT TYPE="radio" NAME="frm_del" VALUE = "30" onClick = "document.del_form.frm_days_val.value='this.value';"  /><BR /><BR /><BR />
 		<INPUT TYPE='button' VALUE='<?php print gettext('OK - do it');?>' onClick = "if ((validate_del()) && (confirm('<?php print gettext('Confirm deletion - CANNOT BE UNDONE!');?>'))) {document.del_form.submit();}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = "document.can_form.submit();" />
-		<INPUT TYPE='hidden' NAME='frm_days_val' VALUE=0>
+		<INPUT TYPE='hidden' NAME='frm_days_val' VALUE=0 />
 		</FORM>
 
 	<FORM NAME="can_form" METHOD="post" ACTION = "<?php print basename(__FILE__); ?>"></FORM>

@@ -148,19 +148,19 @@ if (empty($_POST)) {
 <?php		
 	if(count($rows)>0) {
 ?>
-	<BODY onLoad = "reSizeScr(<?php print count($rows);?>)"><CENTER>		<!-- 1/12/09 -->
+	<BODY onLoad = "reSizeScr(<?php print count($rows);?>);"><CENTER>		<!-- 1/12/09 -->
 	<CENTER><H3><?php print gettext('Mail to Users');?></H3>
 <?php
 	if(count($rows)>2) {
 ?>
-		<SPAN ID='clr_spn' STYLE = 'display:block' onClick = 'do_clear()'>&raquo; <U><?php print gettext('Un-check all');?></U></SPAN>
-		<SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check()'>&raquo; <U><?php print gettext('Check all');?></U></SPAN>
+		<SPAN ID='clr_spn' STYLE = 'display:block' onClick = 'do_clear();'>&raquo; <U><?php print gettext('Un-check all');?></U></SPAN>
+		<SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check();'>&raquo; <U><?php print gettext('Check all');?></U></SPAN>
 <?php
 		}
 ?>		
 	<P>
 		<FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
-		<INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''>	<!-- for pipe-delim'd addr string -->
+		<INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''/>	<!-- for pipe-delim'd addr string -->
 <?php		
 		print "<TABLE ALIGN = 'center' BORDER=0 WIDTH=500>\n";
 		for ($i=0; $i < count($rows); $i++) {
@@ -174,7 +174,7 @@ if (empty($_POST)) {
 			}		// end for()
 
 ?>	
-		<TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
+		<TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60 /></TD></TR>
 <SCRIPT>
 /**
  * 
@@ -206,9 +206,9 @@ if (empty($_POST)) {
 
 
 		<TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD ALIGN='center' COLSPAN=3><BR /><BR />
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "do_step_2();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'/>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/><BR /><BR />
 			</TD></TR>
 			</TABLE></FORM>
 
@@ -224,11 +224,11 @@ if (empty($_POST)) {
 			}		// end if(mysql_affected_rows()>0)
 		else {
 ?>
-	<BODY onLoad = "reSizeScr(2)"><CENTER>		<!-- 1/12/09 -->
+	<BODY onLoad = "reSizeScr(2);"><CENTER>		<!-- 1/12/09 -->
 	<CENTER><H3><?php print gettext('Mail to Users');?></H3>
 	<BR /><BR />
 	<H3><?php print gettext('No addresses available!');?></H3><BR /><BR />
-	<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
+	<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/><BR /><BR />
 
 <?php
 			}
@@ -238,9 +238,9 @@ if (empty($_POST)) {
 
 			do_send ($_POST['frm_add_str'], "", $_POST['frm_subj'], $_POST['frm_text'], 0, 0);	// ($to_str, $subject_str, $text_str )
 ?>
-	<BODY onLoad = "reSizeScr(2)"><CENTER>		<!-- 1/12/09 -->
+	<BODY onLoad = "reSizeScr(2);"><CENTER>		<!-- 1/12/09 -->
 	<CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
-	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'><BR /><BR />
+	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'/><BR /><BR />
 
 <?php
 

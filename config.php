@@ -235,7 +235,7 @@
 				for(var key in response[0]) {
 					the_resp = key;
 					the_val = response[0][key];
-					un_stat_chg(the_resp, the_val)
+					un_stat_chg(the_resp, the_val);
 					}	
 				var the_mess = response[1][0];
 				var the_stored = response[1][1];
@@ -245,14 +245,20 @@
 				}
 			}
 		}	
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function checkAll() {	//	9/10/13
 		var theField = document.user_add_Form.elements["frm_group[]"];
 		for (i = 0; i < theField.length; i++) {
 			theField[i].checked = true ;
 			}
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function uncheckAll() {	//	9/10/13
 		var theField = document.user_add_Form.elements["frm_group[]"];
 		for (i = 0; i < theField.length; i++) {
@@ -425,7 +431,10 @@
 			}
 		newwindow_t.focus();
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function file_window() {										// 9/10/13
 		var url = "file_upload.php";
 		var nfWindow = window.open(url, 'NewFileWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100');
@@ -792,12 +801,12 @@ print "//" . date("n/j/y", filemtime(basename(__FILE__))) . "\n";
 		if(starting) {return;} 
 		parent.upper.do_set_sess_exp();				// session expiration update
 	
-		if(window.focus() && window_about) {window_about.focus()}    // if window exists
+		if(window.focus() && window_about) {window_about.focus();}    // if window exists
 		starting=true;
 	
 		params  = 'width='+screen.width;
 		params += ', height='+screen.height;
-		params += ', top=0, left=0', scrollbars = 1
+		params += ', top=0, left=0', scrollbars = 1;
 		params += ', fullscreen=no';
 		window_about=window.open("about.php", "About_this_version", params);
 		if (isNull(window_about)) {
@@ -887,7 +896,7 @@ print "//" . date("n/j/y", filemtime(basename(__FILE__))) . "\n";
 			case 'notify': 
 				print "</HEAD>\n<BODY onLoad = 'ck_frames()'>\n";
 			if (array_key_exists('id', ($_GET))) {			// 0 -> all tickets notify
-				print "<FONT CLASS='header' STYLE = 'margin-left:80px'>Add Notify</FONT><BR /><BR />";
+				print "<FONT CLASS='header' STYLE = 'margin-left:80px'>" . gettext('Add Notify') . "</FONT><BR /><BR />";
 				if (!get_variable('allow_notify')) print "<FONT CLASS='warn'>" . gettext('Warning: Notification is disabled by administrator') . "</FONT><BR /><BR />"; 
 				if ($_GET['id']!=0) {
 					$query = "SELECT `id`, `scope` FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id` = ${_GET['id']} LIMIT 1";
@@ -944,7 +953,7 @@ if (mysql_num_rows($result)>0) {
 
 	}				// end if (mysql_num_rows($result)>0) 
 // _________________________________________
-		print "<SPAN STYLE = 'margin-left:80px;margin-top:40px'><FONT CLASS='header' >Add Notify</FONT><BR /><BR /></SPAN>";
+		print "<SPAN STYLE = 'margin-left:80px;margin-top:40px'><FONT CLASS='header' >" . gettext('Add Notify') . "</FONT><BR /><BR /></SPAN>";
 
 		$mg_select2 = "<SELECT NAME='frm_mailgroup'>";
 		$mg_select2 .= "<OPTION VALUE=0>" . gettext('Select Mail List') . "</OPTION>";
@@ -978,7 +987,7 @@ if (mysql_num_rows($result)>0) {
 				<TR CLASS='even'><TD COLSPAN=2 ALIGN="center"><BR />
 					<INPUT TYPE = 'button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'document.can_Form.submit();' STYLE = 'margin-left:40px' />
 					<INPUT TYPE="reset" VALUE="<?php print gettext('Reset');?>"  STYLE = 'margin-left:40px' />
-					<INPUT TYPE="button" VALUE="<?php print gettext('Submit');?>" onClick = "validate(this.form)"  STYLE = 'margin-left:40px' />
+					<INPUT TYPE="button" VALUE="<?php print gettext('Submit');?>" onClick = "validate(this.form);"  STYLE = 'margin-left:40px' />
 					</TD></TR>
 				</FORM></TABLE>
 				<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename(__FILE__); ?>"></FORM>		
@@ -1142,9 +1151,9 @@ if (mysql_num_rows($result)>0) {
 						$i++;
 						}
 					print "<TR CLASS='" .$colors[$i%2]  ."'><TD COLSPAN=99 ALIGN='center'><BR />
-						<INPUT TYPE='button' VALUE='" . gettext('New notify') . "' onClick='document.new_notify.submit();'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "' onClick='document.can_Form.submit();'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<INPUT TYPE='reset' VALUE='" . gettext('Reset') . "'>&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='submit' VALUE='" . gettext('Submit') . "'></TD></TR></FORM>";
+						<INPUT TYPE='button' VALUE='" . gettext('New notify') . "' onClick='document.new_notify.submit();'/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "' onClick='document.can_Form.submit();'/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<INPUT TYPE='reset' VALUE='" . gettext('Reset') . "'>&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='submit' VALUE='" . gettext('Submit') . "'/></TD></TR></FORM>";
 					print "</TABLE><BR />";
 	?>
 					<FORM NAME = 'new_notify' method = 'GET' ACTION = '<?php print basename(__FILE__);?>' >
@@ -1204,9 +1213,9 @@ if (mysql_num_rows($result)>0) {
 				<BR /><BR /><TABLE BORDER="0" STYLE = 'margin-left:40px'>	<!-- 8/27/10 -->
 				<TR CLASS='odd'><TD COLSPAN=2 ALIGN='center'><FONT CLASS="header"><?php print gettext('Edit My Profile');?></FONT><BR /><BR /></TD></TR>
 				<FORM METHOD="POST" ACTION="config.php?func=profile&go=true"><INPUT TYPE="hidden" NAME="frm_id" VALUE="<?php print $row['id'];?>">
-				<TR CLASS="even"><TD CLASS="td_label"><?php print gettext('New Password');?>:</TD><TD><INPUT MAXLENGTH="255" SIZE="16" TYPE="password" NAME="frm_passwd" VALUE=''> &nbsp;&nbsp;<B><?php print gettext('Confirm');?>: </B><INPUT MAXLENGTH="255" SIZE="16" TYPE="password" NAME="frm_passwd_confirm"  VALUE=''></TD></TR>
-				<TR CLASS="odd"><TD CLASS="td_label"><?php print gettext('Email');?>:</TD><TD><INPUT SIZE="47" MAXLENGTH="255" TYPE="text" VALUE="<?php print $row['email'];?>" NAME="frm_email"></TD></TR>
-				<TR CLASS="even"><TD CLASS="td_label"><?php print gettext('Info');?>:</TD><TD><INPUT SIZE="47" MAXLENGTH="255" TYPE="text" VALUE="<?php print $row['info'];?>" NAME="frm_info"></TD></TR>
+				<TR CLASS="even"><TD CLASS="td_label"><?php print gettext('New Password');?>:</TD><TD><INPUT MAXLENGTH="255" SIZE="16" TYPE="password" NAME="frm_passwd" VALUE=''/> &nbsp;&nbsp;<B><?php print gettext('Confirm');?>: </B><INPUT MAXLENGTH="255" SIZE="16" TYPE="password" NAME="frm_passwd_confirm"  VALUE=''/></TD></TR>
+				<TR CLASS="odd"><TD CLASS="td_label"><?php print gettext('Email');?>:</TD><TD><INPUT SIZE="47" MAXLENGTH="255" TYPE="text" VALUE="<?php print $row['email'];?>" NAME="frm_email"/></TD></TR>
+				<TR CLASS="even"><TD CLASS="td_label"><?php print gettext('Info');?>:</TD><TD><INPUT SIZE="47" MAXLENGTH="255" TYPE="text" VALUE="<?php print $row['info'];?>" NAME="frm_info"/></TD></TR>
 	<!-- 		<TR><TD CLASS="td_label"><?php print gettext('Show reporting actions');?>:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_reporting" <?php if($row['reporting']) print " checked";?>></TD></TR> -->
 				<TR CLASS="odd"><TD CLASS="td_label"><?php print gettext('Tickets per page');?>:</TD><TD><INPUT SIZE="47" MAXLENGTH="3" TYPE="text" VALUE="<?php print $row['ticket_per_page'];?>" NAME="frm_ticket_per_page"></TD></TR>
 				<TR CLASS="even"><TD CLASS="td_label"><?php print gettext('Sort By');?>:</TD><TD><SELECT NAME="frm_sortorder">
@@ -1282,14 +1291,14 @@ if (mysql_num_rows($result)>0) {
 	    break;
 	
 	case 'optimize' :
-		print "</HEAD>\n<BODY onLoad = 'ck_frames()'>\n";
+		print "</HEAD>\n<BODY onLoad = 'ck_frames();'>\n";
 		optimize_db();
 		print '<FONT CLASS="header">' . gettext('Database optimization complete.') . '</FONT><BR /><BR />';
 	    break;
 	
 	case 'reset' :
 		if((isset($_GET['auth'])) && ($_GET['auth'] == 'true') && ($_POST['frm_confirm'] == 'yes')) {
-			print "</HEAD>\n<BODY onLoad = 'ck_frames()'>\n";
+			print "</HEAD>\n<BODY onLoad = 'ck_frames();'>\n";
 			dump_db();	//	for security, dump db to file;
 			print "Database Backed Up<BR />";
 			$ticket = ((isset($_POST['frm_ticket'])) && ($_POST['frm_ticket'] == 1)) ? 1 : 0;
@@ -1308,13 +1317,13 @@ if (mysql_num_rows($result)>0) {
 			<TABLE BORDER="0"><FORM METHOD="POST" ACTION="config.php?func=reset&auth=true">
 			<!-- <TR><TD CLASS="td_label"><?php print gettext('Purge closed tickets');?>:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_purge"></TD></TR> -->
 			<TR><TD CLASS="td_label"><?php print gettext('Reset tickets/actions');?>:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_ticket"></TD></TR>
-			<TR><TD CLASS="td_label"><?php print gettext('Reset users');?>:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_user"></TD></TR>
-			<TR><TD CLASS="td_label"><?php print gettext('Reset settings');?>:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_settings"></TD></TR>
-			<TR><TD CLASS="td_label"><?php print gettext('Reset responders');?>:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_responders"></TD></TR>
-			<TR><TD CLASS="td_label"><?php print gettext('Reset facilities');?>:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_facilities"></TD></TR>	
-			<TR><TD CLASS="td_label"><?php print gettext('Reset messages');?>:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_messages"></TD></TR>				
-			<TR><TD CLASS="td_label"><?php print gettext('Really reset database?');?> &nbsp;&nbsp;</TD><TD><INPUT MAXLENGTH="20" SIZE="40" TYPE="text" NAME="frm_confirm"></TD></TR>
-			<TR><TD></TD><TD ALIGN="center"><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="history.back();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="reset" VALUE="<?php print gettext('Reset');?>">&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="submit" VALUE="<?php print gettext('Apply');?>"></TD></TR>
+			<TR><TD CLASS="td_label"><?php print gettext('Reset users');?>:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_user"/></TD></TR>
+			<TR><TD CLASS="td_label"><?php print gettext('Reset settings');?>:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_settings"/></TD></TR>
+			<TR><TD CLASS="td_label"><?php print gettext('Reset responders');?>:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_responders"/></TD></TR>
+			<TR><TD CLASS="td_label"><?php print gettext('Reset facilities');?>:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_facilities"/></TD></TR>	
+			<TR><TD CLASS="td_label"><?php print gettext('Reset messages');?>:</TD><TD ALIGN="right"><INPUT TYPE="checkbox" VALUE="1" NAME="frm_messages"/></TD></TR>				
+			<TR><TD CLASS="td_label"><?php print gettext('Really reset database?');?> &nbsp;&nbsp;</TD><TD><INPUT MAXLENGTH="20" SIZE="40" TYPE="text" NAME="frm_confirm"/></TD></TR>
+			<TR><TD></TD><TD ALIGN="center"><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="history.back();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="reset" VALUE="<?php print gettext('Reset');?>"/>&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="submit" VALUE="<?php print gettext('Apply');?>"/></TD></TR>
 			</FORM></TABLE>
 			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename(__FILE__); ?>"></FORM>		
 			</BODY>
@@ -1350,7 +1359,7 @@ if (mysql_num_rows($result)>0) {
 				if ($row['name']{0} <> "_" ) {								// hide these
 					$capt = str_replace ( "_", " ", $row['name']);
 					print "<TR CLASS='" . $evenodd[$counter%2] . "'><TD CLASS='td_label'><A HREF='#' TITLE='".get_setting_help($row['name'])."'>$capt</A>: &nbsp;</TD>";
-					print "<TD><INPUT MAXLENGTH='512' SIZE='128' TYPE='text' VALUE='" . $row['value'] . "' NAME='" . $row['name'] . "'></TD></TR>\n";
+					print "<TD><INPUT MAXLENGTH='512' SIZE='128' TYPE='text' VALUE='" . $row['value'] . "' NAME='" . $row['name'] . "'/></TD></TR>\n";
 	
 					$counter++;
 					}
@@ -1362,12 +1371,12 @@ if (mysql_num_rows($result)>0) {
 		<IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#top';" STYLE = 'margin-left: 20px'></TD>
 
 			<DIV ID="foo"><DIV ID="bar">		<!-- 9/26/09 -->
-				<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='document.can_Form.submit();'><BR /><BR />
+				<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='document.can_Form.submit();'/><BR /><BR />
 <?php		// 3/19/11
 				if((is_administrator()) || (is_super())) {
 ?>				
-				<INPUT TYPE='button' VALUE='<?php print gettext('Reset form');?>'  onClick='document.set_Form.reset();'><BR /><BR />
-				<INPUT TYPE='button' VALUE='<?php print gettext('Apply changes');?>'  onClick='document.set_Form.submit();'>
+				<INPUT TYPE='button' VALUE='<?php print gettext('Reset form');?>'  onClick='document.set_Form.reset();'/><BR /><BR />
+				<INPUT TYPE='button' VALUE='<?php print gettext('Apply changes');?>'  onClick='document.set_Form.submit();'/>
 <?php	
 				}
 ?>				
@@ -1424,7 +1433,7 @@ if (mysql_num_rows($result)>0) {
 				if (($row['name']{0} <> "_" ) && (($row['name'] <> "columns") && ($row['name'] <> "smsg_provider"))) {								// hide these
 					$capt = str_replace ( "_", " ", $row['name']);
 					print "<TR CLASS='" . $evenodd[$counter%2] . "'><TD CLASS='td_label'><A HREF='#' TITLE='".get_msg_settings_help($row['name'])."'>$capt</A>: &nbsp;</TD>";
-					print "<TD><INPUT MAXLENGTH='512' SIZE='128' TYPE='text' VALUE='" . $row['value'] . "' NAME='" . $row['name'] . "'></TD></TR>\n";
+					print "<TD><INPUT MAXLENGTH='512' SIZE='128' TYPE='text' VALUE='" . $row['value'] . "' NAME='" . $row['name'] . "'/></TD></TR>\n";
 	
 					$counter++;
 					}
@@ -1440,14 +1449,14 @@ if (mysql_num_rows($result)>0) {
 					$chkd8 = (in_array("8", $columns_checked)) ? "CHECKED" : "";
 					$capt = str_replace ( "_", " ", $row['name']);
 					print "<TR CLASS='" . $evenodd[$counter%2] . "'><TD CLASS='td_label'><A HREF='#' TITLE='".get_msg_settings_help($row['name'])."'>$capt</A>: &nbsp;</TD>";
-					print "<TD><INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=1 " . $chkd1 . ">Ticket";
-					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=2 " . $chkd2 . ">Type";
-					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=3 " . $chkd3 . ">From";
-					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=4 " . $chkd4 . ">To";
-					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=5 " . $chkd5 . ">Subject";
-					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=6 " . $chkd6 . ">Message";
-					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=7 " . $chkd7 . ">Date";
-					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=8 " . $chkd8 . ">Owner";					
+					print "<TD><INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=1 " . $chkd1 . "/>" . gettext('Ticket');
+					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=2 " . $chkd2 . "/>" . gettext('Type');
+					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=3 " . $chkd3 . "/>" . gettext('From');
+					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=4 " . $chkd4 . "/>" . gettext('To');
+					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=5 " . $chkd5 . "/>" . gettext('Subject');
+					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=6 " . $chkd6 . "/>" . gettext('Message');
+					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=7 " . $chkd7 . "/>" . gettext('Date');
+					print "<INPUT TYPE=CHECKBOX NAME='columns[]' VALUE=8 " . $chkd8 . "/>" . gettext('Owner');					
 					print "</TD></TR>\n";
 	
 					$counter++;
@@ -1474,12 +1483,12 @@ if (mysql_num_rows($result)>0) {
 		<IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#top';" STYLE = 'margin-left: 20px'></TD>
 
 			<DIV ID="foo"><DIV ID="bar">		<!-- 9/26/09 -->
-				<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='document.can_Form.submit();'><BR /><BR />
+				<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='document.can_Form.submit();'/><BR /><BR />
 <?php		// 3/19/11
 				if((is_administrator()) || (is_super())) {
 ?>				
-				<INPUT TYPE='button' VALUE='<?php print gettext('Reset form');?>'  onClick='document.set_Form.reset();'><BR /><BR />
-				<INPUT TYPE='button' VALUE='<?php print gettext('Apply changes');?>'  onClick='document.set_Form.submit();'>
+				<INPUT TYPE='button' VALUE='<?php print gettext('Reset form');?>'  onClick='document.set_Form.reset();'/><BR /><BR />
+				<INPUT TYPE='button' VALUE='<?php print gettext('Apply changes');?>'  onClick='document.set_Form.submit();'/>
 <?php	
 				}
 ?>				
@@ -1504,7 +1513,7 @@ if (mysql_num_rows($result)>0) {
 	    break;		
 	
 	case 'user' :
-		print "</HEAD>\n<BODY onLoad = 'ck_frames()'>\n";
+		print "</HEAD>\n<BODY onLoad = 'ck_frames();'>\n";
 		if ((array_key_exists('id', ($_GET))) && ($_GET['id'] != '')) {
 			if (is_administrator()) {				// admin or super
 	
@@ -1558,32 +1567,32 @@ if (mysql_num_rows($result)>0) {
 				<TABLE BORDER="0" CELLSPACING=1>
 				<FORM METHOD="POST" NAME = "user_add_Form" onSubmit="return validate_user(document.user_add_Form);" ACTION="config.php?func=user&edit=true">
 					<INPUT TYPE="hidden" NAME="frm_id" VALUE="<?php print $id;?>">
-				<TR CLASS="even"><TD ALIGN="right" CLASS="td_label"><?php print gettext('User ID');?>:</TD><TD COLSPAN=3><INPUT MAXLENGTH="20" SIZE="20" TYPE="text" VALUE="<?php print $row['user'];?>" NAME="frm_user" <?php print $disabled;?> ></TD></TR>
-				<TR CLASS="odd"><TD ALIGN="right" CLASS="td_label"><?php print gettext('Password');?>:</TD><TD COLSPAN=3><INPUT MAXLENGTH="20" SIZE="20" TYPE="password" NAME="frm_passwd" <?php print $disabled;?>> &nbsp;&nbsp;<B><?php print gettext('Confirm');?>: </B><INPUT MAXLENGTH="255" SIZE="16" TYPE="password" NAME="frm_passwd_confirm" <?php print $disabled;?>></TD></TR>
+				<TR CLASS="even"><TD ALIGN="right" CLASS="td_label"><?php print gettext('User ID');?>:</TD><TD COLSPAN=3><INPUT MAXLENGTH="20" SIZE="20" TYPE="text" VALUE="<?php print $row['user'];?>" NAME="frm_user" <?php print $disabled;?> /></TD></TR>
+				<TR CLASS="odd"><TD ALIGN="right" CLASS="td_label"><?php print gettext('Password');?>:</TD><TD COLSPAN=3><INPUT MAXLENGTH="20" SIZE="20" TYPE="password" NAME="frm_passwd" <?php print $disabled;?>/> &nbsp;&nbsp;<B><?php print gettext('Confirm');?>: </B><INPUT MAXLENGTH="255" SIZE="16" TYPE="password" NAME="frm_passwd_confirm" <?php print $disabled;?>/></TD></TR>
 				<TR CLASS="even" VALIGN='middle'><TD ALIGN="right" CLASS="td_label"><?php print gettext('Level');?>:</TD><TD COLSPAN=3>&nbsp;&nbsp;&nbsp;
 <?php
 				$checked = (intval($row['level'])==intval($GLOBALS['LEVEL_USER']))?			"checked":"" ;
-				print gettext("Operator") . " &raquo<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_USER'] . 		"' {$checked} {$disabled} {$onclick}>&nbsp;&nbsp;&nbsp;\n";
+				print gettext("Operator") . " &raquo<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_USER'] . 		"' {$checked} {$disabled} {$onclick}/>&nbsp;&nbsp;&nbsp;\n";
 				$checked = (intval($row['level'])==intval($GLOBALS['LEVEL_GUEST']))? 			"checked":"" ;
-				print gettext("Guest") . " &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_GUEST'] . 		"' {$checked} {$disabled} {$onclick}>&nbsp;&nbsp;&nbsp;\n";
+				print gettext("Guest") . " &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_GUEST'] . 		"' {$checked} {$disabled} {$onclick}/>&nbsp;&nbsp;&nbsp;\n";
 				$checked = (intval($row['level'])==intval($GLOBALS['LEVEL_ADMINISTRATOR']))? 	"checked":"" ;
-				print gettext("Administrator") . " &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_ADMINISTRATOR'] ."' {$checked} {$disabled} {$onclick}>&nbsp;&nbsp;&nbsp;\n";
+				print gettext("Administrator") . " &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_ADMINISTRATOR'] ."' {$checked} {$disabled} {$onclick}/>&nbsp;&nbsp;&nbsp;\n";
 				if (is_super()) {				// 6/9/08
 					$checked = (intval($row['level'])==intval($GLOBALS['LEVEL_SUPER']))? 	"checked":"" ;
-					print gettext("Super") . " &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_SUPER'] ."' {$checked} {$disabled} {$onclick}>&nbsp;&nbsp;&nbsp;\n";
+					print gettext("Super") . " &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_SUPER'] ."' {$checked} {$disabled} {$onclick}/>&nbsp;&nbsp;&nbsp;\n";
 					}
 				$checked = (intval($row['level'])==intval($GLOBALS['LEVEL_MEMBER']))? 	"checked":"" ;						// 12/15/08
-				print gettext("Member") . " &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_MEMBER'] ."' {$checked} {$disabled} {$onclick}>\n";
+				print gettext("Member") . " &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_MEMBER'] ."' {$checked} {$disabled} {$onclick}/>\n";
 	// 7/12/10
 	
 				$checked = (intval($row['level'])==intval($GLOBALS['LEVEL_UNIT']))? 	"checked":"" ;						// 12/15/08
-	 			print get_text("Units") . "&raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_UNIT'] ."' {$checked} {$disabled}>\n";
+	 			print get_text("Units") . "&raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_UNIT'] ."' {$checked} {$disabled}/>\n";
 	//	7/6/11
 				$checked = (intval($row['level'])==intval($GLOBALS['LEVEL_STATS']))? 	"checked":"" ;						// 12/15/08
-	 			print gettext("Statistics") . " &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_STATS'] ."' {$checked} {$disabled}>\n";				
+	 			print gettext("Statistics") . " &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_STATS'] ."' {$checked} {$disabled}/>\n";				
 	//	10/23/12
 				$checked = (intval($row['level'])==intval($GLOBALS['LEVEL_SERVICE_USER']))? 	"checked":"" ;						// 12/15/08
-	 			print gettext("Service User") . " &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_SERVICE_USER'] ."' {$checked} {$disabled}>\n";					
+	 			print gettext("Service User") . " &raquo;<INPUT TYPE='radio' NAME='frm_level' VALUE='" . $GLOBALS['LEVEL_SERVICE_USER'] ."' {$checked} {$disabled}/>\n";					
 ?>			
 				</TD></TR>
 <?php
@@ -1617,20 +1626,20 @@ if (mysql_num_rows($result)>0) {
 				<TR CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Callsign');?>: </TD><TD><INPUT SIZE="20" MAXLENGTH="20" TYPE="text" NAME="frm_callsign" VALUE="<?php print $row['callsign'];?>"<?php print $disabled;?>/></TD>
 					<TD CLASS="td_label" ALIGN="right"><?php print gettext('Ident');?>: </TD>
 					<TD><INPUT ID="ID17" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_ident" VALUE="<?php print $row['ident'];?>" onChange = "this.value=this.value.trim();"<?php print $disabled;?>> </TD></TR>
-				<TR CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Info');?>: </TD><TD COLSPAN=3><INPUT SIZE="83" MAXLENGTH="83" TYPE="text" NAME="frm_info" VALUE="<?php print $row['info'];?>"<?php print $disabled;?>></TD></TR>
-				<TR CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Email');?>: </TD><TD><INPUT SIZE="32" MAXLENGTH="32" TYPE="text" NAME="frm_email" VALUE="<?php print $row['email'];?>"<?php print $disabled;?>></TD>
+				<TR CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Info');?>: </TD><TD COLSPAN=3><INPUT SIZE="83" MAXLENGTH="83" TYPE="text" NAME="frm_info" VALUE="<?php print $row['info'];?>"<?php print $disabled;?>/></TD></TR>
+				<TR CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Email');?>: </TD><TD><INPUT SIZE="32" MAXLENGTH="32" TYPE="text" NAME="frm_email" VALUE="<?php print $row['email'];?>"<?php print $disabled;?>/></TD>
 					<TD CLASS="td_label" ALIGN="right">&nbsp;&nbsp;&nbsp;&nbsp;<?php print gettext('Alternate');?>: </TD>
-					<TD><INPUT ID="ID24" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_email_s" VALUE="<?php print $row['email_s'];?>" onChange = "this.value=this.value.trim();"<?php print $disabled;?>> </TD></TR>
+					<TD><INPUT ID="ID24" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_email_s" VALUE="<?php print $row['email_s'];?>" onChange = "this.value=this.value.trim();"<?php print $disabled;?>/> </TD></TR>
 				<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"> <?php print gettext('Street addr');?>: </TD>
-					<TD COLSPAN=3><INPUT ID="ID8" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_addr_street" VALUE="<?php print $row['addr_street'];?>" onChange = "this.value=this.value.trim();"<?php print $disabled;?>> </TD></TR>
+					<TD COLSPAN=3><INPUT ID="ID8" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_addr_street" VALUE="<?php print $row['addr_street'];?>" onChange = "this.value=this.value.trim();"<?php print $disabled;?>/> </TD></TR>
 				<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('City');?>: </TD>
-					<TD><INPUT ID="ID9" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_addr_city" VALUE="<?php print $row['addr_city'];?>" onChange = "this.value=this.value.trim();"<?php print $disabled;?>></TD>
+					<TD><INPUT ID="ID9" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_addr_city" VALUE="<?php print $row['addr_city'];?>" onChange = "this.value=this.value.trim();"<?php print $disabled;?>/></TD>
 					<TD CLASS="td_label" ALIGN="right">St: </TD>
-					<TD><INPUT ID="ID10" MAXLENGTH="<?php print $st_size;?>" SIZE="<?php print $st_size;?>" type="text" NAME="frm_addr_st" VALUE="<?php print $row['addr_st'];?>" onChange = "this.value=this.value.trim();"<?php print $disabled;?>> </TD></TR>
+					<TD><INPUT ID="ID10" MAXLENGTH="<?php print $st_size;?>" SIZE="<?php print $st_size;?>" type="text" NAME="frm_addr_st" VALUE="<?php print $row['addr_st'];?>" onChange = "this.value=this.value.trim();"<?php print $disabled;?>/> </TD></TR>
 				<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Phone');?>: </TD>
-					<TD><INPUT ID="ID19" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_phone_p" VALUE="<?php print $row['phone_p'];?>" onChange = "this.value=this.value.trim();"<?php print $disabled;?>></TD>
+					<TD><INPUT ID="ID19" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_phone_p" VALUE="<?php print $row['phone_p'];?>" onChange = "this.value=this.value.trim();"<?php print $disabled;?>/></TD>
 					<TD CLASS="td_label" ALIGN="right"><?php print gettext('Alternate');?>: </TD><TD>
-						<INPUT ID="ID20" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_phone_s" VALUE="<?php print $row['phone_s'];?>" onChange = "this.value=this.value.trim();"<?php print $disabled;?>> </TD></TR>
+						<INPUT ID="ID20" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_phone_s" VALUE="<?php print $row['phone_s'];?>" onChange = "this.value=this.value.trim();"<?php print $disabled;?>/> </TD></TR>
 				<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Mobile');?>: </TD>
 					<TD><INPUT ID="ID21" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_phone_m" VALUE="<?php print $row['phone_m'];?>" onChange = "this.value=this.value.trim();"<?php print $disabled;?>/> </TD></TR>
 <?php if ((is_administrator() || is_super())) { ?>					
@@ -1790,28 +1799,28 @@ if (mysql_num_rows($result)>0) {
 						?>
 						<BR /><TABLE BORDER="0">
 						<FORM METHOD="POST" NAME = "user_add_Form" onSubmit="return validate_user(document.user_add_Form);" ACTION="config.php?func=user&add=true&go=true">
-						<TR CLASS="even"><TD CLASS="td_label"><?php print gettext('User ID:');?></TD><TD><INPUT MAXLENGTH="20" SIZE="20" TYPE="text" VALUE="<?php print $_POST['frm_user'];?>" NAME="frm_user"></TD></TR>
-						<TR CLASS="odd"><TD CLASS="td_label"><?php print gettext('Password');?></TD><TD><INPUT MAXLENGTH="20" SIZE="20" TYPE="password" NAME="frm_passwd"></TD></TR>
-						<TR CLASS="even"><TD CLASS="td_label"><?php print gettext('Confirm Password');?>: &nbsp;&nbsp;</TD><TD><INPUT MAXLENGTH="20" SIZE="20" TYPE="password" NAME="frm_passwd_confirm"></TD></TR>
-						<TR CLASS="odd"><TD CLASS="td_label"><?php print gettext('Callsign');?>:</TD><TD><INPUT MAXLENGTH="20" SIZE="20" TYPE="text" VALUE="<?php print $_POST['frm_callsign'];?>" NAME="frm_callsign"></TD></TR>
+						<TR CLASS="even"><TD CLASS="td_label"><?php print gettext('User ID:');?></TD><TD><INPUT MAXLENGTH="20" SIZE="20" TYPE="text" VALUE="<?php print $_POST['frm_user'];?>" NAME="frm_user"/></TD></TR>
+						<TR CLASS="odd"><TD CLASS="td_label"><?php print gettext('Password');?></TD><TD><INPUT MAXLENGTH="20" SIZE="20" TYPE="password" NAME="frm_passwd"/></TD></TR>
+						<TR CLASS="even"><TD CLASS="td_label"><?php print gettext('Confirm Password');?>: &nbsp;&nbsp;</TD><TD><INPUT MAXLENGTH="20" SIZE="20" TYPE="password" NAME="frm_passwd_confirm"/></TD></TR>
+						<TR CLASS="odd"><TD CLASS="td_label"><?php print gettext('Callsign');?>:</TD><TD><INPUT MAXLENGTH="20" SIZE="20" TYPE="text" VALUE="<?php print $_POST['frm_callsign'];?>" NAME="frm_callsign"/></TD></TR>
 						<TR CLASS="even"><TD CLASS="td_label"><?php print gettext('Level');?>:</TD><TD>
 <?php
 					if (is_super()) {				// 6/9/08
 ?>				
-							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_SUPER'];?>" NAME="frm_level" <?php print is_super()?"checked":"";?>> <?php print gettext('Super');?><BR />
+							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_SUPER'];?>" NAME="frm_level" <?php print is_super()?"checked":"";?>/> <?php print gettext('Super');?><BR />
 <?php
 						}
 ?>						
-							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_ADMINISTRATOR'];?>" NAME="frm_level" <?php print is_administrator()?"checked":"";?>> <?php print gettext('Administrator');?><BR />
-							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_USER'];?>" NAME="frm_level" <?php print is_user()?"checked":"";?>> <?php print gettext('Operator');?><BR />
-							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_GUEST'];?>" NAME="frm_level" <?php print is_guest()?"checked":"";?>> <?php print gettext('Guest');?><BR />
-							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_MEMBER'];?>" NAME="frm_level" <?php print is_member()?"checked":"";?>> <?php print gettext('Member');?><BR />
-							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_UNIT'];?>" NAME="frm_level" <?php print is_unit()?"checked":"";?>> <?php print gettext('Unit');?><BR />
-							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_STATISTICS'];?>" NAME="frm_level" <?php print is_statistics()?"checked":"";?>> <?php print gettext('Statistics');?><BR />	
-							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_SERVICE_USER'];?>" NAME="frm_level" <?php print is_service_user()?"checked":"";?>> <?php print gettext('Service User');?><BR />
+							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_ADMINISTRATOR'];?>" NAME="frm_level" <?php print is_administrator()?"checked":"";?>/> <?php print gettext('Administrator');?><BR />
+							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_USER'];?>" NAME="frm_level" <?php print is_user()?"checked":"";?>/> <?php print gettext('Operator');?><BR />
+							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_GUEST'];?>" NAME="frm_level" <?php print is_guest()?"checked":"";?>/> <?php print gettext('Guest');?><BR />
+							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_MEMBER'];?>" NAME="frm_level" <?php print is_member()?"checked":"";?>/> <?php print gettext('Member');?><BR />
+							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_UNIT'];?>" NAME="frm_level" <?php print is_unit()?"checked":"";?>/> <?php print gettext('Unit');?><BR />
+							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_STATISTICS'];?>" NAME="frm_level" <?php print is_statistics()?"checked":"";?>/> <?php print gettext('Statistics');?><BR />	
+							<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_SERVICE_USER'];?>" NAME="frm_level" <?php print is_service_user()?"checked":"";?>/> <?php print gettext('Service User');?><BR />
 							</TD></TR>
 						<TR CLASS="odd"><TD CLASS="td_label">Info:</TD><TD><INPUT SIZE="40" MAXLENGTH="80" TYPE="text" VALUE="<?php print $_POST['frm_info'];?>" NAME="frm_info"></TD></TR>
-						<TR CLASS="even"><TD></TD><TD><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick="document.can_Form.submit();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="reset" VALUE="<?php print gettext('Reset');?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="submit" VALUE="<?php print gettext('Submit');?>"></TD></TR>
+						<TR CLASS="even"><TD></TD><TD><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick="document.can_Form.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="reset" VALUE="<?php print gettext('Reset');?>"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="submit" VALUE="<?php print gettext('Submit');?>"/></TD></TR>
 						</FORM></TABLE>
 						<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename(__FILE__); ?>"></FORM>		
 						</BODY>
@@ -1823,7 +1832,7 @@ if (mysql_num_rows($result)>0) {
 				else {
 					$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `name` ASC";		// 7/11/10
 					$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
-					$sel_str = "\n<SELECT ID='frm_responder_sel' NAME='frm_responder_sel' STYLE = 'display:inline;' onChange='do_set_unit(this.options[selectedIndex].value.trim())'>\n\t<OPTION VALUE=0 SELECTED>Select one</OPTION>\n";
+					$sel_str = "\n<SELECT ID='frm_responder_sel' NAME='frm_responder_sel' STYLE = 'display:inline;' onChange='do_set_unit(this.options[selectedIndex].value.trim());'>\n\t<OPTION VALUE=0 SELECTED>" . gettext('Select one') . "</OPTION>\n";
 					while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {		
 						$sel_str .= "\t<OPTION VALUE='{$row['id']}'>{$row['name']}</OPTION>\n";		
 						}
@@ -1834,8 +1843,8 @@ if (mysql_num_rows($result)>0) {
 					<FORM METHOD="POST" NAME = "user_add_Form" onSubmit="return validate_user(document.user_add_Form);"  ACTION="config.php?func=user&add=true&go=true">
 					<TABLE BORDER=0 CELLSPACING=1>
 					<TR><TD COLSPAN=4 ALIGN='center'><FONT COLOR='red'>*</FONT> <?php print gettext('Required');?></TD></TR>
-					<TR CLASS="even"><TD CLASS="td_label" ALIGN="right"> <?php print gettext('User ID');?>: <FONT COLOR='red'>*</FONT></TD><TD COLSPAN=3><INPUT MAXLENGTH="20" SIZE="20" TYPE="text" NAME="frm_user" VALUE=""></TD></TR>
-					<TR CLASS="odd"><TD CLASS="td_label" ALIGN="right"> <?php print gettext('Password');?>: <FONT COLOR='red'>*</FONT></TD><TD COLSPAN=3><INPUT MAXLENGTH="20" SIZE="20" TYPE="password" NAME="frm_passwd" VALUE="">&nbsp;&nbsp; <B><?php print gettext('Confirm');?>: </B> <INPUT MAXLENGTH="255" SIZE="16" TYPE="password" NAME="frm_passwd_confirm"></TD></TR>
+					<TR CLASS="even"><TD CLASS="td_label" ALIGN="right"> <?php print gettext('User ID');?>: <FONT COLOR='red'>*</FONT></TD><TD COLSPAN=3><INPUT MAXLENGTH="20" SIZE="20" TYPE="text" NAME="frm_user" VALUE=""/></TD></TR>
+					<TR CLASS="odd"><TD CLASS="td_label" ALIGN="right"> <?php print gettext('Password');?>: <FONT COLOR='red'>*</FONT></TD><TD COLSPAN=3><INPUT MAXLENGTH="20" SIZE="20" TYPE="password" NAME="frm_passwd" VALUE=""/>&nbsp;&nbsp; <B><?php print gettext('Confirm');?>: </B> <INPUT MAXLENGTH="255" SIZE="16" TYPE="password" NAME="frm_passwd_confirm"/></TD></TR>
 					<TR CLASS="even" VALIGN='baseline'><TD CLASS="td_label" ALIGN="right"> <?php print gettext('Level');?>: <FONT COLOR='red'>*</FONT></TD><TD COLSPAN=3>&nbsp;&nbsp;&nbsp;&nbsp;
 <?php 				if (is_super()) { ?>	<!-- / 6/9/08 -->				
 						 <?php print gettext('Super');?>  &raquo;<INPUT TYPE="radio" VALUE="<?php print $GLOBALS['LEVEL_SUPER'];?>" NAME="frm_level">&nbsp;&nbsp;&nbsp;
@@ -1856,8 +1865,8 @@ if (mysql_num_rows($result)>0) {
 						print "<SPAN id='collapse_gps' onClick=\"$('checkButts').style.display = 'none'; $('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';\" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN>";
 						print "</TD><TD COLSPAN = 3>";
 						print "<DIV id='checkButts' style='display: none;'>";
-						print "<SPAN id='checkbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='checkAll();'>Check All</SPAN>";
-						print "<SPAN id='uncheckbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='uncheckAll();'>Uncheck All</SPAN>";	
+						print "<SPAN id='checkbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='checkAll();'>" . gettext('Check All') . "</SPAN>";
+						print "<SPAN id='uncheckbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='uncheckAll();'>" . gettext('Uncheck All') . "</SPAN>";	
 						print "</DIV>";							
 						$alloc_groups = implode(',', get_allocates(1, $_SESSION['user_id']));	//	6/10/11
 						print get_all_group_butts_chkd(get_allocates(4, $_SESSION['user_id']));	//	6/10/11	
@@ -1869,8 +1878,8 @@ if (mysql_num_rows($result)>0) {
 						print "<SPAN id='collapse_gps' onClick=\"$('checkButts').style.display = 'none'; $('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';\" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN>";
 						print "</TD><TD COLSPAN = 3>";
 						print "<DIV id='checkButts' style='display: none;'>";
-						print "<SPAN id='checkbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='checkAll();'>Check All</SPAN>";
-						print "<SPAN id='uncheckbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='uncheckAll();'>Uncheck All</SPAN>";	
+						print "<SPAN id='checkbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='checkAll();'>" . gettext('Check All') . "</SPAN>";
+						print "<SPAN id='uncheckbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='uncheckAll();'>" . gettext('Uncheck All') . "</SPAN>";	
 						print "</DIV>";
 						$alloc_groups = implode(',', get_allocates(1, $_SESSION['user_id']));	//	6/10/11
 						print get_all_group_butts(get_allocates(4, $_SESSION['user_id']));	//	6/10/11	
@@ -1886,31 +1895,31 @@ if (mysql_num_rows($result)>0) {
 					<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print get_text("Units");?>: </TD><TD><?php print $sel_str;?></TD></TR>
 					<TR VALIGN="baseline" CLASS="spacer"><TD class="spacer" COLSPAN=4 ALIGN='center'>&nbsp;</TD></TR>
 					<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Last name');?>: </TD>
-						<TD><INPUT ID="ID3" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_name_l" VALUE="" onChange = "this.value=this.value.trim();"></TD>
+						<TD><INPUT ID="ID3" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_name_l" VALUE="" onChange = "this.value=this.value.trim();"/></TD>
 						<TD CLASS="td_label" ALIGN="right"><?php print gettext('First');?>: </TD>
-						<TD><INPUT ID="ID4" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_name_f" VALUE="" onChange = "this.value=this.value.trim();"> </TD></TR>
+						<TD><INPUT ID="ID4" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_name_f" VALUE="" onChange = "this.value=this.value.trim();"/> </TD></TR>
 					<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('MI');?>: </TD>
-						<TD><INPUT ID="ID5" MAXLENGTH="4" SIZE=3 type="text" NAME="frm_name_mi" VALUE="" onChange = "this.value=this.value.trim();"></TD>
-						<TD CLASS="td_label" ALIGN="right"><?php print gettext('DOB');?>: </TD><TD><INPUT MAXLENGTH=16 ID="fd6" SIZE=16 type="text" NAME="frm_dob" VALUE="" onChange = "this.value=this.value.trim()"/></TD></TR>
-					<TR CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Callsign');?>: </TD><TD><INPUT SIZE="20" MAXLENGTH="20" TYPE="text" NAME="frm_callsign" VALUE=""></TD>
+						<TD><INPUT ID="ID5" MAXLENGTH="4" SIZE=3 type="text" NAME="frm_name_mi" VALUE="" onChange = "this.value=this.value.trim();"/></TD>
+						<TD CLASS="td_label" ALIGN="right"><?php print gettext('DOB');?>: </TD><TD><INPUT MAXLENGTH=16 ID="fd6" SIZE=16 type="text" NAME="frm_dob" VALUE="" onChange = "this.value=this.value.trim();"/></TD></TR>
+					<TR CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Callsign');?>: </TD><TD><INPUT SIZE="20" MAXLENGTH="20" TYPE="text" NAME="frm_callsign" VALUE=""/></TD>
 						<TD CLASS="td_label" ALIGN="right"><?php print gettext('Ident');?>: </TD>
-						<TD><INPUT ID="ID17" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_ident" VALUE="" onChange = "this.value=this.value.trim();"></TD></TR>
-					<TR CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Info');?>: </TD><TD COLSPAN=3><INPUT SIZE="83" MAXLENGTH="83" TYPE="text" NAME="frm_info" VALUE=""></TD></TR>
+						<TD><INPUT ID="ID17" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_ident" VALUE="" onChange = "this.value=this.value.trim();"/></TD></TR>
+					<TR CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Info');?>: </TD><TD COLSPAN=3><INPUT SIZE="83" MAXLENGTH="83" TYPE="text" NAME="frm_info" VALUE=""/></TD></TR>
 					<TR CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Email');?>: </TD><TD><INPUT SIZE="32" MAXLENGTH="32" TYPE="text" NAME="frm_email" VALUE=""></TD>
 						<TD CLASS="td_label" ALIGN="right"><?php print gettext('Alternate');?>: </TD>
-						<TD><INPUT ID="ID24" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_email_s" VALUE="" onChange = "this.value=this.value.trim();"> </TD></TR>
+						<TD><INPUT ID="ID24" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_email_s" VALUE="" onChange = "this.value=this.value.trim();"/> </TD></TR>
 					<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"> <?php print gettext('Street addr');?>: </TD>
-						<TD COLSPAN=3><INPUT ID="ID8" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_addr_street" VALUE="" onChange = "this.value=this.value.trim();"> </TD></TR>
+						<TD COLSPAN=3><INPUT ID="ID8" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_addr_street" VALUE="" onChange = "this.value=this.value.trim();"/> </TD></TR>
 					<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('City');?>: </TD>
-						<TD><INPUT ID="ID9" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_addr_city" VALUE="" onChange = "this.value=this.value.trim();"></TD>
+						<TD><INPUT ID="ID9" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_addr_city" VALUE="" onChange = "this.value=this.value.trim();"/></TD>
 						<TD CLASS="td_label" ALIGN="right"><?php print gettext('St');?>: </TD>
-						<TD><INPUT ID="ID10" MAXLENGTH="<?php print $st_size;?>" SIZE="<?php print $st_size;?>" type="text" NAME="frm_addr_st" VALUE="" onChange = "this.value=this.value.trim();"> </TD></TR>
+						<TD><INPUT ID="ID10" MAXLENGTH="<?php print $st_size;?>" SIZE="<?php print $st_size;?>" type="text" NAME="frm_addr_st" VALUE="" onChange = "this.value=this.value.trim();"/> </TD></TR>
 					<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Phone');?>: </TD>
-						<TD><INPUT ID="ID19" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_phone_p" VALUE="" onChange = "this.value=this.value.trim();"></TD>
+						<TD><INPUT ID="ID19" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_phone_p" VALUE="" onChange = "this.value=this.value.trim();"/></TD>
 						<TD CLASS="td_label" ALIGN="right"><?php print gettext('Alternate');?>: </TD><TD>
-							<INPUT ID="ID20" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_phone_s" VALUE="" onChange = "this.value=this.value.trim();"> </TD></TR>
+							<INPUT ID="ID20" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_phone_s" VALUE="" onChange = "this.value=this.value.trim();"/> </TD></TR>
 					<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Mobile');?>: </TD>
-						<TD><INPUT ID="ID21" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_phone_m" VALUE="" onChange = "this.value=this.value.trim();"> </TD></TR>
+						<TD><INPUT ID="ID21" MAXLENGTH="32" SIZE=32 type="text" NAME="frm_phone_m" VALUE="" onChange = "this.value=this.value.trim();"/> </TD></TR>
 							<INPUT TYPE='hidden' NAME='frm_func' VALUE='a'>
 							<INPUT TYPE='hidden' NAME='frm_hash' VALUE=''>	<!-- 11/30/08 -->
 							</TD></TR>
@@ -1945,7 +1954,7 @@ if (mysql_num_rows($result)>0) {
 		label, input[type="radio"]{font-size:10px; vertical-align:bottom;}
 		</STYLE>
 		</HEAD>
-		<BODY onLoad = "ck_frames()" onUnload="GUnload()">
+		<BODY onLoad = "ck_frames();" onUnload="GUnload();">
 <?php
 	
 		$get_update = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['update'])))) ) ? "" : $_GET['update'] ;
@@ -1972,15 +1981,15 @@ if (mysql_num_rows($result)>0) {
 			$checks_ar[$which] = " CHECKED ";
 ?>	
 			<TABLE BORDER=0 ID='outer'>
-			<TR><TD COLSPAN=2 ALIGN='center'><FONT CLASS="header">Select Map Center/Zoom and Caption</FONT><BR /><BR /></TD></TR>
+			<TR><TD COLSPAN=2 ALIGN='center'><FONT CLASS="header"><?php print gettext('Select Map Center/Zoom and Caption');?></FONT><BR /><BR /></TD></TR>
 			<TR><TD>
 			<TABLE BORDER="0">
 			<FORM METHOD="POST" NAME= "cen_Form"  onSubmit="return validate_cen(document.cen_Form);" ACTION="config.php?func=center&update=true">
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print gettext('Lookup');?>:</TD><TD COLSPAN=3>&nbsp;&nbsp;<?php print gettext('City');?>:&nbsp;<INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_city" VALUE="" />
 			&nbsp;&nbsp;&nbsp;&nbsp;<?php print gettext('State');?>:&nbsp;<INPUT MAXLENGTH="<?php print $st_size;?>" SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_st" VALUE="" /></TD></TR>
-			<TR CLASS = "odd"><TD COLSPAN=4 ALIGN="center"><button type="button" onClick="addrlkup()"><img src="./markers/glasses.png" alt="<?php print gettext('Lookup location.');?>" /></TD></TR> <!-- 1/21/09 -->
+			<TR CLASS = "odd"><TD COLSPAN=4 ALIGN="center"><button type="button" onClick="addrlkup();"><img src="./markers/glasses.png" alt="<?php print gettext('Lookup location.');?>" /></TD></TR> <!-- 1/21/09 -->
 			<TR><TD><BR /><BR /><BR /><BR /><BR /></TD></TR>
-			<TR CLASS = "even"><TD CLASS="td_label">Caption:</TD><TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_map_caption" VALUE="<?php print get_variable('map_caption');?>" onChange = "document.getElementById('caption').innerHTML=this.value "/></TD></TR>
+			<TR CLASS = "even"><TD CLASS="td_label"><?php print gettext('Caption');?>:</TD><TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_map_caption" VALUE="<?php print get_variable('map_caption');?>" onChange = "document.getElementById('caption').innerHTML=this.value;"/></TD></TR>
 			<TR CLASS = "odd" VALIGN='baseline'>
 				<TD CLASS="td_label" ROWSPAN=6><?php print gettext('Map');?>:</TD>
 				<TD ALIGN='right'>&nbsp;&nbsp;<?php print gettext('Lat');?>:&nbsp;</TD>
@@ -1990,15 +1999,15 @@ if (mysql_num_rows($result)>0) {
 <?php
 				$coords = "{$lat},{$lng}";
 ?>
-				<TD ALIGN='right' onClick = "usng_to_map()"><?php print gettext('USNG');?>:&nbsp;</TD>
+				<TD ALIGN='right' onClick = "usng_to_map();"><?php print gettext('USNG');?>:&nbsp;</TD>
 				<TD COLSPAN=2><INPUT TYPE="text" NAME="frm_ngs" VALUE="<?php print LLtoUSNG($lat, $lng) ;?>" SIZE=22 DISABLED />
 				</TD></TR>
 			<TR>
-				<TD ALIGN='right' onClick = "utm_to_map()"><?php print gettext('OSGB');?>:&nbsp;</TD>
+				<TD ALIGN='right' onClick = "utm_to_map();"><?php print gettext('OSGB');?>:&nbsp;</TD>
 				<TD COLSPAN=2><INPUT TYPE="text" NAME="frm_osgb" VALUE="<?php print LLtoOSGB($lat,$lng);?>" SIZE=22 DISABLED />
 				</TD></TR>
 			<TR>
-				<TD ALIGN='right' onClick = "utm_to_map()"><?php print gettext('UTM');?>:&nbsp;</TD>
+				<TD ALIGN='right' onClick = "utm_to_map();"><?php print gettext('UTM');?>:&nbsp;</TD>
 				<TD COLSPAN=2><INPUT TYPE="text" NAME="frm_utm" VALUE="<?php print toUTM($coords);?>" SIZE=22 DISABLED />
 				</TD></TR>
 			<TR CLASS = "odd">
@@ -2006,16 +2015,16 @@ if (mysql_num_rows($result)>0) {
 				<TD><INPUT TYPE="text" NAME="frm_zoom" VALUE="<?php print get_variable('def_zoom');?>" SIZE=4 disabled /></TD></TR>	<!-- 4/5/09 -->
 			<TR VALIGN='baseline'><TD CLASS="td_label" ALIGN='right'><?php print gettext('Dynamic zoom');?>:</TD><TD ALIGN='center' COLSPAN=2>&nbsp;&nbsp;
 			 		<?php print gettext('Yes');?> &raquo;<INPUT TYPE='radio' NAME='frm_zoom_fixed' VALUE='0' <?php print $checks_ar[0]; ?> onClick = "document.cen_Form.frm_dfz.value=0";> &nbsp;&nbsp;
-					<B><?php print gettext('Situation');?></B> <?php print gettext('fixed');?> &raquo;<INPUT TYPE='radio' NAME='frm_zoom_fixed' VALUE='1' <?php print $checks_ar[1]; ?> onClick = "document.cen_Form.frm_dfz.value=1";>&nbsp;&nbsp;
-					<B><?php print get_text("Units");?></B> <?php print gettext('fixed');?> &raquo;<INPUT TYPE='radio' NAME='frm_zoom_fixed' VALUE='2' <?php print $checks_ar[2]; ?> onClick = "document.cen_Form.frm_dfz.value=2";>&nbsp;&nbsp;
-					<B><?php print gettext('Both');?></B> <?php print gettext('fixed');?> &raquo;<INPUT TYPE='radio' NAME='frm_zoom_fixed' VALUE='3' <?php print $checks_ar[3]; ?> onClick = "document.cen_Form.frm_dfz.value=3";></TD></TR>
+					<B><?php print gettext('Situation');?></B> <?php print gettext('fixed');?> &raquo;<INPUT TYPE='radio' NAME='frm_zoom_fixed' VALUE='1' <?php print $checks_ar[1]; ?> onClick = "document.cen_Form.frm_dfz.value=1;" />&nbsp;&nbsp;
+					<B><?php print get_text("Units");?></B> <?php print gettext('fixed');?> &raquo;<INPUT TYPE='radio' NAME='frm_zoom_fixed' VALUE='2' <?php print $checks_ar[2]; ?> onClick = "document.cen_Form.frm_dfz.value=2;" />&nbsp;&nbsp;
+					<B><?php print gettext('Both');?></B> <?php print gettext('fixed');?> &raquo;<INPUT TYPE='radio' NAME='frm_zoom_fixed' VALUE='3' <?php print $checks_ar[3]; ?> onClick = "document.cen_Form.frm_dfz.value=3;" /></TD></TR>
 						
 			<TR><TD>&nbsp;</TD></TR>
 			<TR CLASS = "even"><TD COLSPAN=5 ALIGN='center'>
-				<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='document.can_Form.submit();'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='reset' VALUE='<?php print gettext('Reset');?>' onClick = "map_cen_reset();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='submit' VALUE='<?php print gettext('Submit');?>'></TD></TR>
-				<INPUT TYPE="hidden" NAME="frm_lat" VALUE="<?php print $lat;?>">				<!-- // 9/16/08 -->
-				<INPUT TYPE="hidden" NAME="frm_lng" VALUE="<?php print $lng;?>">
-				<INPUT TYPE="hidden" NAME="frm_dfz" VALUE="<?php print $which;?>">
+				<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='document.can_Form.submit();'/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='reset' VALUE='<?php print gettext('Reset');?>' onClick = "map_cen_reset();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='submit' VALUE='<?php print gettext('Submit');?>'></TD></TR>
+				<INPUT TYPE="hidden" NAME="frm_lat" VALUE="<?php print $lat;?>"/>				<!-- // 9/16/08 -->
+				<INPUT TYPE="hidden" NAME="frm_lng" VALUE="<?php print $lng;?>"/>
+				<INPUT TYPE="hidden" NAME="frm_dfz" VALUE="<?php print $which;?>"/>
 			</FORM></TABLE>
 			</TD><TD><DIV ID='map' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
 			<BR><CENTER><FONT CLASS="header"><SPAN ID="caption"><?php print gettext('Click/Zoom to new default position');?></SPAN></FONT></CENTER>
@@ -2042,7 +2051,7 @@ if (mysql_num_rows($result)>0) {
 		else {
 			$curr_key = get_variable('gmaps_api_key')
 ?>	
-			<BODY onLoad = 'ck_frames()'>
+			<BODY onLoad = 'ck_frames();'>
 			
 			<TABLE BORDER="0" STYLE = "margin-left: 100px; margin-top: 40px";>
 			<FORM METHOD="POST" NAME= "api_Form"  onSubmit="return validate_key(document.api_Form);" ACTION="config.php?func=api_key&update=true">
@@ -2051,7 +2060,7 @@ if (mysql_num_rows($result)>0) {
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print gettext('Copy/paste key');?>:</TD></TR>
 			<TR CLASS = "odd"><TD><INPUT MAXLENGTH="88" SIZE="88" TYPE="text" NAME="frm_value" VALUE="<?php print $curr_key; ?>" /></TD></TR>
 			<TR CLASS = "even"><TD ALIGN='center'><BR />
-				<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>'  onClick='document.can_Form.submit();'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='reset' VALUE='<?php print gettext('Reset');?>' onClick = "map_cen_reset();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='submit' VALUE='<?php print gettext('Submit');?>'></TD></TR>
+				<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>'  onClick='document.can_Form.submit();'/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='reset' VALUE='<?php print gettext('Reset');?>' onClick = "map_cen_reset();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='submit' VALUE='<?php print gettext('Submit');?>'/></TD></TR>
 			</FORM></TABLE>
 			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename(__FILE__); ?>"></FORM>		
 			</BODY>
@@ -2126,12 +2135,12 @@ if (mysql_num_rows($result)>0) {
 
 		$_echo .="\n\n--" . gettext('end') . " " . gettext('end') . " " . gettext('end') . " " . gettext('end') . " " . gettext('end') . " " . gettext('end') . " " . gettext('end') . " " . gettext('end') . " " . gettext('end') . " " . "\n";
 		echo "\n<FORM NAME='the_form'><TEXTAREA NAME ='the_dump' COLS=120 ROWS=20>{$_echo}</TEXTAREA>";
-		echo "<BR /><BR /><INPUT onclick='copyit();' type='button' value='" . gettext('Click to copy the dump') . "' name='cpy'\>\n</FORM>\n";
+		echo "<BR /><BR /><INPUT onclick='copyit();' type='button' value='" . gettext('Click to copy the dump') . "' name='cpy'/>\n</FORM>\n";
 	
 		break;
 	    
 	case 'delete' :	
-		print "<BODY onLoad = 'ck_frames()'>\n";
+		print "<BODY onLoad = 'ck_frames();'>\n";
 		$subfunc = (array_key_exists ('subfunc',$_GET ))? $_GET['subfunc']: "list";
 		switch ($subfunc) {
 			case 'list':
@@ -2143,7 +2152,7 @@ if (mysql_num_rows($result)>0) {
 				$result	= mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 				if (mysql_affected_rows()>0) {																				// inventory affected rows
 					print "<TABLE BORDER=0 STYLE='margin-top:20px;margin-left:100px;'>";
-					print "<TR CLASS = 'even'><TD CLASS='td_label' ALIGN='center'  COLSPAN=6>Select Closed Tickets for Permanent Deletion</TD></TR>";
+					print "<TR CLASS = 'even'><TD CLASS='td_label' ALIGN='center'  COLSPAN=6>" . gettext('Select Closed Tickets for Permanent Deletion') . "</TD></TR>";
 	//				print "<TR CLASS = 'odd'><TD COLSPAN=3>&nbsp;</TD></TR>";
 					print "<TR CLASS = 'odd'><TD ALIGN='left'>&nbsp;&nbsp;&nbsp;" . gettext('Ticket') . "</TD><TD ALIGN='left'>&nbsp;&nbsp;&nbsp;" . gettext('Closed') . "</TD><TD>Actions</TD><TD ALIGN='center'>Patients</TD><TD ALIGN='center'>Assigns</TD><TD>Del</TD></TR>";
 	
@@ -2165,14 +2174,14 @@ if (mysql_num_rows($result)>0) {
 							print "<TD ALIGN='center'>{$no_acts}</TD>";
 							print "<TD ALIGN='center'>{$no_pers}</TD>";
 							print "<TD ALIGN='center'>{$no_assns}</TD>";
-							print "<TD CLASS='td_label'><INPUT TYPE='checkbox' NAME = 'T" . $row['id'] . "' onClick = 'this.form.delcount.value++;'></TD></TR>\n";
+							print "<TD CLASS='td_label'><INPUT TYPE='checkbox' NAME = 'T" . $row['id'] . "' onClick = 'this.form.delcount.value++;'/></TD></TR>\n";
 							$i++;
 							}		// end while($row ...)
 					print "<TR CLASS='" . $evenodd[$i%2] . "'><TD ALIGN='center' COLSPAN=6><BR/>";
 ?>
-					<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' 	onClick='document.can_Form.submit();'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<INPUT TYPE='button' VALUE='<?php print gettext('Select All');?>' onClick = 'document.del_Form.delcount.value=1; all_ticks(true)';>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<INPUT TYPE='button' VALUE='<?php print gettext('Reset');?>' 		onClick = 'document.del_Form.reset();'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' 	onClick='document.can_Form.submit();'/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<INPUT TYPE='button' VALUE='<?php print gettext('Select All');?>' onClick = 'document.del_Form.delcount.value=1; all_ticks(true);'/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<INPUT TYPE='button' VALUE='<?php print gettext('Reset');?>' 		onClick = 'document.del_Form.reset();'/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<INPUT TYPE='button' VALUE='<?php print gettext('Submit');?>' 	onClick = 'collect();'></TD></TR>
 					<INPUT TYPE='hidden' NAME = 'idstr' VALUE=''>
 					<INPUT TYPE='hidden' NAME = 'delcount' VALUE=0>
@@ -2181,7 +2190,7 @@ if (mysql_num_rows($result)>0) {
 					}				// end if (mysql_affected_rows()>0)
 				else {
 					print "</FORM><BR />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>" . gettext('No Closed Tickets!') . "</B><br /><br />";
-					print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='button' VALUE='" . gettext('Continue') . "' onClick = 'document.can_Form.submit();'>";
+					print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='button' VALUE='" . gettext('Continue') . "' onClick = 'document.can_Form.submit();'/>";
 					}
 ?>
 				
@@ -2196,8 +2205,8 @@ if (mysql_num_rows($result)>0) {
 ?>
 				<DIV STYLE='margin-top:20px; margin-left:100px'><FONT CLASS='warn' SIZE = "+1"><B><?php print gettext('Please confirm deletions - cannot be undone!');?></B></FONT><BR /><BR />
 				<FORM METHOD="POST" NAME= "del_Form" ACTION="config.php?func=delete&subfunc=do_del">
-				<INPUT TYPE='hidden' NAME='idstr' VALUE="<?php print $_POST['idstr'];?>">
-				<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>'  onClick='document.can_Form.submit();'>&nbsp;&nbsp;<INPUT TYPE='submit' VALUE='Confirmed'></TD></TR>
+				<INPUT TYPE='hidden' NAME='idstr' VALUE="<?php print $_POST['idstr'];?>"/>
+				<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>'  onClick='document.can_Form.submit();'/>&nbsp;&nbsp;<INPUT TYPE='submit' VALUE='<?php gettext('Confirmed');?>'/></TD></TR>
 				</FORM>
 				<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename(__FILE__); ?>"></FORM>		
 				</DIV>
@@ -2227,7 +2236,7 @@ if (mysql_num_rows($result)>0) {
 				<DIV STYLE = 'margin-left:100px; margin-top:60px;'>
 				<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename(__FILE__); ?>">	
 				<BR /><BR /><BR /><BR /><B><?php print gettext("Ticket {$plu} and associated Assigns, Action and {$patient} record {$plu} deleted");?>: <U><?php print count($temp); ?></U></B><BR /><BR />
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>'  onClick='document.can_Form.submit();'>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>'  onClick='document.can_Form.submit();'/>
 				</FORM>
 				</BODY>
 <?php
@@ -2241,7 +2250,7 @@ if (mysql_num_rows($result)>0) {
 	
 	
 		case 'in_nums' :				// incident numbering - 11/11/10
-			print "</HEAD>\n<BODY onLoad = 'ck_frames()'>\n";
+			print "</HEAD>\n<BODY onLoad = 'ck_frames();'>\n";
 ?>
 <SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT>
 <?php
@@ -2399,12 +2408,12 @@ if (mysql_num_rows($result)>0) {
 	case 'hints' :									// 2/3/11
 ?>
 	<DIV ID="foo"><DIV ID="bar">		<!-- floater div - handles IE compat'y -->
-		<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='history.back();'><BR /><BR />
+		<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='history.back();'/><BR /><BR />
 <?php		// 3/19/11
 		if((is_administrator()) || (is_super())) {
 ?>				
-		<INPUT TYPE='button' VALUE='<?php print gettext('Reset form');?>'  onClick='document.hints.reset();'><BR /><BR />
-		<INPUT TYPE='button' VALUE='<?php print gettext('Apply changes');?>'  onClick='document.hints.submit();'>
+		<INPUT TYPE='button' VALUE='<?php print gettext('Reset form');?>'  onClick='document.hints.reset();'/><BR /><BR />
+		<INPUT TYPE='button' VALUE='<?php print gettext('Apply changes');?>'  onClick='document.hints.submit();'/>
 <?php		
 			}
 ?>				
@@ -2494,7 +2503,7 @@ function depart() {
 				if ($row['name']{0} <> "_" ) {
 					$capt = str_replace ( "_", " ", $row['name']);
 					print "<TR CLASS='" . $evenodd[$counter%2] . "'><TD CLASS='td_label'><A CLASS='td_label' HREF='#' TITLE='".get_css_day_help($row['name'])."'>$capt</A>: &nbsp;</TD>";
-					print "<TD><INPUT CLASS='color' MAXLENGTH='16' SIZE='16' TYPE='text' VALUE='" . $row['value'] . "' NAME='" . $row['name'] . "'></TD></TR>\n";
+					print "<TD><INPUT CLASS='color' MAXLENGTH='16' SIZE='16' TYPE='text' VALUE='" . $row['value'] . "' NAME='" . $row['name'] . "'/></TD></TR>\n";
 					$counter++;
 					}
 				}		// str_replace ( search, replace, subject)
@@ -2505,13 +2514,13 @@ function depart() {
 		<IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#top';" STYLE = 'margin-left: 20px'></TD>
 
 			<DIV ID="foo"><DIV ID="bar">
-				<INPUT TYPE='button' VALUE='<?php print gettext('Try Colors');?>' onClick='do_day_color_check();'><BR /><BR />			
-				<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='document.can_Form.submit();'><BR /><BR />
+				<INPUT TYPE='button' VALUE='<?php print gettext('Try Colors');?>' onClick='do_day_color_check();'/><BR /><BR />			
+				<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='document.can_Form.submit();'/><BR /><BR />
 <?php		// 3/19/11
 				if((is_administrator()) || (is_super())) {
 ?>
-				<INPUT TYPE='button' VALUE='<?php print gettext('Reset form');?>'  onClick='document.css_day_Form.reset();'><BR /><BR />
-				<INPUT TYPE='button' VALUE='<?php print gettext('Apply changes');?>'  onClick='document.css_day_Form.submit();'>
+				<INPUT TYPE='button' VALUE='<?php print gettext('Reset form');?>'  onClick='document.css_day_Form.reset();'/><BR /><BR />
+				<INPUT TYPE='button' VALUE='<?php print gettext('Apply changes');?>'  onClick='document.css_day_Form.submit();'/>
 <?php	
 				}
 ?>				
@@ -2574,13 +2583,13 @@ function depart() {
 		<IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#top';" STYLE = 'margin-left: 20px'></TD>
 
 			<DIV ID="foo"><DIV ID="bar">		<!-- 9/26/09 -->
-				<INPUT TYPE='button' VALUE='<?php print gettext('Try Colors');?>' onClick='do_night_color_check();'><BR /><BR />
-				<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='document.can_Form.submit();'><BR /><BR />
+				<INPUT TYPE='button' VALUE='<?php print gettext('Try Colors');?>' onClick='do_night_color_check();'/><BR /><BR />
+				<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='document.can_Form.submit();'/><BR /><BR />
 <?php		// 3/19/11
 				if((is_administrator()) || (is_super())) {
 ?>				
-				<INPUT TYPE='button' VALUE='<?php print gettext('Reset form');?>'  onClick='document.css_night_Form.reset();'><BR /><BR />
-				<INPUT TYPE='button' VALUE='<?php print gettext('Apply changes');?>'  onClick='document.css_night_Form.submit();'>
+				<INPUT TYPE='button' VALUE='<?php print gettext('Reset form');?>'  onClick='document.css_night_Form.reset();'/><BR /><BR />
+				<INPUT TYPE='button' VALUE='<?php print gettext('Apply changes');?>'  onClick='document.css_night_Form.submit();'/>
 <?php	
 				}
 ?>				
@@ -2683,11 +2692,11 @@ ul {
 		}
 ?>
 		<BR /><BR />
-		<LI><B>Files</B><BR />		<!-- 9/10/13 -->
+		<LI><B><?php print gettext('Files');?></B><BR />		<!-- 9/10/13 -->
 			<TABLE BORDER=0>
 				<TR CLASS = 'odd'>				
-					<TD><LI><A HREF="#" onClick='file_window();'>Upload File</A></TD>	<!-- 9/10/13 -->
-					<TD><LI><A HREF="fileman.php">File Manager</A></TD>				<!-- 9/10/13 -->	
+					<TD><LI><A HREF="#" onClick='file_window();'><?php print gettext('Upload File');?></A></TD>	<!-- 9/10/13 -->
+					<TD><LI><A HREF="fileman.php"><?php print gettext('File Manager');?></A></TD>				<!-- 9/10/13 -->	
 				</TR>
 			</TABLE>
 		<BR />
@@ -2715,20 +2724,20 @@ ul {
 		if((is_administrator()) || (is_super())) {
 			if(get_variable('use_disp_autostat') == 1) {		//9/10/13
 ?>
-			<LI><B>Auto Dispatch Status</B><BR />
+			<LI><B><?php print gettext('Auto Dispatch Status');?></B><BR />
 			<TABLE BORDER=0><TR CLASS = 'odd'>		
-			<TD><LI><A HREF="auto_disp_status.php" >Auto Status Values</A></TD>		<!-- 9/10/13 -->
+			<TD><LI><A HREF="auto_disp_status.php" ><?php print gettext('Auto Status Values');?></A></TD>		<!-- 9/10/13 -->
 			</TR></TABLE><BR />
 <?php
 			}
 ?>
 			<LI><B>Email Lists</B><BR />
 			<TABLE BORDER=0><TR CLASS = 'odd'>		
-			<TD><LI><A HREF="#" onClick = "do_Post('mailgroup');">Email Lists</A></TD>			<!-- 8/27/13 -->
-			<TD><LI><A HREF="email_lists.php?func=list" >Email List Members</A></TD>		<!-- 8/27/13 -->
+			<TD><LI><A HREF="#" onClick = "do_Post('mailgroup');"><?php print gettext('Email Lists');?></A></TD>			<!-- 8/27/13 -->
+			<TD><LI><A HREF="email_lists.php?func=list" ><?php print gettext('Email List Members');?></A></TD>		<!-- 8/27/13 -->
 			</TR></TABLE><BR />
 			
-			<LI><B>Regions</B><BR />
+			<LI><B><?php print gettext('Regions');?></B><BR />
 			<TABLE BORDER=0><TR CLASS = 'odd'>		
 			<TD><LI><A HREF="#" onClick = "do_Post('region');"><?php print get_text("Regions");?></A></LI></TD>		
 			<TD><LI><A HREF="#" onClick = "do_Post('region_type');"><?php print get_text("Region");?> <?php print gettext('Type');?></A></LI></TD>	
@@ -2752,7 +2761,7 @@ ul {
 <?php 
 					if(get_variable('use_responder_mobile') == "1") {
 ?>
-						<TD><LI><A HREF= "./get_tiles.php">Download Mobile Map Tiles (OSM)</A></TD>		<!-- 9/10/13 -->
+						<TD><LI><A HREF= "./get_tiles.php"><?php print gettext('Download Mobile Map Tiles (OSM)');?></A></TD>		<!-- 9/10/13 -->
 <?php
 				}
 ?>
@@ -2769,10 +2778,10 @@ ul {
 				</TR>
 			</TABLE>
 			<BR />
-			<LI><B>Road Conditions</B><BR />			<!-- 9/10/13 -->
+			<LI><B><?php print gettext('Road Conditions');?></B><BR />			<!-- 9/10/13 -->
 			<TABLE BORDER=0>
 				<TR CLASS = 'odd'><!-- 3/15/11 -->
-					<TD><LI><A HREF="#" onClick = "do_Post('conditions');">Conditions Table</A></TD>
+					<TD><LI><A HREF="#" onClick = "do_Post('conditions');"><?php print gettext('Conditions Table');?></A></TD>
 				</TR>
 			</TABLE>
 			<BR />			
@@ -2782,19 +2791,19 @@ ul {
 		<LI><B><?php print gettext('Outgoing email and Unit Tracking Tests');?></B></LI><BR />
 		<TABLE BORDER=0>
 			<TR CLASS = 'odd'><!-- 3/15/11 -->		
-				<TD><LI><A HREF="#" onClick = "do_test()"><U><?php print gettext('APRS');?></U></A></LI></TD>
-				<TD><LI><A HREF="#" onClick = "do_instam()"><U><?php print gettext('Instamapper');?></U></A></LI></TD>
+				<TD><LI><A HREF="#" onClick = "do_test();"><U><?php print gettext('APRS');?></U></A></LI></TD>
+				<TD><LI><A HREF="#" onClick = "do_instam();"><U><?php print gettext('Instamapper');?></U></A></LI></TD>
 <?php 				// 7/5/10
 		if (is_super()) {
-			print "\t\t<TD><LI><A HREF=\"#\" onClick = \"do_smtp()\"><U><?php print gettext('SMTP Mail');?></U></A></TD>\n";
-			print "\t\t<TD><LI><A HREF=\"#\" onClick = \"do_native()\"><U><?php print gettext('Native PHP Mail');?></U></A></TD>\n";
+			print "\t\t<TD><LI><A HREF=\"#\" onClick = \"do_smtp();\"><U><?php print gettext('SMTP Mail');?></U></A></TD>\n";
+			print "\t\t<TD><LI><A HREF=\"#\" onClick = \"do_native();\"><U><?php print gettext('Native PHP Mail');?></U></A></TD>\n";
 			}
 ?>		
-				<TD><LI><A HREF="#" onClick = "do_glat()"><U><?php print gettext('Google Latitude');?></U></A></LI></TD>	<!-- 7/28/09 -->
-				<TD><LI><A HREF="#" onClick = "do_locatea()"><U><?php print gettext('LocateA');?></U></A></LI></TD>	<!-- 7/28/09 -->
-				<TD><LI><A HREF="#" onClick = "do_gtrack()"><U><?php print gettext('Gtrack');?></U></A></LI></TD>		<!-- 7/28/09 -->
-				<TD><LI><A HREF="#" onClick = "do_ogts()"><U><?php print gettext('Open GTS');?></U></A></LI></TD>		<!-- 7/5/11 -->
-				<TD><LI><A HREF="#" onClick = "do_t_tracker()"><U><?php print gettext('Internal Tracker');?></U></A></LI></TD>			<!-- 9/27/11 -->	
+				<TD><LI><A HREF="#" onClick = "do_glat();"><U><?php print gettext('Google Latitude');?></U></A></LI></TD>	<!-- 7/28/09 -->
+				<TD><LI><A HREF="#" onClick = "do_locatea();"><U><?php print gettext('LocateA');?></U></A></LI></TD>	<!-- 7/28/09 -->
+				<TD><LI><A HREF="#" onClick = "do_gtrack();"><U><?php print gettext('Gtrack');?></U></A></LI></TD>		<!-- 7/28/09 -->
+				<TD><LI><A HREF="#" onClick = "do_ogts();"><U><?php print gettext('Open GTS');?></U></A></LI></TD>		<!-- 7/5/11 -->
+				<TD><LI><A HREF="#" onClick = "do_t_tracker();"><U><?php print gettext('Internal Tracker');?></U></A></LI></TD>			<!-- 9/27/11 -->	
 			</TR>
 		</TABLE></BR>
 <?php
@@ -2832,10 +2841,10 @@ ul {
 <?php
 		}
 ?>
-		<LI><B>Warn Locations</B><BR />		<!-- 9/10/13 -->
+		<LI><B><?php print gettext('Warn Locations');?></B><BR />		<!-- 9/10/13 -->
 		<TABLE BORDER=0 STYLE = 'margin-left:0px'>
 			<TR CLASS = 'odd'><!-- 3/15/11 -->
-				<TD><LI><A HREF="warn_locations.php">Warn Locations</A></TD>
+				<TD><LI><A HREF="warn_locations.php"><?php print gettext('Warn Locations');?></A></TD>
 			</TR>
 		</TABLE><BR />
 
@@ -2938,8 +2947,8 @@ ul {
 	show_stats();	
 ?>
 	<FORM NAME='tables' METHOD = 'post' ACTION='tables.php'>
-	<INPUT TYPE='hidden' NAME='func' VALUE='r'>
-	<INPUT TYPE='hidden' NAME='tablename' VALUE=''>
+	<INPUT TYPE='hidden' NAME='func' VALUE='r'/>
+	<INPUT TYPE='hidden' NAME='tablename' VALUE=''/>
 	</FORM>
 <!-- <INPUT TYPE='button' VALUE='<?php print gettext('Tables');?>' onclick="document.tables.submit();"> -->
 
@@ -2985,7 +2994,7 @@ function map_cen () {				// specific to map center
 		var d = new Number(Math.abs(inval));
 		d  = Math.floor(d);
 		var mi = (Math.abs(inval)-d)*60;	// fraction * 60
-		var m = Math.floor(mi)				// min's as fraction
+		var m = Math.floor(mi);				// min's as fraction
 		var si = (mi-m)*60;					// to sec's
 		var s = si.toFixed(1);
 		return d + '\260 ' + Math.abs(m) +"' " + Math.abs(s) + '"';
@@ -3103,7 +3112,7 @@ function map_cen () {				// specific to map center
 		top.consoleRef=window.open('','myconsole',
 			'width=800,height=250' +',menubar=0' +',toolbar=0' +',status=0' +',scrollbars=0' +',resizable=0');
 	 	top.consoleRef.document.writeln('<html><head><title><?php print gettext('Console');?></title></head>'
-			+'<body bgcolor=white onLoad="self.focus()">' +content +'</body></HTML>'
+			+'<body bgcolor=white onLoad="self.focus();">' +content +'</body></HTML>'
 			);				// end top.consoleRef.document.writeln()
 	 	top.consoleRef.document.close();
 		}				// end function writeConsole(content)

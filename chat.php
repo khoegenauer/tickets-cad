@@ -34,8 +34,8 @@ $sig_script = "<SCRIPT>
 		</SCRIPT>
 		";
 
-$signals_list = $sig_script ."<SELECT NAME='signals' onFocus = 'clear_to()'; onBlur = 'set_to()'; onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>";
-$signals_list .= "<OPTION VALUE='0' SELECTED>Select signal/code</OPTION>";
+$signals_list = $sig_script ."<SELECT NAME='signals' onFocus = 'clear_to();' onBlur = 'set_to();' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;'>";
+$signals_list .= "<OPTION VALUE='0' SELECTED>" . gettext('Select signal/code') . "</OPTION>";
 
 $query  = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY 'text' ASC";
 $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
@@ -191,7 +191,7 @@ $signals_list .= "</SELECT>\n";
 			return AJAX.responseText;																				 
 			} 
 		else {
-			alert ("129: failed")
+			alert ("129: failed");
 			return false;
 			}																						 
 		}		// end function sync Ajax(strURL)
@@ -204,7 +204,7 @@ $signals_list .= "</SELECT>\n";
 	function rd_chat_msg() {							// read chat messages via ajax xfer - 5/29/10
 
 		var our_max = (first)? 5 : <?php print $list_length ;?>;		// startup limiter
-		var params = "last_id=" + last_msg_id + "&max_ct=" + our_max ;
+		var params = "last_id=" + last_msg_id + "&max_ct=" + our_max;
 		first = false;													// standard limiter
 //		alert("211 " + params);
 		sendRequest ('chat_rd.php',handleResult, params);	// 
@@ -223,7 +223,7 @@ $signals_list .= "</SELECT>\n";
 		else {
 //			alert("220 " + payload);
 			var person = document.getElementById("person");
-			var lines = payload.split(0xFF, 99) 											// lines FF-delimited
+			var lines = payload.split(0xFF, 99); 											// lines FF-delimited
 			for (i=0;i<lines.length; i++) {
 				var theLine = lines[i].split("\t", 6);										// tab-delimited
 				if (theLine.length>1){
@@ -281,10 +281,10 @@ $signals_list .= "</SELECT>\n";
  * @type Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -350,7 +350,7 @@ $signals_list .= "</SELECT>\n";
 			set_to();										// set timeout again
 			the_Form.frm_message.value="";
 //			the_Form.frm_message.focus();
-			do_focus ()
+			do_focus ();
 			}				// end if/else (payload.substring(... )
 		}		// end function wr_chat_ msg()
 /**
@@ -381,7 +381,7 @@ $signals_list .= "</SELECT>\n";
 		else if(e.which)	{keynum = e.which;	}				// Mozilla/Opera
 		if (keynum==13) {										// allow enter key
 			wr_chat_msg(document.forms[0]) ;					// submit to server-side script
-			do_focus ()
+			do_focus ();
 			}
 		else {
 			keychar = String.fromCharCode(keynum);
@@ -400,7 +400,7 @@ $signals_list .= "</SELECT>\n";
  * @returns {undefined}
  */
 	function set_to() {										// set timeout
-		if (!the_to) {the_to=setTimeout('getMessages(false)', <?php print $cycle; ?>)}
+		if (!the_to) {the_to=setTimeout('getMessages(false)', <?php print $cycle; ?>);}
 		}
 /**
  * 
@@ -455,9 +455,12 @@ $signals_list .= "</SELECT>\n";
 		document.chat_form.chat_invite.options[0].selected = true;
 		if(!the_to) {set_to();}	//	10/29/13	
 		}		// end function do_can ()
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function get_chatusers() {	//	9/10/13
-		$('whos_chatting').innerHTML = "Checking ......";
+		$('whos_chatting').innerHTML = "<?php print gettext('Checking...');?>...";
 		var randomnumber=Math.floor(Math.random()*99999999);
 		var url ="chat_wl.php?version=" + randomnumber;
 		sendRequest (url, chatusers_cb, "");
@@ -466,10 +469,13 @@ $signals_list .= "</SELECT>\n";
 			$('whos_chatting').innerHTML = chatusers[0];
 			}
 		}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 	function pause_messages() {	//	10/29/13
 		clear_to();
-		$('help').innerHTML = "Click Cancel to return to chat messages";
+		$('help').innerHTML = "<?php print gettext('Click Cancel to return to chat messages');?>";
 		}
 	
 
@@ -482,23 +488,23 @@ $signals_list .= "</SELECT>\n";
 		<FONT CLASS="header">Chat</FONT> <I>(logged-in: <span id='whos_chatting'></span>)</I><BR /><BR />		
 		<FORM METHOD="post" NAME='chat_form' onSubmit="return false;">
 		<NOBR>
-		<INPUT TYPE="text" NAME="frm_message" SIZE=80 value = "" onChange = "clear_to()"; onBlur = 'set_to()'; >
+		<INPUT TYPE="text" NAME="frm_message" SIZE=80 value = "" onChange = "clear_to();" onBlur = 'set_to();' />
 
-		<INPUT TYPE="button" VALUE = "Send" onClick="wr_chat_msg(document.forms[0]);set_to()"  style='margin-left:20px;' >
-		<INPUT TYPE="Reset" VALUE = "Reset" style='margin-left:20px;'  onClick="this.form.reset(); document.chat_form.frm_message.value='';" />
+    <INPUT TYPE="button" VALUE = "<?php print gettext('Send');?>" onClick="wr_chat_msg(document.forms[0]);set_to();"  style='margin-left:20px;' />
+    <INPUT TYPE="Reset" VALUE = "<?php print gettext('Reset');?>" style='margin-left:20px;'  onClick="this.form.reset(); document.chat_form.frm_message.value='';" />
 		<BR /><NOBR>
 <?php print  $signals_list; ?><br />
 
-		<INPUT TYPE='hidden' NAME = 'frm_room' VALUE='0'>
-		<INPUT TYPE='hidden' NAME = 'frm_user' VALUE='<?php print $_SESSION['user_id'];?>'>
-		<INPUT TYPE='hidden' NAME = 'frm_from' VALUE='<?php print $_SERVER['REMOTE_ADDR']; ?>'>
+		<INPUT TYPE='hidden' NAME = 'frm_room' VALUE='0'/>
+		<INPUT TYPE='hidden' NAME = 'frm_user' VALUE='<?php print $_SESSION['user_id'];?>'/>
+		<INPUT TYPE='hidden' NAME = 'frm_from' VALUE='<?php print $_SERVER['REMOTE_ADDR']; ?>'/>
 
 		<SPAN ID = 'botton_row' STYLE='margin-left:120px;'>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<B>Invite </B><SELECT NAME='chat_invite' 
+		<B><?php print gettext('Invite');?> </B><SELECT NAME='chat_invite' 
 				onFocus = "pause_messages(); $('can_butt').style.display='inline';" onChange = "$('send_butt').style.display='inline';"> 
-		<OPTION VALUE="" SELECTED>Select</OPTION>	
-		<OPTION VALUE=0>All</OPTION>	
+		<OPTION VALUE="" SELECTED><?php print gettext('Select');?></OPTION>	
+		<OPTION VALUE=0><?php print gettext('All');?></OPTION>	
 
 <?php
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `id` != {$_SESSION['user_id']} ";
@@ -509,17 +515,17 @@ $signals_list .= "</SELECT>\n";
 		}
 	print "\t</SELECT>\n";
 ?>
-		<INPUT ID = 'send_butt' TYPE='button' VALUE = 'Send invite' style='margin-left:10px; display:none' onClick = "do_send_inv(document.chat_form.chat_invite.value);">
+		<INPUT ID = 'send_butt' TYPE='button' VALUE = '<?php print gettext('Send invite');?>' style='margin-left:10px; display:none' onClick = "do_send_inv(document.chat_form.chat_invite.value);"/>
 		<SPAN ID= 'help' STYLE = 'margin-left:60px; color: red;'><B></B></span>		
-		<SPAN ID= 'sent_msg' STYLE = 'margin-left:60px; display:none;'><B>Invitation Sent!</B></span>
-		<INPUT ID = 'can_butt' TYPE='button' VALUE = 'Cancel' style='margin-left:10px; display:none' onClick = "do_can();">
-		<INPUT TYPE="button" VALUE = "Close"  style='margin-left:60px;'onClick = "this.disabled=true; clear_to(); opener.chat_win_close(); self.close()">
+		<SPAN ID= 'sent_msg' STYLE = 'margin-left:60px; display:none;'><B><?php print gettext('Invitation Sent!');?></B></span>
+		<INPUT ID = 'can_butt' TYPE='button' VALUE = '<?php print gettext('Cancel');?>' style='margin-left:10px; display:none' onClick = "do_can();"/>
+      <INPUT TYPE="button" VALUE = "<?php print gettext('Close');?>"  style='margin-left:60px;'onClick = "this.disabled=true; clear_to(); opener.chat_win_close(); self.close();"/>
 		<NOBR></CENTER>
 		</SPAN>
 		</FORM>
 		<FORM METHOD="post" NAME='chat_form_2' onSubmit="return false;">
-		<INPUT TYPE="hidden" NAME = "frm_message" VALUE=' has left this chat.'>
-		<INPUT TYPE='hidden' NAME = 'frm_room' VALUE='0'>
+		<INPUT TYPE="hidden" NAME = "frm_message" VALUE=' has left this chat.'/>
+		<INPUT TYPE='hidden' NAME = 'frm_room' VALUE='0'/>
 		<INPUT TYPE='hidden' NAME = 'frm_user' VALUE='<?php print $_SESSION['user_id'];?>'>
 		<INPUT TYPE='hidden' NAME = 'frm_from' VALUE='<?php print $_SERVER['REMOTE_ADDR']; ?>'>
 		</FORM>

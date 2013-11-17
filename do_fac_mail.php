@@ -105,7 +105,7 @@ if (empty($_POST)) {
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 //	dump($query);
 ?>
-	<BODY onLoad = "reSizeScr(<?php print mysql_affected_rows();?>)"><CENTER>		<!-- 1/12/09 -->
+	<BODY onLoad = "reSizeScr(<?php print mysql_affected_rows();?>);"><CENTER>		<!-- 1/12/09 -->
 
 	<CENTER>		<!-- 1/12/09 -->
 	<CENTER><H3>Facility Mail </H3>
@@ -116,12 +116,12 @@ if (empty($_POST)) {
 		$i = 0;
 		while($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 			if (is_email($row['contact_email'])) {
-				print "<TR CLASS = '{$evenodd[($i%2)]}'><TD><INPUT TYPE='checkbox' NAME='cb{$i}' VALUE='{$row['contact_email']}' CHECKED></TD>
+				print "<TR CLASS = '{$evenodd[($i%2)]}'><TD><INPUT TYPE='checkbox' NAME='cb{$i}' VALUE='{$row['contact_email']}' CHECKED/></TD>
 					<TD>{$row['name']}</TD><TD>{$row['contact_name']}</TD><TD>{$row['contact_email']}</TD><TD></TD></TR>\n";
 				$i++;
 				}
 			if (is_email($row['security_email'])) {
-				print "<TR CLASS = '{$evenodd[($i%2)]}'><TD><INPUT TYPE='checkbox' NAME='cb" .$i. "' VALUE='" . $row['security_email'] . "' CHECKED></TD>
+				print "<TR CLASS = '{$evenodd[($i%2)]}'><TD><INPUT TYPE='checkbox' NAME='cb" .$i. "' VALUE='" . $row['security_email'] . "' CHECKED/></TD>
 					<TD>{$row['name']}</TD><TD>{$row['security_contact']}</TD><TD>{$row['security_email']}</TD><TD></TD></TR>\n";
 				$i++;
 				}	// end if (is_email)
@@ -132,12 +132,12 @@ if (empty($_POST)) {
 				
 ?>
 		<TR><TD COLSPAN=5>&nbsp;</TD></TR>	
-		<TR CLASS='even'><TD ALIGN='right'><?php print gettext('Subject');?>: </TD><TD COLSPAN=4><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
+		<TR CLASS='even'><TD ALIGN='right'><?php print gettext('Subject');?>: </TD><TD COLSPAN=4><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60/></TD></TR>
 		<TR CLASS='odd'><TD ALIGN='right'><?php print gettext('Message');?>:</TD><TD COLSPAN=4> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
 		<TR CLASS='even'><TD></TD><TD ALIGN='left' COLSPAN=3><BR /><BR />
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "validate()"  STYLE =  'margin-left: 100px'>
-			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>' STYLE =  'margin-left: 20px'>
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'STYLE =  'margin-left: 20px'><BR /><BR />
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "validate();"  STYLE =  'margin-left: 100px'/>
+			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>' STYLE =  'margin-left: 20px'/>
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'STYLE =  'margin-left: 20px'/><BR /><BR />
 			</TD></TR>
 			</TABLE></FORM>
 <?php
@@ -164,7 +164,7 @@ if (empty($_POST)) {
 ?>
 	<BODY>
 	<CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
-	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'><BR /><BR />
+	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'/><BR /><BR />
 
 <?php
 

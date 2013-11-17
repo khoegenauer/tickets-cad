@@ -98,9 +98,9 @@ if (empty($_POST)) {
 		<TR CLASS='even'><TD ALIGN='right'><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
 		<TR CLASS='odd'><TD ALIGN='right'><?php print gettext('Message');?>:</TD><TD COLSPAN=2> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
 		<TR CLASS='even'><TD ALIGN='center' COLSPAN=3><BR /><BR />
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "validate()">&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "validate();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'/>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/><BR /><BR />
 			</TD></TR>
 			</TABLE></FORM>
 <?php
@@ -112,7 +112,7 @@ if (empty($_POST)) {
 ?>
 	<BODY><CENTER>		
 	<CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
-	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'><BR /><BR />
+	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'/><BR /><BR />
 
 <?php
 

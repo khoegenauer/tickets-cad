@@ -442,10 +442,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 							if (strlen(filesize($file)) < 20000000) {
 								$print .= "";
 								} else {
-								$print .= "Attached file is too large!";
+								$print .= gettext("Attached file is too large!");
 								}
 							} else {
-							$print .= "Error uploading file";
+							$print .= gettext("Error uploading file");
 							}
 						} else {
 						$row = stripslashes_deep(mysql_fetch_assoc($result));			
@@ -588,10 +588,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  * @type Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -859,7 +859,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		var d = new Number(Math.abs(inval));
 		d  = Math.floor(d);
 		var mi = (Math.abs(inval)-d)*60;	// fraction * 60
-		var m = Math.floor(mi)				// min's as fraction
+		var m = Math.floor(mi);				// min's as fraction
 		var si = (mi-m)*60;					// to sec's
 		var s = si.toFixed(1);
 		return d + '\260 ' + Math.abs(m) +"' " + Math.abs(s) + '"';
@@ -955,7 +955,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 //	geocoder = new GClientGeocoder();
 	var request;
 //	var querySting;   				// will hold the POSTed data
-	var tab1contents				// info window contents - first/only tab
+	var tab1contents;				// info window contents - first/only tab
 	var thePoint;
 	var baseIcon;
 	var cross;
@@ -1284,10 +1284,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  * @type Array|Array|Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -1321,7 +1321,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 <?php
 	if (get_variable("locale") ==0) {				// USA only		// 10/2/09
 ?>
-			alert("lookup failed");
+			alert("<?php print gettext('lookup failed');?>");
 <?php
 		}
 ?>		
@@ -1359,7 +1359,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 <?php
 		}		// end locale check
 ?>		
-		var params = "phone=" + URLEncode(goodno)
+		var params = "phone=" + URLEncode(goodno);
 		sendRequest (document.add, 'wp_lkup.php',handleResult, params);		//1/17/09
 		}
 		
@@ -1429,9 +1429,9 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		theRequest (theurl, loc_w, "");
 		function loc_w(req) {
 			var the_warnings=JSON.decode(req.responseText);
-			var the_count = the_warnings[0]
+			var the_count = the_warnings[0];
 			if(the_count != 0) {
-				alert("There is at least one location nearby with a warning registered for it\r\nPlease view the Ticket to see the warnings");
+				alert("<?php print gettext('There is at least one location nearby with a warning registered for it.\nPlease view the Ticket to see the warnings');?>");
 				document.add.submit();
 				} else {
 				document.add.submit();
@@ -1446,7 +1446,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		var url = "warnloc_popup.php?id=" + the_Id;
 		newwindow_wl=window.open(url, "sta_log",  "titlebar=no, location=0, resizable=1, scrollbars, height=600,width=750,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
 		if (!(newwindow_wl)) {
-			alert ("Locations warning operation requires popups to be enabled. Please adjust your browser options - or else turn off the Call Board option.");
+			alert ("<?php print gettext('Locations warning operation requires popups to be enabled. Please adjust your browser options - or else turn off the Call Board option.');?>");
 			return;
 			}
 		newwindow_wl.focus();
@@ -1472,10 +1472,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		}
 
 	var doXMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 
 	function docreateXMLHTTPObject() {
@@ -1538,9 +1538,9 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 							document.add.frm_state.value=temp[0].substring(0,5).trim() ;								// US state							
 							}
 						else {
-							var the_city = addr_pieces[(addr_pieces.length-3)] + ", " + addr_pieces[(addr_pieces.length-2)] ;
+							var the_city = addr_pieces[(addr_pieces.length-3)] + ", " + addr_pieces[(addr_pieces.length-2)];
 							document.add.frm_city.value=the_city.substring(0,33).trim() ;								// city						
-							document.add.frm_state.value=addr_pieces[(addr_pieces.length-1)].substring(0,5).trim()		// country							
+							document.add.frm_state.value=addr_pieces[(addr_pieces.length-1)].substring(0,5).trim();		// country							
 							}
 					}				// end switch
 				}
@@ -1755,8 +1755,8 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		for (var i=0 ; i < words.length ; i++){ 
 			var testwd = words[i]; 
 			var firLet = testwd.substr(0,1); 
-			var rest = testwd.substr(1, testwd.length -1) 
-			words[i] = firLet.toUpperCase() + rest 
+			var rest = testwd.substr(1, testwd.length -1); 
+			words[i] = firLet.toUpperCase() + rest;
 	  	 	} 
 		return( words.join(" ")); 
 		} 
@@ -1875,7 +1875,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  * @returns {undefined}
  */
 	function do_unlock_ps(theForm) {											// 8/10/08
-		do_problemstart(theForm, false)
+		do_problemstart(theForm, false);
 		$("lock_s").style.visibility = "hidden";		
 		}
 /**
@@ -1884,7 +1884,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  * @returns {undefined}
  */
 	function do_unlock_bd(theForm) {									// 9/29/09 Unlock booked date
-		do_booked_date(theForm, false)
+		do_booked_date(theForm, false);
 		$("lock_b").style.visibility = "hidden";		
 		}
 /**
@@ -1893,7 +1893,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  * @returns {undefined}
  */		
 	function do_lock_ps(theForm) {												// 8/10/08
-		do_problemstart(theForm, true)
+		do_problemstart(theForm, true);
 		$("lock_s").style.visibility = "visible";
 		}
 /**
@@ -1902,7 +1902,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  * @returns {undefined}
  */
 	function do_unlock_pe(theForm) {											// 8/10/08 
-		do_problemend(theForm, false)
+		do_problemend(theForm, false);
 //		$("lock_e").style.visibility = "hidden";		
 		}
 /**
@@ -1911,7 +1911,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  * @returns {undefined}
  */		
 	function do_lock_pe(theForm) {												// 8/10/08
-		do_problemend(theForm, true)
+		do_problemend(theForm, true);
 //		$("lock_e").style.visibility = "visible";
 		}
 /**
@@ -1978,7 +1978,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  * @returns {Boolean}
  */
 	function ReadOnlyCheckBox() {
-		alert("You can't change this value");
+		alert("<?php print gettext('You can\'t change this value');?>");
 		return false;
 	}
 
@@ -2043,7 +2043,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		LEFT JOIN `$GLOBALS[mysql_prefix]allocates` ON ( `$GLOBALS[mysql_prefix]facilities`.`id` = `$GLOBALS[mysql_prefix]allocates`.`resource_id` )		
 		$where2 GROUP BY `$GLOBALS[mysql_prefix]facilities`.`id` ORDER BY `name` ASC";		
 	$result_rfc = mysql_query($query_rfc) or do_error($query_rfc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-	$pulldown2 = '<option value = 0 selected>Receiving facility</option>\n'; 	// 3/18/10
+	$pulldown2 = '<option value = 0 selected>' . gettext("Receiving facility") . '</option>\n'; 	// 3/18/10
 		while ($row_rfc = mysql_fetch_array($result_rfc, MYSQL_ASSOC)) {
 			$pulldown2 .= "<option value=\"{$row_rfc['fac_id']}\">" . shorten($row_rfc['name'], 30) . "</option>\n";
 			print "\tfac_lat[" . $row_rfc['fac_id'] . "] = " . $row_rfc['lat'] . " ;\n";
@@ -2057,7 +2057,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 	if(mysql_affected_rows() > 0) {
 		$has_portal = 1;
 		$portal_user_control = "<SELECT NAME='frm_portal_user'>\n";
-		$portal_user_control .= "<OPTION VALUE = 0 SELECTED>Select User</OPTION>\n";
+		$portal_user_control .= "<OPTION VALUE = 0 SELECTED>" . gettext('Select User') . "</OPTION>\n";
 			while ($row_pu = mysql_fetch_array($result_pu, MYSQL_ASSOC)) {
 				$theName = $row_pu['name_f'] . " " . $row_pu['name_l'] . " (" . $row_pu['user'] . ")";
 				$portal_user_control .= "<OPTION VALUE=" . $row_pu['id'] . ">" . $theName . "</OPTION>\n";
@@ -2081,7 +2081,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  * @returns {undefined}
  */
 	function do_set_severity (in_val) {				// 6/26/10
-		if(severities[in_val]>0) {document.add.frm_severity.selectedIndex = severities[in_val]};
+		if(severities[in_val]>0) {document.add.frm_severity.selectedIndex = severities[in_val];};
 		}
 /**
  * 
@@ -2140,15 +2140,15 @@ $onload_str .= (is_float($cid_lat))? " pt_to_map( add, {$cid_lat} ,{$cid_lng});"
 <div id = 'outer' style = "position:fixed; z-index: 998;">				<!-- 2/19/11 -->
 <div id="boxB" class="box" style="left:<?php print $from_left;?>px; top:<?php print $from_top;?>px;">
   <div class="bar" STYLE="width:12em; color:red; background-color : transparent;"
-       onmousedown="dragStart(event, 'boxB')"><i>&nbsp;&nbsp;&nbsp;&nbsp;<?php print gettext('Drag me');?></i></div>
+       onmousedown="dragStart(event, 'boxB');"><i>&nbsp;&nbsp;&nbsp;&nbsp;<?php print gettext('Drag me');?></i></div>
   <div class="content" style="width:auto;">
-  		<INPUT TYPE="button" VALUE="<?php print gettext('History');?>"  onClick="do_hist_win();" STYLE = 'margin-top:none;'><BR />
-  		<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>"  onClick="do_cancel(document.add);" STYLE = 'margin-top:4px;'><BR />
-  		<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onclick= "do_reset(this.form);"  STYLE = 'margin-top:4px;'><BR />
-  		<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>"  onClick="validate(document.add);" STYLE = 'margin-top:4px;'><BR />
+  		<INPUT TYPE="button" VALUE="<?php print gettext('History');?>"  onClick="do_hist_win();" STYLE = 'margin-top:0;'/><BR />
+  		<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>"  onClick="do_cancel(document.add);" STYLE = 'margin-top:4px;'/><BR />
+  		<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onclick= "do_reset(this.form);"  STYLE = 'margin-top:4px;'/><BR />
+  		<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>"  onClick="validate(document.add);" STYLE = 'margin-top:4px;'/><BR />
 <?php if (!($in_win )) { ?>
-  		<INPUT TYPE="button" VALUE="<?php print get_text("Action"); ?>"  onClick="do_act_window('action_w.php?ticket_id=<?php echo $ticket_id;?>');" STYLE = 'margin-top:4px;'> <BR /> 
-  		<INPUT TYPE="button" VALUE="<?php print get_text("Patient"); ?>"  onClick="do_pat_window('patient_w.php?ticket_id=<?php echo $ticket_id;?>');" STYLE = 'margin-top:4px;'>  <!-- 6/23/11 -->
+  		<INPUT TYPE="button" VALUE="<?php print get_text("Action"); ?>"  onClick="do_act_window('action_w.php?ticket_id=<?php echo $ticket_id;?>');" STYLE = 'margin-top:4px;'/> <BR /> 
+  		<INPUT TYPE="button" VALUE="<?php print get_text("Patient"); ?>"  onClick="do_pat_window('patient_w.php?ticket_id=<?php echo $ticket_id;?>');" STYLE = 'margin-top:4px;'/>  <!-- 6/23/11 -->
 <?php } ?>
   </div>
 </div>
@@ -2293,21 +2293,21 @@ function do_nearby(the_form){		// 11/22/2012
 <TR><TD ALIGN='center' COLSPAN='3'><FONT CLASS='header'><FONT COLOR='green'><?php print gettext('New Call');?></FONT></FONT><BR />
 	<FONT SIZE=-1>(<?php print gettext('mouseover caption for help information');?>)</FONT></FONT><BR /><BR /></TD>
 	</TR>
-<FORM NAME="add" METHOD="post" ENCTYPE="multipart/form-data" ACTION="<?php print basename(__FILE__);?>?add=true" onSubmit="return validate(document.add)">
+<FORM NAME="add" METHOD="post" ENCTYPE="multipart/form-data" ACTION="<?php print basename(__FILE__);?>?add=true" onSubmit="return validate(document.add);">
 <TR CLASS='even'>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_loca"];?>');"><?php print get_text("Location"); ?></A>:</TD>
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_loca"];?>');"><?php print get_text("Location"); ?></A>:</TD>
 	<TD></TD>
 	<TD><INPUT NAME="frm_street" tabindex=1 SIZE="72" TYPE="text" VALUE="<?php print $street;?>" MAXLENGTH="96"></TD>
 	</TR>
 <TR CLASS='odd'>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('About Address - for instance, round the back, building number etc.');"><?php print get_text("Address About"); ?></A>:</TD>	<!-- 9/10/13 -->
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print gettext('About Address - for instance, round the back, building number etc.');?>');"><?php print get_text("Address About"); ?></A>:</TD>	<!-- 9/10/13 -->
 	<TD></TD>
 	<TD><INPUT NAME="frm_address_about" tabindex=1 SIZE="72" TYPE="text" VALUE="" MAXLENGTH="512"></TD>
 	</TR>
 <TR CLASS='even'>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_city"];?>')"><?php print get_text("City");?>:</TD>
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_city"];?>');"><?php print get_text("City");?>:</TD>
 	<TD ALIGN='center' ><BUTTON type="button" onClick="Javascript:loc_lkup(document.add);return false;"><img src="./markers/glasses.png" alt="<?php print gettext('Lookup location.');?>" /></BUTTON>&nbsp;&nbsp;</TD>		
-	<TD><INPUT ID="my_txt"  onFocus = "createAutoComplete();$('city_reset').visibility='visible';" NAME="frm_city" autocomplete="off" tabindex=2 SIZE="32" TYPE="text" VALUE="<?php print $city; ?>" MAXLENGTH="32" onChange = " $('city_reset').visibility='visible'; this.value=capWords(this.value)">
+	<TD><INPUT ID="my_txt"  onFocus = "createAutoComplete();$('city_reset').visibility='visible';" NAME="frm_city" autocomplete="off" tabindex=2 SIZE="32" TYPE="text" VALUE="<?php print $city; ?>" MAXLENGTH="32" onChange = " $('city_reset').visibility='visible'; this.value=capWords(this.value);">
 		<span id="suggest" onmousedown="$('suggest').style.display='none'; $('city_reset').style.visibility='visible';" style="visibility:hidden;border:#000000 1px solid;width:150px;right:400px;" /></span>
 		<IMG ID = 'city_reset' SRC="./markers/reset.png" STYLE = "margin-left:20px; visibility:hidden;" onClick = "this.style.visibility='hidden'; document.add.frm_city.value=''; document.add.frm_city.focus(); obj_sugg = null; ">
 <?php
@@ -2317,23 +2317,23 @@ function do_nearby(the_form){		// 11/22/2012
 <?php
 	}	
 ?>			
-		<SPAN CLASS="td_label" STYLE='margin-left:20px;' onmouseout="UnTip()" onmouseover="Tip('<?php print $titles['_state'];?>');"><?php print get_text("St"); ?></SPAN>:&nbsp;&nbsp;
+		<SPAN CLASS="td_label" STYLE='margin-left:20px;' onmouseout="UnTip();" onmouseover="Tip('<?php print $titles['_state'];?>');"><?php print get_text("St"); ?></SPAN>:&nbsp;&nbsp;
 		<INPUT NAME="frm_state" tabindex=3 SIZE="<?php print $st_size;?>" TYPE="text" VALUE="<?php print $st; ?>" MAXLENGTH="<?php print $st_size;?>">
 		<DIV id='loc_warnings' style='z-index: 1000; display: none; height: 100px; width: 300px; font-size: 1.5em; font-weight: bold; border: 1px outset #707070;'></DIV>		<!-- 9/10/13 -->
 		</TD>
 	</TR>
 <TR CLASS='odd'>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_phone"];?>');"><?php print get_text("Phone");?></A>:</TD> 
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_phone"];?>');"><?php print get_text("Phone");?></A>:</TD> 
 	<TD ALIGN='center' ><BUTTON type="button" onClick="Javascript:phone_lkup(document.add.frm_phone.value);"><img src="./markers/glasses.png" alt="<?php print gettext('Lookup phone number');?>" ></button>&nbsp;&nbsp;</TD>	
 	<TD><INPUT NAME="frm_phone"  tabindex=4 SIZE="16" TYPE="text" VALUE="<?php print $phone;?>"  MAXLENGTH="16">&nbsp;<SPAN ID='repeats'></SPAN></TD>
 	</TR>
 <TR CLASS='even'>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('To address - Not plotted on map, for information only');"><?php print get_text("To address");?></A>:</TD>	<!-- 9/10/13 -->
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print gettext('To address - Not plotted on map, for information only');?>');"><?php print get_text("To address");?></A>:</TD>	<!-- 9/10/13 -->
 	<TD></TD>	
 	<TD><INPUT NAME="frm_to_address" tabindex=4 SIZE="72" TYPE="text" VALUE=""  MAXLENGTH="1024"></TD>
 	</TR>
 <TR CLASS='odd'>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_nature"];?>');"><?php print $nature;?>: <font color='red' size='-1'>*</font></TD>	
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_nature"];?>');"><?php print $nature;?>: <font color='red' size='-1'>*</font></TD>	
 	<TD></TD>
 	<TD>
 		<SELECT NAME="frm_in_types_id"  tabindex=5 onChange="do_set_severity (this.selectedIndex); do_inc_name(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim());">	<!--  10/4/08 -->
@@ -2362,7 +2362,7 @@ function do_nearby(the_form){		// 11/22/2012
 
 	</SELECT>
 
-	<SPAN CLASS="td_label" STYLE='margin-left:20px' onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_prio"];?>');"><?php print get_text("Priority");?></SPAN>: 
+	<SPAN CLASS="td_label" STYLE='margin-left:20px' onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_prio"];?>');"><?php print get_text("Priority");?></SPAN>: 
 	
 	<SELECT NAME="frm_severity" tabindex=6>
 	<OPTION VALUE="0" SELECTED><?php print get_severity($GLOBALS['SEVERITY_NORMAL']);?></OPTION>
@@ -2374,7 +2374,7 @@ function do_nearby(the_form){		// 11/22/2012
 	</TD>
 	</TR>
 <TR CLASS='odd'>	<!--  3/15/11 -->
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_proto"];?>');"><?php print get_text("Protocol");?></A>:</SPAN></TD>
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_proto"];?>');"><?php print get_text("Protocol");?></A>:</SPAN></TD>
 	<TD></TD>
 	<TD ID='proto_cell'></TD>
 	</TR>
@@ -2383,14 +2383,14 @@ if(get_num_groups()) {
 	if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>
 		<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
-		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('<?php print gettext('Sets groups that Incident is allocated to - click + to expand, - to collapse');?>');"><?php print get_text("Regions");?></A>: </TD>
+		<TD CLASS="td_label" onmouseout='UnTip();' onmouseover="Tip('<?php print gettext('Sets groups that Incident is allocated to - click + to expand, - to collapse');?>');"><?php print get_text("Regions");?></A>: </TD>
 		<TD>
 		<SPAN id='expand_gps' onClick="$('checkButts').style.display = 'inline-block'; $('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 		<SPAN id='collapse_gps' onClick="$('checkButts').style.display = 'none'; $('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
 		<TD>
 			<DIV id='checkButts' style='display: none;'>
-				<SPAN id='checkbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='checkAll();'>Check All</SPAN>
-				<SPAN id='uncheckbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='uncheckAll();'>Uncheck All</SPAN>	
+				<SPAN id='checkbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='checkAll();'><?php print gettext('Check All');?></SPAN>
+				<SPAN id='uncheckbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='uncheckAll();'><?php print gettext('Uncheck All');?></SPAN>	
 			</DIV>
 <?php
 		$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	6/10/11
@@ -2401,7 +2401,7 @@ if(get_num_groups()) {
 		} elseif((is_admin()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
 ?>
 		<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
-		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('<?php print gettext('Sets groups that Incident is allocated to - click + to expand, - to collapse');?>');"><?php print get_text("Regions");?></A>: </TD>
+		<TD CLASS="td_label" onmouseout='UnTip();' onmouseover="Tip('<?php print gettext('Sets groups that Incident is allocated to - click + to expand, - to collapse');?>');"><?php print get_text("Regions");?></A>: </TD>
 		<TD>
 		<SPAN id='expand_gps' onClick="$('checkButts').style.display = 'inline-block'; $('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 		<SPAN id='collapse_gps' onClick="$('checkButts').style.display = 'none'; $('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
@@ -2419,15 +2419,15 @@ if(get_num_groups()) {
 		} else {
 ?>
 		<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
-		<TD CLASS="td_label" onmouseout='UnTip()' onmouseover="Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');"><?php print get_text("Regions");?></A>: 
+		<TD CLASS="td_label" onmouseout='UnTip();' onmouseover="Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');"><?php print get_text("Regions");?></A>: 
 		</TD>
 		<TD>
 		<SPAN id='expand_gps' onClick="$('checkButts').style.display = 'inline-block'; $('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 		<SPAN id='collapse_gps' onClick="$('checkButts').style.display = 'none'; $('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
 		<TD>
 			<DIV id='checkButts' style='display: none;'>
-				<SPAN id='checkbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='checkAll();'>Check All</SPAN>
-				<SPAN id='uncheckbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='uncheckAll();'>Uncheck All</SPAN>	
+				<SPAN id='checkbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='checkAll();'><?php print gettext('Check All');?></SPAN>
+				<SPAN id='uncheckbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='uncheckAll();'><?php print gettext('Uncheck All');?></SPAN>	
 			</DIV>
 <?php
 		$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	6/10/11
@@ -2438,13 +2438,13 @@ if(get_num_groups()) {
 		}
 	} else {
 ?>
-		<INPUT TYPE="hidden" NAME="frm_group[]" VALUE="1">	 <!-- 6/10/11 -->
+		<INPUT TYPE="hidden" NAME="frm_group[]" VALUE="1"/>	 <!-- 6/10/11 -->
 <?php
 	}//	end if num of groups is greater than 1 (i.e. non multi-region system
 ?>
 	<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>
 	<TR CLASS='odd' VALIGN="top">	<!--  3/15/11 -->
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_synop"];?>');"><?php print get_text("Synopsis");?></A>: </TD>
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_synop"];?>');"><?php print get_text("Synopsis");?></A>: </TD>
 	<TD></TD>
 	<TD><TEXTAREA NAME="frm_description"  tabindex=7 COLS="48" ROWS="2" WRAP="virtual"></TEXTAREA></TD>
 	</TR>
@@ -2502,13 +2502,13 @@ if(get_num_groups()) {
 ?>
 
 <TR CLASS='odd'>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_911"];?>');"><?php print get_text("911 Contacted"); ?></A>:&nbsp;</TD>
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_911"];?>');"><?php print get_text("911 Contacted"); ?></A>:&nbsp;</TD>
 	<TD></TD>
-	<TD><INPUT NAME="frm_nine_one_one"  tabindex=8 SIZE="56" TYPE="text" VALUE="" MAXLENGTH="96" ></TD>
+	<TD><INPUT NAME="frm_nine_one_one"  tabindex=8 SIZE="56" TYPE="text" VALUE="" MAXLENGTH="96" /></TD>
 	</TR>
 
 <TR CLASS='even'>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_caller"];?>');"><?php print get_text("Reported by");?></A>:&nbsp;<FONT COLOR='RED' SIZE='-1'>*</FONT></TD>
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_caller"];?>');"><?php print get_text("Reported by");?></A>:&nbsp;<FONT COLOR='RED' SIZE='-1'>*</FONT></TD>
 	<TD></TD>
 	<TD><INPUT NAME="frm_contact"  tabindex=9 SIZE="56" TYPE="text" VALUE="<?php print $reported_by; ?>" MAXLENGTH="48" onFocus ="Javascript: if (this.value.trim()=='TBD') {this.value='';}"></TD>
 	</TR>
@@ -2516,14 +2516,14 @@ if(get_num_groups()) {
 if($has_portal == 1) {
 ?>
 	<TR CLASS='even'>	<!-- 9/10/13 - associate Ticket with Portal User -->
-		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('Associate this ticket with a specific portal user so they can see it.');"><?php print get_text("Portal User");?></A>:&nbsp;</TD>
+		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print gettext('Associate this ticket with a specific portal user so they can see it.');?>');"><?php print get_text("Portal User");?></A>:&nbsp;</TD>
 		<TD></TD>
 		<TD><?php print $portal_user_control;?></TD>
 	</TR>
 <?php
 	} else {
 ?>
-	<INPUT TYPE='hidden' NAME="frm_portal_user" VALUE=0>
+	<INPUT TYPE='hidden' NAME="frm_portal_user" VALUE=0/>
 <?php
 	}
 ?>
@@ -2556,7 +2556,7 @@ if($has_portal == 1) {
 ?>
 
 	<TR CLASS='odd'>
-		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_name"];?>');"><?php print get_text("Incident name");?></A>: <font color='red' size='-1'>*</font></TD>
+		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_name"];?>');"><?php print get_text("Incident name");?></A>: <font color='red' size='-1'>*</font></TD>
 		<TD></TD>
 <?php
 		if (!(empty($inc_name))) {				// 11/13/10
@@ -2577,7 +2577,7 @@ if($has_portal == 1) {
 	</TR>
 
 	<TR CLASS='even' valign="middle">
-		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_booked"];?>');"><?php print get_text("Scheduled Date");?></A>:
+		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_booked"];?>');"><?php print get_text("Scheduled Date");?></A>:
 		 	</TD>
 		<TD ALIGN='center' ><input type="radio" name="book_but" onClick ="do_booking(this.form);" /><!-- 9/30/10 -->
 			</TD>
@@ -2589,10 +2589,10 @@ if($has_portal == 1) {
 	if ($facilities > 0) {				// any? - 3/24/10
 ?>	
 	<TR CLASS='odd'>
-		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_facy"];?>');"><?php print gettext('Facility?');?></A>:&nbsp;&nbsp;&nbsp;&nbsp;</TD>	 <!-- 9/22/09 -->
+		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_facy"];?>');"><?php print gettext('Facility?');?></A>:&nbsp;&nbsp;&nbsp;&nbsp;</TD>	 <!-- 9/22/09 -->
 		<TD></TD>
 		<TD>
-			<SELECT NAME="frm_facility_id"  tabindex=11 onChange="do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim())"><?php print $pulldown; ?></SELECT>&nbsp;&nbsp;&nbsp;&nbsp;
+			<SELECT NAME="frm_facility_id"  tabindex=11 onChange="do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim());"><?php print $pulldown; ?></SELECT>&nbsp;&nbsp;&nbsp;&nbsp;
 			<SELECT NAME="frm_rec_facility_id" onFocus ="Javascript: if (this.value.trim()=='TBD') {this.value='';}">
 			<?php print $pulldown2; ?></SELECT>
 		</TD>
@@ -2601,21 +2601,21 @@ if($has_portal == 1) {
 		}		// end if ($facilities > 0)
 	else {
 ?>
-	<INPUT TYPE = 'hidden' NAME = 'frm_facility_id' VALUE=''>
-	<INPUT TYPE = 'hidden' NAME = 'frm_rec_facility_id' VALUE=''>
+	<INPUT TYPE = 'hidden' NAME = 'frm_facility_id' VALUE=''/>
+	<INPUT TYPE = 'hidden' NAME = 'frm_rec_facility_id' VALUE=''/>
 <?php
 	}
 
 ?>		
 <!--
 	<TR CLASS='odd'>
-		<TD CLASS="td_label">Affected:</TD>
+		<TD CLASS="td_label"><?php print gettext('Affected');?>:</TD>
 		<TD></TD>
 		<TD><INPUT SIZE="48" TYPE="text" 	NAME="frm_affected" VALUE="" MAXLENGTH="48"></TD>
 	</TR>
 -->
 	<TR CLASS='even' VALIGN='bottom'>
-		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_start"];?>');"><?php print get_text("Run Start");?></A>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_start"];?>');"><?php print get_text("Run Start");?></A>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 		<TD ALIGN='center' ><img id='lock_s' border=0 src='./markers/unlock2.png' STYLE='vertical-align: middle' onClick = 'do_unlock_ps(document.add);'></TD>
 		<TD>
 <?php print generate_date_dropdown('problemstart',0,TRUE);?>
@@ -2627,7 +2627,7 @@ if($has_portal == 1) {
 		</TD>
 	</TR>
 	<TR CLASS='odd' valign="middle">
-		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_end"];?>');"><?php print get_text("Run End");?></A>: 
+		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_end"];?>');"><?php print get_text("Run End");?></A>: 
 		</TD>
 		<TD ALIGN='center' ><input type="radio" name="re_but" onClick ="do_end(this.form);" /></TD>
 		<TD>
@@ -2635,7 +2635,7 @@ if($has_portal == 1) {
 		</TD>
 	</TR>
 	<TR CLASS='even' VALIGN="top">
-		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_disp"];?>');"><?php print $disposition;?></A>:</TD>
+		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_disp"];?>');"><?php print $disposition;?></A>:</TD>
 		<TD></TD>
 		<TD><TEXTAREA NAME="frm_comments" COLS="45" ROWS="2" WRAP="virtual"></TEXTAREA></TD>
 		</TR>
@@ -2671,8 +2671,8 @@ if($has_portal == 1) {
 				<font color='red' size='-1'>*</font>
 		</TD>
 		<TD ALIGN='center' ><img id='lock_p' border=0 src='./markers/unlock2.png' STYLE='vertical-align: middle' onClick = 'do_unlock_pos(document.add);'></TD>
-		<TD><INPUT SIZE="11" TYPE="text" NAME="show_lat" VALUE="" >
-			<INPUT SIZE="11" TYPE="text" NAME="show_lng" VALUE="" >&nbsp;&nbsp;
+		<TD><INPUT SIZE="11" TYPE="text" NAME="show_lat" VALUE="" />
+			<INPUT SIZE="11" TYPE="text" NAME="show_lng" VALUE="" />&nbsp;&nbsp;
 <?php
 	$locale = get_variable('locale');						// 08/03/09
 	$grid_types = array("USNG", "OSGB", "UTM");				// 4/23/11
@@ -2689,23 +2689,23 @@ if($has_portal == 1) {
 		<TD COLSPAN='3' class='spacer'>&nbsp;</TD>
 	</TR>
 	<TR class='heading'>
-		<TD COLSPAN='3' class='heading' style='text-align: center;'>File Upload</TD>
+		<TD COLSPAN='3' class='heading' style='text-align: center;'><?php print gettext('File Upload');?></TD>
 	</TR>
 	<TR class='even'>
-		<TD class='td_label' COLSPAN='2' style='text-align: left;'>Choose a file to upload:</TD>
+		<TD class='td_label' COLSPAN='2' style='text-align: left;'><?php print gettext('Choose a file to upload');?>:</TD>
 		<TD class='td_data' style='text-align: left;'><INPUT NAME="frm_file" TYPE="file" /></TD>
 	</TR>
 	<TR class='odd'>
-		<TD class='td_label' COLSPAN='2' style='text-align: left;'>File Name</TD>
+		<TD class='td_label' COLSPAN='2' style='text-align: left;'><?php print gettext('File Name');?></TD>
 		<TD class='td_data' style='text-align: left;'><INPUT NAME="frm_file_title" TYPE="text" SIZE="48" MAXLENGTH="128" VALUE=""></TD>
 	</TR>
 	<TR class='even'>
 		<TD COLSPAN='3'>&nbsp;</TD>
 	</TR>	
-		<INPUT TYPE="hidden" NAME="frm_lat" VALUE="">				<!-- // 9/9/08 -->
-		<INPUT TYPE="hidden" NAME="frm_lng" VALUE="">
-		<INPUT TYPE="hidden" NAME="ticket_id" VALUE="<?php print $ticket_id;?>">	<!-- 1/25/09, 3/10/09 -->
-		<INPUT TYPE='hidden' NAME="frm_do_scheduled" VALUE=0>	<!-- 1/1/11 -->
+		<INPUT TYPE="hidden" NAME="frm_lat" VALUE=""/>				<!-- // 9/9/08 -->
+		<INPUT TYPE="hidden" NAME="frm_lng" VALUE=""/>
+		<INPUT TYPE="hidden" NAME="ticket_id" VALUE="<?php print $ticket_id;?>"/>	<!-- 1/25/09, 3/10/09 -->
+		<INPUT TYPE='hidden' NAME="frm_do_scheduled" VALUE=0/>	<!-- 1/1/11 -->
 	</FORM></TABLE>
 	</TD>
 <?php
@@ -2719,10 +2719,10 @@ if($has_portal == 1) {
 					<div id='map_canvas' style='z-index:1; width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px'>
 					</div>
 					<BR /><CENTER><FONT CLASS='header'><?php echo get_variable('map_caption');?></FONT><BR /><BR />
-					<SPAN ID='do_grid' onclick = "toglGrid()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>Grid</U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<SPAN ID='do_sv' onClick = "sv_win(document.add)" style='display:none'><u>Street view</U></SPAN> <!-- 2/11/09 -->
+					<SPAN ID='do_grid' onclick = "toglGrid();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<U><?php print gettext('Grid');?></U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<SPAN ID='do_sv' onClick = "sv_win(document.add);" style='display:none'><U><?php print gettext('Street view');?></U></SPAN> <!-- 2/11/09 -->
 				</TD>
-			</TR />
+			</TR>
 		</TABLE>
 	</TD>
 <?php

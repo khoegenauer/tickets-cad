@@ -99,7 +99,7 @@ if (isset($_POST['module_choice'])) { // Handle the form.
 	<TR><TD>&nbsp;</TD></TR>	
 	<INPUT TYPE='hidden' NAME='confirmation' VALUE='<?php print $_POST['module_choice'];?>'>
 	<INPUT TYPE='hidden' NAME='flag' VALUE='Confirmation Received'>	
-	<TR><TD ALIGN="center"><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick="window.location.href='config.php'" >&nbsp;&nbsp;<input type="submit" name="submit" value="<?php print gettext('Submit');?>" /></TD></TR>
+	<TR><TD ALIGN="center"><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick="window.location.href='config.php';" />&nbsp;&nbsp;<input type="submit" name="submit" value="<?php print gettext('Submit');?>" /></TD></TR>
 	</FORM></TABLE>	
 	</DIV>
 

@@ -402,10 +402,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  * @type Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -459,7 +459,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 //					==============================================
 	else {
 		if (is_guest() && !get_variable('guest_add_ticket')) {		// 6/25/10
-			print '<FONT CLASS="warn">Guest/member users may not add tickets on this system.  Contact administrator for further information.</FONT>';
+			print '<FONT CLASS="warn">' . gettext('Guest/member users may not add tickets on this system.  Contact administrator for further information.') . '</FONT>';
 			exit();
 			}
 
@@ -661,7 +661,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		var d = new Number(Math.abs(inval));
 		d  = Math.floor(d);
 		var mi = (Math.abs(inval)-d)*60;	// fraction * 60
-		var m = Math.floor(mi)				// min's as fraction
+		var m = Math.floor(mi);				// min's as fraction
 		var si = (mi-m)*60;					// to sec's
 		var s = si.toFixed(1);
 		return d + '\260 ' + Math.abs(m) +"' " + Math.abs(s) + '"';
@@ -737,7 +737,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 //	geocoder = new GClientGeocoder();
 	var request;
 	var querySting;   				// will hold the POSTed data
-	var tab1contents				// info window contents - first/only tab
+	var tab1contents;				// info window contents - first/only tab
 	var grid = false;				// toggle
 	var thePoint;
 	var baseIcon;
@@ -749,10 +749,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  */	
 	function writeConsole(content) {
 		top.consoleRef=window.open('','myconsole',
-			'width=800,height=250' +',menubar=0' +',toolbar=0' +',status=0' +',scrollbars=1' +',resizable=1')
+			'width=800,height=250' +',menubar=0' +',toolbar=0' +',status=0' +',scrollbars=1' +',resizable=1');
 	 	top.consoleRef.document.writeln('<html><head><title><?php print gettext('Console');?></title></head>'
-			+'<body bgcolor=white onLoad="self.focus()">' +content +'</body></html>'
-			)				// end top.consoleRef.document.writeln()
+			+'<body bgcolor=white onLoad="self.focus();">' +content +'</body></html>'
+			);				// end top.consoleRef.document.writeln()
 	 	top.consoleRef.document.close();
 		}				// end function writeConsole(content)
 /**
@@ -868,8 +868,8 @@ $maptype = get_variable('maptype');	// 08/02/09
 				}
 			if (point) {
 				map.clearOverlays();
-				do_lat (point.lat())				// display
-				do_lng (point.lng())	
+				do_lat (point.lat());				// display
+				do_lng (point.lng());	
 				do_grids(document.add);
 				map.addOverlay(new GMarker(point));	// GLatLng.
 				map.openInfoWindowHtml(point,tab1contents);
@@ -965,8 +965,8 @@ $maptype = get_variable('maptype');	// 08/02/09
 				if (point) {
 					$("do_sv").style.display = "block";
 					map.clearOverlays();
-					do_lat (point.lat().toFixed(6))				// display
-					do_lng (point.lng().toFixed(6))
+					do_lat (point.lat().toFixed(6));				// display
+					do_lng (point.lng().toFixed(6));
 					do_grids(document.add);
 					do_marker(point.lat(), point.lng(), null);		// 12/6/08
 					thePoint = point;
@@ -1149,10 +1149,10 @@ $maptype = get_variable('maptype');	// 08/02/09
  * @type Array|Array|Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -1224,7 +1224,7 @@ $maptype = get_variable('maptype');	// 08/02/09
 <?php
 		}		// end locale check
 ?>		
-		var params = "phone=" + URLEncode(goodno)
+		var params = "phone=" + URLEncode(goodno);
 		sendRequest (document.add, 'wp_lkup.php',handleResult, params);		//1/17/09
 		}
 		
@@ -1280,7 +1280,7 @@ $maptype = get_variable('maptype');	// 08/02/09
 						alert(address + " not found");
 						} 
 					else {
-						pt_to_map (my_form, point.lat(), point.lng())
+						pt_to_map (my_form, point.lat(), point.lng());
 						}
 					}
 				);
@@ -1474,8 +1474,8 @@ $maptype = get_variable('maptype');	// 08/02/09
 		for (var i=0 ; i < words.length ; i++){ 
 			var testwd = words[i]; 
 			var firLet = testwd.substr(0,1); 
-			var rest = testwd.substr(1, testwd.length -1) 
-			words[i] = firLet.toUpperCase() + rest 
+			var rest = testwd.substr(1, testwd.length -1); 
+			words[i] = firLet.toUpperCase() + rest; 
 	  	 	} 
 		return( words.join(" ")); 
 		} 
@@ -1594,7 +1594,7 @@ $maptype = get_variable('maptype');	// 08/02/09
  * @returns {undefined}
  */
 	function do_unlock_ps(theForm) {											// 8/10/08
-		do_problemstart(theForm, false)
+		do_problemstart(theForm, false);
 		$("lock_s").style.visibility = "hidden";		
 		}
 /**
@@ -1603,7 +1603,7 @@ $maptype = get_variable('maptype');	// 08/02/09
  * @returns {undefined}
  */
 	function do_unlock_bd(theForm) {									// 9/29/09 Unlock booked date
-		do_booked_date(theForm, false)
+		do_booked_date(theForm, false);
 		$("lock_b").style.visibility = "hidden";		
 		}
 /**
@@ -1612,7 +1612,7 @@ $maptype = get_variable('maptype');	// 08/02/09
  * @returns {undefined}
  */		
 	function do_lock_ps(theForm) {												// 8/10/08
-		do_problemstart(theForm, true)
+		do_problemstart(theForm, true);
 		$("lock_s").style.visibility = "visible";
 		}
 /**
@@ -1621,7 +1621,7 @@ $maptype = get_variable('maptype');	// 08/02/09
  * @returns {undefined}
  */
 	function do_unlock_pe(theForm) {											// 8/10/08 
-		do_problemend(theForm, false)
+		do_problemend(theForm, false);
 //		$("lock_e").style.visibility = "hidden";		
 		}
 /**
@@ -1630,7 +1630,7 @@ $maptype = get_variable('maptype');	// 08/02/09
  * @returns {undefined}
  */		
 	function do_lock_pe(theForm) {												// 8/10/08
-		do_problemend(theForm, true)
+		do_problemend(theForm, true);
 //		$("lock_e").style.visibility = "visible";
 		}
 /**
@@ -1712,7 +1712,7 @@ $maptype = get_variable('maptype');	// 08/02/09
  * @returns {undefined}
  */
 	function do_set_severity (in_val) {				// 6/26/10
-		if(severities[in_val]>0) {document.add.frm_severity.selectedIndex = severities[in_val]};
+		if(severities[in_val]>0) {document.add.frm_severity.selectedIndex = severities[in_val];}
 		}
 
 <?php
@@ -1732,7 +1732,7 @@ $maptype = get_variable('maptype');	// 08/02/09
 </SCRIPT>
 </HEAD>
 
-<BODY onLoad="ck_frames();do_lock_pe(document.add); document.add.frm_street.focus(); load(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>, <?php echo get_variable('def_zoom'); ?>)" onUnload="GUnload()">  <!-- <?php print __LINE__;?> -->		<!-- // 8/23/08 -->
+<BODY onLoad="ck_frames();do_lock_pe(document.add); document.add.frm_street.focus(); load(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>, <?php echo get_variable('def_zoom'); ?>);" onUnload="GUnload();">  <!-- <?php print __LINE__;?> -->		<!-- // 8/23/08 -->
 <SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT>
 
 <?php
@@ -1774,26 +1774,26 @@ print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 <TR><TD ALIGN='center' COLSPAN='3'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'><?php print gettext('New Call');?></FONT></FONT><BR />
 	<FONT SIZE=-1>(<?php print gettext('mouseover caption for help information');?>)</FONT></FONT><BR /><BR /></TD>
 	</TR>
-<FORM METHOD="post" ACTION="<?php print basename(__FILE__);?>?add=true" NAME="add" onSubmit="return validate(document.add)">
+<FORM METHOD="post" ACTION="<?php print basename(__FILE__);?>?add=true" NAME="add" onSubmit="return validate(document.add);">
 <TR CLASS='even'>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a1"];?>');"><?php print get_text("Location"); ?></A>:</TD>
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a1"];?>');"><?php print get_text("Location"); ?></A>:</TD>
 	<TD></TD>
-	<TD><INPUT NAME="frm_street" tabindex=1 SIZE="72" TYPE="text" VALUE="<?php print $res_row['street'];?>" MAXLENGTH="96"></TD>
+	<TD><INPUT NAME="frm_street" tabindex=1 SIZE="72" TYPE="text" VALUE="<?php print $res_row['street'];?>" MAXLENGTH="96"/></TD>
 	</TR>
 <TR CLASS='odd'>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a2"];?>')"><?php print get_text("City");?></A>:</TD>
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a2"];?>');"><?php print get_text("City");?></A>:</TD>
 	<TD ALIGN='center' ><BUTTON type="button" onClick="Javascript:loc_lkup(document.add);return false;"><img src="./markers/glasses.png" alt="<?php print gettext('Lookup location.');?>" /></BUTTON>&nbsp;&nbsp;</TD>		
-	<TD><INPUT NAME="frm_city" tabindex=2 SIZE="32" TYPE="text" VALUE="<?php print $city; ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)">
+	<TD><INPUT NAME="frm_city" tabindex=2 SIZE="32" TYPE="text" VALUE="<?php print $city; ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value);"/>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="#" TITLE="<?php print $titles["a3"];?>"><?php print get_text("St"); ?></A>:&nbsp;&nbsp;
-		<INPUT NAME="frm_state" tabindex=3 SIZE="<?php print $st_size;?>" TYPE="text" VALUE="<?php print $st; ?>" MAXLENGTH="<?php print $st_size;?>"></TD>
+		<INPUT NAME="frm_state" tabindex=3 SIZE="<?php print $st_size;?>" TYPE="text" VALUE="<?php print $st; ?>" MAXLENGTH="<?php print $st_size;?>"/></TD>
 	</TR>
 <TR CLASS='even'>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a4"];?>');"><?php print get_text("Phone");?></A>:</TD> 
-	<TD ALIGN='center' ><BUTTON type="button" onClick="Javascript:phone_lkup(document.add.frm_phone.value);"><img src="./markers/glasses.png" alt="Lookup phone no." ></button>&nbsp;&nbsp;</TD>	
-	<TD><INPUT NAME="frm_phone"  tabindex=4 SIZE="16" TYPE="text" VALUE="<?php print get_variable('def_area_code');?>"  MAXLENGTH="16">&nbsp;<SPAN ID='repeats'></SPAN></TD>
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a4"];?>');"><?php print get_text("Phone");?></A>:</TD> 
+	<TD ALIGN='center' ><BUTTON type="button" onClick="Javascript:phone_lkup(document.add.frm_phone.value);"><img src="./markers/glasses.png" alt="<?php print gettext('Lookup phone no.');?>" /></button>&nbsp;&nbsp;</TD>	
+	<TD><INPUT NAME="frm_phone"  tabindex=4 SIZE="16" TYPE="text" VALUE="<?php print get_variable('def_area_code');?>"  MAXLENGTH="16"/>&nbsp;<SPAN ID='repeats'></SPAN></TD>
 	</TR>
 <TR CLASS='odd'>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a5"];?>');"><?php print $nature;?></A>:</TD>	
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a5"];?>');"><?php print $nature;?></A>:</TD>	
 	<TD></TD>
 	<TD>
 		<SELECT NAME="frm_in_types_id"  tabindex=5 onChange="do_set_severity (this.selectedIndex); do_inc_name(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim());">	<!--  10/4/08 -->
@@ -1822,7 +1822,7 @@ print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 
 	</SELECT>
 
-	<SPAN CLASS="td_label" STYLE='margin-left:20px' onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a6"];?>');"><?php print get_text("Priority");?></SPAN>: 
+	<SPAN CLASS="td_label" STYLE='margin-left:20px' onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a6"];?>');"><?php print get_text("Priority");?></SPAN>: 
 	
 	<SELECT NAME="frm_severity" tabindex=6>
 	<OPTION VALUE="0" SELECTED><?php print get_severity($GLOBALS['SEVERITY_NORMAL']);?></OPTION>
@@ -1834,7 +1834,7 @@ print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 	</TD>
 	</TR>
 <TR>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a7"];?>');"><?php print get_text("Protocol");?></A>:</SPAN></TD>
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a7"];?>');"><?php print get_text("Protocol");?></A>:</SPAN></TD>
 	<TD></TD>
 	<TD ID='proto_cell'></TD>
 	</TR>
@@ -1863,7 +1863,7 @@ print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 		}		// end function set_signal()
 </SCRIPT>
 <TR CLASS='even' VALIGN="top">
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a8"];?>');"><?php print get_text("Synopsis");?></A>: </TD>
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a8"];?>');"><?php print get_text("Synopsis");?></A>: </TD>
 	<TD></TD>
 	<TD><TEXTAREA NAME="frm_description"  tabindex=7 COLS="48" ROWS="2" WRAP="virtual"></TEXTAREA></TD>
 	</TR>
@@ -1888,15 +1888,15 @@ print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 
 
 <TR CLASS='odd'>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a9"];?>');"><?php print get_text("911 Contacted"); ?></A>:&nbsp;</TD>
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a9"];?>');"><?php print get_text("911 Contacted"); ?></A>:&nbsp;</TD>
 	<TD></TD>
-	<TD><INPUT NAME="frm_nine_one_one"  tabindex=8 SIZE="56" TYPE="text" VALUE="" MAXLENGTH="96" ></TD>
+	<TD><INPUT NAME="frm_nine_one_one"  tabindex=8 SIZE="56" TYPE="text" VALUE="" MAXLENGTH="96" /></TD>
 	</TR>
 
 <TR CLASS='even'>
-	<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a10"];?>');"><?php print get_text("Reported by");?></A>:&nbsp;<FONT COLOR='RED' SIZE='-1'>*</FONT></TD>
+	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a10"];?>');"><?php print get_text("Reported by");?></A>:&nbsp;<FONT COLOR='RED' SIZE='-1'>*</FONT></TD>
 	<TD></TD>
-	<TD><INPUT NAME="frm_contact"  tabindex=9 SIZE="56" TYPE="text" VALUE="TBD" MAXLENGTH="48" onFocus ="Javascript: if (this.value.trim()=='TBD') {this.value='';}"></TD>
+	<TD><INPUT NAME="frm_contact"  tabindex=9 SIZE="56" TYPE="text" VALUE="TBD" MAXLENGTH="48" onFocus ="Javascript: if (this.value.trim()=='TBD') {this.value='';}"/></TD>
 	</TR>
 <TR CLASS='odd' ID = 'tr_misc' STYLE = 'display:none'>
 	<TD CLASS="td_label"><?php print gettext('Additional');?>:</TD>
@@ -1927,7 +1927,7 @@ print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 ?>
 
 	<TR CLASS='odd'>
-		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a11"];?>');"><?php print get_text("Incident name");?></A>: <font color='red' size='-1'>*</font></TD>
+		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a11"];?>');"><?php print get_text("Incident name");?></A>: <font color='red' size='-1'>*</font></TD>
 		<TD></TD>
 <?php
 		if (!(empty($inc_name))) {				// 11/13/10
@@ -1948,7 +1948,7 @@ print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 	</TR>
 
 	<TR CLASS='even' valign="middle">
-		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a12"];?>');"><?php print get_text("Scheduled Date");?></A>:
+		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a12"];?>');"><?php print get_text("Scheduled Date");?></A>:
 		 	</TD>
 		<TD ALIGN='center' ><input type="radio" name="book_but" onClick ="do_booking(this.form);" /><!-- 9/30/10 -->
 			</TD>
@@ -1960,10 +1960,10 @@ print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 	if ($facilities > 0) {				// any? - 3/24/10
 ?>	
 	<TR CLASS='odd'>
-		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a13"];?>');">Facility?</A>:&nbsp;&nbsp;&nbsp;&nbsp;</TD>	 <!-- 9/22/09 -->
+		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a13"];?>');">Facility?</A>:&nbsp;&nbsp;&nbsp;&nbsp;</TD>	 <!-- 9/22/09 -->
 		<TD></TD>
 		<TD>
-			<SELECT NAME="frm_facility_id"  tabindex=11 onChange="do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim())"><?php print $pulldown; ?></SELECT>&nbsp;&nbsp;&nbsp;&nbsp;
+			<SELECT NAME="frm_facility_id"  tabindex=11 onChange="do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim());"><?php print $pulldown; ?></SELECT>&nbsp;&nbsp;&nbsp;&nbsp;
 			<SELECT NAME="frm_rec_facility_id" onFocus ="Javascript: if (this.value.trim()=='TBD') {this.value='';}">
 			<?php print $pulldown2; ?></SELECT>
 		</TD>
@@ -1972,25 +1972,25 @@ print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 		}		// end if ($facilities > 0)
 	else {
 ?>
-	<INPUT TYPE = 'hidden' NAME = 'frm_facility_id' VALUE=''>
-	<INPUT TYPE = 'hidden' NAME = 'frm_rec_facility_id' VALUE=''>
+	<INPUT TYPE = 'hidden' NAME = 'frm_facility_id' VALUE=''/>
+	<INPUT TYPE = 'hidden' NAME = 'frm_rec_facility_id' VALUE=''/>
 <?php
 	}
 
 ?>		
 <!--
 	<TR CLASS='odd'>
-		<TD CLASS="td_label">Affected:</TD>
+		<TD CLASS="td_label"><?php print gettext('Affected');?>:</TD>
 		<TD></TD>
-		<TD><INPUT SIZE="48" TYPE="text" 	NAME="frm_affected" VALUE="" MAXLENGTH="48"></TD>
+		<TD><INPUT SIZE="48" TYPE="text" 	NAME="frm_affected" VALUE="" MAXLENGTH="48"/></TD>
 	</TR>
 -->
 	<TR CLASS='even' VALIGN='bottom'>
-		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a14"];?>');"><?php print get_text("Run Start");?></A>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a14"];?>');"><?php print get_text("Run Start");?></A>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 		<TD ALIGN='center' ><img id='lock_s' border=0 src='./markers/unlock2.png' STYLE='vertical-align: middle' onClick = 'do_unlock_ps(document.add);'></TD>
 		<TD>
 <?php print generate_date_dropdown('problemstart',0,TRUE);?>
-		<SPAN CLASS="td_label" STYLE='margin-left:12px' onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a15"];?>');"><?php print get_text("Status");?>:</SPAN>
+		<SPAN CLASS="td_label" STYLE='margin-left:12px' onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a15"];?>');"><?php print get_text("Status");?>:</SPAN>
 		<SELECT NAME='frm_status'><OPTION VALUE='<?php print $GLOBALS['STATUS_OPEN'];?>' selected><?php print gettext('Open');?></OPTION>
 		<OPTION VALUE='<?php print $GLOBALS['STATUS_CLOSED']; ?>'><?php print gettext('Closed');?></OPTION>
 		<OPTION VALUE='<?php print $GLOBALS['STATUS_SCHEDULED']; ?>'><?php print gettext('Scheduled');?></OPTION></SELECT>		
@@ -1998,7 +1998,7 @@ print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 		</TD>
 	</TR>
 	<TR CLASS='odd' valign="middle">
-		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a16"];?>');"><?php print get_text("Run End");?></A>: 
+		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a16"];?>');"><?php print get_text("Run End");?></A>: 
 		</TD>
 		<TD ALIGN='center' ><input type="radio" name="re_but" onClick ="do_end(this.form);" /></TD>
 		<TD>
@@ -2006,7 +2006,7 @@ print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 		</TD>
 	</TR>
 	<TR CLASS='even' VALIGN="top">
-		<TD CLASS="td_label" onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["a17"];?>');"><?php print $disposition;?></A>:</TD>
+		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a17"];?>');"><?php print $disposition;?></A>:</TD>
 		<TD></TD>
 		<TD><TEXTAREA NAME="frm_comments" COLS="45" ROWS="2" WRAP="virtual"></TEXTAREA></TD>
 		</TR>
@@ -2037,15 +2037,15 @@ print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 			<U><A HREF="#" TITLE="<?php print $titles["a18"];?>"><?php print $incident;?> <?php print gettext('Lat/Lng');?></A></U></SPAN>: 
 				<font color='red' size='-1'>*</font>
 		</TD>
-		<TD ALIGN='center' ><img id='lock_p' border=0 src='./markers/unlock2.png' STYLE='vertical-align: middle' onClick = 'do_unlock_pos(document.add);'></TD>
-		<TD><INPUT SIZE="11" TYPE="text" NAME="show_lat" VALUE="" >
-			<INPUT SIZE="11" TYPE="text" NAME="show_lng" VALUE="" >&nbsp;&nbsp;
+		<TD ALIGN='center' ><img id='lock_p' border=0 src='./markers/unlock2.png' STYLE='vertical-align: middle' onClick = 'do_unlock_pos(document.add);'/></TD>
+		<TD><INPUT SIZE="11" TYPE="text" NAME="show_lat" VALUE="" />
+			<INPUT SIZE="11" TYPE="text" NAME="show_lng" VALUE="" />&nbsp;&nbsp;
 <?php
 $locale = get_variable('locale');	// 08/03/09
 	switch($locale) { 
 		case "0":
 ?>
-			<B><SPAN ID = 'USNG' onClick = "do_usng()"><?php print gettext('USNG');?></SPAN></B>:&nbsp;<INPUT SIZE="19" TYPE="text" NAME="frm_ngs" VALUE="" DISABLED ></TD>
+			<B><SPAN ID = 'USNG' onClick = "do_usng();"><?php print gettext('USNG');?></SPAN></B>:&nbsp;<INPUT SIZE="19" TYPE="text" NAME="frm_ngs" VALUE="" DISABLED /></TD>
 			
 	</TR> <!-- 9/13/08, 12/3/08 -->
 	
@@ -2054,14 +2054,14 @@ $locale = get_variable('locale');	// 08/03/09
 
 		case "1":		// UK
 ?>
-			<B><SPAN ID = 'OSGB' ><?php print gettext('OSGB');?>:</SPAN></B>&nbsp;<INPUT SIZE="19" TYPE="text" NAME="frm_osgb" VALUE="" DISABLED ></TD>
+			<B><SPAN ID = 'OSGB' ><?php print gettext('OSGB');?>:</SPAN></B>&nbsp;<INPUT SIZE="19" TYPE="text" NAME="frm_osgb" VALUE="" DISABLED /></TD>
 			
 	</TR> <!-- 9/13/08, 12/3/08 --><?php
 		break;
 
 		default:		// ROW
 ?>
-			<B><SPAN ID = 'UTM'><?php print gettext('UTM');?>:</SPAN></B>&nbsp;<INPUT SIZE="19" TYPE="text" NAME="frm_utm" VALUE="" DISABLED ></TD>
+			<B><SPAN ID = 'UTM'><?php print gettext('UTM');?>:</SPAN></B>&nbsp;<INPUT SIZE="19" TYPE="text" NAME="frm_utm" VALUE="" DISABLED /></TD>
 			
 	</TR> <!-- 9/13/08, 12/3/08 -->
 	
@@ -2070,19 +2070,19 @@ $locale = get_variable('locale');	// 08/03/09
 	}		// end if ($gmaps)
 ?>			
 	<TR CLASS='even'><TD COLSPAN="3" ALIGN="center"><BR />
-		<INPUT TYPE="button" VALUE="<?php print gettext('History');?>"  onClick="do_hist_win();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>"  onClick="history.back();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onclick= "do_reset(this.form);" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="submit" VALUE="<?php print get_text("Next"); ?>"></TD>
+		<INPUT TYPE="button" VALUE="<?php print gettext('History');?>"  onClick="do_hist_win();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>"  onClick="history.back();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onclick= "do_reset(this.form);" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE="submit" VALUE="<?php print get_text("Next"); ?>"/></TD>
 	</TR>	<!-- 8/11/08 -->
 	<TR CLASS='odd'>
 		<TD COLSPAN="3" ALIGN="center"><br /><IMG SRC="glasses.png" BORDER="0"/>: <?php print gettext('Lookup');?> </TD>
 		</TR>
 	
-		<INPUT TYPE="hidden" NAME="frm_lat" VALUE="">				<!-- // 9/9/08 -->
-		<INPUT TYPE="hidden" NAME="frm_lng" VALUE="">
-		<INPUT TYPE="hidden" NAME="ticket_id" VALUE="<?php print $ticket_id;?>">	<!-- 1/25/09, 3/10/09 -->
-		<INPUT TYPE='hidden' NAME="frm_do_scheduled" VALUE=0>	<!-- 1/1/11 -->
+		<INPUT TYPE="hidden" NAME="frm_lat" VALUE=""/>				<!-- // 9/9/08 -->
+		<INPUT TYPE="hidden" NAME="frm_lng" VALUE=""/>
+		<INPUT TYPE="hidden" NAME="ticket_id" VALUE="<?php print $ticket_id;?>"/>	<!-- 1/25/09, 3/10/09 -->
+		<INPUT TYPE='hidden' NAME="frm_do_scheduled" VALUE=0 />	<!-- 1/1/11 -->
 	
 	</FORM></TABLE>
 	</TD>
@@ -2094,10 +2094,10 @@ $locale = get_variable('locale');	// 08/03/09
 
 	<TABLE ID='four' border=0><TR><TD id='three' ALIGN='center'><div id='map' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px'></div>
 	<BR /><CENTER><FONT CLASS='header'><?php echo get_variable('map_caption');?></FONT><BR /><BR />
-		<SPAN ID='do_grid' onclick = "toglGrid()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u><?php print gettext('Grid');?></U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<SPAN ID='do_sv' onClick = "sv_win(document.add)" style='display:none'><u><?php print gettext('Street view');?></U></SPAN> <!-- 2/11/09 -->
+		<SPAN ID='do_grid' onclick = "toglGrid();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u><?php print gettext('Grid');?></U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<SPAN ID='do_sv' onClick = "sv_win(document.add);" style='display:none'><u><?php print gettext('Street view');?></U></SPAN> <!-- 2/11/09 -->
 		
-	</TD></TR /></TABLE>
+	</TD></TR></TABLE>
 	</TD>
 <?php
 	}

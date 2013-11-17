@@ -29,9 +29,6 @@ $disposition = get_text("Disposition");				// 12/1/10
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Close Incident');?></TITLE>
-<META NAME="Author" CONTENT="" />
-<META NAME="Keywords" CONTENT="" />
-<META NAME="Description" CONTENT="" />
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -69,7 +66,7 @@ else {			// not empty then is finished
 		}
 	else{
 ?>
-<BODY onLoad = "if(document.frm_text) {document.frm_note.frm_text.focus() ;}"><CENTER>
+<BODY onLoad = "if(document.frm_text) {document.frm_note.frm_text.focus();}"><CENTER>
 <?php
 		$scope = do_is_finished();		// 2/15/10
 ?>
@@ -100,7 +97,7 @@ function do_is_closed() {
 ?>		
 <CENTER>
 	<H3><?php print gettext("Call  {$row['scope']} is already closed");?></H3><BR /><BR />
-	<INPUT TYPE = 'button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close()'>	
+	<INPUT TYPE = 'button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();'/>	
 	</BODY>
 	</HTML>
 <?php		
@@ -262,7 +259,7 @@ function do_is_start($in_row) {				// 3/22/10
 			while ( $asgn_row = stripslashes_deep(mysql_fetch_array($asgn_result))){
 				print "<TR CLASS='{$evenodd[($i)%2]}' VALIGN = 'baseline'><TD ALIGN = 'right' CLASS='td_label'>{$clear_capt}</TD><TD>";			
 				$clear_capt = "";					// 1st only
-				print "<INPUT TYPE='checkbox' NAME= 'frm_ckbx_{$asgn_row['assign_id']}' VALUE= {$asgn_row['assign_id']} CHECKED> {$asgn_row['theunit']}";
+				print "<INPUT TYPE='checkbox' NAME= 'frm_ckbx_{$asgn_row['assign_id']}' VALUE= {$asgn_row['assign_id']} CHECKED /> {$asgn_row['theunit']}";
 				print "</TD></TR>\n";
 				$i++;
 				}				// end while ()
@@ -272,9 +269,9 @@ function do_is_start($in_row) {				// 3/22/10
 
 ?>			
 	<TR CLASS='<?php print $evenodd[($i)%2]?>'><TD></TD><TD ALIGN = 'center'>
-	<INPUT TYPE = 'button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close()' />
-	<INPUT TYPE = 'button' VALUE = '<?php print gettext('Reset');?>' onClick = 'this.form.reset()' STYLE = 'margin-left:20px' />
-	<INPUT TYPE = 'button' VALUE = '<?php print gettext('Next');?>' onClick = 'validate()'  STYLE = 'margin-left:20px' />
+	<INPUT TYPE = 'button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
+	<INPUT TYPE = 'button' VALUE = '<?php print gettext('Reset');?>' onClick = 'this.form.reset();' STYLE = 'margin-left:20px' />
+	<INPUT TYPE = 'button' VALUE = '<?php print gettext('Next');?>' onClick = 'validate();'  STYLE = 'margin-left:20px' />
 	</TD></TR>
 	</TABLE>
 	<INPUT TYPE = 'hidden' NAME = 'frm_ticket_id' VALUE='<?php print $_GET['ticket_id']; ?>' />
@@ -361,6 +358,10 @@ function do_is_start($in_row) {				// 3/22/10
 		if ($addrs) {				// any addresses?	8/28/13
 ?>	
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */
 			function do_notify() {
 
 				var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
@@ -372,14 +373,24 @@ function do_is_start($in_row) {				// 3/22/10
 				var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId + "&text_sel=1";		// ($to_str, $text, $ticket_id)   10/15/08
 				sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 				}			// end function do notify()
-			
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
 			function handleResult(req) {				// the 'called-back' function
 <?php
 
 			if($istest) {print "\t\t\talert('HTTP error ' + req.status + '" . __LINE__ . "');\n";}
 ?>
 			}
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 			function sendRequest(url,callback,postData) {
 				var req = createXMLHTTPObject();
 				if (!req) return;
@@ -402,10 +413,10 @@ function do_is_start($in_row) {				// 3/22/10
 				}
 	
 			var XMLHttpFactories = [
-				function () {return new XMLHttpRequest()	},
-				function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-				function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-				function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+				function () {return new XMLHttpRequest();	},
+				function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+				function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+				function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 				];
 			
 			function createXMLHTTPObject() {

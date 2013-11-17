@@ -73,7 +73,6 @@ if(!empty($_POST)) {
 	<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		<HEAD>
-		<META NAME="ROBOTS" CONTENT="INDEX,FOLLOW" />
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 		<META HTTP-EQUIV="Expires" CONTENT="0" />
 		<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -108,7 +107,6 @@ if(!empty($_POST)) {
 	<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		<HEAD>
-		<META NAME="ROBOTS" CONTENT="INDEX,FOLLOW" />
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 		<META HTTP-EQUIV="Expires" CONTENT="0" />
 		<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -171,12 +169,12 @@ if(!empty($_POST)) {
 	<BODY onLoad='ck_frames();'>
 
 	<DIV id='outer' style='position: absolute; top: 5%; width: 100%; height: 75%; border: 1px solid #FFFFFF;'>
-		<DIV class='heading' style='width: 100%; position: absolute; text-align: center;'>AUTOMATIC STATUS UPDATES WITH DISPATCH STATUS CHANGES</DIV>
+		<DIV class='heading' style='width: 100%; position: absolute; text-align: center;'><?php print gettext('AUTOMATIC STATUS UPDATES WITH DISPATCH STATUS CHANGES');?></DIV>
 		<DIV id='left_col' style='width: 45%; position: absolute; top: 60px; left: 2%; border: 3px outset #CECECE;'>
 			<FORM NAME='auto_stat_edit' METHOD="post" ACTION="<?php print basename(__FILE__);?>">
 			<TABLE style='width: 100%;'>
 				<TR class='heading'>
-					<TH COLSPAN=99>SETTINGS</TH>
+					<TH COLSPAN=99><?php print gettext('SETTINGS');?></TH>
 				</TR>
 				<TR class='spacer'>
 					<TD class='spacer' COLSPAN=99>&nbsp;</TH>
@@ -190,7 +188,7 @@ if(!empty($_POST)) {
 						<TD class='td_label'><?php print $the_id;?></TD>
 						<TD class='td_data'>
 							<select name="frm_status[<?php print $i;?>]" size="1">
-								<option value="0" selected="selected">Select Status Value</option>						
+								<option value="0" selected="selected"><?php print gettext('Select Status Value');?></option>						
 <?php
 								foreach($status_ids AS $val) {
 									$sel = ($val[0] == $current[$i][2]) ? " SELECTED" : "";
@@ -212,15 +210,15 @@ if(!empty($_POST)) {
 		</DIV>
 		<DIV id='right_col' style='width: 40%; height: 500px; position: absolute; top: 60px; right: 2%; border: 3px outset #DEDEDE; background-color: #F0F0F0;'>
 			<DIV class='heading' style='width: 100%;'>HELP</DIV>
-			<DIV style='width: 100%; word-wrap: break-word;'>
+			<DIV style='width: 100%; word-wrap: break-word;'><?php print gettext('
 			This page is to set the Auto Dispatch Status values and their associated status values.<BR /><BR />
-			On the left side sre the Dispatch status values and on the right are select controls with the status values currently configured on the Tickets CAD system.
+			On the left side are the Dispatch status values and on the right are select controls with the status values currently configured on the Tickets CAD system.
 			These can be changed through Config / Units Status.<BR /><BR />
-			To congigure the auto status values, for each Dispatch status value that you want a specific unit status to be set, select the unit status next to that dispatch status and then click submit.<BR />
+			To configure the auto status values, for each Dispatch status value that you want a specific unit status to be set, select the unit status next to that dispatch status and then click submit.');?><BR />
 			</DIV>
 		</DIV>
 		<DIV style='width: 100%; text-align: center; position: absolute; bottom: 10%;'>
-			<INPUT TYPE='SUBMIT' NAME='SUBMIT' VALUE='Submit'>
+			<INPUT TYPE='SUBMIT' NAME='SUBMIT' VALUE='<?php print gettext('Submit');?>'/>
 		</DIV>
 		</FORM>			
 	</DIV>

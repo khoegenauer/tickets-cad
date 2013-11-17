@@ -10,9 +10,6 @@ require_once('./incs/functions.inc.php');
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Classes Taken Report');?></TITLE>
-<META NAME="Author" CONTENT="">
-<META NAME="Keywords" CONTENT="">
-<META NAME="Description" CONTENT="">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">

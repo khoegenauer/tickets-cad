@@ -86,7 +86,6 @@ if(!empty($_POST)) {
 	<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		<HEAD>
-		<META NAME="ROBOTS" CONTENT="INDEX,FOLLOW" />
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 		<META HTTP-EQUIV="Expires" CONTENT="0" />
 		<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -125,7 +124,6 @@ if(!empty($_POST)) {
 	<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		<HEAD>
-		<META NAME="ROBOTS" CONTENT="INDEX,FOLLOW" />
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 		<META HTTP-EQUIV="Expires" CONTENT="0" />
 		<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -217,7 +215,7 @@ if(!empty($_POST)) {
 					$the_text = (array_key_exists($the_id[0], $current)) ? $current[$the_id[0]][1] : "Not Set";
 ?>						
 						<input type="text" name="text_val<?php print $i;?>" value="<?php print $the_text;?>" size="20" />&nbsp;&nbsp;
-						<select name="s<?php print $i;?>" size="1" onchange="document.forms['auto_stat_edit'].text_val<?php print $i;?>.value = document.forms['auto_stat_edit'].s<?php print $i;?>.options[this.selectedIndex].value; document.forms['auto_stat_edit'].s<?php print $i;?>.value=''">
+						<select name="s<?php print $i;?>" size="1" onchange="document.forms['auto_stat_edit'].text_val<?php print $i;?>.value = document.forms['auto_stat_edit'].s<?php print $i;?>.options[this.selectedIndex].value; document.forms['auto_stat_edit'].s<?php print $i;?>.value='';">
 							<option value=" " selected="selected"><?php print gettext('Select or type in box');?></option>						
 <?php
 							foreach($signals AS $val) {
@@ -229,7 +227,7 @@ if(!empty($_POST)) {
 ?>
 						</select>
 					</TD>
-					<INPUT TYPE='hidden' NAME='the_id[]' VALUE='<?php print $status_ids[$the_id[0]][0];?>'>
+					<INPUT TYPE='hidden' NAME='the_id[]' VALUE='<?php print $status_ids[$the_id[0]][0];?>'/>
 				</TR>
 <?php
 					$class = ($class == 'even') ? 'odd' : 'even';
@@ -250,7 +248,7 @@ if(!empty($_POST)) {
 			</DIV>
 		</DIV>
 		<DIV style='width: 100%; text-align: center; position: absolute; bottom: 10%;'>
-			<INPUT TYPE='SUBMIT' NAME='SUBMIT' VALUE='<?php print gettext('Submit');?>'>
+			<INPUT TYPE='SUBMIT' NAME='SUBMIT' VALUE='<?php print gettext('Submit');?>'/>
 		</DIV>
 		</FORM>			
 	</DIV>

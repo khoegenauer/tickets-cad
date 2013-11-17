@@ -13,7 +13,6 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 	<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		<HEAD>
-		<META NAME="ROBOTS" CONTENT="INDEX,FOLLOW" />
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 		<META HTTP-EQUIV="Expires" CONTENT="0" />
 		<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -132,7 +131,7 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 						$query_d  = "DELETE FROM `$GLOBALS[mysql_prefix]allocates` WHERE `resource_id` = '{$value2}' AND `group` = '{$value}' AND `type` = 4 LIMIT 1;";
 						$result_d = mysql_query($query_d);				
 						}
-					$users_text .= "Duplicated region " . $value . " . entries removed for user " . $value2 . "<BR />";
+          $users_text .= gettext("Duplicated region {$value} entries removed for user {$value2}") . "<BR />";
 					}
 				}
 			}
@@ -146,7 +145,7 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 				$query3  = "INSERT INTO `$GLOBALS[mysql_prefix]allocates` (`group` , `type`, `al_as_of` , `al_status` , `resource_id` , `sys_comments` , `user_id`) VALUES 
 				(1 , 4, '$now', 0, $value2, 'Inserted by list and cleanse regions routine' , 0)";
 				$result3 = mysql_query($query3);
-				$users_text .= "Region entry for user " . $value2 . " . added in region 1<BR />";			
+      $users_text .= gettext("Region entry for user {$value2} added in region 1") . "<BR />";			
 				}
 			}
 	// end of User cleanse
@@ -164,7 +163,7 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 						$query_d  = "DELETE FROM `$GLOBALS[mysql_prefix]allocates` WHERE `resource_id` = '{$value2}' AND `group` = '{$value}' AND `type` = 1 LIMIT 1;";
 						$result_d = mysql_query($query_d);
 						}
-					$tickets_text .= "Duplicated region " . $value . " . entries removed for ticket " . $value2 . "<BR />";
+        $tickets_text .= gettext("Duplicated region {$value} entries removed for ticket {$value2}") . "<BR />";
 					}
 				}
 			}
@@ -178,7 +177,7 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 				$query3  = "INSERT INTO `$GLOBALS[mysql_prefix]allocates` (`group` , `type`, `al_as_of` , `al_status` , `resource_id` , `sys_comments` , `user_id`) VALUES 
 					(1 , 1, '$now', 0, $value2, 'Inserted by list and cleanse regions routine' , 0)";
 				$result3 = mysql_query($query3);
-				$tickets_text .= "Region entry for ticket " . $value2 . " . added in region 1<BR />";	
+      $tickets_text .= gettext("Region entry for ticket {$value2} added in region 1") . "<BR />";	
 				}
 			}	
 	// end of Ticket cleanse
@@ -196,7 +195,7 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 						$query_d  = "DELETE FROM `$GLOBALS[mysql_prefix]allocates` WHERE `resource_id` = '{$value2}' AND `group` = '{$value}' AND `type` = 2 LIMIT 1;";
 						$result_d = mysql_query($query_d);				
 						}
-					$units_text .= "Duplicated region " . $value . " . entries removed for responder " . $value2 . "<BR />";
+          $units_text .= gettext("Duplicated region {$value} entries removed for responder {$value2}") . "<BR />";
 					}
 				}
 			}
@@ -228,7 +227,7 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 						$query_d  = "DELETE FROM `$GLOBALS[mysql_prefix]allocates` WHERE `resource_id` = '{$value2}' AND `group` = '{$value}' AND `type` = 3 LIMIT 1;";
 						$result_d = mysql_query($query_d);	
 						}
-					$facilities_text .= "Duplicated region " . $value . " . entries removed for facility " . $value2 . "<BR />";
+          $facilities_text .= gettext("Duplicated region {$value} entries removed for facility {$value2}") . "<BR />";
 					}
 				}
 			}
@@ -247,18 +246,18 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 			}			
 	// end of Facility cleanse	
 
-	$text_output .= $counter1 >= 1 ? $users_text . "User Allocations Cleansed<BR />" : "User Allocation Cleansing not required<BR />";
-	$text_output .= $counter2 >= 1 ? $tickets_text . "Ticket Allocations Cleansed<BR />" : "Ticket Allocation Cleansing not required<BR />";
-	$text_output .= $counter3 >= 1 ? $units_text . "Responder Allocations Cleansed<BR />" : "Responder Allocation Cleansing not required<BR />";
-	$text_output .= $counter4 >= 1 ? $facilities_text . "Facility Allocations Cleansed<BR />" : "Facility Allocation Cleansing not required<BR />";	
+	$text_output .= $counter1 >= 1 ? $users_text . gettext("User Allocations Cleansed") . "<BR />" : gettext("User Allocation Cleansing not required") . "<BR />";
+	$text_output .= $counter2 >= 1 ? $tickets_text . gettext("Ticket Allocations Cleansed") . "<BR />" : gettext("Ticket Allocation Cleansing not required") . "<BR />";
+	$text_output .= $counter3 >= 1 ? $units_text . gettext("Responder Allocations Cleansed") . "<BR />" : gettext("Responder Allocation Cleansing not required") . "<BR />";
+	$text_output .= $counter4 >= 1 ? $facilities_text . gettext("Facility Allocations Cleansed") . "<BR />" : gettext("Facility Allocation Cleansing not required") . "<BR />";	
 ?>
-	<BODY onLoad = 'ck_frames()'>
+	<BODY onLoad = 'ck_frames();'>
 
 	<DIV style='font-size: 14px; position: absolute; top: 150px; left: 100px;'>
-	<H1>Actions completed</H1>
+	<H1><?php print gettext('Actions completed');?></H1>
 	<DIV style='position: relative; top: 10px; height: 150px; overflow-y: scroll; border: 3px outset #707070;'><?php print $text_output;?></DIV><BR />
-	<B>Region table Cleansed</B><br /><br />
-	<A id='ret_but' class='plain' style='font-size: 14px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" href="config.php">Return to Config</A>		
+	<B><?php print gettext('Region table Cleansed');?></B><br /><br />
+	<A id='ret_but' class='plain' style='font-size: 14px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" href="config.php"><?php print gettext('Return to Config');?></A>		
 	</DIV>
 	</BODY>
 	</HTML>
@@ -268,7 +267,6 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 	<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		<HEAD>
-		<META NAME="ROBOTS" CONTENT="INDEX,FOLLOW" />
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 		<META HTTP-EQUIV="Expires" CONTENT="0" />
 		<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -385,7 +383,7 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 	// end of facility ids
 
 ?>
-	<BODY onLoad = 'ck_frames()'>
+	<BODY onLoad = 'ck_frames();'>
 
 	<DIV style='font-size: 20px; font-weight: bold; width:70%;'>
 	<DIV class='page_heading'>
@@ -415,14 +413,14 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 						print "Ticket ID: " . $value2 . "<br />";
 						} elseif($num_entries >=2) {
 						$counter++;	
-						$the_errors	.= "User ID: " . $value2 . "&nbsp;&nbsp;&nbsp;Duplicate Entries<BR />";					
-						print "<FONT COLOR='red'>User ID: " . $value2 . "&nbsp;&nbsp;&nbsp;Duplicate Entries</FONT>";
+						$the_errors	.= "User ID: " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext('Duplicate Entries') . "<BR />";					
+						print "<FONT COLOR='red'>User ID: " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext('Duplicate Entries') . "</FONT>";
 						}
 					}
 				} else {
 				$counter++;	
-				$the_errors	.= "No Users Allocated to Regions<BR />";				
-				print "No Users Allocated to Regions";
+				$the_errors	.= gettext("No Users Allocated to Regions") . "<BR />";				
+				print gettext("No Users Allocated to Regions");
 				}					
 			print "</TD>";
 			print "<TD class='table_cell'>";
@@ -435,14 +433,14 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 						print "Ticket ID: " . $value2 . "<br />";
 						} elseif($num_entries >=2) {
 						$counter++;
-						$the_errors	.= "Ticket ID: " . $value2 . "&nbsp;&nbsp;&nbsp;Duplicate Entries<BR />";	
-						print "<FONT COLOR='red'>Ticket ID: " . $value2 . "&nbsp;&nbsp;&nbsp;Duplicate Entries</FONT>";
+						$the_errors	.= "Ticket ID: " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext('Duplicate Entries') . "<BR />";	
+						print "<FONT COLOR='red'>Ticket ID: " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext('Duplicate Entries') . "</FONT>";
 						}
 					}
 				} else {
 				$counter++;
-				$the_errors	.= "No Tickets Allocated to Regions<BR />";					
-				print "No Tickets Allocated to Regions";
+				$the_errors	.= gettext("No Tickets Allocated to Regions") . "<BR />";					
+				print gettext("No Tickets Allocated to Regions");
 				}				
 			print "</TD>";	
 			print "<TD class='table_cell'>";			
@@ -455,8 +453,8 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 						print gettext("Responder ID") . ": " . $value2 . "<br />";
 						} elseif($num_entries >=2) {
 						$counter++;
-						$the_errors	.= "Responder ID: " . $value2 . "&nbsp;&nbsp;&nbsp;Duplicate Entries<BR />";	
-						print "<FONT COLOR='red'>" . gettext('Responder ID') . ": " . $value2 . "&nbsp;&nbsp;&nbsp;Duplicate Entries</FONT>";
+						$the_errors	.= gettext("Responder ID") . ": " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext('Duplicate Entries') . "<BR />";	
+						print "<FONT COLOR='red'>" . gettext('Responder ID') . ": " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext('Duplicate Entries') . "</FONT>";
 						}
 					}
 				} else {
@@ -475,8 +473,8 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 						print gettext("Facility ID") . ": " . $value2 . "<br />";
 						} elseif($num_entries >=2) {
 						$counter++;
-						$the_errors	.= gettext("Facility ID") . ": " . $value2 . "&nbsp;&nbsp;&nbsp;Duplicate Entries<BR />";	
-						print "<FONT COLOR='red'>" . gettext('Facility ID') . ": " . $value2 . "&nbsp;&nbsp;&nbsp;Duplicate Entries</FONT>";
+						$the_errors	.= gettext("Facility ID") . ": " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext('Duplicate Entries') . "<BR />";	
+						print "<FONT COLOR='red'>" . gettext('Facility ID') . ": " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext('Duplicate Entries') . "</FONT>";
 						}
 					}
 				} else {
@@ -494,7 +492,7 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 			$num_entries = mysql_num_rows($result);
 			if($num_entries == 0) {
 				$counter++;	
-				$the_errors	.= "User ID: " . $value3 . "&nbsp;&nbsp;&nbsp;No Region Entry<BR />";					
+				$the_errors	.= "User ID: " . $value3 . "&nbsp;&nbsp;&nbsp;" . gettext('No Region Entry') . "<BR />";					
 				}		
 			}
 		}
@@ -505,7 +503,7 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 			$num_entries = mysql_num_rows($result);
 			if($num_entries == 0) {
 				$counter++;	
-				$the_errors	.= "Ticket ID: " . $value3 . "&nbsp;&nbsp;&nbsp;No Region Entry<BR />";					
+				$the_errors	.= "Ticket ID: " . $value3 . "&nbsp;&nbsp;&nbsp;" . gettext('No Region Entry') . "<BR />";					
 				}		
 			}
 		}
@@ -516,7 +514,7 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 			$num_entries = mysql_num_rows($result);
 			if($num_entries == 0) {
 				$counter++;	
-				$the_errors	.= "Unit ID: " . $value3 . "&nbsp;&nbsp;&nbsp;No Region Entry<BR />";					
+				$the_errors	.= "Unit ID: " . $value3 . "&nbsp;&nbsp;&nbsp;" . gettext('No Region Entry') . "<BR />";					
 				}		
 			}	
 		}
@@ -527,7 +525,7 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 			$num_entries = mysql_num_rows($result);
 			if($num_entries == 0) {
 				$counter++;	
-				$the_errors	.= "Facility ID: " . $value3 . "&nbsp;&nbsp;&nbsp;No Region Entry<BR />";					
+				$the_errors	.= "Facility ID: " . $value3 . "&nbsp;&nbsp;&nbsp;" . gettext('No Region Entry') . "<BR />";					
 				}		
 			}
 		}
@@ -553,7 +551,6 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 	<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	<HEAD>
-	<META NAME="ROBOTS" CONTENT="INDEX,FOLLOW" />
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
 	<META HTTP-EQUIV="Expires" CONTENT="0" />
 	<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
@@ -604,7 +601,7 @@ if((isset($_GET['func'])) && ($_GET['func']=='clean')) {
 		}	
 	</SCRIPT>	
 	</HEAD>
-	<BODY onLoad = 'ck_frames()'>
+	<BODY onLoad = 'ck_frames();'>
 	<DIV style='font-size: 14px; position: fixed; top: 150px; left: 100px;'>
 	<?php print gettext('Are you sure you want to cleanse the Region allocations');?><br />
 	<br />

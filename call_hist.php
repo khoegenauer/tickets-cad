@@ -93,7 +93,7 @@ else {
 ?>
 </TH></TR>
 <TR CLASS='odd'><TD ALIGN = 'center'><BR />
-	<INPUT TYPE='button' VALUE= '<?php print gettext('Finished');?>' onClick = 'window.close()'>
+	<INPUT TYPE='button' VALUE= '<?php print gettext('Finished');?>' onClick = 'window.close();'/>
 </TD></TR></TABLE>
 </BODY>
 </HTML>

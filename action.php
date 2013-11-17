@@ -90,7 +90,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 	if(document.all && !document.getElementById) {		// accomodate IE							
 		document.getElementById = function(id) {							
 			return document.all[id];							
-			}							
+			};							
 		}				
 
 	try {
@@ -137,9 +137,9 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			var controlarea = "incs_list";
 			}
 
-		var divarea = div_area 
-		var hide_cont = hide_cont 
-		var show_cont = show_cont 
+		var divarea = div_area; 
+		var hide_cont = hide_cont; 
+		var show_cont = show_cont; 
 		if($(divarea)) {
 			$(divarea).style.display = 'none';
 			$(hide_cont).style.display = 'none';
@@ -169,9 +169,9 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		if (div_area == "incs_list_sh") {
 			var controlarea = "incs_list";
 			}
-		var divarea = div_area
-		var hide_cont = hide_cont 
-		var show_cont = show_cont 
+		var divarea = div_area;
+		var hide_cont = hide_cont; 
+		var show_cont = show_cont; 
 		if($(divarea)) {
 			$(divarea).style.display = '';
 			$(hide_cont).style.display = '';
@@ -326,7 +326,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 				return;
 				}
 			callback(req);
-			}
+			};
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
@@ -335,10 +335,10 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
  * @type Array|Array
  */
 	var XMLHttpFactories = [								// 6/10/11
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -509,7 +509,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 				return;
 				}
 			callback(req);
-			}
+			};
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}
@@ -518,10 +518,10 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
  * @type Array|Array|Array|Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -583,8 +583,8 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 
 			print "<FONT CLASS='header'>" . gettext('Really delete action record') . " '" . shorten($row['description'], 24) . "' ? </FONT><BR /><BR />";
 			print "<FORM NAME='delfrm' METHOD='post' ACTION='action.php?action=delete&id=$_GET[id]&ticket_id=" . $_GET['ticket_id'] . "&confirm=1'>";
-			print "<INPUT TYPE='Submit' VALUE='" . gettext('Yes') . "'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-			print "<INPUT TYPE='Button' VALUE='" . gettext('Cancel') . "' onClick='history.back();'></FORM>";
+			print "<INPUT TYPE='Submit' VALUE='" . gettext('Yes') . "'/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			print "<INPUT TYPE='Button' VALUE='" . gettext('Cancel') . "' onClick='history.back();'/></FORM>";
 			}
 
 		}				// end if ($get_action == 'delete') 
@@ -673,16 +673,16 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		print "\t</DIV></TD>\n";
 ?>
 		<TD CLASS="td_label"><SPAN><?php print gettext('As of');?>: &nbsp;&nbsp;<SPAN>
-		<INPUT SIZE=4 NAME="frm_year_asof" VALUE="" MAXLENGTH=4>
-		<INPUT SIZE=2 NAME="frm_month_asof" VALUE="" MAXLENGTH=2>
-		<INPUT SIZE=2 NAME="frm_day_asof" VALUE="" MAXLENGTH=2>
-		<INPUT SIZE=2 NAME="frm_hour_asof" VALUE="" MAXLENGTH=2>:<INPUT SIZE=2 NAME="frm_minute_asof" VALUE="" MAXLENGTH=2>
-		&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.ed_frm);'>
+		<INPUT SIZE=4 NAME="frm_year_asof" VALUE="" MAXLENGTH=4 />
+		<INPUT SIZE=2 NAME="frm_month_asof" VALUE="" MAXLENGTH=2 />
+		<INPUT SIZE=2 NAME="frm_day_asof" VALUE="" MAXLENGTH=2 />
+		<INPUT SIZE=2 NAME="frm_hour_asof" VALUE="" MAXLENGTH=2 />:<INPUT SIZE=2 NAME="frm_minute_asof" VALUE="" MAXLENGTH=2 />
+		&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.ed_frm);'/>
 			<br /> <br /> <br />
 
-			<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"	onClick="history.back()" STYLE = 'margin-left:20px' > 
-			<INPUT TYPE="button" VALUE="<?php print gettext('Form reset');?>" 	onClick="this.form.reset();init();" STYLE = 'margin-left:20px'>
-			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>"	onClick="return validate(this.form)" STYLE = 'margin-left:20px'>
+			<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"	onClick="history.back();" STYLE = 'margin-left:20px' /> 
+			<INPUT TYPE="button" VALUE="<?php print gettext('Form reset');?>" 	onClick="this.form.reset();init();" STYLE = 'margin-left:20px'/>
+			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>"	onClick="return validate(this.form);" STYLE = 'margin-left:20px'/>
 			</TD></TR>
 		</TABLE></FORM><BR />
 <?php
@@ -726,7 +726,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			$z++;
 			}			
 
-		$heading = "Add Action";
+		$heading = gettext("Add Action");
 ?>
 		<FORM METHOD="post" NAME="add_frm" onSubmit='return validate(this.form);' ACTION="action.php?ticket_id=<?php print $_GET['ticket_id'];?>&action=add">
 		<TABLE BORDER="0">
@@ -820,7 +820,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 		print "<TR><TD></TD><TD COLSPAN=2>" . get_units_legend(). "</TD></TR>";
 		print "<TR CLASS='odd'><TD CLASS='td_label'></TD>";		// 8/8/10
 		print "<TD><DIV  style='width:auto;height:{$height}PX; overflow-y: auto; overflow-x: auto;' >
-			<INPUT TYPE = 'checkbox' VALUE=0 NAME = 'frm_cb_0'>" . gettext('NA') . "<BR />\n";
+			<INPUT TYPE = 'checkbox' VALUE=0 NAME = 'frm_cb_0'/>" . gettext('NA') . "<BR />\n";
 //    		$the_class = (array_key_exists($row['type'], $optstyles))?  $optstyles[$row['type']] : "";
 
     	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
@@ -842,14 +842,14 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 			<INPUT SIZE=4 NAME="frm_year_asof" VALUE="" MAXLENGTH=4 />
 			<INPUT SIZE=2 NAME="frm_month_asof" VALUE="" MAXLENGTH=2 />
 			<INPUT SIZE=2 NAME="frm_day_asof" VALUE="" MAXLENGTH=2 />
-			<INPUT SIZE=2 NAME="frm_hour_asof" VALUE="" MAXLENGTH=2 />:<INPUT SIZE=2 NAME="frm_minute_asof" VALUE="" MAXLENGTH=2>
+			<INPUT SIZE=2 NAME="frm_hour_asof" VALUE="" MAXLENGTH=2 />:<INPUT SIZE=2 NAME="frm_minute_asof" VALUE="" MAXLENGTH=2 />
 			<INPUT TYPE="hidden" NAME = "frm_ticket_id" VALUE = "<?php print $tick_id;?>" />		<!-- 6/10/11 -->
-			&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.add_frm);'>
+			&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.add_frm);'/>
 			<br /> <br /> <br />
 
 			<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"	onClick="history.back();"  STYLE = 'margin-left:40px' />
 			<INPUT TYPE="button" VALUE="<?php print gettext('Reset form');?>"	onClick="this.form.reset();init();"  STYLE = 'margin-left:20px' />
-			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>"	onClick="return validate(this.form)"  STYLE = 'margin-left:20px' />
+			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>"	onClick="return validate(this.form);"  STYLE = 'margin-left:20px' />
 			</TD></TR>
 
 		</TABLE><BR />
@@ -860,7 +860,7 @@ $tick_id = (isset($_REQUEST['ticket_id'])) ? $_REQUEST['ticket_id'] : "";							
 //				 common to all
 ?>
 <FORM NAME='can_Form' ACTION="main.php">
-<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $tick_id;?>">		<!-- 6/10/11 -->
+<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $tick_id;?>"/>		<!-- 6/10/11 -->
 </FORM>	
 <?php
 $from_right = 20;	//	6/10/11
@@ -894,7 +894,7 @@ function do_asof(theForm, theBool) {							// 8/10/08, 6/11/12
  */
 function do_unlock(theForm) {									// 8/10/08, 6/11/12
 	document.getElementById("lock").style.visibility = "hidden";		
-	do_asof(theForm, false)
+	do_asof(theForm, false);
 	}
 /**
  * 
@@ -902,7 +902,7 @@ function do_unlock(theForm) {									// 8/10/08, 6/11/12
  * @returns {undefined}
  */	
 function do_lock(theForm) {										// 8/10/08, 6/11/12
-	do_asof(theForm, true)
+	do_asof(theForm, true);
 	document.getElementById("lock").style.visibility = "visible";
 	}
 /**
@@ -910,7 +910,7 @@ function do_lock(theForm) {										// 8/10/08, 6/11/12
  * @returns {undefined}
  */	
 function init () {
-	do_unlock(document.forms[0])
+	do_unlock(document.forms[0]);
 	var now = new Date();
 	if (now.getYear()>2000) {
 		document.forms[0].frm_year_asof.value= now.getYear() - 2000;

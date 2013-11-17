@@ -369,8 +369,8 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 							}
 ?>
 					</SELECT>
-						<SPAN STYLE='margin-left:20px;'><?php print gettext('Apply to') . ": " . gettext('Subject');?> &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='0' CHECKED onClick = 'set_text = false;'></SPAN>
-						<SPAN STYLE='margin-left:20px;'><?php print gettext('Text');?> &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='1' CHECKED onClick = 'set_text = true;'>&nbsp;&nbsp;</SPAN>
+						<SPAN STYLE='margin-left:20px;'><?php print gettext('Apply to') . ": " . gettext('Subject');?> &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='0' CHECKED onClick = 'set_text = false;'/></SPAN>
+						<SPAN STYLE='margin-left:20px;'><?php print gettext('Text');?> &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='1' CHECKED onClick = 'set_text = true;'/>&nbsp;&nbsp;</SPAN>
 					</TD>
 				</TR>
 				<TR VALIGN = 'TOP' CLASS='even'>
@@ -410,13 +410,13 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 <?php
 					} else {
 ?>
-				<INPUT TYPE='hidden' NAME="use_smsg" VALUE='0'>
+				<INPUT TYPE='hidden' NAME="use_smsg" VALUE='0'/>
 <?php
 					}
 ?>
 				</TABLE>
-				<INPUT type='hidden' NAME='frm_resp_ids' VALUE=''>
-				<INPUT type='hidden' NAME='frm_smsg_ids' VALUE='<?php print $smsg_ids;?>'>				
+				<INPUT type='hidden' NAME='frm_resp_ids' VALUE=''/>
+				<INPUT type='hidden' NAME='frm_smsg_ids' VALUE='<?php print $smsg_ids;?>'/>				
 				</FORM>
 	
 <?php
@@ -437,8 +437,8 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 ?>
 <BODY scroll='auto' onLoad = "document.mail_form_single.submit();">	<!-- 1/12/09 -->
 <FORM NAME='mail_form_single' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
-<INPUT TYPE='hidden' NAME='frm_step' VALUE='2'>	<!-- '2' = select units, '3' = send to selected units -->
-<INPUT TYPE='hidden' NAME='frm_sel_inc' VALUE='<?php print $row['ticket_id'];?>'>	
+<INPUT TYPE='hidden' NAME='frm_step' VALUE='2'/>	<!-- '2' = select units, '3' = send to selected units -->
+<INPUT TYPE='hidden' NAME='frm_sel_inc' VALUE='<?php print $row['ticket_id'];?>'/>	
 </FORM></BODY></HTML>			
 <?php			
 				}
@@ -450,13 +450,13 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 
 	
 <FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
-<INPUT TYPE='hidden' NAME='frm_step' VALUE='2'>	<!-- '2' = select units, '3' = send to selected units -->
+<INPUT TYPE='hidden' NAME='frm_step' VALUE='2'/>	<!-- '2' = select units, '3' = send to selected units -->
 <?php
 	$bg_colors_arr = array ("transparent", "lime", "red");		// for severity
 	if($no_tickets >= 2) {
 		print "<EM>". get_text("Units"). " assigned to ". get_text("Incident") . "</EM>: 
 			<SELECT NAME='frm_sel_inc' ONCHANGE = 'this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color;'>\n\t
-			<OPTION VALUE=0 SELECTED>All incidents </OPTION>\n";
+			<OPTION VALUE=0 SELECTED>" . gettext('All incidents') . " </OPTION>\n";
 		while($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)){
 			$bg_color = $bg_colors_arr[$row['severity']];
 			if(!(empty($row['scope']))) {				// 6/28/09
@@ -594,7 +594,7 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 						$e_add = (($val['contact_via'] == NULL) || ($val['contact_via'] == "")) ? "NONE" : $val['contact_via'] ;
 						$dist = (round($val['distance'],1) != 0) ? "Dist: " . round($val['distance'],1) : "";         
 						print "\t<SPAN STYLE='background-color:{$val['bg_color']}; color:{$val['text_color']}; display: inline-block; white-space: nowrap;'>
-							<INPUT TYPE='checkbox' NAME='cb{$i}' VALUE='{$val['contact_via']}:{$val['responder_id']}:{$val['smsg_id']}'>
+							<INPUT TYPE='checkbox' NAME='cb{$i}' VALUE='{$val['contact_via']}:{$val['responder_id']}:{$val['smsg_id']}'/>
 							&nbsp;&nbsp;{$dist} &nbsp;&nbsp;{$val['name']}&nbsp;&nbsp;(<I>(E) {$e_add} - (SMSG) {$smsg}</I> )</SPAN><BR />\n";	//	10/23/12
 						$i++;
 						}		// end while()
@@ -644,9 +644,9 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 				</TD>
 			</TR>
 			<TR VALIGN='top' CLASS='odd'><TD ALIGN='center' COLSPAN=2><BR /><BR />
-				<INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2()">&nbsp;&nbsp;&nbsp;&nbsp;
-				<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'>&nbsp;&nbsp;&nbsp;&nbsp;
-				<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
+				<INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+				<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'/>&nbsp;&nbsp;&nbsp;&nbsp;
+				<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/><BR /><BR />
 				</TD></TR>
 <?php	//	10/23/12
 				if((get_variable('use_messaging') == 2) || (get_variable('use_messaging') == 3)) {
@@ -654,20 +654,20 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 					<TR><TD>&nbsp;</TD></TR>				
 					<TR>
 						<TD ALIGN='left' COLSPAN=2>
-							<input type="radio" name="use_smsg" VALUE="0" checked> <?php print gettext('Use Email');?><br>
-							<input type="radio" name="use_smsg" VALUE="1"> <?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?<br>						
+							<input type="radio" name="use_smsg" VALUE="0" checked/> <?php print gettext('Use Email');?><br>
+							<input type="radio" name="use_smsg" VALUE="1"/> <?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?<br>						
 						</TD>
 					</TR>
 <?php
 					} else {
 ?>
-				<INPUT TYPE='hidden' NAME="use_smsg" VALUE='0'>
+				<INPUT TYPE='hidden' NAME="use_smsg" VALUE='0'/>
 <?php
 					}
 ?>
-				<INPUT type='hidden' NAME='frm_resp_ids' VALUE=''>
-				<INPUT type='hidden' NAME='frm_smsg_ids' VALUE=''>		
-				<INPUT type='hidden' NAME='frm_ticket_id' VALUE='<?php print $tik_id;?>'>					
+				<INPUT type='hidden' NAME='frm_resp_ids' VALUE=''/>
+				<INPUT type='hidden' NAME='frm_smsg_ids' VALUE=''/>		
+				<INPUT type='hidden' NAME='frm_ticket_id' VALUE='<?php print $tik_id;?>'/>					
 <?php
 				print "</TABLE></TD></TR></TABLE></FORM>";
 //				print get_unit_status_legend();
@@ -675,7 +675,7 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 				}		// end if(mysql_affected_rows()>0)
 			else {
 				print "<H3>" . gettext('No addresses available!') . "</H3>\n";
-				print "<INPUT TYPE='button' 	VALUE='" . gettext('Cancel') . "' onClick = 'window.close();'><BR /><BR />";
+				print "<INPUT TYPE='button' 	VALUE='" . gettext('Cancel') . "' onClick = 'window.close();'/><BR /><BR />";
 				}
 		
 			break;

@@ -30,7 +30,7 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
 $count_users = count($the_users);
 
 $the_addressbook = "<SELECT NAME='frm_addressbook' onChange='pop_address(this.options[this.selectedIndex].value);'>";
-$the_addressbook .= "<OPTION VALUE='0' SELECTED>Select Address from Contacts</OPTION>";
+$the_addressbook .= "<OPTION VALUE='0' SELECTED>" . gettext('Select Address from Contacts') . "</OPTION>";
 $z=1;
 foreach($the_contacts as $val) {
 	$the_addressbook .= "<OPTION VALUE=" . $the_contacts[$z][4] . ">" . $the_contacts[$z][0] . "  "  . $the_contacts[$z][4] . "</OPTION>";
@@ -48,7 +48,6 @@ $now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Message');?></TITLE>
-<META NAME="Description" CONTENT="">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -74,7 +73,7 @@ function reply_button() {
 	$("reply_but").style.display="none";
 	$("can_but").style.display="inline-block";		
 	$("send_but").style.display="inline-block";		
-	$("send_but").onclick=function() {send_button('reply_frm')};
+	$("send_but").onclick=function() {send_button('reply_frm');};
 	}
 /**
  * 
@@ -91,7 +90,7 @@ function forward_button() {
 	$("reply_but").style.display="none";
 	$("can_but").style.display="inline-block";		
 	$("send_but").style.display="inline-block";	
-	$("send_but").onclick=function() {send_button('forward_frm')};	
+	$("send_but").onclick=function() {send_button('forward_frm');};	
 	}
 /**
  * 
@@ -238,14 +237,14 @@ function get_themessage(therow, thefile) {
 		var numrows = parseInt(the_message[14]);
 		if(parseInt(therow) <= numrows) {
 			var nextrow = parseInt(therow) + 1;
-			the_string = "<SPAN class='plain' id='next_but' onMouseover='do_hover(this);' onMouseout='do_plain(this);'  style='float: right; color: #000000; display: inline-block; vertical-align: middle;' onClick='get_themessage(\"" + nextrow + "\", \"" + thefile + "\");'>Next</SPAN>";
+			the_string = "<SPAN class='plain' id='next_but' onMouseover='do_hover(this);' onMouseout='do_plain(this);'  style='float: right; color: #000000; display: inline-block; vertical-align: middle;' onClick='get_themessage(\"" + nextrow + "\", \"" + thefile + "\");'><?php print gettext('Next');?></SPAN>";
 			$('thenext').innerHTML = the_string;
 			} else {
 			$('thenext').innerHTML = "";
 			}
 		if(parseInt(therow) >= 2) {
 			var prevrow = parseInt(therow) - 1;
-			the_string = "<SPAN class='plain' id='prev_but' onMouseover='do_hover(this);' onMouseout='do_plain(this);'  style='float: right; color: #000000; display: inline-block; vertical-align: middle;' onClick='get_themessage(\"" + prevrow + "\", \"" + thefile + "\");'>Prev</SPAN>";
+			the_string = "<SPAN class='plain' id='prev_but' onMouseover='do_hover(this);' onMouseout='do_plain(this);'  style='float: right; color: #000000; display: inline-block; vertical-align: middle;' onClick='get_themessage(\"" + prevrow + "\", \"" + thefile + "\");'><?php print gettext('Prev');?></SPAN>";
 			$('theprev').innerHTML = the_string;
 			} else {
 			$('theprev').innerHTML = "";	
@@ -284,9 +283,9 @@ if(!empty($_POST)) {
 if(empty($_POST)) {	
 //$opener = $_GET['screen'];
 ?>
-	<BODY onLoad="get_themessage('<?php print $the_row;?>', '<?php print $filename;?>')">
+	<BODY onLoad="get_themessage('<?php print $the_row;?>', '<?php print $filename;?>');">
 		<CENTER>	
-		<DIV id='progress' style=position: fixed; left: 45%; top: 45%; z-index: 999999; display: none;'><img src="./images/progress.gif"></DIV>
+		<DIV id='progress' style='position: fixed; left: 45%; top: 45%; z-index: 999999; display: none;'><img src="./images/progress.gif"></DIV>
 		<DIV ID='controls' style='position: absolute; top: 10px; left: 20%; display: block; text-align: center; width: 60%; height: 10px; vertical-align: middle;'>
 			<SPAN id='print_but' class='plain' style='float: left; display: inline-block; vertical-align: middle;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='window.print();'><?php print gettext('Print');?></SPAN>			
 			<SPAN id='reply_but' class='plain' style='float: left; display: inline-block; vertical-align: middle;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='reply_button();'><?php print gettext('Reply');?></SPAN>			
@@ -338,15 +337,15 @@ if(empty($_POST)) {
 					</tr>   					
 					<tr>          
 						<td><?php print gettext('To');?>:</td>           
-						<td><INPUT TYPE='text' NAME='frm_addrs' size='60' VALUE=""></td>      
+						<td><INPUT TYPE='text' NAME='frm_addrs' size='60' VALUE=""/></td>      
 					</tr>      
 					<tr>           
 						<td><?php print gettext('Date');?>:</td>           
-						<td><INPUT TYPE='text' NAME='frm_date' size='60' VALUE="<?php print $now; ?>"></td>      
+						<td><INPUT TYPE='text' NAME='frm_date' size='60' VALUE="<?php print $now; ?>"/></td>      
 					</tr>     
 					<tr>           
 						<td><?php print gettext('Subject');?>:</td>           
-						<td><INPUT TYPE='text' NAME='frm_subject' size='60' VALUE=""></td>      
+						<td><INPUT TYPE='text' NAME='frm_subject' size='60' VALUE=""/></td>      
 					</tr> 	
 					<tr>       
 						<td><?php print gettext('Original Message');?>:</td>   					
@@ -358,7 +357,7 @@ if(empty($_POST)) {
 					</tr> 
 					<tr>
 						<td><?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?: </td>
-						<td><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE=1></td>
+						<td><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE=1/></td>
 					</tr>		
 					<INPUT TYPE="hidden" NAME = 'frm_theothers' VALUE=""/>			
 					<INPUT TYPE="hidden" NAME = 'frm_ticket_id' VALUE=""/>	
@@ -382,15 +381,15 @@ if(empty($_POST)) {
 					</tr>      					
 					<tr>          
 						<td><?php print gettext('To');?>:</td>           
-						<td><INPUT TYPE='text' NAME='frm_addrs' size='60' VALUE=""></td>      
+						<td><INPUT TYPE='text' NAME='frm_addrs' size='60' VALUE=""/></td>      
 					</tr>      
 					<tr>           
 						<td><?php print gettext('Date');?>:</td>           
-						<td><INPUT TYPE='text' NAME='frm_date' size='60' VALUE="<?php print $now; ?>"></td>      
+						<td><INPUT TYPE='text' NAME='frm_date' size='60' VALUE="<?php print $now; ?>"/></td>      
 					</tr>     
 					<tr>           
 						<td><?php print gettext('Subject');?>:</td>           
-						<td><INPUT TYPE='text' NAME='frm_subject' size='60' VALUE=""></td>      
+						<td><INPUT TYPE='text' NAME='frm_subject' size='60' VALUE=""/></td>      
 					</tr> 	
 					<tr>   
 						<td><?php print gettext('Original Message');?>:</td>          					
@@ -402,7 +401,7 @@ if(empty($_POST)) {
 					</tr>					
 					<tr>
 						<td><?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?: </td>
-						<td><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE=1></td>
+						<td><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE=1/></td>
 					</tr>		
 					<INPUT TYPE="hidden" NAME = 'frm_theothers' VALUE=""/>		
 					<INPUT TYPE="hidden" NAME = 'frm_ticket_id' VALUE=""/>
@@ -411,8 +410,8 @@ if(empty($_POST)) {
 				</table>
 			</DIV>
 			<FORM NAME="go_frm" METHOD="get" ACTION = "<?php print basename( __FILE__); ?>">	
-			<INPUT TYPE='hidden' NAME='id' VALUE=''>
-			<INPUT TYPE='hidden' NAME='screen' VALUE=''>			
+			<INPUT TYPE='hidden' NAME='id' VALUE=''/>
+			<INPUT TYPE='hidden' NAME='screen' VALUE=''/>			
 			</FORM>
 		</DIV>
 

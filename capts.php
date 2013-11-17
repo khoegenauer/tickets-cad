@@ -36,9 +36,6 @@ $func = (empty($_POST))? "l":$_POST['func'];
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Captions processor');?></TITLE>
-<META NAME="Author" CONTENT="">
-<META NAME="Keywords" CONTENT="">
-<META NAME="Description" CONTENT="">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -158,7 +155,7 @@ $func = (empty($_POST))? "l":$_POST['func'];
 				</TR>
 			<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'>
 				<INPUT TYPE ='button' VALUE = '<?php print gettext('Cancel');?>' onClick="document.can_form.submit();" />
-				<INPUT TYPE ='reset' VALUE = '<?php print gettext('Reset');?>' onClick = "this.form.reset()" STYLE = 'margin-left:40px;' />
+				<INPUT TYPE ='reset' VALUE = '<?php print gettext('Reset');?>' onClick = "this.form.reset();" STYLE = 'margin-left:40px;' />
 				<INPUT TYPE ='submit' VALUE = '<?php print gettext('Next');?>'  STYLE = 'margin-left:40px;' />
 				</FORM>
 				</TABLE>

@@ -26,9 +26,6 @@ $disposition = get_text("Disposition");				// 12/1/10
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Add Note to Existing Incident');?></TITLE>
-<META NAME="Author" CONTENT="">
-<META NAME="Keywords" CONTENT="">
-<META NAME="Description" CONTENT="">
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 <META HTTP-EQUIV="Expires" CONTENT="0">
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
@@ -96,11 +93,11 @@ Signal &raquo;
 <B><?php print gettext('Apply to');?></B>&nbsp;:&nbsp;&nbsp;
 <?php print gettext('Description');?> &raquo; <INPUT TYPE = 'radio' NAME='frm_add_to' value='0' CHECKED />&nbsp;&nbsp;&nbsp;&nbsp;
 <?php print $disposition;?> &raquo; <INPUT TYPE = 'radio' NAME='frm_add_to' value='1' /><BR /><BR />
-<INPUT TYPE = 'button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close()' />&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE = 'button' VALUE = '<?php print gettext('Reset');?>' onClick = 'this.form.reset()' />&nbsp;&nbsp;&nbsp;&nbsp;
-<INPUT TYPE = 'button' VALUE = '<?php print gettext('Next');?>' onClick = 'validate()' />
+<INPUT TYPE = 'button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE = 'button' VALUE = '<?php print gettext('Reset');?>' onClick = 'this.form.reset();' />&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE = 'button' VALUE = '<?php print gettext('Next');?>' onClick = 'validate();' />
 
-<!-- <INPUT TYPE = 'button' VALUE = '<?php print gettext('Next');?>' onClick = 'this.form.submit()' /> -->
+<!-- <INPUT TYPE = 'button' VALUE = '<?php print gettext('Next');?>' onClick = 'this.form.submit();' /> -->
 <INPUT TYPE = 'hidden' NAME = 'frm_ticket_id' VALUE='<?php print $_GET['ticket_id']; ?>' />
 </FORM>
 <?php
@@ -133,7 +130,7 @@ Signal &raquo;
 <BODY onLoad = "opener.location.reload(true);"><CENTER>
 <BR /><BR />
 <H3><?php print gettext('Note added to Incident');?> '<?php print $row['scope'];?>'</H3><BR /><BR />
-<INPUT TYPE = 'button' VALUE = '<?php print gettext('Finished');?>' onClick = 'window.close()'>
+<INPUT TYPE = 'button' VALUE = '<?php print gettext('Finished');?>' onClick = 'window.close();'/>
 </CENTER>
 </BODY>
 </HTML>

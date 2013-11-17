@@ -54,7 +54,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 	if(document.all && !document.getElementById) {		// accomodate IE							
 		document.getElementById = function(id) {							
 			return document.all[id];							
-			}							
+			};							
 		}				
 
 	try {
@@ -102,7 +102,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
  */
 	function do_unlock(theForm) {									// 8/10/08
 		document.getElementById("lock").style.visibility = "hidden";		
-		do_asof(theForm, false)
+		do_asof(theForm, false);
 		}
 /**
  * 
@@ -110,7 +110,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
  * @returns {undefined}
  */		
 	function do_lock(theForm) {										// 8/10/08
-		do_asof(theForm, true)
+		do_asof(theForm, true);
 		document.getElementById("lock").style.visibility = "visible";
 		}
 /**
@@ -158,7 +158,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
  */	
 	function validate(theForm) {
 		var errmsg="";
-		if (theForm.frm_description.value == "")		{errmsg+= "\tDescription is required');?>\n";}
+		if (theForm.frm_description.value == "")		{errmsg+= "\t<?php print gettext('Description is required');?>\n";}
 		do_unlock(theForm) ;
 		if (!chkval(theForm.frm_year_asof.value, <?php print date('Y')-1 . ", " . date('Y'); ?>)) 	{errmsg+= "\t<?php print gettext('As-of date error - Year');?>\n";}
 		if (!chkval(theForm.frm_month_asof.value, 1,12)) 		{errmsg+= "\t<?php print gettext('As-of date error - Month');?>\n";}
@@ -306,10 +306,10 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
  * @type Array
  */	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 /**
  * 
@@ -371,8 +371,8 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 
 			print "<FONT CLASS='header'>" . gettext('Really delete action record') . " '" . shorten($row['description'], 24) . "' ? </FONT><BR /><BR />";
 			print "<FORM NAME='delfrm' METHOD='post' ACTION='action_w.php?action=delete&id=$_GET[id]&ticket_id=" . $_GET['ticket_id'] . "&confirm=1'>";
-			print "<INPUT TYPE='Submit' VALUE='" . gettext('Yes') . "'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-			print "<INPUT TYPE='Button' VALUE='" . gettext('Cancel') . "' onClick='history.back();'></FORM>";
+			print "<INPUT TYPE='Submit' VALUE='" . gettext('Yes') . "'/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			print "<INPUT TYPE='Button' VALUE='" . gettext('Cancel') . "' onClick='history.back();'/></FORM>";
 			}
 
 		}				// end if ($get_action == 'delete') 
@@ -433,7 +433,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		print "<TR VALIGN='top'><TD COLSPAN=2>" . get_units_legend(). "</TD></TR>";
 		$checked = (in_array("0", $responders))? "CHECKED" : "";	// NA is special case - 8/8/10
 		print "<TD><DIV  style='width:auto;height:{$height}PX; overflow-y: auto; overflow-x: auto;' >
-			<INPUT TYPE = 'checkbox' VALUE=0 NAME = 'frm_cb_0" . gettext('NA') . "<BR />\n";
+			<INPUT TYPE = 'checkbox' VALUE=0 NAME = 'frm_cb_0 />" . gettext('NA') . "<BR />\n";
 
     	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
 			$the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$row['icon']];		// 7/20/10
@@ -455,16 +455,16 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		print "\t</DIV></TD>\n";
 ?>
 		<TD CLASS="td_label"><SPAN><?php print gettext('As of');?>: &nbsp;&nbsp;<SPAN>
-		<INPUT SIZE=4 NAME="frm_year_asof" VALUE="" MAXLENGTH=4>
-		<INPUT SIZE=2 NAME="frm_month_asof" VALUE="" MAXLENGTH=2>
-		<INPUT SIZE=2 NAME="frm_day_asof" VALUE="" MAXLENGTH=2>
-		<INPUT SIZE=2 NAME="frm_hour_asof" VALUE="" MAXLENGTH=2>:<INPUT SIZE=2 NAME="frm_minute_asof" VALUE="" MAXLENGTH=2>
-		&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.ed_frm);'>
+		<INPUT SIZE=4 NAME="frm_year_asof" VALUE="" MAXLENGTH=4 />
+		<INPUT SIZE=2 NAME="frm_month_asof" VALUE="" MAXLENGTH=2 />
+		<INPUT SIZE=2 NAME="frm_day_asof" VALUE="" MAXLENGTH=2 />
+		<INPUT SIZE=2 NAME="frm_hour_asof" VALUE="" MAXLENGTH=2 />:<INPUT SIZE=2 NAME="frm_minute_asof" VALUE="" MAXLENGTH=2 />
+		&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.ed_frm);'/>
 			<br /> <br /> <br />
 
-			<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"	onClick="history.back()" STYLE = 'margin-left:20px' > 
-			<INPUT TYPE="button" VALUE="<?php print gettext('Form reset');?>" 	onClick="this.form.reset();init();" STYLE = 'margin-left:20px'>
-			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>"	onClick="return validate(this.form)" STYLE = 'margin-left:20px'>
+			<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"	onClick="history.back();" STYLE = 'margin-left:20px' /> 
+			<INPUT TYPE="button" VALUE="<?php print gettext('Form reset');?>" 	onClick="this.form.reset();init();" STYLE = 'margin-left:20px'/>
+			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>"	onClick="return validate(this.form);" STYLE = 'margin-left:20px'/>
 			</TD></TR>
 		</TABLE></FORM><BR />
 <?php
@@ -500,7 +500,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 		print "<TR><TD></TD><TD COLSPAN=2>" . get_units_legend(). "</TD></TR>";
 		print "<TR CLASS='odd'><TD CLASS='td_label'></TD>";		// 8/8/10
 		print "<TD><DIV  style='width:auto;height:{$height}PX; overflow-y: auto; overflow-x: auto;' >
-			<INPUT TYPE = 'checkbox' VALUE=0 NAME = 'frm_cb_0'>" . gettext('NA') . "<BR />\n";
+			<INPUT TYPE = 'checkbox' VALUE=0 NAME = 'frm_cb_0' />" . gettext('NA') . "<BR />\n";
 //    		$the_class = (array_key_exists($row['type'], $optstyles))?  $optstyles[$row['type']] : "";
 
     	while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
@@ -530,7 +530,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 
 			<INPUT TYPE = 'button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' STYLE = 'margin-left:40px' />
 			<INPUT TYPE="button" VALUE="<?php print gettext('Reset form');?>"	onClick="this.form.reset();init();"  STYLE = 'margin-left:20px' />
-			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>"	onClick="return validate(this.form)"  STYLE = 'margin-left:20px' />
+			<INPUT TYPE="button" VALUE="<?php print gettext('Next');?>"	onClick="return validate(this.form);"  STYLE = 'margin-left:20px' />
 			</TD></TR>
 
 		</TABLE><BR />
@@ -541,7 +541,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 //				 common to all
 ?>
 <FORM NAME='can_Form' ACTION="main.php">
-<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['ticket_id'];?>">
+<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['ticket_id'];?>"/>
 </FORM>	
 </BODY>
 <?php
@@ -554,7 +554,7 @@ init();
  * @returns {undefined}
  */
 function init () {
-	do_unlock(document.forms[0])
+	do_unlock(document.forms[0]);
 	var now = new Date();
 	if (now.getYear()>2000) {
 		document.forms[0].frm_year_asof.value= now.getYear() - 2000;

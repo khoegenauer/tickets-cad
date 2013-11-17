@@ -248,7 +248,7 @@ function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, f
 function drawBanner(point, html, text, font_size, color, name) {        // Create the banner
 	var invisibleIcon = new google.maps.MarkerImage("./markers/markerTransparent.png");
 	map.setCenter(point, 8);
-	var the_color = (typeof color == 'undefined')? "000000" : color ;	// default to black
+	var the_color = (typeof color == 'undefined')? "000000" : color;	// default to black
     if (label != null) {
         label.setMap(null);
     }	
@@ -275,11 +275,11 @@ var circle_OK = false;
  */
 function chk_circle(theForm) {
 	var err_msg = "";
-	if (!(count == 1)) 									{err_msg += "Click map for circle center\n";}
-	if (!(is_ok_radius (theForm.circ_radius.value))) 	{err_msg += "Valid circle radius is required\n";};
+	if (!(count == 1)) 									{err_msg += "<?php print gettext('Click map for circle center.');?>\n";}
+	if (!(is_ok_radius (theForm.circ_radius.value))) 	{err_msg += "<?php print gettext('Valid circle radius is required.');?>\n";};
 
 	if (!(err_msg == "")) {
-		alert ("Please correct the following:\n\n" + err_msg);
+		alert ("<?php print gettext('Please correct the following');?>:\n\n" + err_msg);
 		return;
 		}
 	else {
@@ -570,7 +570,7 @@ function buildMap_l() {				// 'list' version
 		zoomControl: true,
 		scaleControl: true,
 		mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
-		}	
+		};
 
 	var map = new google.maps.Map($('map_canvas'), mapOptions);				// 481
 	map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
@@ -719,7 +719,7 @@ switch ($_POST["_func"]) {
 
 	case "l":				// list
 ?>
-<BODY onLoad = "buildMap_l()">		<!-- <?php echo basename(__FILE__); ?> -->
+<BODY onLoad = "buildMap_l();">		<!-- <?php echo basename(__FILE__); ?> -->
 <SCRIPT TYPE='text/javascript' src='./js/wz_tooltip.js'></SCRIPT>
 <TABLE ID = 'outer' ALIGN='center' BORDER = 0 STYLE = 'margin-left:20px;margin-top:20px;'>
 <TR CLASS='even'><TH colspan=2><?php print gettext('Lines and Boundaries');?></TH></TR>
@@ -731,7 +731,7 @@ switch ($_POST["_func"]) {
 	$query 	= "SELECT *, UNIX_TIMESTAMP(_on) AS `_on` FROM `{$tablename}` WHERE `line_type` = 'c'";				// 1/27/09
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 	if (mysql_num_rows($result)==0) {		
-		print "<TR CLASS = 'odd'><TH COLSPAN=99>No data</TH></TR>\n";
+		print "<TR CLASS = 'odd'><TH COLSPAN=99>" . gettext('No data') . "</TH></TR>\n";
 		}
 	else {	
 		print "<TR STYLE = 'height:8px;'><TD COLSPAN=99 ALIGN='center'><I>" . gettext('Click to view/edit') . "</I></TD></TR>";
@@ -767,10 +767,10 @@ switch ($_POST["_func"]) {
 		}		// end if/else (mysql_num_rows($result)==0)
 ?>		
 		<TR CLASS = 'odd'><TD COLSPAN=99 ALIGN='center'  STYLE = 'white-space:nowrap;'><BR />	
-		  	<INPUT TYPE="button" VALUE="<?php print gettext('Add new');?> =>" >
+		  	<INPUT TYPE="button" VALUE="<?php print gettext('Add new');?> =>" />
 		  	<INPUT TYPE = 'button' VALUE = "<?php print gettext('Polygon');?>" onClick = "document.new_form._type.value='p'; document.new_form.submit();"/>
-		  	<INPUT TYPE = 'button' VALUE = "<?php print gettext('Circle');?>" onClick = "location.href='circle.php'"/>
-		  	<INPUT TYPE = 'button' VALUE = "<?php print gettext('Banner');?>" onClick = "location.href='banner.php'"/>
+		  	<INPUT TYPE = 'button' VALUE = "<?php print gettext('Circle');?>" onClick = "location.href='circle.php';"/>
+		  	<INPUT TYPE = 'button' VALUE = "<?php print gettext('Banner');?>" onClick = "location.href='banner.php';"/>
 		  	</TD>
 			</TR></TABLE>
 			</TD>
@@ -779,13 +779,13 @@ switch ($_POST["_func"]) {
 			</TD>
 			</TR></TABLE>
 	<FORM NAME = 'new_form' METHOD = 'post' ACTION = '<?php print basename(__FILE__);?>'>
-	<INPUT TYPE= 'hidden' NAME = '_func' VALUE = 'c'>
-	<INPUT TYPE= 'hidden' NAME = '_type' VALUE = ''>
+	<INPUT TYPE= 'hidden' NAME = '_func' VALUE = 'c'/>
+	<INPUT TYPE= 'hidden' NAME = '_type' VALUE = ''/>
 	</FORM>
 
 	<FORM NAME = 'to_view_form' METHOD = 'post' ACTION = '<?php print basename(__FILE__);?>'>
-	<INPUT TYPE= 'hidden' NAME = '_func' VALUE = 'r'>
-	<INPUT TYPE= 'hidden' NAME = 'id' VALUE = ''>
+	<INPUT TYPE= 'hidden' NAME = '_func' VALUE = 'r'/>
+	<INPUT TYPE= 'hidden' NAME = 'id' VALUE = ''/>
 	</FORM>
 
 <?php
@@ -807,7 +807,7 @@ function buildMap_c() {															// 'create' version
 		zoomControl: true,
 		scaleControl: true,
 		mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
-		}	
+		};	
 
 	map = new google.maps.Map($('map_canvas'), mapOptions);				// 481
 	var bounds = new google.maps.LatLngBounds();		// Initialize bounds for the map	
@@ -867,8 +867,8 @@ function buildMap_c() {															// 'create' version
 			<TD CLASS="td_label" ALIGN="left"><?php print gettext('Description');?>:</TD>
 			<TD><INPUT MAXLENGTH="32" SIZE="32" type="text" NAME="frm_name" VALUE="" onChange = "this.value.trim();" />
 				<SPAN STYLE = 'margin-left:20px' CLASS="td_label" ><?php print gettext('Visible');?>&nbsp;&raquo;&nbsp;</SPAN>
-				<SPAN STYLE = 'margin-left:10px'><?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'rb_line_is_vis' onClick = "document.c.rb_line_not_vis.checked = false;document.c.frm_line_status.value=0" CHECKED /></SPAN>
-				<SPAN STYLE = 'margin-left:20px'><?php print gettext('No');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'rb_line_not_vis' onClick = "document.c.rb_line_is_vis.checked = false;document.c.frm_line_status.value=1" /></SPAN>
+				<SPAN STYLE = 'margin-left:10px'><?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'rb_line_is_vis' onClick = "document.c.rb_line_not_vis.checked = false;document.c.frm_line_status.value=0;" CHECKED /></SPAN>
+				<SPAN STYLE = 'margin-left:20px'><?php print gettext('No');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'rb_line_not_vis' onClick = "document.c.rb_line_is_vis.checked = false;document.c.frm_line_status.value=1;" /></SPAN>
 			
 			</TD></TR>
 
@@ -882,11 +882,11 @@ function buildMap_c() {															// 'create' version
 
 		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="left"><?php print gettext('Apply to');?>:</TD>
 			<TD ALIGN='left' CLASS="td_label"  STYLE = 'white-space:nowrap;' >
-				<SPAN STYLE="margin-left: 20px;border:1px; width:20%"><?php print gettext('Base Map');?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_bm" onClick = "this.form.frm_use_with_bm.value=1"/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print get_text("Regions");?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_r"  onClick = 	"this.form.frm_use_with_r.value=1"/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Facilities');?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_f"  onClick = "this.form.frm_use_with_f.value=1"/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Unit Exclusion Zone');?>&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" NAME="box_use_with_u_ex"  onClick = "this.form.frm_use_with_u_ex.value=1"/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Unit Ringfence');?>&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" NAME="box_use_with_u_rf"  onClick = "this.form.frm_use_with_u_rf.value=1"/></SPAN>
+				<SPAN STYLE="margin-left: 20px;border:1px; width:20%"><?php print gettext('Base Map');?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_bm" onClick = "this.form.frm_use_with_bm.value=1;"/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print get_text("Regions");?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_r"  onClick = 	"this.form.frm_use_with_r.value=1;"/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Facilities');?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_f"  onClick = "this.form.frm_use_with_f.value=1;"/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Unit Exclusion Zone');?>&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" NAME="box_use_with_u_ex"  onClick = "this.form.frm_use_with_u_ex.value=1;"/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Unit Ringfence');?>&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" NAME="box_use_with_u_rf"  onClick = "this.form.frm_use_with_u_rf.value=1;"/></SPAN>
 				</TD>
 			</TR>
 		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="left"><?php echo $line_ary[$_type];?>:</TD>
@@ -900,7 +900,7 @@ function buildMap_c() {															// 'create' version
 		<TR VALIGN="baseline" CLASS="odd" ID = 'fill_cb_tr'  >
 			<TD CLASS="td_label" ALIGN="left"><?php print gettext('Filled');?>:&nbsp;&nbsp;&nbsp;</TD>
 			<TD ALIGN="left"><SPAN CLASS="td_label" STYLE = "margin-left: 20px;" >
-				<?php print gettext('No');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_n' value = 'n'	onClick = 'do_un_checked(this.form)' CHECKED  />&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php print gettext('No');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_n' value = 'n'	onClick = 'do_un_checked(this.form);' CHECKED  />&nbsp;&nbsp;&nbsp;&nbsp;
 				<?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_y' value = 'y'  onClick = 'do_checked(this.form);'/>					
 				</SPAN>
 				</TD>
@@ -1046,7 +1046,7 @@ function buildMap_c() {															// 'create' version
 				}
 			else {
 				count = markers[markers.length-1].content;
-				markers[n].setMap(map)
+				markers[n].setMap(map);
 				}
 			});
 		drawOverlay();
@@ -1065,7 +1065,7 @@ function buildMap_c() {															// 'create' version
 			zoomControl: true,
 			scaleControl: true,
 			mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
-			}	
+			};
 
 		map = new google.maps.Map($('map_canvas'), mapOptions);				// 481
 		map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
@@ -1185,7 +1185,7 @@ function buildMap_c() {															// 'create' version
 			zoomControl: true,
 			scaleControl: true,
 			mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
-			}	
+			};
 
 		map = new google.maps.Map($('map_canvas'), mapOptions);				// 481
 		map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
@@ -1242,7 +1242,7 @@ function buildMap_c() {															// 'create' version
 	//				tooltip.style.display = "none";			
 			for(var n = 0; n < markers.length; n++) {		// Find out which marker to remove
 				if(markers[n] == marker) {
-					markers[n].setMap(null)
+					markers[n].setMap(null);
 					break;
 					}
 				}
@@ -1252,7 +1252,7 @@ function buildMap_c() {															// 'create' version
 				}
 			else {
 				count = markers[markers.length-1].content;
-				markers[n].setMap(map)
+				markers[n].setMap(map);
 				}
 			});
 	 drawOverlay();
@@ -1308,8 +1308,8 @@ else {
 							<SPAN STYLE = 'margin-left:10px'><?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_is_vis' <?php echo $visible_true;?> DISABLED /></SPAN>
 							<SPAN STYLE = 'margin-left:20px'><?php print gettext('No');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_not_vis' <?php echo $visible_false;?> DISABLED /></SPAN>
 <?php			} else {?>		
-							<SPAN STYLE = 'margin-left:10px'><?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_is_vis' <?php echo $visible_true;?> onClick = "document.u.frm_line_not_vis.checked = false;document.u.frm_line_status.value=0" /></SPAN>
-							<SPAN STYLE = 'margin-left:20px'><?php print gettext('No');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_not_vis' <?php echo $visible_false;?> onClick = "document.u.frm_line_is_vis.checked = false;document.u.frm_line_status.value=1" /></SPAN>
+							<SPAN STYLE = 'margin-left:10px'><?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_is_vis' <?php echo $visible_true;?> onClick = "document.u.frm_line_not_vis.checked = false;document.u.frm_line_status.value=0;" /></SPAN>
+							<SPAN STYLE = 'margin-left:20px'><?php print gettext('No');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_not_vis' <?php echo $visible_false;?> onClick = "document.u.frm_line_is_vis.checked = false;document.u.frm_line_status.value=1;" /></SPAN>
 <?php }?>	
 			</SPAN></TD></TR>
 
@@ -1323,11 +1323,11 @@ else {
 
 		<TR CLASS="odd" VALIGN = baseline ><TD CLASS="td_label" ALIGN="left"><?php print gettext('Apply to');?>:</TD>
 			<TD ALIGN='left' CLASS="td_label" >
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Base Map');?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" 	NAME="box_use_with_bm" 	<?php print $use_w_bm;?> onClick = "this.form.frm_use_with_bm.value=toggle(this.value)" <?php print $dis;?>/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print get_text("Regions");?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" 		NAME="box_use_with_r"	<?php print $use_w_r;?> onClick = "this.form.frm_use_with_r.value=toggle(this.value)" <?php print $dis;?>/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Facilities');?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox"	NAME="box_use_with_f"	<?php print $use_w_f;?> onClick = "this.form.frm_use_with_f.value=toggle(this.value)" <?php print $dis;?>/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Unit Exclusion Zone');?>&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" 		NAME="box_use_with_u_ex"	<?php print $use_w_u_ex;?> onClick = "this.form.frm_use_with_u_ex.value=toggle(this.value)" <?php print $dis;?>/></SPAN>
-				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Unit Ringfence');?>&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" 		NAME="box_use_with_u_rf"	<?php print $use_w_u_rf;?> onClick = "this.form.frm_use_with_u_rf.value=toggle(this.value)" <?php print $dis;?>/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Base Map');?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" 	NAME="box_use_with_bm" 	<?php print $use_w_bm;?> onClick = "this.form.frm_use_with_bm.value=toggle(this.value);" <?php print $dis;?>/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print get_text("Regions");?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" 		NAME="box_use_with_r"	<?php print $use_w_r;?> onClick = "this.form.frm_use_with_r.value=toggle(this.value);" <?php print $dis;?>/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Facilities');?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox"	NAME="box_use_with_f"	<?php print $use_w_f;?> onClick = "this.form.frm_use_with_f.value=toggle(this.value);" <?php print $dis;?>/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Unit Exclusion Zone');?>&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" 		NAME="box_use_with_u_ex"	<?php print $use_w_u_ex;?> onClick = "this.form.frm_use_with_u_ex.value=toggle(this.value);" <?php print $dis;?>/></SPAN>
+				<SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Unit Ringfence');?>&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" 		NAME="box_use_with_u_rf"	<?php print $use_w_u_rf;?> onClick = "this.form.frm_use_with_u_rf.value=toggle(this.value);" <?php print $dis;?>/></SPAN>
 				</TD>
 			</TR>
 
@@ -1353,7 +1353,7 @@ else {
 ?>
 		<TR VALIGN="baseline" CLASS="odd" ID = 'fill_cb_tr'  ><TD CLASS="td_label" ALIGN="left"><?php print gettext('Filled');?>:&nbsp;&nbsp;&nbsp;</TD>
 				<TD ALIGN="left"><SPAN CLASS="td_label" STYLE = "margin-left: 20px;" >
-				<?php print gettext('No');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_n' value = 'n' 	onClick = 'do_un_checked(this.form)' <?php echo $cb_n_checked . " " . $dis;?>  />&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php print gettext('No');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_n' value = 'n' 	onClick = 'do_un_checked(this.form);' <?php echo $cb_n_checked . " " . $dis;?>  />&nbsp;&nbsp;&nbsp;&nbsp;
 				<?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_y' value = 'y'	onClick = 'do_checked(this.form);'  <?php echo $cb_y_checked . " " . $dis;?> />				
 				</SPAN>
 			</TD></TR>
@@ -1383,7 +1383,7 @@ else {
 			<INPUT TYPE='hidden' NAME = 'frm_use_with_u_rf' VALUE='<?php print $row['use_with_u_rf'];?>' />	
 			<BR />
 <?php if (is_administrator() || is_super()) { ?>	
-			<INPUT TYPE="button" VALUE="<?php print gettext('Delete');?>" STYLE = 'width:auto;'  onClick = "do_delete(<?php echo $row['id'];?>)"/>
+			<INPUT TYPE="button" VALUE="<?php print gettext('Delete');?>" STYLE = 'width:auto;'  onClick = "do_delete(<?php echo $row['id'];?>);"/>
 <?php	} ?>			
 			&nbsp;&nbsp;<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" STYLE = 'width:auto;'  onClick = "document.canform.submit();"/>
 <?php
@@ -1490,8 +1490,8 @@ function waiter() {
 $the_id = (isset($row['id']) && (!(empty($row['id']))))? $row['id']: "";
 ?>
 <FORM NAME = 'navform' METHOD = 'post' ACTION = "<?php print basename(__FILE__);?>">
-<INPUT TYPE='hidden' NAME = '_func' VALUE = ''>
-<INPUT TYPE='hidden' NAME = 'id' VALUE = '<?php print $the_id;?>'>
+<INPUT TYPE='hidden' NAME = '_func' VALUE = ''/>
+<INPUT TYPE='hidden' NAME = 'id' VALUE = '<?php print $the_id;?>'/>
 </FORM>
 
 <FORM NAME = 'canform' METHOD = 'post' ACTION = "landb.php"></FORM>

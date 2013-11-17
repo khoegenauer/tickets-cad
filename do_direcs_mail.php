@@ -122,11 +122,11 @@ if (empty($_POST)) {
 		<INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''>	<!-- for pipe-delim'd addr string -->
 		<TABLE BORDER = 0>
 		<TR CLASS= 'even'>
-			<TD ALIGN='right'><?php print gettext('To');?>:</TD><TD><INPUT NAME='frm_name' SIZE=32 VALUE = '<?php print $contact_name;?>'></TD>
+			<TD ALIGN='right'><?php print gettext('To');?>:</TD><TD><INPUT NAME='frm_name' SIZE=32 VALUE = '<?php print $contact_name;?>'/></TD>
 			</TR>
 
 		<TR CLASS= 'odd'>
-			<TD ALIGN='right'><?php print gettext('Addr');?>:</TD><TD><INPUT NAME='frm_addr' SIZE=32 VALUE = '<?php print $contact_email;?>'></TD>
+			<TD ALIGN='right'><?php print gettext('Addr');?>:</TD><TD><INPUT NAME='frm_addr' SIZE=32 VALUE = '<?php print $contact_email;?>'/></TD>
 		</TR>
 <?php
 		if((get_variable('use_messaging') == 2) || (get_variable('use_messaging') == 3)) {	//	10/23/12
@@ -135,27 +135,27 @@ if (empty($_POST)) {
 				<TD><INPUT TYPE='text' NAME='frm_smsgaddrs' size='60' VALUE='<?php print $smsg_id;?>'></TD>
 			</TR>	
 			<TR CLASS='even'><TD><?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?: </TD> <!-- 10/23/12 -->
-				<TD><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE="0"></TD> <!-- 10/23/12 -->
+				<TD><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE="0"/></TD> <!-- 10/23/12 -->
 			</TR>			
 <?php
 			} else {
 ?>
 			<INPUT TYPE="hidden" NAME = 'frm_smsgaddrs' VALUE=""/> <!-- 10/23/12 -->
-			<INPUT TYPE='hidden' NAME = 'frm_use_smsg' VALUE = "0"> <!-- 10/23/12 -->
+			<INPUT TYPE='hidden' NAME = 'frm_use_smsg' VALUE = "0"/> <!-- 10/23/12 -->
 <?php
 			}	
 ?>
-		<TR CLASS='even'><TD ALIGN='right'><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60 VALUE = '<?php print $mail_subject;?> - <?php print $tick_name;?>'></TD></TR>		<!-- 10/29/09 -->
+		<TR CLASS='even'><TD ALIGN='right'><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60 VALUE = '<?php print $mail_subject;?> - <?php print $tick_name;?>'/></TD></TR>		<!-- 10/29/09 -->
 		<TR CLASS='odd'><TD ALIGN='right'><?php print gettext('Message');?>:</TD><TD COLSPAN=2> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4><?php print $direcs;?></TEXTAREA></TD></TR>
 		<TR CLASS='even'><TD ALIGN='center' COLSPAN=3><BR /><BR />
-		<INPUT TYPE="hidden" NAME="frm_direcs" VALUE="">
-		<INPUT TYPE="hidden" NAME="frm_u_id" VALUE='<?php print $unit_id;?>'>
-		<INPUT TYPE="hidden" NAME="frm_tick_id" VALUE='<?php print $the_tick;?>'>		
-		<INPUT TYPE="hidden" NAME="frm_mail_subject" VALUE="">
-		<INPUT TYPE="hidden" NAME="frm_scope" VALUE="">		<!-- 10/29/09 -->
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "validate()">&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
+		<INPUT TYPE="hidden" NAME="frm_direcs" VALUE=""/>
+		<INPUT TYPE="hidden" NAME="frm_u_id" VALUE='<?php print $unit_id;?>'/>
+		<INPUT TYPE="hidden" NAME="frm_tick_id" VALUE='<?php print $the_tick;?>'/>		
+		<INPUT TYPE="hidden" NAME="frm_mail_subject" VALUE=""/>
+		<INPUT TYPE="hidden" NAME="frm_scope" VALUE=""/>		<!-- 10/29/09 -->
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "validate();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'/>&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/><BR /><BR />
 			</TD></TR>
 			</TABLE></FORM>
 <?php
@@ -166,7 +166,7 @@ if (empty($_POST)) {
 ?>
 	<BODY><CENTER>		
 	<CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
-	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'><BR /><BR />
+	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'/><BR /><BR />
 
 <?php
 

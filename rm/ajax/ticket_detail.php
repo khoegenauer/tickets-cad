@@ -5,6 +5,11 @@
 
 @session_start();
 require_once('../../incs/functions.inc.php');
+/**
+ * 
+ * @param type $input
+ * @return type
+ */
 function br2nl($input) {
 	return preg_replace('/<br(\s+)?\/?>/i', "\n", $input);
 	}
@@ -14,7 +19,11 @@ $the_status_vals[0] = "Reserved";
 $the_status_vals[1] = "Closed";
 $the_status_vals[2] = "Open";
 $the_status_vals[3] = "Scheduled";
-
+/**
+ * 
+ * @param type $id
+ * @return boolean
+ */
 function the_ticket($id) {
 	$restrict_ticket = ((get_variable('restrict_user_tickets')==1) && !(is_administrator()))? " AND owner=$_SESSION[user_id]" : "";
 	$query = "SELECT *,
@@ -51,7 +60,12 @@ function the_ticket($id) {
 		return $row;
 		}
 	}	
-
+/**
+ * 
+ * @param type $user_id
+ * @param type $ticket
+ * @return type
+ */
 function get_assigns_id($user_id, $ticket) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `responder_id` = '" . $user_id . "' AND `ticket_id` = '" . $ticket . "'"; 
 	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
@@ -69,7 +83,11 @@ function get_assigns_id($user_id, $ticket) {
 	$assigns_arr[9] = (($row['on_scene_miles'] != "") && ($row['on_scene_miles'] != NULL)) ? $row['on_scene_miles']: "";	
 	return $assigns_arr;
 	}
-	
+/**
+ * 
+ * @param type $id
+ * @return string
+ */	
 function get_recfac_address($id) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = '" . $id . "' LIMIT 1"; 
 	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -94,7 +112,7 @@ $ticket_id = (isset($_GET['ticket_id'])) ? $_GET['ticket_id'] : NULL;
 $row = the_ticket($ticket_id);
 
 if (!$row) {
-	$print = "<TABLE style='width: 100%;'><TR style='width: 100%;'><TD style='width: 100%;'>No Ticket Details</TD></TR></TABLE>";
+	$print = "<TABLE style='width: 100%;'><TR style='width: 100%;'><TD style='width: 100%;'>" . gettext('No Ticket Details') . "</TD></TR></TABLE>";
 	} else {
 	switch ($row['severity']) {		
 		case 0:
@@ -118,65 +136,65 @@ if (!$row) {
 		}						// end switch(($row['severity']))
 	$rec_fac_address = ($row['rec_facility'] != 0) ? get_recfac_address($row['rec_facility']) : "";
 	$print = "<TABLE style='width: 100%; border: 2px solid #707070;'>";	
-	$print .= "<TR style='width: 100%; color: #FFFFFF; background-color: #707070;'><TD COLSPAN=2 style='text-align: center; font-weight: bold;'>TICKET DETAILS<BR />";
-	$print .= "<SPAN id='close_tkt_detail_but' class='plain' style='float: right; z-index: 999999; text-align: center; width: 40px;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='close_ticket_detail();'><IMG SRC = './images/close.png' BORDER=0 STYLE = 'vertical-align: middle'></span>";
-	$print .= "<SPAN id='directions_but' class='plain' style='float: right; z-index: 999999; text-align: center;width: 40px;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='setDirections(\"" . $row['lat'] . "," . $row['lng'] . "\", \"" . $rec_fac_address . "\");'><IMG SRC = './images/directions.png' BORDER=0 STYLE = 'vertical-align: middle'></span>";	
-	$print .= "<SPAN id='ticket_msgs' class='plain' style='float: right; z-index: 999999; text-align: center; width: 40px;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='tkt_messages(" . $ticket_id . ");'>Tkt Msgs</span>";
+	$print .= "<TR style='width: 100%; color: #FFFFFF; background-color: #707070;'><TD COLSPAN=2 style='text-align: center; font-weight: bold;'>" . gettext('TICKET DETAILS') . "<BR />";
+	$print .= "<SPAN id='close_tkt_detail_but' class='plain' style='float: right; z-index: 999999; text-align: center; width: 40px;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='close_ticket_detail();'><IMG SRC = './images/close.png' BORDER=0 STYLE = 'vertical-align: middle'/></span>";
+	$print .= "<SPAN id='directions_but' class='plain' style='float: right; z-index: 999999; text-align: center;width: 40px;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='setDirections(\"" . $row['lat'] . "," . $row['lng'] . "\", \"" . $rec_fac_address . "\");'><IMG SRC = './images/directions.png' BORDER=0 STYLE = 'vertical-align: middle'/></span>";	
+	$print .= "<SPAN id='ticket_msgs' class='plain' style='float: right; z-index: 999999; text-align: center; width: 40px;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='tkt_messages(" . $ticket_id . ");'>" . gettext('Tkt Msgs') . "</span>";
 	$print .= "</TD></TR>";
 	$rec_fac = $row['rec_facility'];
 	$rec_fac_name = ($row['rec_fac_name'] != "") ? $row['rec_fac_name'] : "Not Set";
 	$booked_date = (($row['booked_date'] != NULL) && ($row['booked_date'] != "0000-00-00 00:00:00")) ? format_date_2(strtotime($row['booked_date'])) : "";
 	$print .= "<TR style='width: 100%;'>";
-	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>Title</TD>";		
+	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>" . gettext('Title') . "</TD>";		
 	$print .= "<TD style='width: 70%; background-color: #CECECE; color: #000000;'>" . $row['scope'] . "</TD></TR>";
 	$print .= "<TR class='spacer'><TD colspan=99 class='spacer'>&nbsp;</TD></TR>";
 	$print .= "<TR style='width: 100%;'>";
-	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>Severity</TD>";		
+	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>" . gettext('Severity') . "</TD>";		
 	$print .= "<TD style='font-weight: bold; width: 70%; background-color: " . $bgcolor . "; color: " . $txtcol . ";'>" . $sev_string . "</TD></TR>";
 	$print .= "<TR class='spacer'><TD colspan=99 class='spacer'>&nbsp;</TD></TR>";		
 	$print .= "<TR style='width: 100%;'>";
-	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>Status</TD>";		
+	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>" . gettext('Status') . "</TD>";		
 	$print .= "<TD style='width: 70%; background-color: #CECECE; color: #000000;'>" . $the_status_vals[$row['status']] . "</TD></TR>";
 	$print .= "<TR class='spacer'><TD colspan=99 class='spacer'>&nbsp;</TD></TR>";		
 	$print .= "<TR style='width: 100%;'>";
-	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>Contact</TD>";		
+	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>" . gettext('Contact') . "</TD>";		
 	$print .= "<TD style='width: 70%; background-color: #CECECE; color: #000000;'>" . $row['the_contact'] . "</TD></TR>";
 	$print .= "<TR class='spacer'><TD colspan=99 class='spacer'>&nbsp;</TD></TR>";	
 	$print .= "<TR style='width: 100%;'>";
-	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>Phone</TD>";		
+	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>" . gettext('Phone') . "</TD>";		
 	$print .= "<TD style='width: 70%; background-color: #CECECE; color: #000000;'>" . $row['the_phone'] . "</TD></TR>";
 	$print .= "<TR class='spacer'><TD colspan=99 class='spacer'>&nbsp;</TD></TR>";		
 	$print .= "<TR style='width: 100%;'>";
-	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>Address</TD>";		
+	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>" . gettext('Address') . "</TD>";		
 	$print .= "<TD style='width: 70%; background-color: #CECECE; color: #000000;'>" . $row['tick_street'] . "<BR />" .  $row['tick_city'] . "<BR />" . $row['tick_state'] . "</TD></TR>";
 	$print .= "<TR class='spacer'><TD colspan=99 class='spacer'>&nbsp;</TD></TR>";		
 	$print .= "<TR style='width: 100%;'>";
-	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>Receiving Facility</TD>";			
+	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>" . gettext('Receiving Facility') . "</TD>";			
 	$print .= "<TD style='width: 70%; background-color: #DEDEDE; color: #000000;'>" . $rec_fac_name . "</TD></TR>";	
 	$print .= "<TR class='spacer'><TD colspan=99 class='spacer'>&nbsp;</TD></TR>";			
 	$print .= "<TR style='width: 100%;'>";	
-	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>911 Contacted</TD>";			
+	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>" . gettext('911 Contacted') . "</TD>";			
 	$print .= "<TD style='width: 20%; background-color: #CECECE; color: #000000;'>" . $row['nine_one_one'] . "</TD></TR>";	
 	$print .= "<TR class='spacer'><TD colspan=99 class='spacer'>&nbsp;</TD></TR>";				
 	$print .= "<TR style='width: 100%;'>";
-	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>Description</TD>";			
+	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>" . gettext('Description') . "</TD>";			
 	$print .= "<TD style='width: 70%; background-color: #DEDEDE; color: #000000;'>" . $row['tick_descr'] . "</TD></TR>";
 	$print .= "<TR class='spacer'><TD colspan=99 class='spacer'>&nbsp;</TD></TR>";				
 	$print .= "<TR style='width: 100%;'>";
-	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>Start Time</TD>";			
+	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>" . gettext('Start Time') . "</TD>";			
 	$print .= "<TD style='width: 20%; background-color: #CECECE; color: #000000;'>" . format_date_2(strtotime($row['problemstart'])) . "</TD></TR>";	
 	$print .= "<TR class='spacer'><TD colspan=99 class='spacer'>&nbsp;</TD></TR>";			
 	$print .= "<TR style='width: 100%;'>";	
 	$print .= "<TR style='width: 100%;'>";
-	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>Updated</TD>";			
+	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>" . gettext('Updated') . "</TD>";			
 	$print .= "<TD style='width: 20%; background-color: #CECECE; color: #000000;'>" . format_date_2(strtotime($row['updated'])) . "</TD></TR>";	
 	$print .= "<TR class='spacer'><TD colspan=99 class='spacer'>&nbsp;</TD></TR>";			
 	$print .= "<TR style='width: 100%;'>";		
-	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>Scheduled Time</TD>";			
+	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>" . gettext('Scheduled Time') . "</TD>";			
 	$print .= "<TD style='width: 20%; background-color: #CECECE; color: #000000;'>" . $booked_date . "</TD></TR>";	
 	$print .= "<TR class='spacer'><TD colspan=99 class='spacer'>&nbsp;</TD></TR>";			
 	$print .= "<TR style='width: 100%;'>";	
-	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>Comments</TD>";			
+	$print .= "<TD style='width: 30%; background-color: #000000; color: #FFFFFF; font-weight: bold;'>" . gettext('Comments') . "</TD>";			
 	$print .= "<TD style='width: 20%; background-color: #CECECE; color: #000000;'>" . $row['comments'] . "</TD></TR>";		
 	$print .= "<TR class='spacer'><TD colspan=99 class='spacer'>&nbsp;</TD></TR>";			
 	$print .= "</TABLE>";

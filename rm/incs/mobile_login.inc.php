@@ -1,6 +1,13 @@
 <?php
 /*
 */
+/**
+ * 
+ * @global type $hide_dispatched
+ * @global type $hide_status_groups
+ * @param type $return
+ * @return type
+ */
 function do_mobile_logout($return=FALSE){						/* logout - destroy session data */
 	global $hide_dispatched, $hide_status_groups;
 	@session_start();
@@ -39,7 +46,10 @@ function do_mobile_logout($return=FALSE){						/* logout - destroy session data 
 	if ($return) return;	
 	exit;		
 	}
-	
+/**
+ * 
+ * @return boolean
+ */	
 function check_conn_mob () {				// returns TRUE/FALSE
 	$url = "http://maps.google.com/";
 	$response="";
@@ -87,7 +97,10 @@ function check_conn_mob () {				// returns TRUE/FALSE
 		}
 		
 	}	// end function check_conn ()
-	
+/**
+ * 
+ * @param type $internet
+ */	
 function set_filenames_mob($internet) {
 	$normal = (($internet == 1) || (($internet == 3) && (check_conn ())));		// check_conn()  returns TRUE/FALSE = 8/31/10			
 	$_SESSION['internet'] = $normal;
@@ -101,7 +114,12 @@ function set_filenames_mob($internet) {
 	$_SESSION['facroutesfile'] = ($normal)? "fac_routes.php": "fac_routes_nm.php";
 	$_SESSION['warnlocationsfile'] = ($normal)?	"warn_locations.php": "warn_locations_nm.php";			//	8/9/13
 	}
-
+/**
+ * 
+ * @global type $now
+ * @param type $id
+ * @return type
+ */
 function mobile_is_expired($id) {		// returns boolean
 	global $now ;
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `id` = {$id} LIMIT 1;";	
@@ -109,7 +127,14 @@ function mobile_is_expired($id) {		// returns boolean
 	$row = @stripslashes_deep(mysql_fetch_assoc($result));
 	return ((is_resource($result)) && (mysql_affected_rows()==1) && ($row['expires'] > $now));
 	}
-	
+/**
+ * 
+ * @global type $expiry
+ * @global type $istest
+ * @param type $requested_page
+ * @param type $outinfo
+ * @param type $hh
+ */	
 function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do login/ses sion code - returns array - 2/12/09, 3/8/09
 	global $expiry, $istest;
 	$nocenter = FALSE;
@@ -247,7 +272,10 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
 		String.prototype.trim = function () {
 			return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 			};
-			
+/**
+ * 
+ * @returns {@exp;@call;isNaN|Number|@exp;@exp;@call;isNaNval}
+ */			
 		function getBrowserWidth(){
 			var val="";
 		    if (window.innerWidth){
@@ -259,6 +287,10 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
 		    else if (document.body){var val= document.body.clientWidth;}
 		        return(isNaN(val))? 1024: val;
 			}
+/**
+ * 
+ * @returns {@exp;@call;isNaN|Number|@exp;@exp;@call;isNaNval}
+ */
 		function getBrowserHeight(){
 			var val="";
 		    if (window.innerHeight){
@@ -270,7 +302,16 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
 		    else if (document.body){var val= document.body.clientHeight;}
 		        return(isNaN(val))? 740: val;
 			}
-
+/**
+ * 
+ * @param {type} name
+ * @param {type} value
+ * @param {type} expires
+ * @param {type} path
+ * @param {type} domain
+ * @param {type} secure
+ * @returns {undefined}
+ */
 		function Set_Cookie( name, value, expires, path, domain, secure ) {
 			var today = new Date();	// set time in milliseconds
 			today.setTime( today.getTime() );
@@ -289,7 +330,11 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
 			// for hours, delete * 24, for minutes, delete * 60 * 24
 			// alert('expires ' + expires_date.toGMTString());// this is for testing purposes only
 			// alert( 'today ' + today.toGMTString() );// this is for testing purpose only
-			
+/**
+ * 
+ * @param {type} check_name
+ * @returns {unresolved}
+ */			
 			function Get_Cookie( check_name ) {
 				var a_all_cookies = document.cookie.split( ';' ); 	// first we'll split this cookie up into name/value pairs
 				var a_temp_cookie = '';							  	// note: document.cookie only returns name=value, not the other components
@@ -315,14 +360,20 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
 					return null;
 					}
 				}		// end function Get_Cookie(
-		
+/**
+ * 
+ * @returns {undefined}
+ */
 		function do_hh_onload () {				// 2/24/09
 			document.login_form.scr_width.value=getBrowserWidth();
 			document.login_form.scr_height.value=getBrowserHeight();
 			document.login_form.frm_user.focus();
 			}		// end function 
 
-
+/**
+ * 
+ * @returns {undefined}
+ */
 		function do_onload () {
 			document.login_form.scr_width.value=screen.width;			// 1/23/10
 			document.login_form.scr_height.value=screen.height;
@@ -331,39 +382,67 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
 			}		// end function do_onload () 
 
 		var theToken = '<?php echo $token;?>';
+/**
+ * 
+ * @param {type} the_form
+ * @returns {undefined}
+ */    
 		function validate(the_form) {
 			the_form.frm_user.value = the_form.frm_user.value.trim().toLowerCase();
 			the_form.encoding.value = hex_md5(the_form.frm_passwd.value);
 			the_form.frm_passwd.value="";				// DO MOT SEND!
 			the_form.submit();
 			}	
-		
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */		
 		function do_hover (the_id) {
 			CngClass(the_id, 'hover');
 			return true;
 			}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 		function do_plain (the_id) {
 			CngClass(the_id, 'plain');
 			return true;
 			}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 		function do_sb_hover (the_id) {
 			CngClass(the_id, 'screen_but_hover');
 			return true;
 			}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 		function do_sb_plain (the_id) {
 			CngClass(the_id, 'screen_but_plain');
 			return true;
 			}
-			
-
-		function CngClass(obj, the_class){
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
+    function CngClass(obj, the_class){
 			$(obj).className=the_class;
 			return true;
 			}
-			
+/**
+ * 
+ * @returns {Array}
+ */
 		function $() {
 			var elements = new Array();
 			for (var i = 0; i < arguments.length; i++) {
@@ -379,16 +458,16 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
 		</SCRIPT>
 		</HEAD>
 <?php
-		print ($hh)? "\n\t<BODY onLoad = 'do_hh_onload()'>\n" : "\n\t<BODY onLoad = 'do_onload()'>\n";		// 2/24/09
+		print ($hh)? "\n\t<BODY onLoad = 'do_hh_onload();'>\n" : "\n\t<BODY onLoad = 'do_onload();'>\n";		// 2/24/09
 ?>	
 		
 		<CENTER>
 		<div id='outer' class='screen'>		
-			<div style='font-weight: bold; font-size: 1.2em; color: #000000; background-color: #FFFFCC;'><?php print get_variable('login_banner');?></FONT></div><BR />
+			<div style='font-weight: bold; font-size: 1.2em; color: #000000; background-color: #FFFFCC;'><?php print get_variable('login_banner');?></div><BR />
 			<FORM METHOD="post" ACTION="<?php print $requested_page;?>" NAME="login_form"  onSubmit="return true;">
 			<div>
 <?php
-				if(array_key_exists('frm_passwd', $_POST)) {$warn = "Login failed. Pls enter correct values and try again.";}
+				if(array_key_exists('frm_passwd', $_POST)) {$warn = gettext("Login failed. Please enter correct values and try again.");}
 				if(!(empty($warn))) { 
 					print "<div><FONT CLASS='warn'>
 					{$warn}
@@ -399,15 +478,15 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
 ?>
 				<div style='display: inline; font-size: 1.5em; font-weight: bold;'><?php print get_text("User"); ?><BR /><INPUT TYPE="text" NAME="frm_user" onChange = "document.login_form.frm_user.value = document.login_form.frm_user.value.trim();" VALUE=""></div><BR />
 				<div style='display: inline; font-size: 1.5em; font-weight: bold;'><?php print get_text("Password"); ?><BR /><INPUT TYPE="password" NAME="frm_passwd" onChange = "document.login_form.frm_passwd.value = document.login_form.frm_passwd.value.trim();"  VALUE=""></div><BR /><BR /><BR />
-				<span id="sub_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.forms.login_form.submit() ;"><?php print get_text("Log In"); ?></span>
+				<span id="sub_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.forms.login_form.submit();"><?php print get_text("Log In"); ?></span>
 			</div>
 
-			<INPUT TYPE='hidden' NAME = 'encoding' VALUE=''>		
-			<INPUT TYPE='hidden' NAME = 'scr_width' VALUE=''>
-			<INPUT TYPE='hidden' NAME = 'scr_height' VALUE=''>
-			<INPUT TYPE='hidden' NAME = 'frm_referer' VALUE="<?php print $temp; ?>">
+			<INPUT TYPE='hidden' NAME = 'encoding' VALUE=''/>		
+			<INPUT TYPE='hidden' NAME = 'scr_width' VALUE=''/>
+			<INPUT TYPE='hidden' NAME = 'scr_height' VALUE=''/>
+			<INPUT TYPE='hidden' NAME = 'frm_referer' VALUE="<?php print $temp; ?>"/>
 			</FORM><BR /><BR />
-			<a href="http://www.ticketscad.org/"><SPAN CLASS='text_small'>Tickets CAD Project home</SPAN></a><BR /><BR />
+			<a href="http://www.ticketscad.org/"><SPAN CLASS='text_small'><?php print gettext('Tickets CAD Project home');?></SPAN></a><BR /><BR />
 			<div><IMG BORDER=0 SRC='../open_source_button.png' <?php print $my_click; ?>>&nbsp;&nbsp;<img src="../php.png" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>			
 		</div>
 		</CENTER>

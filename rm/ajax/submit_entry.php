@@ -7,7 +7,11 @@ require_once('../../incs/functions.inc.php');
 @session_start();
 $the_session = $_GET['session'];
 
-
+/**
+ * 
+ * @param type $the_id
+ * @return type
+ */
 function get_user_name($the_id) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` `u` WHERE `id` = " . $the_id . " LIMIT 1";
 	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	

@@ -10,7 +10,7 @@ $ret_arr = array();
 $i = 0;
 
 if(!isset($_GET)) {
-	$print = "<TABLE style='width: 100%;'><TR style='width: 100%;'><TD style='width: 100%;'>No Alerts</TD></TR></TABLE>";
+	$print = "<TABLE style='width: 100%;'><TR style='width: 100%;'><TD style='width: 100%;'>" . gettext('No Alerts') . "</TD></TR></TABLE>";
 	print $print;
 	exit();
 	}
@@ -18,7 +18,15 @@ if(!isset($_GET)) {
 $curr_lat = $_GET['lat'];
 $curr_lng = $_GET['lng'];
 $unit = (isset($_GET['unit'])) ? $_GET['unit'] : "M";
-
+/**
+ * 
+ * @param type $lat1
+ * @param type $lon1
+ * @param type $lat2
+ * @param type $lon2
+ * @param type $unit
+ * @return int
+ */
 function distance($lat1, $lon1, $lat2, $lon2, $unit) { 
 	if(($lat1 == 0 ) || ($lon1 == 0)) { 
 		return 0; 
@@ -38,7 +46,12 @@ function distance($lat1, $lon1, $lat2, $lon2, $unit) {
 		return $miles;
 		}
 	}
-
+/**
+ * 
+ * @param type $a
+ * @param type $subkey
+ * @return type
+ */
 function subval_sort($a,$subkey) {
 	foreach($a as $k=>$v) {
 		$b[$k] = strtolower($v[$subkey]);
@@ -51,7 +64,11 @@ function subval_sort($a,$subkey) {
 	}
 
 $the_arr = array();
-
+/**
+ * 
+ * @param type $input
+ * @return type
+ */
 function br2nl($input) {
 	return preg_replace('/<br(\s+)?\/?>/i', "\n", $input);
 	}
@@ -68,10 +85,10 @@ $result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(
 $bgcolor = "#EEEEEE";
 $num=mysql_num_rows($result);
 if (mysql_num_rows($result) == 0) { 				// 8/6/08
-	$print = "<TABLE style='width: 100%;'><TR style='width: 100%;'><TD style='width: 100%;'>No Alerts</TD></TR></TABLE>";
+	$print = "<TABLE style='width: 100%;'><TR style='width: 100%;'><TD style='width: 100%;'>" . gettext('No Alerts') . "</TD></TR></TABLE>";
 	} else {
 	$print = "<TABLE style='width: 100%;'>";
-	$print .= "<TR style='width: 100%; font-weight: bold; color: #FFFFFF; background-color: #707070;'><TD style='width: 30%;'>LOCATION</TD><TD style='width: 60%;'>SUBJECT</TD><TD style='width: 10%;'>DIST</TD></TR>";
+	$print .= "<TR style='width: 100%; font-weight: bold; color: #FFFFFF; background-color: #707070;'><TD style='width: 30%;'>" . gettext('LOCATION') . "</TD><TD style='width: 60%;'>" . gettext('SUBJECT') . "</TD><TD style='width: 10%;'>" . gettext('DIST') . "</TD></TR>";
 	$z=0;
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))){
 		$the_arr[$z]['id'] = $row['id'];

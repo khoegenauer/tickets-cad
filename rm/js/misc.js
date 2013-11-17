@@ -60,7 +60,7 @@ String.prototype.trim = function () {
 	        oldonload();
 	      }
 	      func();
-	    }
+	    };
 	  }
 	};
 	// does the heavy work of working through the browsers idiosyncracies (let's call them that) to hook onload.
@@ -165,16 +165,16 @@ String.prototype.trim = function () {
 				return;
 				}
 			callback(req);
-			}
+			};
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}	// end function sendRequest()
 	
 	var XMLHttpFactories = [
-		function () {return new XMLHttpRequest()	},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
 	
 	function createXMLHTTPObject() {

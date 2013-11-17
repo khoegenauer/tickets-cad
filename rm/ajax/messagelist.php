@@ -58,10 +58,10 @@ $result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(
 $bgcolor = "#EEEEEE";
 $num=mysql_num_rows($result);
 if (mysql_num_rows($result) == 0) { 				// 8/6/08
-	$print = "<TABLE style='width: 100%;'><TR style='width: 100%;'><TD style='width: 100%;'>No Messages</TD></TR></TABLE>";	
+	$print = "<TABLE style='width: 100%;'><TR style='width: 100%;'><TD style='width: 100%;'>" . gettext('No Messages') . "</TD></TR></TABLE>";	
 	} else {
 	$print = "<TABLE style='width: 100%;'>";	
-	$print .= "<TR style='width: 100%; font-weight: bold; color: #FFFFFF; background-color: #707070;'><TD style='width: 10%;'>TYPE</TD><TD style='width: 30%;'>FROM</TD><TD style='width: 40%;'>SUBJECT</TD><TD style='width: 20%;'>DATE</TD></TR>";
+	$print .= "<TR style='width: 100%; font-weight: bold; color: #FFFFFF; background-color: #707070;'><TD style='width: 10%;'>" . gettext('TYPE') . "</TD><TD style='width: 30%;'>" . gettext('FROM') . "</TD><TD style='width: 40%;'>" . gettext('SUBJECT') . "</TD><TD style='width: 20%;'>" . gettext('DATE') . "</TD></TR>";
 	while ($msg_row = stripslashes_deep(mysql_fetch_assoc($result))){
 		$the_readers = array();
 		$the_readers = explode("," , $msg_row['readby']);

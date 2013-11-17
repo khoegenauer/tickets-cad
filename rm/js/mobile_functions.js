@@ -300,7 +300,7 @@ function slideIt(theDiv, theButton) {
 	if (parseInt(slidingDiv.style.left) < stopPosition ) {
 		slidingDiv.style.left = parseInt(slidingDiv.style.left) + 4 + "px";
 //		setTimeout(slideIt(theDiv, theButton), .5);
-		setTimeout(function(){slideIt(theDiv, theButton)}, .5);
+		setTimeout(function(){slideIt(theDiv, theButton);}, .5);
 		}
 	$(theButton).setAttribute( "onClick", 'javascript: slideIn("' + theDiv + '", this.id);' );	
 	$(theButton).innerHTML = "Hide Menu";	
@@ -317,7 +317,7 @@ function slideIn(theDiv, theButton) {
 	if (parseInt(slidingDiv.style.left) > stopPosition ) { 
 		slidingDiv.style.left = parseInt(slidingDiv.style.left) - 4 + "px";
 //		setTimeout(slideIn(theDiv,theButton), .5);
-		setTimeout(function(){slideIn(theDiv, theButton)}, .5);		
+		setTimeout(function(){slideIn(theDiv, theButton);}, .5);		
 		}
 	$(theButton).setAttribute( "onClick", 'javascript: slideIt("' + theDiv + '", this.id);' );	
 	$(theButton).innerHTML = "Show Menu";		
@@ -424,7 +424,7 @@ function sendRequest(url,callback,postData) {
 			return;
 			}
 		callback(req);
-		}
+		};
 	if (req.readyState == 4) return;
 	req.send(postData);
 	}
@@ -528,7 +528,7 @@ function alert_location() {
  */	
 function the_status(status, title, description) {
 	if (confirm("Are you sure you want submit this " + title + " report?")) { 
-		sub_data(title,description,form_add,the_lat,the_lng,status)
+		sub_data(title,description,form_add,the_lat,the_lng,status);
 //		initialise();
 		get_conditions();		
 		slideIn();

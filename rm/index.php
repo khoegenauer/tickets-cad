@@ -42,7 +42,13 @@ while ($row_st = stripslashes_deep(mysql_fetch_array($result_st))) {
 	$status_vals[$temp] = $row_st['status_val'];
 	}
 unset($result_st);
-
+/**
+ * 
+ * @param type $unit_in
+ * @param type $status_val_in
+ * @param type $tbl_in
+ * @return string
+ */
 function get_status_selector($unit_in, $status_val_in, $tbl_in) {
 	switch ($tbl_in) {
 		case ("u") :
@@ -58,7 +64,7 @@ function get_status_selector($unit_in, $status_val_in, $tbl_in) {
 			$status_field = "status_val";
 			break;
 		default:
-			print "ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ";	
+			print gettext("ERROR") . gettext("ERROR") . gettext("ERROR") . gettext("ERROR") . gettext("ERROR") . gettext("ERROR");	
 			}
 
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]{$tablename}`, `$GLOBALS[mysql_prefix]{$status_table}` WHERE `$GLOBALS[mysql_prefix]{$tablename}`.`id` = $unit_in 
@@ -96,7 +102,11 @@ function get_status_selector($unit_in, $status_val_in, $tbl_in) {
 	$outstr .= "\t\t</OPTGROUP>\t\t</SELECT>";
 	return $outstr;
 	}
-
+/**
+ * 
+ * @param type $id
+ * @return type
+ */
 function get_responder_details($id) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `id`= " . $id;
 	$result = mysql_query($query);
@@ -104,7 +114,11 @@ function get_responder_details($id) {
 	$ret = $row['contact_via'];
 	return $ret;
 	}
-	
+/**
+ * 
+ * @param type $id
+ * @return type
+ */	
 function get_responder_status($id) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `id`= " . $id;
 	$result = mysql_query($query);
@@ -112,7 +126,11 @@ function get_responder_status($id) {
 	$ret = $row['un_status_id'];
 	return $ret;
 	}
-	
+/**
+ * 
+ * @param type $id
+ * @return string
+ */	
 function get_responder_name($id) {
 	if(($id == 0) && (isset($_SESSION['user_id']))) {
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `id` = " . $_SESSION['user_id'];
@@ -166,14 +184,14 @@ $logged_in_load = ($logged_in == 1) ? "get_conditions(); get_ticket_markers(" . 
 <!DOCTYPE html>
 <html>
 <head>
-<title>Tickets Mobile Screen</title>
+<title><?php print gettext('Tickets Mobile Screen');?></title>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <link rel="stylesheet" href="../js/leaflet/leaflet.css" />
 <!--[if lte IE 8]>
      <link rel="stylesheet" href="../js/leaflet/leaflet.ie.css" />
 <![endif]-->
-<LINK REL=StyleSheet HREF="./css/stylesheet.php?version=<?php print time();?>" TYPE="text/css">	
+<LINK REL="StyleSheet" HREF="./css/stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	
 <style type="text/css">
 	*, html { margin:0; padding:0 }
 	div#map_canvas {z-index: 1; position: fixed; top: 0px; left: 0px;}
@@ -268,7 +286,7 @@ var chat_user = parseInt("<?php print $chat_user;?>");
 var do_chat = false;
 var theIcon;
 
-window.onresize=function(){set_size()};
+window.onresize=function(){set_size();};
 
 window.onload = function() {
 	set_size();
@@ -279,14 +297,14 @@ function set_size() {
 	var viewportwidth;
 	var viewportheight;
 	if (typeof window.innerWidth != 'undefined') {
-		viewportwidth = window.innerWidth,
-		viewportheight = window.innerHeight
+		viewportwidth = window.innerWidth;
+		viewportheight = window.innerHeight;
 		} else if (typeof document.documentElement != 'undefined'	&& typeof document.documentElement.clientWidth != 'undefined' && document.documentElement.clientWidth != 0) {
-		viewportwidth = document.documentElement.clientWidth,
-		viewportheight = document.documentElement.clientHeight
+		viewportwidth = document.documentElement.clientWidth;
+		viewportheight = document.documentElement.clientHeight;
 		} else {
-		viewportwidth = document.getElementsByTagName('body')[0].clientWidth,
-		viewportheight = document.getElementsByTagName('body')[0].clientHeight
+		viewportwidth = document.getElementsByTagName('body')[0].clientWidth;
+		viewportheight = document.getElementsByTagName('body')[0].clientHeight;
 		}
 	var mapWidth = viewportwidth;
 	var mapHeight = viewportheight;
@@ -308,7 +326,7 @@ function set_size() {
 	initialise();
 	}
 
-Number.prototype.between = function(first,last){    return (first < last ? this >= first && this <= last : this >= last && this <= first);}
+Number.prototype.between = function(first,last){    return (first < last ? this >= first && this <= last : this >= last && this <= first);};
 
 var condIcon = L.Icon.extend({
     options: {
@@ -674,7 +692,7 @@ function tkt_messages(ticket_id) {
 	function main_mess_cb(req) {
 		the_messages=close_button;
 		the_messages+=req.responseText;		
-		$('tkt_message_list').innerHTML = "Loading Messages............";
+		$('tkt_message_list').innerHTML = "<?php print gettext('Loading Messages.');?>...........";
 		setTimeout(function() {$('tkt_message_list').innerHTML = the_messages;},1000);
 		}
 	}
@@ -696,7 +714,7 @@ function get_alerts() {
 	sendRequest (url, alerts_cb, "");
 	function alerts_cb(req) {
 		the_alerts=req.responseText;
-		$('alert_list').innerHTML = "Loading Alerts............";
+		$('alert_list').innerHTML = "<?php print gettext('Loading Alerts.');?>...........";
 		setTimeout(function() {$('alert_list').innerHTML = the_alerts;},1000);
 		}
 	}	
@@ -707,7 +725,7 @@ function get_tickets(user_id) {
 	sendRequest (url, tickets_cb, "");
 	function tickets_cb(req) {
 		var the_tickets=req.responseText;
-		$('ticket_list').innerHTML = "Loading Ticket List............";
+		$('ticket_list').innerHTML = "<?php print gettext('Loading Ticket List.');?>...........";
 		setTimeout(function() {$('ticket_list').innerHTML = the_tickets;},1000);
 		}
 	}	
@@ -729,7 +747,7 @@ function get_ticket_markers(user_id) {
 			var tkt_desc = the_tickets[key][4];
 			var tkt_opened = the_tickets[key][5];
 			var info = "<TABLE style='width: 100%; border: 3px outset #707070; background-colour: #CECECE;'>";
-			info += "<TR style='border: 1px solid #707070;'><TH colspan=99 class='header'>Incident</TH></TR>";
+			info += "<TR style='border: 1px solid #707070;'><TH colspan=99 class='header'><?php print gettext('Incident');?></TH></TR>";
 			info += "<TR style='border: 1px solid #707070;'><TD style='background-color: #707070; font-weight: bold; color: #FFFFFF'>Title</TD><TD style='font-weight: bold;'>" + tkt_scope + "</TD></TR>";
 			info += "<TR style='border: 1px solid #707070;'><TD style='background-color: #707070; font-weight: bold; color: #FFFFFF'>Description</TD><TD>" + tkt_desc + "</TD></TR>";
 			info += "<TR style='border: 1px solid #707070;'><TD style='background-color: #707070; font-weight: bold; color: #FFFFFF'>Incident Started</TD><TD>" + tkt_opened + "</TD></TR>";
@@ -754,23 +772,23 @@ function get_ticket(ticket_id) {
 		$('ticket_detail').style.display = "block";				
 		$('ticket_detail_wrapper').style.display = "block";	
 		var the_text_alert = "Dispatching Assigns ID " + the_assigns_id;
-		$('disp_but').innerHTML = "Dispatched<BR />" + the_ticket[1]; 
+		$('disp_but').innerHTML = "<?php print gettext('Dispatched');?><BR />" + the_ticket[1]; 
 		if(the_ticket[1] != "") { $('disp_but').setAttribute( "onClick", "" ); $('disp_but').setAttribute( "onMouseover", "" );	$('disp_but').setAttribute( "onMouseout", "" );}
-		$('resp_but').innerHTML = "Responding<BR />" + the_ticket[2]; 
+		$('resp_but').innerHTML = "<?php print gettext('Responding');?><BR />" + the_ticket[2]; 
 		if(the_ticket[2] != "") { $('resp_but').setAttribute( "onClick", "" ); $('resp_but').setAttribute( "onMouseover", "" );	$('resp_but').setAttribute( "onMouseout", "" );}
-		$('os_but').innerHTML = "On Scene<BR />" + the_ticket[3]; 
+		$('os_but').innerHTML = "<?php print gettext('On Scene');?><BR />" + the_ticket[3]; 
 		if(the_ticket[3] != "") { $('os_but').setAttribute( "onClick", "" ); $('os_but').setAttribute( "onMouseover", "" ); $('os_but').setAttribute( "onMouseout", "" );}
-		$('fenr_but').innerHTML = "Fac enroute<BR />" + the_ticket[4]; 
+		$('fenr_but').innerHTML = "<?php print gettext('Fac enroute');?><BR />" + the_ticket[4]; 
 		if(the_ticket[4] != "") { $('fenr_but').setAttribute( "onClick", "" ); $('fenr_but').setAttribute( "onMouseover", "" ); $('fenr_but').setAttribute( "onMouseout", "" );}
-		$('farr_but').innerHTML = "Fac Arrived<BR />" + the_ticket[5]; 
+		$('farr_but').innerHTML = "<?php print gettext('Fac Arrived');?><BR />" + the_ticket[5]; 
 		if(the_ticket[5] != "") { $('farr_but').setAttribute( "onClick", "" ); $('farr_but').setAttribute( "onMouseover", "" ); $('farr_but').setAttribute( "onMouseout", "" );}
-		$('clear_but').innerHTML = "Clear<BR />" + the_ticket[6]; 
+		$('clear_but').innerHTML = "<?php print gettext('Clear');?><BR />" + the_ticket[6]; 
 		if(the_ticket[6] != "") { $('clear_but').setAttribute( "onClick", "" ); $('clear_but').setAttribute( "onMouseover", "" ); $('clear_but').setAttribute( "onMouseout", "" );}
-		if((the_ticket[7] != "") && (the_ticket[7] != 0)) { $('mileage_start_but').innerHTML = "Start Miles<BR />" + the_ticket[7];} 
+		if((the_ticket[7] != "") && (the_ticket[7] != 0)) { $('mileage_start_but').innerHTML = "<?php print gettext('Start Miles');?><BR />" + the_ticket[7];} 
 		if((the_ticket[7] != "") && (the_ticket[7] != 0)) { $('mileage_start_but').setAttribute( "onClick", "" ); $('mileage_start_but').setAttribute( "onMouseover", "" ); $('mileage_start_but').setAttribute( "onMouseout", "" );}
-		if((the_ticket[8] != "") && (the_ticket[8] != 0)) { $('mileage_end_but').innerHTML = "End Miles<BR />" + the_ticket[8]; }
+		if((the_ticket[8] != "") && (the_ticket[8] != 0)) { $('mileage_end_but').innerHTML = "<?php print gettext('End Miles');?><BR />" + the_ticket[8]; }
 		if((the_ticket[8] != "") && (the_ticket[8] != 0)) { $('mileage_end_but').setAttribute( "onClick", "" ); $('mileage_end_but').setAttribute( "onMouseover", "" ); $('mileage_end_but').setAttribute( "onMouseout", "" );}
-		if((the_ticket[9] != "") && (the_ticket[9] != 0)) {$('mileage_os_but').innerHTML = "On Scene Miles<BR />" + the_ticket[9]; }
+		if((the_ticket[9] != "") && (the_ticket[9] != 0)) {$('mileage_os_but').innerHTML = "<?php print gettext('On Scene Miles');?><BR />" + the_ticket[9]; }
 		if((the_ticket[9] != "") && (the_ticket[9] != 0)) { $('mileage_os_but').setAttribute( "onClick", "" ); $('mileage_os_but').setAttribute( "onMouseover", "" ); $('mileage_os_but').setAttribute( "onMouseout", "" );}	
 		if(the_ticket[1] != "") { $('disp_but').style.backgroundColor = "#66FF00"; $('disp_but').style.color = "#707070"; }
 		if(the_ticket[2] != "") { $('resp_but').style.backgroundColor = "#66FF00"; $('resp_but').style.color = "#707070"; }
@@ -807,7 +825,7 @@ function get_message(message_id) {
 		var tickets_address = "<?php print get_variable('email_reply_to');?>";
 		$('message_list').style.display = "none";
 		$('message_detail').style.display = "block";				
-		$('message_detail').innerHTML = "Loading Message Details............";
+		$('message_detail').innerHTML = "<?php print gettext('Loading Message Details.');?>...........";
 		tick_id = the_message[1];
 		setTimeout(function() {$('message_detail').innerHTML = the_message[4];},1000);
 		setTimeout(function() {if(the_return_add != tickets_address) { $('reply_but').style.display = "inline"; msg_subject = the_message[2]; msg_text = the_message[3];}},1000);	
@@ -846,7 +864,7 @@ function get_tkt_message(message_id) {
 		var tickets_address = "<?php print get_variable('email_reply_to');?>";
 		$('tkt_message_list').style.display = "none";
 		$('tkt_message_detail').style.display = "block";				
-		$('tkt_message_detail').innerHTML = "Loading Message Details............";
+		$('tkt_message_detail').innerHTML = "<?php print gettext('Loading Message Details.');?>...........";
 		tick_id = the_message[1];
 		setTimeout(function() {$('tkt_message_detail').innerHTML = the_message[4];},1000);
 		setTimeout(function() {if(the_return_add != tickets_address) { $('tkt_reply_but').style.display = "inline"; msg_subject = the_message[2]; msg_text = the_message[3];}},1000);		
@@ -876,7 +894,7 @@ function get_alert(alert_id) {
 		var the_ticket=req.responseText;
 		$('alert_list').style.display = "none";
 		$('alert_detail').style.display = "block";				
-		$('alert_detail').innerHTML = "Loading Alert Details............";
+		$('alert_detail').innerHTML = "<?php print gettext('Loading Alert Details.');?>...........";
 		setTimeout(function() {$('alert_detail').innerHTML = the_ticket;},1000);
 		}
 	}	
@@ -937,7 +955,7 @@ function slideIt(theDiv, theButton) {
 		
 		}
 	$(theButton).setAttribute( "onClick", 'javascript: slideIn("' + theDiv + '", this.id);' );	
-	$(theButton).innerHTML = "Hide Menu";	
+	$(theButton).innerHTML = "<?php print gettext('Hide Menu');?>";	
 	}
 
 function slideIn(theDiv, theButton) {
@@ -948,7 +966,7 @@ function slideIn(theDiv, theButton) {
 		setTimeout(function(){slideIn(theDiv, theButton)}, .5);		
 		}
 	$(theButton).setAttribute( "onClick", 'javascript: slideIt("' + theDiv + '", this.id);' );	
-	$(theButton).innerHTML = "Show Menu";		
+	$(theButton).innerHTML = "<?php print gettext('Show Menu');?>";		
 	}
 	
 function get_conditions() {
@@ -959,7 +977,7 @@ function get_conditions() {
 		var cond_response=JSON.decode(req.responseText);
 		for(var key in cond_response) {
 			if(cond_response[key][0] == 100) {	
-				alert("error");
+				alert("<?php print gettext('error');?>");
 				} else {
 				var the_id = cond_response[key][0];
 				var the_title = cond_response[key][1];	
@@ -986,9 +1004,9 @@ function sub_data(title,address,lat,lng,type) {
 	function sub_cb(req) {
 		var response=JSON.decode(req.responseText);
 		if(response[0] == 100) {
-			msg = "Report Submitted - Thank You";
+			msg = "<?php print gettext('Report Submitted - Thank You');?>";
 			} else {
-			msg = "There was an error submitting the data, please try again";
+			msg = "<?php print gettext('There was an error submitting the data, please try again');?>";
 			}
 		show_msg(msg);	
 		}
@@ -1014,10 +1032,10 @@ function sendRequest(url,callback,postData) {
 	}
 
 var XMLHttpFactories = [
-	function () {return new XMLHttpRequest()	},
-	function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-	function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-	function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+	function () {return new XMLHttpRequest();	},
+	function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+	function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+	function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 	];
 
 function createXMLHTTPObject() {
@@ -1083,7 +1101,7 @@ function alert_location() {
 	
 function the_status(status, title) {
 	if (confirm("Are you sure you want submit this " + title + " report?")) { 
-		sub_data(title,form_add,the_lat,the_lng,status)
+		sub_data(title,form_add,the_lat,the_lng,status);
 		get_conditions();		
 		slideIn('buttons', 'menu_but');	
 		}
@@ -1290,10 +1308,10 @@ function send_message() {
 	function send_msg_cb(req) {
 		var the_response=JSON.decode(req.responseText);
 		if(the_response[0] == 100) {
-			$('message_alert').innerHTML = "Reply Sent";
+			$('message_alert').innerHTML = "<?php print gettext('Reply Sent');?>";
 			can_reply();
 			} else {
-			$('message_alert').innerHTML = "Reply FAILED";
+			$('message_alert').innerHTML = "<?php print gettext('Reply FAILED');?>";
 			can_reply();
 			}
 		}	
@@ -1464,7 +1482,7 @@ var last_msg_id=0;									// initial value at page load
 
 function rd_chat_msg() {							// read chat messages via ajax xfer - 5/29/10
 	var our_max = (first)? 5 : <?php print $list_length ;?>;		// startup limiter
-	var params = "last_id=" + last_msg_id + "&max_ct=" + our_max ;
+	var params = "last_id=" + last_msg_id + "&max_ct=" + our_max;
 	first = false;													// standard limiter
 	sendRequest ('./ajax/chat_rd.php',handleResult, params);	// 
 	}
@@ -1477,7 +1495,7 @@ function handleResult(req) {									// the called-back phone lookup function
 		}
 	else {
 		var person = document.getElementById("person");
-		var lines = payload.split(0xFF, 99) 											// lines FF-delimited
+		var lines = payload.split(0xFF, 99); 											// lines FF-delimited
 		for (i=0;i<lines.length; i++) {
 			var theLine = lines[i].split("\t", 6);										// tab-delimited
 			if (theLine.length>1){
@@ -1555,7 +1573,7 @@ function wr_chat_msg(the_Form) {							// write chat message via ajax xfer
 		set_to();										// set timeout again
 		the_Form.frm_message.value="";
 //			the_Form.frm_message.focus();
-		do_focus ()
+		do_focus ();
 		}				// end if/else (payload.substring(... )
 	}		// end function wr_chat_ msg()
 
@@ -1575,7 +1593,7 @@ function do_enter(e) {										// enter key submits form
 	else if(e.which)	{keynum = e.which;	}				// Mozilla/Opera
 	if (keynum==13) {										// allow enter key
 		wr_chat_msg(document.forms['chat_form']) ;					// submit to server-side script
-		do_focus ()
+		do_focus ();
 		}
 	else {
 		keychar = String.fromCharCode(keynum);
@@ -1588,7 +1606,7 @@ function announce() {										//end announcement
 	}
 
 function set_to() {										// set timeout
-	if (!the_to) {the_to=setTimeout('getMessages(false)', <?php print $cycle;?>)}
+	if (!the_to) {the_to=setTimeout('getMessages(false)', <?php print $cycle;?>);}
 	}
 	
 function clear_to() {
@@ -1660,7 +1678,7 @@ function chat_stop() {
 	
 function pause_messages() {	//	10/29/13
 	clear_to();
-	$('help').innerHTML = "Click Cancel to return to chat messages";
+	$('help').innerHTML = "<?php print gettext('Click Cancel to return to chat messages');?>";
 	}
 // 	end of chat functions
 </script>
@@ -1673,18 +1691,18 @@ function pause_messages() {	//	10/29/13
 		<div id='map_but' onClick = "map_controls_onoff();"><IMG SRC = './images/map.png' ALT='Map Controls' BORDER=0 STYLE = 'vertical-align: middle'></div>		
 		<div id='map_controls' style='display: none; border: 3px outset #707070; background-color: #CECECE; width: 70px; height: 230px'>
 			<div id='day_but' style='display: none;' onClick = "do_day();"><IMG SRC = './images/day.png' ALT='Day Colorsl' BORDER=0 STYLE = 'vertical-align: middle'></div>
-			<div id='night_but' onClick = "do_night();"><IMG SRC = './images/night.png' ALT='Night Colors' BORDER=0 STYLE = 'vertical-align: middle'></div>			
-			<div id='toggle_tracks_but' style='display: none;' onClick = "toggleTracks();"><IMG SRC = './images/toggle_tracks.png' ALT='Toggle Tracks' BORDER=0 STYLE = 'vertical-align: middle'></div>	
+			<div id='night_but' onClick = "do_night();"><IMG SRC = './images/night.png' ALT='<?php print gettext('Night Colors');?>' BORDER=0 STYLE = 'vertical-align: middle'></div>			
+			<div id='toggle_tracks_but' style='display: none;' onClick = "toggleTracks();"><IMG SRC = './images/toggle_tracks.png' ALT='<?php print gettext('Toggle Tracks');?>' BORDER=0 STYLE = 'vertical-align: middle'></div>	
 			<div id='toggle_tracks_off_but' style='display: none;' onClick = "toggleTracks();"><IMG SRC = './images/toggle_tracks_off.png' ALT='Toggle Tracks' BORDER=0 STYLE = 'vertical-align: middle'></div>		
-			<div id='center_but' onClick = "map.panTo(theLatLng,{animate: true});"><IMG SRC = './images/center.png' ALT='Center on me' BORDER=0 STYLE = 'vertical-align: middle'></div>	
+			<div id='center_but' onClick = "map.panTo(theLatLng,{animate: true});"><IMG SRC = './images/center.png' ALT='<?php print gettext('Center on me');?>' BORDER=0 STYLE = 'vertical-align: middle'></div>	
 		</div>
 <!--		<div id='help_but' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);">HELP</div>	-->
 <!--		<div id='center_but' onClick = "gotoCentre();"><IMG SRC = './images/center.png' ALT='Center on Me' BORDER=0 STYLE = 'vertical-align: middle'></div>			-->
 		<div id="buttons" style='position:absolute; left:-300px; top: 130px; z-index: 10; text-align: center; background-color: #CECECE; border: 3px outset #DEDEDE; padding: 10px;'>
-			<span id="mylat" class='plain' style="display: inline-block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'alert_coords();'>My Lat Lng</span><BR />	
-			<span id="myloc" class='plain' style="display: inline-block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'alert_location();'>My Location</span><BR />	
+			<span id="mylat" class='plain' style="display: inline-block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'alert_coords();'><?php print gettext('My Lat Lng');?></span><BR />	
+			<span id="myloc" class='plain' style="display: inline-block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'alert_location();'><?php print gettext('My Location');?></span><BR />	
 			<span id="refresh_but" class='plain' style="display: inline-block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'refresh_screen();'>Refresh</span><BR /><BR />
-			<span style='font-weight: bold; font-size: 16px;'>Road Conditions</span><BR />					
+			<span style='font-weight: bold; font-size: 16px;'><?php print gettext('Road Conditions');?></span><BR />					
 			<select style='font-size: 16px;' id='condition_selector' name="selectionField" onChange="the_status(this.options[this.selectedIndex].value, this.options[this.selectedIndex].text);"> 
 				<option value=0 style='font-size: 16px;'>Select Type</option>
 <?php
@@ -1698,19 +1716,19 @@ function pause_messages() {	//	10/29/13
 			</select><BR />					
 		</div>					
 		<div id="buttons2" style='position:absolute; left:-300px; top: 130px; z-index: 10; text-align: center;'>				
-			<span id="disp_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'alert("Dispatch Button");'>Dispatched</span>
-			<span id="resp_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'do_sub("frm_responding","resp_but");'>Responding</span>
-			<span id="os_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'do_sub("frm_on_scene","os_but");'>On Scene</span>	
-			<span id="fenr_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'do_sub("frm_u2fenr","fenr_but");'>Fac Enroute</span>	
-			<span id="farr_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'do_sub("frm_u2farr","farr_butt");'>Fac Arr</span>
-			<span id="clear_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'do_sub("frm_clear","clear_but");'>Clear</span>
-			<span id="mileage_start_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'start_miles();'>Start Miles</span>
-			<span id="mileage_os_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'os_miles();'>On Scene Miles</span>						
-			<span id="mileage_end_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'end_miles();'>End Miles</span>			
-			<span id="notes_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'notes();'>Notes</span>						
+			<span id="disp_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'alert("Dispatch Button");'><?php print gettext('Dispatched');?></span>
+			<span id="resp_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'do_sub("frm_responding","resp_but");'><?php print gettext('Responding');?></span>
+			<span id="os_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'do_sub("frm_on_scene","os_but");'><?php print gettext('On Scene');?></span>	
+			<span id="fenr_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'do_sub("frm_u2fenr","fenr_but");'><?php print gettext('Fac Enroute');?></span>	
+			<span id="farr_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'do_sub("frm_u2farr","farr_butt");'><?php print gettext('Fac Arr');?></span>
+			<span id="clear_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'do_sub("frm_clear","clear_but");'><?php print gettext('Clear');?></span>
+			<span id="mileage_start_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'start_miles();'><?php print gettext('Start Miles');?></span>
+			<span id="mileage_os_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'os_miles();'><?php print gettext('On Scene Miles');?></span>						
+			<span id="mileage_end_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'end_miles();'><?php print gettext('End Miles');?></span>			
+			<span id="notes_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'notes();'><?php print gettext('Notes');?></span>						
 		</div>		
 		<div id='app_outer'>
-			<div id='title_button' class='plain' style='position: absolute; left: 0px; top: 0px; display: inline-block;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick='showhideTitle();'><IMG SRC="../<?php print get_variable('logo');?>" ALT='Login and Logout' style='vertical-align: middle;' BORDER=0 /></div>
+			<div id='title_button' class='plain' style='position: absolute; left: 0px; top: 0px; display: inline-block;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick='showhideTitle();'><IMG SRC="../<?php print get_variable('logo');?>" ALT='<?php print gettext('Login and Logout');?>' style='vertical-align: middle;' BORDER=0 /></div>
 			<div id='app_title' style='display: none;'>
 <?php
 				$temp = get_variable('_version');
@@ -1722,7 +1740,7 @@ function pause_messages() {	//	10/29/13
 					}
 ?>		
 				<span ID="tagline" CLASS="titlebar_text"><IMG SRC="../<?php print get_variable('logo');?>" style='vertical-align: middle;' BORDER=0 /><?php print $title_string; ?></span><BR />
-				<FONT SIZE='-2'>Mobile Screen</FONT><BR />	
+				<FONT SIZE='-2'><?php print gettext('Mobile Screen');?></FONT><BR />	
 <?php
 				if($logged_in == 0) {
 ?>
@@ -1741,25 +1759,25 @@ function pause_messages() {	//	10/29/13
 			</div>
 		</div>
 		<div id='screen1' class='screen' style='display: block;'>
-			<div id='menu_but' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "slideIt('buttons', this.id);">Show Menu</div><BR />
+			<div id='menu_but' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "slideIt('buttons', this.id);"><?php print gettext('Show Menu');?></div><BR />
 <!-- 			<div id='msg_span' style='position: relative; width: 100%; height: 20px; z-index: 99999999; font-size: 1.5em; color: red; background-color: #FFFFFF; font-weight: bold; text-align: center; display: none;'></div></BR /> -->
 		</div>
 		<div id='screen2' class='screen' style='display: none;'><BR /><BR />
 			<div id="alert_list" class='lists'></div>	
-			<div id="close_alert_detail" style='position: relative; left: 30%; display: none; width: 40px;'><span class="screen_but_plain" style="float: none; z-index: 999999; text-align: center;" onMouseOver="do_sb_hover(this.id);" onMouseOut="do_sb_plain(this.id);"  onClick="close_alert_detail();"><IMG SRC = './images/close.png' ALT='Close Detail' BORDER=0 STYLE = 'vertical-align: middle'></span></div>
+			<div id="close_alert_detail" style='position: relative; left: 30%; display: none; width: 40px;'><span class="screen_but_plain" style="float: none; z-index: 999999; text-align: center;" onMouseOver="do_sb_hover(this.id);" onMouseOut="do_sb_plain(this.id);"  onClick="close_alert_detail();"><IMG SRC = './images/close.png' ALT='<?php print gettext('Close Detail');?>' BORDER=0 STYLE = 'vertical-align: middle'></span></div>
 			<div id="alert_detail" class='detail_page' style='display: none;'></div>				
 		</div>
 		<div id='screen3' class='screen' style='display: none;'><BR /><BR />
 			<div id="ticket_list" class='lists'></div>
 			<div id="ticket_detail_wrapper" style='z-index: 5; text-align: left; display: none; background-color: #EFEFEF;'>
-				<div id='menu_but2' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'slideIt("buttons2", this.id);'>Show Menu</div>
+				<div id='menu_but2' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'slideIt("buttons2", this.id);'><?php print gettext('Show Menu');?></div>
 				<div id="ticket_detail" class='detail_page' style='display: none;'></div>	
 				<div id="tkt_message_list" class='lists' style='display: none;'></div>	
 				<div id="tkt_message_detail" class='detail_page' style='display: none;'></div>		
 				<div id="tkt_message_reply" class='detail_page' style='display: none;'>
 					<div class='heading' style='width: 100%; height: 30px; text-align: center; color: #FFFFFF; background-color: #707070;'>MESSAGE DETAIL<span id='message_alert' style='color: red; font-weight: bold;'></span>		
-						<span id="tkt_sub_msg" class='plain' style="float: right; display: inline-block; z-index: 10; width: 40px;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'send_message();'><IMG SRC = './images/send_email.png' ALT='Send' BORDER=0 STYLE = 'vertical-align: middle'></span>		
-						<span id="tkt_can_msg" class='plain' style="float: right; display: inline-block; z-index: 10; width: 40px;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'can_reply();'><IMG SRC = './images/back.png' ALT='Cancel' BORDER=0 STYLE = 'vertical-align: middle'></span>
+						<span id="tkt_sub_msg" class='plain' style="float: right; display: inline-block; z-index: 10; width: 40px;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'send_message();'><IMG SRC = './images/send_email.png' ALT='<?php print gettext('Send');?>' BORDER=0 STYLE = 'vertical-align: middle'></span>		
+						<span id="tkt_can_msg" class='plain' style="float: right; display: inline-block; z-index: 10; width: 40px;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'can_reply();'><IMG SRC = './images/back.png' ALT='<?php print gettext('Cancel');?>' BORDER=0 STYLE = 'vertical-align: middle'></span>
 					</div>						
 					<form name="tkt_reply_form" action="send_message();">
 						<div style='width: 20%; display: inline-block;'>To:</div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_to"></div><BR />
@@ -1769,8 +1787,8 @@ function pause_messages() {	//	10/29/13
 					</form>		
 				</div>					
 				<div id='directions_wrapper' style='z-index: 5; text-align: left; height: 100%; display: none; background-color: #EFEFEF;'><BR />
-					<div style='width: 100%; color: #FFFFFF; background-color: #707070; height: 25px; font-weight: bold; text-align: center;'>DIRECTIONS				
-					<span id="close_directions" class='plain' style="width: auto; display: block; z-index: 10; float: right; width: 40px;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'close_directions();'><IMG SRC = './images/close.png' ALT='Close Directions' BORDER=0 STYLE = 'vertical-align: middle'></span></div>			
+					<div style='width: 100%; color: #FFFFFF; background-color: #707070; height: 25px; font-weight: bold; text-align: center;'><?php print gettext('DIRECTIONS');?>				
+					<span id="close_directions" class='plain' style="width: auto; display: block; z-index: 10; float: right; width: 40px;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'close_directions();'><IMG SRC = './images/close.png' ALT='<?php print gettext('Close Directions');?>' BORDER=0 STYLE = 'vertical-align: middle'/></span></div>			
 					<div id='directions' style='overflow-y: scroll; z-index: 5; text-align: left; background-color: #EFEFEF; margin: 10px; width: 98%;'></div>
 				</div>
 			</div>
@@ -1779,15 +1797,15 @@ function pause_messages() {	//	10/29/13
 			<div id="message_list" class='lists'></div>	
 			<div id="message_detail" class='detail_page' style='display: none;'></div>	
 			<div id="message_reply" class='detail_page' style='display: none;'>
-				<div class='heading' style='width: 100%; height: 30px; text-align: center; color: #FFFFFF; background-color: #707070;'>MESSAGE DETAIL<span id='message_alert' style='color: red; font-weight: bold;'></span>		
-					<span id="sub_msg" class='plain' style="float: right; display: inline-block; z-index: 10; width: 40px;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'send_message();'><IMG SRC = './images/send_email.png' ALT='Send' BORDER=0 STYLE = 'vertical-align: middle'></span>		
-					<span id="can_msg" class='plain' style="float: right; display: inline-block; z-index: 10; width: 40px;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'can_reply();'><IMG SRC = './images/back.png' ALT='Cancel' BORDER=0 STYLE = 'vertical-align: middle'></span>
+				<div class='heading' style='width: 100%; height: 30px; text-align: center; color: #FFFFFF; background-color: #707070;'><?php print gettext('MESSAGE DETAIL');?><span id='message_alert' style='color: red; font-weight: bold;'></span>		
+					<span id="sub_msg" class='plain' style="float: right; display: inline-block; z-index: 10; width: 40px;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'send_message();'><IMG SRC = './images/send_email.png' ALT='<?php print gettext('Send');?>' BORDER=0 STYLE = 'vertical-align: middle'/></span>		
+					<span id="can_msg" class='plain' style="float: right; display: inline-block; z-index: 10; width: 40px;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'can_reply();'><IMG SRC = './images/back.png' ALT='<?php print gettext('Cancel');?>' BORDER=0 STYLE = 'vertical-align: middle'/></span>
 				</div>						
 				<form name="reply_form" action="send_message();">
-					<div style='width: 20%; display: inline-block;'>To:</div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_to"></div><BR />
-					<div style='width: 20%; display: inline-block;'>From:</div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_from"></div><BR />
-					<div style='width: 20%; display: inline-block;'>Subject:</div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_subject"></div><BR />
-					<div style='width: 20%; display: inline-block; vertical-align: top;'>Message:</div><div style='width: 70%; display: inline-block;'><textarea name='frm_msg' rows="10" cols="30">Basic Message</textarea></div>
+					<div style='width: 20%; display: inline-block;'><?php print gettext('To');?>:</div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_to"></div><BR />
+					<div style='width: 20%; display: inline-block;'><?php print gettext('From');?>:</div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_from"></div><BR />
+					<div style='width: 20%; display: inline-block;'><?php print gettext('Subject');?>:</div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_subject"></div><BR />
+					<div style='width: 20%; display: inline-block; vertical-align: top;'><?php print gettext('Message');?>:</div><div style='width: 70%; display: inline-block;'><textarea name='frm_msg' rows="10" cols="30"><?php print gettext('Basic Message');?></textarea></div>
 				</form>		
 			</div>				
 		</div>	
@@ -1809,17 +1827,17 @@ function pause_messages() {	//	10/29/13
 <?php
 		if($logged_in == 1) {
 ?>
-			<span id='sb1' class='screen_but_plain' onMouseOver="do_sb_hover(this.id);" onMouseOut="do_sb_plain(this.id);" onClick='screen1();'>Main</span>
-			<span id='sb2' class='screen_but_plain' onMouseOver="do_sb_hover(this.id);" onMouseOut="do_sb_plain(this.id);" onClick='screen2();'>Alerts</span>
+			<span id='sb1' class='screen_but_plain' onMouseOver="do_sb_hover(this.id);" onMouseOut="do_sb_plain(this.id);" onClick='screen1();'><?php print gettext('Main');?></span>
+			<span id='sb2' class='screen_but_plain' onMouseOver="do_sb_hover(this.id);" onMouseOut="do_sb_plain(this.id);" onClick='screen2();'><?php print gettext('Alerts');?></span>
 <?php
 			if($the_responder != 0) {
 ?>
-				<span id='sb3' class='screen_but_plain' onMouseOver="do_sb_hover(this.id);" onMouseOut="do_sb_plain(this.id);" onClick='screen3();'>Incidents</span>
-				<span id='sb4' class='screen_but_plain' onMouseOver="do_sb_hover(this.id);" onMouseOut="do_sb_plain(this.id);" onClick='screen4();'>Messages</span>	
+				<span id='sb3' class='screen_but_plain' onMouseOver="do_sb_hover(this.id);" onMouseOut="do_sb_plain(this.id);" onClick='screen3();'><?php print gettext('Incidents');?></span>
+				<span id='sb4' class='screen_but_plain' onMouseOver="do_sb_hover(this.id);" onMouseOut="do_sb_plain(this.id);" onClick='screen4();'><?php print gettext('Messages');?></span>	
 <?php
 				}
 ?>
-			<span id='sb5' class='screen_but_plain' onMouseOver="do_sb_hover(this.id);" onMouseOut="do_sb_plain(this.id);" onClick='screen5();'>Chat</span>			
+			<span id='sb5' class='screen_but_plain' onMouseOver="do_sb_hover(this.id);" onMouseOut="do_sb_plain(this.id);" onClick='screen5();'><?php print gettext('Chat');?></span>			
 <?php
 			}
 ?>
@@ -2069,7 +2087,7 @@ window.getRoute = function (response) {
 	}).addTo(map);
 	route.bringToFront();
 	$('directions').innerHTML = theText;
-	}
+	};
 			
 function setDirections(toAddress, recfacAddress) {
 	$('menu_but2').style.display = 'none';

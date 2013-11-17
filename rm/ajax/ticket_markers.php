@@ -22,7 +22,7 @@ $bgcolor = "#EEEEEE";
 $result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 $num=mysql_num_rows($result);
 if (mysql_num_rows($result) == 0) { 				// 8/6/08
-	$ret_arr[0] = "No Assignments Currently";
+	$ret_arr[0] = gettext("No Assignments Currently");
 	} else {
 	$i = 0;
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))){	

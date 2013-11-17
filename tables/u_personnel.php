@@ -20,51 +20,51 @@ function validate_form(myform) {	// reject empty form elements
 		<INPUT TYPE="hidden" NAME="id" 			VALUE="<?php print $row['id'];?>" />
 	
 		<TABLE BORDER="0" ALIGN="center">
-		<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1">Table 'Conditions' - Update Entry</FONT></TD></TR>
+		<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext("Table 'Conditions' - Update Entry");?></FONT></TD></TR>
 		<TR><TD>&nbsp;</TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Surname:</TD>
-			<TD><INPUT ID="ID1" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_surname" VALUE="<?php print $row['surname'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Fornames:</TD>
-			<TD><INPUT ID="ID2" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_forenames" VALUE="<?php print $row['forenames'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Address:</TD>
-			<TD><INPUT ID="ID3" CLASS="dirty" MAXLENGTH="128" SIZE="48" type="text" NAME="frm_address" VALUE="<?php print $row['address'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">State:</TD>
-			<TD><INPUT ID="ID4" CLASS="dirty" MAXLENGTH="24" SIZE="4" type="text" NAME="frm_state" VALUE="<?php print $row['state'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Date of Birth:</TD>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Surname');?>:</TD>
+			<TD><INPUT ID="ID1" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_surname" VALUE="<?php print $row['surname'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Fornames');?>:</TD>
+			<TD><INPUT ID="ID2" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_forenames" VALUE="<?php print $row['forenames'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Address');?>:</TD>
+			<TD><INPUT ID="ID3" CLASS="dirty" MAXLENGTH="128" SIZE="48" type="text" NAME="frm_address" VALUE="<?php print $row['address'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('State');?>:</TD>
+			<TD><INPUT ID="ID4" CLASS="dirty" MAXLENGTH="24" SIZE="4" type="text" NAME="frm_state" VALUE="<?php print $row['state'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Date of Birth');?>:</TD>
 			<TD><?php print generate_dateonly_dropdown('date_of_birth',strtotime($row['date_of_birth']),FALSE);?></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Gender:</TD>
-			<TD><INPUT ID="ID5" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_gender" VALUE="<?php print $row['gender'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Identifier:</TD>
-			<TD><INPUT ID="ID6" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_person_identifier" VALUE="<?php print $row['person_identifier'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Email:</TD>
-			<TD><INPUT ID="ID7" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_email" VALUE="<?php print $row['email'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Home phone:</TD>
-			<TD><INPUT ID="ID8" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_homephone" VALUE="<?php print $row['homephone'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Work phone:</TD>
-			<TD><INPUT ID="ID9" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_workphone" VALUE="<?php print $row['workphone'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Cellphone:</TD>
-			<TD><INPUT ID="ID10" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_cellphone" VALUE="<?php print $row['cellphone'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Next of Kin Name:</TD>
-			<TD><INPUT ID="ID11" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_next_of_kin_name" VALUE="<?php print $row['next_of_kin_name'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Next of Kin Address:</TD>
-			<TD><INPUT ID="ID12" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_next_of_kin_address" VALUE="<?php print $row['next_of_kin_address'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Next of Kin Home phone:</TD>
-			<TD><INPUT ID="ID13" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_next_of_kin_homephone" VALUE="<?php print $row['next_of_kin_homephone'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Next of Kin Work phone:</TD>
-			<TD><INPUT ID="ID14" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_next_of_kin_workphone" VALUE="<?php print $row['next_of_kin_workphone'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Next of Kin Cellphone:</TD>
-			<TD><INPUT ID="ID15" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_next_of_kin_cellphone" VALUE="<?php print $row['next_of_kin_cellphone'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">AR Callsign:</TD>
-			<TD><INPUT ID="ID16" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_amateur_radio_callsign" VALUE="<?php print $row['amateur_radio_callsign'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Notes:</TD>
-			<TD><TEXTAREA ID="ID17" name="frm_person_notes" rows="6" cols="48" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"><?php print $row['person_notes'];?></TEXTAREA> <SPAN class='warn' >text</SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Capabilities:</TD>
-			<TD><TEXTAREA ID="ID18" name="frm_person_capabilities" rows="6" cols="48" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"><?php print $row['person_capabilities'];?></TEXTAREA> <SPAN class='warn' >text</SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Gender');?>:</TD>
+			<TD><INPUT ID="ID5" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_gender" VALUE="<?php print $row['gender'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Identifier');?>:</TD>
+			<TD><INPUT ID="ID6" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_person_identifier" VALUE="<?php print $row['person_identifier'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Email');?>:</TD>
+			<TD><INPUT ID="ID7" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_email" VALUE="<?php print $row['email'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Home phone');?>:</TD>
+			<TD><INPUT ID="ID8" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_homephone" VALUE="<?php print $row['homephone'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Work phone');?>:</TD>
+			<TD><INPUT ID="ID9" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_workphone" VALUE="<?php print $row['workphone'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Cellphone');?>:</TD>
+			<TD><INPUT ID="ID10" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_cellphone" VALUE="<?php print $row['cellphone'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Next of Kin Name');?>:</TD>
+			<TD><INPUT ID="ID11" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_next_of_kin_name" VALUE="<?php print $row['next_of_kin_name'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Next of Kin Address');?>:</TD>
+			<TD><INPUT ID="ID12" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_next_of_kin_address" VALUE="<?php print $row['next_of_kin_address'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Next of Kin Home phone');?>:</TD>
+			<TD><INPUT ID="ID13" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_next_of_kin_homephone" VALUE="<?php print $row['next_of_kin_homephone'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Next of Kin Work phone');?>:</TD>
+			<TD><INPUT ID="ID14" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_next_of_kin_workphone" VALUE="<?php print $row['next_of_kin_workphone'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Next of Kin Cellphone');?>:</TD>
+			<TD><INPUT ID="ID15" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_next_of_kin_cellphone" VALUE="<?php print $row['next_of_kin_cellphone'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('AR Callsign');?>:</TD>
+			<TD><INPUT ID="ID16" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_amateur_radio_callsign" VALUE="<?php print $row['amateur_radio_callsign'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Notes');?>:</TD>
+			<TD><TEXTAREA ID="ID17" name="frm_person_notes" rows="6" cols="48" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"><?php print $row['person_notes'];?></TEXTAREA> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Capabilities');?>:</TD>
+			<TD><TEXTAREA ID="ID18" name="frm_person_capabilities" rows="6" cols="48" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"><?php print $row['person_capabilities'];?></TEXTAREA> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
 		<TR><TD COLSPAN="99" ALIGN="center">
 		<BR />
-		<INPUT TYPE="button"	VALUE="Cancel" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="button"	VALUE="Reset" onClick = "Javascript: document.u.reset();"/>&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="button" NAME="sub_but" VALUE="               Submit                " onclick="this.disabled=true; validate_form(this.form, this);"/> 
+		<INPUT TYPE="button"	VALUE="<?php print gettext('Cancel');?>" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE="button"	VALUE="<?php print gettext('Reset');?>" onClick = "Javascript: document.u.reset();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+		<INPUT TYPE="button" NAME="sub_but" VALUE="               <?php print gettext('Submit');?>                " onclick="this.disabled=true; validate_form(this.form, this);"/> 
 		
 		</TD></TR>
 		</FORM>

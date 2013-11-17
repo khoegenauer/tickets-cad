@@ -16,45 +16,45 @@ function validate_form(myform) {	// reject empty form elements
 		<INPUT TYPE="hidden" NAME="id" 			VALUE="<?php print $row['id'];?>" />
 	
 		<TABLE BORDER="0" ALIGN="center">
-		<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1">Table 'Conditions' - View Entry</FONT></TD></TR>
+		<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext("Table 'Conditions' - View Entry");?></FONT></TD></TR>
 		<TR><TD>&nbsp;</TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Surname:</TD>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Surname');?>:</TD>
 			<TD><?php print $row['surname'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Fornames:</TD>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Fornames');?>:</TD>
 			<TD><?php print $row['forenames'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Address:</TD>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Address');?>:</TD>
 			<TD><?php print $row['address'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">State:</TD>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('State');?>:</TD>
 			<TD><?php print $row['state'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Date of Birth:</TD>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Date of Birth');?>:</TD>
 			<TD><?php print format_date_2(strtotime($row['date_of_birth']));?></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Gender:</TD>
-			<TD><?php print $row['gender'];?></SPAN></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Identifier:</TD>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Gender');?>:</TD>
+			<TD><?php print $row['gender'];?></TD></TR>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Identifier');?>:</TD>
 			<TD><?php print $row['person_identifier'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Email:</TD>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Email');?>:</TD>
 			<TD><?php print $row['email'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Home phone:</TD>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Home phone');?>:</TD>
 			<TD><?php print $row['homephone'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Work phone:</TD>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Work phone');?>:</TD>
 			<TD><?php print $row['workphone'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Cellphone:</TD>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Cellphone');?>:</TD>
 			<TD><?php print $row['cellphone'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Next of Kin Name:</TD>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Next of Kin Name');?>:</TD>
 			<TD><?php print $row['next_of_kin_name'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Next of Kin Address:</TD>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Next of Kin Address');?>:</TD>
 			<TD><?php print $row['next_of_kin_address'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Next of Kin Home phone:</TD>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Next of Kin Home phone');?>:</TD>
 			<TD><?php print $row['next_of_kin_homephone'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Next of Kin Work phone:</TD>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Next of Kin Work phone');?>:</TD>
 			<TD><?php print $row['next_of_kin_workphone'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Next of Kin Cellphone:</TD>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Next of Kin Cellphone');?>:</TD>
 			<TD><?php print $row['next_of_kin_cellphone'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">AR Callsign:</TD>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('AR Callsign');?>:</TD>
 			<TD><?php print $row['amateur_radio_callsign'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Notes:</TD>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Notes');?>:</TD>
 			<TD><?php print $row['person_notes'];?></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Capabilities:</TD>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Capabilities');?>:</TD>
 			<TD><?php print $row['person_capabilities'];?></TD></TR>
 		<TR><TD COLSPAN="99" ALIGN="center">
 		<BR />

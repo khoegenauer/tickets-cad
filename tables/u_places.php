@@ -80,22 +80,22 @@
 
 	function validate(theForm) {	//
 		var errmsg="";
-		if (theForm.frm_name.value == "")		{errmsg+= "\tPlace Name is required\n";}
-		if (theForm.frm_lat.value == "")		{errmsg+= "\tLatitude value is required\n";}
+		if (theForm.frm_name.value == "")		{errmsg+= "\t<?php print gettext('Place Name is required');?>\n";}
+		if (theForm.frm_lat.value == "")		{errmsg+= "\t<?php print gettext('Latitude value is required');?>\n";}
 		else if (!
 			(is_float(theForm.frm_lat.value) && 
 			(theForm.frm_lat.value <=90.0) && 
 			(theForm.frm_lat.value >= -90.0)
-			)) 									{errmsg+= "\tValid latitude is required\n";}
-		if (theForm.frm_lon.value == "")		{errmsg+= "\tLongitude value is required\n";}
+			)) 									{errmsg+= "\t<?php print gettext('Valid latitude is required');?>\n";}
+		if (theForm.frm_lon.value == "")		{errmsg+= "\t<?php print gettext('Longitude value is required');?>\n";}
 		else if (!
 			(is_float(JSfnTrim(theForm.frm_lon.value)) && 
 			(theForm.frm_lon.value <=180.0) && 
 			(theForm.frm_lon.value >= -180.0)
-			)) 									{errmsg+= "\tValid longitude is required\n";}		
+			)) 									{errmsg+= "\t<?php print gettext('Valid longitude is required');?>\n";}		
 		
 		if (errmsg!="") {
-			alert ("Please correct the following and re-submit:\n\n" + errmsg);
+			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 			return false;
 			}
 		else {
@@ -119,27 +119,27 @@
 		<TR><TD COLSPAN=2 ALIGN='center'><FONT CLASS="header"><?php echo get_variable('map_caption');?></FONT><BR /><BR /></TD></TR>
 		<TR><TD>
 			<TABLE BORDER="0" ALIGN="center">
-			<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1">Table 'places' - Update Entry</FONT></TD></TR>
+			<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext("Table 'places' - Update Entry");?></FONT></TD></TR>
 			<TR><TD>&nbsp;</TD></TR>
-			<TR CLASS = "even"><TD CLASS="td_label">Lookup:</TD>
+			<TR CLASS = "even"><TD CLASS="td_label"><?php print gettext('Lookup');?>:</TD>
 				<TD COLSPAN=3>&nbsp;&nbsp;<?php print get_text("City");?>:&nbsp;<INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="the_city" VALUE="" />
 				&nbsp;&nbsp;&nbsp;&nbsp;<?php print get_text("St");?>:&nbsp;<INPUT MAXLENGTH="4" SIZE="2" TYPE="text" NAME="the_st" VALUE="" /></TD></TR>
 			<TR CLASS = "odd">
-				<TD COLSPAN=4 ALIGN="center"><button type="button" onClick="addrlkup(this.form)">
-				<img src="./markers/glasses.png" alt="Lookup location." /></TD></TR> <!-- 1/21/09 -->
+				<TD COLSPAN=4 ALIGN="center"><button type="button" onClick="addrlkup(this.form);">
+				<img src="./markers/glasses.png" alt="<?php print gettext('Lookup location.');?>" /></TD></TR> <!-- 1/21/09 -->
 			<TR><TD><BR /><BR /></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Name:</TD>
-			<TD><INPUT ID="ID1" CLASS="dirty" MAXLENGTH="64" SIZE="64" type="text" NAME="frm_name" VALUE="<?php echo $row['name'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> </TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Lat:</TD>
-			<TD><INPUT ID="ID2" MAXLENGTH=12 SIZE=12 TYPE=text NAME="frm_lat" VALUE="<?php echo $row['lat']; ?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"/>
-			<SPAN CLASS="td_label" STYLE ="margin-left:20px;">Lon:&nbsp;&nbsp;&nbsp;
-			<INPUT ID="ID3" MAXLENGTH=12 SIZE=12 TYPE=text NAME="frm_lon" VALUE="<?php echo $row['lon']; ?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"/></SPAN>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Name');?>:</TD>
+			<TD><INPUT ID="ID1" CLASS="dirty" MAXLENGTH="64" SIZE="64" type="text" NAME="frm_name" VALUE="<?php echo $row['name'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> </TD></TR>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Lat');?>:</TD>
+			<TD><INPUT ID="ID2" MAXLENGTH=12 SIZE=12 TYPE=text NAME="frm_lat" VALUE="<?php echo $row['lat']; ?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"/>
+			<SPAN CLASS="td_label" STYLE ="margin-left:20px;"><?php print gettext('Lon');?>:&nbsp;&nbsp;&nbsp;
+			<INPUT ID="ID3" MAXLENGTH=12 SIZE=12 TYPE=text NAME="frm_lon" VALUE="<?php echo $row['lon']; ?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"/></SPAN>
 			 </TD></TR>
 				<TR><TD COLSPAN="99" ALIGN="center">
 			<BR /><BR />
-			<INPUT TYPE="button"	VALUE="Cancel" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="reset"		VALUE="Reset"/>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="button" NAME="sub_but" VALUE="Submit" onclick="validate(this.form)"/>
+      <INPUT TYPE="button"	VALUE="<?php print gettext('Cancel');?>" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+      <INPUT TYPE="reset"		VALUE="<?php print gettext('Reset');?>"/>&nbsp;&nbsp;&nbsp;&nbsp;
+      <INPUT TYPE="button" NAME="sub_but" VALUE="<?php print gettext('Submit');?>" onclick="validate(this.form);"/>
 	
 			</TD></TR>
 			</FORM>

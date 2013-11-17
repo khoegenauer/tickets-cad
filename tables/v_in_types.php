@@ -15,20 +15,20 @@ function get_mailgroup_name($id) {	//	8/28/13
 	return $the_ret;
 	}
 ?>
-<TABLE BORDER="0" ALIGN="center" ><TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1">Table 'Incident types' - View Entry</FONT></TD></TR><TR><TD>&nbsp;</TD></TR>
-	<TR CLASS='odd' VALIGN="top"><TD CLASS="td_label" ALIGN="right">ID:</TD>			<TD><?php print $row['id'];?></TD></TR>
-	<TR CLASS='even' VALIGN="top"><TD CLASS="td_label" ALIGN="right">Type:</TD>		<TD><?php print $row['type'];?></TD></TR>
-	<TR CLASS='odd' VALIGN="top"><TD CLASS="td_label" ALIGN="right">Description:</TD>	<TD><?php print $row['description'];?></TD></TR>
-	<TR CLASS='even' VALIGN="top"><TD CLASS="td_label" ALIGN="right">Protocol:</TD>	<TD><?php print $row['protocol'];?></TD></TR>
+<TABLE BORDER="0" ALIGN="center" ><TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext("Table 'Incident types' - View Entry");?></FONT></TD></TR><TR><TD>&nbsp;</TD></TR>
+	<TR CLASS='odd' VALIGN="top"><TD CLASS="td_label" ALIGN="right"><?php print gettext('ID');?>:</TD>			<TD><?php print $row['id'];?></TD></TR>
+	<TR CLASS='even' VALIGN="top"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Type');?>:</TD>		<TD><?php print $row['type'];?></TD></TR>
+	<TR CLASS='odd' VALIGN="top"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Description');?>:</TD>	<TD><?php print $row['description'];?></TD></TR>
+	<TR CLASS='even' VALIGN="top"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Protocol');?>:</TD>	<TD><?php print $row['protocol'];?></TD></TR>
 
-	<TR CLASS='odd' VALIGN="top"><TD CLASS="td_label" ALIGN="right">Severity:</TD>	<TD><?php print get_severity($row['set_severity']); ?> </TD></TR>
-	<TR CLASS='even' VALIGN="top"><TD CLASS="td_label" ALIGN="right">Group:</TD>		<TD><?php print $row['group'];?></TD></TR>
-	<TR CLASS='odd' VALIGN="top"><TD CLASS="td_label" ALIGN="right">Sort:</TD>		<TD><?php print $row['sort'];?></TD></TR>
-	<TR CLASS='even' VALIGN="top"><TD CLASS="td_label" ALIGN="right">Radius:</TD>		<TD><?php print $row['radius'];?></TD></TR>
-	<TR CLASS='odd' VALIGN="top"><TD CLASS="td_label" ALIGN="right">Color:</TD>		<TD><?php print $row['color'];?></TD></TR>
-	<TR CLASS='even' VALIGN="top"><TD CLASS="td_label" ALIGN="right">Opacity:</TD><TD><?php print $row['opacity'];?></TD></TR>
-	<TR CLASS='odd' VALIGN="top"><TD CLASS="td_label" ALIGN="right">Notify Mailgroup:</TD><TD><?php print get_mailgroup_name($row['notify_mailgroup']);?></TD></TR>
-	<TR CLASS='even' VALIGN="top"><TD CLASS="td_label" ALIGN="right">Notify Email:</TD><TD><?php print $row['notify_email'];?></TD></TR>
+	<TR CLASS='odd' VALIGN="top"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Severity');?>:</TD>	<TD><?php print get_severity($row['set_severity']); ?> </TD></TR>
+	<TR CLASS='even' VALIGN="top"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Group');?>:</TD>		<TD><?php print $row['group'];?></TD></TR>
+	<TR CLASS='odd' VALIGN="top"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Sort');?>:</TD>		<TD><?php print $row['sort'];?></TD></TR>
+	<TR CLASS='even' VALIGN="top"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Radius');?>:</TD>		<TD><?php print $row['radius'];?></TD></TR>
+	<TR CLASS='odd' VALIGN="top"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Color');?>:</TD>		<TD><?php print $row['color'];?></TD></TR>
+	<TR CLASS='even' VALIGN="top"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Opacity');?>:</TD><TD><?php print $row['opacity'];?></TD></TR>
+	<TR CLASS='odd' VALIGN="top"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Notify Mailgroup');?>:</TD><TD><?php print get_mailgroup_name($row['notify_mailgroup']);?></TD></TR>
+	<TR CLASS='even' VALIGN="top"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Notify Email');?>:</TD><TD><?php print $row['notify_email'];?></TD></TR>
 	<TR><TD COLSPAN="2" ALIGN="center">
 	<BR />
 <?php	

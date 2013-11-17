@@ -18,23 +18,23 @@
 		<INPUT TYPE="hidden" NAME="func" 		VALUE="pc"/>
 	
 		<TABLE BORDER="0" ALIGN="center">
-		<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1">Table 'Unit Status' - Add New Entry</FONT></TD></TR>
+		<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext("Table 'Unit Status' - Add New Entry");?></FONT></TD></TR>
 		<TR><TD COLSPAN=4>&nbsp;</TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Status:</TD>
-			<TD><INPUT  ID="ID1"  MAXLENGTH="20" SIZE="20" type="text" NAME="frm_status_val" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"></TD>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Status');?>:</TD>
+			<TD><INPUT  ID="ID1"  MAXLENGTH="20" SIZE="20" type="text" NAME="frm_status_val" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"/></TD>
 			</TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Can dispatch:</TD>
-			<TD VALIGN='baseline'><SPAN STYLE = 'margin-left:20px'><B>Yes &raquo;<INPUT TYPE='radio' NAME="frm_dispatch" VALUE= 0  CHECKED /></SPAN>
-			<SPAN STYLE = 'margin-left:20px'>No - not enforced &raquo;<INPUT TYPE='radio' NAME="frm_dispatch" VALUE= "1" /></SPAN>
-			<SPAN STYLE = 'margin-left:20px'>No - enforced &raquo;<INPUT TYPE='radio' NAME="frm_dispatch" VALUE= "2" /></SPAN>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Can dispatch');?>:</TD>
+			<TD VALIGN='baseline'><SPAN STYLE = 'margin-left:20px'><B><?php print gettext('Yes');?> &raquo;<INPUT TYPE='radio' NAME="frm_dispatch" VALUE= 0  CHECKED /></SPAN>
+			<SPAN STYLE = 'margin-left:20px'><?php print gettext('No - not enforced');?> &raquo;<INPUT TYPE='radio' NAME="frm_dispatch" VALUE= "1" /></SPAN>
+			<SPAN STYLE = 'margin-left:20px'><?php print gettext('No - enforced');?> &raquo;<INPUT TYPE='radio' NAME="frm_dispatch" VALUE= "2" /></SPAN>
 			</TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Description:</TD>
-			<TD><INPUT  ID="ID2"  MAXLENGTH="60" SIZE="60" type="text" NAME="frm_description" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> </TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Hide:</TD><TD VALIGN='baseline'><SPAN STYLE = 'margin-left:20px'><B>No &raquo;<INPUT TYPE='radio' NAME="frm_hide" VALUE= "n"  CHECKED /></SPAN><SPAN STYLE = 'margin-left:20px'>Yes &raquo;<INPUT TYPE='radio' NAME="frm_hide" VALUE= "y" /></TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Group:</TD>
-			<TD><INPUT  ID="ID4"  MAXLENGTH="20" SIZE="20" type="text" NAME="frm_group" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"></TD></TR>
-		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Sort:</TD><TD><INPUT ID="ID5" MAXLENGTH=11 SIZE=11 TYPE= "text" NAME="frm_sort" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"/> </TD></TR>
-		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Background color:</TD>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Description');?>:</TD>
+			<TD><INPUT  ID="ID2"  MAXLENGTH="60" SIZE="60" type="text" NAME="frm_description" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> </TD></TR>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Hide');?>:</TD><TD VALIGN='baseline'><SPAN STYLE = 'margin-left:20px'><B><?php print gettext('No');?> &raquo;<INPUT TYPE='radio' NAME="frm_hide" VALUE= "n"  CHECKED /></SPAN><SPAN STYLE = 'margin-left:20px'><?php print gettext('Yes');?> &raquo;<INPUT TYPE='radio' NAME="frm_hide" VALUE= "y" /></TD></TR>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Group');?>:</TD>
+			<TD><INPUT  ID="ID4"  MAXLENGTH="20" SIZE="20" type="text" NAME="frm_group" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"></TD></TR>
+		<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Sort');?>:</TD><TD><INPUT ID="ID5" MAXLENGTH=11 SIZE=11 TYPE= "text" NAME="frm_sort" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"/> </TD></TR>
+		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Background color');?>:</TD>
 			<TD>			
 				<SELECT name='dmy_status_id' STYLE='background-color:transparent; color:black;' ONCHANGE =  "set_bg_vals (this.form);this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color;">				
 				<OPTION VALUE=0 STYLE='background-color:transparent; 	color:black;' SELECTED>None</OPTION>
@@ -61,9 +61,9 @@
 			</TD></TR>
 			<TR><TD COLSPAN="99" ALIGN="center">
 		<BR />
-		<INPUT TYPE="button"	VALUE="Cancel" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="reset"		VALUE="Reset"  onClick = "this.form.frm_bg_color.value=this.form.def_bg_color.value; this.form.frm_text_color.value=this.form.def_text_color.value; this.form.reset()"; />&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="button" NAME="sub_but" VALUE="               Submit                " onclick="this.disabled=true; JSfnCheckInput(this.form, this);"/> 
+    <INPUT TYPE="button"	VALUE="<?php print gettext('Cancel');?>" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+    <INPUT TYPE="reset"		VALUE="<?php print gettext('Reset');?>"  onClick = "this.form.frm_bg_color.value=this.form.def_bg_color.value; this.form.frm_text_color.value=this.form.def_text_color.value; this.form.reset();" />&nbsp;&nbsp;&nbsp;&nbsp;
+    <INPUT TYPE="button" NAME="sub_but" VALUE="               <?php print gettext('Submit');?>                " onclick="this.disabled=true; JSfnCheckInput(this.form, this);"/> 
 		<INPUT TYPE="hidden" NAME="frm_bg_color"  	VALUE="transparent" />
 		<INPUT TYPE="hidden" NAME="frm_text_color"	VALUE="black" />
 		<INPUT TYPE="hidden" NAME="def_bg_color"  	VALUE="transparent" /> <!-- default values see reset button -->

@@ -10,14 +10,14 @@
 		<INPUT TYPE="hidden" NAME="frm_icon" 	VALUE="" />
 	
 		<TABLE BORDER="0" ALIGN="center">
-		<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1">Table 'fac_types' - Add New Entry</FONT></TD></TR>
+		<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext("Table 'fac_types' - Add New Entry");?></FONT></TD></TR>
 		<TR><TD>&nbsp;</TD></TR>
-	<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Type name:</TD>
-		<TD><INPUT ID="ID1" CLASS="dirty" MAXLENGTH="16" SIZE="16" type="text" NAME="frm_name" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-	<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Description:</TD>
-		<TD><INPUT ID="ID2" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_description" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value)"> <SPAN class='warn' >text</SPAN></TD></TR>
-	<TR VALIGN="top" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Icon:</TD>
-		<TD><IMG ID='ID3' SRC="sm_icons[0]" STYLE="visibility:hidden;"></TD></TR>
+	<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Type name');?>:</TD>
+		<TD><INPUT ID="ID1" CLASS="dirty" MAXLENGTH="16" SIZE="16" type="text" NAME="frm_name" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+	<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Description');?>:</TD>
+		<TD><INPUT ID="ID2" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_description" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+	<TR VALIGN="top" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Icon');?>:</TD>
+		<TD><IMG ID='ID3' SRC="sm_icons[0]" STYLE="visibility:hidden;"/></TD></TR>
 	<TR CLASS="even"><TD></TD><TD ALIGN='center'>&nbsp;&nbsp;&nbsp;&nbsp;
 <SCRIPT>
 			for (i=0; i<sm_icons.length-1; i++) {						// generate icons display
@@ -31,9 +31,9 @@
 		</td></tr
 		<TR><TD COLSPAN="99" ALIGN="center">
 		<BR />
-		<INPUT TYPE="button"				VALUE="Cancel" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="button"				VALUE="Reset" onClick = "Javascript: $('ID3').style.visibility='hidden'; document.c.frm_icon.value = ''; document.c.reset();" />&nbsp;&nbsp;&nbsp;&nbsp;
-		<INPUT TYPE="button" NAME="sub_but" VALUE="               Submit                " onclick="Javascript: validate_f_t(document.c);"/> 
+    <INPUT TYPE="button"				VALUE="<?php print gettext('Cancel');?>" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+    <INPUT TYPE="button"				VALUE="<?php print gettext('Reset');?>" onClick = "Javascript: $('ID3').style.visibility='hidden'; document.c.frm_icon.value = ''; document.c.reset();" />&nbsp;&nbsp;&nbsp;&nbsp;
+    <INPUT TYPE="button" NAME="sub_but" VALUE="               <?php print gettext('Submit');?>                " onclick="Javascript: validate_f_t(document.c);"/> 
 		</TD></TR>
 		</FORM>
 		</TD></TR></TABLE>

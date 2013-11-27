@@ -1000,13 +1000,13 @@ function list_locations($addon = '', $start) {
 					'<li><a href="#tab-3"><span><?php print gettext('Three');?></span></a></li>',
 				  '</ul>',
 				  '<div id="tab-1">',
-					'<p>Tab 1</p>',
+					'<p><?php print gettext('Tab 1');?></p>',
 				  '</div>',
 				  '<div id="tab-2">',
-				   '<p>Tab 2</p>',
+				   '<p><?php print gettext('Tab 2');?></p>',
 				  '</div>',
 				  '<div id="tab-3">',
-					'<p>Tab 3</p>',
+					'<p><?php print gettext('Tab 3');?></p>',
 				  '</div>',
 				  '</div>'
 				].join('');
@@ -1023,7 +1023,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 
 ?>
 	var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_locations' WIDTH='100%'>";
-	side_bar_html += "<TR class='even'>	<TD WIDTH='5%'><B>ID</B></TD><TD WIDTH='30%' ALIGN='left'><B><?php print gettext('Name');?></B></TD>";
+	side_bar_html += "<TR class='even'>	<TD WIDTH='5%'><B><?php print gettext('ID');?></B></TD><TD WIDTH='30%' ALIGN='left'><B><?php print gettext('Name');?></B></TD>";
 	side_bar_html += "<TD WIDTH='40%' ALIGN='left'><B><?php print get_text("Street"); ?></B></TD><TD WIDTH='25%' ALIGN='left'><B><?php print get_text("As of"); ?></B></TD></TR>";
 	var gmarkers = [];
 	var infoTabs = [];
@@ -1320,7 +1320,7 @@ var buttons_html = "";
 			<SPAN onClick = 'javascript: do_coords(document.loc_add_form.frm_lat.value ,document.loc_add_form.frm_lng.value);'>
 				<?php print get_text("Lat/Lng"); ?></A></SPAN>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<IMG ID='lock_p' BORDER=0 SRC='./markers/unlock2.png' STYLE='vertical-align: middle'
-					onClick = 'do_unlock_pos(document.loc_add_form);'><TD COLSPAN=3>
+					onClick = 'do_unlock_pos(document.loc_add_form);' /><TD COLSPAN=3>
 			<INPUT TYPE="text" NAME="show_lat" SIZE=11 VALUE="" disabled />
 			<INPUT TYPE="text" NAME="show_lng" SIZE=11 VALUE="" disabled />&nbsp;&nbsp;
 <?php
@@ -1348,7 +1348,7 @@ var buttons_html = "";
 
 		<TR CLASS='even'><TD COLSPAN=4 ALIGN='center'><font color='red' size='-1'>*</FONT> <?php print gettext('Required');?></TD></TR>
 		<TR CLASS = "odd"><TD COLSPAN='2' ALIGN='center'>
-			<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();" STYLE = 'margin-left: 50px' >
+			<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();" STYLE = 'margin-left: 50px' />
 			<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick = "do_add_reset(this.form);" STYLE = 'margin-left: 20px' />
 			<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>"  onClick="validate(document.loc_add_form);"  STYLE = 'margin-left: 20px' /></TD></TR>
 		<INPUT TYPE='hidden' NAME = 'frm_lat' VALUE=''/>
@@ -1421,10 +1421,10 @@ var buttons_html = "";
 ?>
 		</HEAD>
 		<BODY onLoad = "ck_frames(); " > 	<!-- <?php echo __LINE__; ?> -->
-		<A NAME='top'>
+		<A NAME='top' />
 <?php
 		require_once('./incs/links.inc.php');
-		print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:50px; height: 12px; width: 10px;' onclick = 'to_bottom()'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
+		print "\n<DIV ID='to_bottom' style='position:fixed; top:2px; left:50px; height: 12px; width: 10px;' onclick = 'to_bottom();'><IMG SRC='markers/down.png'  BORDER=0 /></DIV>\n";
 ?>
 		<TABLE BORDER=0 ID='outer' WIDTH='80%'><TR><TD WIDTH='50%'>
 		<TABLE BORDER=0 ID='editform'>
@@ -1488,9 +1488,9 @@ var buttons_html = "";
 		</TD></TR>
 		<TR CLASS = "odd">
 			<TD ALIGN='center'><BR>
-			<TD ALIGN='center'><BR><INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- 11/27/09 -->
+			<TD ALIGN='center'><BR><INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- 11/27/09 -->
 				<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick="map_reset();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>" onClick="validate(document.res_edit_Form);"></TD></TR>
+				<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>" onClick="validate(document.res_edit_Form);" /></TD></TR>
 				</TD></TR>
 
 		<INPUT TYPE="hidden" NAME="frm_id" VALUE="<?php print $row['id'] ;?>" />
@@ -1499,7 +1499,7 @@ var buttons_html = "";
 		<INPUT TYPE="hidden" NAME = "frm_log_it" VALUE=""/>
 		</FORM></TABLE>
 		</TD><TD ALIGN='center' WIDTH='50%'><DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: inset'></DIV>
-		<BR /><A HREF='#' onClick='toglGrid();'><u>Grid</U></A><BR />
+		<BR /><A HREF='#' onClick='toglGrid();'><U><?php print gettext('Grid');?></U></A><BR />
 
 		<?php print $map_capt; ?></TD></TR></TABLE>
 <?php

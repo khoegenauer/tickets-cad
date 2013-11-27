@@ -508,7 +508,7 @@ function get_user_details($rosterID) {	//	9/6/13
 			if (theForm.frm_callsign.value.trim()==""){
 				if(theForm.frm_track_disp.selectedIndex == 8) {
 					} else {
-					errmsg+="License information is required with Tracking.\n";
+					errmsg+="<?php print gettext('License information is required with Tracking.');?>\n";
 					}
 				}
 			}
@@ -1279,10 +1279,10 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 						if (strlen(filesize($file)) < 20000000) {
 							$print .= "";
 							} else {
-							$print .= "Attached file is too large!";
+							$print .= gettext("Attached file is too large!");
 							}
 						} else {
-						$print .= "Error uploading file";
+						$print .= gettext("Error uploading file");
 						}
 					} else {
 					$row = stripslashes_deep(mysql_fetch_assoc($result));			
@@ -1344,11 +1344,11 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'><?php print gettext("Add") . get_text("Units");?></FONT></FONT><BR /><BR />
 		<FONT SIZE=-1>(<?php gettext("mouseover caption for help information"); ?>)</FONT></FONT><BR /><BR /></TD></TR>
 		<FORM NAME= "res_add_Form" METHOD="POST" ACTION="<?php echo basename(__FILE__);?>?func=responder&goadd=true"> <!-- 7/9/09 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Roster User">Roster User</A></TD>	<!-- 9/6/13 -->
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Roster User');?>"><?php print gettext('Roster User');?></A></TD>	<!-- 9/6/13 -->
 			<TD COLSPAN=3 style='text-align: left; vertical-align: top;'><?php print get_roster();?><DIV id='user_details' style='width: 300px; vertical-align: top; display: inline-block; font-size: 1.3em; word-wrap: normal;'></DIV></TD></TR>		<!-- 9/6/13 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print get_text("Units");?> Name ">Name</A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print get_text("Units");?> Name "><?php print gettext('Name');?></A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
 			<TD COLSPAN=3 ><INPUT MAXLENGTH="64" SIZE="64" TYPE="text" NAME="frm_name" VALUE="" /></TD></TR>
-		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Handle - local rules, could be callsign or badge number, generally for radio comms use">Handle</A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
+		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Handle - local rules, could be callsign or badge number, generally for radio comms use');?>"><?php print gettext('Handle');?></A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
 			<TD COLSPAN=3 ><INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_handle" VALUE="" />
 			<SPAN STYLE = 'margin-left:30px'  CLASS="td_label"><?php gettext("Icon");?>: </SPAN>&nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp;<INPUT TYPE = "text" NAME = "frm_icon_str" SIZE = 3 MAXLENGTH=3 VALUE="" />
 
@@ -1357,13 +1357,13 @@ if(get_num_groups()) {
 		if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>		
 			<TR CLASS='even' VALIGN="top">	<!--  4/12/11 -->
-			<TD CLASS="td_label"><A CLASS="td_label" HREF="#"  TITLE="Sets Regions that Responder is allocated to - click + to expand, - to collapse"><?php print get_text("Region");?></A>: 
+			<TD CLASS="td_label"><A CLASS="td_label" HREF="#"  TITLE="<?php print gettext('Sets Regions that Responder is allocated to - click + to expand, - to collapse');?>"><?php print get_text("Region");?></A>: 
 			<SPAN id='expand_gps' onClick="$('checkButts').style.display = 'inline-block'; $('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 			<SPAN id='collapse_gps' onClick="$('checkButts').style.display = 'none'; $('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
 			<TD COLSPAN='2'>
 			<DIV id='checkButts' style='display: none;'>
-				<SPAN id='checkbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='checkAll();'>Check All</SPAN>
-				<SPAN id='uncheckbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='uncheckAll();'>Uncheck All</SPAN>	
+				<SPAN id='checkbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='checkAll();'><?php print gettext('Check All');?></SPAN>
+				<SPAN id='uncheckbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='uncheckAll();'><?php print gettext('Uncheck All');?></SPAN>	
 			</DIV>
 <?php
 			$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	4/18/11
@@ -1371,14 +1371,14 @@ if(get_num_groups()) {
 			} elseif((is_admin()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
 ?>		
 			<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
-			<TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Sets Regions that Responder is allocated to - click + to expand, - to collapse"><?php print get_text("Regions");?></A>: 
+			<TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Sets Regions that Responder is allocated to - click + to expand, - to collapse');?>"><?php print get_text("Regions");?></A>: 
 			<SPAN id='expand_gps' onClick="$('checkButts').style.display = 'inline-block'; $('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 			<SPAN id='collapse_gps' onClick="$('checkButts').style.display = 'none'; $('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
 			</TD>
 			<TD COLSPAN='2'>
 			<DIV id='checkButts' style='display: none;'>
-				<SPAN id='checkbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='checkAll();'>Check All</SPAN>
-				<SPAN id='uncheckbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='uncheckAll();'>Uncheck All</SPAN>	
+				<SPAN id='checkbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='checkAll();'><?php print gettext('Check All');?></SPAN>
+				<SPAN id='uncheckbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='uncheckAll();'><?php print gettext('Uncheck All');?></SPAN>	
 			</DIV>
 <?php
 
@@ -1390,14 +1390,14 @@ if(get_num_groups()) {
 			} else {
 ?>
 			<TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
-			<TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Sets Regions that Responder is allocated to - click + to expand, - to collapse"><?php print get_text("Regions");?></A>: 
+			<TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Sets Regions that Responder is allocated to - click + to expand, - to collapse');?>"><?php print get_text("Regions");?></A>: 
 			<SPAN id='expand_gps' onClick="$('checkButts').style.display = 'inline-block'; $('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 			<SPAN id='collapse_gps' onClick="$('checkButts').style.display = 'none'; $('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
 			</TD>
 			<TD COLSPAN='2'>
 			<DIV id='checkButts' style='display: none;'>
-				<SPAN id='checkbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='checkAll();'>Check All</SPAN>
-				<SPAN id='uncheckbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='uncheckAll();'>Uncheck All</SPAN>	
+				<SPAN id='checkbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='checkAll();'><?php print gettext('Check All');?></SPAN>
+				<SPAN id='uncheckbut' class='plain' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='uncheckAll();'><?php print gettext('Uncheck All');?></SPAN>	
 			</DIV>
 <?php
 			$alloc_groups = implode(',', get_allocates(4, $_SESSION['user_id']));	//	4/18/11
@@ -1408,13 +1408,13 @@ if(get_num_groups()) {
 			}
 		} else {
 ?>
-		<INPUT TYPE="hidden" NAME="frm_group[]" VALUE="1">	 <!-- 6/10/11 -->
+		<INPUT TYPE="hidden" NAME="frm_group[]" VALUE="1" />	 <!-- 6/10/11 -->
 <?php
 		}
 ?>
 		<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>	
 		<TR CLASS = "even" VALIGN='middle'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print get_text("Units");?> Type - Select from pulldown menu">Type</A>: <font color='red' size='-1'>*</font></TD>
-			<TD ALIGN='left'><SELECT NAME='frm_type'><OPTION VALUE=0>Select one</OPTION>		<!-- 1/8/09 -->
+			<TD ALIGN='left'><SELECT NAME='frm_type'><OPTION VALUE=0><?php print gettext('Select one');?></OPTION>		<!-- 1/8/09 -->
 <?php
 	foreach ($u_types as $key => $value) {								// 12/27/08
 		$temp = $value; 												// 2-element array
@@ -1445,13 +1445,13 @@ if(get_num_groups()) {
 <SCRIPT>				
 				var track_info = "APRS:   callsign\nInstamapper:   Device key\nLocateA:   Userid\nGtrack:   Userid\nLatitude:   Badge\nOpenGTS:   Device\n";
 </SCRIPT>
-				<INPUT TYPE = 'button' onClick = alert(track_info) value="?">&nbsp;&raquo;&nbsp;&nbsp;
+				<INPUT TYPE = 'button' onClick='alert(track_info);' value="?" />&nbsp;&raquo;&nbsp;&nbsp;
 				
 				<INPUT ID = "track_key" SIZE="<?php print $key_field_size;?>" MAXLENGTH="<?php print $key_field_size;?>" TYPE="text" NAME="frm_callsign" VALUE="" />&nbsp;
 			</TD>
 			</TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print get_text("Units") . gettext('Status - Select from pulldown menu');?>"><?php print gettext('Status');?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>
-			<TD ALIGN ='left'><SELECT NAME="frm_un_status_id" onChange = "document.res_add_Form.frm_log_it.value='1'">
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('{get_text("Units")} Status - Select from pulldown menu');?>"><?php print gettext('Status');?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>
+			<TD ALIGN ='left'><SELECT NAME="frm_un_status_id" onChange = "document.res_add_Form.frm_log_it.value='1';">
 				<OPTION VALUE=0 SELECTED><?php print gettext('Select one');?></OPTION>
 <?php			
 
@@ -1482,7 +1482,7 @@ if(get_num_groups()) {
 			<TR CLASS='odd' VALIGN="top">	<!--  6/10/11 -->
 			<TD CLASS='td_label'><A CLASS="td_label" HREF="#"  TITLE="<?php print gettext('Sets Boundaries for Ring Fences and exclusion zones');?>"><?php print get_text("Boundaries");?></A>:</TD>
 			<TD COLSPAN='3'><A CLASS="td_label" HREF="#"  TITLE="<?php print gettext('Sets boundary used to ring-fence the area this unit is allowed in');?>"><?php print get_text("Ringfence");?></A>:&nbsp;
-			<SELECT NAME="frm_ringfence" onChange = "this.value=JSfnTrim(this.value)">
+			<SELECT NAME="frm_ringfence" onChange = "this.value=JSfnTrim(this.value);">
 				<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>
 <?php
 				$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `use_with_u_rf` = 1 ORDER BY `line_name` ASC";
@@ -1508,8 +1508,8 @@ if(get_num_groups()) {
 ?>			
 		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Location - type in location in fields or click location on map');?>">Location</A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="" MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('City - defaults to default city set in configuration. Type in City if required');?>"><?php print gettext('City');?></A></TD> <!-- 7/5/10 -->
-		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print get_variable('def_city'); ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="<?php print gettext('State - US State or non-US Country code e.g. UK for United Kingdom');?>">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
+		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print get_variable('def_city'); ?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value);" /> <!-- 7/5/10 -->
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="<?php print gettext('State - US State or non-US Country code e.g. UK for United Kingdom');?>"><?php print gettext('St');?></A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print get_variable('def_st'); ?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Phone Number');?>"><?php print gettext('Phone');?></A>:&nbsp;</TD><TD COLSPAN=3 ><INPUT SIZE="12" MAXLENGTH="48" TYPE="text" NAME="frm_phone" VALUE="" /></TD></TR> <!-- 7/5/10 -->
 
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print get_text("Units") . gettext('Description - additional details about unit');?>"><?php print gettext('Description');?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=56 ROWS=2></TEXTAREA></TD></TR>
@@ -1525,15 +1525,15 @@ if(get_num_groups()) {
 			<TD COLSPAN='4' class='spacer'>&nbsp;</TD>
 		</TR>
 		<TR class='heading'>
-			<TD COLSPAN='4' class='heading' style='text-align: center;'>File Upload</TD>
+			<TD COLSPAN='4' class='heading' style='text-align: center;'><?php print gettext('File Upload');?></TD>
 		</TR>
 		<TR class='even'>
-			<TD class='td_label' style='text-align: left;'>Choose a file to upload:</TD>
+			<TD class='td_label' style='text-align: left;'><?php print gettext('Choose a file to upload');?>:</TD>
 			<TD COLSPAN='3' class='td_data' style='text-align: left;'><INPUT NAME="frm_file" TYPE="file" /></TD>
 		</TR>
 		<TR class='odd'>
-			<TD class='td_label' style='text-align: left;'>File Name</TD>
-			<TD COLSPAN='3'  class='td_data' style='text-align: left;'><INPUT NAME="frm_file_title" TYPE="text" SIZE="48" MAXLENGTH="128" VALUE=""></TD>
+			<TD class='td_label' style='text-align: left;'><?php print gettext('File Name');?></TD>
+			<TD COLSPAN='3'  class='td_data' style='text-align: left;'><INPUT NAME="frm_file_title" TYPE="text" SIZE="48" MAXLENGTH="128" VALUE="" /></TD>
 		</TR>
 		<TR class='spacer'>
 			<TD COLSPAN='4' class='spacer'>&nbsp;</TD>
@@ -1545,9 +1545,9 @@ if(get_num_groups()) {
 		<TR><TD COLSPAN=4 ALIGN='center'><font color='red' size='-1'>*</FONT> Required</TD></TR>
 		<TR CLASS = "even">
 			<TD COLSPAN=4 ALIGN='center'>
-			<INPUT TYPE="button" VALUE="Cancel" onClick="document.can_Form.submit();" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="reset" VALUE="Reset" onClick = "do_add_reset(this.form);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- 1/22/09 -->
-			<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>"  onClick="validate(document.res_add_Form);" >
+			<INPUT TYPE="button" VALUE="Cancel" onClick="document.can_Form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="reset" VALUE="Reset" onClick = "do_add_reset(this.form);" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- 1/22/09 -->
+			<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>"  onClick="validate(document.res_add_Form);" />
 			</TD>
 		</TR>	<!-- 7/21/09 -->
 		<INPUT TYPE='hidden' NAME = 'frm_lat' VALUE=''/>
@@ -1629,7 +1629,7 @@ if(get_num_groups()) {
 		</HEAD>
 		<BODY onLoad = "ck_frames(); do_tracking(document.res_edit_Form, <?php print $track_type;?>); get_files();"> <!-- <?php print __LINE__;?> -->
 		<A NAME='top'>		<!-- 11/11/09 -->
-		<DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0></div>
+		<DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0 /></div>
 		<?php 
 		require_once('./incs/links.inc.php');
 		?>
@@ -1639,9 +1639,9 @@ if(get_num_groups()) {
 		<FONT SIZE=-1>(<?php print gettext('mouseover caption for help information');?></FONT></FONT><BR /><BR /></TD></TR>
 		<FORM METHOD="POST" NAME= "res_edit_Form" ACTION="<?php echo basename(__FILE__);?>?func=responder&goedit=true"> <!-- 7/9/09 -->
 		<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>	
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Roster User">Roster User</A></TD>	<!-- 9/6/13 -->
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Roster User"><?php print gettext('Roster User');?></A></TD>	<!-- 9/6/13 -->
 			<TD COLSPAN=3 style='text-align: left; vertical-align: top;'><?php print get_roster($row['roster_user']);?><DIV id='user_details' style='width: 300px; vertical-align: top; display: inline-block; font-size: 1.3em; word-wrap: normal;'><?php print get_user_details($row['roster_user']);?></DIV></TD></TR>		<!-- 9/6/13 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print get_text("Units");?> Name ">Name</A>: <font color='red' size='-1'>*</font></TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="<?php print $row['name'] ;?>" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print get_text("Units");?> Name "><?php print gettext('Name');?></A>: <font color='red' size='-1'>*</font></TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="<?php print $row['name'] ;?>" /></TD></TR>
 		<TR CLASS = "odd"><TD CLASS="td_label">
 		<A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Handle - local rules, could be callsign or badge number, generally for radio comms use');?>"><?php print gettext('Handle');?></A>: &nbsp;<FONT COLOR='red' size='-1'>*</FONT>&nbsp;</TD>
 		<TD COLSPAN=3><INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_handle" VALUE="<?php print $row['handle'] ;?>" />
@@ -1676,7 +1676,7 @@ if(get_num_groups()) {
 			} else {
 ?>
 			<TR CLASS='even' VALIGN='top'>;
-			<TD CLASS='td_label'><A CLASS="td_label" HREF="#" TITLE="Shows Regions that Responder is allocated to"><?php print get_text("Regions");?></A>:
+			<TD CLASS='td_label'><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Shows Regions that Responder is allocated to');?>"><?php print get_text("Regions");?></A>:
 			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
 			<TD>
@@ -1729,7 +1729,7 @@ if(get_num_groups()) {
 <SCRIPT>				
 				var track_info = "APRS:   callsign\nInstamapper:   Device key\nLocateA:   Userid\nGtrack:   Userid\nLatitude:   Badge\nOpenGTS:   Device\nMobile Tracker:    Automatic\n";	//	9/6/13
 </SCRIPT>
-				<INPUT TYPE = 'button' onClick = alert(track_info) value="?">
+				<INPUT TYPE = 'button' onClick='alert(track_info);' value="?" />
 			
 				&nbsp;&raquo; <INPUT ID = "track_key" SIZE="<?php print $key_field_size;?>" MAXLENGTH="<?php print $key_field_size;?>" TYPE="text" NAME="frm_callsign" VALUE="<?php print $row['callsign'];?>" /> <!-- 7/23/09 -->
 			</TD>
@@ -1756,14 +1756,14 @@ if(get_num_groups()) {
 			unset($result_st);
 ?>
 			</TD></TR>
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" CLASS="td_label" HREF="#" TITLE="About unit status - information about particular status values for this unit">About Status</A></TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_status_about" VALUE="<?php print $row['status_about'] ;?>"  MAXLENGTH="512"></TD></TR>		<!-- 9/6/13 -->
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" CLASS="td_label" HREF="#" TITLE="<?php print gettext('About unit status - information about particular status values for this unit');?>"><?php print gettext('About Status');?></A></TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_status_about" VALUE="<?php print $row['status_about'] ;?>"  MAXLENGTH="512"></TD></TR>		<!-- 9/6/13 -->
 		<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>	
 <?php
 		if(is_administrator()) {
 ?>
 			<TR CLASS='odd' VALIGN="top">	<!--  6/10/11 -->
 			<TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Sets boundary used to ring-fence the area this unit is allowed in');?>"><?php print get_text("Ringfence");?></A>:</TD>
-			<TD><SELECT NAME="frm_ringfence" onChange = "this.value=JSfnTrim(this.value)">	<!--  11/17/10 -->
+			<TD><SELECT NAME="frm_ringfence" onChange = "this.value=JSfnTrim(this.value);">	<!--  11/17/10 -->
 				<OPTION VALUE=0><?php print gettext('Select');?></OPTION>
 <?php
 				$query_bound = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `use_with_u_rf` = 1 ORDER BY `line_name` ASC";		// 12/18/10
@@ -1776,7 +1776,7 @@ if(get_num_groups()) {
 			</SELECT></TD></TR>
 			<TR CLASS='odd' VALIGN="top">	<!--  6/10/11 -->
 			<TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Sets exclusion zone for this unit');?>"><?php print get_text("Exclusion Zone");?></A>:</TD>
-			<TD><SELECT NAME="frm_excl_zone" onChange = "this.value=JSfnTrim(this.value)">	<!--  11/17/10 -->
+			<TD><SELECT NAME="frm_excl_zone" onChange = "this.value=JSfnTrim(this.value);">	<!--  11/17/10 -->
 				<OPTION VALUE=0><?php print gettext('Select');?></OPTION>
 <?php
 				$query_bound = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup` WHERE `use_with_u_ex` = 1 ORDER BY `line_name` ASC";		// 12/18/10
@@ -1800,7 +1800,7 @@ if(get_num_groups()) {
 			</TD></TR>
 		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Location - type in location in fields or click location on map');?> "><?php print gettext('Location');?></A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="<?php print $row['street'] ;?>"  MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('City - defaults to default city set in configuration. Type in City if required.');?>"><?php print gettext('City');?></A>:</TD> <!-- 7/5/10 -->
-		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
+		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value);" /> <!-- 7/5/10 -->
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="<?php print gettext('State - US State or non-US Country code e.g. UK for United Kingdom');?>"><?php print gettext('St');?></A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS = "odd"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Phone number');?>"><?php print gettext('Phone');?></A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="12" MAXLENGTH="48" TYPE="text" NAME="frm_phone" VALUE="<?php print $row['phone'] ;?>" /></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print get_text("Units") . gettext('Description - additional details about unit');?>"><?php print gettext('Description');?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=56 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
@@ -1844,17 +1844,17 @@ if(get_num_groups()) {
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
 
 			<!-- 9/10/13 File List -->
-		<SPAN id='s_fl' class='plain' style='position: fixed; top: 10px; right: 0px; height: 20px; width: 100px; font-size: 1.2em; float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'block'; $('s_fl').style.display='none'; $('h_fl').style.display='inline-block';">Files</SPAN>
+		<SPAN id='s_fl' class='plain' style='position: fixed; top: 10px; right: 0px; height: 20px; width: 100px; font-size: 1.2em; float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'block'; $('s_fl').style.display='none'; $('h_fl').style.display='inline-block';"><?php print gettext('Files');?></SPAN>
 		<DIV id='file_list' style='position: fixed; right: 10px; top: 10px; width: 400px; height: 600px; border: 2px outset #707070; text-align: center; display: none;'>
-			<SPAN id='h_fl' class='plain' style='float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'none'; $('h_fl').style.display='none'; $('s_fl').style.display='inline-block';">Hide</SPAN>
-			<DIV class='heading' style='text-align: center;'>FILE LIST</DIV><BR />
-			<SPAN id='nf_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='file_window(<?php print $id;?>);'>Add file</SPAN><BR /><BR />
+			<SPAN id='h_fl' class='plain' style='float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'none'; $('h_fl').style.display='none'; $('s_fl').style.display='inline-block';"><?php print gettext('Hide');?></SPAN>
+			<DIV class='heading' style='text-align: center;'><?php print gettext('FILE LIST');?></DIV><BR />
+			<SPAN id='nf_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick='file_window(<?php print $id;?>);'><?php print gettext('Add file');?></SPAN><BR /><BR />
 			<DIV id='the_file_list' style='width: 100%; height: 100%; overflow-y: auto; text-align: left;'></DIV>
 		</DIV>
 			<!-- 9/10/13 File List -->
 
 		<A NAME="bottom" /> 
-		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>			
+		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0 /></div>			
 		</BODY>
 		</HTML>
 <?php
@@ -1923,7 +1923,7 @@ if(get_num_groups()) {
 		</HEAD><!-- 1387 -->
 		<BODY onLoad = "ck_frames(); get_files();">
 		<A NAME='top'>		<!-- 11/11/09 -->
-		<DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0></div>
+		<DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0 /></div>
 <?php
 		if ($_dodisp == 'true') {				// dispatch
 			print "\t<BODY onLoad = 'ck_frames(); do_disp();' >\n";
@@ -1970,9 +1970,9 @@ if(get_num_groups()) {
 <?php
 		$dispatch_arr = array("Yes", "No, not enforced", "No, enforced");
 ?>
-				<SPAN CLASS="td_label" STYLE='margin-left: 32px'>Dispatch:&nbsp;</SPAN><?php print $dispatch_arr[$row_st['dispatch']];?>
+				<SPAN CLASS="td_label" STYLE='margin-left: 32px'><?php print gettext('Dispatch');?>:&nbsp;</SPAN><?php print $dispatch_arr[$row_st['dispatch']];?>
 				</TD></TR>
-			<TR CLASS = "even"><TD CLASS="td_label">About Status</TD>  <TD><?php print $row['status_about'] ;?></TD></TR>	<!-- 9/6/13 -->
+			<TR CLASS = "even"><TD CLASS="td_label"><?php print gettext('About Status');?></TD>  <TD><?php print $row['status_about'] ;?></TD></TR>	<!-- 9/6/13 -->
 			<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>
 			<TR CLASS='even'><TD CLASS="td_label"><A HREF="#" TITLE="<?php print gettext('Location - type in location in fields or click location on map');?>"><?php print gettext('Location');?></A>:</TD><TD><?php print $row['street'] ;?></TD></TR> <!-- 7/5/10 -->
 			<TR CLASS='odd'><TD CLASS="td_label"><A HREF="#" TITLE="<?php print gettext('City - defaults to default city set in configuration. Type in City if required');?>"><?php print gettext('City');?></A>:</TD> <!-- 7/5/10 -->
@@ -1988,7 +1988,7 @@ if(get_num_groups()) {
 			<TR CLASS = 'even'><TD CLASS="td_label"><?php print gettext('As of');?>:</TD>	<TD><?php print format_date_2($row['updated']); ?></TD></TR>
 			<TR><TD>&nbsp;</TD></TR>
 			<TR CLASS = "odd"><TD COLSPAN=2 ALIGN='center'>
-				<INPUT TYPE="button" VALUE="Cancel" onClick="document.can_Form.submit();" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick="document.can_Form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <?php		// 1/2/10
 			print (is_administrator() || is_super())? 	"<INPUT TYPE='button' VALUE='" . gettext('to Edit') . "' onClick= 'to_edit_Form.submit();'/>\n": "" ;
@@ -2082,7 +2082,7 @@ if(get_num_groups()) {
 				default: 							$severityclass='severity_normal'; break;
 				}
 
-			print "\t<TR CLASS ='" .  $evenodd[($i+1)%2] . "' onClick = 'to_routes(\"" . $row_t['id'] . "\")'>\n";
+			print "\t<TR CLASS ='" .  $evenodd[($i+1)%2] . "' onClick = 'to_routes(\"" . $row_t['id'] . "\");'>\n";
 			print "\t\t<TD CLASS='{$severityclass}' TITLE ='{$row_t['scope']}'>" . 						shorten($row_t['scope'], 24) . "</TD>\n";
 			print "\t\t<TD CLASS='{$severityclass}' TITLE ='{$row_t['description']}'>" . 				shorten($row_t['description'], 24) . "</TD>\n";
 			print "\t\t<TD CLASS='{$severityclass}' TITLE ='{$row_t['street']} {$row_t['city']}'>" . 	shorten($row_t['street'], 24) . "</TD>\n";
@@ -2094,7 +2094,7 @@ if(get_num_groups()) {
 			print ($i>0)? "" : "<TR><TD COLSPAN=99 ALIGN='center'><BR />" . gettext('No incidents available') . "</TD></TR>\n";
 ?>
 			<TR><TD ALIGN="center" COLSPAN=99><BR /><BR />
-				<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick = "$('incidents').style.display='none'; $('view_unit').style.display='block';">
+				<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick = "$('incidents').style.display='none'; $('view_unit').style.display='block';" />
 			</TD></TR>
 			</TABLE><BR><BR>
 
@@ -2119,19 +2119,19 @@ if(get_num_groups()) {
 ?>
 
 			<TR><TD ALIGN="center" COLSPAN=99><BR /><BR />
-				<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick = "$('facilities').style.display='none'; $('view_unit').style.display='block';">
+				<INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>" onClick = "$('facilities').style.display='none'; $('view_unit').style.display='block';" />
 			</TD></TR>
 			</TABLE><BR><BR>
 			</TD></TR></TABLE>
 			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
 			<FORM NAME="to_edit_Form" METHOD="post" ACTION = "<?php echo basename(__FILE__);?>?func=responder&edit=true&id=<?php print $id; ?>"></FORM>
 			<FORM NAME="routes_Form" METHOD="get" ACTION = "routes_nm.php">
-			<INPUT TYPE="hidden" NAME="ticket_id" 	VALUE="">						<!-- 10/16/08 -->
-			<INPUT TYPE="hidden" NAME="unit_id" 	VALUE="<?php print $id; ?>">
+			<INPUT TYPE="hidden" NAME="ticket_id" 	VALUE="" />						<!-- 10/16/08 -->
+			<INPUT TYPE="hidden" NAME="unit_id" 	VALUE="<?php print $id; ?>" />
 			</FORM>
 			<FORM NAME="fac_routes_Form" METHOD="get" ACTION = "fac_routes_nm.php">
-			<INPUT TYPE="hidden" NAME="fac_id" 	VALUE="">						<!-- 10/16/08 -->
-			<INPUT TYPE="hidden" NAME="unit_id" 	VALUE="<?php print $id; ?>">
+			<INPUT TYPE="hidden" NAME="fac_id" 	VALUE="" />						<!-- 10/16/08 -->
+			<INPUT TYPE="hidden" NAME="unit_id" 	VALUE="<?php print $id; ?>" />
 			</FORM>
 
 							<!-- END UNIT VIEW -->
@@ -2236,12 +2236,12 @@ if(get_num_groups()) {
 		print "<TR CLASS='odd'><TD COLSPAN=99 ALIGN='center'><DIV style='width: 80%;'>" . get_units_legend() . "</DIV></TD></TR>";
 		print "<TR class='spacer'><TD class='spacer'>&nbsp;</TD></TR>";		
 		$buttons = "<TR><TD COLSPAN=99 ALIGN='center'><BR />
-			<INPUT TYPE = 'button' onClick = 'document.tracks_Form.submit();' VALUE='" . get_text("Units") . gettext('Tracks') . " ' STYLE = 'margin-left: 60px'>";
+			<INPUT TYPE = 'button' onClick = 'document.tracks_Form.submit();' VALUE='" . get_text("Units") . gettext('Tracks') . " ' STYLE = 'margin-left: 60px' />";
 		if (!(is_guest())) {
 			if ((!(is_user())) && (!(is_unit()))) {				// 7/27/10
-				$buttons .="<INPUT TYPE='button' value= '" . gettext('Add a ') . get_text("Units") . "'  onClick ='document.add_Form.submit();' style = 'margin-left:20px'>";	// 10/8/08
+				$buttons .="<INPUT TYPE='button' value= '" . gettext('Add a ') . get_text("Units") . "'  onClick ='document.add_Form.submit();' style = 'margin-left:20px' />";	// 10/8/08
 				}			
-			$buttons .= "<INPUT TYPE = 'button' onClick = 'do_mail_win()' VALUE='" . gettext('Email'). " " . get_text("Units") . "'  style = 'margin-left:20px'>";	// 6/13/09
+			$buttons .= "<INPUT TYPE = 'button' onClick = 'do_mail_win();' VALUE='" . gettext('Email'). " " . get_text("Units") . "'  style = 'margin-left:20px' />";	// 6/13/09
 			}
 
 		$buttons .= "</TD></TR>";
@@ -2291,7 +2291,7 @@ if(get_num_groups()) {
 			<FORM NAME='can_Form' METHOD="post" ACTION = "<?php echo basename(__FILE__);?>?func=responder"></FORM>
 			<!-- 1452 -->
 			<A NAME="bottom" /> <!-- 5/3/10 -->
-			<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>
+			<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0 /></div>
 			</BODY>				<!-- END RESPONDER LIST and ADD -->
 <?php
 		print do_calls();		// generate JS calls array

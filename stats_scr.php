@@ -1472,7 +1472,7 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 			<DIV class='config_cell_data' style='width: 20%;'><SELECT NAME='frm_t_type6'><?php print $menu2;?></DIV>
 		</DIV>
 <?php
-	$menu1 = "<OPTION VALUE=0 SELECTED>Select</OPTION>";
+	$menu1 = "<OPTION VALUE=0 SELECTED>" . gettext('Select') . "</OPTION>";
 	$query1 = "SELECT * FROM `$GLOBALS[mysql_prefix]stats_type` ORDER BY `st_id` ASC";
 	$result1 = mysql_query($query1) or do_error($query1, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 	while ($row1 = stripslashes_deep(mysql_fetch_assoc($result1))) {
@@ -1505,7 +1505,7 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 			<DIV class='config_cell_data' style='width: 20%;'><SELECT NAME='frm_t_type7'><?php print $menu2;?></DIV>
 		</DIV>
 <?php
-	$menu1 = "<OPTION VALUE=0 SELECTED>Select</OPTION>";
+	$menu1 = "<OPTION VALUE=0 SELECTED>" . gettext('Select') . "</OPTION>";
 	$query1 = "SELECT * FROM `$GLOBALS[mysql_prefix]stats_type` ORDER BY `st_id` ASC";
 	$result1 = mysql_query($query1) or do_error($query1, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 	while ($row1 = stripslashes_deep(mysql_fetch_assoc($result1))) {
@@ -1540,7 +1540,7 @@ if (((isset($_GET['config'])) && ($_GET['config'] == "config"))) {
 		</FORM>
 		<DIV class='config_row'>
 			<DIV class='config_cell_butts' style='width: 96%; text-align: center;'><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="window.location='stats_scr.php?stats=stats';"/>
-			&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="button" VALUE="Submit" onClick="document.stats_config.submit();"/>
+			&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="button" VALUE="<?php print gettext('Submit');?>" onClick="document.stats_config.submit();"/>
 			</DIV>
 		</DIV> 
 

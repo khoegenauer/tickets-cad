@@ -24,7 +24,7 @@
 				document.write(gen_img_str(i)+"&nbsp;\n");
 				}
 </SCRIPT>
-			 	&laquo; <SPAN class='warn'>click to select icon </SPAN> &nbsp;
+			 	&laquo; <SPAN class='warn'><?php print gettext('click to select icon');?> </SPAN> &nbsp;
 
 		</TD></TR>
 		<tr><td colspan=99 align='center'>

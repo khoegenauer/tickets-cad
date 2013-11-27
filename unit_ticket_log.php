@@ -137,16 +137,16 @@ if (empty($_POST)) {
 		}
 ?>
 	<TR CLASS = 'even' ><TH COLSPAN=2><?php print $theTag;?> <?php print gettext('Log');?></TH></TR>
-	<TR CLASS = 'odd'><TD>Log entry:</TD><TD><TEXTAREA NAME="frm_comment" COLS="70" ROWS="10" WRAP="virtual"></TEXTAREA></TD></TR>
+	<TR CLASS = 'odd'><TD><?php print gettext('Log entry');?>:</TD><TD><TEXTAREA NAME="frm_comment" COLS="70" ROWS="10" WRAP="virtual"></TEXTAREA></TD></TR>
 	<TR CLASS = 'even'><TD COLSPAN=2 ALIGN='center'>
 	<INPUT TYPE = 'button' VALUE='<?php print gettext('Submit');?>' onClick="document.log_form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;
 	<INPUT TYPE = 'button' VALUE='<?php print gettext('Reset');?>' onClick="document.log_form.reset();" />&nbsp;&nbsp;&nbsp;&nbsp;
 	<INPUT TYPE = 'button' VALUE='<?php print gettext('Cancel');?>' onClick="window.close();" />
 	</TD></TR>
 	</TABLE>
-	<INPUT TYPE='hidden' NAME='func' VALUE='add'/>
-	<INPUT TYPE='hidden' NAME='responder' VALUE=<?php print $responder;?>/>
-	<INPUT TYPE='hidden' NAME='ticket' VALUE=<?php print $ticket;?>/>
+	<INPUT TYPE='hidden' NAME='func' VALUE='add' />
+	<INPUT TYPE='hidden' NAME='responder' VALUE=<?php print $responder;?> />
+	<INPUT TYPE='hidden' NAME='ticket' VALUE=<?php print $ticket;?> />
 	</FORM>
 <?php 
 	} else {										// not empty

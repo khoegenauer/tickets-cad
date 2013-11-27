@@ -567,7 +567,7 @@ if(empty($_POST)) {
 	$tick_result = mysql_query($tick_query) or do_error($tick_query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	if (!mysql_num_rows($tick_result)){	//no tickets? print "error" or "restricted user rights"
 		$num_tkts = 0;
-		$error_msg = '"' . gettext('No Ticket details for this message') . '"';
+		$error_msg = gettext('No Ticket details for this message');
 		} else {
 		$num_tkts = mysql_num_rows($tick_result);
 		$error_msg = "";

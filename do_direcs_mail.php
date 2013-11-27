@@ -28,7 +28,7 @@ require_once($_SESSION['fip']);		//7/28/10
 
 if (empty($_POST['frm_u_id'])) {
 	print "<CENTER>" . gettext('You must select a Unit first') . "</BR></BR>";
-	print "<A href='javascript: self.close ()'>" . gettext('Close') . "</A></CENTER>";
+	print "<A href='javascript: self.close();'>" . gettext('Close') . "</A></CENTER>";
 	exit();
 	}
 

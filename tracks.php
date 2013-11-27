@@ -691,7 +691,7 @@ unset($result);
 		print "\n\tside_bar_html +=\"" . $addon . "\"\n";
 		}
 //	$temp = get_variable('auto_poll');
-//	$aprs_but = (intval($temp>0))? "<TR><TD COLSPAN=99 ALIGN='center'><INPUT TYPE='button' value= 'APRS'  onClick ='do_aprs_window();'></TD></TR>": "";
+//	$aprs_but = (intval($temp>0))? "<TR><TD COLSPAN=99 ALIGN='center'><INPUT TYPE='button' value= 'APRS'  onClick ='do_aprs_window();' /></TD></TR>": "";
 	$aprs_but = "";		
 ?>
 	side_bar_html += "<?php print $aprs_but;?>";
@@ -712,7 +712,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<HEAD><TITLE><?php print gettext('Tickets - Tracks Module');?></TITLE>
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+	<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />	<!-- 3/15/11 -->
 	<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry,weather&sensor=false"></SCRIPT>
 	<SCRIPT SRC='./js/graticule_V3.js' type='text/javascript'></SCRIPT> 
 	<SCRIPT SRC='./js/misc_function.js' type='text/javascript'></SCRIPT>  <!-- 4/14/10 -->
@@ -757,14 +757,14 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 			</TD></TR></TABLE><!-- end outer -->
 			
 			<FORM NAME='view_form' METHOD='get' ACTION='units.php'>
-			<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
-			<INPUT TYPE='hidden' NAME='view' VALUE='true'>
-			<INPUT TYPE='hidden' NAME='id' VALUE=''>
+			<INPUT TYPE='hidden' NAME='func' VALUE='responder' />
+			<INPUT TYPE='hidden' NAME='view' VALUE='true' />
+			<INPUT TYPE='hidden' NAME='id' VALUE='' />
 			</FORM>
 			
 			<FORM NAME='to_add_form' METHOD='get' ACTION='units.php'>
-			<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
-			<INPUT TYPE='hidden' NAME='add' VALUE='true'>
+			<INPUT TYPE='hidden' NAME='func' VALUE='responder' />
+			<INPUT TYPE='hidden' NAME='add' VALUE='true' />
 			</FORM>
 			
 			<FORM NAME='can_Form' METHOD="post" ACTION = "units.php?func=responder"></FORM>

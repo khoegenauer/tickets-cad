@@ -736,9 +736,7 @@ function loc_lkup(my_form) {		   						// 7/5/10
 		return false;
 		}
 	var geocoder = new google.maps.Geocoder();
-
 	var myAddress = my_form.frm_street.value.trim() + ", " +my_form.frm_city.value.trim() + " "  +my_form.frm_state.value.trim();
-
 	geocoder.geocode( { 'address': myAddress}, function(results, status) {		
 		if (status == google.maps.GeocoderStatus.OK)	{ pt_to_map (my_form, results[0].geometry.location.lat(), results[0].geometry.location.lng());}					
 		else 											{ alert("Geocode lookup failed: " + status);}

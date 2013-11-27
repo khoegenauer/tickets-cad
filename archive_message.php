@@ -271,7 +271,7 @@ if(!empty($_POST)) {
 		<CENTER>
 		<DIV style='position: absolute; top: 50px; left: 220px; font-size: 20px; font-weight: bold;'><?php print gettext("Message Sent");?></DIV>
 		<DIV ID='controls' style='position: relative; top: 150px; left: 5%; display: block; text-align: center; width: 20%;'>
-		<SPAN id='close_but' class='plain' style='float: left; display: inline-block;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='window.close();'>CLOSE</SPAN>
+		<SPAN id='close_but' class='plain' style='float: left; display: inline-block;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='window.close();'><?php print gettext('CLOSE');?></SPAN>
 		</DIV>	
 		</CENTER>	
 	</BODY>

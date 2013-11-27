@@ -181,7 +181,7 @@ else {
 			foreach ($failures as $value){
 			    $errs .= $value . " ";
 			    }
-			$caption = '"' . gettext('Mail to') . " '$errs' " . gettext('failed') . '"';
+			$caption = '"' . gettext('Mail to '{$errs}' failed') . '"';
 			}
 		else {
 			if ($errors) {

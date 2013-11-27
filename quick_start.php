@@ -510,7 +510,7 @@ elseif((!empty($_POST)) && (isset($_POST['country']))) {
 			$query = "INSERT INTO `$GLOBALS[mysql_prefix]un_status` (`status_val`,`description`,`dispatch`,`hide`,`group`,`bg_color`,`text_color`) VALUES('$resp_stat','$description','$can_dispatch','$can_hide','$grouping','$bgcolor','$textcol')";
 			$result = mysql_query($query) or die('"' . gettext('Unit Status types insertion failed, execution halted') . '"');		
 			if($result) {
-				$output_text .= "Responder Status " . $_POST['frm_rstat_name'] . " inserted<BR />";	
+				$output_text .= gettext("Responder Status {$_POST['frm_rstat_name']} inserted") . "<BR />";	
 				}	
 			$i++;
 			}
@@ -1020,7 +1020,7 @@ elseif((!empty($_POST)) && (isset($_POST['country']))) {
 								<OPTION VALUE=2 SELECTED><?php print gettext('High');?></OPTION>
 							</SELECT>
 						</TD>
-						<TD style='width: 20%;'><INPUT NAME='frm_grp[]' TYPE='text' SIZE='20' MAXLENGTH='20' VALUE='<?php print gettext('Medical');?>'></TD>
+						<TD style='width: 20%;'><INPUT NAME='frm_grp[]' TYPE='text' SIZE='20' MAXLENGTH='20' VALUE='<?php print gettext('Medical');?>' /></TD>
 						<TD style='width: 10%;'>&nbsp;</TD>
 					</TR>					
 				</TABLE>
@@ -1047,9 +1047,9 @@ elseif((!empty($_POST)) && (isset($_POST['country']))) {
 			<TABLE style='width: 90%;'>	
 				<TR style='width: 100%;'>
 					<TD style='font-weight: bold; background-color: #707070; color: #FFFFFF; width: 20%; font-size: 12px;'><?php print gettext('No. of Responders');?></TD>
-					<TD style='width: 20%;'><INPUT NAME='frm_num_responders' TYPE='text' SIZE='5' VALUE='10'></TD><TD style='width: 20%;'>&nbsp;&nbsp;&nbsp;</TD>
+					<TD style='width: 20%;'><INPUT NAME='frm_num_responders' TYPE='text' SIZE='5' VALUE='10' /></TD><TD style='width: 20%;'>&nbsp;&nbsp;&nbsp;</TD>
 					<TD style='font-weight: bold; background-color: #707070; color: #FFFFFF; width: 20%; font-size: 12px;'><?php print gettext('Name Prefix');?></TD>
-					<TD style='width: 20%;'><INPUT NAME='frm_responder_prefix' TYPE='text' SIZE='12' MAXLENGTH='12' VALUE='<?php print gettext('Responder');?>_'></TD>
+					<TD style='width: 20%;'><INPUT NAME='frm_responder_prefix' TYPE='text' SIZE='12' MAXLENGTH='12' VALUE='<?php print gettext('Responder');?>_' /></TD>
 				</TR>					
 			</TABLE>
 		</DIV>

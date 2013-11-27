@@ -123,12 +123,12 @@ $row = mysql_fetch_assoc($result);
 	</TR>
 </TABLE>
 <BR /><BR /><BR />
-<CENTER><SPAN id='fin_button' class='plain' style='text-align: center;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Finished</SPAN></CENTER>
+<CENTER><SPAN id='fin_button' class='plain' style='text-align: center;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'><?php print gettext('Finished');?></SPAN></CENTER>
 <FORM NAME='to_closed' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'>
-<INPUT TYPE='hidden' NAME='status' VALUE='<?php print $GLOBALS['STATUS_CLOSED'];?>'>
+<INPUT TYPE='hidden' NAME='status' VALUE='<?php print $GLOBALS['STATUS_CLOSED'];?>' />
 </FORM>
 <FORM NAME='to_all' METHOD='get' ACTION = '<?php print basename( __FILE__); ?>'>
-<INPUT TYPE='hidden' NAME='status' VALUE=''>
+<INPUT TYPE='hidden' NAME='status' VALUE='' />
 </FORM>
 </TD></TR></TABLE>
 </BODY></HTML>

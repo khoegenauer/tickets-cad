@@ -435,7 +435,7 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
  * @param {type} the_class
  * @returns {Boolean}
  */
-    function CngClass(obj, the_class){
+        function CngClass(obj, the_class){
 			$(obj).className=the_class;
 			return true;
 			}

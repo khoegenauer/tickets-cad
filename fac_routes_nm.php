@@ -493,7 +493,7 @@ if (!empty($_POST)) {
 	<CENTER><BR><BR><BR><BR><H3><?php print gettext('Call Assignments made to');?>:<BR /><?php print substr((str_replace ( "\n", ", ", $_POST['frm_name_str'])) , 0, -2);?><BR><BR> <!-- 11/8/08 -->
 	<?php print gettext('See call Board');?></H3>
 	<FORM NAME='cont_form' METHOD = 'get' ACTION = "main.php">
-	<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>' onClick = "document.cont_form.submit();">
+	<INPUT TYPE='button' VALUE='<?php print gettext('Continue');?>' onClick = "document.cont_form.submit();" />
 	</FORM></BODY></HTML>
 <?php		
 	}		// end if (!empty($_POST))
@@ -683,7 +683,7 @@ require_once('./incs/links.inc.php');
 		
 
 	<FORM NAME='can_Form' ACTION="main.php">
-	<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['fac_id'];?>">
+	<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['fac_id'];?>" />
 	</FORM>	
 	<FORM NAME='routes_Form' METHOD='post' ACTION="<?php print basename( __FILE__); ?>">
 	<INPUT TYPE='hidden' NAME='func' 			VALUE='do_db'/>
@@ -695,7 +695,7 @@ require_once('./incs/links.inc.php');
 	<INPUT TYPE='hidden' NAME='frm_comments' 	VALUE= "New"/>
 	</FORM>
 	<FORM NAME='reLoad_Form' METHOD = 'get' ACTION="<?php print basename( __FILE__); ?>">
-	<INPUT TYPE='hidden' NAME='fac_id' 	VALUE='<?php print $_GET['fac_id']; ?>'>
+	<INPUT TYPE='hidden' NAME='fac_id' 	VALUE='<?php print $_GET['fac_id']; ?>' />
 	</FORM>
 	<DIV STYLE="position:fixed; width:120px; height:auto; top:<?php print $from_top;?>px; left:<?php print $from_left;?>px; background-color: transparent;">	<!-- 5/17/09, 7/7/09 -->
 		
@@ -962,7 +962,7 @@ function do_list($unit_id ="") {
 			gmarkers[id] = null;										// marker to array for side_bar click function
 	
 			side_bar_html += "<TR CLASS='" + colors[(id+1)%2] +"' VALIGN='bottom' onClick = myclick(" + id + "," + unit_id +");><TD>";
-			side_bar_html += "<IMG BORDER=0 SRC='rtarrow.gif' ID = \"R" + id + "\"  STYLE = 'visibility:hidden;'></TD>";
+			side_bar_html += "<IMG BORDER=0 SRC='rtarrow.gif' ID = \"R" + id + "\"  STYLE = 'visibility:hidden;' /></TD>";
 			var letter = ""+ id;	
 			var the_class = (lats[id])?  "emph" : "td_label";
 

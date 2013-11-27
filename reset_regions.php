@@ -149,7 +149,7 @@ if((isset($_GET['func'])) && ($_GET['func']=='reset')) {
 	<DIV class='heading' style='font-size: 24px; text-align: center;'><?php print gettext('Reset Regions');?></DIV><BR /><BR />
 	<DIV style='padding: 20px; border:1px outset #FFFFFF; position: relative; background-color: #F8F8F8;'>	
 	<?php print gettext('All Tickets Resources have been reset to Region 1.');?><BR /><BR /><BR /><CENTER>
-	<SPAN id='can_but' class='plain' onMouseOver='do_hover(this);' onMouseOut='do_plain(this);' onClick="document.can_Form.submit();">Finish</SPAN></CENTER>
+	<SPAN id='can_but' class='plain' onMouseOver='do_hover(this);' onMouseOut='do_plain(this);' onClick="document.can_Form.submit();"><?php print gettext('Finish');?></SPAN></CENTER>
 	<BR />
 	<BR />	
 	</DIV>

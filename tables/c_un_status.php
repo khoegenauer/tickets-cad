@@ -37,26 +37,26 @@
 		<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Background color');?>:</TD>
 			<TD>			
 				<SELECT name='dmy_status_id' STYLE='background-color:transparent; color:black;' ONCHANGE =  "set_bg_vals (this.form);this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color;">				
-				<OPTION VALUE=0 STYLE='background-color:transparent; 	color:black;' SELECTED>None</OPTION>
-				<OPTION VALUE=1 STYLE='background-color:maroon; 		color:white;' >Maroon</OPTION>
-				<OPTION VALUE=2 STYLE='background-color:red; 			color:white;' >Red</OPTION>
-				<OPTION VALUE=3 STYLE='background-color:orange; 		color:black;' >Orange</OPTION>
-				<OPTION VALUE=4 STYLE='background-color:tan; 			color:black;' >Tan</OPTION>				
-				<OPTION VALUE=5 STYLE='background-color:yellow; 		color:black;' >Yellow</OPTION>
-				<OPTION VALUE=6 STYLE='background-color:olive; 			color:white;' >Olive</OPTION>				
-				<OPTION VALUE=7 STYLE='background-color:purple; 		color:white;' >Purple</OPTION>
-				<OPTION VALUE=8 STYLE='background-color:fuchsia; 		color:white;' >Fuchsia</OPTION>
-				<OPTION VALUE=9 STYLE='background-color:HotPink; 		color:black;' >HotPink</OPTION>
-				<OPTION VALUE=10 STYLE='background-color:pink; 			color:black;' >Pink</OPTION>
-				<OPTION VALUE=12 STYLE='background-color:green; 		color:white;' >Green</OPTION>
-				<OPTION VALUE=13 STYLE='background-color:PaleGreen; 	color:black;' >PaleGreen</OPTION>
-				<OPTION VALUE=14 STYLE='background-color:lime; 			color:black;' >Lime</OPTION>
-				<OPTION VALUE=15 STYLE='background-color:aqua; 			color:black;' >Aqua</OPTION>				
-				<OPTION VALUE=16 STYLE='background-color:black; 		color:white;' >Black</OPTION>
-				<OPTION VALUE=17 STYLE='background-color:silver; 		color:black;' >Silver</OPTION>
-				<OPTION VALUE=18 STYLE='background-color:SlateGray; 	color:white;' >SlateGray</OPTION>
-				<OPTION VALUE=19 STYLE='background-color:navy; 			color:white;' >Navy</OPTION>
-				<OPTION VALUE=20 STYLE='background-color:blue; 			color:white;' >Blue</OPTION>				
+				<OPTION VALUE=0 STYLE='background-color:transparent; 	color:black;' SELECTED><?php print gettext('None');?></OPTION>
+				<OPTION VALUE=1 STYLE='background-color:maroon; 		color:white;' ><?php print gettext('Maroon');?></OPTION>
+				<OPTION VALUE=2 STYLE='background-color:red; 			color:white;' ><?php print gettext('Red');?></OPTION>
+				<OPTION VALUE=3 STYLE='background-color:orange; 		color:black;' ><?php print gettext('Orange');?></OPTION>
+				<OPTION VALUE=4 STYLE='background-color:tan; 			color:black;' ><?php print gettext('Tan');?></OPTION>				
+				<OPTION VALUE=5 STYLE='background-color:yellow; 		color:black;' ><?php print gettext('Yellow');?></OPTION>
+				<OPTION VALUE=6 STYLE='background-color:olive; 			color:white;' ><?php print gettext('Olive');?></OPTION>				
+				<OPTION VALUE=7 STYLE='background-color:purple; 		color:white;' ><?php print gettext('Purple');?></OPTION>
+				<OPTION VALUE=8 STYLE='background-color:fuchsia; 		color:white;' ><?php print gettext('Fuchsia');?></OPTION>
+				<OPTION VALUE=9 STYLE='background-color:HotPink; 		color:black;' ><?php print gettext('HotPink');?></OPTION>
+				<OPTION VALUE=10 STYLE='background-color:pink; 			color:black;' ><?php print gettext('Pink');?></OPTION>
+				<OPTION VALUE=12 STYLE='background-color:green; 		color:white;' ><?php print gettext('Green');?></OPTION>
+				<OPTION VALUE=13 STYLE='background-color:PaleGreen; 	color:black;' ><?php print gettext('PaleGreen');?></OPTION>
+				<OPTION VALUE=14 STYLE='background-color:lime; 			color:black;' ><?php print gettext('Lime');?></OPTION>
+				<OPTION VALUE=15 STYLE='background-color:aqua; 			color:black;' ><?php print gettext('Aqua');?></OPTION>				
+				<OPTION VALUE=16 STYLE='background-color:black; 		color:white;' ><?php print gettext('Black');?></OPTION>
+				<OPTION VALUE=17 STYLE='background-color:silver; 		color:black;' ><?php print gettext('Silver');?></OPTION>
+				<OPTION VALUE=18 STYLE='background-color:SlateGray; 	color:white;' ><?php print gettext('SlateGray');?></OPTION>
+				<OPTION VALUE=19 STYLE='background-color:navy; 			color:white;' ><?php print gettext('Navy');?></OPTION>
+				<OPTION VALUE=20 STYLE='background-color:blue; 			color:white;' ><?php print gettext('Blue');?></OPTION>				
 				</SELECT>							
 			</TD></TR>
 			<TR><TD COLSPAN="99" ALIGN="center">

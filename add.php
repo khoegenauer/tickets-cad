@@ -1398,7 +1398,6 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 			map: map_obj
 			});
 		myMarker.setMap(map_obj);		// add marker with icon
-
 		}				// end function pt_to_map ()
 /**
  * 
@@ -1539,7 +1538,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 							}
 						else {
 							var the_city = addr_pieces[(addr_pieces.length-3)] + ", " + addr_pieces[(addr_pieces.length-2)];
-							document.add.frm_city.value=the_city.substring(0,33).trim() ;								// city						
+							document.add.frm_city.value=the_city.substring(0,33).trim();								// city						
 							document.add.frm_state.value=addr_pieces[(addr_pieces.length-1)].substring(0,5).trim();		// country							
 							}
 					}				// end switch
@@ -1727,7 +1726,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 	}			// end if (broadcast)
 ?>			
 			find_warnings(theForm.frm_lat.value, theForm.frm_lng.value);	//	9/10/13		
-//			return true;
+			return true;	//	11/18/13
 			}
 		}				// end function validate(theForm)
 /**
@@ -2611,15 +2610,15 @@ if($has_portal == 1) {
 	<TR CLASS='odd'>
 		<TD CLASS="td_label"><?php print gettext('Affected');?>:</TD>
 		<TD></TD>
-		<TD><INPUT SIZE="48" TYPE="text" 	NAME="frm_affected" VALUE="" MAXLENGTH="48"></TD>
+		<TD><INPUT SIZE="48" TYPE="text" 	NAME="frm_affected" VALUE="" MAXLENGTH="48" /></TD>
 	</TR>
 -->
 	<TR CLASS='even' VALIGN='bottom'>
 		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_start"];?>');"><?php print get_text("Run Start");?></A>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-		<TD ALIGN='center' ><img id='lock_s' border=0 src='./markers/unlock2.png' STYLE='vertical-align: middle' onClick = 'do_unlock_ps(document.add);'></TD>
+		<TD ALIGN='center' ><img id='lock_s' border=0 src='./markers/unlock2.png' STYLE='vertical-align: middle' onClick = 'do_unlock_ps(document.add);' /></TD>
 		<TD>
 <?php print generate_date_dropdown('problemstart',0,TRUE);?>
-		<SPAN CLASS="td_label" STYLE='margin-left:12px' onmouseout="UnTip()" onmouseover="Tip('<?php print $titles["_status"];?>');"><?php print get_text("Status");?>:</SPAN>
+		<SPAN CLASS="td_label" STYLE='margin-left:12px' onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_status"];?>');"><?php print get_text("Status");?>:</SPAN>
 		<SELECT NAME='frm_status'><OPTION VALUE='<?php print $GLOBALS['STATUS_OPEN'];?>' selected><?php print gettext('Open');?></OPTION>
 		<OPTION VALUE='<?php print $GLOBALS['STATUS_CLOSED']; ?>'><?php print gettext('Closed');?></OPTION>
 		<OPTION VALUE='<?php print $GLOBALS['STATUS_SCHEDULED']; ?>'><?php print gettext('Scheduled');?></OPTION></SELECT>		
@@ -2697,15 +2696,15 @@ if($has_portal == 1) {
 	</TR>
 	<TR class='odd'>
 		<TD class='td_label' COLSPAN='2' style='text-align: left;'><?php print gettext('File Name');?></TD>
-		<TD class='td_data' style='text-align: left;'><INPUT NAME="frm_file_title" TYPE="text" SIZE="48" MAXLENGTH="128" VALUE=""></TD>
+		<TD class='td_data' style='text-align: left;'><INPUT NAME="frm_file_title" TYPE="text" SIZE="48" MAXLENGTH="128" VALUE="" /></TD>
 	</TR>
 	<TR class='even'>
 		<TD COLSPAN='3'>&nbsp;</TD>
 	</TR>	
-		<INPUT TYPE="hidden" NAME="frm_lat" VALUE=""/>				<!-- // 9/9/08 -->
-		<INPUT TYPE="hidden" NAME="frm_lng" VALUE=""/>
-		<INPUT TYPE="hidden" NAME="ticket_id" VALUE="<?php print $ticket_id;?>"/>	<!-- 1/25/09, 3/10/09 -->
-		<INPUT TYPE='hidden' NAME="frm_do_scheduled" VALUE=0/>	<!-- 1/1/11 -->
+		<INPUT TYPE="hidden" NAME="frm_lat" VALUE="" />				<!-- // 9/9/08 -->
+		<INPUT TYPE="hidden" NAME="frm_lng" VALUE="" />
+		<INPUT TYPE="hidden" NAME="ticket_id" VALUE="<?php print $ticket_id;?>" />	<!-- 1/25/09, 3/10/09 -->
+		<INPUT TYPE='hidden' NAME="frm_do_scheduled" VALUE=0 />	<!-- 1/1/11 -->
 	</FORM></TABLE>
 	</TD>
 <?php

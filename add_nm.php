@@ -1796,7 +1796,7 @@ print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 	<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a5"];?>');"><?php print $nature;?></A>:</TD>	
 	<TD></TD>
 	<TD>
-		<SELECT NAME="frm_in_types_id"  tabindex=5 onChange="do_set_severity (this.selectedIndex); do_inc_name(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim());">	<!--  10/4/08 -->
+		<SELECT NAME="frm_in_types_id"  tabindex=5 onChange="do_set_severity(this.selectedIndex); do_inc_name(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim());">	<!--  10/4/08 -->
 		<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>				<!-- 1/11/09 -->
 <?php
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]in_types` ORDER BY `group` ASC, `sort` ASC, `type` ASC";
@@ -1987,7 +1987,7 @@ print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 -->
 	<TR CLASS='even' VALIGN='bottom'>
 		<TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a14"];?>');"><?php print get_text("Run Start");?></A>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-		<TD ALIGN='center' ><img id='lock_s' border=0 src='./markers/unlock2.png' STYLE='vertical-align: middle' onClick = 'do_unlock_ps(document.add);'></TD>
+		<TD ALIGN='center' ><img id='lock_s' border=0 src='./markers/unlock2.png' STYLE='vertical-align: middle' onClick = 'do_unlock_ps(document.add);' /></TD>
 		<TD>
 <?php print generate_date_dropdown('problemstart',0,TRUE);?>
 		<SPAN CLASS="td_label" STYLE='margin-left:12px' onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["a15"];?>');"><?php print get_text("Status");?>:</SPAN>

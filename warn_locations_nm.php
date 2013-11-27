@@ -738,7 +738,7 @@ var buttons_html = "";
 ?>
 		</HEAD>
 		<BODY onLoad = "ck_frames(); " > 	<!-- <?php echo __LINE__; ?> -->
-		<A NAME='top'>
+		<A NAME='top' />
 <?php
 		require_once('./incs/links.inc.php');
 ?>		
@@ -746,28 +746,28 @@ var buttons_html = "";
 		<TABLE BORDER=0 ID='outer' WIDTH='80%'><TR><TD WIDTH='100%'>
 		<TABLE BORDER=0 ID='editform'>
 		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'>&nbsp;Edit Warn Location '<?php print $row['title'];?>' data</FONT>&nbsp;&nbsp;(#<?php print $id; ?>)</FONT></FONT><BR /><BR />
-		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>
+		<FONT SIZE=-1>(<?php print gettext('mouseover caption for help information');?>)</FONT></FONT><BR /><BR /></TD></TR>
 		<FORM METHOD="POST" NAME= "res_edit_Form" ACTION="<?php print  basename(__FILE__);?>?func=location&goedit=true">
 
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Location Name - fill in with Name of location">Name</A>:&nbsp;<font color='red' size='-1'>*</font></TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="<?php print $row['title'] ;?>" /></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Location Name - fill in with Name of location');?>"><?php print gettext('Name');?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>			<TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="<?php print $row['title'] ;?>" /></TD></TR>
 		<TR class='spacer'><TD class='spacer' COLSPAN='2'>&nbsp;</TD></TR>
 
 <?php
 		$dis_rmv = " ENABLED";
 ?>
-		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Street Address - type in street address in fields or click location on map ">Location</A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="<?php print $row['street'] ;?>"  MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="City - defaults to default city set in configuration. Type in City if required"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_edit_Form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
-		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value)"> <!-- 7/5/10 -->
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="State - US State or non-US Country code e.g. UK for United Kingdom">St</A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Facility Description - additional details about unit">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
+		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Street Address - type in street address in fields or click location on map "><?php print gettext('Location');?></A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="<?php print $row['street'] ;?>"  MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('City - defaults to default city set in configuration. Type in City if required');?>"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_edit_Form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
+		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value);"> <!-- 7/5/10 -->
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="<?php print gettext('State - US State or non-US Country code e.g. UK for United Kingdom');?>"><?php print gettext('St');?></A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Facility Description - additional details about unit"><?php print gettext('Description');?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
 		<TR><TD>&nbsp;</TD></TR>
-		<TR CLASS="even" VALIGN='baseline'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Delete Facility from system">Remove Facility</A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>>
+		<TR CLASS="even" VALIGN='baseline'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Delete Facility from system');?>"><?php print gettext('Remove Facility');?></A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>>
 		</TD></TR>
 		<TR CLASS = "odd">
 			<TD ALIGN='center'><BR>
-			<TD ALIGN='center'><BR><INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- 11/27/09 -->
-				<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick="map_reset()";>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>" onClick="validate(document.res_edit_Form);"></TD></TR>
+			<TD ALIGN='center'><BR><INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- 11/27/09 -->
+				<INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick="map_reset();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>" onClick="validate(document.res_edit_Form);" /></TD></TR>
 				</TD></TR>
 
 		<INPUT TYPE="hidden" NAME="frm_id" VALUE="<?php print $row['id'] ;?>" />
@@ -779,7 +779,7 @@ var buttons_html = "";
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
 		<!-- 2431 -->
 		<A NAME="bottom" /> 
-		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>		
+		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0 /></div>		
 		</BODY>
 		</HTML>
 <?php
@@ -814,9 +814,9 @@ var buttons_html = "";
 			<TR CLASS = 'odd'><TD CLASS="td_label"><?php print get_text("Location"); ?>: </TD><TD><?php print $row['street'] ;?></TD></TR> <!-- 7/5/10 -->
 			<TR CLASS = 'even'><TD CLASS="td_label"><?php print get_text("City"); ?>: &nbsp;&nbsp;&nbsp;&nbsp;</TD><TD><?php print $row['city'] ;?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php print $row['state'] ;?></TD></TR> <!-- 7/5/10 -->
 			<TR CLASS = "even"><TD CLASS="td_label"><?php print get_text("Description"); ?>: </TD>	<TD><?php print $row['description'];?></TD></TR>
-			<TR CLASS = 'odd'><TD CLASS="td_label">As of:</TD>	<TD><?php print loc_format_date(strtotime($row['_on'])); ?></TD></TR>
+			<TR CLASS = 'odd'><TD CLASS="td_label"><?php print gettext('As of');?>:</TD>	<TD><?php print loc_format_date(strtotime($row['_on'])); ?></TD></TR>
 <?php
-			$toedit = (is_administrator() || is_super())? "<INPUT TYPE='button' VALUE='to Edit' onClick= 'to_edit_Form.submit();'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;": "" ;
+			$toedit = (is_administrator() || is_super())? "<INPUT TYPE='button' VALUE='<?php print gettext('to Edit');?>' onClick= 'to_edit_Form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;": "" ;
 ?>
 			<TR><TD>&nbsp;</TD></TR>
 <?php
@@ -825,8 +825,8 @@ var buttons_html = "";
 				<TR CLASS = "even">
 					<TD COLSPAN=99 ALIGN='center'>
 						<DIV style='text-align: center;'>
-							<SPAN id='edit_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick= 'to_edit_Form.submit();'>Edit</SPAN>
-							<SPAN id='can_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick= 'document.can_Form.submit();'>Cancel</SPAN>
+							<SPAN id='edit_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick= 'to_edit_Form.submit();'><?php print gettext('Edit');?></SPAN>
+							<SPAN id='can_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick= 'document.can_Form.submit();'><?php print gettext('Cancel');?></SPAN>
 						</DIV>
 					</TD>
 				</TR>
@@ -882,11 +882,11 @@ var buttons_html = "";
 					<TD WIDTH = '100%'>
 						<TABLE ID = 'sidebar' BORDER = 0 WIDTH='98%'>
 							<TR class='even'>
-								<TD ALIGN='center'><B>Warn Locations (<DIV id="num_locations" style="display: inline;"></DIV>)</B>
+								<TD ALIGN='center'><B><?php print gettext('Warn Locations');?> (<DIV id="num_locations" style="display: inline;"></DIV>)</B>
 								</TD>
 							</TR>
 							<TR class='odd'>	
-								<TD ALIGN='center'>Click line or icon for details
+								<TD ALIGN='center'><?php print gettext('Click line or icon for details');?>
 								</TD>
 							</TR>			
 							<TR>
@@ -913,25 +913,25 @@ var buttons_html = "";
 			</TABLE>
 		</DIV>	<!-- end of outer -->
 		<FORM NAME='view_form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
-		<INPUT TYPE='hidden' NAME='func' VALUE='location'>
-		<INPUT TYPE='hidden' NAME='view' VALUE='true'>
-		<INPUT TYPE='hidden' NAME='id' VALUE=''>
+		<INPUT TYPE='hidden' NAME='func' VALUE='location' />
+		<INPUT TYPE='hidden' NAME='view' VALUE='true' />
+		<INPUT TYPE='hidden' NAME='id' VALUE='' />
 		</FORM>
 
 		<FORM NAME='add_Form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
-		<INPUT TYPE='hidden' NAME='func' VALUE='location'>
-		<INPUT TYPE='hidden' NAME='add' VALUE='true'>
+		<INPUT TYPE='hidden' NAME='func' VALUE='location' />
+		<INPUT TYPE='hidden' NAME='add' VALUE='true' />
 		</FORM>
 
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print  basename(__FILE__);?>?func=location"></FORM>
 		<!-- 1452 -->
 		<A NAME="bottom" /> 
-		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>			
+		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0 /></div>			
 		</BODY>				<!-- END LOCATION LIST and ADD -->
 <?php
 		$buttons = "<TR><TD COLSPAN=99 ALIGN='center'>";
 		if ((!(is_guest())) && (!(is_unit()))) {
-			$buttons .="<INPUT TYPE='button' value= 'Add a Location'  onClick ='document.add_Form.submit();'  STYLE = 'margin-left: 60px;'>";
+			$buttons .="<INPUT TYPE='button' value= '" . gettext('Add a Location') . "'  onClick ='document.add_Form.submit();'  STYLE = 'margin-left: 60px;' />";
 			}
 		$buttons .= "</TD></TR>";
 

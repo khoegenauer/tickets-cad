@@ -307,9 +307,9 @@ ul {
 		}	?>
 	</SELECT></TD></TR>
 	<TR CLASS="spacer"></TR>
-	<TR CLASS="even"><TD COLSPAN="2"><INPUT TYPE='button' VALUE='<?php print gettext('Submit');?>'  onClick='document.hints_select.submit();'></TD></TR>
+	<TR CLASS="even"><TD COLSPAN="2"><INPUT TYPE='button' VALUE='<?php print gettext('Submit');?>'  onClick='document.hints_select.submit();' /></TD></TR>
 	</TABLE>
-	<INPUT TYPE='hidden' NAME='func' VALUE='show_hints'>
+	<INPUT TYPE='hidden' NAME='func' VALUE='show_hints' />
 	</FORM>
 	
 	<DIV ID="foo"><DIV ID="bar">		<!-- 9/26/09 -->

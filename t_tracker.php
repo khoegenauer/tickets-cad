@@ -160,7 +160,7 @@ if (!(isset($usr_id))) {
 	<TR CLASS  = 'even'><TH COLSPAN=2><?php print gettext('Tickets Tracker Test');?></TH></TR>
 	<FORM NAME= 'frm_t_tracker' METHOD='post' ACTION = '<?php print basename(__FILE__);?>'>
 	</TD></TR>
-	<TR CLASS  = 'odd'><TD><?php print gettext('User ID');?>:</TD><TD><INPUT NAME = 'dev_key' TYPE = 'text' SIZE = '30' VALUE=''>	<BR /><BR /></TD></TR>
+	<TR CLASS  = 'odd'><TD><?php print gettext('User ID');?>:</TD><TD><INPUT NAME = 'dev_key' TYPE = 'text' SIZE = '30' VALUE='' />	<BR /><BR /></TD></TR>
 	<TR CLASS  = 'even'><TD COLSPAN=2 ALIGN='center'>
 		<INPUT TYPE='button' VALUE = '<?php print gettext('Test');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
 		<INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />

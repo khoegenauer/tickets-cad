@@ -1025,7 +1025,6 @@ var buttons_html = "";
 				quote_smart(trim($_POST['frm_handle'])) . "," .
 				quote_smart(trim($_POST['frm_icon_str'])) . "," .
 				quote_smart(trim($_POST['frm_descr'])) . "," .
-
 				quote_smart(trim($_POST['frm_beds_a'])) . "," .
 				quote_smart(trim($_POST['frm_beds_o'])) . "," .
 				quote_smart(trim($_POST['frm_beds_info'])) . "," .
@@ -1389,7 +1388,7 @@ var buttons_html = "";
 		if((is_super()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {		//	6/10/11
 ?>			
 			<TR CLASS='even' VALIGN='top'>
-			<TD CLASS='td_label'><A CLASS="td_label" HREF="#" TITLE="Sets Regions that Facility is allocated to - click + to expand, - to collapse"><?php print get_text('Region');?></A>:
+			<TD CLASS='td_label'><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Sets Regions that Facility is allocated to - click + to expand, - to collapse');?>"><?php print get_text('Region');?></A>:
 			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
 			<TD>
@@ -1400,7 +1399,7 @@ var buttons_html = "";
 			} elseif((is_admin()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {	//	6/10/11
 ?>
 			<TR CLASS='even' VALIGN='top'>;
-			<TD CLASS='td_label'><A CLASS="td_label" HREF="#" TITLE="Sets Regions that Facility is allocated to - click + to expand, - to collapse"><?php print get_text('Region');?></A>:
+			<TD CLASS='td_label'><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Sets Regions that Facility is allocated to - click + to expand, - to collapse');?>"><?php print get_text('Region');?></A>:
 			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
 			<TD>
@@ -1411,7 +1410,7 @@ var buttons_html = "";
 			} else {
 ?>
 			<TR CLASS='even' VALIGN='top'>;
-			<TD CLASS='td_label'><A CLASS="td_label" HREF="#" TITLE="Sets Regions that Facility is allocated to - click + to expand, - to collapse"><?php print get_text('Region');?></A>:
+			<TD CLASS='td_label'><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Sets Regions that Facility is allocated to - click + to expand, - to collapse');?>"><?php print get_text('Region');?></A>:
 			<SPAN id='expand_gps' onClick="$('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>
 			<SPAN id='collapse_gps' onClick="$('groups_sh').style.display = 'none'; $('collapse_gps').style.display = 'none'; $('expand_gps').style.display = 'inline-block';" style = 'display: none; font-size: 16px; border: 1px solid;'><B>-</B></SPAN></TD>
 			<TD>
@@ -1438,7 +1437,7 @@ var buttons_html = "";
 		}
 ?>
 				</SELECT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<A HREF="#" TITLE="<?php print gettext('Calculate directions on dispatch? - required if you wish to use email directions to unit facility');?>"><?php print gettext('Directions');?></A> &raquo;<INPUT TYPE="checkbox" NAME="frm_direcs_disp" checked /></TD>
+			<A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Calculate directions on dispatch? - required if you wish to use email directions to unit facility');?>"><?php print gettext('Directions');?></A> &raquo;<INPUT TYPE="checkbox" NAME="frm_direcs_disp" checked /></TD>
 				
 		</TD>
 		</TR>
@@ -1499,7 +1498,7 @@ var buttons_html = "";
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Facility contact secondary pager number');?>"><?php print gettext('Pager Secondary');?></A>:&nbsp;</TD><TD COLSPAN=3><INPUT SIZE="48" MAXLENGTH="48" TYPE="text" NAME="frm_pager_s" VALUE="<?php print $row['pager_s'] ;?>" /></TD></TR>
 <?php
 		$mg_select = "<SELECT NAME='frm_notify_mailgroup'>";
-		$mg_select .= "<OPTION VALUE=0>Select Mail List</OPTION>";
+		$mg_select .= "<OPTION VALUE=0>" . gettext('Select Mail List') . "</OPTION>";
 		$query_mg = "SELECT * FROM `$GLOBALS[mysql_prefix]mailgroup` ORDER BY `id` ASC";
 		$result_mg = mysql_query($query_mg) or do_error($query_mg, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 		while ($row_mg = stripslashes_deep(mysql_fetch_assoc($result_mg))) {
@@ -1787,14 +1786,14 @@ var buttons_html = "";
 		print get_buttons_inner2();	//	3/28/12			
 ?>			
 		<FORM NAME='view_form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
-		<INPUT TYPE='hidden' NAME='func' VALUE='responder'/>
-		<INPUT TYPE='hidden' NAME='view' VALUE='true'/>
-		<INPUT TYPE='hidden' NAME='id' VALUE=''>
+		<INPUT TYPE='hidden' NAME='func' VALUE='responder' />
+		<INPUT TYPE='hidden' NAME='view' VALUE='true' />
+		<INPUT TYPE='hidden' NAME='id' VALUE='' />
 		</FORM>
 
 		<FORM NAME='add_Form' METHOD='get' ACTION='<?php print basename(__FILE__); ?>'>
-		<INPUT TYPE='hidden' NAME='func' VALUE='responder'/>
-		<INPUT TYPE='hidden' NAME='add' VALUE='true'/>
+		<INPUT TYPE='hidden' NAME='func' VALUE='responder' />
+		<INPUT TYPE='hidden' NAME='add' VALUE='true' />
 		</FORM>
 
 		<FORM NAME='can_Form' METHOD="post" ACTION = "facilities_nm.php?func=responder"></FORM>
@@ -1812,7 +1811,7 @@ var buttons_html = "";
 ?>
 		</TD></TR></TABLE></DIV>
 		<A NAME="bottom" />
-		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>		
+		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0 /></div>		
 		</BODY>				<!-- END FACILITIES LIST and ADD -->
 		</HTML>
 <?php

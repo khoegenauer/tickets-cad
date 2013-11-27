@@ -151,8 +151,8 @@ if (empty($_POST)) {
 <?php
 	if(count($rows)>2) {
 ?>
-		<SPAN ID='clr_spn' STYLE = 'display:block' onClick = 'do_clear()'>&raquo; <U><?php print gettext('Un-check all');?></U></SPAN>
-		<SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check()'>&raquo; <U><?php print gettext('Check all');?></U></SPAN>
+		<SPAN ID='clr_spn' STYLE = 'display:block' onClick = 'do_clear();'>&raquo; <U><?php print gettext('Un-check all');?></U></SPAN>
+		<SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check();'>&raquo; <U><?php print gettext('Check all');?></U></SPAN>
 <?php
 		}
 ?>		
@@ -189,7 +189,7 @@ if (empty($_POST)) {
 	<CENTER><H3><?php print gettext('Mail to Users');?></H3>
 	<BR /><BR />
 	<H3><?php print gettext('No addresses available!');?></H3><BR /><BR />
-	<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'><BR /><BR />
+	<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();' /><BR /><BR />
 
 <?php
 			}

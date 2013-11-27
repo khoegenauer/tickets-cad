@@ -88,14 +88,14 @@ if (empty($_POST)) {
 		<INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''>	<!-- for pipe-delim'd addr string -->
 		<TABLE BORDER = 0>
 		<TR CLASS= 'even'>
-			<TD ALIGN='right'><?php print gettext('To');?>:</TD><TD><INPUT NAME='frm_name' SIZE=32 VALUE = '<?php print $row['contact_name'];?>'></TD>
+			<TD ALIGN='right'><?php print gettext('To');?>:</TD><TD><INPUT NAME='frm_name' SIZE=32 VALUE = '<?php print $row['contact_name'];?>' /></TD>
 			</TR>
 
 		<TR CLASS= 'odd'>
-			<TD ALIGN='right'><?php print gettext('Addr');?>:</TD><TD><INPUT NAME='frm_addr' SIZE=32 VALUE = '<?php print $row['contact_via'];?>'></TD>
+			<TD ALIGN='right'><?php print gettext('Addr');?>:</TD><TD><INPUT NAME='frm_addr' SIZE=32 VALUE = '<?php print $row['contact_via'];?>' /></TD>
 			</TR>
 	
-		<TR CLASS='even'><TD ALIGN='right'><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
+		<TR CLASS='even'><TD ALIGN='right'><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60 /></TD></TR>
 		<TR CLASS='odd'><TD ALIGN='right'><?php print gettext('Message');?>:</TD><TD COLSPAN=2> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
 		<TR CLASS='even'><TD ALIGN='center' COLSPAN=3><BR /><BR />
 			<INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "validate();"/>&nbsp;&nbsp;&nbsp;&nbsp;

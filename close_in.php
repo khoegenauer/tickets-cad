@@ -71,7 +71,7 @@ else {			// not empty then is finished
 		$scope = do_is_finished();		// 2/15/10
 ?>
 <H3><?php print gettext('Call');?><SPAN style = 'background-color:#DEE3E7'><?php print $scope; ?></SPAN><?php print gettext('closed');?></H3><BR /><BR />	<!-- 2/15/10 -->
-<INPUT TYPE = 'button' VALUE = '<?php print gettext('Finished');?>' onClick = "opener.location.href = 'main.php'; window.close();">
+<INPUT TYPE = 'button' VALUE = '<?php print gettext('Finished');?>' onClick = "opener.location.href = 'main.php'; window.close();" />
 </BODY>
 </HTML>
 

@@ -373,21 +373,21 @@ if(!empty($_POST)) {	//	$_POST data exists, process the file
 				</TR>
 				<TR class='odd'>
 					<TD class='td_label' style='text-align: left;'><?php print gettext('File Name');?></TD>
-					<TD class='td_data' style='text-align: left;'><INPUT NAME="frm_title" TYPE="text" SIZE="48" MAXLENGTH="128" VALUE=""></TD>
+					<TD class='td_data' style='text-align: left;'><INPUT NAME="frm_title" TYPE="text" SIZE="48" MAXLENGTH="128" VALUE="" /></TD>
 				</TR>
 <?php
 				if((!$ticket_id) && (!$responder_id) && (!$facility_id)) {
 ?>
 					<TR class='even'>
-						<TD class='td_label' style='text-align: left;'>For Ticket
+						<TD class='td_label' style='text-align: left;'><?php print gettext('For Ticket');?>
 						<TD class='td_data' style='text-align: left;'><?php print $select_t;?></TD>
 					</TR>
 					<TR class='odd'>
-						<TD class='td_label' style='text-align: left;'>For Responder
+						<TD class='td_label' style='text-align: left;'><?php print gettext('For Responder');?>
 						<TD class='td_data' style='text-align: left;'><?php print $select_r;?></TD>
 					</TR>
 					<TR class='even'>
-						<TD class='td_label' style='text-align: left;'>For Facility
+						<TD class='td_label' style='text-align: left;'><?php print gettext('For Facility');?>
 						<TD class='td_data' style='text-align: left;'><?php print $select_f;?></TD>
 					</TR>
 <?php

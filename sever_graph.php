@@ -1,6 +1,6 @@
 <?php
 /*
-3/21/10 settings value for pie diameter added
+3/21/10 user-spec for pie diameter added
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
 6/1/2013 corrections to sql and date format 
 10/5/2013 complete rewrite; simplification based on using SQL COUNT/GROUP-BY

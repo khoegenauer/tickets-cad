@@ -120,6 +120,7 @@ Sequence numbering: SELECT a.id, @num := @num + 1 seqno from ticket a, (SELECT @
 1/10/2013 function my_gregoriantojd added, gregoriantojd being absent from some config's
 7/12/2013 revised for zero frame height in case of frames and no assigns
 7/16/2013 corrections applied to do_assgn_reset()
+11/21/2013 correction per BI email; intrusive close-parens
 */
 
 @session_start();
@@ -1953,7 +1954,7 @@ setTimeout('do_post()', 1000);
 						$unit_name = empty($row['unit_id']) ? "[#{$row['unit_id']}]" : ($row['unit_name']) ;			// id only if absent
 						$short_name = cb_shorten($row['handle'], $COLS_UNIT);
 						print "\t<TD CLASS='$theClass' onClick = {$doUnit}('{$row['unit_id']}') 
-							 onmouseover=\"Tip('[#{$row['unit_id']}] {$unit_name}')\" ALIGN='left' onmouseout=\"UnTip();\">
+							 onmouseover=\"Tip('[#{$row['unit_id']}] {$unit_name}');\" ALIGN='left' onmouseout=\"UnTip();\">
 							 <SPAN STYLE='background-color:{$the_bg_color};  opacity: .7; color:{$the_text_color};'><B>{$short_name}</B></SPAN></TD>\n";							// unit 8/24/08, 1/17/09
 						
 						print "\t<TD  CLASS='mylink' onmouseover =\"$('c{$i}').style.visibility='visible';\" onmouseout = \"$('c{$i}').style.visibility='hidden'; \" ALIGN='center'>
@@ -1979,7 +1980,7 @@ setTimeout('do_post()', 1000);
 								}
 							
 							print "\t<TD>\n\t<SPAN ID='TD{$i}' STYLE='display:none'><INPUT TYPE='button' VALUE='" . gettext('Go') . "'  CLASS = 'btn' onClick=\"to_server(F$i); do_refresh();\">\n"; 		// 9/28/08
-							print "\t<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "'   CLASS = 'btn' onClick=\"document.F$i.reset();hide_but($i)\"></SPAN></TD>\n";
+							print "\t<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "'   CLASS = 'btn' onClick=\"document.F$i.reset();hide_but($i);\"></SPAN></TD>\n";
 							array_push($unit_ids, $row['unit_id']);
 							}
 						else {
@@ -2153,7 +2154,7 @@ setTimeout('do_post()', 1000);
 		</HEAD>
 		<BODY><CENTER>		<!-- <?php echo __LINE__; ?> -->
 <?php	
-														// if (!empty($row['clear'])) ??????
+														// if (!empty($row['clear'])) ?????? 11/21/2013
 			extract($_POST);
 
 			$query = "SELECT *,
@@ -2164,7 +2165,7 @@ setTimeout('do_post()', 1000);
 			`u2fenr` AS `u2fenr`, 
 			`u2farr` AS `u2farr`, 
 			`clear` AS `clear`,  
-			`problemstart`) AS `problemstart`,  
+			`problemstart` AS `problemstart`,  
 			`$GLOBALS[mysql_prefix]assigns`.`id` AS `assign_id` , 
 			`$GLOBALS[mysql_prefix]assigns`.`comments` AS `assign_comments`,
 			`u`.`user` AS `theuser`,
@@ -2263,7 +2264,7 @@ setTimeout('do_post()', 1000);
 				<INPUT TYPE="BUTTON" VALUE="<?php print gettext('Cancel');?>"  onClick="history.back();"  CLASS = 'btn' />&nbsp;&nbsp;&nbsp;&nbsp;	
 <?php
 			if(!($guest)){
-				print "<INPUT TYPE='BUTTON' VALUE='" . gettext('Edit') . "' onClick='document.nav_form.func.value=\"edit\";document.nav_form.frm_id.value= $frm_id;document.nav_form.submit();'  CLASS = 'btn'>\n";
+				print "<INPUT TYPE='BUTTON' VALUE='" . gettext('Edit') . "' onClick='document.nav_form.func.value=\"edit\";document.nav_form.frm_id.value= $frm_id;document.nav_form.submit();'  CLASS = 'btn' />\n";
 				}
 ?>			
 				</TD></TR>
@@ -2457,7 +2458,7 @@ setTimeout('do_post()', 1000);
 			<TR CLASS="even">
 				<TD CLASS="td_label" ALIGN="right"><?php print gettext('Comments');?>:</TD>
 				<TD colspan=3><TEXTAREA NAME="frm_comments" COLS="45" ROWS="5" <?php print $disabled; ?>><?php print $asgn_row['assign_comments']; ?></TEXTAREA></TD></TR> <!-- 10/06/09 -->
-				<!-- <TD colspan=3><INPUT MAXLENGTH="64" SIZE="64" NAME="frm_comments" VALUE="<?php print $asgn_row['assign_comments']; ?>" TYPE="text" <?php print $disabled;?>></TD></TR>-->
+				<!-- <TD colspan=3><INPUT MAXLENGTH="64" SIZE="64" NAME="frm_comments" VALUE="<?php print $asgn_row['assign_comments']; ?>" TYPE="text" <?php print $disabled;?> /></TD></TR>-->
 
 			<TR CLASS=''><TD CLASS="td_label" ALIGN="right"><?php print gettext('Mileage');?>:</TD> <!--10/6/09-->
 				<TD colspan=3 ALIGN='center'>
@@ -2586,7 +2587,7 @@ setTimeout('do_post()', 1000);
 	
 <!--		<TR CLASS="even" VALIGN="baseline"><TD colspan="99" ALIGN="center">
 				<br>
-				<INPUT TYPE="BUTTON" VALUE="<?php print gettext('Cancel');?>"  onClick="history.back();"  CLASS = 'btn'>
+				<INPUT TYPE="BUTTON" VALUE="<?php print gettext('Cancel');?>"  onClick="history.back();"  CLASS = 'btn' />
 <?php
 				if (!$disabled) {
 ?>			
@@ -3099,7 +3100,7 @@ setTimeout('do_post()', 1000);
 ?>
 		</TABLE>
 		<DIV ID='foo'><DIV ID='bar'>		<!-- 12/13/09 -->
-		<INPUT TYPE='button' VALUE = '<?php print gettext('Finished');?>' onClick = 'window.close();'  CLASS = 'btn'>
+		<INPUT TYPE='button' VALUE = '<?php print gettext('Finished');?>' onClick = 'window.close();'  CLASS = 'btn' />
 		</DIV></DIV>
 		<FORM NAME='finform' METHOD='post' ACTION = '<?php print basename(__FILE__);?>'>
 		<INPUT TYPE = 'hidden' NAME='func' VALUE='board' />

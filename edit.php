@@ -90,6 +90,7 @@ $zoom_tight = FALSE;		// default is FALSE (no tight zoom); replace with a decima
 6/2/2013 reverse_geo operation added.
 7/3/2013 - socket2me conditioned on internet and broadcast settings, reverse geo field size limits corrected
 9/10/13 - Added "Address About" and "To Address" fields and File storage
+11/18/13 - Fix for notifies on edit.
 */
 	$addrs = FALSE;										// notifies address array doesn't exist
 
@@ -334,8 +335,8 @@ $zoom_tight = FALSE;		// default is FALSE (no tight zoom); replace with a decima
 	add_header($id);
 	show_ticket($id);
 	$addrs = notify_user($id,$GLOBALS['NOTIFY_TICKET_CHG']);		// returns array or FALSE
-
 	unset ($_SESSION['active_ticket']);								// 5/4/11
+	return($addrs);	//	11/18/13
 
 	}				// end function edit ticket() 
 
@@ -382,6 +383,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 	<SCRIPT SRC="./js/lat_lng.js" TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->
 	<SCRIPT SRC="./js/geotools2.js" TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->
 	<SCRIPT SRC="./js/osgb.js" TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->		
+	<SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>	<!-- 11/18/13 -->	
 
 <SCRIPT>
 
@@ -470,7 +472,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		starting = false;
 		}		// end function sv win()
 
- function do_usng() {														// 5/2/09
+    function do_usng() {														// 5/2/09
 		alert(279);
 		if (document.edit.frm_ngs.value.trim().length>6) {do_usng_conv();}
 		}
@@ -636,7 +638,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 		// 7/2/2013
 ?>
 			var theMessage = "Updated  <?php print get_text('Incident');?> (" + theForm.frm_scope.value + ") by <?php echo $_SESSION['user'];?>";
-			broadcast(theMessage ) ;
+			broadcast(theMessage );
 <?php
 	}			// end if (broadcast)
 ?>				
@@ -792,14 +794,14 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		$('the_file_list').innerHTML = "Please Wait, loading files";
 		randomnumber=Math.floor(Math.random()*99999999);
 		var url ="./ajax/file_list.php?ticket_id=<?php print $_GET['id'];?>&version=" + randomnumber;
-		theRequest (url, filelist_cb, "");
+		sendRequest (url, filelist_cb, "");	//	11/18/13
 		function filelist_cb(req) {
 			var theFiles=req.responseText;
 			$('the_file_list').innerHTML = theFiles;		
 			}
 		}
 		
-	function theRequest(url,callback,postData) {										// 9/10/13
+	function sendRequest(url,callback,postData) {	// 9/10/13, 11/14/13, 11/18/13
 		var req = createXMLHTTPObject();
 		if (!req) return;
 		var method = (postData) ? "POST" : "GET";
@@ -817,10 +819,27 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 		req.send(postData);
 		}
 		
+	var XMLHttpFactories = [
+		function () {return new XMLHttpRequest();	},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
+		];
+
+	function createXMLHTTPObject() {	//	11/18/13
+		var xmlhttp = false;
+		for (var i=0;i<XMLHttpFactories.length;i++) {
+			try { xmlhttp = XMLHttpFactories[i](); }
+			catch (e) { continue; }
+			break;
+			}
+		return xmlhttp;
+		}
+		
 	function find_warnings(tick_lat, tick_lng) {	//	9/10/13
 		randomnumber=Math.floor(Math.random()*99999999);
 		var theurl ="./ajax/loc_warn_list.php?version=" + randomnumber + "&lat=" + tick_lat + "&lng=" + tick_lng;
-		theRequest (theurl, loc_w, "");
+		sendRequest (theurl, loc_w, "");	//	11/18/13
 		function loc_w(req) {
 			var the_warnings=JSON.decode(req.responseText);
 			var the_count = the_warnings[0];
@@ -902,7 +921,81 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			print "<FONT CLASS=\"warn\">Invalid Ticket ID: '$id'</FONT>";
 			}
 		else {
-			edit_ticket($id);									// post updated data
+			$the_addrs = edit_ticket($id);	// post updated data	11/18/13
+?>			
+<SCRIPT>
+<?php
+			if ($the_addrs) {	//	11/18/13
+?>
+				function do_notify() {	//	11/18/13
+					var theAddresses = '<?php print implode("|", array_unique($the_addrs));?>';		// drop dupes
+					var theText= "TICKET-Update: ";
+					var theId = '<?php print $id;?>';
+					var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId + "&text_sel=1" ;		// ($to_str, $text, $ticket_id)   10/15/08
+					sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
+					}			// end function do notify()
+				
+				function handleResult(req) {				// the 'called-back' function, 11/18/13
+					}
+
+				function sendRequest(url,callback,postData) {	//	11/18/13
+					var req = createXMLHTTPObject();
+					if (!req) return;
+					var method = (postData) ? "POST" : "GET";
+					req.open(method,url,true);
+					if (postData)
+						req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+					req.onreadystatechange = function () {
+						if (req.readyState != 4) return;
+						if (req.status != 200 && req.status != 304) {
+<?php
+							if($istest) {print "\t\t\talert('HTTP error ' + req.status + '" . __LINE__ . "');\n";}
+?>
+							return;
+							}
+						callback(req);
+						}
+					if (req.readyState == 4) return;
+					req.send(postData);
+					}
+	
+				var XMLHttpFactories = [
+					function () {return new XMLHttpRequest();	},
+					function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+					function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+					function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
+					];
+				
+				function createXMLHTTPObject() {
+					var xmlhttp = false;
+					for (var i=0;i<XMLHttpFactories.length;i++) {
+						try {
+							xmlhttp = XMLHttpFactories[i]();
+							}
+						catch (e) {
+							continue;
+							}
+						break;
+						}
+					return xmlhttp;
+					}
+	
+<?php
+
+				} else {
+?>		
+				function do_notify() {
+					return;
+					}			// end function do notify()
+<?php		
+				}			
+			
+?>
+</SCRIPT>
+			<script type="text/javascript">
+			do_notify();
+			</script>
+<?php
 			}
 		}
 	else if (isset($_GET['delete'])) {							//delete ticket
@@ -939,7 +1032,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			
 			$row = stripslashes_deep(mysql_fetch_array($result));
 ?>
-			<BODY onLoad = "do_notify(); ck_frames(); find_warnings(<?php print $row['lat'];?>, <?php print $row['lng'];?>); get_files();">	<!-- 628 -->
+			<BODY onLoad = "ck_frames(); find_warnings(<?php print $row['lat'];?>, <?php print $row['lng'];?>); get_files();">	<!-- 628, 11/18/13 -->
 			<SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT>
 			<SCRIPT SRC="./js/misc_function.js"></SCRIPT>				
 <?php				
@@ -1007,7 +1100,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 
 			print "<TR CLASS='even'>
 					<TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_loca']}');\">" . get_text("Location") . ": </TD><TD><INPUT SIZE='48' TYPE='text' NAME='frm_street' VALUE=\"{$row['street']}\" MAXLENGTH='48' {$dis}></TD></TR>\n";
-			print "<TR CLASS='odd'><TD CLASS='td_label' onmouseout='UnTip()' onmouseover='Tip(\"Anout Address, for instance round the back or building number\");'>" . get_text('Address About') . "</A>:</TD>
+			print "<TR CLASS='odd'><TD CLASS='td_label' onmouseout='UnTip();' onmouseover='Tip(\"Anout Address, for instance round the back or building number\");'>" . get_text('Address About') . "</A>:</TD>
 					<TD></TD>
 					<TD><INPUT NAME='frm_address_about' tabindex=1 SIZE='72' TYPE='text' VALUE=\"{$row['address_about']}\" MAXLENGTH='512'></TD>
 					</TR>";	//	9/10/13
@@ -1216,7 +1309,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 				print $portal_user_control;
 				print "</TD></TR>\n";
 				} else {
-				print "<INPUT TYPE='hidden' NAME='frm_portal_user' VALUE=0>";
+				print "<INPUT TYPE='hidden' NAME='frm_portal_user' VALUE=0 />";
 				}
 
 			print "<TR CLASS='even'>
@@ -1234,8 +1327,8 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 
 			print "<TR CLASS='even'>
 				<TD CLASS='td_label' COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_status']}');\">" . get_text("Status") . ":</TD>
-				<TD><SELECT NAME='frm_status' {$dis}><OPTION VALUE='" . $GLOBALS['STATUS_OPEN'] . "' $selO>Open</OPTION><OPTION VALUE='" . $GLOBALS['STATUS_CLOSED'] . "'$selC>Closed</OPTION><OPTION VALUE='" . $GLOBALS['STATUS_SCHEDULED'] . "'$selP>Scheduled</OPTION></SELECT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$elapsed} </TD></TR>";
-//			print "<TR CLASS='odd'><TD CLASS='td_label'>Affected:</TD><TD><INPUT TYPE='text' SIZE='48' NAME='frm_affected' VALUE='" . $row['affected'] . "' MAXLENGTH='48' {$dis}></TD></TR>\n";
+				<TD><SELECT NAME='frm_status' {$dis}><OPTION VALUE='" . $GLOBALS['STATUS_OPEN'] . "' $selO>" . gettext('Open') . "</OPTION><OPTION VALUE='" . $GLOBALS['STATUS_CLOSED'] . "'$selC>" . gettext('Closed') . "</OPTION><OPTION VALUE='" . $GLOBALS['STATUS_SCHEDULED'] . "'$selP>" . gettext('Scheduled') . "</OPTION></SELECT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$elapsed} </TD></TR>";
+//			print "<TR CLASS='odd'><TD CLASS='td_label'>" . gettext('Affected') . ":</TD><TD><INPUT TYPE='text' SIZE='48' NAME='frm_affected' VALUE='" . $row['affected'] . "' MAXLENGTH='48' {$dis} /></TD></TR>\n";
 
 //	facility handling  - 3/25/10
 
@@ -1425,7 +1518,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			
 				case "1":
 					$osgb = LLtoOSGB($row['lat'], $row['lng']) ;
-					print "<B><SPAN ID = 'OSGB' ><U><A HREF='#' TITLE='" . gettext('United Kingdom Ordnance Survey Grid Reference.') . "'>" . gettext('OSGB') . "</A></U>:&nbsp;</SPAN></B><INPUT SIZE='19' TYPE='text' NAME='frm_osgb' VALUE='{$osgb}' DISABLED ></TD></TR>";		// 9/13/08, 5/2/09
+					print "<B><SPAN ID = 'OSGB'><U><A HREF='#' TITLE='" . gettext('United Kingdom Ordnance Survey Grid Reference.') . "'>" . gettext('OSGB') . "</A></U>:&nbsp;</SPAN></B><INPUT SIZE='19' TYPE='text' NAME='frm_osgb' VALUE='{$osgb}' DISABLED ></TD></TR>";		// 9/13/08, 5/2/09
 					break;			
 
 				default:																	// 8/10/09
@@ -1446,17 +1539,17 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 				}	// End of check on ticket entered in "no maps" Mode 7/28/10
 ?>	
 			
-			<INPUT TYPE="hidden" NAME="frm_lat" VALUE="<?php print $row['lat'];?>">				<!-- // 8/9/08 -->
-			<INPUT TYPE="hidden" NAME="frm_lng" VALUE="<?php print $row['lng'];?>">
-			<INPUT TYPE="hidden" NAME="frm_status_default" VALUE="<?php print $row['status'];?>">
-			<INPUT TYPE="hidden" NAME="frm_affected_default" VALUE="<?php print $row['affected'];?>">
-			<INPUT TYPE="hidden" NAME="frm_scope_default" VALUE="<?php print $row['scope'];?>">
-			<INPUT TYPE="hidden" NAME="frm_owner_default" VALUE="<?php print $row['owner'];?>">
-			<INPUT TYPE="hidden" NAME="frm_severity_default" VALUE="<?php print $row['severity'];?>">
-			<INPUT TYPE="hidden" NAME="frm_exist_rec_fac" VALUE="<?php print $exist_rec_fac;?>">
-			<INPUT TYPE="hidden" NAME="frm_exist_rec_fac" VALUE="<?php print $exist_rec_fac;?>">
-			<INPUT TYPE="hidden" NAME="frm_exist_groups" VALUE="<?php print (isset($alloc_groups)) ? $alloc_groups : 1;?>">			
-			<INPUT TYPE="hidden" NAME="frm_fac_chng" VALUE="0">		<!-- 3/25/10 -->
+			<INPUT TYPE="hidden" NAME="frm_lat" VALUE="<?php print $row['lat'];?>" />				<!-- // 8/9/08 -->
+			<INPUT TYPE="hidden" NAME="frm_lng" VALUE="<?php print $row['lng'];?>" />
+			<INPUT TYPE="hidden" NAME="frm_status_default" VALUE="<?php print $row['status'];?>" />
+			<INPUT TYPE="hidden" NAME="frm_affected_default" VALUE="<?php print $row['affected'];? />">
+			<INPUT TYPE="hidden" NAME="frm_scope_default" VALUE="<?php print $row['scope'];?>" />
+			<INPUT TYPE="hidden" NAME="frm_owner_default" VALUE="<?php print $row['owner'];?>" />
+			<INPUT TYPE="hidden" NAME="frm_severity_default" VALUE="<?php print $row['severity'];?>" />
+			<INPUT TYPE="hidden" NAME="frm_exist_rec_fac" VALUE="<?php print $exist_rec_fac;?>" />
+			<INPUT TYPE="hidden" NAME="frm_exist_rec_fac" VALUE="<?php print $exist_rec_fac;?>" />
+			<INPUT TYPE="hidden" NAME="frm_exist_groups" VALUE="<?php print (isset($alloc_groups)) ? $alloc_groups : 1;?>" />			
+			<INPUT TYPE="hidden" NAME="frm_fac_chng" VALUE="0" />		<!-- 3/25/10 -->
 <?php
 			print "<TR CLASS='even'>
 				<TD COLSPAN='10' ALIGN='center'><BR /><B><U><A HREF='#' TITLE='" . gettext('List of all actions and patients atached to this Incident') . "'>" . gettext('Actions and Patients') . "</A></U></B><BR /></TD></TR>";	//8/7/09
@@ -1485,7 +1578,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			$from_top = 220;				// 11/22/2012
 ?>			
 			<FORM NAME='can_Form' ACTION="main.php">
-			<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['id'];?>">
+			<INPUT TYPE='hidden' NAME = 'id' VALUE = "<?php print $_GET['id'];?>" />
 			</FORM>	
 			<!-- 9/10/13 File List -->
 			<SPAN id='s_fl' class='plain' style='position: fixed; top: 10px; right: 0px; height: 20px; width: 100px; font-size: 1.2em; float: right;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick="$('file_list').style.display= 'block'; $('s_fl').style.display='none'; $('h_fl').style.display='inline-block';"><?php print gettext('Files');?></SPAN>
@@ -2053,11 +2146,7 @@ if (!$disallow) {
 		var theAddresses = '<?php print implode("|", array_unique($addrs));?>';		// drop dupes
 		var theText= "<?php print gettext('TICKET-Update');?>: ";
 		var theId = '<?php print $_GET['id'];?>';
-
-//			 		 ($to_str, $text, $ticket_id, $text_sel=1;, $txt_only = FALSE)
-// 12/10/2012
-//		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId ;		// ($to_str, $text, $ticket_id)   10/15/08
-		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId + "&text_sel=1";		// ($to_str, $text, $ticket_id)   10/15/08
+		var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId + "&text_sel=1" ;		// ($to_str, $text, $ticket_id)   10/15/08
 		sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
 		}			// end function do notify()
 /**
@@ -2079,7 +2168,6 @@ if (!$disallow) {
 		if (!req) return;
 		var method = (postData) ? "POST" : "GET";
 		req.open(method,url,true);
-//		req.setRequestHeader('User-Agent','XMLHTTP/1.0');
 		if (postData)
 			req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 		req.onreadystatechange = function () {

@@ -238,10 +238,10 @@ if(empty($_POST)) {	//	Upload a file for import
 				$errmsg = "";
 				} else {
 				$filename = NULL;
-				$errmsg = "Attached file is too large!";
+				$errmsg = gettext("Attached file is too large!");
 				}
 		} else {
-			$errmsg = "Could not proces file";
+			$errmsg = gettext("Could not proces file");
 		}
 	}
 
@@ -342,9 +342,9 @@ if(empty($_POST)) {	//	Upload a file for import
 	<CENTER>
 	<DIV id='outer' style='position: absolute; width: 100%;'>
 		<DIV style='position: relative; top: 5%; width: 60%; max-height: 350px; border: 2px outset #FFFFFF; background-color: #FEF7D6; padding: 20px;'>
-		Error calling the file
-		<A HREF='import_requests.php'>Try Again</A>
-		<A HREF='#' onClick='window.close();'>Cancel</A>		
+		<?php print gettext('Error calling the file');?>
+		<A HREF='import_requests.php'><?php print gettext('Try Again');?></A>
+		<A HREF='#' onClick='window.close();'><?php print gettext('Cancel');?></A>		
 		</DIV>
 	</DIV>
 	</CENTER>

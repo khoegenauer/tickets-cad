@@ -69,7 +69,7 @@ if (empty($_POST)) {
 ?>
 <CENTER><BR /><BR /><BR /><BR /><BR /><H3><?php print gettext('Guests not allowed Log access.');?> </CENTER><BR /><BR />
 
-<INPUT TYPE='button' value='<?php print gettext('Cancel');?>' onClick = 'window.exit();'>
+<INPUT TYPE='button' value='<?php print gettext('Cancel');?>' onClick = 'window.exit();' />
 <?php } ?>
 
 

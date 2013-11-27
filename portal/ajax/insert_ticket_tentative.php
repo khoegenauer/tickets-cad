@@ -125,6 +125,8 @@ foreach ($regions as $grp_val) {
 	}
 	
 do_log($GLOBALS['LOG_INCIDENT_OPEN'], $last_id);
+
+
 if($last_id != 0) {
 	$ret_arr[0] = $last_id;
 	$the_summary = "Request from " . $the_requester . "\r\n";

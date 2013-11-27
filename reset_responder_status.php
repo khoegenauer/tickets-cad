@@ -168,7 +168,7 @@ if(!empty($_POST)) {
 					<TD class='spacer' COLSPAN=99>&nbsp;</TH>
 				</TR>	
 				<TR class='odd'>
-					<TD ALIGN='center' COLSPAN=99><INPUT TYPE='SUBMIT' NAME='SUBMIT' VALUE='<?php print gettext('Submit');?>'></TH>
+					<TD ALIGN='center' COLSPAN=99><INPUT TYPE='SUBMIT' NAME='SUBMIT' VALUE='<?php print gettext('Submit');?>' /></TH>
 				</TR>				
 			</TABLE>
 		</DIV>

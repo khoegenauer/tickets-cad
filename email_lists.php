@@ -407,8 +407,8 @@ if(!empty($_POST)) {
 					</DIV>
 				</DIV>
 				<DIV style='width: 100%; text-align: center; position: absolute; bottom: 10%; left: 20%;'>
-					<SPAN id='bsub_but' class='plain' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='validate(document.edit_form);'>Submit</SPAN>
-					<SPAN id='can_but' class='plain' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='goto_list();'>Back</SPAN>
+					<SPAN id='bsub_but' class='plain' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='validate(document.edit_form);'><?php print gettext('Submit');?></SPAN>
+					<SPAN id='can_but' class='plain' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='goto_list();'><?php print gettext('Back');?></SPAN>
 				</DIV>
 				<INPUT TYPE="hidden" NAME="frm_id" VALUE=<?php print $row['id'];?>/>
 				<INPUT TYPE="hidden" NAME="frm_formname" VALUE="edit"/>
@@ -445,7 +445,7 @@ if(!empty($_POST)) {
 						<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('From Contacts');?>:</TD>
 							<TD CLASS="td_data">
 								<SELECT NAME="frm_contacts" onChange = "this.value=JSfnTrim(this.value);">
-									<OPTION VALUE=0>Select</OPTION>
+									<OPTION VALUE=0><?php print gettext('Select');?></OPTION>
 <?php
 									$query = "SELECT * FROM `$GLOBALS[mysql_prefix]contacts` ORDER BY `id` ASC";
 									$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);

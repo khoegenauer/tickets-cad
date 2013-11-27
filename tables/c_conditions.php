@@ -32,9 +32,9 @@ $theIcons = read_directory($theDirectory);
 		<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext('Table \'Conditions\' - Add New Entry');?></FONT></TD></TR>
 		<TR><TD>&nbsp;</TD></TR>
 	<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Type name:</TD>
-		<TD><INPUT ID="ID1" CLASS="dirty" MAXLENGTH="16" SIZE="16" type="text" NAME="frm_title" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' >text</SPAN></TD></TR>
+		<TD><INPUT ID="ID1" CLASS="dirty" MAXLENGTH="16" SIZE="16" type="text" NAME="frm_title" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
 	<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right">Description:</TD>
-		<TD><INPUT ID="ID2" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_description" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' >text</SPAN></TD></TR>
+		<TD><INPUT ID="ID2" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_description" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
 	<TR VALIGN="top" CLASS="odd"><TD CLASS="td_label" ALIGN="right">Icon:</TD>
 		<TD><IMG ID='ID3' SRC="theIcons[0]" STYLE="visibility:hidden;"/></TD></TR>
 	<TR CLASS="even"><TD></TD><TD ALIGN='center'>&nbsp;&nbsp;&nbsp;&nbsp;

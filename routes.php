@@ -834,10 +834,10 @@ if((array_key_exists('func', $_REQUEST)) && ($_REQUEST['func'] == "do_db")) {	//
 ?>	
 <SCRIPT>
 if (window.opener && !window.opener.closed) {
-	window.opener.parent.frames['upper'].show_msg ('Email sent!');
+	window.opener.parent.frames['upper'].show_msg ('<?php print gettext('Email sent!');?>');
 	}
 else {	
-	parent.frames['upper'].show_msg ('Email sent!');
+	parent.frames['upper'].show_msg ('<?php print gettext('Email sent!');?>');
 	}
 </SCRIPT>
 	<CENTER><BR><BR><BR><BR><H3><?php print gettext('Call Assignments made to');?>:<BR /><?php print substr((str_replace ( "\n", ", ", $_REQUEST['frm_name_str'])) , 0, -2);?><BR><BR> <!-- 11/8/08 -->
@@ -1286,7 +1286,7 @@ function toggle_div(theDiv, theButton, theText) {
 			<TR class='heading'><TH class='heading'><?php  print gettext('FILTER BY CAPABILITIES');?></TH></TR>	<!-- 3/15/11 -->
 			<FORM NAME='filter_Form' METHOD="GET" ACTION="routes.php">
 			<TR class='odd'><TD ALIGN='center'><?php  print gettext('Filter Type');?>: <b><?php  print gettext('OR');?> </b><INPUT TYPE='radio' NAME='searchtype' VALUE='OR' checked><b><?php  print gettext('AND');?> </b><INPUT TYPE='radio' NAME='searchtype' VALUE='AND'></TD></TR>	<!-- 3/15/11 -->
-			<TR class='even'><TD><INPUT SIZE='48' TYPE='text' NAME='capabilities' VALUE='<?php print $capabilities;?>' MAXLENGTH='64'></TD></TR>	<!-- 3/15/11 -->
+			<TR class='even'><TD><INPUT SIZE='48' TYPE='text' NAME='capabilities' VALUE='<?php print $capabilities;?>' MAXLENGTH='64' /></TD></TR>	<!-- 3/15/11 -->
 			<INPUT TYPE='hidden' NAME='ticket_id' 	VALUE='<?php print get_ticket_id (); ?>' />
 			<INPUT TYPE='hidden' NAME='unit_id' 	VALUE='<?php print $unit_id; ?>' />
 			<TR class='odd'><TD align="center"><input type="button" OnClick="filterSubmit();" VALUE="<?php  print gettext('Filter');?>"/>&nbsp;&nbsp;<input type="button" OnClick="filterReset();" VALUE="<?php print gettext('Reset Filter');?>" <?php print $disabled;?>/></TD></TR>	<!-- 3/15/11 -->	
@@ -1308,10 +1308,10 @@ function toggle_div(theDiv, theButton, theText) {
 		</TD>
 		<TD VALIGN="top" ALIGN='center'>
 			<DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset; display: inline-block;'></DIV>
-			<span id='toggle_dirs' class='plain' style='position: fixed; top: 0px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('directions', 'toggle_dirs', 'Directions')"><?php  print gettext('Show Directions');?></span><BR />
-			<span id='toggle_tkt' class='plain' style='position: fixed; top: 25px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('the_ticket', 'toggle_tkt', 'Ticket')"><?php  print gettext('Show Ticket');?></span><BR />
-			<span id='toggle_msgs' class='plain' style='position: fixed; top: 50px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('the_messages', 'toggle_msgs', 'Messages')"><?php  print gettext('Show Messages');?></span><BR />
-			<span id='toggle_dispatch' class='plain' style='position: fixed; top: 75px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('disp_details', 'toggle_dispatch', 'Disp details')"><?php  print gettext('Show Disp Details');?></span><BR />
+			<span id='toggle_dirs' class='plain' style='position: fixed; top: 0px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('directions', 'toggle_dirs', 'Directions');"><?php  print gettext('Show Directions');?></span><BR />
+			<span id='toggle_tkt' class='plain' style='position: fixed; top: 25px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('the_ticket', 'toggle_tkt', 'Ticket');"><?php  print gettext('Show Ticket');?></span><BR />
+			<span id='toggle_msgs' class='plain' style='position: fixed; top: 50px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('the_messages', 'toggle_msgs', 'Messages');"><?php  print gettext('Show Messages');?></span><BR />
+			<span id='toggle_dispatch' class='plain' style='position: fixed; top: 75px; right: 0px; width: 100px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_div('disp_details', 'toggle_dispatch', 'Disp details');"><?php  print gettext('Show Disp Details');?></span><BR />
 			<DIV ID="directions" STYLE="position: fixed; top: 125px; right: 0px; width: <?php print get_variable('map_width') * .35;?>px; height: <?php print get_variable('map_height');?>px; text-align: left; font-weight: bold; display: none; border: 2px outset #707070; overflow-y: auto; overflow-x: auto;"></DIV>
 			<DIV ID="disp_details" STYLE="position: fixed; top: 125px; right: 0px; width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; text-align: left; font-weight: bold; display: none; border: 2px outset #707070; overflow-y: scroll;">
 			<?php print do_ticket_extras($row_ticket, $the_width, FALSE, FALSE);?>

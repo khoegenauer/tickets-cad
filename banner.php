@@ -785,7 +785,7 @@ switch ($_POST["_func"]) {
 
 	$type_ary = array( "p" =>"Polygon", "c" => "Circle", "t" => "Banner", "k" => "kml");
 	$capt_ary = array( "p" =>gettext("click map - drag icons"),	"c" => gettext("Click map and enter form values"), "t" => gettext("Click map and enter form values"),  "k" => gettext("kml"));
-	$line_ary = array( "p" =>gettext("Line"), "c" =>gettext("Circle"), "t" =>gettext("Text"), "k" => gettext("kml"));
+	$line_ary = array( "p" =>"Line", "c" =>"Circle", "t" =>"Text", "k" => "kml");
 
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup_cats` ORDER BY `category` ASC";		
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -1258,7 +1258,7 @@ else {
 		<TR><TD>&nbsp;</TD></TR>
 		<TR CLASS="odd" VALIGN = baseline >
 			<TD CLASS="td_label" ALIGN="left"><?php print gettext('Description');?>:</TD>
-			<TD><INPUT MAXLENGTH="32" SIZE="32" type="text" NAME="frm_name" VALUE="<?php print $row['line_name'];?>" <?php print $dis;?> onChange = "this.value.trim();">
+			<TD><INPUT MAXLENGTH="32" SIZE="32" type="text" NAME="frm_name" VALUE="<?php print $row['line_name'];?>" <?php print $dis;?> onChange = "this.value.trim();" />
 			<SPAN CLASS = 'td_label' STYLE = 'margin-left:20px;'><?php print gettext('Visible');?>: <?php if ($_func == "r") {?>
 			
 							<SPAN STYLE = 'margin-left:10px'><?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<INPUT TYPE='radio' NAME = 'frm_line_is_vis' <?php echo $visible_true;?> DISABLED /></SPAN>

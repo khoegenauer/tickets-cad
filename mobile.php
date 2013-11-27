@@ -117,7 +117,7 @@ function get_butts($ticket_id, $unit_id) {
 		print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('Notify') . "' onClick  = \"var notWindow = window.open('config.php?mode=1&func=notify&id={$ticket_id}', 'NotWindow', 'resizable=1, scrollbars, height=400, width=600, left=250,top=50,screenX=250,screenY=50'); notWindow.focus();\" />\n"; // 7/3/10
 		}
 	print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('Note') . "' onClick = \"var noteWindow = window.open('add_note.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=240, width=600, left=100,top=100,screenX=100,screenY=100'); noteWindow.focus();\" />\n"; // 10/8/08
-//	print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('Print') . "' onClick='main.php?print=true&id=$ticket_id;'>\n ";
+//	print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('Print') . "' onClick='main.php?print=true&id=$ticket_id;' />\n ";
 	print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('E-mail') . "' onClick = \"var mailWindow = window.open('mail.php?ticket_id=$ticket_id', 'mailWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100'); mailWindow.focus();\" />\n"; // 2/1/10
 	print "<BR /><INPUT TYPE='button' CLASS = 'btn_smaller' VALUE = '" . gettext('Dispatch') . "' onClick = \"var dispWindow = window.open('routes_nm.php?frm_mode=1&ticket_id={$ticket_id}', 'dispWindow', 'resizable=1, scrollbars, height=480, width=" . round (0.8 * ($_SESSION['scr_width'])) . ", left=100,top=100,screenX=100,screenY=100'); dispWindow.focus();\" />\n"; // 2/1/10
 	}				// end function get butts()

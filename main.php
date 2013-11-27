@@ -1213,11 +1213,11 @@ if((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1))  {
 </FORM>
 
 <!--
-<span onclick = "parent.top.calls.location.reload(true)"><?php print gettext('Test1');?></span>
+<span onclick = "parent.top.calls.location.reload(true);"><?php print gettext('Test1');?></span>
 <br />
-<span onclick = "parent.top.calls.document.page_refresh_form.submit()"><?php print gettext('Test2');?></span>
+<span onclick = "parent.top.calls.document.page_refresh_form.submit();"><?php print gettext('Test2');?></span>
 <br />
-<span onclick = "alert(parent.$('what').rows)"><?php print gettext('Test3');?></span>
+<span onclick = "alert(parent.$('what').rows);"><?php print gettext('Test3');?></span>
 -->
 <br /><br />
 <DIV ID='to_top' style="position:fixed; bottom:50px; left:20px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png" ID = "up" BORDER=0></div>

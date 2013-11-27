@@ -166,7 +166,7 @@ if(empty($_POST)) {
 					<TD COLSPAN=99></TD>
 				</TR>
 			</TABLE>
-			<INPUT NAME='table' TYPE='hidden' SIZE='24' VALUE='messages'>
+			<INPUT NAME='table' TYPE='hidden' SIZE='24' VALUE='messages' />
 			</FORM><BR /><BR />
 			<SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "submit_archive();"><?php print gettext('Submit');?></SPAN><BR /><BR />	
 <?php

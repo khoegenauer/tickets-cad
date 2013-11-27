@@ -672,11 +672,11 @@ switch ($_func) {
 		print "<TR CLASS = 'odd'  STYLE = 'height:16px;'><TD ALIGN='left'><B>&nbsp;" . gettext('Name') . "</B></TD>
 			<TD><B>" . gettext('Type') . "&nbsp;</B></TD>
 			<TD><B>&nbsp;" . gettext('Visible') . "&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to base map') . "');\"><B>&nbsp;" . gettext('BM') . "&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to regions') . "');\"><B>&nbsp;" . gettext('R') . "&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to facilities') . "');\"><B>&nbsp;" . gettext('F') . "&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to units - Exclusion zone') . "');\"><B>&nbsp;" . gettext('EX') . "&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to units - Ringfence') . "');\"><B>&nbsp;" . gettext('RF') . "&nbsp;</B></TD>			
+			<TD onmouseout=\"UnTip();\" onmouseover=\"Tip('" . gettext('Apply to base map') . "');\"><B>&nbsp;" . gettext('BM') . "&nbsp;</B></TD>
+			<TD onmouseout=\"UnTip();\" onmouseover=\"Tip('" . gettext('Apply to regions') . "');\"><B>&nbsp;" . gettext('R') . "&nbsp;</B></TD>
+			<TD onmouseout=\"UnTip();\" onmouseover=\"Tip('" . gettext('Apply to facilities') . "');\"><B>&nbsp;" . gettext('F') . "&nbsp;</B></TD>
+			<TD onmouseout=\"UnTip();\" onmouseover=\"Tip('" . gettext('Apply to units - Exclusion zone') . "');\"><B>&nbsp;" . gettext('EX') . "&nbsp;</B></TD>
+			<TD onmouseout=\"UnTip();\" onmouseover=\"Tip('" . gettext('Apply to units - Ringfence') . "');\"><B>&nbsp;" . gettext('RF') . "&nbsp;</B></TD>			
 			<TD><B>&nbsp;&nbsp;" . gettext('As of') . "</B></TD></TR>\n";
 
 		$i = 0;

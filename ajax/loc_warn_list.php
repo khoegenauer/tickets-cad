@@ -1,6 +1,7 @@
 <?php
 /*
 9/10/13 - New file, gets stored warn locations for display in new and edit ticket pages
+11/18/13 - Fixed inccorrect <DENTER> !!
 */
 //	error_reporting(E_ALL);
 require_once('../incs/functions.inc.php');
@@ -105,7 +106,7 @@ if($out_arr[0] == "No Warnings Found") {
 		if($bgcol == "#CECECE") { $bgcol = "#DEDEDE"; } else { $bgcol = "#CECECE"; }
 		}
 	}
-$print .= "</TABLE></DENTER>";
+$print .= "</TABLE></CENTER>";	//	11/18/13
 
 $ret = array();
 $ret[0] = $count;

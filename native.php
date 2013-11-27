@@ -76,7 +76,7 @@ function validateForm (theForm) {
 
 <TR VALIGN="middle" CLASS = 'even'>
 	<TD colspan = 2 align= "center"><br/>
-	<input type="button" value="<?php print gettext('Submit');?>" onclick = "validateForm (document.mail_form)"/>
+	<input type="button" value="<?php print gettext('Submit');?>" onclick = "validateForm (document.mail_form);"/>
 	<input type="button" value="<?php print gettext('Reset');?>" onclick = "document.mail_form.reset(); document.mail_form.frm_from.focus();"  STYLE = 'margin-left: 24px;'/>
 	<input type="button" value="<?php print gettext('Cancel');?>" STYLE = 'margin-left: 24px;' onClick = "self.close();"/>
 	</TD>
@@ -108,7 +108,7 @@ else {
 		}
 ?>
 	<p align='center'>
-	<input type="button" value="<?php print gettext('Another?');?>" onclick = "document.mail_form.submit();">
+	<input type="button" value="<?php print gettext('Another?');?>" onclick = "document.mail_form.submit();" />
 	<INPUT TYPE='button' VALUE = "<?php print gettext('Finished');?>" onClick = "self.close();" />	
 	</p>
 <?php

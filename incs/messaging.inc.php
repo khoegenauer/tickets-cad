@@ -2,6 +2,7 @@
 /*
 3/15/11 New file for Messaging functionality
 6/21/13 Changes to incorporate new field "status_updated" in responder table - used for aut status update
+11/18/13 - Fixed incorrect saving of messages to multiple recipients
 */
 
 extract($_GET);
@@ -635,7 +636,7 @@ function store_email($msg_type, $recipients, $messageid, $subject, $message, $ti
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]messages` WHERE `msg_type` = '2' AND `message_id` = '{$messageid}' AND `subject` = '{$subject}' AND `message` = '{$message}' AND `date` = '" . $time . "'";
 	$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);	
 	if(mysql_num_rows($result) == 0) {
-		$query = "INSERT INTO `$GLOBALS[mysql_prefix]messages` (msg_type, message_id, ticket_id, resp_id, recipients, from_address, fromname, subject, message, date, _by, _from, _on) VALUES({$msg_type},'{$messageid}',{$ticket_id},{$resp_id},'{$recipients}','{$from_address}','{$fromname}','{$subject}','" . $message . "','{$time}',{$who},'{$from}','{$now}')";
+		$query = "INSERT INTO `$GLOBALS[mysql_prefix]messages` (msg_type, message_id, ticket_id, resp_id, recipients, from_address, fromname, subject, message, date, _by, _from, _on) VALUES({$msg_type},'{$messageid}',{$ticket_id},'{$resp_id}','{$recipients}','{$from_address}','{$fromname}','{$subject}','" . $message . "','{$time}',{$who},'{$from}','{$now}')";	//	11/18/13
 		$result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);	
 		if($result) {
 			$counter = 1;

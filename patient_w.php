@@ -426,7 +426,7 @@ setTimeout("document.next_Form.submit()",1500);
 			$query = "SELECT * FROM `$GLOBALS[mysql_prefix]patient` WHERE `id`='$_GET[id]' LIMIT 1";
 			$result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
 			$row = stripslashes_deep(mysql_fetch_assoc($result));
-			print "<FONT CLASS='header'>Really delete {$patient} record ' " .shorten($row['description'], 24) . "' ?</FONT><BR /><BR />";
+			print "<FONT CLASS='header'>" . gettext('Really delete {$patient} record') . " ' " .shorten($row['description'], 24) . "' ?</FONT><BR /><BR />";
 			print "<FORM METHOD='post' ACTION='patient_w.php?action=delete&id=$_GET[id]&ticket_id=$_GET[ticket_id]&confirm=1'>
 				<INPUT TYPE='Submit' VALUE='" . gettext('Yes') . "'/>";
 			print "<INPUT TYPE = 'button' VALUE = '" . gettext('Cancel') . "' onClick = 'window.close();' STYLE = 'margin-left:40px' /></FORM>";
@@ -676,7 +676,7 @@ document.list_form.submit();
 ?>
 			</SELECT>
 			</TD></TR>
-		<TR CLASS='odd' VALIGN='bottom'><TD CLASS="td_label">As of: &nbsp;&nbsp;</TD><TD><?php print generate_date_dropdown('asof',0,TRUE);?>&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.patientAdd);'></TD></TR>
+		<TR CLASS='odd' VALIGN='bottom'><TD CLASS="td_label"><?php print gettext('As of');?>: &nbsp;&nbsp;</TD><TD><?php print generate_date_dropdown('asof',0,TRUE);?>&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.patientAdd);'></TD></TR>
 
 		<TR CLASS='odd'><TD></TD><TD><BR /><INPUT TYPE="button" VALUE="<?php print gettext('Cancel');?>"  onClick="do_cancel();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<INPUT TYPE="button" VALUE="<?php print gettext('Reset');?>" onClick = 'do_asof(theForm, false); reset(); do_asof(theForm, true); reset(); '/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

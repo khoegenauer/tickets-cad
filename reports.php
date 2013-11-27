@@ -1056,7 +1056,7 @@ p.page { page-break-after: always; }
 						$row['ticket_id'] . "' CLASS='" .
 						$severity_class . "' onClick = 'viewT(" .
 //						$row['tick_severity'] . "' onClick = 'viewT(" .
-						$row['ticket_id'] . ")'>" .
+						$row['ticket_id'] . ");'>" .
 						$the_ticket . "</TD>";
 						}
 					print "<TD>" . $row['user_name'] . "</TD>";
@@ -1084,15 +1084,15 @@ $c_urlstr =  "city_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencod
 <TABLE>
 <TR><TD COLSPAN=3 ALIGN='center'><br><HR SIZE=1 COLOR='blue' WIDTH='50%'></TD></TR>
 <TR VALIGN='bottom'><TD ALIGN='center'>
-	<img src="<?php print $s_urlstr;?>" border=0 ID = "sev_img">
+	<img src="<?php print $s_urlstr;?>" border=0 ID = "sev_img" />
 	</TD>
 
 	<TD ALIGN='center'>
-	<img src="<?php print $t_urlstr;?>" border=0 ID = "typ_img">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<img src="<?php print $t_urlstr;?>" border=0 ID = "typ_img" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	</TD>
 
 	<TD ALIGN='center'>
-	<img src="<?php print $c_urlstr;?>" border=0 ID = "cit_img">
+	<img src="<?php print $c_urlstr;?>" border=0 ID = "cit_img" />
 	</TD>
 	</TR>
 <?php
@@ -1857,7 +1857,7 @@ function my_stripslashes_deep($value) {
 ?>
 	<BR CLEAR='left' /><BR />
 	<TABLE ALIGN='left' CELLSPACING = 2 CELLPADDING = 2  BORDER=0 width='800px'>
-	<TR CLASS='even'><TH COLSPAN=99>Other Reports</TH></TR>
+	<TR CLASS='even'><TH COLSPAN=99><?php print gettext('Other Reports');?></TH></TR>
 	<TR CLASS='odd'><TD>&nbsp;</TD></TR>
 	<TR><TD COLSPAN=99 ALIGN='center'>
 	<FORM NAME='sel_form' METHOD='post' ACTION = ''><!-- dummy  -->
@@ -1940,7 +1940,7 @@ function my_stripslashes_deep($value) {
 
 //		print "&nbsp;&nbsp;<INPUT ID = 'inc_log_btn' TYPE = 'button' value = '{$incident} Log' onClick = 'document.log_form.submit();' STYLE = 'display: none'>";
 ?>
-	<INPUT TYPE='hidden' NAME='frm_full_w' VALUE=0>
+	<INPUT TYPE='hidden' NAME='frm_full_w' VALUE=0 />
 	</B></TD></TR>
 
 	<TR CLASS='odd'><TD COLSPAN=8 ALIGN='center'><B>
@@ -2050,7 +2050,7 @@ $locale = get_variable('locale');	// 08/03/09
 	</FORM>
 
 	<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename(__FILE__); ?>"></FORM>
-<BR CLEAR = 'left' /><IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#top';" STYLE = 'margin-left: 20px'>
+<BR CLEAR = 'left' /><IMG SRC="markers/up.png" BORDER=0  onclick = "location.href = '#top';" STYLE = 'margin-left: 20px' />
 <A NAME="bottom" />
 </BODY></HTML>
 

@@ -748,9 +748,9 @@ function get_ticket_markers(user_id) {
 			var tkt_opened = the_tickets[key][5];
 			var info = "<TABLE style='width: 100%; border: 3px outset #707070; background-colour: #CECECE;'>";
 			info += "<TR style='border: 1px solid #707070;'><TH colspan=99 class='header'><?php print gettext('Incident');?></TH></TR>";
-			info += "<TR style='border: 1px solid #707070;'><TD style='background-color: #707070; font-weight: bold; color: #FFFFFF'>Title</TD><TD style='font-weight: bold;'>" + tkt_scope + "</TD></TR>";
-			info += "<TR style='border: 1px solid #707070;'><TD style='background-color: #707070; font-weight: bold; color: #FFFFFF'>Description</TD><TD>" + tkt_desc + "</TD></TR>";
-			info += "<TR style='border: 1px solid #707070;'><TD style='background-color: #707070; font-weight: bold; color: #FFFFFF'>Incident Started</TD><TD>" + tkt_opened + "</TD></TR>";
+			info += "<TR style='border: 1px solid #707070;'><TD style='background-color: #707070; font-weight: bold; color: #FFFFFF'><?php print gettext('Title');?></TD><TD style='font-weight: bold;'>" + tkt_scope + "</TD></TR>";
+			info += "<TR style='border: 1px solid #707070;'><TD style='background-color: #707070; font-weight: bold; color: #FFFFFF'><?php print gettext('Description');?></TD><TD>" + tkt_desc + "</TD></TR>";
+			info += "<TR style='border: 1px solid #707070;'><TD style='background-color: #707070; font-weight: bold; color: #FFFFFF'><?php print gettext('Incident Started');?></TD><TD>" + tkt_opened + "</TD></TR>";
 			info += "</TABLE>";
 			tkticonUrl = "./images/gen_icon.php?blank=3&text=" + tkt_id;	
 			tkticon = new baseIcon({iconUrl: tkticonUrl});			
@@ -810,7 +810,7 @@ function get_ticket(ticket_id) {
 			$('farr_but').setAttribute( "onClick", "javascript:do_sub('frm_u2farr','farr_but');" );
 			}
 		$('clear_but').setAttribute( "onClick", "javascript:do_sub('frm_clear','clear_but');" );		
-		$('ticket_detail').innerHTML = "Loading Ticket Details............";
+		$('ticket_detail').innerHTML = "<?php print gettext('Loading Ticket Details.');?>...........";
 		setTimeout(function() {$('ticket_detail').innerHTML = the_ticket[11]; $('menu_but2').style.display = 'inline-block'; },1000);
 		}
 	}	
@@ -1573,7 +1573,7 @@ function wr_chat_msg(the_Form) {							// write chat message via ajax xfer
 		set_to();										// set timeout again
 		the_Form.frm_message.value="";
 //			the_Form.frm_message.focus();
-		do_focus ();
+		do_focus();
 		}				// end if/else (payload.substring(... )
 	}		// end function wr_chat_ msg()
 
@@ -1593,7 +1593,7 @@ function do_enter(e) {										// enter key submits form
 	else if(e.which)	{keynum = e.which;	}				// Mozilla/Opera
 	if (keynum==13) {										// allow enter key
 		wr_chat_msg(document.forms['chat_form']) ;					// submit to server-side script
-		do_focus ();
+		do_focus();
 		}
 	else {
 		keychar = String.fromCharCode(keynum);
@@ -1686,25 +1686,25 @@ function pause_messages() {	//	10/29/13
 <body onUnload='stop_loop();'>
 	<div id='outer' style='height: auto; width: 100%; background-color: #CECECE;'>
 		<div id="map_canvas"></div>	
-		<div id='plus_but' onClick = "zoomIn();"><IMG SRC = './images/zoomin.png' ALT='Zoom In' BORDER=0 STYLE = 'vertical-align: middle'></div>	
-		<div id='minus_but' onClick = "zoomOut();"><IMG SRC = './images/zoomout.png' ALT='Zoom Out' BORDER=0 STYLE = 'vertical-align: middle'></div>	
-		<div id='map_but' onClick = "map_controls_onoff();"><IMG SRC = './images/map.png' ALT='Map Controls' BORDER=0 STYLE = 'vertical-align: middle'></div>		
+		<div id='plus_but' onClick = "zoomIn();"><IMG SRC = './images/zoomin.png' ALT='<?php print gettext('Zoom In');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>	
+		<div id='minus_but' onClick = "zoomOut();"><IMG SRC = './images/zoomout.png' ALT='<?php print gettext('Zoom Out');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>	
+		<div id='map_but' onClick = "map_controls_onoff();"><IMG SRC = './images/map.png' ALT='<?php print gettext('Map Controls');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>		
 		<div id='map_controls' style='display: none; border: 3px outset #707070; background-color: #CECECE; width: 70px; height: 230px'>
-			<div id='day_but' style='display: none;' onClick = "do_day();"><IMG SRC = './images/day.png' ALT='Day Colorsl' BORDER=0 STYLE = 'vertical-align: middle'></div>
-			<div id='night_but' onClick = "do_night();"><IMG SRC = './images/night.png' ALT='<?php print gettext('Night Colors');?>' BORDER=0 STYLE = 'vertical-align: middle'></div>			
-			<div id='toggle_tracks_but' style='display: none;' onClick = "toggleTracks();"><IMG SRC = './images/toggle_tracks.png' ALT='<?php print gettext('Toggle Tracks');?>' BORDER=0 STYLE = 'vertical-align: middle'></div>	
-			<div id='toggle_tracks_off_but' style='display: none;' onClick = "toggleTracks();"><IMG SRC = './images/toggle_tracks_off.png' ALT='Toggle Tracks' BORDER=0 STYLE = 'vertical-align: middle'></div>		
-			<div id='center_but' onClick = "map.panTo(theLatLng,{animate: true});"><IMG SRC = './images/center.png' ALT='<?php print gettext('Center on me');?>' BORDER=0 STYLE = 'vertical-align: middle'></div>	
+			<div id='day_but' style='display: none;' onClick = "do_day();"><IMG SRC = './images/day.png' ALT='<?php print gettext('Day Colorsl');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>
+			<div id='night_but' onClick = "do_night();"><IMG SRC = './images/night.png' ALT='<?php print gettext('Night Colors');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>			
+			<div id='toggle_tracks_but' style='display: none;' onClick = "toggleTracks();"><IMG SRC = './images/toggle_tracks.png' ALT='<?php print gettext('Toggle Tracks');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>	
+			<div id='toggle_tracks_off_but' style='display: none;' onClick = "toggleTracks();"><IMG SRC = './images/toggle_tracks_off.png' ALT='<?php print gettext('Toggle Tracks');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>		
+			<div id='center_but' onClick = "map.panTo(theLatLng,{animate: true});"><IMG SRC = './images/center.png' ALT='<?php print gettext('Center on me');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>	
 		</div>
-<!--		<div id='help_but' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);">HELP</div>	-->
-<!--		<div id='center_but' onClick = "gotoCentre();"><IMG SRC = './images/center.png' ALT='Center on Me' BORDER=0 STYLE = 'vertical-align: middle'></div>			-->
+<!--		<div id='help_but' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"><?php print gettext('HELP');?></div>	-->
+<!--		<div id='center_but' onClick = "gotoCentre();"><IMG SRC = './images/center.png' ALT='<?php print gettext('Center on Me');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>			-->
 		<div id="buttons" style='position:absolute; left:-300px; top: 130px; z-index: 10; text-align: center; background-color: #CECECE; border: 3px outset #DEDEDE; padding: 10px;'>
 			<span id="mylat" class='plain' style="display: inline-block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'alert_coords();'><?php print gettext('My Lat Lng');?></span><BR />	
 			<span id="myloc" class='plain' style="display: inline-block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'alert_location();'><?php print gettext('My Location');?></span><BR />	
-			<span id="refresh_but" class='plain' style="display: inline-block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'refresh_screen();'>Refresh</span><BR /><BR />
+			<span id="refresh_but" class='plain' style="display: inline-block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'refresh_screen();'><?php print gettext('Refresh');?></span><BR /><BR />
 			<span style='font-weight: bold; font-size: 16px;'><?php print gettext('Road Conditions');?></span><BR />					
 			<select style='font-size: 16px;' id='condition_selector' name="selectionField" onChange="the_status(this.options[this.selectedIndex].value, this.options[this.selectedIndex].text);"> 
-				<option value=0 style='font-size: 16px;'>Select Type</option>
+				<option value=0 style='font-size: 16px;'><?php print gettext('Select Type');?></option>
 <?php
 				foreach($c_types as $val) {
 
@@ -1780,10 +1780,10 @@ function pause_messages() {	//	10/29/13
 						<span id="tkt_can_msg" class='plain' style="float: right; display: inline-block; z-index: 10; width: 40px;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'can_reply();'><IMG SRC = './images/back.png' ALT='<?php print gettext('Cancel');?>' BORDER=0 STYLE = 'vertical-align: middle'></span>
 					</div>						
 					<form name="tkt_reply_form" action="send_message();">
-						<div style='width: 20%; display: inline-block;'>To:</div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_to"></div><BR />
-						<div style='width: 20%; display: inline-block;'>From:</div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_from"></div><BR />
-						<div style='width: 20%; display: inline-block;'>Subject:</div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_subject"></div><BR />
-						<div style='width: 20%; display: inline-block; vertical-align: top;'>Message:</div><div style='width: 70%; display: inline-block;'><textarea name='frm_msg' rows="10" cols="30">Basic Message</textarea></div>
+						<div style='width: 20%; display: inline-block;'><?php print gettext('To:');?></div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_to"></div><BR />
+						<div style='width: 20%; display: inline-block;'><?php print gettext('From:');?></div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_from"></div><BR />
+						<div style='width: 20%; display: inline-block;'><?php print gettext('Subject:');?></div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_subject"></div><BR />
+						<div style='width: 20%; display: inline-block; vertical-align: top;'><?php print gettext('Message:');?></div><div style='width: 70%; display: inline-block;'><textarea name='frm_msg' rows="10" cols="30">Basic Message</textarea></div>
 					</form>		
 				</div>					
 				<div id='directions_wrapper' style='z-index: 5; text-align: left; height: 100%; display: none; background-color: #EFEFEF;'><BR />
@@ -2087,7 +2087,7 @@ window.getRoute = function (response) {
 	}).addTo(map);
 	route.bringToFront();
 	$('directions').innerHTML = theText;
-	};
+	}
 			
 function setDirections(toAddress, recfacAddress) {
 	$('menu_but2').style.display = 'none';

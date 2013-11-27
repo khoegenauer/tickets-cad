@@ -1715,7 +1715,7 @@ case "u":	// =======================================  Update 	==================
 	<INPUT TYPE="hidden" NAME="tablename" 	VALUE="<?php print $tablename ?>"/>
 	<INPUT TYPE="hidden" NAME="indexname" 	VALUE="<?php print $indexname; ?>"/>
 	<INPUT TYPE="hidden" NAME="sortby" 		VALUE="<?php print $sortby; ?>"/>
-	<INPUT TYPE="hidden" NAME="sortdir"		VALUE=0>
+	<INPUT TYPE="hidden" NAME="sortdir"		VALUE=0 />
 	<INPUT TYPE="hidden" NAME="srch_str"  	VALUE=""/> <!-- 9/12/10 -->
 	
 	</FORM>
@@ -2055,8 +2055,8 @@ case "u":	// =======================================  Update 	==================
 <TR CLASS='even' COLSPAN=99 >
 	<TD CLASS='td_label'><?php print gettext('Search for');?>:</TD><TD COLSPAN= <?php print ($cols-1);?>>
 		<FORM NAME='s' METHOD = 'post' ACTION = '<?php print basename(__FILE__); ?>'>
-		<INPUT TYPE='text' 		NAME = 'argument' SIZE = 32 VALUE=''>
-		<INPUT TYPE='hidden' 	NAME = 'fields' VALUE=''> <!-- slash-separated list of names -->
+		<INPUT TYPE='text' 		NAME = 'argument' SIZE = 32 VALUE='' />
+		<INPUT TYPE='hidden' 	NAME = 'fields' VALUE='' /> <!-- slash-separated list of names -->
 		</TD></TR>
 <?php
 	echo "<TR CLASS='odd'><TD COLSPAN=99 ALIGN='left'><H3>" . gettext('In') . ":</H3></TD></TR>\n";
@@ -2070,7 +2070,7 @@ case "u":	// =======================================  Update 	==================
 
 		$i++;
 		$out_str .= "<TR CLASS='{$evenodd[($i+1) % 2]}'><TD CLASS= 'td_label'>
-			<INPUT TYPE='checkbox' NAME = '{$name[$n]}' VALUE='{$name[$n]}' STYLE = 'display:inline; margin-left:20px'> {$name[$n]}</TD></TR>\n";
+			<INPUT TYPE='checkbox' NAME = '{$name[$n]}' VALUE='{$name[$n]}' STYLE = 'display:inline; margin-left:20px' /> {$name[$n]}</TD></TR>\n";
 		if ($i == $perCol){		// start new column?
 			$i=0;
 			$out_str .=  "</TABLE>\n";

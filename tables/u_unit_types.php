@@ -31,7 +31,7 @@
 		<BR />
     <INPUT TYPE="button"	VALUE="<?php print gettext('Cancel');?>" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
     <INPUT TYPE="button"	VALUE="<?php print gettext('Reset');?>" onClick = "Javascript: document.u.reset();icon_to_form('<?php print $row['icon'];?>'); "/>&nbsp;&nbsp;&nbsp;&nbsp;
-    <INPUT TYPE="button" NAME="sub_but" VALUE="               <?php print gettext('Submit');?>                " onclick="this.disabled=true; JSfnCheckInput(this.form, this );"/> 
+    <INPUT TYPE="button" NAME="sub_but" VALUE="               <?php print gettext('Submit');?>                " onclick="this.disabled=true; JSfnCheckInput(this.form, this);"/> 
 		
 		</TD></TR>
 		</FORM>

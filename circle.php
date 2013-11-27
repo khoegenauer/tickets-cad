@@ -738,11 +738,11 @@ switch ($_POST["_func"]) {
 		print "<TR CLASS = 'odd'  STYLE = 'height:16px;'><TD ALIGN='left'><B>&nbsp;" . gettext('Name') . "</B></TD>
 			<TD><B>" . gettext('Type') . "&nbsp;</B></TD>
 			<TD><B>&nbsp;" . gettext('Visible') . "&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to base map') . "');\"><B>&nbsp;" . gettext('BM') . "&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to regions') . "');\"><B>&nbsp;" . gettext('R') . "&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to facilities') . "');\"><B>&nbsp;" . gettext('F') . "&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to units - Exclusion zone') . "');\"><B>&nbsp;" . gettext('EX') . "&nbsp;</B></TD>
-			<TD onmouseout=\"UnTip()\" onmouseover=\"Tip('" . gettext('Apply to units - Ringfence') . "');\"><B>&nbsp;" . gettext('RF') . "&nbsp;</B></TD>		
+			<TD onmouseout=\"UnTip();\" onmouseover=\"Tip('" . gettext('Apply to base map') . "');\"><B>&nbsp;" . gettext('BM') . "&nbsp;</B></TD>
+			<TD onmouseout=\"UnTip();\" onmouseover=\"Tip('" . gettext('Apply to regions') . "');\"><B>&nbsp;" . gettext('R') . "&nbsp;</B></TD>
+			<TD onmouseout=\"UnTip();\" onmouseover=\"Tip('" . gettext('Apply to facilities') . "');\"><B>&nbsp;" . gettext('F') . "&nbsp;</B></TD>
+			<TD onmouseout=\"UnTip();\" onmouseover=\"Tip('" . gettext('Apply to units - Exclusion zone') . "');\"><B>&nbsp;" . gettext('EX') . "&nbsp;</B></TD>
+			<TD onmouseout=\"UnTip();\" onmouseover=\"Tip('" . gettext('Apply to units - Ringfence') . "');\"><B>&nbsp;" . gettext('RF') . "&nbsp;</B></TD>		
 			<TD><B>&nbsp;&nbsp;" . gettext('As of') . "</B></TD></TR>\n";
 
 		$i = 0;
@@ -1351,7 +1351,7 @@ else {
 		$tr_display = "none";
 	}
 ?>
-		<TR VALIGN="baseline" CLASS="odd" ID = 'fill_cb_tr'  ><TD CLASS="td_label" ALIGN="left"><?php print gettext('Filled');?>:&nbsp;&nbsp;&nbsp;</TD>
+		<TR VALIGN="baseline" CLASS="odd" ID = 'fill_cb_tr'><TD CLASS="td_label" ALIGN="left"><?php print gettext('Filled');?>:&nbsp;&nbsp;&nbsp;</TD>
 				<TD ALIGN="left"><SPAN CLASS="td_label" STYLE = "margin-left: 20px;" >
 				<?php print gettext('No');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_n' value = 'n' 	onClick = 'do_un_checked(this.form);' <?php echo $cb_n_checked . " " . $dis;?>  />&nbsp;&nbsp;&nbsp;&nbsp;
 				<?php print gettext('Yes');?>&nbsp;&raquo;&nbsp;<input type = radio name = 'frm_filled_y' value = 'y'	onClick = 'do_checked(this.form);'  <?php echo $cb_y_checked . " " . $dis;?> />				

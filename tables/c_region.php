@@ -11,7 +11,7 @@
 		<TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext("Table 'Region' - Add New Entry");?></FONT></TD></TR>
 		<TR><TD>&nbsp;</TD></TR>
 	<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Region or Group name');?>:</TD>
-		<TD><INPUT ID="ID1" CLASS="dirty" MAXLENGTH="64" SIZE="48" type="text" NAME="frm_group_name" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' >text</SPAN></TD></TR>
+		<TD><INPUT ID="ID1" CLASS="dirty" MAXLENGTH="64" SIZE="48" type="text" NAME="frm_group_name" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
 	<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Group Category');?>:</TD>
 				<TD CLASS="td_data"><SELECT NAME="frm_category" onChange = "this.value=JSfnTrim(this.value);">	<!--  11/17/10 -->
 				<OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>

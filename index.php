@@ -7,7 +7,7 @@ if(!(file_exists("./incs/mysql.inc.php"))) {
 
 require_once('./incs/functions.inc.php');	
 
-$version = "2.41C Beta - 11/05/13";	
+$version = "2.41D Beta - 11/21/13";	
 
 /*
 10/1/08 added error reporting
@@ -1479,7 +1479,7 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]assigns` ADD `miles` INT( 8 ) NULL DEFAULT NULL AFTER `end_miles`;";
 			$result = mysql_query($query);		//	10/23/12				
 
-			do_caption("messaging help", '"' . gettext('Messaging Help Goes Here') . '"');	
+			do_caption("messaging help", gettext('Messaging Help Goes Here'));	
 			do_msg_setting ('email_del','1');			// 5/25/13  				
 
 //																	6/7/2013

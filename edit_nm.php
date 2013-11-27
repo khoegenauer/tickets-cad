@@ -630,14 +630,14 @@ require_once('./incs/links.inc.php');
 			print "<TR CLASS='even'><TD COLSPAN='2'>&nbsp;</TD></TR>";
 			print "<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Location - type in location in fields, click location on map or use *Located at Facility* menu below.') . " \">" . get_text("Location") . "</A>: </TD><TD><INPUT SIZE='48' TYPE='text'NAME='frm_street' VALUE=\"{$row['street']}\" MAXLENGTH='48'></TD></TR>\n";
 			print "<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('City - defaults to default city set in configuration. Type in City if required.') . " \">" . get_text("City") . "</A>:&nbsp;&nbsp;&nbsp;&nbsp;";
-			print 		"</TD><TD><INPUT SIZE='32' TYPE='text' 	NAME='frm_city' VALUE=\"{$row['city']}\" MAXLENGTH='32' onChange = 'this.value=capWords(this.value)'>\n";
+			print 		"</TD><TD><INPUT SIZE='32' TYPE='text' 	NAME='frm_city' VALUE=\"{$row['city']}\" MAXLENGTH='32' onChange = 'this.value=capWords(this.value);' />\n";
 			$st_size = (get_variable("locale") ==0)?  2: 4;												// 11/23/10
 
 			print 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"#\" TITLE=\"" . gettext('State - US State or non-US Country code e.g. UK for United Kingdom') . "\">" . gettext('St') . "</A>:&nbsp;&nbsp;<INPUT SIZE='{$st_size}' TYPE='text' NAME='frm_state' VALUE='" . $row['state'] . "' MAXLENGTH='{$st_size}'></TD></TR>\n";
 
 			print "<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Caller reporting the incident') . "\">" . get_text("Reported by") . "</A>:</TD><TD><INPUT SIZE='48' TYPE='text' 	NAME='frm_contact' VALUE=\"{$row['contact']}\" MAXLENGTH='48'></TD></TR>\n";
 			print "<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Phone number') . "\">" . get_text("Phone") . "</A>:&nbsp;&nbsp;&nbsp;&nbsp;";
-			print 		"</TD><TD><INPUT SIZE='48' TYPE='text' NAME='frm_phone' VALUE='" . $row['phone'] . "' MAXLENGTH='16'></TD></TR>\n";
+			print 		"</TD><TD><INPUT SIZE='48' TYPE='text' NAME='frm_phone' VALUE='" . $row['phone'] . "' MAXLENGTH='16' /></TD></TR>\n";
 
 			if (!(empty($row['phone']))) {					// 3/13/10
 				$query  = "SELECT `miscellaneous` FROM `$GLOBALS[mysql_prefix]constituents` WHERE `phone`= '{$row['phone']}' LIMIT 1";
@@ -695,7 +695,7 @@ require_once('./incs/links.inc.php');
 					}
 				unset ($result_fc);
 				print "<TR CLASS='even'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Use the first dropdown menu to select the Facility where the incident is located at, use the second dropdown menu to select the facility where persons from the incident will be received') . "\">" . gettext('Facility?') . "</A>:</TD>";
-				print "<TD><SELECT NAME='frm_facility_id' onChange='document.edit.frm_fac_chng.value = 1; do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim())'>$pulldown</SELECT>&nbsp;&nbsp;&nbsp;&nbsp;\n";
+				print "<TD><SELECT NAME='frm_facility_id' onChange='document.edit.frm_fac_chng.value = 1; do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim());'>$pulldown</SELECT>&nbsp;&nbsp;&nbsp;&nbsp;\n";
 				}
 //	receiving facility - 3/25/10
 
@@ -767,7 +767,7 @@ require_once('./incs/links.inc.php');
 <?php
 
 			print "<TR CLASS='even'><TD CLASS='td_label'><A HREF='#' TITLE='" . gettext('911 contact information') . "'>" . get_text("911 Contacted") . "</A>:&nbsp;</TD>
-				<TD><INPUT SIZE='56' TYPE='text' NAME='frm_nine_one_one' VALUE='{$row['nine_one_one']}' MAXLENGTH='96' ></TD></TR>";
+				<TD><INPUT SIZE='56' TYPE='text' NAME='frm_nine_one_one' VALUE='{$row['nine_one_one']}' MAXLENGTH='96' /></TD></TR>";
 
 			if (good_date($row['booked_date'])) {	//10/1/09
 				print "\n<TR CLASS='odd'><TD CLASS='td_label'><A HREF=\"#\" TITLE=\"" . gettext('Scheduled Date. Must be set if Incident Status is *Scheduled*. Sets date and time for a future booked incident, mainly used for non immediate patient transport. Click on Radio button to show date fields.') . "\">" . gettext('Scheduled Date') . "</A>:</TD><TD>";

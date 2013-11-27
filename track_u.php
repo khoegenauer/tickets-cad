@@ -435,14 +435,14 @@ $name = ($row_callsign['name']);				// 7/29/09
 			</TABLE><!-- end outer -->
 			
 			<FORM NAME='view_form' METHOD='get' ACTION='units.php'>
-			<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
-			<INPUT TYPE='hidden' NAME='view' VALUE='true'>
-			<INPUT TYPE='hidden' NAME='id' VALUE=''>
+			<INPUT TYPE='hidden' NAME='func' VALUE='responder' />
+			<INPUT TYPE='hidden' NAME='view' VALUE='true' />
+			<INPUT TYPE='hidden' NAME='id' VALUE='' />
 			</FORM>
 			
 			<FORM NAME='to_add_form' METHOD='get' ACTION='units.php'>
-			<INPUT TYPE='hidden' NAME='func' VALUE='responder'>
-			<INPUT TYPE='hidden' NAME='add' VALUE='true'>
+			<INPUT TYPE='hidden' NAME='func' VALUE='responder' />
+			<INPUT TYPE='hidden' NAME='add' VALUE='true' />
 			</FORM>
 			
 			<FORM NAME='can_Form' METHOD="post" ACTION = "units.php?func=responder"></FORM>

@@ -1075,7 +1075,7 @@ if(file_exists("./incs/modules.inc.php")) {
  * @returns {unresolved}
  */
 	function do_emd_card(filename) {
-		light_butt('card') ;
+		light_butt('card');
 		try {
 			newwindow_em=window.open(filename, "emdCard",  "titlebar, resizable=1, scrollbars, height=640,width=800,status=0,toolbar=0,menubar=0,location=0, left=50,top=150,screenX=100,screenY=300");
 			}
@@ -1476,7 +1476,7 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 			<SPAN ID = 'call'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick = "starting=false;do_callBoard();" STYLE = 'display:<?php print $call_disp_attr; ?>'><?php print get_text("Board"); ?></SPAN> <!-- 5/12/10 -->
 <!-- ================== -->
-			<SPAN ID = 'term'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
+			<SPAN ID = 'term' CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick = "go_there('mobile.php', this.id);"><?php print get_text("Mobile"); ?></SPAN>	<!-- 7/27/10 -->
 <!-- ================== -->
 			<SPAN ID = 'files'  CLASS = 'plain' style='display: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
@@ -1484,7 +1484,6 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 <!-- ================== -->
 			<SPAN ID = 'reqs'  CLASS = 'plain' style='display: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
 				onClick = "go_there('./portal/requests.php', this.id);"></SPAN>	<!-- 10/23/12 -->
-
 <?php
 		if (intval(get_variable('ics_top')==1)) { 		// 5/21/2013
 ?>
@@ -1544,7 +1543,7 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 	</FORM>
 	<P>
 		<DIV ID = "log_div"></DIV>
-<!-- <button onclick = 'alert(getElementById("user_id"));'>Test</button> -->
+<!-- <button onclick = 'alert(getElementById("user_id"));'><?php print gettext('Test');?></button> -->
 <?php
 	$the_wav_file = get_variable('sound_wav');		// browser-specific cabilities as of 6/12/10
 	$the_mp3_file = get_variable('sound_mp3');
@@ -1562,12 +1561,12 @@ if((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2) 
 		}	// end switch
 ?>
 <!--  example frame manipulation
-<button onClick = "alert(parent.document.getElementById('the_frames').getAttribute('rows'));">Get</button>
-<button onClick = "parent.document.getElementById('the_frames').setAttribute('rows', '600, 100, *');">Set</button>
+<button onClick = "alert(parent.document.getElementById('the_frames').getAttribute('rows'));"><?php print gettext('Get');?></button>
+<button onClick = "parent.document.getElementById('the_frames').setAttribute('rows', '600, 100, *');"><?php print gettext('Set');?></button>
 -->
 <DIV ID='test' style="position: fixed; top: 20px; left: 20px; height: 20px; width: 100px;" onclick = "location.href = '#bottom';">
 	<h3></h3></DIV>
-<!-- <button onclick = "show_has_message('asasasasas ERERERERER ')">Test</button> -->
+<!-- <button onclick = "show_has_message('asasasasas ERERERERER ');"><?php print gettext('Test');?></button> -->
 
 </BODY>
 </HTML>

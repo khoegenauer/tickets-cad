@@ -679,7 +679,7 @@ require_once('./incs/links.inc.php');
 	<DIV ID='bottom' STYLE='display:none'>
 	<CENTER>
 	<H3><?php print gettext('Dispatching ... please wait.');?> ...</H3><BR /><BR /><BR />
-<!-- 	<IMG SRC="./markers/spinner.gif" BORDER=0> -->
+<!-- 	<IMG SRC="./markers/spinner.gif" BORDER=0 /> -->
 	</DIV>
 		
 
@@ -963,7 +963,7 @@ function do_list($unit_id ="") {
 			gmarkers[id] = null;										// marker to array for side_bar click function
 	
 			side_bar_html += "<TR CLASS='" + colors[(id+1)%2] +"' VALIGN='bottom' onClick = myclick(" + id + "," + unit_id +");><TD>";
-			side_bar_html += "<IMG BORDER=0 SRC='rtarrow.gif' ID = \"R" + id + "\"  STYLE = 'visibility:hidden;'></TD>";
+			side_bar_html += "<IMG BORDER=0 SRC='rtarrow.gif' ID = \"R" + id + "\"  STYLE = 'visibility:hidden;' /></TD>";
 			var letter = ""+ id;	
 			var the_class = (lats[id])?  "emph" : "td_label";
 
@@ -1190,7 +1190,7 @@ function do_list($unit_id ="") {
 		var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_responders'>";
 		side_bar_html += "<TR class='even'>	<TD  COLSPAN=99 ALIGN='center'><B><?php print gettext('Routes to Facility');?>: <I><?php print shorten($row_fac['fac_name'], 20); ?></I></B></TD></TR>\n";
 		side_bar_html += "<TR class='odd'>	<TD COLSPAN=99 ALIGN='center'><?php print gettext('Click line, icon or map for route');?></TD></TR>\n";
-		side_bar_html += "<TR class='even'>	<TD COLSPAN=3></TD><TD ALIGN='center'><?php print gettext('Unit');?></TD><TD ALIGN='center'>SLD</TD><TD ALIGN='center'><?php print gettext('Facility');?></TD><TD ALIGN='center'><?php print gettext('Status');?></TD><TD ALIGN='center'><?php print gettext('As of');?></TD></TR>\n";
+		side_bar_html += "<TR class='even'>	<TD COLSPAN=3></TD><TD ALIGN='center'><?php print gettext('Unit');?></TD><TD ALIGN='center'><?php print gettext('SLD');?></TD><TD ALIGN='center'><?php print gettext('Facility');?></TD><TD ALIGN='center'><?php print gettext('Status');?></TD><TD ALIGN='center'><?php print gettext('As of');?></TD></TR>\n";
 
 		var gmarkers = [];
 		var infoTabs = [];

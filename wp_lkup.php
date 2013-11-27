@@ -11,6 +11,7 @@
 9/2/10 corrected test for internet available
 9/30/10 fix per JB email
 6/9/2013 revised for general code cleanup, WP json data
+11/15/2013 corrections for short array; no geodata  
 */
 
 require_once('incs/functions.inc.php');		//7/28/10
@@ -111,10 +112,13 @@ else {													// no priors or constituents - do WP
 					$jsonresp["listings"][0]["address"] ["state"] : "" ;
 		$vals[6] = array_key_exists (  "zip", $jsonresp["listings"][0]["address"] ) ?
 					$jsonresp["listings"][0]["address"] ["zip"] : "" ;
-		$vals[7] = array_key_exists (  "latitude", $jsonresp["listings"][0]["geodata"] ) ?
-					$jsonresp["listings"][0]["geodata"] ["latitude"] : "" ;
-		$vals[8] = array_key_exists ( "longitude", $jsonresp["listings"][0]["geodata"] ) ?
-					$jsonresp["listings"][0]["geodata"] ["longitude"] : "" ;			
+		if (array_key_exists ( "geodata", $jsonresp["listings"][0])) {					// 11/15/2013
+			$vals[7] = array_key_exists (  "latitude", $jsonresp["listings"][0]["geodata"] ) ?
+						$jsonresp["listings"][0]["geodata"] ["latitude"] : "" ;
+			$vals[8] = array_key_exists ( "longitude", $jsonresp["listings"][0]["geodata"] ) ?
+						$jsonresp["listings"][0]["geodata"] ["longitude"] : "" ;
+			}
+		else {$vals[7] = $vals[8] = ""; }
 
 		$val_str = implode(";", $vals);				
 		}				// end no errors

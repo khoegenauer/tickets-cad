@@ -524,7 +524,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 			<INPUT SIZE=2 NAME="frm_day_asof" VALUE="" MAXLENGTH=2 />
 			<INPUT SIZE=2 NAME="frm_hour_asof" VALUE="" MAXLENGTH=2 />:<INPUT SIZE=2 NAME="frm_minute_asof" VALUE="" MAXLENGTH=2>
 			<INPUT TYPE="hidden" NAME = "frm_ticket_id" VALUE = "<?php print $_GET['ticket_id'];?>" />
-			&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.add_frm);'>
+			&nbsp;&nbsp;&nbsp;&nbsp;<img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'do_unlock(document.add_frm);' />
 			<br /> <br /> <br />
 			<TR><TD COLSPAN=3 ALIGN='center'>
 

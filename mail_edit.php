@@ -188,10 +188,10 @@ $the_other = ((isset($_GET['other'])) && ($_GET['other'] != "")) ? $_GET['other'
 
 ?>
 		<TR CLASS='even'><TD><?php get_provider_name(get_msg_variable('smsg_provider'));?> <?php print gettext('Addresses');?>: </TD>
-			<TD><INPUT TYPE='text' NAME='frm_smsgaddrs' size='60' VALUE='<?php print $smsgaddrs;?>'></TD>
+			<TD><INPUT TYPE='text' NAME='frm_smsgaddrs' size='60' VALUE='<?php print $smsgaddrs;?>' /></TD>
 		</TR>	
 		<TR CLASS='even'><TD><?php print gettext('Use');?> <?php get_provider_name(get_msg_variable('smsg_provider'));?>?: </TD> <!-- 10/23/12 -->
-			<TD><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE="0"></TD> <!-- 10/23/12 -->
+			<TD><INPUT TYPE='checkbox' NAME='frm_use_smsg' VALUE="0" /></TD> <!-- 10/23/12 -->
 		</TR>			
 		<INPUT TYPE="hidden" NAME = 'frm_theothers' VALUE="<?php print $the_other;?>"/> <!-- 10/23/12 -->
 <?php

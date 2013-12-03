@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package do_unit_mail.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-06-13
+ * @version 2012-10-23
+ */
 /*
 6/13/09	initial release
 6/28/09	handle no assigns and empty scope

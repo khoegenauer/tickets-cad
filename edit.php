@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package edit.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2007-11-03
+ * @version 2013-11-18
+ */
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
 error_reporting (E_ALL  ^ E_DEPRECATED);
 @session_start();

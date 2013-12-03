@@ -113,10 +113,5 @@ $ret[0] = $count;
 $ret[1] = $print;
 
 print json_encode($ret);
+exit();
 ?>
-			
-
-
-
-
-

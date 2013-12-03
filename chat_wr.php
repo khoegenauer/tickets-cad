@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @package chat_wr.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2010-07-28
+ * @version 2010-07-28
+ */
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10
 	extract ($_GET);	

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package assign_res.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-04-26
+ * @version 2012-06-20
+ */
 /*
 4/26/09 initial release
 5/25/09 reset defined here to avoid need for current functions.inc.php

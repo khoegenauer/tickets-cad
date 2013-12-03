@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package do_direcs_mail.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-09-17
+ * @version 2011-03-15
+ */
 /*
 9/17/09	initial release - Email directions to Facilty to responding unit.
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package do_send.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-03-08
+ * @version 2010-07-28
+ */
 /*
 3/8/09 initial release - simply a way to connect an XHR call to the server-side function
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.

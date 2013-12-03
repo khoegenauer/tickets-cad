@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package chat_wl.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2013-09-10
+ * @version 2013-09-10
+ */
 /*
 9/10/13 New file - Ajax use for showing who is logged in to chat.
 */

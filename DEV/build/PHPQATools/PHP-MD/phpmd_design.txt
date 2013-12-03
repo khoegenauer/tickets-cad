@@ -1,24 +1,4 @@
 
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/src/base.php:428	The method checkDependency() contains an exit expression.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/src/base.php:441	The method checkDependency() contains an exit expression.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/src/exceptions/exception.php:17	The class ezcBaseException has 15 children. Consider to rebalance this class hierarchy to keep number of children under 15.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/tests/base_test.php:13	The class ezcBaseTest has a coupling between objects value of 16. Consider to reduce the number of dependencies under 13.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/input.php:111	The class ezcConsoleInput has a coupling between objects value of 24. Consider to reduce the number of dependencies under 13.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/input_test.php:18	The class ezcConsoleInputTest has a coupling between objects value of 17. Consider to reduce the number of dependencies under 13.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/suite.php:146	The class ezcConsoleToolsSuite has a coupling between objects value of 30. Consider to reduce the number of dependencies under 13.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/tests/suite.php:49	The class ezcReflectionSuite has a coupling between objects value of 20. Consider to reduce the number of dependencies under 13.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/pear/PEAR.php:904	The method PEAR_Error() contains an exit expression.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/pear/PEAR.php:913	The method PEAR_Error() contains an eval expression.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/PHPCallGraphCli.php:37	The class PHPCallGraphCli has a coupling between objects value of 13. Consider to reduce the number of dependencies under 13.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/PHPCallGraphCli.php:166	The method run() contains an exit expression.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/PHPCallGraphCli.php:168	The method run() contains an exit expression.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:237	The method classForObj() contains an exit expression.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:245	The method objForClass() contains an exit expression.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:258	The method objForClass() contains an exit expression.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:380	The method getCodeForCurrentClassAndMethod() contains an exit expression.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:430	The method exitUnlessOutputDirExists() contains an exit expression.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:437	The method exitUnlessSequenceLibExists() contains an exit expression.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:485	The method _registerObject() contains an exit expression.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/baaChart.php:502	The method drawGraph() contains an exit expression.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/error.php:27	The function myErrorHandler() contains an exit expression.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/incs/functions.inc.php:1867	The function do_error() contains an exit expression.

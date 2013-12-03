@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package assigns_t.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-01-15
+ * @version 2013-09-10
+ */
 /*
 1/15/09 initial release
 1/20/09 added $frm_tick, $frm_unit

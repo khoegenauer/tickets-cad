@@ -1,4 +1,11 @@
 <?php
+/**
+ * 
+ * @package add_note.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-08-10
+ * @version 2013-01-07
+ */
 /*
 8/10/09	initial release
 1/27/10 corrections applied to update field

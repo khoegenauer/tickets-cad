@@ -78,10 +78,22 @@ before_script:
   - if [[ "$DB" == "mysql" ]]; then mysql -e "create database IF NOT EXISTS tickets;" -uroot; fi
 #---------------------------------------------------
   - pear channel-discover pear.phpqatools.org
-  - pear install -f phpqatools/phpqatools
+  - pear install -f phpqatools/phpqatools -alldeps
   - pear channel-discover pear.phpdoc.org
   - pear install phpdoc/phpDocumentor
   - phpenv rehash
+#pear.phpunit.de/PHPUnit
+#pear.phpunit.de/PHPUnit_Skeleton_Generator
+#pear.pdepend.org/PHP_Depend
+#pear.phpmd.org/PHP_PMD
+#pear.phpunit.de/phpcpd
+#pear.phpunit.de/phploc
+#pear.phpunit.de/DbUnit
+#
+#sudo apt-get install curl
+#sudo apt-get install php5-json
+#curl -s http://getcomposer.org/installer | php
+#
 #---------------------------------------------------
 ##DEV TOOLS
 #PHP_UML (Works local)(<1min)(Requires PHP Extension "XSL")

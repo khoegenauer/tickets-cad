@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package do_color_checker.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2011-03-15
+ * @version 2011-03-15
+ */
 /*
 3/15/11	initial release, color check file for checking colors configured for css day and night.
 */

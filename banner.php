@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package banner.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2011-05-25
+ * @version 2013-05-22
+ */
 /*
 5/25/11 initial release
 7/2/11 corrections to include filled data as hiddens

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package delete_module.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2011-05-17
+ * @version 2011-05-17
+ */
 /*
 5/17/11 Module Deletion Script
 */

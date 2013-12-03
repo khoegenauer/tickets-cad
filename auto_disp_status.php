@@ -1,4 +1,12 @@
 <?php 
+/**
+ * 
+ * 
+ * @package auto_disp_status.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2013-09-10
+ * @version 2013-09-10
+ */
 /* Change log - auto_status.php
 9/10/13 - Config file to configure automatic status updates when dispatch status changes
 */

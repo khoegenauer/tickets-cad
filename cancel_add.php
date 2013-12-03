@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package cancel_add.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2011-06-09
+ * @version 2011-06-09
+ */
 /*
 6/9/11 initial release
 */

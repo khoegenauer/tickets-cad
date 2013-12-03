@@ -1,150 +1,4 @@
 
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/src/base.php:286	Avoid unused local variables such as '$file'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/src/struct.php:26	Avoid unused parameters such as '$value'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/tests/base_test.php:18	Avoid unused private fields such as '$errorMessage'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/tests/file_find_recursive_test.php:111	Avoid unused local variables such as '$expected'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Base/tests/struct_test.php:31	Avoid unused local variables such as '$value'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/input.php:432	Avoid unused local variables such as '$id'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/input.php:654	Avoid unused local variables such as '$param'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/input.php:1133	Avoid unused local variables such as '$allowsArgs'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/input.php:1313	Avoid unused local variables such as '$id'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/input/help_generators/standard.php:91	Avoid unused local variables such as '$id'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/input/help_generators/standard.php:338	Avoid unused local variables such as '$allowsArgs'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/input/option.php:272	Avoid unused local variables such as '$id'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/input/option.php:383	Avoid unused local variables such as '$id'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/input/validators/standard.php:44	Avoid unused local variables such as '$id'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/statusbar.php:233	Avoid unused local variables such as '$count'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/table.php:545	Avoid unused local variables such as '$brkRow'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/table.php:575	Avoid unused local variables such as '$col'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/table.php:696	Avoid unused local variables such as '$width'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/src/table.php:715	Avoid unused local variables such as '$lineNo'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/input_test.php:136	Avoid unused private fields such as '$testArgsSuccess'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/input_test.php:589	Avoid unused local variables such as '$res'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/input_test.php:749	Avoid unused local variables such as '$res'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/input_test.php:763	Avoid unused local variables such as '$res'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/input_test.php:1465	Avoid unused local variables such as '$res'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/input_test.php:1554	Avoid unused local variables such as '$res'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/input_test.php:1572	Avoid unused local variables such as '$res'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/input_test.php:1590	Avoid unused local variables such as '$res'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/option_rule_test.php:43	Avoid unused local variables such as '$foo'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/option_test.php:67	Avoid unused local variables such as '$option'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/option_test.php:80	Avoid unused local variables such as '$option'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/option_test.php:205	Avoid unused local variables such as '$rule'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/option_test.php:354	Avoid unused local variables such as '$rule'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/option_test.php:410	Avoid unused local variables such as '$foo'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/option_test.php:425	Avoid unused local variables such as '$foo'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/option_test.php:440	Avoid unused local variables such as '$foo'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/output_format_test.php:61	Avoid unused local variables such as '$foo'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/progressbar_test.php:276	Avoid unused local variables such as '$opArr'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/statusbar_test.php:327	Avoid unused parameters such as '$errno'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/statusbar_test.php:327	Avoid unused parameters such as '$errline'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/statusbar_test.php:327	Avoid unused parameters such as '$errcontext'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/table_cell_test.php:55	Avoid unused local variables such as '$cell'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/table_row_test.php:50	Avoid unused local variables such as '$row'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/table_test.php:367	Avoid unused local variables such as '$table'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/table_test.php:385	Avoid unused local variables such as '$table'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/table_test.php:403	Avoid unused local variables such as '$table'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/ConsoleTools/tests/table_test.php:654	Avoid unused local variables such as '$table'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/src/types/array_type.php:112	Avoid unused local variables such as '$seamsToBeMap'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/tests/test_classes/SomeClass.php:12	Avoid unused private fields such as '$fields'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/tests/test_classes/functions.php:12	Avoid unused parameters such as '$test'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/tests/test_classes/functions.php:12	Avoid unused parameters such as '$test2'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/tests/test_classes/functions.php:12	Avoid unused parameters such as '$test3'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/tests/test_classes/functions.php:16	Avoid unused parameters such as '$t'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/tests/test_classes/functions.php:26	Avoid unused local variables such as '$staticVar'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/tests/test_classes/methods.php:39	Avoid unused parameters such as '$undocumented'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/tests/test_classes/methods.php:40	Avoid unused local variables such as '$staticVar'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/ezcomponents/Reflection/tests/test_classes/webservice.php:16	Avoid unused private fields such as '$prop1'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/instantsvc/components/CodeAnalyzer/src/class_loader.php:63	Avoid unused local variables such as '$output'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/instantsvc/components/CodeAnalyzer/src/code_analyzer.php:711	Avoid unused local variables such as '$mName'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/pear/PEAR.php:463	Avoid unused local variables such as '$key'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/pear/PEAR.php:779	Avoid unused local variables such as '$k'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/pear/System.php:75	Avoid unused parameters such as '$long_options'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:63	Avoid unused parameters such as '$argument'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:63	Avoid unused parameters such as '$return'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:76	Avoid unused parameters such as '$argument'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:220	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:234	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:248	Avoid unused parameters such as '$filter'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:262	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:276	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:290	Avoid unused parameters such as '$filter'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:304	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:331	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:423	Avoid unused parameters such as '$object'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:437	Avoid unused parameters such as '$args'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:451	Avoid unused parameters such as '$args'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:478	Avoid unused parameters such as '$class'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:506	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:506	Avoid unused parameters such as '$default'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:521	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:521	Avoid unused parameters such as '$value'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/class.php:561	Avoid unused parameters such as '$interface'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/extension.php:48	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/extension.php:48	Avoid unused parameters such as '$return'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/extension.php:61	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/function.php:130	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/function.php:130	Avoid unused parameters such as '$return'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/function.php:157	Avoid unused parameters such as '$args'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/function.php:171	Avoid unused parameters such as '$args'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/method.php:69	Avoid unused parameters such as '$class'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/method.php:69	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/method.php:69	Avoid unused parameters such as '$return'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/method.php:82	Avoid unused parameters such as '$class_or_method'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/method.php:82	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/method.php:227	Avoid unused parameters such as '$object'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/method.php:227	Avoid unused parameters such as '$args'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/method.php:242	Avoid unused parameters such as '$object'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/method.php:242	Avoid unused parameters such as '$args'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:48	Avoid unused parameters such as '$argument'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:48	Avoid unused parameters such as '$return'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:61	Avoid unused parameters such as '$argument'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:221	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:235	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:249	Avoid unused parameters such as '$filter'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:263	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:277	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:291	Avoid unused parameters such as '$filter'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:305	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:332	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:424	Avoid unused parameters such as '$object'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:438	Avoid unused parameters such as '$args'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:452	Avoid unused parameters such as '$args'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:479	Avoid unused parameters such as '$class'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:507	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:507	Avoid unused parameters such as '$default'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:522	Avoid unused parameters such as '$name'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:522	Avoid unused parameters such as '$value'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/object.php:562	Avoid unused parameters such as '$interface'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/parameter.php:49	Avoid unused parameters such as '$function'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/parameter.php:49	Avoid unused parameters such as '$parameter'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/parameter.php:49	Avoid unused parameters such as '$return'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/parameter.php:62	Avoid unused parameters such as '$function'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/parameter.php:62	Avoid unused parameters such as '$parameter'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/property.php:73	Avoid unused parameters such as '$argument'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/property.php:73	Avoid unused parameters such as '$return'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/property.php:86	Avoid unused parameters such as '$argument'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/property.php:126	Avoid unused parameters such as '$object'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/property.php:141	Avoid unused parameters such as '$object'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/static-reflection/property.php:141	Avoid unused parameters such as '$value'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/PHPCallGraph.php:312	Avoid unused local variables such as '$method'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/PHPCallGraph.php:664	Avoid unused local variables such as '$mainVlaue'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:104	Avoid unused local variables such as '$libDir'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/src/drivers/UmlGraphSequenceDiagramDriver.php:445	Avoid unused local variables such as '$dummy'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/test/testfiles/TestClass.php:21	Avoid unused parameters such as '$nix'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/test/testfiles/TestClass.php:21	Avoid unused parameters such as '$ar'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/test/testfiles/TestClass.php:21	Avoid unused parameters such as '$ref'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/test/testfiles/TestClass.php:21	Avoid unused parameters such as '$std'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/test/testfiles/TestClass.php:21	Avoid unused parameters such as '$na'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/test/testfiles/TestClass.php:21	Avoid unused parameters such as '$opt'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/test/testfiles/TestClass.php:21	Avoid unused parameters such as '$def'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/test/testfiles/TestClass.php:32	Avoid unused parameters such as '$nix'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/test/testfiles/TestClass.php:32	Avoid unused parameters such as '$ar'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/test/testfiles/TestClass.php:32	Avoid unused parameters such as '$ref'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/test/testfiles/TestClass.php:32	Avoid unused parameters such as '$std'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/test/testfiles/TestClass.php:32	Avoid unused parameters such as '$na'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/test/testfiles/TestClass.php:32	Avoid unused parameters such as '$opt'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/test/testfiles/TestClass.php:32	Avoid unused parameters such as '$def'.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/add.php:180	Avoid unused local variables such as '$result_insert'.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/add.php:206	Avoid unused local variables such as '$addrs'.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/add.php:206	Avoid unused local variables such as '$NOTIFY_TICKET'.
@@ -587,27 +441,6 @@
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/latitude.php:92	Avoid unused local variables such as '$key'.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/latitude.php:94	Avoid unused local variables such as '$key1'.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/latitude.php:96	Avoid unused local variables such as '$key2'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/ByteStream/FileByteStream.php:168	Avoid unused private methods such as '_resetWriteHandle'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Events/SendEvent.php:54	Avoid unused private fields such as '$_transport'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Events/SendEvent.php:60	Avoid unused private fields such as '$failedRecipients'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Events/SendEvent.php:66	Avoid unused private fields such as '$result'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/KeyCache/DiskKeyCache.php:260	Avoid unused local variables such as '$null'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/KeyCache/DiskKeyCache.php:320	Avoid unused local variables such as '$null'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Mime/Headers/AbstractHeader.php:323	Avoid unused parameters such as '$charset'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Mime/Headers/AbstractHeader.php:324	Avoid unused parameters such as '$encoder'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Mime/Headers/IdentificationHeader.php:116	Avoid unused local variables such as '$k'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Mime/SimpleHeaderSet.php:353	Avoid unused private methods such as '_sortHeaders'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Mime/SimpleMimeEntity.php:747	Avoid unused private methods such as '_setNestingLevel'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Mime/SimpleMimeEntity.php:923	Avoid unused private methods such as '_childSortAlgorithm'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Plugins/DecoratorPlugin.php:41	Avoid unused private fields such as '$_orginalBody'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Plugins/PopBeforeSmtpPlugin.php:161	Avoid unused local variables such as '$errno'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Transport/AbstractSmtpTransport.php:404	Avoid unused local variables such as '$separator'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Transport/AbstractSmtpTransport.php:404	Avoid unused local variables such as '$text'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Transport/EsmtpTransport.php:360	Avoid unused private methods such as '_sortHandlers'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/classes/Swift/Transport/LoadBalancedTransport.php:69	Avoid unused parameters such as '$transports'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/xpm/PHP5/FUNC5.php:279	Avoid unused local variables such as '$exphost2'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/xpm/PHP5/MAIL5.php:967	Avoid unused local variables such as '$body'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/lib/xpm/PHP5/SMTP5.php:211	Avoid unused local variables such as '$code'.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/log.php:150	Avoid unused local variables such as '$types'.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/incs/sp_functions.inc.php:467	Avoid unused local variables such as '$dispatched'.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/m/incs/sp_functions.inc.php:468	Avoid unused local variables such as '$responding'.
@@ -760,7 +593,6 @@
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/wp1.php:26	Avoid unused local variables such as '$errstr'.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/wp_lkup_cid.php:71	Avoid unused local variables such as '$apartment'.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/wp_lkup_cid.php:72	Avoid unused local variables such as '$misc'.
-/media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/instantsvc/components/CodeAnalyzer/tests/test_files/load_dir/folder2/error.php	-	Unexpected token: dfg, line: 3, col: 10, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/DEV/tools/phpcallgraph-0.8.0/lib/instantsvc/components/CodeAnalyzer/tests/test_files/load_dir/folder2/error.php.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/add_nm.php	-	Unexpected token: }, line: 2069, col: 3, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/add_nm.php.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/cancel_add.php	-	Unexpected token: }, line: 17, col: 127, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/cancel_add.php.
 /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/chat.php	-	Unexpected token: ?>, line: 508, col: 77, file: /media/kevin/OS/xampp/htdocs/tickets/tickets-cad/chat.php.

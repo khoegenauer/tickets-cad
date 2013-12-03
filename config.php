@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package config.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2008-05-28
+ * @version 2013-09-10
+ */
 /*
 5/28/08 - revised map center to allow icon drag			
 6/4/08 - added do_log($GLOBALS['LOG_INCIDENT_DELETE']				

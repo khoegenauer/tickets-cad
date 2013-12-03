@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package capts.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2010-08-21
+ * @version 2012-05-01
+ */
 ob_start();							// 8/28/10
 
 $cols = 6;	// no. of columns in the list presentation

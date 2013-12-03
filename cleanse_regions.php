@@ -1,4 +1,10 @@
 <?php 
+/**
+ * @package cleanse_regions.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2011-11-03
+ * @version 2013-09-10
+ */
 /* Change log - cleanse_regions.php
 11/03/11	New File - accessed from Config to cleanse the region allocations where there are issues caused by duplicate entries	
 9/10/13 Major re-write to revise cleanse routine

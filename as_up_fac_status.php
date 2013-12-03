@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package as_up_fac_status.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2011-03-15
+ * @version 2011-03-15
+ */
 /*
 3/15/11 Created from as_up_un_status.php to allow change of facility status through situation screen 
 */

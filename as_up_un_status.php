@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package as_up_un_status.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2010-04-08
+ * @version 2013-06-21
+ */
 /*
 4/8/10 update user_id field
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.

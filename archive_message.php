@@ -1,8 +1,13 @@
 <?php 
-/*
-archive_message.php - view and handle an archive message - loads message using ./ajax/arch_msg.php
-10/23/12 - new file
-*/
+/**
+ * view and handle an archive message - loads message using ./ajax/arch_msg.php
+ * 
+ * @package archive_message.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2012-10-23
+ * @version 2012-10-23
+ */
+
 @session_start();
 require_once('./incs/functions.inc.php');
 require_once('./incs/messaging.inc.php');

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package call_hist.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-12-16
+ * @version 2013-07-16
+ */
 error_reporting(E_ALL);
 /*
 12/16/09 initial release

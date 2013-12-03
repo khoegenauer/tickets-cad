@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package do_fac_mail.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-08-17
+ * @version 2011-03-15
+ */
 /*
 8/17/09	initial release - mail to facility
 7/16/10 added check for no addressees

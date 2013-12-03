@@ -1,5 +1,12 @@
 <?php
-//	areas server-side create script
+/**
+ * Areas server-side create script
+ * 
+ * @package areas_sc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10

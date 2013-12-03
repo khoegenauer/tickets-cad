@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package do_cid.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2010-11-05
+ * @version 2010-11-05
+ */
 /*
 11/5/10 initial release
 */

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package chat_invite.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-12-23
+ * @version 2010-07-28
+ */
 error_reporting(E_ALL);	
 /*
 12/23/09 initial release

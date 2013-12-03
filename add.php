@@ -1,4 +1,11 @@
 <?php
+/**
+ * 
+ * @package add.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2007-10-28
+ * @version 2013-11-29
+ */
 
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
 error_reporting (E_ALL  ^ E_DEPRECATED);
@@ -1372,7 +1379,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  * @returns {undefined}
  */
 	function pt_to_map (my_form, lat, lng) {						// 7/5/10
-		myMarker.setMap(null);			// destroy predecessor
+		if(myMarker) { myMarker.setMap(null);}			// destroy predecessor
 		my_form.frm_lat.value=lat;	
 		my_form.frm_lng.value=lng;		
 			
@@ -1391,7 +1398,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		myIcon.anchor= new google.maps.Point(iconImg.width/2, iconImg.height/2);		// 8/11/12 - center offset = half icon width and height
 		var dp_latlng = new google.maps.LatLng(lat, lng);
 
-		myMarker = new google.maps.Marker({
+		var myMarker = new google.maps.Marker({
 			position: dp_latlng,
 			icon: myIcon, 
 			draggable: true,
@@ -1425,7 +1432,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 	function find_warnings(tick_lat, tick_lng) {	//	9/10/13
 		randomnumber=Math.floor(Math.random()*99999999);
 		var theurl ="./ajax/loc_warn_list.php?version=" + randomnumber + "&lat=" + tick_lat + "&lng=" + tick_lng;
-		theRequest (theurl, loc_w, "");
+		theRequest(theurl, loc_w, "");
 		function loc_w(req) {
 			var the_warnings=JSON.decode(req.responseText);
 			var the_count = the_warnings[0];

@@ -1,4 +1,11 @@
 <?php
+/**
+ * 
+ * @package action_w.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2008-08-16
+ * @version 2011-03-15
+ */
 /*
 8/16/08	lots of changes; lock icon for date entry control, date validation, 'fetch_assoc' vs 'fetch_array', 'delete' process, 'LIMIT 1' added
 8/24/08 removed LIMIT from INSERT sql

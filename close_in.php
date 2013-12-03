@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package close_in.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-08-20
+ * @version 2013-10-24
+ */
 /*
 8/20/09	initial release
 2/15/10 corrections per jb email

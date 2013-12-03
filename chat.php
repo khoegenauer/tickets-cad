@@ -1,4 +1,10 @@
 <?php 
+/**
+ * @package chat.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-12-26
+ * @version 2013-10-29
+ */
 error_reporting(E_ALL);		// 10/1/08
 
 $cycle = 5000;			// user reviseable delay between polls, in milliseconds

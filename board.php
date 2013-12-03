@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package board.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 error_reporting(E_ALL);
 // ========== Beginning of user-reviseable values ==========================================================================
 //

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package chat_rd.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-12-26
+ * @version 2010-07-28
+ */
 error_reporting(E_ALL);
 /*
 12/26/09 added user id restriction, ordering logic, DELETE query

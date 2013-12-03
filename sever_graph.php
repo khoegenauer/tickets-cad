@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package server_graph.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 3/21/10 user-spec for pie diameter added
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.

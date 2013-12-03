@@ -1,4 +1,10 @@
-<?php 
+<?php
+/**
+ * @package reset_regions.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version
+ */
 error_reporting(E_ALL);
 
 @session_start();

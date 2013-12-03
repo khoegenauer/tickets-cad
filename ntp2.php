@@ -1,5 +1,11 @@
 <?php
 /**
+ * @package ntp2.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+/**
  * ntp_time
  * Insert description here
  *

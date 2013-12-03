@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package file_upload.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2013-??-??
+ * @version 2013-??-??
+ */
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}
 error_reporting (E_ALL  ^ E_DEPRECATED);
 @session_start();

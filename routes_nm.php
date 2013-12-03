@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package routes_nm.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version
+ */
 error_reporting(E_ALL);
 @session_start();
 require_once('./incs/functions.inc.php');

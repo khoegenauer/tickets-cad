@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package ics213.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2012-03-22
+ * @version 2012-03-22
+ */
 /*
 3/22/12 - initial release
 */

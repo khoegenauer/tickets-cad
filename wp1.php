@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package wp1.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version
+ */
 @session_start();
 require_once('incs/functions.inc.php');		//7/28/10
 

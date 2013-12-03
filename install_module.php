@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package install_module.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2010-09-10
+ * @version 2011-03-15
+ */
 /*
 9/10/10 Module Installation Script
 3/15/11 changed stylesheet.php to stylesheet.php

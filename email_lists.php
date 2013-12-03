@@ -1,4 +1,10 @@
 <?php 
+/**
+ * @package email_lists.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2013-08-28
+ * @version 2013-08-28
+ */
 /* Change log - email_lists.php
 8/28/13	New File - accessed from Config to set configure Mailing List members;	
 */

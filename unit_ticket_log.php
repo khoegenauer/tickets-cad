@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package unit_ticket_log.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 9/10/13 New File - for writing unit or ticket specific log entry
 */

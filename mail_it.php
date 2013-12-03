@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package mail_it.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2008-10-07
+ * @version 2010-07-28
+ */
 /*
 10/7/08	initial version of server-side mail
 10/15/08 revised to pass addresses as pipe-delim'd string

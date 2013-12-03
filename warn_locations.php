@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * @package warn_locations.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ * 
+ */
 error_reporting(E_ALL);
 $facs_side_bar_height = .5;		// max height of facilities sidebar as decimal fraction of screen height - default is 0.6 (60%)
 $zoom_tight = FALSE;				// replace with a decimal number to over-ride the standard default zoom setting

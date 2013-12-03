@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package tracker.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /* Release Notes - tracking script for windows and windows mobile devices using uTrack application
 5/10/11	Initial Release. Takes incoming data from tracked unit and puts into database
 */

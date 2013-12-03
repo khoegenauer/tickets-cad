@@ -1,4 +1,10 @@
 <?php 
+/**
+ * @package iframe1.php
+ * @author John Doe <john.doe@example.com>
+ * @since 
+ * @version 2011-03-15
+ */
 /*
 3/15/11 changed stylesheet.php to stylesheet.php
 */

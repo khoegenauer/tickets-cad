@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package locatea.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-07-25
+ * @version 2011-03-15
+ */
 /*
 7/25/09	initial release
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.

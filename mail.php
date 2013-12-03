@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package mail.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2008-09-17
+ * @version 2011-03-15
+ */
 /*
 9/17/08 notify user if no contact addresses
 10/6/08	extracted mail function to functions.inc.php as mail_it()

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package map_popup.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2010-09-06
+ * @version 2011-03-15
+ */
 /*
 9/6/10 initial release
 3/15/11 changed stylesheet.php to stylesheet.php

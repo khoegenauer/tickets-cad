@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package inc_types_graph.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version 2013-10-05
+ */
 /*
 10/5/2013 complete rewrite; simplification based on using SQL COUNT/GROUP-BY
 */

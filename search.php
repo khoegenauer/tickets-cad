@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @package search.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version 2013-01-06
+ */
 /*
 8/28/08 mysql_fetch_array to  mysql_fetch_assoc
 9/19/08 add injection protection to query parameters

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package reports.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /* 
 6/6/08 revised to accommodate deleted incident and unit records, these identified by a # at its index value
 8/7/08 added ACTION & PATIENT delete types

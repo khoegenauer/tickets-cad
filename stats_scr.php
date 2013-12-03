@@ -1,6 +1,12 @@
 <?php
+/**
+ * @package stats_scr.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2011-06-14
+ * @version 2011-06-14
+ */
 #
-# stats_scr.php - Management Statistics from Tickets - calls statistics.php vai AJAX.
+# stats_scr.php - Management Statistics from Tickets - calls statistics.php via AJAX.
 #
 /*
 6/14/11	First version

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package error.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version
+ */
 // error handler function
 /**
  * myErrorHandler

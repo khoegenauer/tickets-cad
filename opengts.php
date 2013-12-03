@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package opengts.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 7/4/11	initial release
 4/20/12 fix to accommodate empty json element, per KB email

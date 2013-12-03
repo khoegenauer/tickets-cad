@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package persist2.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2011-03-15
+ * @version 2011-03-15
+ */
 /*
 3/15/11 new release
 */

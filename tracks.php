@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package tracks.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 5/23/08 added do_kml() - generate KML JS - 
 5/25/08 revised removed deleting non-located units

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package orphan.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 //$dir = "./tickets_2013_apr_02_work";	//getcwd
 $dir = getcwd();	//getcwd
 $findex = array();

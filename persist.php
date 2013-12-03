@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package persist.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version 2010-07-28
+ */
 /*
 2/14/09 initial release of session persistence processor - sets flag n (POST['f_n']) to given value (POST['v_n'])
 1/23/10 revise to use PHP sessions

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package wp_lkup_cid.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version
+ */
 /*
 8/7/08	initial release - replaces a Google search
 1/18/09 POST replace GET

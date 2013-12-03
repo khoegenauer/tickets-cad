@@ -1,4 +1,10 @@
 <?php 
+/**
+ * @package wait.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 1/12/09 initial version
 3/15/11 changed stylesheet.php to stylesheet.php

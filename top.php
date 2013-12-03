@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @package top.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version
+ */
 /*
 1/3/10 complete re-write to support button light-up for multi-user operation
 1/11/10 added do_set_sess_exp() 

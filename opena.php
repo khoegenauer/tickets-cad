@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package opena.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2008-09-15
+ * @version 2013-06-10
+ */
 /*
 9/15/08	 initial release
 10/1/08	 added error reporting call

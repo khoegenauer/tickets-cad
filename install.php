@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package install.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 10/8/07 added domain detection for GMaps API key association
 1/8/08 added settings email_reply_to' and call_board;

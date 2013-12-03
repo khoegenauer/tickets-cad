@@ -1,6 +1,10 @@
 <?php
-/*
-*/
+/**
+ * @package native.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 error_reporting(E_ALL);
 require_once('./incs/functions.inc.php');
 ?>

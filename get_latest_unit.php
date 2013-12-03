@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package get_latest_unit.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2010-04-09
+ * @version 2010-07-28
+ */
 /*
 4/9/10 initial release 
 6/11/10 disabled unit_flag_2 setting

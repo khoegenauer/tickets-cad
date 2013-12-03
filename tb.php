@@ -1,7 +1,10 @@
 <?php
-/*
-any comments go here
-*/
+/**
+ * @package tb.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 error_reporting(E_ALL);	
 /**
  * dump

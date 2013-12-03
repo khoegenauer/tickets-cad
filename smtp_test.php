@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package smtp_test.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version 2011-03-15
+ */
 /*
 7/5/10 accomodate security parameter, per KJ email
 7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
@@ -181,11 +187,11 @@ else {
 			foreach ($failures as $value){
 			    $errs .= $value . " ";
 			    }
-			$caption = '"' . gettext('Mail to '{$errs}' failed') . '"';
+			$caption = gettext('Mail to \'{$errs}\' failed');
 			}
 		else {
 			if ($errors) {
-				$caption = '"' . gettext('Mail delivery failed') . '"';
+				$caption = gettext('Mail delivery failed');
 				}
 			}
 		}
@@ -194,15 +200,11 @@ else {
 			dump($server);
 			dump($fp);
 			}
-		$caption = '"' . gettext('Failed - server name error') . '"';
+		$caption = gettext('Failed - server name error');
 		}
 
 ?>
-<CENTER><BR />
-<BR />
-<H2> <?php echo $caption; ?></H2>
-<BR />
-<BR /></CENTER>
+<CENTER><BR /><BR /><H2> <?php echo $caption; ?></H2><BR /><BR /></CENTER>
 <FORM NAME='mail' METHOD = 'post' ACTION = '<?php print basename(__FILE__);?>'>
 <INPUT TYPE='button' VALUE = "<?php print gettext('Again');?>" onClick = "this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <INPUT TYPE='button' VALUE = "<?php print gettext('Close');?>" onClick = "self.close();" />

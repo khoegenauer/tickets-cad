@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package quick_start.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2012-05-11
+ * @version 2012-05-11
+ */
 /*
 5/11/12 Initial release - Basic setup script to build a default set of values and responders into Tickets
 */

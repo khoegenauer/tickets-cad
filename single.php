@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package single.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2010-04-13
+ * @version 2012-11-30
+ */
 /*
 4/13/10 initial release
 4/30/10 added test for data existence

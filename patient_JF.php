@@ -1,4 +1,10 @@
 <?php 
+/**
+ * @package patient_JF.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 8/16/08	lots of changes; date_dropdown used, lock icon for date entry control, date validation, 'mysql_fetch_assoc' vs 'fetch_array', 'delete' process, 'LIMIT 1' added
 10/1/08	added error reporting

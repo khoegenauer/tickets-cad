@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package incident_popup.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-07-08
+ * @version 2011-03-15
+ */
 /*
 7/08/09 Created Incident Popup from track_u.php
 7/29/09 Revised code for statistics display and background color determined by severity

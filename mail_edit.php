@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package mail_edit.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-02-18
+ * @version 2012-10-23
+ */
 /*
 2/18/09 initial release
 2/28/09 added email addr validation

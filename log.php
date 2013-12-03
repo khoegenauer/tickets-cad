@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package log.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2009-01-18
+ * @version 2011-04-05
+ */
 
 //	CONSTANT settings specific to this script
 // end file-specific constants

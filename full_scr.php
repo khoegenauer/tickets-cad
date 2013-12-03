@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package full_scr.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2008-10-14
+ * @version 2013-06-03
+ */
 /*
 10/14/08 moved js includes here fm function_major
 1/11/09  handle callboard frame

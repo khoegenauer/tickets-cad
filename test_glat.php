@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package test_glat.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version 2011-03-15
+ */
 /*
 8/9/09	handle missing curl 
 3/15/11 changed stylesheet.php to stylesheet.php

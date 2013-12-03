@@ -1,6 +1,10 @@
 <?php
-/*
-*/
+/**
+ * @package logs.php
+ * @author John Doe <john.doe@example.com>
+ * @since 
+ * @version  
+ */
 error_reporting(E_ALL);	
 require_once('./incs/functions.inc.php');
 	$query = "

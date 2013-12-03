@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package units_nm.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 error_reporting(E_ALL);
 $units_side_bar_height = .5;		// max height of units sidebar as decimal fraction of screen height - default is 0.6 (60%)
 $iw_width= "300px";			// map infowindow with

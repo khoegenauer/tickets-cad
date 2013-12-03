@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package track_u.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 original, converted from tracks.php
 10/4/08	added auto-refresh

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package logs1.php
+ * @author John Doe <john.doe@example.com>
+ * @since 
+ * @version
+ */
 /*
 PHP_EOL (string) 
 */

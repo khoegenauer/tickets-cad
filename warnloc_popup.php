@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package warnloc_popup.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 9/10/13 - New file - popup window to vie details of Location warnings
 */

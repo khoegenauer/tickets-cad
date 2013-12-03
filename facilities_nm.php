@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package facilities_nm.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2010-07-16
+ * @version 2013-08-28
+ */
 error_reporting(E_ALL);
 $facs_side_bar_height = .5;		// max height of units sidebar as decimal fraction of screen height - default is 0.5 (50%)
 $iw_width = "300px";		// map infowindow with

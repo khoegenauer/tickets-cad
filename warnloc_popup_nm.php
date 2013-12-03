@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package warnloc_popup_nm.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version 2013-09-10
+ */
 /*
 9/10/13 - New file - popup window to vie details of Location warnings - no-maps mode
 */

@@ -1,7 +1,10 @@
 <?php
-/*
-
-*/
+/**
+ * @package messages.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 error_reporting(E_ALL);
 
 @session_start();

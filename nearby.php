@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package nearby.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2012-11-21
+ * @version 2012-11-21
+ */
 /*
 11/21/2012 initial release
 */

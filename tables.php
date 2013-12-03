@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package tables.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version
+ */
 // Made available under the terms of GNU General Public License (GPL) http://www.gnu.org/copyleft/gpl.html
 /*
 Released Jul 23, 2006

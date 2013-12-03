@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package wxalert1.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 
 // 	DEC 17 2010
 //	"M d Y"

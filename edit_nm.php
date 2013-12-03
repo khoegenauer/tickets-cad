@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package edit_nm.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2010-07-16
+ * @version 2013-06-04
+ */
 $zoom_tight = FALSE;		// default is FALSE (no tight zoom); replace with a decimal zoom value to over-ride the standard default zoom setting - 3/27/10
 
 error_reporting(E_ALL);

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package test_eparam.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 require_once('./incs/functions.inc.php');
 require_once('./incs/messaging.inc.php');
 

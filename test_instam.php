@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package test_instam.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version 2011-03-15
+ */
 /*
 7/25/09	initial release
 1/21/10 captions changed to conform to IM usage

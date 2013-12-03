@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package hints_config.php
+ * @author John Doe <john.doe@example.com>
+ * @since 
+ * @version 2011-03-15
+ */
 /*
 3/15/11 added css color tables configuration capability
 */

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package main.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 
 error_reporting(E_ALL);				// 9/13/08
 $units_side_bar_height = .6;		// max height of units sidebar as decimal fraction of screen height - default is 0.6 (60%)

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package portal.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version 2013-09-10
+ */
 /*
 9/10/13 - Major re-write to previous versions
 */

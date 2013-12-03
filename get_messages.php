@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package get_messages.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version 
+ */
 require_once('./incs/functions.inc.php');
 require_once('./incs/messaging.inc.php');
 require_once './lib/xpm/POP3.php';

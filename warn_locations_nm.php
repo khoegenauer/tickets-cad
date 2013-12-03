@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @package warn_locations_nm.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version 2013-09-10
+ */
 error_reporting(E_ALL);
 $facs_side_bar_height = .5;		// max height of facilities sidebar as decimal fraction of screen height - default is 0.6 (60%)
 $zoom_tight = FALSE;				// replace with a decimal number to over-ride the standard default zoom setting
@@ -755,11 +760,11 @@ var buttons_html = "";
 <?php
 		$dis_rmv = " ENABLED";
 ?>
-		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Street Address - type in street address in fields or click location on map "><?php print gettext('Location');?></A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="<?php print $row['street'] ;?>"  MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('City - defaults to default city set in configuration. Type in City if required');?>"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_edit_Form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD> <!-- 7/5/10 -->
-		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value);"> <!-- 7/5/10 -->
+		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Street Address - type in street address in fields or click location on map');?> "><?php print gettext('Location');?></A>:</TD><TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="<?php print $row['street'] ;?>"  MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
+		<TR CLASS='odd'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('City - defaults to default city set in configuration. Type in City if required');?>"><?php print get_text("City"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.res_edit_Form);"><img src="./markers/glasses.png" alt="<?php print gettext('Lookup location.');?>" /></button></TD> <!-- 7/5/10 -->
+		<TD><INPUT SIZE="32" TYPE="text" NAME="frm_city" VALUE="<?php print $row['city'] ;?>" MAXLENGTH="32" onChange = "this.value=capWords(this.value);" /> <!-- 7/5/10 -->
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="td_label" HREF="#" TITLE="<?php print gettext('State - US State or non-US Country code e.g. UK for United Kingdom');?>"><?php print gettext('St');?></A>:&nbsp;&nbsp;<INPUT SIZE="<?php print $st_size;?>" TYPE="text" NAME="frm_state" VALUE="<?php print $row['state'] ;?>" MAXLENGTH="<?php print $st_size;?>"></TD></TR> <!-- 7/5/10 -->
-		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Facility Description - additional details about unit"><?php print gettext('Description');?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
+		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Facility Description - additional details about unit');?>"><?php print gettext('Description');?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2><?php print $row['description'];?></TEXTAREA></TD></TR>
 		<TR><TD>&nbsp;</TD></TR>
 		<TR CLASS="even" VALIGN='baseline'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Delete Facility from system');?>"><?php print gettext('Remove Facility');?></A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>>
 		</TD></TR>

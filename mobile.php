@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package mobile.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 error_reporting(E_ALL);		// E_ALL
 $interval = 48;				// booked date limit - hide if date is > n hours ahead of 'now'
 $blink_duration = 5;		// blink for n (5, here) minutes after ticket was written

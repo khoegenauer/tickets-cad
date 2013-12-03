@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package msg_archive.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
 error_reporting (E_ALL  ^ E_DEPRECATED);
 @session_start();

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package latitude.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2010-08-13
+ * @version 2011-03-15
+ */
 error_reporting(E_ALL);
 /*
 8/13/10 handle non-curl configurations

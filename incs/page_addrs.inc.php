@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package page_addrs.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 10/22/08 initial release
 */

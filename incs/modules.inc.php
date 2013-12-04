@@ -1,11 +1,13 @@
 <?php
-/*
-9/15/10 New File 
-*/
+/**
+ * This is the main modules include file. It includes the helper file of all modules that are installed and enabled.
+ * 
+ * @package modules.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2010-09-15
+ * @version 2010-09-15 - New File
+ */
 
-/*
-This is the main modules include file. It includes the helper file of all modules that are installed and enabled. 
-*/
 //require_once('functions.inc.php');
 require_once('mysql.inc.php');
 

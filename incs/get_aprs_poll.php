@@ -1,4 +1,13 @@
 <?php
+/**
+ * 
+ * 
+ * @package get_aprs_poll.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
 /*
 3/18/09 'aprs_poll' to 'auto_poll'
 */

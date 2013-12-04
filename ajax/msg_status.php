@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package msg_status.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 msg_status.php - used by message.php to change read status of a message
 10/23/12 - new file

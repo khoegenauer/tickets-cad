@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package usng.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 8/12/08	initial release, a port of the javascript equivalent by Larry Moore
 */

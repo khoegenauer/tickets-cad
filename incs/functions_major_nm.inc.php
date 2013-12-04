@@ -1,4 +1,13 @@
 <?php
+/**
+ * 
+ * 
+ * @package functions_major_nm.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
 /*
 7/16/10  Initial Release for no internet operation - created from FMP
 11/16/10 fixes to print, do_ticket etc. to conform to SQL from current FMP

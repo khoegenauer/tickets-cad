@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package request.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 9/10/13 - request.php - file for view and edit of portal user request
 */
@@ -124,7 +132,11 @@ function get_facilityname($value) {
 		return "";
 		}
 	}
-	
+/**
+ * 
+ * @param type $value
+ * @return string
+ */	
 function get_facilitydetails($value) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = " . $value . " LIMIT 1";		 
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -313,7 +325,7 @@ function validate(theForm) {
 	var street = theForm.frm_street.value;
 	var city = theForm.frm_city.value;
 	var state = theForm.frm_state.value;
-	var theDescription = theForm.frm_description.value
+	var theDescription = theForm.frm_description.value;
 	var requestDate = theForm.frm_year_request_date.value + "-" + theForm.frm_month_request_date.value + "-" + theForm.frm_day_request_date.value + " " + theForm.frm_hour_request_date.value + " " + theForm.frm_minute_request_date.value + ":00";
 	var thePhone = (theForm.frm_phone.value != "") ? theForm.frm_phone.value : "none";
 	var ToAddress = theForm.frm_toaddress.value;
@@ -348,7 +360,11 @@ function validate(theForm) {
 		theForm.submit();
 		}
 	}
-		
+/**
+ * 
+ * @param {type} req_id
+ * @returns {undefined}
+ */		
 	function do_cancel(req_id) {
 		randomnumber=Math.floor(Math.random()*99999999);
 		$('view').style.display="none";
@@ -512,14 +528,28 @@ function validate(theForm) {
 		$('result').style.display = 'none';
 		$('view').style.display = 'inline';	
 		}
-
+/**
+ * 
+ * @param {type} lat
+ * @returns {undefined}
+ */
 	function do_lat (lat) {
 		document.edit_frm.frm_lat.value=lat;			// 9/9/08
 		}
+/**
+ * 
+ * @param {type} lng
+ * @returns {undefined}
+ */
 	function do_lng (lng) {
 		document.edit_frm.frm_lng.value=lng;
 		}
-
+/**
+ * 
+ * @param {type} text
+ * @param {type} index
+ * @returns {undefined}
+ */
 	function do_fac_to_loc(text, index){			// 9/22/09
 		var theFaclat = fac_lat[index];
 		var theFaclng = fac_lng[index];
@@ -528,11 +558,16 @@ function validate(theForm) {
 		var theFacstate = fac_state[index];
 		do_lat(theFaclat);
 		do_lng(theFaclng);
-		document.edit_frm.frm_street.value = theFacstreet
+		document.edit_frm.frm_street.value = theFacstreet;
 		document.edit_frm.frm_city.value = theFaccity;
 		document.edit_frm.frm_state.value = theFacstate;	
 		}					// end function do_fac_to_loc
-		
+/**
+ * 
+ * @param {type} text
+ * @param {type} index
+ * @returns {undefined}
+ */		
 	function do_rec_fac_to_loc(text, index){			// 9/22/09
 		var recFaclat = rec_fac_lat[index];
 		var recFaclng = rec_fac_lng[index];

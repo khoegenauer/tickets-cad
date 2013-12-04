@@ -1,4 +1,13 @@
 <?php
+/**
+ * 
+ * 
+ * @package functions.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
 /*
 5/23/08 added function do_kml() - generates JS for kml files - 
 5/31/08 added function do_log() default values

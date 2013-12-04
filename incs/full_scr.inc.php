@@ -1,4 +1,13 @@
 <?php
+/**
+ * 
+ * 
+ * @package full_scr.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
 /*
 10/25/09 Created from functions_maj.inc.php
 10/26/09 Added Facilities and hide and show unavailable units from functions_major.inc.php

@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package status_cats.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 $hide_dispatched = 1;	// 0 is standard, disallows hiding of deployed units. 1 allows deployed units to be hidden.
 $hide_status_groups = get_variable('group_or_dispatch');
 /*

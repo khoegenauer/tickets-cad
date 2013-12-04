@@ -1,4 +1,13 @@
 <?php
+/**
+ * 
+ * 
+ * @package login.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
 /*
 8/21/10 initial creation
 8/27/10 dropped nm variant of fip, cleared out end-of-script junk

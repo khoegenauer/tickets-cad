@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package exportcsv.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
  
 /**
  * exportMysqlToCsv

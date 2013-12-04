@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package phonelkup.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 require_once("../nusoap/lib/nusoap.php");
 define("tab",  "\t");
 if (!empty($_POST)) extract($_POST);

@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package remotes.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 8/21/10 - initial release
 8/24/10 - glat hyphen logic removed

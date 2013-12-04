@@ -1,4 +1,13 @@
 <?php
+/**
+ * 
+ * 
+ * @package do_top.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
 /*
 3/19/11 initial impleentation - executes inline
 */

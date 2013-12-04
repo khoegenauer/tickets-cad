@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package stats_type.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 #
 # statistics.php - Management Statistics from Tickets.
 #

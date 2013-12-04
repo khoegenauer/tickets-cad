@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package requests.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 9/10/13 - requests.php - lists pending / open requests for Tickets user
 */

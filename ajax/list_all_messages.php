@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package list_all_messages.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 list messages.php - gets messages from messages table for display in message window and ticket view and unit view
 10/23/12 - new file

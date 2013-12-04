@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package loc_warn_list.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 9/10/13 - New file, gets stored warn locations for display in new and edit ticket pages
 11/18/13 - Fixed inccorrect <DENTER> !!

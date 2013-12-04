@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package set_cook_exp.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 1/11/10 initial release - updates user cookie expiration
 */

@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package list_requests.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 @session_start();
 require_once('../../incs/functions.inc.php');
 require_once('../incs/portal.inc.php');

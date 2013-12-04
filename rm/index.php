@@ -293,6 +293,10 @@ window.onload = function() {
 	screen1(); 
 	<?php print $logged_in_load;?>
 	};
+/**
+ * 
+ * @returns {undefined}
+ */
 function set_size() {
 	var viewportwidth;
 	var viewportheight;
@@ -358,33 +362,56 @@ yellowicon = 			new baseIcon({iconUrl: yellowiconUrl});
 greenicon = 			new baseIcon({iconUrl: greeniconUrl});
 blueicon = 				new baseIcon({iconUrl: blueiconUrl});
 redcircle = 			new circIcon({iconUrl: redcircleUrl});
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_hover (the_id) {
 	CngClass(the_id, 'hover');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_plain (the_id) {
 	CngClass(the_id, 'plain');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_sb_hover (the_id) {
 	CngClass(the_id, 'screen_but_hover');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_sb_plain (the_id) {
 	CngClass(the_id, 'screen_but_plain');
 	return true;
 	}
-	
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 function CngClass(obj, the_class){
 	$(obj).className=the_class;
 	return true;
 	}
-	
+/**
+ * 
+ * @returns {Array}
+ */	
 function $() {
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -395,7 +422,11 @@ function $() {
 		}
 	return elements;
 	}
-
+/**
+ * 
+ * @param {type} lat
+ * @param {type} lng
+ */
 function do_ngs(lat,lng) {											// LL to USNG - 6/2/2013
 	var the_grid;
 	var loc = <?php print get_variable('locale');?>;
@@ -404,7 +435,11 @@ function do_ngs(lat,lng) {											// LL to USNG - 6/2/2013
 	if(loc == 2) { the_grid = do_utm(lat,lng);			}			
 	return the_grid;
 	}
-	
+/**
+ * 
+ * @param {type} lat_lng
+ * @returns {String}
+ */	
 function do_utm(lat_lng) {
 	var ll_in = new LatLng(parseFloat(lat), parseFloat(lng));
 	var utm_out = ll_in.toUTMRef().toString();
@@ -412,7 +447,12 @@ function do_utm(lat_lng) {
 	var the_utm = (temp_ary.length == 3)? temp_ary[0] + " " +  parseInt(temp_ary[1]) + " " + parseInt(temp_ary[2]) : "";
 	return the_utm;
 	}
-
+/**
+ * 
+ * @param {type} lat
+ * @param {type} lng
+ * @returns {String}
+ */
 function convertDMS( lat, lng ) {
 	lat = (lat < 0) ? lat*-1: lat;
 	var lat_ns = (lat > 0) ? "N" : "S";
@@ -430,7 +470,12 @@ function convertDMS( lat, lng ) {
 	var theCoords = lat_deg + "\u00B0 " + lat_min + "'" +  lat_sec + "' " + lat_ns + "   " + lng_deg + "\u00B0 " + lng_min + "'" +  lng_sec + "' " + lng_ew;
 	return theCoords;	
 	}
-
+/**
+ * 
+ * @param {type} the_unit
+ * @param {type} the_status
+ * @returns {Boolean}
+ */
 function update_status(the_unit, the_status) {							// write unit status data via ajax xfer
 	var querystr = "frm_responder_id=" + the_unit;
 	querystr += "&frm_status_id=" + the_status;
@@ -440,35 +485,52 @@ function update_status(the_unit, the_status) {							// write unit status data v
 		return false;
 		}
 	else {
-		show_flag ('Your status update applied!');
+		show_flag ('<?php print gettext('Your status update applied!');?>');
 		return true;
 		}				// end if/else (payload.substring(... )
 	}		// end function to_server()
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function do_logout() {
 	clearInterval(primary_timer);
 	clearInterval(secondary_timer);
 	clearInterval(tertiary_timer);
 	document.gout_form.submit();			// send logout 	
 	}
-
+/**
+ * 
+ * @param {type} msg
+ * @returns {undefined}
+ */
 function show_flag (msg) {	
 	$('theFlag').innerHTML = msg;			
 	setTimeout("$('theFlag').innerHTML =''", 3000);	// show for 3 seconds
 	}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 function do_login() {
 	primary_timer = null;
 	secondary_timer = null;
 	tertiary_timer = null;
 	document.gin_form.submit();			// send logout 	
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function get_latest_ids() {				// get latest chat invites and new assignments
 	var randomnumber=Math.floor(Math.random()*99999999);		
 	sendRequest ('./ajax/get_latest_ids.php?version=' + randomnumber,get_latest_id_cb, "");	
 	}			// end function do_loop()	
-
+/**
+ * 
+ * @param {type} req
+ * @returns {unresolved}
+ */
 function get_latest_id_cb(req) {					// get_latest_id callback()
 	var arr_lgth_good = 3;								// size of a valid returned array
 	try {
@@ -503,14 +565,20 @@ function get_latest_id_cb(req) {					// get_latest_id callback()
 			}
 		}
 	}			// end function get_latest_id_cb()		
-	
+/**
+ * 
+ * @returns {unresolved}
+ */	
 function chat_signal() {
 	if(!$('sb5')) {return; }
 	if (lit_r["sb5"]) {return; }
 	CngClass("sb5", "signal_r_but");
 	lit_r["sb5"] = true;
 	}
-	
+/**
+ * 
+ * @returns {unresolved}
+ */	
 function chat_signal_r_off() {
 	if(!$('sb5')) {return; }
 	if (!lit_r["sb5"]) {return; }
@@ -523,14 +591,20 @@ function chat_signal_r_off() {
 		lit["sb5"] = true;
 		}
 	}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 function inc_signal() {
 	if(!$('sb3')) {return; }
 	if (lit_r["sb3"]) {return; }
 	CngClass("sb3", "signal_r_but");
 	lit_r["sb3"] = true;
 	}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 function inc_signal_r_off() {
 	if(!$('sb3')) {return; }
 	if (!lit_r["sb3"]) {return; }
@@ -543,14 +617,20 @@ function inc_signal_r_off() {
 		lit["sb3"] = true;
 		}
 	}
-	
+/**
+ * 
+ * @returns {unresolved}
+ */	
 function msg_signal_r() {
 	if(!$('sb4')) {return; }
 	if (lit_r["sb4"]) {return; }
 	CngClass("sb4", "signal_r_but");
 	lit_r["sb4"] = true;
 	}
-	
+/**
+ * 
+ * @returns {unresolved}
+ */	
 function msg_signal_r_off() {
 	if(!$('sb4')) {return; }
 	if (!lit_r["sb4"]) {return; }
@@ -563,14 +643,21 @@ function msg_signal_r_off() {
 		lit["sb4"] = true;
 		}
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function get_latest_messages() {
 	var randomnumber=Math.floor(Math.random()*99999999);
 	user_id = parseInt("<?php print $the_user;?>");
 	var url ='./ajax/get_latest_messages.php?responder_id=' + user_id + '&version=' + randomnumber;	
 	sendRequest (url,get_latest_messages_cb, "");	
 	}
-
+/**
+ * 
+ * @param {type} req
+ * @returns {unresolved}
+ */
 function get_latest_messages_cb(req) {
 	try {
 		var the_msg_arr=JSON.decode(req.responseText);
@@ -588,7 +675,12 @@ function get_latest_messages_cb(req) {
 		msg_signal_r_off();
 		}	
 	}			// end function get_latest_messages_cb()	
-
+/**
+ * 
+ * @param {type} the_status
+ * @param {type} the_button
+ * @returns {undefined}
+ */
 function do_sub(the_status,the_button) {				// form submitted
 	var params = "frm_id="+the_assigns_id;
 	params += "&frm_tick="+tick_id;
@@ -605,7 +697,10 @@ function do_sub(the_status,the_button) {				// form submitted
 		}
 	get_ticket(tick_id);
 	}			// end function do_sub()
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function start_miles() {
 	var value = prompt("Enter your start miles", "");
 	randomnumber=Math.floor(Math.random()*99999999);
@@ -620,7 +715,10 @@ function start_miles() {
 			}
 		}
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function end_miles() {
 	var value = prompt("Enter your end miles", "");
 	randomnumber=Math.floor(Math.random()*99999999);
@@ -635,7 +733,10 @@ function end_miles() {
 			}
 		}	
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function os_miles() {
 	var value = prompt("Enter your on scene miles", "");
 	randomnumber=Math.floor(Math.random()*99999999);
@@ -650,7 +751,10 @@ function os_miles() {
 			}	
 		}	
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function notes() {
 	user_id = parseInt("<?php print $the_user;?>");
 	var value = prompt("Enter call notes", "");
@@ -666,7 +770,11 @@ function notes() {
 		}
 	setTimeout(function() { get_ticket(tick_id); },1000);		
 	}
-
+/**
+ * 
+ * @param {type} ticket_id
+ * @returns {undefined}
+ */
 function get_messages(ticket_id) {
 	user_id = parseInt("<?php print $the_user;?>");
 	randomnumber=Math.floor(Math.random()*99999999);
@@ -674,15 +782,19 @@ function get_messages(ticket_id) {
 	sendRequest (url, main_mess_cb, "");
 	function main_mess_cb(req) {
 		the_messages=req.responseText;
-		$('message_list').innerHTML = "Loading Messages............";
+		$('message_list').innerHTML = "<?php print gettext('Loading Messages.');?>...........";
 		setTimeout(function() {$('message_list').innerHTML = the_messages;},1000);
 		}
 	}	
-	
+/**
+ * 
+ * @param {type} ticket_id
+ * @returns {undefined}
+ */	
 function tkt_messages(ticket_id) {
 	var close_button = '<span id="close_directions" class="plain" style="width: auto; display: block; z-index: 10; float: right; width: 40px;"';
 	close_button += 'onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "close_tkt_messages();">';
-	close_button += '<IMG SRC = "./images/close.png" ALT="Close Messages" BORDER=0 STYLE = "vertical-align: middle;"></span>';	
+	close_button += '<IMG SRC = "./images/close.png" ALT="<?php print gettext('Close Messages');?>" BORDER=0 STYLE = "vertical-align: middle;" /></span>';	
 	$('ticket_detail').style.display = 'none';
 	$('tkt_message_list').style.display = 'block';
 	user_id = parseInt("<?php print $the_user;?>");
@@ -696,7 +808,10 @@ function tkt_messages(ticket_id) {
 		setTimeout(function() {$('tkt_message_list').innerHTML = the_messages;},1000);
 		}
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */
 function update_position() {
 	if((responder_id) && (the_lat) && (the_lng)) {
 		randomnumber=Math.floor(Math.random()*99999999);
@@ -707,7 +822,10 @@ function update_position() {
 			}
 		}
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function get_alerts() {
 	randomnumber=Math.floor(Math.random()*99999999);
 	url ='./ajax/alertlist.php?lat=' + the_lat + '&lng=' + the_lng + '&unit=M&version=' + randomnumber;
@@ -718,7 +836,11 @@ function get_alerts() {
 		setTimeout(function() {$('alert_list').innerHTML = the_alerts;},1000);
 		}
 	}	
-
+/**
+ * 
+ * @param {type} user_id
+ * @returns {undefined}
+ */
 function get_tickets(user_id) {
 	randomnumber=Math.floor(Math.random()*99999999);
 	url ='./ajax/ticket_list.php?user_id=' + user_id + '&version=' + randomnumber;
@@ -729,7 +851,11 @@ function get_tickets(user_id) {
 		setTimeout(function() {$('ticket_list').innerHTML = the_tickets;},1000);
 		}
 	}	
-	
+/**
+ * 
+ * @param {type} user_id
+ * @returns {unresolved}
+ */
 function get_ticket_markers(user_id) {
 	if(user_id == 0) return;
 	randomnumber=Math.floor(Math.random()*99999999);
@@ -758,7 +884,11 @@ function get_ticket_markers(user_id) {
 			}
 		}
 	}
-
+/**
+ * 
+ * @param {type} ticket_id
+ * @returns {undefined}
+ */
 function get_ticket(ticket_id) {
 	tick_id = ticket_id;
 	randomnumber=Math.floor(Math.random()*99999999);
@@ -814,7 +944,11 @@ function get_ticket(ticket_id) {
 		setTimeout(function() {$('ticket_detail').innerHTML = the_ticket[11]; $('menu_but2').style.display = 'inline-block'; },1000);
 		}
 	}	
-	
+/**
+ * 
+ * @param {type} message_id
+ * @returns {undefined}
+ */	
 function get_message(message_id) {
 	randomnumber=Math.floor(Math.random()*99999999);
 	url ='./ajax/message_detail.php?message_id=' + message_id + '&version=' + randomnumber;
@@ -832,7 +966,11 @@ function get_message(message_id) {
 		update_msgread(message_id);	
 		}
 	}	
-	
+/**
+ * 
+ * @param {type} message_id
+ * @returns {undefined}
+ */	
 function update_msgread(message_id) {
 	randomnumber=Math.floor(Math.random()*99999999);
 	user_id = parseInt("<?php print $the_user;?>");
@@ -842,7 +980,10 @@ function update_msgread(message_id) {
 		var the_success=JSON.decode(req.responseText);
 		}
 	}	
-	
+/**
+ * 
+ * @returns {undefined}
+ */
 function chat_invite_off() {
 	randomnumber=Math.floor(Math.random()*99999999);
 	user_id = parseInt("<?php print $the_user;?>");
@@ -853,7 +994,11 @@ function chat_invite_off() {
 		chat_signal_r_off();	
 		}
 	}	
-	
+/**
+ * 
+ * @param {type} message_id
+ * @returns {undefined}
+ */
 function get_tkt_message(message_id) {
 	randomnumber=Math.floor(Math.random()*99999999);
 	url ='./ajax/message_detail2.php?message_id=' + message_id + '&version=' + randomnumber;
@@ -870,7 +1015,11 @@ function get_tkt_message(message_id) {
 		setTimeout(function() {if(the_return_add != tickets_address) { $('tkt_reply_but').style.display = "inline"; msg_subject = the_message[2]; msg_text = the_message[3];}},1000);		
 		}
 	}	
-
+/**
+ * 
+ * @param {type} to_address
+ * @returns {undefined}
+ */
 function do_reply(to_address) {
 	var user_email = "<?php print $the_email;?>";
 	$('message_detail').style.display = "none";
@@ -880,12 +1029,19 @@ function do_reply(to_address) {
 	document.reply_form.frm_subject.value = msg_subject;
 	document.reply_form.frm_msg.value = msg_text;	
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function can_reply() {
 	$('message_detail').style.display = "block";
 	$('message_reply').style.display = "none";
 	}
-
+/**
+ * 
+ * @param {type} alert_id
+ * @returns {undefined}
+ */
 function get_alert(alert_id) {
 	randomnumber=Math.floor(Math.random()*99999999);
 	url ='./ajax/alert_detail.php?alert_id=' + alert_id + '&version=' + randomnumber;
@@ -898,13 +1054,19 @@ function get_alert(alert_id) {
 		setTimeout(function() {$('alert_detail').innerHTML = the_ticket;},1000);
 		}
 	}	
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function close_alert_detail() {
 	$('close_alert_detail').style.display = "none";
 	$('alert_detail').style.display = "none";
 	$('alert_list').style.display = "block";	
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */
 function close_ticket_detail() {
 	slideIn('buttons2', 'menu_but2');	
 	$('menu_but2').style.display = 'none';
@@ -928,47 +1090,68 @@ function close_ticket_detail() {
 	$('farr_but').className  = "plain";
 	$('clear_but').className  = "plain"; 
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function close_message_detail() {
 	$('message_detail').style.display = "none";
 	$('message_list').style.display = "block";	
 	get_messages(0);
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */
 function close_tkt_message_detail() {
 	$('tkt_message_detail').style.display = "none";
 	$('tkt_message_list').style.display = "block";	
 	get_messages(tick_id);
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */
 function close_tkt_messages() {
 	$('ticket_detail').style.display = "block";
 	$('tkt_message_list').style.display = "none";	
 	}
-
+/**
+ * 
+ * @param {type} theDiv
+ * @param {type} theButton
+ * @returns {undefined}
+ */
 function slideIt(theDiv, theButton) {
 	var slidingDiv = $(theDiv);
 	var stopPosition = 0;
 	if (parseInt(slidingDiv.style.left) < stopPosition ) {
 		slidingDiv.style.left = parseInt(slidingDiv.style.left) + 4 + "px";
-		setTimeout(function(){slideIt(theDiv, theButton)}, .5);
-		
+		setTimeout(function(){slideIt(theDiv, theButton);}, .5);
 		}
 	$(theButton).setAttribute( "onClick", 'javascript: slideIn("' + theDiv + '", this.id);' );	
 	$(theButton).innerHTML = "<?php print gettext('Hide Menu');?>";	
 	}
-
+/**
+ * 
+ * @param {type} theDiv
+ * @param {type} theButton
+ * @returns {undefined}
+ */
 function slideIn(theDiv, theButton) {
 	var slidingDiv = $(theDiv);
 	var stopPosition = -150;
 	if (parseInt(slidingDiv.style.left) > stopPosition ) { 
 		slidingDiv.style.left = parseInt(slidingDiv.style.left) - 4 + "px";
-		setTimeout(function(){slideIn(theDiv, theButton)}, .5);		
+		setTimeout(function(){slideIn(theDiv, theButton);}, .5);		
 		}
 	$(theButton).setAttribute( "onClick", 'javascript: slideIt("' + theDiv + '", this.id);' );	
 	$(theButton).innerHTML = "<?php print gettext('Show Menu');?>";		
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function get_conditions() {
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./ajax/infolist2.php?version=" + randomnumber;
@@ -996,7 +1179,15 @@ function get_conditions() {
 			}
 		}
 	}
-
+/**
+ * 
+ * @param {type} title
+ * @param {type} address
+ * @param {type} lat
+ * @param {type} lng
+ * @param {type} type
+ * @returns {undefined}
+ */
 function sub_data(title,address,lat,lng,type) {
 	randomnumber=Math.floor(Math.random()*99999999);
 	var url ="./ajax/submit_entry.php?id=0&version=" + randomnumber + "&type=" + type + "&address=" + address + "&title=" + title + "&lat=" + lat + "&lng=" + lng;
@@ -1012,7 +1203,13 @@ function sub_data(title,address,lat,lng,type) {
 		}
 	$('condition_selector').selectedIndex = 0;
 	}
-	
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */	
 function sendRequest(url,callback,postData) {
 	var req = createXMLHTTPObject();
 	if (!req) return;
@@ -1037,7 +1234,10 @@ var XMLHttpFactories = [
 	function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
 	function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 	];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
 function createXMLHTTPObject() {
 	var xmlhttp = false;
 	for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -1047,7 +1247,11 @@ function createXMLHTTPObject() {
 		}
 	return xmlhttp;
 	}
-
+/**
+ * 
+ * @param {type} strURL
+ * @returns {Boolean|@exp;AJAX@pro;responseText}
+ */
 function syncAjax(strURL) {	//	10/23/12
 	if (window.XMLHttpRequest) {						 
 		AJAX=new XMLHttpRequest();						 
@@ -1064,41 +1268,76 @@ function syncAjax(strURL) {	//	10/23/12
 		return false;
 		}																						 
 	}		// end function sync Ajax()
-	
+/**
+ * 
+ * @param {type} array
+ * @param {type} item
+ * @returns {Boolean}
+ */	
 function contains(array, item) {
 	for (var i = 0, I = array.length; i < I; ++i) {
 		if (array[i] == item) return true;
 		}
 	return false;
 	}
-
+/**
+ * 
+ * @param {type} lat
+ * @param {type} lon
+ * @param {type} info
+ * @param {type} icon
+ * @param {type} title
+ * @returns {undefined}
+ */
 function createMarker(lat, lon, info, icon, title){
 	L.marker([lat, lon], {icon: icon}).addTo(map)
 		.bindPopup(info);
 	}
-	
+/**
+ * 
+ * @param {type} lat
+ * @param {type} lon
+ * @param {type} info
+ * @param {type} theIcon
+ * @param {type} title
+ * @returns {undefined}
+ */	
 function createCondMarker(lat, lon, info, theIcon, title){
 	var condMarker	= new condIcon({iconUrl: './roadinfo_icons/' + theIcon});
 	L.marker([lat, lon], {icon: condMarker}).addTo(map)
 		.bindPopup(info);
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function closeIW() {
 //	$('adverts').style.display = 'inline-block';
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function alert_coords() {
 	var thecoords = convertDMS(the_lat,the_lng);
 	var the_text = "Decimal: " + the_lat + "   " + the_lng + "\r\nDMS: " + thecoords + "\r\nGRID: " + do_ngs(the_lat,the_lng);
 	alert(the_text);
 	slideIn('buttons', 'menu_but');		
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function alert_location() {
 	do_geolocate(latLng, the_lat, the_lng);
 	setTimeout(function() {alert(form_add); slideIn('buttons', 'menu_but');	},1000);
 	}	
-	
+/**
+ * 
+ * @param {type} status
+ * @param {type} title
+ * @returns {undefined}
+ */	
 function the_status(status, title) {
 	if (confirm("Are you sure you want submit this " + title + " report?")) { 
 		sub_data(title,form_add,the_lat,the_lng,status);
@@ -1106,33 +1345,56 @@ function the_status(status, title) {
 		slideIn('buttons', 'menu_but');	
 		}
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function refresh_screen() {
 	initialise();
 	get_conditions();		
 	slideIn('buttons', 'menu_but');	
 	}
-	
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */	
 function do_hover (the_id) {
 	CngClass(the_id, 'hover');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_plain (the_id) {
 	CngClass(the_id, 'plain');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_sm_hover (the_id) {
 	CngClass(the_id, 'sm_hover');
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_sm_plain (the_id) {
 	CngClass(the_id, 'sm_plain');
 	return true;
 	}	
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
 function do_sb_hover (the_id) {
 	if (the_id == current_butt_id) {return true;}
 	if (lit[the_id]) {return true;}
@@ -1143,7 +1405,11 @@ function do_sb_hover (the_id) {
 		}
 	return true;
 	}
-	
+/**
+ * 
+ * @param {type} the_id
+ * @returns {Boolean}
+ */	
 function do_sb_plain (the_id) {
 	if (the_id == current_butt_id) {return true;}
 	if (lit[the_id] ) {return true;}
@@ -1154,12 +1420,20 @@ function do_sb_plain (the_id) {
 		}
 	return true;
 	}
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 function CngClass(obj, the_class){
 	$(obj).className=the_class;
 	return true;
 	}
-	
+/**
+ * 
+ * @returns {Array}
+ */	
 function $() {
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -1170,21 +1444,31 @@ function $() {
 		}
 	return elements;
 	}
-	
+/**
+ * 
+ * @param {type} msg
+ * @returns {undefined}
+ */	
 function show_msg (msg) {
 	$('msg_span').style.display = "block";
 	$('msg_span').innerHTML = msg;			
 	setTimeout("$('msg_span').innerHTML =''", 6000);	// show for 3 seconds
 	$('msg_span').style.display = "none";	
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function close_directions() {
 	$('ticket_detail').style.display = 'block';		
 	$('directions_wrapper').style.display = 'none';
 	$('menu_but2').style.display = 'inline-block';	
 	map.removeLayer(route);
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function get_geo() {	//	Start up the geo location
 	if(map) {
 		map.locate({setView: true, watch: false, maxZoom: 16, enableHighAccuracy:true});	//	get location, don't auto watch, set max zoom, zoom and center on location, enable GPS
@@ -1199,7 +1483,10 @@ function get_geo() {	//	Start up the geo location
 		}
 	do_loop();
 	}
-	
+/**
+ * 
+ * @returns {unresolved}
+ */	
 function do_loop() {
 	primary_timer = window.setInterval('primary_repeats()', 2000);	// the shortest timer, get new location data
 	if(user_id == 0) return;	//	if not logged in, only get position updates - no messages, chat or tickets
@@ -1207,32 +1494,51 @@ function do_loop() {
 	secondary_timer = window.setInterval('secondary_repeats()', 30000);	// 30 second timer - chat, messages and markers
 	tertiary_timer = window.setInterval('tertiary_repeats()', the_time);	// The long timer - send position updates to server
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function primary_repeats() {
 	next_update();
 	get_conditions();	//	get condition alerts
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function secondary_repeats() {
 	get_latest_messages();	//	get messages
 	get_ticket_markers(parseInt("<?php print $the_user;?>"));	// get new ticket markers
 	get_latest_ids();	//	Get chat and ticket assignment updates
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function tertiary_repeats() {
 	update_position();
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function stop_loop() {
 	window.clearInterval(primary_timer);	//	stop location finding
 	window.clearInterval(secondary_timer);	//	stop second timer - the shorter timer
 	window.clearInterval(tertiary_timer);	//	stop the longer timer - position updates to server
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function next_update() {
 	map.locate({setView: false});	//	find location, don't re-center and zoom map.
 	}
-
+/**
+ * 
+ * @param {type} plaintext
+ * @returns {String}
+ */
 function URLEncode(plaintext ) {					// The Javascript escape and unescape functions do
 													// NOT correspond with what browsers actually do...
 	var SAFECHARS = "0123456789" +					// Numeric
@@ -1266,7 +1572,11 @@ function URLEncode(plaintext ) {					// The Javascript escape and unescape funct
 		} 			// end for(...)
 	return encoded;
 	};			// end function
-
+/**
+ * 
+ * @param {type} encoded
+ * @returns {String}
+ */
 function URLDecode(encoded ){   					// Replace + with ' '
    var HEXCHARS = "0123456789ABCDEFabcdef";  		// Replace %xx with equivalent character
    var plaintext = "";   							// Place [ERROR] in output if %xx is invalid.
@@ -1294,7 +1604,10 @@ function URLDecode(encoded ){   					// Replace + with ' '
 	} 				// end  while (...)
 	return plaintext;
 	};				// end function URLDecode()
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function send_message() {
 	var theForm = document.forms['reply_form'];
 	var theTo = theForm.elements["frm_to"].value;
@@ -1316,7 +1629,10 @@ function send_message() {
 			}
 		}	
 	}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 function screen1() {
 	if(!$('sb1')) {return; }
 	if (lit["sb1"]) {return; }									// already lit
@@ -1339,7 +1655,10 @@ function screen1() {
 	current_butt_id = "sb1";	
 	lit['sb2'] = lit['sb3'] = lit['sb4'] = lit['sb5'] = false;		
 	}
-	
+/**
+ * 
+ * @returns {unresolved}
+ */
 function screen2() {
 	if (lit["sb2"]) {return; }									// already lit	
 	if(do_chat) {do_chat = false; chat_stop();}		
@@ -1362,7 +1681,10 @@ function screen2() {
 	current_butt_id = "sb2";		
 	lit['sb1'] = lit['sb3'] = lit['sb4'] = lit['sb5'] = false;		
 	}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 function screen3() {
 	if (lit["sb3"]) {return; }									// already lit	
 	if(do_chat) {do_chat = false; chat_stop(); }	
@@ -1386,7 +1708,10 @@ function screen3() {
 	current_butt_id = "sb3";	
 	lit['sb1'] = lit['sb2'] = lit['sb4'] = lit['sb5'] = false;	
 	}
-	
+/**
+ * 
+ * @returns {unresolved}
+ */	
 function screen4() {
 	if (lit["sb4"]) {return; }									// already lit
 	if(do_chat) {do_chat = false; chat_stop();}		
@@ -1409,7 +1734,10 @@ function screen4() {
 	current_butt_id = "sb4";	
 	lit['sb1'] = lit['sb2'] = lit['sb3'] = lit['sb5'] = false;
 	}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 function screen5() {
 	if (lit["sb5"]) {return; }									// already lit
 	if(!do_chat) {do_chat = true; chat_start(); }
@@ -1432,7 +1760,10 @@ function screen5() {
 	current_butt_id = "sb5";	
 	lit['sb1'] = lit['sb2'] = lit['sb3'] = lit['sb4'] = false;	
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function showhideTitle() {
 	if($('app_title').style.display == "none") {
 		$('app_title').style.display = "inline-block";
@@ -1440,7 +1771,10 @@ function showhideTitle() {
 		$('app_title').style.display = "none";
 		}
 	}
-	
+/**
+ * 
+ * @returns {unresolved}
+ */
 function toggleTracks() {
 	if(!theTrack) return;
 	if(tracksOn) {
@@ -1455,7 +1789,10 @@ function toggleTracks() {
 		tracksOn = true;
 		}
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function map_controls_onoff() {
 	if($('map_controls').style.display == "none") {
 		$('map_controls').style.display = "inline-block";
@@ -1473,20 +1810,30 @@ colors[2] = '#FFFFFF';
 var the_to = false;				// timeout object
 var first = true;
 window.onBlur = clearTimeout (the_to);
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 String.prototype.trim = function () {
 	return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 	};
 	
 var last_msg_id=0;									// initial value at page load
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function rd_chat_msg() {							// read chat messages via ajax xfer - 5/29/10
 	var our_max = (first)? 5 : <?php print $list_length ;?>;		// startup limiter
 	var params = "last_id=" + last_msg_id + "&max_ct=" + our_max;
 	first = false;													// standard limiter
 	sendRequest ('./ajax/chat_rd.php',handleResult, params);	// 
 	}
-
+/**
+ * 
+ * @param {type} req
+ * @returns {Boolean}
+ */
 function handleResult(req) {									// the called-back phone lookup function
 	var payload = req.responseText;		
 	if (payload.substring(0,1)=="-") {
@@ -1519,9 +1866,11 @@ function handleResult(req) {									// the called-back phone lookup function
 			}
 		}
 	}		// end function handleResult()
-
-
-
+/**
+ * 
+ * @param {type} target
+ * @returns {Boolean}
+ */
 function wr_invite(target) {							// write chat message via ajax xfer
 	var url = "./ajax/chat_invite.php?frm_to=" + target.trim() + "&frm_user=" + document.chat_form.frm_user.value;		// user id or broadcast
 	var payload = syncAjax(url);						// send lookup url
@@ -1534,13 +1883,15 @@ function wr_invite(target) {							// write chat message via ajax xfer
 		return;
 		}				// end if/else (payload.substring(... )
 	}		// end function wr invite msg()
-	
-
+/**
+ * 
+ * @param {type} the_Form
+ * @returns {Boolean}
+ */
 function wr_chat_msg(the_Form) {							// write chat message via ajax xfer
 	if (the_Form.frm_message.value.trim()=="") {return;}
 
 	var person = document.getElementById("person");		// into table
-
 	var new_tr = person.insertRow(-1);
 	new_tr.style.backgroundColor = colors[2];
 	var timecell = new_tr.insertCell(-1).appendChild(document.createTextNode(""));		// empty time
@@ -1576,16 +1927,27 @@ function wr_chat_msg(the_Form) {							// write chat message via ajax xfer
 		do_focus();
 		}				// end if/else (payload.substring(... )
 	}		// end function wr_chat_ msg()
-
+/**
+ * 
+ * @param {type} the_id
+ * @returns {undefined}
+ */
 function show_hide(the_id) {						// display then hide given id
 	$(the_id).style.display='inline';
 	setTimeout("$('sent_msg').style.display='none';", 3000);
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function do_focus () {	
 	document.chat_form.frm_message.focus();
 	}	
-
+/**
+ * 
+ * @param {type} e
+ * @returns {unresolved}
+ */
 function do_enter(e) {										// enter key submits form
 	var keynum;
 	var keychar;
@@ -1600,20 +1962,33 @@ function do_enter(e) {										// enter key submits form
 		return keychar;
 			}
 	} //	end function do_enter(e)
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function announce() {										//end announcement
 	wr_chat_msg(document.chat_form);
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function set_to() {										// set timeout
 	if (!the_to) {the_to=setTimeout('getMessages(false)', <?php print $cycle;?>);}
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function clear_to() {
 	clearTimeout (the_to);
 	the_to = false;
 	}
-	
+/**
+ * 
+ * @param {type} ignore
+ * @returns {undefined}
+ */	
 function getMessages(ignore){
 	clear_to();
 	rd_chat_msg();
@@ -1621,7 +1996,10 @@ function getMessages(ignore){
 	do_focus ();
 	get_chatusers();
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function get_chatusers() {
 	$('whos_chatting').innerHTML = "Checking ......";
 	randomnumber=Math.floor(Math.random()*99999999);
@@ -1632,7 +2010,11 @@ function get_chatusers() {
 		$('whos_chatting').innerHTML = chatusers[0];
 		}
 	}
-
+/**
+ * 
+ * @param {type} in_val
+ * @returns {undefined}
+ */
 function do_send_inv(in_val) {
 	show_hide('sent_msg');
 	wr_invite(in_val);
@@ -1640,7 +2022,11 @@ function do_send_inv(in_val) {
 	if(!the_to) {window.setTimeout('set_to()',10000);}	//	10/29/13
 	do_can ();			// hide some buttons and reset select
 	}
-
+/**
+ * 
+ * @param {type} ctr
+ * @returns {undefined}
+ */
 function trim_list(ctr) {			// delete oldest rows from display
 	ctr = $('person').rows.length;
 	while ($('person').rows.length>ctr){
@@ -1648,7 +2034,10 @@ function trim_list(ctr) {			// delete oldest rows from display
 		main.deleteRow(-1);
 		}
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function do_can () {
 	$('help').innerHTML = "";
 	$('send_butt').style.display='none';
@@ -1656,7 +2045,10 @@ function do_can () {
 	document.chat_form.chat_invite.options[0].selected = true;
 	if(!the_to) {set_to();}	//	10/29/13	
 	}		// end function do_can ()
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function chat_start() {
 	if(do_chat) {
 		announce();
@@ -1668,14 +2060,20 @@ function chat_start() {
 		clearTimeout(the_to);
 		}
 	}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 function chat_stop() {
 	if(!do_chat) {
 		wr_chat_msg(document.chat_form_2);
 		clearTimeout(the_to);
 		}
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function pause_messages() {	//	10/29/13
 	clear_to();
 	$('help').innerHTML = "<?php print gettext('Click Cancel to return to chat messages');?>";
@@ -1869,7 +2267,10 @@ if(cm_api != "") {
 	} else {
 	var minimal   = L.tileLayer(osmUrl, {attribution: cmAttr});	
 	}
-	
+/**
+ * 
+ * @returns {unresolved}
+ */
 function do_day() {
 	if(daynight == "day") return;
 	daynight = "day";
@@ -1879,7 +2280,10 @@ function do_day() {
 	$('night_but').style.display = "block";
 	$('app_title').style.display = "none";		
 	}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 function do_night() {
 	if(daynight == "night") return;
 	daynight = "night";
@@ -1889,7 +2293,10 @@ function do_night() {
 	$('night_but').style.display = "none";	
 	$('app_title').style.display = "none";		
 	}
-		
+/**
+ * 
+ * @returns {undefined}
+ */		
 function initialise() {
 		if(cm_api != "") {
 			if(!map) { map = L.map('map_canvas', {
@@ -1910,7 +2317,11 @@ function initialise() {
 		}
 	$('toggle_tracks_off_but').style.display = 'none';
 	$('toggle_tracks_but').style.display = 'none';
-	
+/**
+ * 
+ * @param {type} e
+ * @returns {undefined}
+ */	
 	function onLocationFound(e) {
 		var theBounds = map.getBounds();
 		var radius = 0;
@@ -1985,7 +2396,11 @@ function initialise() {
 			   .openOn(map);
 			});		
 		}
-
+/**
+ * 
+ * @param {type} e
+ * @returns {undefined}
+ */
 	function onLocationError(e) {
 //		alert(e.message);
 		}
@@ -1994,7 +2409,13 @@ function initialise() {
 	map.on('locationerror', onLocationError);
 	get_geo();
 	}
-
+/**
+ * 
+ * @param {type} the_latlng
+ * @param {type} theLat
+ * @param {type} theLng
+ * @returns {undefined}
+ */
 function do_geolocate(the_latlng, theLat, theLng) {
 	var theinfo;
 	(new google.maps.Geocoder()).geocode({latLng: the_latlng}, function(resp) {
@@ -2058,14 +2479,22 @@ function do_geolocate(the_latlng, theLat, theLng) {
 			}
 		});
 	}
-	
+/**
+ * 
+ * @param {type} url
+ * @returns {undefined}
+ */	
 function addScript(url) {
 	var script = document.createElement('script');
 	script.type="text/javascript";
 	script.src=url;
 	document.getElementsByTagName('head') [0].appendChild(script);
 	}
-
+/**
+ * 
+ * @param {type} response
+ * @returns {undefined}
+ */
 window.getRoute = function (response) {
 	var point, points = [];
 	var theText = "";
@@ -2088,7 +2517,12 @@ window.getRoute = function (response) {
 	route.bringToFront();
 	$('directions').innerHTML = theText;
 	}
-			
+/**
+ * 
+ * @param {type} toAddress
+ * @param {type} recfacAddress
+ * @returns {undefined}
+ */			
 function setDirections(toAddress, recfacAddress) {
 	$('menu_but2').style.display = 'none';
 	$('ticket_detail').style.display = 'none';		
@@ -2107,12 +2541,18 @@ function setDirections(toAddress, recfacAddress) {
         console.log('http://routes.cloudmade.com/' + theAPI + '/api/0.3/' + the_lat + ',' + the_lng + transit + toAddress + '/car.js?callback=getRoute');
         addScript('http://routes.cloudmade.com/' + theAPI + '/api/0.3/' + the_lat + ',' + the_lng + transit + toAddress + '/car.js?callback=getRoute');
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function zoomIn() {
 	map.zoomIn();
 	$('app_title').style.display = "none";		
 	}
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 function zoomOut() {
 	map.zoomOut();
 	$('app_title').style.display = "none";		

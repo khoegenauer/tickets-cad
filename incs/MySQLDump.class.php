@@ -1,6 +1,8 @@
 <?php
-/*
-MySQL Dump PHP class by CubeScripts, www.cubescripts.com
+/**
+ * MySQL Dump PHP class by CubeScripts, www.cubescripts.com
+ * @package MySQLDump.class.php
+ * @author Cubescripts <john.doe@example.com>
 */
 
 /**

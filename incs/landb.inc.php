@@ -1,5 +1,14 @@
 <?php
 /**
+ * 
+ * 
+ * @package landb.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
+/**
  * do_landb_server
  * Insert description here
  *

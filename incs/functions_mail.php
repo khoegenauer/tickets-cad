@@ -1,4 +1,13 @@
 <?php
+/**
+ * 
+ * 
+ * @package functions_mail.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
 /*
 1/9/11 initial extractf from FIP
 4/19/11 corrections re smtp array makeup

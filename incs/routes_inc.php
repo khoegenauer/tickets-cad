@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package routes_inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 error_reporting(E_ALL);
 
 /*

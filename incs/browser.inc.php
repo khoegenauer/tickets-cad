@@ -1,4 +1,13 @@
 <?php
+/**
+ * 
+ * 
+ * @package browser.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
 /*
 1/23/10 - initial release
 5/8/10 chrome added

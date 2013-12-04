@@ -1,4 +1,13 @@
 <?php
+/**
+ * 
+ * 
+ * @package log_codes.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
 /*
 3/25/10 initial release
 12/1/10 get_text patient added

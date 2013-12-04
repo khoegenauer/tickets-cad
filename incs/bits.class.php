@@ -1,4 +1,13 @@
 <?php
+/**
+ * 
+ * 
+ * @package bits.class.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
 /*
 4/27/11 initial installation
 */

@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package addrlkup.php
+ * @author John Doe <john.doe@example.com>
+ * @copyright (c) 2013, OpenISES Project
+ * @license http://opensource.org/licenses/GPL-2.0 GPL v2
+ * @since version
+ * @version
+ */
 $istest = FALSE;
 $istest=false;
 

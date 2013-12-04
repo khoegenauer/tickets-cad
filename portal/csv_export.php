@@ -1,17 +1,33 @@
 <?php
+/**
+ * 
+ * 
+ * @package csv_export.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
 error_reporting (E_ALL  ^ E_DEPRECATED);
 @session_start();
 require '../incs/functions.inc.php';
 $user = $_SESSION['user_id'];
- 
+/**
+ * 
+ * @param type $value
+ * @return type
+ */ 
 function get_facilityname($value) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = " . $value . " LIMIT 1";		 
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 	$row = stripslashes_deep(mysql_fetch_assoc($result));
 	return $row['name'];
 	}
- 
+/**
+ * 
+ * @param type $user
+ * @param type $filename
+ */ 
 function exportMysqlToCsv($user,$filename = 'requests.csv'){
     $csv_terminated = "\n";
     $csv_separator = ",";

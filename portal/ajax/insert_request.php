@@ -1,9 +1,22 @@
 <?php
+/**
+ * 
+ * 
+ * @package insert_request.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
 error_reporting (E_ALL  ^ E_DEPRECATED);
 @session_start();
 require_once('../../incs/functions.inc.php');
 $ret_arr = array();
+/**
+ * 
+ * @param type $the_id
+ * @return string
+ */
 function get_requester_details($the_id) {
 	$the_ret = array();
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `id` = " . $the_id . " LIMIT 1";
@@ -24,7 +37,11 @@ function get_requester_details($the_id) {
 		}
 	return $the_ret;
 	}
-
+/**
+ * 
+ * @param type $id
+ * @return string
+ */
 function get_facname($id) {
 	$the_ret = array();
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = " . $id . " LIMIT 1";

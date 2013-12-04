@@ -1,9 +1,22 @@
 <?php
+/**
+ * 
+ * 
+ * @package decline.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 require_once('../../incs/functions.inc.php');
 @session_start();
 $by = $_SESSION['user_id'];
 $now = mysql_format_date(time() - (intval(get_variable('delta_mins')*60)));
 $regions = array();
+/**
+ * 
+ * @param type $the_id
+ * @return type
+ */
 function get_requester_details($the_id) {
 	$the_ret = array();
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` `u` WHERE `id` = " . $the_id . " LIMIT 1";

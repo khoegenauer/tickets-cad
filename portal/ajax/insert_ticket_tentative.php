@@ -1,10 +1,22 @@
 <?php
+/**
+ * 
+ * 
+ * @package insert_ticket_tentative.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 require_once('../../incs/functions.inc.php');
 @session_start();
 $by = $_SESSION['user_id'];
 $now = mysql_format_date(time() - (intval(get_variable('delta_mins')*60)));
 $regions = array();
-
+/**
+ * 
+ * @param type $the_id
+ * @return type
+ */
 function get_requester_details($the_id) {
 	$the_ret = array();
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `id` = " . $the_id . " LIMIT 1";
@@ -26,7 +38,11 @@ function get_requester_details($the_id) {
 		$the_ret[1] = $row['user'];
 	return $the_ret;
 	}
-
+/**
+ * 
+ * @param type $id
+ * @return string
+ */
 function get_facname($id) {
 	$the_ret = array();
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = " . $id . " LIMIT 1";

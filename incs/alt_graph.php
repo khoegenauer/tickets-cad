@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package alt_graph.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 10/5/08 sql tidy-up
 */

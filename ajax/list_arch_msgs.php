@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package list_arch_msgs.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 list_arch_messages.php - gets archive messages from stored csv files for display in message window and ticket view and unit view
 10/23/12 - new file

@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package restore_message.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 restore_message.php - restores message from wastebasket to inbox.
 10/23/12 - new file

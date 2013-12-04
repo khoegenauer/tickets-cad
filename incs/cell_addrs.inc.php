@@ -1,4 +1,13 @@
 <?php
+/**
+ * 
+ * 
+ * @package cell_addrs.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
 /*
 initial release 10/22/08
 */

@@ -1,9 +1,22 @@
 <?php
+/**
+ * 
+ * 
+ * @package file_list.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 9/10/13 - new file, lists tickets that are assigned to the mobile user
 */
 @session_start();
 require_once('../../incs/functions.inc.php');
+/**
+ * 
+ * @param type $input
+ * @return type
+ */
 function br2nl($input) {
 	return preg_replace('/<br(\s+)?\/?>/i', "\n", $input);
 	}
@@ -25,10 +38,10 @@ $query = "SELECT *,
 $bgcolor = '#EEEEEE';
 $result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 if (mysql_affected_rows() == 0) { 
-	$return .= "<TABLE style='width: 100%;'><TR style='width: 100%; font-size: 1em;'><TD style='width: 100%; font-size: 1em; text-align: center;'>No Files</TD></TR></TABLE>";
+	$return .= "<TABLE style='width: 100%;'><TR style='width: 100%; font-size: 1em;'><TD style='width: 100%; font-size: 1em; text-align: center;'>" . gettext('No Files') . "</TD></TR></TABLE>";
 	} else {
 	$return .= "<TABLE style='width: 100%;'>";	
-	$return .= "<TR class='heading' style='width: 100%; color: #FFFFFF; font-size: 1.1em;'><TD style='font-size: 1em;; color: #FFFFFF'>File Name</TD><TD style='font-size: 1em;; color: #FFFFFF'>Uploaded By</TD><TD style='font-size: 1em;; color: #FFFFFF'>Date</TD></TR>";		
+	$return .= "<TR class='heading' style='width: 100%; color: #FFFFFF; font-size: 1.1em;'><TD style='font-size: 1em;; color: #FFFFFF'>" . gettext('File Name') . "</TD><TD style='font-size: 1em;; color: #FFFFFF'>Uploaded By</TD><TD style='font-size: 1em;; color: #FFFFFF'>Date</TD></TR>";		
 	while ($row = stripslashes_deep(mysql_fetch_assoc($result))){	
 		$return .= "<TR style='font-size: 1em; background-color: " . $bgcolor . "; font-size: 1em;'>";
 		$filename = $row['filename'];

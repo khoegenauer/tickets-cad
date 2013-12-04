@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package list_waste_messages.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 list_waste_messages.php - gets messages from messages wastebasket table for display in message window and ticket view and unit view
 10/23/12 - new file

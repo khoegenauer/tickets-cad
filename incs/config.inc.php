@@ -1,4 +1,13 @@
 <?php
+/**
+ * 
+ * 
+ * @package config.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
 error_reporting(E_ALL);		// 3/5/12
 
 /*

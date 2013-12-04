@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package portal.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 11/28/12	New incs file for portal
 */

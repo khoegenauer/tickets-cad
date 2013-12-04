@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package socket2me.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 5/21/2013 initial release - useage: inside the page <head> "require_once('./incs/socket2me.inc.php');"
 5/27/2013 removed user_id prepend

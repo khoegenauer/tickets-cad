@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package smtp.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 1/10/11 addded batch send in order to hide other addees
 */

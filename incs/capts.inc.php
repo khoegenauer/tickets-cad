@@ -1,4 +1,13 @@
 <?php
+/**
+ * 
+ * 
+ * @package capts.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
 error_reporting(E_ALL);		// 10/1/08
 
 /*

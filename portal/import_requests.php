@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * 
+ * @package import_requests.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
 /*
 6/7/12	New file, allows upload of existing csv file with member details on, processing of this and adding to DB.
 */
@@ -43,7 +51,7 @@ function get_user_name($the_id) {
 	<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<meta http-equiv=”X-UA-Compatible” content=”IE=EmulateIE7" />
 	<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
-	<LINK REL=StyleSheet HREF="../stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+	<LINK REL="StyleSheet" HREF="../stylesheet.php?version=<?php print time();?>" TYPE="text/css" />
 	<SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
 	<SCRIPT type="text/javascript">
 /**
@@ -103,8 +111,8 @@ if(empty($_POST)) {	//	Upload a file for import
 		<DIV id='outer' style='position: relative; top: 1%; left: 1%; width: 95%; text-align: center; margin: 10px;'>
 			<DIV id='inner' style='position: relative; top: 20%; left: 20%; height: 30%; width: 60%;'>
 				<FORM enctype="multipart/form-data" METHOD="POST" NAME= "fileForm" ACTION="<?php print basename(__FILE__);?>" />
-				<INPUT TYPE="file" NAME="the_file" SIZE="48" VALUE="" style='cursor: pointer;'>
-				<INPUT type='hidden' name='stage' value=1>
+				<INPUT TYPE="file" NAME="the_file" SIZE="48" VALUE="" style='cursor: pointer;' />
+				<INPUT type='hidden' name='stage' value=1 />
 				</FORM>
 			</DIV><BR /><BR />
 			<DIV id='controls' style='position: relative; width: 60%; top: 20%; left: 20%; text-align: center;'>
@@ -323,7 +331,7 @@ if(empty($_POST)) {	//	Upload a file for import
 			}
 ?>
 			</TABLE>
-			<INPUT type='hidden' name='stage' value=2>
+			<INPUT type='hidden' name='stage' value=2 />
 			</FORM>
 		</DIV>
 	</DIV>

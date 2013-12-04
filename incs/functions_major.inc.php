@@ -1,4 +1,13 @@
 <?php
+/**
+ * 
+ * 
+ * @package functions_major.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since version
+ * @version string
+ */
+
 $iw_width = 	"300px";		// map infowindow with
 
 /*

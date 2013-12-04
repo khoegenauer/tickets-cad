@@ -2564,22 +2564,24 @@ var buttons_html = "";
 	switch($locale) { 
 		case "0":
 ?>
-		<SPAN ID = 'usng_link' onClick = "do_usng_conv(res_add_Form);" style='font-weight: bold;'><?php print gettext('USNG');?>:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled /></TD></TR>
+		<SPAN ID = 'usng_link' onClick = "do_usng_conv(res_add_Form);" style='font-weight: bold;'><?php print gettext('USNG');?>:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled />
 <?php
 		break;
 
 		case "1":
 ?>
-		<SPAN ID = 'osgb_link' style='font-weight: bold;'><?php print gettext('OSGB');?>:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled /></TD></TR>
+		<SPAN ID = 'osgb_link' style='font-weight: bold;'><?php print gettext('OSGB');?>:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled />
 <?php
 		break;
 	
 		default:
 ?>
-		<SPAN ID = 'utm_link' style='font-weight: bold;'><?php print gettext('UTM');?>:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_utm" VALUE="" disabled /></TD></TR>
+		<SPAN ID = 'utm_link' style='font-weight: bold;'><?php print gettext('UTM');?>:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_utm" VALUE="" disabled />
 <?php
-
 	}
+  ?>
+      </TD></TR>
+<?php
 		$mg_select = "<SELECT NAME='frm_notify_mailgroup'>";	//	8/28/13
 		$mg_select .= "<OPTION VALUE=0>" . gettext('Select Mail List') . "</OPTION>";	//	8/28/13
 		$query_mg = "SELECT * FROM `$GLOBALS[mysql_prefix]mailgroup`";	//	8/28/13

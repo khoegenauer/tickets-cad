@@ -2052,28 +2052,28 @@ $locale = get_variable('locale');	// 08/03/09
 	switch($locale) { 
 		case "0":
 ?>
-			<B><SPAN ID = 'USNG' onClick = "do_usng();"><?php print gettext('USNG');?></SPAN></B>:&nbsp;<INPUT SIZE="19" TYPE="text" NAME="frm_ngs" VALUE="" DISABLED /></TD>
-			
-	</TR> <!-- 9/13/08, 12/3/08 -->
+			<B><SPAN ID = 'USNG' onClick = "do_usng();"><?php print gettext('USNG');?></SPAN></B>:&nbsp;<INPUT SIZE="19" TYPE="text" NAME="frm_ngs" VALUE="" DISABLED />
+			<!-- 9/13/08, 12/3/08 -->
 	
 <?php
 		break;
 
 		case "1":		// UK
 ?>
-			<B><SPAN ID = 'OSGB' ><?php print gettext('OSGB');?>:</SPAN></B>&nbsp;<INPUT SIZE="19" TYPE="text" NAME="frm_osgb" VALUE="" DISABLED /></TD>
-			
-	</TR> <!-- 9/13/08, 12/3/08 --><?php
+			<B><SPAN ID = 'OSGB' ><?php print gettext('OSGB');?>:</SPAN></B>&nbsp;<INPUT SIZE="19" TYPE="text" NAME="frm_osgb" VALUE="" DISABLED />
+			<!-- 9/13/08, 12/3/08 --><?php
 		break;
 
 		default:		// ROW
 ?>
-			<B><SPAN ID = 'UTM'><?php print gettext('UTM');?>:</SPAN></B>&nbsp;<INPUT SIZE="19" TYPE="text" NAME="frm_utm" VALUE="" DISABLED /></TD>
-			
-	</TR> <!-- 9/13/08, 12/3/08 -->
+			<B><SPAN ID = 'UTM'><?php print gettext('UTM');?>:</SPAN></B>&nbsp;<INPUT SIZE="19" TYPE="text" NAME="frm_utm" VALUE="" DISABLED />
+			 <!-- 9/13/08, 12/3/08 -->
 	
 <?php
 		}			// end switch($locale)
+?>
+      </TD></TR>
+<?php
 	}		// end if ($gmaps)
 ?>			
 	<TR CLASS='even'><TD COLSPAN="3" ALIGN="center"><BR />

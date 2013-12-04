@@ -408,7 +408,7 @@ $name = ($row_callsign['name']);				// 7/29/09
 
 <?php print $refresh; ?>	<!-- 10/4/08 -->
 	
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+	<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 	<SCRIPT src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
 <SCRIPT>
 <?php
@@ -461,5 +461,5 @@ $name = ($row_callsign['name']);				// 7/29/09
 <BR /><HR ALIGN='center' SIZE=1 COLOR='blue' WIDTH='75%'><BR />
 <CENTER><img src="<?php print $alt_urlstr;?>" border=0 />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <br><br>
-<CENTER><A HREF='#top'><U><?php print gettext('to top');?></U></A>
+</CENTER><A HREF='#top'><U><?php print gettext('to top');?></U></A>
 </BODY></HTML>

@@ -5352,7 +5352,7 @@ function shut_down(){				// 5/25/11
 	do_log($GLOBALS['LOG_INTRUSION'],0);	
 ?>
 <html>
- <body onload="setTimeout('parent.frames['upper'].do_logout();', 2000);" > 
+ <body onload="setTimeout('parent.frames[\'upper\'].do_logout();', 2000);" > 
  <BR /><BR /><CENTER><H2><?php print gettext('Intrusion attempt prevented!');?></H2></CENTER>
  </body>
 </html>

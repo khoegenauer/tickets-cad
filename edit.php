@@ -1548,7 +1548,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			<INPUT TYPE="hidden" NAME="frm_lat" VALUE="<?php print $row['lat'];?>" />				<!-- // 8/9/08 -->
 			<INPUT TYPE="hidden" NAME="frm_lng" VALUE="<?php print $row['lng'];?>" />
 			<INPUT TYPE="hidden" NAME="frm_status_default" VALUE="<?php print $row['status'];?>" />
-			<INPUT TYPE="hidden" NAME="frm_affected_default" VALUE="<?php print $row['affected'];? />">
+			<INPUT TYPE="hidden" NAME="frm_affected_default" VALUE="<?php print $row['affected'];?>"/>
 			<INPUT TYPE="hidden" NAME="frm_scope_default" VALUE="<?php print $row['scope'];?>" />
 			<INPUT TYPE="hidden" NAME="frm_owner_default" VALUE="<?php print $row['owner'];?>" />
 			<INPUT TYPE="hidden" NAME="frm_severity_default" VALUE="<?php print $row['severity'];?>" />

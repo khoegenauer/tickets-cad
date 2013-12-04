@@ -1334,24 +1334,23 @@ var buttons_html = "";
 	switch($locale) { 
 		case "0":
 ?>
-		<SPAN ID = 'usng_link' onClick = "do_usng_conv(loc_add_form);" style='font-weight: bold;'>USNG:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled /></TD></TR>
+		<SPAN ID = 'usng_link' onClick = "do_usng_conv(loc_add_form);" style='font-weight: bold;'><?php print gettext('USNG');?>:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled />
 <?php
 		break;
 
 		case "1":
 ?>
-		<SPAN ID = 'osgb_link' style='font-weight: bold;'>OSGB:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled /></TD></TR>
+		<SPAN ID = 'osgb_link' style='font-weight: bold;'><?php print gettext('OSGB');?>:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled />
 <?php
 		break;
 	
 		default:
 ?>
-		<SPAN ID = 'utm_link' style='font-weight: bold;'>UTM:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_utm" VALUE="" disabled /></TD></TR>
+		<SPAN ID = 'utm_link' style='font-weight: bold;'><?php print gettext('UTM');?>:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_utm" VALUE="" disabled />
 <?php
-
 	}
 ?>
-
+    </TD></TR>
 		<TR CLASS='even'><TD COLSPAN=4 ALIGN='center'><font color='red' size='-1'>*</FONT> <?php print gettext('Required');?></TD></TR>
 		<TR CLASS = "odd"><TD COLSPAN='2' ALIGN='center'>
 			<INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();" STYLE = 'margin-left: 50px' />

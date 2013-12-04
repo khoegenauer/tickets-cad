@@ -339,7 +339,7 @@ function chk_circle(theForm) {
 			(myform.box_use_with_r.checked) ||
 			(myform.box_use_with_f.checked) ||
 			(myform.box_use_with_u_ex.checked) ||			
-			(myform.box_use_with_u_rf.checked) ))		 	{errmsg+= "\t<?php print gettext('At least one 'Apply to ...' is required');?>\n";}
+			(myform.box_use_with_u_rf.checked) ))		 	{errmsg+= "\t<?php print gettext('At least one \'Apply to ...\' is required');?>\n";}
 	
 		if (errmsg!="") {
 			$(mybutton).disabled = false; 

@@ -29,7 +29,6 @@
 				strokeWeight: strokeWidth
 			});
 		circle.setRadius(radius*5000); 
-
 		}
 		
 	function drawBanner(point, html, text, font_size, color) {        // Create the banner
@@ -131,9 +130,7 @@
 		
 		unset($query, $result);
 ?>
-		}		// end function do_landb()
-		
-		unset($query, $result);
-		echo "\t}\t// end function do_landb()\n";
-
+		}		// end JS function do_landb_V3()
+<?php		
+  } // end PHP function do_landb_server
 ?>

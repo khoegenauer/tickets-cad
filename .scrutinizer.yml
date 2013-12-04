@@ -30,8 +30,6 @@ tools:
         configuration_file: null
         suffixes:
             - php
-	
-	
 before_commands: {  }
 after_commands: {  }
 artifacts: {  }

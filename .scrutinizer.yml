@@ -1,0 +1,37 @@
+filter:
+    excluded_paths:
+        - 'vendor/*'
+    paths: {  }
+tools:
+    js_hint: true
+    php_analyzer: true
+    php_code_sniffer: true
+    php_cpd:
+        enabled: true
+        command: phpcpd
+        excluded_dirs: {  }
+        names:
+            - '*.php'
+        min_lines: 5
+        min_tokens: 70
+        filter:
+            excluded_paths:
+                - 'vendor/*'
+                - 'app/*'
+                - 'web/*'
+            paths: {  }
+    php_loc: true
+    php_mess_detector: true
+    php_pdepend:
+        excluded_dirs:
+            - vendor
+        enabled: true
+        command: pdepend
+        configuration_file: null
+        suffixes:
+            - php
+	
+	
+before_commands: {  }
+after_commands: {  }
+artifacts: {  }

@@ -44,137 +44,139 @@ if (empty($_POST)) {
 
 <SCRIPT>
 /**
- * 
+ *
  * @returns {unresolved}
- */ 
-	String.prototype.trim = function () {
-		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
-		};
+ */
+    String.prototype.trim = function () {
+        return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
+        };
 /**
- * 
+ *
  * @returns {Array}
  */
-	function $() {
-		var elements = new Array();
-		for (var i = 0; i < arguments.length; i++) {
-			var element = arguments[i];
-			if (typeof element == 'string')
-				element = document.getElementById(element);
-			if (arguments.length == 1)
-				return element;
-			elements.push(element);
-			}
-		return elements;
-		}
+    function $() {
+        var elements = new Array();
+        for (var i = 0; i < arguments.length; i++) {
+            var element = arguments[i];
+            if (typeof element == 'string')
+                element = document.getElementById(element);
+            if (arguments.length == 1)
+                return element;
+            elements.push(element);
+            }
+
+        return elements;
+        }
 /**
- * 
+ *
  * @param {type} lines
  * @returns {undefined}
- */	
-	function reSizeScr(lines){
-		var the_width = 720;
-		var the_height = ((lines * 21)+400);				// values derived via trial/error (more of the latter, mostly)
-		window.resizeTo(the_width,the_height);	
-		}
+ */
+    function reSizeScr(lines) {
+        var the_width = 720;
+        var the_height = ((lines * 21)+400);				// values derived via trial/error (more of the latter, mostly)
+        window.resizeTo(the_width,the_height);
+        }
 /**
- * 
+ *
  * @returns {Boolean}
  */
-	function validate() {
-		var addr_err = true;
-			for (i=0; i< document.mail_form.length; i++) {
-			 	if ((document.mail_form.elements[i].name.substring(0, 2) == 'cb') && (document.mail_form.elements[i].checked)) {
-			 		addr_err = false;
-		 			}
-		 		}
-	
-		var errmsg="";
-		if (addr_err) 									  {errmsg+="<?php print gettext('One or more addresses required');?>\n";}
-		if (document.mail_form.frm_subj.value.trim()=="") {errmsg+="<?php print gettext('Message subject is required');?>\n";}
-		if (document.mail_form.frm_text.value.trim()=="") {errmsg+="<?php print gettext('Message text is required');?>\n";}
-		if (!(errmsg=="")){
-			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
-			return false;
-			}
-		else {
-			document.mail_form.submit();	
-			}
-		}				// end function validate()
+    function validate() {
+        var addr_err = true;
+            for (i=0; i< document.mail_form.length; i++) {
+                 if ((document.mail_form.elements[i].name.substring(0, 2) == 'cb') && (document.mail_form.elements[i].checked)) {
+                     addr_err = false;
+                     }
+                 }
 
-	</SCRIPT>
-	</HEAD>
-	
+        var errmsg="";
+        if (addr_err) {errmsg+="<?php print gettext('One or more addresses required');?>\n";}
+        if (document.mail_form.frm_subj.value.trim()=="") {errmsg+="<?php print gettext('Message subject is required');?>\n";}
+        if (document.mail_form.frm_text.value.trim()=="") {errmsg+="<?php print gettext('Message text is required');?>\n";}
+        if (!(errmsg=="")) {
+            alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
+
+            return false;
+            }
+        else {
+            document.mail_form.submit();
+            }
+        }				// end function validate()
+
+    </SCRIPT>
+    </HEAD>
+
 <?php
 
-	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ";		// (array_key_exists('first', $search_array)) 
-	$query .= (array_key_exists('fac_id', $_GET))? " WHERE `id` = " . quote_smart(trim($_GET['fac_id'])) . " LIMIT 1": "";
-	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+    $query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ";		// (array_key_exists('first', $search_array))
+    $query .= (array_key_exists('fac_id', $_GET))? " WHERE `id` = " . quote_smart(trim($_GET['fac_id'])) . " LIMIT 1": "";
+    $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 //	dump($query);
 ?>
-	<BODY onLoad = "reSizeScr(<?php print mysql_affected_rows();?>);"><CENTER>		<!-- 1/12/09 -->
+    <BODY onLoad = "reSizeScr(<?php print mysql_affected_rows();?>);"><CENTER>		<!-- 1/12/09 -->
 
-	<CENTER>		<!-- 1/12/09 -->
-	<CENTER><H3>Facility Mail </H3>
+    <CENTER>		<!-- 1/12/09 -->
+    <CENTER><H3>Facility Mail </H3>
 <?PHP
-	if (mysql_affected_rows()>0) {
-		print "<FORM NAME='mail_form' METHOD='post' ACTION='" . basename(__FILE__) . "'>\n";
-		print "<TABLE BORDER = 0 ALIGN='center'>\n";
-		$i = 0;
-		while($row = stripslashes_deep(mysql_fetch_assoc($result))) {
-			if (is_email($row['contact_email'])) {
-				print "<TR CLASS = '{$evenodd[($i%2)]}'><TD><INPUT TYPE='checkbox' NAME='cb{$i}' VALUE='{$row['contact_email']}' CHECKED/></TD>
-					<TD>{$row['name']}</TD><TD>{$row['contact_name']}</TD><TD>{$row['contact_email']}</TD><TD></TD></TR>\n";
-				$i++;
-				}
-			if (is_email($row['security_email'])) {
-				print "<TR CLASS = '{$evenodd[($i%2)]}'><TD><INPUT TYPE='checkbox' NAME='cb" .$i. "' VALUE='" . $row['security_email'] . "' CHECKED/></TD>
-					<TD>{$row['name']}</TD><TD>{$row['security_contact']}</TD><TD>{$row['security_email']}</TD><TD></TD></TR>\n";
-				$i++;
-				}	// end if (is_email)
-			}		// end while()
-		}				// end if (mysql_affected_rows()>0) 
+    if (mysql_affected_rows()>0) {
+        print "<FORM NAME='mail_form' METHOD='post' ACTION='" . basename(__FILE__) . "'>\n";
+        print "<TABLE BORDER = 0 ALIGN='center'>\n";
+        $i = 0;
+        while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
+            if (is_email($row['contact_email'])) {
+                print "<TR CLASS = '{$evenodd[($i%2)]}'><TD><INPUT TYPE='checkbox' NAME='cb{$i}' VALUE='{$row['contact_email']}' CHECKED/></TD>
+                    <TD>{$row['name']}</TD><TD>{$row['contact_name']}</TD><TD>{$row['contact_email']}</TD><TD></TD></TR>\n";
+                $i++;
+                }
+            if (is_email($row['security_email'])) {
+                print "<TR CLASS = '{$evenodd[($i%2)]}'><TD><INPUT TYPE='checkbox' NAME='cb" .$i. "' VALUE='" . $row['security_email'] . "' CHECKED/></TD>
+                    <TD>{$row['name']}</TD><TD>{$row['security_contact']}</TD><TD>{$row['security_email']}</TD><TD></TD></TR>\n";
+                $i++;
+                }	// end if (is_email)
+            }		// end while()
+        }				// end if (mysql_affected_rows()>0)
 
-	if ($i > 0 ) {							// 7/16/10
-				
+    if ($i > 0) {							// 7/16/10
+
 ?>
-		<TR><TD COLSPAN=5>&nbsp;</TD></TR>	
-		<TR CLASS='even'><TD ALIGN='right'><?php print gettext('Subject');?>: </TD><TD COLSPAN=4><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60/></TD></TR>
-		<TR CLASS='odd'><TD ALIGN='right'><?php print gettext('Message');?>:</TD><TD COLSPAN=4> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
-		<TR CLASS='even'><TD></TD><TD ALIGN='left' COLSPAN=3><BR /><BR />
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "validate();"  STYLE =  'margin-left: 100px'/>
-			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>' STYLE =  'margin-left: 20px'/>
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'STYLE =  'margin-left: 20px'/><BR /><BR />
-			</TD></TR>
-			</TABLE></FORM>
+        <TR><TD COLSPAN=5>&nbsp;</TD></TR>
+        <TR CLASS='even'><TD ALIGN='right'><?php print gettext('Subject');?>: </TD><TD COLSPAN=4><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60/></TD></TR>
+        <TR CLASS='odd'><TD ALIGN='right'><?php print gettext('Message');?>:</TD><TD COLSPAN=4> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
+        <TR CLASS='even'><TD></TD><TD ALIGN='left' COLSPAN=3><BR /><BR />
+            <INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "validate();"  STYLE =  'margin-left: 100px'/>
+            <INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>' STYLE =  'margin-left: 20px'/>
+            <INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'STYLE =  'margin-left: 20px'/><BR /><BR />
+            </TD></TR>
+            </TABLE></FORM>
 <?php
-		}		// end if ($i > 0 )
-	else {
+        }		// end if ($i > 0 )
+    else {
 ?>
-		<BR /><H3><?php print gettext('No facility addresses available');?></H3><BR /><BR />
-		<INPUT TYPE='button'  VALUE = '<?php print gettext('Close');?>' onClick='window.close();' />
-<?php
-	
-		}		// end if/else end if ($i > 0 )
-		
-		}		// end if (empty($_POST)) {
-
-	else {
-		$addr_str = $sep = "";
-		foreach ($_POST as $VarName=>$VarValue) {
-			if (substr($VarName, 0, 2) == 'cb') {
-				$addr_str .= $sep . $VarValue;
-				$sep = "|";
-				}				// end if
-			}		// end foreach
-		do_send ($addr_str, $_POST['frm_subj'], $_POST['frm_text'], 0, 0);	// ($to_str, $subject_str, $text_str ) - | separator
-?>
-	<BODY>
-	<CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
-	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'/><BR /><BR />
-
+        <BR /><H3><?php print gettext('No facility addresses available');?></H3><BR /><BR />
+        <INPUT TYPE='button'  VALUE = '<?php print gettext('Close');?>' onClick='window.close();' />
 <?php
 
-	}		// end else
+        }		// end if/else end if ($i > 0 )
+
+        }		// end if (empty($_POST)) {
+
+    else {
+        $addr_str = $sep = "";
+        foreach ($_POST as $VarName=>$VarValue) {
+            if (substr($VarName, 0, 2) == 'cb') {
+                $addr_str .= $sep . $VarValue;
+                $sep = "|";
+                }				// end if
+            }		// end foreach
+        do_send ($addr_str, $_POST['frm_subj'], $_POST['frm_text'], 0, 0);	// ($to_str, $subject_str, $text_str ) - | separator
+?>
+    <BODY>
+    <CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
+    <BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'/><BR /><BR />
+
+<?php
+
+    }		// end else
 ?>
 </BODY>
 </HTML>

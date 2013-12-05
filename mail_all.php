@@ -11,9 +11,9 @@
 3/15/11 changed stylesheet.php to stylesheet.php
 */
 error_reporting(E_ALL);		//
-	
+
 @session_start();
-require_once($_SESSION['fip']); 
+require_once($_SESSION['fip']);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
@@ -36,189 +36,191 @@ require_once($_SESSION['fip']);
 
 if (empty($_POST)) {
 
+    $colors = array();
+    $colors[$GLOBALS['LEVEL_SUPER'] ] = 			"#FFFFFF";		// white
+    $colors[$GLOBALS['LEVEL_ADMINISTRATOR'] ] = 	"#C0C0C0";		// gray
+    $colors[$GLOBALS['LEVEL_USER'] 	] =				"#FFFF00";		// yellow
+    $colors[$GLOBALS['LEVEL_GUEST'] ] = 			"#CCFF00";		// mint
+    $colors[$GLOBALS['LEVEL_MEMBER'] ] = 			"#FFCC00";		// orange
+    $colors[$GLOBALS['LEVEL_UNIT'] 	] = 			"#00CCCC";		// lt. blue
 
-	$colors = array();
-	$colors[$GLOBALS['LEVEL_SUPER'] ] = 			"#FFFFFF";		// white
-	$colors[$GLOBALS['LEVEL_ADMINISTRATOR'] ] = 	"#C0C0C0";		// gray
-	$colors[$GLOBALS['LEVEL_USER'] 	] =				"#FFFF00";		// yellow
-	$colors[$GLOBALS['LEVEL_GUEST'] ] = 			"#CCFF00";		// mint
-	$colors[$GLOBALS['LEVEL_MEMBER'] ] = 			"#FFCC00";		// orange
-	$colors[$GLOBALS['LEVEL_UNIT'] 	] = 			"#00CCCC";		// lt. blue	
-
-	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `email` IS NOT NULL
-		ORDER BY `level` ASC,`user` ASC" ;
-	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-	$rows = array();
-	while($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)){
-		if (is_email($row['email'])) {
-			$rows[] = $row;
-			}
-		}
+    $query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `email` IS NOT NULL
+        ORDER BY `level` ASC,`user` ASC" ;
+    $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+    $rows = array();
+    while ($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)) {
+        if (is_email($row['email'])) {
+            $rows[] = $row;
+            }
+        }
 ?>
 <SCRIPT>
 /**
- * 
+ *
  * @returns {unresolved}
- */ 
-	String.prototype.trim = function () {
-		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
-		};
+ */
+    String.prototype.trim = function () {
+        return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
+        };
 /**
- * 
+ *
  * @returns {Array}
  */
-	function $() {
-		var elements = new Array();
-		for (var i = 0; i < arguments.length; i++) {
-			var element = arguments[i];
-			if (typeof element == 'string')
-				element = document.getElementById(element);
-			if (arguments.length == 1)
-				return element;
-			elements.push(element);
-			}
-		return elements;
-		}
+    function $() {
+        var elements = new Array();
+        for (var i = 0; i < arguments.length; i++) {
+            var element = arguments[i];
+            if (typeof element == 'string')
+                element = document.getElementById(element);
+            if (arguments.length == 1)
+                return element;
+            elements.push(element);
+            }
+
+        return elements;
+        }
 /**
- * 
+ *
  * @returns {undefined}
- */	
-	function do_step_1() {
-		document.mail_form.submit();
-		}
+ */
+    function do_step_1() {
+        document.mail_form.submit();
+        }
 /**
- * 
+ *
  * @returns {Boolean}
  */
-	function do_step_2() {
-		if (document.mail_form.frm_text.value.trim()=="") {
-			alert ("<?php print gettext('Message text is required');?>");
-			document.mail_form.frm_text.focus();
-			return false;
-			}
-		var sep = "";
-		for (i=0;i<document.mail_form.elements.length; i++) {
-			if((document.mail_form.elements[i].type =='checkbox') && (document.mail_form.elements[i].checked)){		// frm_add_str
-				document.mail_form.frm_add_str.value += sep + document.mail_form.elements[i].value;
-				sep = "|";
-				}
-			}
-		if (document.mail_form.frm_add_str.value.trim()=="") {
-			alert ("<?php print gettext('Addressees required');?>");
-			return false;
-			}
-		document.mail_form.submit();	
-		}
+    function do_step_2() {
+        if (document.mail_form.frm_text.value.trim()=="") {
+            alert ("<?php print gettext('Message text is required');?>");
+            document.mail_form.frm_text.focus();
+
+            return false;
+            }
+        var sep = "";
+        for (i=0;i<document.mail_form.elements.length; i++) {
+            if ((document.mail_form.elements[i].type =='checkbox') && (document.mail_form.elements[i].checked)) {		// frm_add_str
+                document.mail_form.frm_add_str.value += sep + document.mail_form.elements[i].value;
+                sep = "|";
+                }
+            }
+        if (document.mail_form.frm_add_str.value.trim()=="") {
+            alert ("<?php print gettext('Addressees required');?>");
+
+            return false;
+            }
+        document.mail_form.submit();
+        }
 /**
- * 
+ *
  * @param {type} lines
  * @returns {undefined}
  */
-	function reSizeScr(lines){
-		var the_width = 600;
-		var the_height = ((lines * 23)+380);			// values derived via trial/error (more of the latter, mostly)
-		window.resizeTo(the_width,the_height);	
-		}
+    function reSizeScr(lines) {
+        var the_width = 600;
+        var the_height = ((lines * 23)+380);			// values derived via trial/error (more of the latter, mostly)
+        window.resizeTo(the_width,the_height);
+        }
 /**
- * 
- * @returns {undefined}
- */	
-	function do_clear(){
-		for (i=0;i<document.mail_form.elements.length; i++) {
-			if(document.mail_form.elements[i].type =='checkbox'){
-				document.mail_form.elements[i].checked = false;
-				}
-			}		// end for ()
-		$('clr_spn').style.display = "none";
-		$('chk_spn').style.display = "block";
-		}		// end function do_clear
-/**
- * 
+ *
  * @returns {undefined}
  */
-	function do_check(){
-		for (i=0;i<document.mail_form.elements.length; i++) {
-			if(document.mail_form.elements[i].type =='checkbox'){
-				document.mail_form.elements[i].checked = true;
-				}
-			}		// end for ()
-		$('clr_spn').style.display = "block";
-		$('chk_spn').style.display = "none";
-		}		// end function do_clear
+    function do_clear() {
+        for (i=0;i<document.mail_form.elements.length; i++) {
+            if (document.mail_form.elements[i].type =='checkbox') {
+                document.mail_form.elements[i].checked = false;
+                }
+            }		// end for ()
+        $('clr_spn').style.display = "none";
+        $('chk_spn').style.display = "block";
+        }		// end function do_clear
+/**
+ *
+ * @returns {undefined}
+ */
+    function do_check() {
+        for (i=0;i<document.mail_form.elements.length; i++) {
+            if (document.mail_form.elements[i].type =='checkbox') {
+                document.mail_form.elements[i].checked = true;
+                }
+            }		// end for ()
+        $('clr_spn').style.display = "block";
+        $('chk_spn').style.display = "none";
+        }		// end function do_clear
 
-	</SCRIPT>
-	</HEAD>
+    </SCRIPT>
+    </HEAD>
 
-<?php		
-	if(count($rows)>0) {
+<?php
+    if (count($rows)>0) {
 ?>
-	<BODY onLoad = "reSizeScr(<?php print count($rows);?>);"><CENTER>		<!-- 1/12/09 -->
-	<CENTER><H3><?php print gettext('Mail to Users');?></H3>
+    <BODY onLoad = "reSizeScr(<?php print count($rows);?>);"><CENTER>		<!-- 1/12/09 -->
+    <CENTER><H3><?php print gettext('Mail to Users');?></H3>
 <?php
-	if(count($rows)>2) {
+    if (count($rows)>2) {
 ?>
-		<SPAN ID='clr_spn' STYLE = 'display:block' onClick = 'do_clear();'>&raquo; <U><?php print gettext('Un-check all');?></U></SPAN>
-		<SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check();'>&raquo; <U><?php print gettext('Check all');?></U></SPAN>
+        <SPAN ID='clr_spn' STYLE = 'display:block' onClick = 'do_clear();'>&raquo; <U><?php print gettext('Un-check all');?></U></SPAN>
+        <SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check();'>&raquo; <U><?php print gettext('Check all');?></U></SPAN>
 <?php
-		}
-?>		
-	<P>
-		<FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
-		<INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''/>	<!-- for pipe-delim'd addr string -->
-<?php		
-		print "<TABLE ALIGN = 'center' BORDER=0 WIDTH=500>\n";
-		for ($i=0; $i < count($rows); $i++) {
-			$row = stripslashes_deep($rows[$i]);
-			print "\t<TR CLASS= '{$evenodd[($i)%2]}'>
-				<TD ALIGN='right'><INPUT TYPE='checkbox' CHECKED NAME='cb{($i+1)}'VALUE='{$row['email']}'/> </TD>
-				<TD><SPAN style = \"background-color:{$colors[$row['level']]}\"> &nbsp;{$row['user']}&nbsp;</SPAN>
-					(<I>{$row['email']}</I>) </TD>
-				<TD ALIGN='left'>{$row['name_f']} {$row['name_mi']} {$row['name_l']}</TD>
-				</TR>\n";
-			}		// end for()
-
-?>	
-		<TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
-		<TR CLASS='<?php print $evenodd[($i+1)%2]; ?>'><TD><?php print gettext('Message');?>:</TD><TD COLSPAN=2> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
-		<TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD ALIGN='center' COLSPAN=3><BR /><BR />
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2();"/>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'/>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/><BR /><BR />
-			</TD></TR>
-			</TABLE></FORM>
-
-<?php
-			}		// end if(mysql_affected_rows()>0)
-		else {
+        }
 ?>
-	<BODY onLoad = "reSizeScr(2);"><CENTER>		<!-- 1/12/09 -->
-	<CENTER><H3><?php print gettext('Mail to Users');?></H3>
-	<BR /><BR />
-	<H3><?php print gettext('No addresses available!');?></H3><BR /><BR />
-	<INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();' /><BR /><BR />
-
+    <P>
+        <FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
+        <INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''/>	<!-- for pipe-delim'd addr string -->
 <?php
-			}
-		}		// end if (empty($_POST)) {
+        print "<TABLE ALIGN = 'center' BORDER=0 WIDTH=500>\n";
+        for ($i=0; $i < count($rows); $i++) {
+            $row = stripslashes_deep($rows[$i]);
+            print "\t<TR CLASS= '{$evenodd[($i)%2]}'>
+                <TD ALIGN='right'><INPUT TYPE='checkbox' CHECKED NAME='cb{($i+1)}'VALUE='{$row['email']}'/> </TD>
+                <TD><SPAN style = \"background-color:{$colors[$row['level']]}\"> &nbsp;{$row['user']}&nbsp;</SPAN>
+                    (<I>{$row['email']}</I>) </TD>
+                <TD ALIGN='left'>{$row['name_f']} {$row['name_mi']} {$row['name_l']}</TD>
+                </TR>\n";
+            }		// end for()
 
-	else {
-
-			do_send ($_POST['frm_add_str'], $_POST['frm_subj'], $_POST['frm_text'], 0, 0);	// ($to_str, $subject_str, $text_str )
 ?>
-	<BODY onLoad = "reSizeScr(2);"><CENTER>		<!-- 1/12/09 -->
-	<CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
-	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'/><BR /><BR />
+        <TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
+        <TR CLASS='<?php print $evenodd[($i+1)%2]; ?>'><TD><?php print gettext('Message');?>:</TD><TD COLSPAN=2> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
+        <TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD ALIGN='center' COLSPAN=3><BR /><BR />
+            <INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+            <INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'/>&nbsp;&nbsp;&nbsp;&nbsp;
+            <INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/><BR /><BR />
+            </TD></TR>
+            </TABLE></FORM>
+
+<?php
+            }		// end if(mysql_affected_rows()>0)
+        else {
+?>
+    <BODY onLoad = "reSizeScr(2);"><CENTER>		<!-- 1/12/09 -->
+    <CENTER><H3><?php print gettext('Mail to Users');?></H3>
+    <BR /><BR />
+    <H3><?php print gettext('No addresses available!');?></H3><BR /><BR />
+    <INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();' /><BR /><BR />
+
+<?php
+            }
+        }		// end if (empty($_POST)) {
+
+    else {
+
+            do_send ($_POST['frm_add_str'], $_POST['frm_subj'], $_POST['frm_text'], 0, 0);	// ($to_str, $subject_str, $text_str )
+?>
+    <BODY onLoad = "reSizeScr(2);"><CENTER>		<!-- 1/12/09 -->
+    <CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
+    <BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'/><BR /><BR />
 
 <?php
 
-	}		// end else
-?>Levels: 
+    }		// end else
+?>Levels:
 <SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_SUPER']];?>'><?php print gettext('Super');?></SPAN>&nbsp;&nbsp;
 <SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_ADMINISTRATOR']];?>'><?php print gettext('Admin');?></SPAN>&nbsp;&nbsp;
 <SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_USER']];?>'><?php print gettext('Operator');?></SPAN>&nbsp;&nbsp;
 <SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_GUEST']];?>'><?php print gettext('Guest');?></SPAN>&nbsp;&nbsp;
 <SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_MEMBER']];?>'><?php print gettext('Member');?></SPAN>&nbsp;&nbsp;
 <SPAN style = 'background-color:<?php print $colors[$GLOBALS['LEVEL_UNIT']];?>'><?php print gettext('Unit');?></SPAN>
-  
+
  </BODY>
 </HTML>

@@ -1,15 +1,15 @@
 <?php
 /**
  * @package download.php
- * 
+ *
  * @since version
  * @version string
  * @author John Doe <john.doe@example.com>
  */
-if(empty($_GET)) {
-	exit();
-	}
-require_once('../incs/functions.inc.php');
+if (empty($_GET)) {
+    exit();
+    }
+require_once '../incs/functions.inc.php';
 
 $filename = "../files/" . $_GET['filename'];
 $properFilename = $_GET['origname'];

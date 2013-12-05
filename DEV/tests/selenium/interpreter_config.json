@@ -21,6 +21,6 @@
 	  }
     ],
     "scripts": [
-      "selenium/tests/*" (PATH TO SELENIUM TESTS)
+      "./DEV/tests/selenium/*"
     ]
   }

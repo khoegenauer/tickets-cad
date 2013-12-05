@@ -9,9 +9,9 @@
 
 /* database stuff from here - MUST  be changed */
 
-require_once('./incs/mysql.inc.php');			// database settings - edit per yr installation
+require_once './incs/mysql.inc.php';			// database settings - edit per yr installation
 
-$key_str			= "_id";			// FOREIGN KEY (parent_id) REFERENCES parent(id) relationship terminal string identifier 
+$key_str			= "_id";			// FOREIGN KEY (parent_id) REFERENCES parent(id) relationship terminal string identifier
 //										e.g., if field 'sometable_id' relates to table 'sometable' then string '_id' is the $FK_id value
 
 /* cosmetic stuff from here - MAY  be changed */
@@ -36,8 +36,7 @@ $api_key			= "ABQIAAAAiLlX5dJnXCkZR5Yil2cQ5BQOqXXamPs-BOuxLXsFgzG1vgHGdBTx978MQ0
 
 $def_state			= "10";				// Florida
 $def_county			= "58";				// Sarasota
-$def_lat			= NULL;				// default center lattitude - if present, overrides county centroid 
+$def_lat			= NULL;				// default center lattitude - if present, overrides county centroid
 $def_lon			= NULL;				// guess!
 $radius				= 10;				// radius of circle on default center (miles)
 $do_hints			= FALSE;			// if true, print data hints at input fields
-?>

@@ -20,12 +20,12 @@ require_once($_SESSION['fip']);		//7/28/10
 
 $temp = get_variable('smtp_acct');
 //if (!(empty($temp))) {
-	$temp_ar = explode("/",$temp); 
-	$server = 		isset($temp_ar[0])? $temp_ar[0]:""; 
-	$port =  		isset($temp_ar[1])? $temp_ar[1]:""; 
-	$security =  	isset($temp_ar[2])? $temp_ar[2]:""; // 7/5/10
-	$user_acct =  	isset($temp_ar[3])? $temp_ar[3]:""; 
-	$pass =  		isset($temp_ar[4])? $temp_ar[4]:""; 
+    $temp_ar = explode("/",$temp);
+    $server = 		isset($temp_ar[0])? $temp_ar[0]:"";
+    $port =  		isset($temp_ar[1])? $temp_ar[1]:"";
+    $security =  	isset($temp_ar[2])? $temp_ar[2]:""; // 7/5/10
+    $user_acct =  	isset($temp_ar[3])? $temp_ar[3]:"";
+    $pass =  		isset($temp_ar[4])? $temp_ar[4]:"";
 //	}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
@@ -43,43 +43,46 @@ BODY { BACKGROUND-COLOR: #EFEFEF; FONT-WEIGHT: normal; FONT-SIZE: 10px; COLOR: #
 </STYLE>
 <SCRIPT>
 /**
- * 
+ *
  * @param {type} field
  * @returns {unresolved}
- */  
-	function validate_email(field) {
-		apos=field.indexOf("@");
-		dotpos=field.lastIndexOf(".");
-		return (!(apos<1||dotpos-apos<2));
-		}				// end function validate_email()
-	String.prototype.trim = function () {				// 10/19/08
-		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
-		};
+ */
+    function validate_email(field) {
+        apos=field.indexOf("@");
+        dotpos=field.lastIndexOf(".");
+
+        return (!(apos<1||dotpos-apos<2));
+        }				// end function validate_email()
+    String.prototype.trim = function () {				// 10/19/08
+
+        return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
+        };
 /**
- * 
+ *
  * @returns {Boolean}
- */     		
-	function validate() {
-	//	alert(38);
-		errormsg="";
-		if (document.test.server.value.trim()=="")				{errormsg += "\tServer name is required\n";}
-		if (isNaN(parseInt(document.test.port.value)))			{errormsg += "\tNumeric port no. is required\n";}
-		if (!(validate_email(document.test.from_addr.value)))	{errormsg += "\t\'From address\' is invalid\n";}
-		if (!(validate_email(document.test.to_addr.value)))		{errormsg += "\t\'To address\' is invalid\n";}
-		if (errormsg=="") {document.test.submit(); }
-		else {
-			alert ("<?php print gettext('Please correct the following errors');?>\n"+ errormsg);
-			return false;
-			}
-		}
+ */
+    function validate() {
+    //	alert(38);
+        errormsg="";
+        if (document.test.server.value.trim()=="") {errormsg += "\tServer name is required\n";}
+        if (isNaN(parseInt(document.test.port.value))) {errormsg += "\tNumeric port no. is required\n";}
+        if (!(validate_email(document.test.from_addr.value))) {errormsg += "\t\'From address\' is invalid\n";}
+        if (!(validate_email(document.test.to_addr.value))) {errormsg += "\t\'To address\' is invalid\n";}
+        if (errormsg=="") {document.test.submit(); }
+        else {
+            alert ("<?php print gettext('Please correct the following errors');?>\n"+ errormsg);
+
+            return false;
+            }
+        }
 </SCRIPT>
 </HEAD>
 <BODY>
 
 <?php
 if (empty($_POST)) {
-	$temp = trim(get_variable('smtp_acct'));
-	$caption = (empty($temp))? "" : "(your current setting is '{$temp}')";
+    $temp = trim(get_variable('smtp_acct'));
+    $caption = (empty($temp))? "" : "(your current setting is '{$temp}')";
 ?>
 
 <FORM NAME = "test" METHOD = 'post' ACTION = '<?php print basename(__FILE__);?>'>
@@ -90,10 +93,10 @@ if (empty($_POST)) {
 <TR CLASS="even"><TD><?php print gettext('Server name');?>: </TD>			<TD><INPUT TYPE = 'text' NAME='server' 		VALUE='<?php print $server;?>' SIZE= 24><I> ex: outgoing.verizon.net</TD></TR>
 <TR CLASS="odd"><TD><?php print gettext('Port');?>:  </TD>				<TD><INPUT TYPE = 'text' NAME='port'  		VALUE='<?php print $port;?>' SIZE= 4><I> ex:587</TD></TR>
 <TR CLASS="even"><TD><?php print gettext('Security');?>: </TD>	<TD>
-						<SPAN STYLE = 'margin-left: 24px;'><?php print gettext('None');?> &raquo; <INPUT TYPE = 'radio' NAME = 'security' VALUE = 'none' CHECKED></SPAN>
-						<SPAN STYLE = 'margin-left: 24px;'><?php print gettext('SSL');?> &raquo; <INPUT TYPE = 'radio' NAME = 'security' VALUE = 'ssl' ></SPAN>
-						<SPAN STYLE = 'margin-left: 24px;'><?php print gettext('TLS');?> &raquo; <INPUT TYPE = 'radio' NAME = 'security' VALUE = 'tls' ></SPAN>
-		<SPAN STYLE = 'margin-left: 24px;'><I> <?php print gettext('ISP dependent (Gmail requires a secure transport)');?></SPAN></TD></TR> <!-- 7/5/10 -->
+                        <SPAN STYLE = 'margin-left: 24px;'><?php print gettext('None');?> &raquo; <INPUT TYPE = 'radio' NAME = 'security' VALUE = 'none' CHECKED></SPAN>
+                        <SPAN STYLE = 'margin-left: 24px;'><?php print gettext('SSL');?> &raquo; <INPUT TYPE = 'radio' NAME = 'security' VALUE = 'ssl' ></SPAN>
+                        <SPAN STYLE = 'margin-left: 24px;'><?php print gettext('TLS');?> &raquo; <INPUT TYPE = 'radio' NAME = 'security' VALUE = 'tls' ></SPAN>
+        <SPAN STYLE = 'margin-left: 24px;'><I> <?php print gettext('ISP dependent (Gmail requires a secure transport)');?></SPAN></TD></TR> <!-- 7/5/10 -->
 
 <TR CLASS="odd"><TD><?php print gettext('User account');?>: </TD>			<TD><INPUT TYPE = 'text' NAME='user_acct'  	VALUE='<?php print $user_acct;?>' SIZE= 24><I> ex:ashore3</TD></TR>
 <TR CLASS="even"><TD><?php print gettext('Password');?>:  </TD>			<TD><INPUT TYPE = 'text' NAME='pass'  		VALUE='<?php print $pass;?>' SIZE= 12><I> ex:whatever</TD></TR>
@@ -113,12 +116,12 @@ if (empty($_POST)) {
 </HTML>
 
 <?php
-	}				// end if (empty($_POST))
+    }				// end if (empty($_POST))
 
 else {
-	$errors = FALSE;
-	@set_time_limit(5);		// certain errors take longer
-	
+    $errors = FALSE;
+    @set_time_limit(5);		// certain errors take longer
+
 /**
  * myErrorHandler
  * Insert description here
@@ -135,73 +138,73 @@ else {
  * @see
  * @since
  */
-	function myErrorHandler($errno, $errstr, $errfile, $errline) {
-		global $errors, $istest;
-		if($errno == 2048) { return;}
-		if ($istest) {		
-			dump(__LINE__);
-			dump($errno);
-			dump($errstr);
-			}
-		$errors = TRUE;
-		return FALSE;
-		}
-		
-	require_once 'lib/swift_required.php';
-	error_reporting(E_ALL);
-	$old_error_handler = set_error_handler("myErrorHandler");
+    function myErrorHandler($errno, $errstr, $errfile, $errline) {
+        global $errors, $istest;
+        if ($errno == 2048) { return;}
+        if ($istest) {
+            dump(__LINE__);
+            dump($errno);
+            dump($errstr);
+            }
+        $errors = TRUE;
 
-	$server = trim($_POST['server']);
-	$fp = gethostbyname($server);
+        return FALSE;
+        }
+
+    require_once 'lib/swift_required.php';
+    error_reporting(E_ALL);
+    $old_error_handler = set_error_handler("myErrorHandler");
+
+    $server = trim($_POST['server']);
+    $fp = gethostbyname($server);
 //	$fp = @fsockopen($server, trim($_POST['port']), $errno, $errstr, $timeout);
 //	$fp = @fsockopen("outgoing.verizon.net", 587);
-	if ($fp) {
-		
-		//Create the Transport the call setUsername() and setPassword()
-		$transport = Swift_SmtpTransport::newInstance(trim($_POST['server']) , trim($_POST['port']) , trim($_POST['security']))
-		  ->setUsername(trim($_POST['user_acct']))
-		  ->setPassword(trim($_POST['pass']))
-		  ;
-		
-		//Create the Mailer using your created Transport
-		$mailer = Swift_Mailer::newInstance($transport);
-		
-		
-		//Create a message
-		$temp_ar = explode("@", trim($_POST['to_addr']));
-		
-		$message = Swift_Message::newInstance(trim($_POST['subj']))
-		  ->setFrom(array($_POST['from_addr'] => trim($_POST['from_user'])))
-		  ->setTo(array(trim($_POST['to_addr']) => trim($temp_ar[0])))
-		  ->setBody(trim($_POST['msg']))
-		  ;
-		
-		//    ->setTo(array('receiver@domain.org', 'other@domain.org' => 'Names'))
-		//Send the message
-	//	$result = $mailer->send($message, $failures);
-		$failures="";
-		$caption = "Sent";
-		if (!($mailer->send($message, $failures))) {
-			$errs = "";
-			dump ($failures);
-			foreach ($failures as $value){
-			    $errs .= $value . " ";
-			    }
-			$caption = gettext('Mail to \'{$errs}\' failed');
-			}
-		else {
-			if ($errors) {
-				$caption = gettext('Mail delivery failed');
-				}
-			}
-		}
-	else {
-		if ($istest) {
-			dump($server);
-			dump($fp);
-			}
-		$caption = gettext('Failed - server name error');
-		}
+    if ($fp) {
+
+        //Create the Transport the call setUsername() and setPassword()
+        $transport = Swift_SmtpTransport::newInstance(trim($_POST['server']) , trim($_POST['port']) , trim($_POST['security']))
+          ->setUsername(trim($_POST['user_acct']))
+          ->setPassword(trim($_POST['pass']))
+          ;
+
+        //Create the Mailer using your created Transport
+        $mailer = Swift_Mailer::newInstance($transport);
+
+        //Create a message
+        $temp_ar = explode("@", trim($_POST['to_addr']));
+
+        $message = Swift_Message::newInstance(trim($_POST['subj']))
+          ->setFrom(array($_POST['from_addr'] => trim($_POST['from_user'])))
+          ->setTo(array(trim($_POST['to_addr']) => trim($temp_ar[0])))
+          ->setBody(trim($_POST['msg']))
+          ;
+
+        //    ->setTo(array('receiver@domain.org', 'other@domain.org' => 'Names'))
+        //Send the message
+    //	$result = $mailer->send($message, $failures);
+        $failures="";
+        $caption = "Sent";
+        if (!($mailer->send($message, $failures))) {
+            $errs = "";
+            dump ($failures);
+            foreach ($failures as $value) {
+                $errs .= $value . " ";
+                }
+            $caption = gettext('Mail to \'{$errs}\' failed');
+            }
+        else {
+            if ($errors) {
+                $caption = gettext('Mail delivery failed');
+                }
+            }
+        }
+    else {
+        if ($istest) {
+            dump($server);
+            dump($fp);
+            }
+        $caption = gettext('Failed - server name error');
+        }
 
 ?>
 <CENTER><BR /><BR /><H2> <?php echo $caption; ?></H2><BR /><BR /></CENTER>
@@ -214,5 +217,4 @@ else {
 </HTML>
 
 <?php
-	}				// end else {}
-?>
+    }				// end else {}

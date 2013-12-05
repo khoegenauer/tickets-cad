@@ -26,7 +26,6 @@
   //  - Initial version
   //--------------------------------------------------------------------------
 
-
   // ================================================================== LatLng
 
   /**
@@ -48,7 +47,6 @@
     var $lat;
     var $lng;
 
-
     /**
      * Create a new LatLng object from the given latitude and longitude
      *
@@ -60,7 +58,6 @@
       $this->lng = $lng;
     }
 
-
     /**
      * Return a string representation of this LatLng object
      *
@@ -69,8 +66,7 @@
     function toString() {
       return "(" . $this->lat . ", " . $this->lng . ")";
     }
-    
-    
+
     /**
      * Calculate the surface distance between this LatLng object and the one
      * passed in as a parameter.
@@ -95,11 +91,10 @@
       $z2 = $er * cos($latTo);
 
       $d = acos(sin($latFrom)*sin($latTo) + cos($latFrom)*cos($latTo)*cos($lngTo-$lngFrom)) * $er;
-      
+
       return $d;
     }
 
-    
     /**
      * Convert this LatLng object from OSGB36 datum to WGS84 datum.
      */
@@ -143,12 +138,11 @@
       }
 
       $phiB = rad2deg($phiN);
-      
+
       $this->lat = $phiB;
       $this->lng = $lambdaB;
     }
-    
-    
+
     /**
      * Convert this LatLng object from WGS84 datum to OSGB36 datum.
      */
@@ -190,14 +184,13 @@
         $phiN1 = atan(($zB + ($eSquared * $v * sin($phiN))) / $p);
         $phiN = $phiN1;
       }
- 
+
       $phiB = rad2deg($phiN);
-      
+
       $this->lat = $phiB;
       $this->lng = $lambdaB;
     }
-    
-    
+
     /**
      * Convert this LatLng object into an OSGB grid reference. Note that this
      * function does not take into account the bounds of the OSGB grid -
@@ -274,8 +267,7 @@
 
       return new OSRef($E, $N);
     }
-    
-    
+
     /**
      * Convert a latitude and longitude to an UTM reference
      *
@@ -305,11 +297,11 @@
       if ($latitude >= 72.0 && $latitude < 84.0) {
         if ($longitude >= 0.0 && $longitude < 9.0) {
           $longitudeZone = 31;
-        } else if ($longitude >= 9.0 && $longitude < 21.0) {
+        } elseif ($longitude >= 9.0 && $longitude < 21.0) {
           $longitudeZone = 33;
-        } else if ($longitude >= 21.0 && $longitude < 33.0) {
+        } elseif ($longitude >= 21.0 && $longitude < 33.0) {
           $longitudeZone = 35;
-        } else if ($longitude >= 33.0 && $longitude < 42.0) {
+        } elseif ($longitude >= 33.0 && $longitude < 42.0) {
           $longitudeZone = 37;
         }
       }
@@ -371,9 +363,8 @@
       }
 
       return new UTMRef($UTMEasting, $UTMNorthing, $UTMZone, $longitudeZone);
-    }    
+    }
   }
-
 
   // =================================================================== OSRef
 
@@ -397,7 +388,6 @@
     var $easting;
     var $northing;
 
-
     /**
      * Create a new OSRef object representing an OSGB grid reference. Note
      * that the parameters for this constructor require eastings and
@@ -405,7 +395,7 @@
      * the whole of the British Grid. For example, to create an OSRef
      * object from the six-figure grid reference TG514131, the easting would
      * be 651400 and the northing would be 313100.
-     * 
+     *
      * Grid references with accuracy greater than 1m can be represented
      * using floating point values for the easting and northing. For example,
      * a value representing an easting or northing accurate to 1mm would be
@@ -419,7 +409,6 @@
       $this->northing = $northing;
     }
 
-
     /**
      * Convert this grid reference into a string showing the exact values
      * of the easting and northing.
@@ -430,11 +419,10 @@
       return "(" . $this->easting . ", " . $this->northing . ")";
     }
 
-
     /**
      * Convert this grid reference into a string using a standard six-figure
      * grid reference including the two-character designation for the 100km
-     * square. e.g. TG514131. 
+     * square. e.g. TG514131.
      *
      * @return
      */
@@ -448,7 +436,7 @@
         } else {
           $firstLetter = "T";
         }
-      } else if ($hundredkmN < 10) {
+      } elseif ($hundredkmN < 10) {
         if ($hundredkmE < 5) {
           $firstLetter = "N";
         } else {
@@ -469,7 +457,6 @@
 
       return sprintf("%s%s%03d%03d", $firstLetter, $secondLetter, $e, $n);
     }
-
 
     /**
      * Convert this grid reference into a latitude and longitude
@@ -557,11 +544,10 @@
           - ($XI * pow($E - $E0, 3.0))
           + ($XII * pow($E - $E0, 5.0))
           - ($XIIA * pow($E - $E0, 7.0));
- 
+
       return new LatLng(rad2deg($phi), rad2deg($lambda));
     }
   }
-
 
   // ================================================================== UTMRef
 
@@ -586,7 +572,6 @@
     var $latZone;
     var $lngZone;
 
-
     /**
      * Create a new object representing a UTM reference.
      *
@@ -602,7 +587,6 @@
       $this->lngZone  = $lngZone;
     }
 
-
     /**
      * Return a string representation of this UTM reference
      *
@@ -612,8 +596,7 @@
       return $this->lngZone . $this->latZone . " " .
              $this->easting . " " . $this->northing;
     }
-    
-    
+
     /**
      * Convert this UTM reference to a latitude and longitude
      *
@@ -703,9 +686,8 @@
           / cos($phi1Rad)) * (180.0 / pi());
 
       return new LatLng($latitude, $longitude);
-    }   
+    }
   }
-
 
   // ================================================================== RefEll
 
@@ -729,7 +711,6 @@
     var $min;
     var $ecc;
 
-
     /**
      * Create a new RefEll object to represent a reference ellipsoid
      *
@@ -742,7 +723,6 @@
       $this->ecc = (($maj * $maj) - ($min * $min)) / ($maj * $maj);
     }
   }
-
 
   // ================================================== Mathematical Functions
 
@@ -813,8 +793,7 @@
   function sec($x) {
     return 1.0 / cos($x);
   }
-  
-  
+
   /**
    * Take a string formatted as a six-figure OS grid reference (e.g.
    * "TG514131") and return a reference to an OSRef object that represents
@@ -833,22 +812,22 @@
     $north = substr($ref, 5, 3) * 100;
     if ($char1 == 'H') {
       $north += 1000000;
-    } else if ($char1 == 'N') {
+    } elseif ($char1 == 'N') {
       $north += 500000;
-    } else if ($char1 == 'O') {
+    } elseif ($char1 == 'O') {
       $north += 500000;
       $east  += 500000;
-    } else if ($char1 == 'T') {
+    } elseif ($char1 == 'T') {
       $east += 500000;
     }
     $char2ord = ord($char2);
     if ($char2ord > 73) $char2ord--; // Adjust for no I
     $nx = (($char2ord - 65) % 5) * 100000;
     $ny = (4 - floor(($char2ord - 65) / 5)) * 100000;
+
     return new OSRef($east + $nx, $north + $ny);
   }
-  
-    
+
   /**
    *  Work out the UTM latitude zone from the latitude
    *
@@ -881,4 +860,3 @@
 /*
 relocated $a line 309 9/29
 */
-?>

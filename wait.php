@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * @package wait.php
  * @author John Doe <john.doe@example.com>
@@ -27,4 +27,3 @@ error_reporting(E_ALL);		// 10/1/08
 <BR><CENTER><H3><?php gettext("Waiting for login"); ?></H3></CENTER>
 </BODY>
 </HTML>
-

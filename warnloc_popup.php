@@ -18,22 +18,22 @@ $api_key = get_variable('gmaps_api_key');		// empty($_GET)
 $in_win = array_key_exists ("mode", $_GET);		// in
 
 if ((!empty($_GET))&& ((isset($_GET['logout'])) && ($_GET['logout'] == 'true'))) {
-	do_logout();
-	exit();
-	}
+    do_logout();
+    exit();
+    }
 else {
-	do_login(basename(__FILE__));
-	}
+    do_login(basename(__FILE__));
+    }
 if ($istest) {
-	print "GET<BR/>\n";
-	if (!empty($_GET)) {
-		dump ($_GET);
-		}
-	print "POST<BR/>\n";
-	if (!empty($_POST)) {
-		dump ($_POST);
-		}
-	}
+    print "GET<BR/>\n";
+    if (!empty($_GET)) {
+        dump ($_GET);
+        }
+    print "POST<BR/>\n";
+    if (!empty($_POST)) {
+        dump ($_POST);
+        }
+    }
 
 $id =	(array_key_exists('id', ($_GET)))?	$_GET['id']  :	NULL;
 
@@ -42,129 +42,133 @@ $row = mysql_fetch_assoc($result);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE><?php print gettext('Location Warning Details');?></TITLE>
-	<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
-	<STYLE type="text/css">
-	.hover 	{ text-align: center; margin-left: 4px; float: none; font: normal 12px Arial, Helvetica, sans-serif; color:#FF0000; border-width: 1px; border-STYLE: inset; border-color: #FFFFFF;
-  				  padding: 4px 0.5em;text-decoration: none; background-color: #DEE3E7; font-weight: bolder;}
-	.plain 	{ text-align: center; margin-left: 4px; float: none; font: normal 12px Arial, Helvetica, sans-serif; color:#000000;  border-width: 1px; border-STYLE: outset; border-color: #FFFFFF;
-  				  padding: 4px 0.5em;text-decoration: none; background-color: #EFEFEF; font-weight: bolder;}
-	.wrap_data { width: 200px; background-color: inherit;	font-size: 12px; color: #000000; font-style: normal; font-family: Verdana, Arial, Helvetica, sans-serif; text-decoration: none; }
-	.wrap_label { width: 100px; background-color: #707070; font-size: 12px; color: #FFFFFF; font-weight: bold; font-style: normal; font-family: Verdana, Arial, Helvetica, sans-serif; text-decoration: none; }
-	.tab_row { border: 1px solid #CECECE; width: 300px; }
-  	</STYLE>	
-	<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $api_key;?>&libraries=geometry&sensor=false"></SCRIPT>
-	<SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT>
-	<SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>
-	<SCRIPT SRC="./js/graticule_V3.js" type="text/javascript"></SCRIPT>
-	<SCRIPT SRC="./js/usng.js" TYPE="text/javascript"></SCRIPT>
-	<SCRIPT SRC='./js/jscoord.js' TYPE="text/javascript"></SCRIPT>
-	<SCRIPT SRC="./js/lat_lng.js" TYPE="text/javascript"></SCRIPT>
-	<SCRIPT SRC="./js/osgb.js" TYPE="text/javascript"></SCRIPT>
-	<SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
-	<SCRIPT SRC="./js/suggest.js" TYPE="text/javascript"></SCRIPT>
-	<SCRIPT>
-	function ck_frames() {		// onLoad = "ck_frames()"
-		}		// end function ck_frames()
+    <HEAD><TITLE><?php print gettext('Location Warning Details');?></TITLE>
+    <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
+    <STYLE type="text/css">
+    .hover 	{ text-align: center; margin-left: 4px; float: none; font: normal 12px Arial, Helvetica, sans-serif; color:#FF0000; border-width: 1px; border-STYLE: inset; border-color: #FFFFFF;
+                    padding: 4px 0.5em;text-decoration: none; background-color: #DEE3E7; font-weight: bolder;}
+    .plain 	{ text-align: center; margin-left: 4px; float: none; font: normal 12px Arial, Helvetica, sans-serif; color:#000000;  border-width: 1px; border-STYLE: outset; border-color: #FFFFFF;
+                    padding: 4px 0.5em;text-decoration: none; background-color: #EFEFEF; font-weight: bolder;}
+    .wrap_data { width: 200px; background-color: inherit;	font-size: 12px; color: #000000; font-style: normal; font-family: Verdana, Arial, Helvetica, sans-serif; text-decoration: none; }
+    .wrap_label { width: 100px; background-color: #707070; font-size: 12px; color: #FFFFFF; font-weight: bold; font-style: normal; font-family: Verdana, Arial, Helvetica, sans-serif; text-decoration: none; }
+    .tab_row { border: 1px solid #CECECE; width: 300px; }
+      </STYLE>
+    <SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $api_key;?>&libraries=geometry&sensor=false"></SCRIPT>
+    <SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT>
+    <SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>
+    <SCRIPT SRC="./js/graticule_V3.js" type="text/javascript"></SCRIPT>
+    <SCRIPT SRC="./js/usng.js" TYPE="text/javascript"></SCRIPT>
+    <SCRIPT SRC='./js/jscoord.js' TYPE="text/javascript"></SCRIPT>
+    <SCRIPT SRC="./js/lat_lng.js" TYPE="text/javascript"></SCRIPT>
+    <SCRIPT SRC="./js/osgb.js" TYPE="text/javascript"></SCRIPT>
+    <SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
+    <SCRIPT SRC="./js/suggest.js" TYPE="text/javascript"></SCRIPT>
+    <SCRIPT>
+    function ck_frames() {		// onLoad = "ck_frames()"
+        }		// end function ck_frames()
 
-	function $() {
-		var elements = new Array();
-		for (var i = 0; i < arguments.length; i++) {
-			var element = arguments[i];
-			if (typeof element == 'string')
-				element = document.getElementById(element);
-			if (arguments.length == 1)
-				return element;
-			elements.push(element);
-			}
-		return elements;
-		}
+    function $() {
+        var elements = new Array();
+        for (var i = 0; i < arguments.length; i++) {
+            var element = arguments[i];
+            if (typeof element == 'string')
+                element = document.getElementById(element);
+            if (arguments.length == 1)
+                return element;
+            elements.push(element);
+            }
 
-	function do_hover (the_id) {
-		CngClass(the_id, 'hover');
-		return true;
-		}
+        return elements;
+        }
 
-	function do_plain (the_id) {
-		CngClass(the_id, 'plain');
-		return true;
-		}
+    function do_hover(the_id) {
+        CngClass(the_id, 'hover');
 
-	function CngClass(obj, the_class){
-		$(obj).className=the_class;
-		return true;
-		}
+        return true;
+        }
 
-	var baseIcon;
-	var cross;
-	var icon_file = "./markers/sm_red.png";
-	var map_obj = null;				// the map object - note GLOBAL
-	var myMarker;					// the marker object
-	
-	function do_marker(lat, lng, zoom) {
-		var point = new google.maps.LatLng(lat, lng);
-		myMarker = new google.maps.Marker({position: point, map: map_obj, icon: icon_file});
-		map_obj.setCenter(point, zoom);
-		myMarker.setMap(map_obj);
-		}
+    function do_plain(the_id) {
+        CngClass(the_id, 'plain');
 
-	function load(the_lat, the_lng, the_zoom) {
-		function call_back (in_obj){				// callback function - from gmaps_v3_init()
-			}			// end callback function
+        return true;
+        }
 
-		map_obj = gmaps_v3_init(call_back, 'map_canvas', 
-			<?php echo get_variable('def_lat');?>, 
-			<?php echo get_variable('def_lng');?>, 
-			the_zoom, 
-			icon_file, 
-			<?php echo get_variable('maptype');?>, 
-			false);	
+    function CngClass(obj, the_class) {
+        $(obj).className=the_class;
 
-		do_marker(the_lat, the_lng, the_zoom);
-		}			// end function load()
-	</SCRIPT>
+        return true;
+        }
+
+    var baseIcon;
+    var cross;
+    var icon_file = "./markers/sm_red.png";
+    var map_obj = null;				// the map object - note GLOBAL
+    var myMarker;					// the marker object
+
+    function do_marker(lat, lng, zoom) {
+        var point = new google.maps.LatLng(lat, lng);
+        myMarker = new google.maps.Marker({position: point, map: map_obj, icon: icon_file});
+        map_obj.setCenter(point, zoom);
+        myMarker.setMap(map_obj);
+        }
+
+    function load(the_lat, the_lng, the_zoom) {
+        function call_back(in_obj) {				// callback function - from gmaps_v3_init()
+            }			// end callback function
+
+        map_obj = gmaps_v3_init(call_back, 'map_canvas',
+            <?php echo get_variable('def_lat');?>,
+            <?php echo get_variable('def_lng');?>,
+            the_zoom,
+            icon_file,
+            <?php echo get_variable('maptype');?>,
+            false);
+
+        do_marker(the_lat, the_lng, the_zoom);
+        }			// end function load()
+    </SCRIPT>
 </HEAD>
 <BODY onLoad = 'load(<?php print $row['lat'];?>, <?php print $row['lng'];?>, 15); ck_frames();'>
 <TABLE ALIGN = 'center'><TR><TD>
 
 <CENTER><BR /><BR clear=all/><BR /></CENTER>
 <TABLE style='width: 680px;'>
-	<TR>
-		<TD style='width: 300px;'>
-			<TABLE style='width: 300px; border: 1px solid #000000;'>
-				<TR class='tab_row'>
-					<TD class='wrap_label'><?php print gettext('Title');?></TD><TD class='wrap_data'><?php print $row['title'];?></TD>
-				</TR>
-				<TR class='tab_row'>
-					<TD class='wrap_label'><?php print gettext('Street');?></TD><TD class='wrap_data'><?php print $row['street'];?></TD>
-				</TR>
-				<TR class='tab_row'>
-					<TD class='wrap_label'><?php print gettext('City');?></TD><TD class='wrap_data'><?php print $row['city'];?></TD>
-				</TR>
-				<TR class='tab_row'>
-					<TD class='wrap_label'><?php print gettext('State');?></TD><TD class='wrap_data'><?php print $row['state'];?></TD>
-				</TR>
-				<TR class='tab_row'>
-					<TD class='wrap_label'><?php print gettext('Latitude');?></TD><TD class='wrap_data'><?php print $row['lat'];?></TD>
-				</TR>
-				<TR class='tab_row'>
-					<TD class='wrap_label'><?php print gettext('Longitude');?></TD><TD class='wrap_data'><?php print $row['lng'];?></TD>
-				</TR>
-				<TR class='tab_row'>
-					<TD class='wrap_label'><?php print gettext('Description');?></TD><TD class='wrap_data'><?php print $row['description'];?></TD>
-				</TR>
-				<TR class='tab_row'>
-					<TD class='wrap_label'><?php print gettext('Reported By');?></TD><TD class='wrap_data'><?php print get_owner($row['_by']);?></TD>
-				</TR>
-				<TR class='tab_row'>
-					<TD class='wrap_label'><?php print gettext('Date Reported');?></TD><TD class='wrap_data'><?php print $row['_on'];?></TD>
-				</TR>
-			</TABLE>
-		</TD>
-		<TD style='width: 380px;'>
-			<DIV id='map_canvas' style='z-index:1; width: 380px; height: 380px'></DIV>
-		</TD>
-	</TR>
+    <TR>
+        <TD style='width: 300px;'>
+            <TABLE style='width: 300px; border: 1px solid #000000;'>
+                <TR class='tab_row'>
+                    <TD class='wrap_label'><?php print gettext('Title');?></TD><TD class='wrap_data'><?php print $row['title'];?></TD>
+                </TR>
+                <TR class='tab_row'>
+                    <TD class='wrap_label'><?php print gettext('Street');?></TD><TD class='wrap_data'><?php print $row['street'];?></TD>
+                </TR>
+                <TR class='tab_row'>
+                    <TD class='wrap_label'><?php print gettext('City');?></TD><TD class='wrap_data'><?php print $row['city'];?></TD>
+                </TR>
+                <TR class='tab_row'>
+                    <TD class='wrap_label'><?php print gettext('State');?></TD><TD class='wrap_data'><?php print $row['state'];?></TD>
+                </TR>
+                <TR class='tab_row'>
+                    <TD class='wrap_label'><?php print gettext('Latitude');?></TD><TD class='wrap_data'><?php print $row['lat'];?></TD>
+                </TR>
+                <TR class='tab_row'>
+                    <TD class='wrap_label'><?php print gettext('Longitude');?></TD><TD class='wrap_data'><?php print $row['lng'];?></TD>
+                </TR>
+                <TR class='tab_row'>
+                    <TD class='wrap_label'><?php print gettext('Description');?></TD><TD class='wrap_data'><?php print $row['description'];?></TD>
+                </TR>
+                <TR class='tab_row'>
+                    <TD class='wrap_label'><?php print gettext('Reported By');?></TD><TD class='wrap_data'><?php print get_owner($row['_by']);?></TD>
+                </TR>
+                <TR class='tab_row'>
+                    <TD class='wrap_label'><?php print gettext('Date Reported');?></TD><TD class='wrap_data'><?php print $row['_on'];?></TD>
+                </TR>
+            </TABLE>
+        </TD>
+        <TD style='width: 380px;'>
+            <DIV id='map_canvas' style='z-index:1; width: 380px; height: 380px'></DIV>
+        </TD>
+    </TR>
 </TABLE>
 <BR /><BR /><BR />
 <CENTER><SPAN id='fin_button' class='plain' style='text-align: center;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'><?php print gettext('Finished');?></SPAN></CENTER>

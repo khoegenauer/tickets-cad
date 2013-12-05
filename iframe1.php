@@ -1,8 +1,8 @@
-<?php 
+<?php
 /**
  * @package iframe1.php
  * @author John Doe <john.doe@example.com>
- * @since 
+ * @since
  * @version 2011-03-15
  */
 /*

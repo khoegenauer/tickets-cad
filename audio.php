@@ -15,14 +15,14 @@ div {MARGIN:12PX; TEXT-DECORATION: underline; }
 </STYLE>
 <SCRIPT>
 /**
- * 
+ *
  * @param {type} n
  * @returns {undefined}
- */  
-	function playit(n) {	// 6/12/10
-		try 		{document.getElementsByTagName('audio')[n].play();}
-		catch (e) 	{alert('Not supported');}		// ignore
-		}				// end function playit()
+ */
+    function playit(n) {	// 6/12/10
+        try {document.getElementsByTagName('audio')[n].play();}
+        catch (e) 	{alert('Not supported');}		// ignore
+        }				// end function playit()
 
 </SCRIPT>
 </HEAD>
@@ -34,7 +34,6 @@ div {MARGIN:12PX; TEXT-DECORATION: underline; }
 <audio src="./sounds/flushtoilet.wav" preload></audio>
 <audio src="./sounds/sonar.wav" preload></audio>
 <audio src="./sounds/taps.wav" preload></audio>
-
 
 <audio src="./sounds/phonesring.mp3" preload></audio>
 <audio src="./sounds/4bells.mp3" preload></audio>

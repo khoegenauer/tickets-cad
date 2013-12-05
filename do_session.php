@@ -12,13 +12,12 @@
 //
 // generic session value writer - note names, method
 //
-error_reporting(E_ALL);	
+error_reporting(E_ALL);
 
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10
-session_start(); 	
+session_start();
 $_SESSION[$_GET['f_n']] = $_GET['v_n'];
 //snap(basename(__FILE__),$_GET['f_n') ;
 //snap(basename(__FILE__),$_GET['f_V') ;
 print "";
-?>

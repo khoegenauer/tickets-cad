@@ -26,4 +26,3 @@ do_send ($_POST['to_str'], $_POST['subject_str'], $_POST['text_str'], 0, 0 ) ;
 
 //snap(basename(__FILE__) . __LINE__, 0);
 print "";
-?>

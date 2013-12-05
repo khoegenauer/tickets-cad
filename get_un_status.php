@@ -1,5 +1,5 @@
 <?php
-require_once('./incs/functions.inc.php');
+require_once './incs/functions.inc.php';
 
 extract($_GET);
 $ret_arr = array();
@@ -8,4 +8,3 @@ $result = mysql_query($query) or do_error($query, "", mysql_error(), basename( _
 $row = mysql_fetch_assoc($result);
 $ret_arr[0] = $row['un_status_id'];
 print json_encode($ret_arr);
-?>

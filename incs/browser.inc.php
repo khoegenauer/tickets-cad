@@ -1,7 +1,7 @@
 <?php
 /**
- * 
- * 
+ *
+ *
  * @package browser.inc.php
  * @author John Doe <john.doe@example.com>
  * @since version
@@ -38,14 +38,14 @@ $browsers = explode(" ", $browsers);
 $userAgent = strToLower( $_SERVER['HTTP_USER_AGENT']);
 
 $l = strlen($userAgent);
-for ($i=0; $i<count($browsers); $i++){
+for ($i=0; $i<count($browsers); $i++) {
   $browser = $browsers[$i];
   $n = stristr($userAgent, $browser);
-  if(strlen($n)>0){
+  if (strlen($n)>0) {
     $version = "";
     $navigator = $browser;
     $j=strpos($userAgent, $navigator)+$n+strlen($navigator)+1;
-    for (; $j<=$l; $j++){
+    for (; $j<=$l; $j++) {
       $s = substr ($userAgent, $j, 1);
       if(is_numeric($version.$s) )
       $version .= $s;
@@ -71,9 +71,8 @@ if ($input==true) {
         "version"      => $version,
         "platform"     => $platform,
         "userAgent"    => $userAgent);
-}else{
+} else {
         return "$navigator $version";
 }
 
 }		// end function
-?>

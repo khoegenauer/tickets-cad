@@ -1,7 +1,7 @@
 <?php
 /**
- * 
- * 
+ *
+ *
  * @package bits.class.php
  * @author John Doe <john.doe@example.com>
  * @since version
@@ -73,7 +73,7 @@ class CBitField {
    * @see
    * @since
    */
-  function CBitField () {
+  function CBitField() {
       $this -> bitfield = ($this -> bitfield | 0);
   }
   /**
@@ -89,7 +89,7 @@ class CBitField {
    * @see
    * @since
    */
-  function QueryBit ($bit) {
+  function QueryBit($bit) {
     if (($this -> bitfield & $bit) > 0 )
       return 1;
     else
@@ -109,7 +109,7 @@ class CBitField {
    * @see
    * @since
    */
-  function SetBit ($bit, $boolean) {
+  function SetBit($bit, $boolean) {
     if ($boolean == 1)
       $this -> bitfield |= $bit;
     else
@@ -128,7 +128,7 @@ class CBitField {
    * @see
    * @since
    */
-  function FlipBit ($bit) {
+  function FlipBit($bit) {
     $this -> bitfield ^= $bit;
   }
 }
@@ -143,4 +143,3 @@ echo $bits -> QueryBit(BIT_1).",";
 echo $bits -> QueryBit(BIT_2).",";
 echo $bits -> QueryBit(BIT_3);
 */
-?>

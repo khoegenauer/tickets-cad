@@ -1,7 +1,7 @@
 <?php
 /**
- * 
- * 
+ *
+ *
  * @package capts.inc.php
  * @author John Doe <john.doe@example.com>
  * @since version
@@ -17,7 +17,7 @@ error_reporting(E_ALL);		// 10/1/08
 12/3/10 get_text functions added
 2/9/12 get_text functions removed, list lengthened with Patient, etc., strings
 3/2/12 corrected "Full name" array element punctuation
-3/4/12 corrected line 73 missing comma, {} 
+3/4/12 corrected line 73 missing comma, {}
 */
 
 $capts = array(
@@ -146,4 +146,3 @@ gettext("User"),
 gettext("USNG"),
 gettext("Written")
 );
-?>

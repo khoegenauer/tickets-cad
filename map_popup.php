@@ -18,23 +18,23 @@ require_once($_SESSION['fmp']);		// 8/26/10
 $api_key = get_variable('gmaps_api_key');		// empty($_GET)
 
 if ((!empty($_GET))&& ((isset($_GET['logout'])) && ($_GET['logout'] == 'true'))) {
-	do_logout();
-	exit();
-	}
+    do_logout();
+    exit();
+    }
 else {
 //	snap(__LINE__, basename(__FILE__));
-	do_login(basename(__FILE__));
-	}
+    do_login(basename(__FILE__));
+    }
 if ($istest) {
-	print "GET<BR/>\n";
-	if (!empty($_GET)) {
-		dump ($_GET);
-		}
-	print "POST<BR/>\n";
-	if (!empty($_POST)) {
-		dump ($_POST);
-		}
-	}
+    print "GET<BR/>\n";
+    if (!empty($_GET)) {
+        dump ($_GET);
+        }
+    print "POST<BR/>\n";
+    if (!empty($_POST)) {
+        dump ($_POST);
+        }
+    }
 
 $temp = get_variable('auto_poll');
 $poll_val = ($temp==0)? "none" : $temp ;
@@ -49,93 +49,97 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<HEAD><TITLE><?php print gettext('Incident');?> <?php print $title;?> <?php print $ticket_updated;?></TITLE>
-	<LINK REL="StyleSheet" HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
-	<STYLE type="text/css">
-	.hover 	{ text-align: center; margin-left: 4px; float: none; font: normal 12px Arial, Helvetica, sans-serif; color:#FF0000; border-width: 1px; border-STYLE: inset; border-color: #FFFFFF;
-  				  padding: 4px 0.5em;text-decoration: none; background-color: #DEE3E7; font-weight: bolder;}
-	.plain 	{ text-align: center; margin-left: 4px; float: none; font: normal 12px Arial, Helvetica, sans-serif; color:#000000;  border-width: 1px; border-STYLE: outset; border-color: #FFFFFF;
-  				  padding: 4px 0.5em;text-decoration: none; background-color: #EFEFEF; font-weight: bolder;}
-  	</STYLE>
-	<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry&sensor=false"></SCRIPT>	<!-- 4/23/13 -->
-	<SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 4/23/13 -->
-	<SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 4/23/13 -->
-	<SCRIPT>
+    <HEAD><TITLE><?php print gettext('Incident');?> <?php print $title;?> <?php print $ticket_updated;?></TITLE>
+    <LINK REL="StyleSheet" HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
+    <STYLE type="text/css">
+    .hover 	{ text-align: center; margin-left: 4px; float: none; font: normal 12px Arial, Helvetica, sans-serif; color:#FF0000; border-width: 1px; border-STYLE: inset; border-color: #FFFFFF;
+                    padding: 4px 0.5em;text-decoration: none; background-color: #DEE3E7; font-weight: bolder;}
+    .plain 	{ text-align: center; margin-left: 4px; float: none; font: normal 12px Arial, Helvetica, sans-serif; color:#000000;  border-width: 1px; border-STYLE: outset; border-color: #FFFFFF;
+                    padding: 4px 0.5em;text-decoration: none; background-color: #EFEFEF; font-weight: bolder;}
+      </STYLE>
+    <SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry&sensor=false"></SCRIPT>	<!-- 4/23/13 -->
+    <SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 4/23/13 -->
+    <SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 4/23/13 -->
+    <SCRIPT>
 /**
- * 
+ *
  * @returns {undefined}
  */
-	function ck_frames() {
-		}
+    function ck_frames() {
+        }
 /**
- * 
+ *
  * @returns {Array}
  */
-	function $() {
-		var elements = new Array();
-		for (var i = 0; i < arguments.length; i++) {
-			var element = arguments[i];
-			if (typeof element == 'string')
-				element = document.getElementById(element);
-			if (arguments.length == 1)
-				return element;
-			elements.push(element);
-			}
-		return elements;
-		}
+    function $() {
+        var elements = new Array();
+        for (var i = 0; i < arguments.length; i++) {
+            var element = arguments[i];
+            if (typeof element == 'string')
+                element = document.getElementById(element);
+            if (arguments.length == 1)
+                return element;
+            elements.push(element);
+            }
 
-	/* function $() Sample Usage:
-	var obj1 = document.getElementById('element1');
-	var obj2 = document.getElementById('element2');
-	function alertElements() {
-	  var i;
-	  var elements = $('a','b','c',obj1,obj2,'d','e');
-	  for ( i=0;i
-	  }
-	*/
+        return elements;
+        }
+
+    /* function $() Sample Usage:
+    var obj1 = document.getElementById('element1');
+    var obj2 = document.getElementById('element2');
+    function alertElements() {
+      var i;
+      var elements = $('a','b','c',obj1,obj2,'d','e');
+      for ( i=0;i
+      }
+    */
 /**
- * 
- * @param {type} the_id
- * @returns {Boolean}
- */ 
-	function do_hover (the_id) {
-		CngClass(the_id, 'hover');
-		return true;
-		}
-/**
- * 
+ *
  * @param {type} the_id
  * @returns {Boolean}
  */
-	function do_plain (the_id) {
-		CngClass(the_id, 'plain');
-		return true;
-		}
+    function do_hover(the_id) {
+        CngClass(the_id, 'hover');
+
+        return true;
+        }
 /**
- * 
+ *
+ * @param {type} the_id
+ * @returns {Boolean}
+ */
+    function do_plain(the_id) {
+        CngClass(the_id, 'plain');
+
+        return true;
+        }
+/**
+ *
  * @param {type} obj
  * @param {type} the_class
  * @returns {Boolean}
  */
-	function CngClass(obj, the_class){
-		$(obj).className=the_class;
-		return true;
-		}
+    function CngClass(obj, the_class) {
+        $(obj).className=the_class;
 
-	</SCRIPT>
-	
+        return true;
+        }
+
+    </SCRIPT>
+
 </HEAD>
 <BODY><CENTER>
 <?php
-	$get_id = (array_key_exists('id', ($_GET)))? $_GET['id'] : NULL;
+    $get_id = (array_key_exists('id', ($_GET)))? $_GET['id'] : NULL;
 
-	if ($get_id) {
-		if($_SESSION['internet']) {
-			popup_ticket($get_id);
-		} else {
-			show_ticket($get_id, $print='false', $search = FALSE);
-			}
-		}
+    if ($get_id) {
+        if ($_SESSION['internet']) {
+            popup_ticket($get_id);
+        } else {
+            show_ticket($get_id, $print='false', $search = FALSE);
+            }
+        }
 
 echo "<CENTER><BR /><BR clear=all/><BR /><SPAN STYLE='background-color:white; font-weight:bold; color:black;'>&nbsp;{$ticket_addr}&nbsp;</SPAN></CEMTER>";
 echo "<BR /><BR /><BR />";

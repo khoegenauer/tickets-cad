@@ -49,26 +49,31 @@ before_script:
 #-----------------------------------------------------
 ## Install / Update
 #  - sudo apt-get update -qq
+## Selenium Interpreter (for Saucelabs integration)
+# - sudo apt-get install nodejs
+# - npm install -g se-interpreter
+## Webservers, Browsers, etc for Selenium testing?
 
 ## For SQL ERD Generation
 #  - sudo apt-get install sqlfairy
 
 ## For PHP_UML 
-#  - sudo apt-get install php5-xsl
+#  - sudo apt-get install -qq php5-xsl
 #  - pear install PHP_UML  
-
+## w3af
+# - sudo apt-get install -qq w3af-console
 ## APACHE
 #  - sudo apt-get update > /dev/null
 #  - sudo apt-get install -y --force-yes apache2 libapache2-mod-php5 php5-curl php5-mysql php5-intl
 
 ## For YUI Docs
-#  - sudo apt-get install nodejs -qq
+#  - sudo apt-get install -qq nodejs
 #  - npm -g install yuidocjs
 
 ## Only if SQLFairy doesn't work (Backup Plan: SchemaSpy)
-#  - sudo apt-get install graphviz -qq
+#  - sudo apt-get install -qq graphviz
 #--------------------------------------------------
-##Sauce Connect
+##Sauce Connect ???
 #  - curl https://gist.github.com/santiycr/5139565/raw/sauce_connect_setup.sh | bash
 
 #---------------------------------------------------
@@ -81,8 +86,6 @@ before_script:
   - pear channel-discover pear.phpdoc.org
   - pear install phpdoc/phpDocumentor
   - phpenv rehash
-#pear.phpunit.de/PHPUnit
-#pear.phpunit.de/PHPUnit_Skeleton_Generator
 #---------------------------------------------------
 ##DEV TOOLS
 #PHP_UML (Works local)(<1min)(Requires PHP Extension "XSL")
@@ -93,9 +96,6 @@ before_script:
 #  - php ./DEV/tools/phpcallgraph-0.8.0/bin/phpcallgraph -r -f deadcode ./ > ./DEV/build/PHP-CallGraph/phpcallgraph-deadcode.txt
 
 #----------------------------------------------
-#SELENIUM / SAUCELABS INTEGRATION
-#PLACEHOLDER: PROBABLY(?) NOT CORRECT FOR PHP. From Saucelabs tutorial "building a CI system using selenium builder github travis and sauce labs
-#  - npm install -g se-interpreter
 
 # omitting "script:" will default to phpunit
 # use the $DB env variable to determine the phpunit.xml to use
@@ -103,6 +103,7 @@ script:
 ##TESTING
 ##    UI TESTING
 #Selenium and Appium(SauceLabs) (Sauce Connect?)
+# - "se-interpreter selenium/interpreter_config.json
 ##    SECURITY TESTING
 #W3AF
 #Skipfish

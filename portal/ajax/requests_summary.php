@@ -1,20 +1,20 @@
 <?php
 /**
- * 
- * 
+ *
+ *
  * @package requests_summary.php
  * @author John Doe <john.doe@example.com>
  * @since version
  * @version string
  */
 @session_start();
-require_once('../../incs/functions.inc.php');
-require_once('../incs/portal.inc.php');
+require_once '../../incs/functions.inc.php';
+require_once '../incs/portal.inc.php';
 
-if(empty($_GET)) {
-	exit();
-	}
-	
+if (empty($_GET)) {
+    exit();
+    }
+
 $query = "SELECT * FROM `$GLOBALS[mysql_prefix]requests` WHERE `request_date` >= (NOW() - INTERVAL 1 WEEK) AND `requester` = " . strip_tags($_GET['id']);
 $result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 $requests_week = mysql_num_rows($result);
@@ -99,4 +99,3 @@ $ret_arr[14] = $closed_year;
 $ret_arr[15] = $closed;
 
 print json_encode($ret_arr);
-?>

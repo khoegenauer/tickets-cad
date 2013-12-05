@@ -1,7 +1,7 @@
 <?php
 /**
- * 
- * 
+ *
+ *
  * @package get_aprs_poll.php
  * @author John Doe <john.doe@example.com>
  * @since version
@@ -17,4 +17,3 @@ $aprs_poll = @get_variable('auto_poll');		//  possibly not set
 $aprs_poll = (is_null ($aprs_poll))? 0 : $aprs_poll ;
 print $aprs_poll;
 //print "55";
-?>

@@ -5,8 +5,8 @@
  * @since
  * @version
  */
-error_reporting(E_ALL);	
-require_once('../../incs/functions.inc.php');
+error_reporting(E_ALL);
+require_once '../../incs/functions.inc.php';
 
 $ret_arr = array();
 $addr = urlencode($_GET['addr']);
@@ -20,4 +20,3 @@ $ret_arr = array();
 $ret_arr[0] = $temp["results"][0]["geometry"]["location"]["lat"];
 $ret_arr[1] = $temp["results"][0]["geometry"]["location"]["lng"];
 print json_encode($ret_arr);
-?>

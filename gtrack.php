@@ -10,13 +10,11 @@
 3/15/11 changed stylesheet.php to stylesheet.php
 */
 
-
-
 error_reporting(E_ALL);
- 
+
 @session_start();
 @session_start();
-require_once($_SESSION['fip']); 
+require_once($_SESSION['fip']);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
@@ -55,9 +53,9 @@ if (empty($_POST)) {
 </HTML>
 
 <?php
-		}				// end if (empty($_POST)) {
-	else {
-		require_once('./incs/functions.inc.php');
+        }				// end if (empty($_POST)) {
+    else {
+        require_once './incs/functions.inc.php';
 
 /**
  * do_gt
@@ -74,47 +72,47 @@ if (empty($_POST)) {
  * @since
  */
 function do_gt($user, $url) {
-	
-		$request_url = "http://" . $url . "/data.php?userid=$user";		//change to reflect the server address
-		$data="";
-		if (function_exists("curl_init")) {
-			$ch = curl_init();
-			$timeout = 5;
-			curl_setopt($ch, CURLOPT_URL, $request_url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-			$data = curl_exec($ch);
-			curl_close($ch);
-			}
-		else {				// not CURL
-			if ($fp = @fopen($request_url, "r")) {
-				while (!feof($fp) && (strlen($data)<9000)) $data .= fgets($fp, 128);
-				fclose($fp);
-				}		
-			else {
-				print "-error 1";		// @fopen fails
-				}
-			}
 
-		$ret_array = new SimpleXMLElement($data);
+        $request_url = "http://" . $url . "/data.php?userid=$user";		//change to reflect the server address
+        $data="";
+        if (function_exists("curl_init")) {
+            $ch = curl_init();
+            $timeout = 5;
+            curl_setopt($ch, CURLOPT_URL, $request_url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+            $data = curl_exec($ch);
+            curl_close($ch);
+            }
+        else {				// not CURL
+            if ($fp = @fopen($request_url, "r")) {
+                while (!feof($fp) && (strlen($data)<9000)) $data .= fgets($fp, 128);
+                fclose($fp);
+                }
+            else {
+                print "-error 1";		// @fopen fails
+                }
+            }
 
-	return $ret_array;
+        $ret_array = new SimpleXMLElement($data);
+
+    return $ret_array;
 
 }	// end function do_gt()
 
-	$user = $_POST['frm_gtrack_id'];
-	$url = $_POST['frm_gtrack_url'];
-	$xml = do_gt($user, $url);
-	$caption = ($xml)? "Successful": "Fails";
+    $user = $_POST['frm_gtrack_id'];
+    $url = $_POST['frm_gtrack_url'];
+    $xml = do_gt($user, $url);
+    $caption = ($xml)? "Successful": "Fails";
 
-	if ($xml) {
-		$api_key = get_variable('gmaps_api_key');		// empty($_GET)
+    if ($xml) {
+        $api_key = get_variable('gmaps_api_key');		// empty($_GET)
 
-		$user_id = $xml->marker['userid'];
-		$lat = $xml->marker['lat'];
-		$lng = $xml->marker['lng'];
+        $user_id = $xml->marker['userid'];
+        $lat = $xml->marker['lat'];
+        $lng = $xml->marker['lng'];
 
-?>	
+?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -126,7 +124,7 @@ function do_gt($user, $url) {
             type="text/javascript"></script>
     <script type="text/javascript">
 /**
- * 
+ *
  * @returns {undefined}
  */
     function initialize() {
@@ -145,19 +143,19 @@ function do_gt($user, $url) {
   <CENTER>
   <br /><br />
   <H3><?php print gettext('Gtrack Successful<br />
-	with public ID');?>: <?php print $user_id; ?></H3><br /><br />
+    with public ID');?>: <?php print $user_id; ?></H3><br /><br />
     <div id="map_canvas" style="width: 500px; height: 300px"></div>
     <br /><br /><input type='button' value="<?php print gettext('Again');?>" onClick = 'location.href="<?php print basename(__FILE__); ?>";' />&nbsp;&nbsp;&nbsp;&nbsp;
   </body><input type='button' value="<?php print gettext('Finished');?>" onClick = "self.close();" /><br /><br />
   </body>
 </html><?php
-		}
-	else {
+        }
+    else {
 ?>
 
 <?php
-		}		// end else
-	}				// end outer else
+        }		// end else
+    }				// end outer else
 
 ?>
 </BODY>

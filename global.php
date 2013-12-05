@@ -2,10 +2,10 @@
 /**
  * @package global.php
  * @author John Doe <john.doe@example.com>
- * @since 
+ * @since
  * @version
  */
-error_reporting(E_ALL);	
+error_reporting(E_ALL);
 $a = 1;
 /**
  * x
@@ -19,8 +19,8 @@ $a = 1;
  * @see
  * @since
  */
-function x () {
-	$b = 2;
+function x() {
+    $b = 2;
 
 /**
  * y
@@ -34,14 +34,10 @@ function x () {
  * @see
  * @since
  */
-	function y() {
-		global $a;
-		global $b;
-		echo $a;	
-		echo $b;	
-		}	//  end y
-	}		// end x
-	
-	
-
-?>
+    function y() {
+        global $a;
+        global $b;
+        echo $a;
+        echo $b;
+        }	//  end y
+    }		// end x

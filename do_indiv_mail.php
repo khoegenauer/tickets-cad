@@ -35,93 +35,95 @@ require_once($_SESSION['fip']);		//7/28/10
 
 //dump($_POST);
 
-if (empty($_POST)) {		
-	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `id` = " . quote_smart(trim($_GET['the_id'])). " LIMIT 1";
-	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-	$row = mysql_fetch_assoc($result);
+if (empty($_POST)) {
+    $query = "SELECT * FROM `$GLOBALS[mysql_prefix]responder` WHERE `id` = " . quote_smart(trim($_GET['the_id'])). " LIMIT 1";
+    $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+    $row = mysql_fetch_assoc($result);
 ?>
 
 <SCRIPT>
 /**
- * 
+ *
  * @returns {unresolved}
- */ 
-	String.prototype.trim = function () {
-		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
-		};
+ */
+    String.prototype.trim = function () {
+        return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
+        };
 /**
- * 
+ *
  * @returns {Array}
  */
-	function $() {
-		var elements = new Array();
-		for (var i = 0; i < arguments.length; i++) {
-			var element = arguments[i];
-			if (typeof element == 'string')
-				element = document.getElementById(element);
-			if (arguments.length == 1)
-				return element;
-			elements.push(element);
-			}
-		return elements;
-		}
-	
+    function $() {
+        var elements = new Array();
+        for (var i = 0; i < arguments.length; i++) {
+            var element = arguments[i];
+            if (typeof element == 'string')
+                element = document.getElementById(element);
+            if (arguments.length == 1)
+                return element;
+            elements.push(element);
+            }
+
+        return elements;
+        }
+
 /**
- * 
+ *
  * @returns {Boolean}
  */
-	function validate() {
-		var errmsg="";
-		if (document.mail_form.frm_addr.value.trim()=="") {errmsg+="<?php print gettext('Message address is required');?>";}
-		if (document.mail_form.frm_subj.value.trim()=="") {errmsg+="<?php print gettext('Message subject is required');?>";}
-		if (document.mail_form.frm_text.value.trim()=="") {errmsg+="<?php print gettext('Message text is required');?>";}
-		if (!(errmsg=="")){
-			alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
-			return false;
-			}
-		else {
-			document.mail_form.submit();	
-			}
-		}				// end function validate()
+    function validate() {
+        var errmsg="";
+        if (document.mail_form.frm_addr.value.trim()=="") {errmsg+="<?php print gettext('Message address is required');?>";}
+        if (document.mail_form.frm_subj.value.trim()=="") {errmsg+="<?php print gettext('Message subject is required');?>";}
+        if (document.mail_form.frm_text.value.trim()=="") {errmsg+="<?php print gettext('Message text is required');?>";}
+        if (!(errmsg=="")) {
+            alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 
-	</SCRIPT>
-	</HEAD>
+            return false;
+            }
+        else {
+            document.mail_form.submit();
+            }
+        }				// end function validate()
 
-	<BODY><CENTER>		<!-- 1/12/09 -->
-	<CENTER><H3><?php print gettext('Mail to Unit');?></H3>
-	<P>
-		<FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
-		<INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''>	<!-- for pipe-delim'd addr string -->
-		<TABLE BORDER = 0>
-		<TR CLASS= 'even'>
-			<TD ALIGN='right'><?php print gettext('To');?>:</TD><TD><INPUT NAME='frm_name' SIZE=32 VALUE = '<?php print $row['contact_name'];?>' /></TD>
-			</TR>
+    </SCRIPT>
+    </HEAD>
 
-		<TR CLASS= 'odd'>
-			<TD ALIGN='right'><?php print gettext('Addr');?>:</TD><TD><INPUT NAME='frm_addr' SIZE=32 VALUE = '<?php print $row['contact_via'];?>' /></TD>
-			</TR>
-	
-		<TR CLASS='even'><TD ALIGN='right'><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60 /></TD></TR>
-		<TR CLASS='odd'><TD ALIGN='right'><?php print gettext('Message');?>:</TD><TD COLSPAN=2> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
-		<TR CLASS='even'><TD ALIGN='center' COLSPAN=3><BR /><BR />
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "validate();"/>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'/>&nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/><BR /><BR />
-			</TD></TR>
-			</TABLE></FORM>
+    <BODY><CENTER>		<!-- 1/12/09 -->
+    <CENTER><H3><?php print gettext('Mail to Unit');?></H3>
+    <P>
+        <FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
+        <INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''>	<!-- for pipe-delim'd addr string -->
+        <TABLE BORDER = 0>
+        <TR CLASS= 'even'>
+            <TD ALIGN='right'><?php print gettext('To');?>:</TD><TD><INPUT NAME='frm_name' SIZE=32 VALUE = '<?php print $row['contact_name'];?>' /></TD>
+            </TR>
+
+        <TR CLASS= 'odd'>
+            <TD ALIGN='right'><?php print gettext('Addr');?>:</TD><TD><INPUT NAME='frm_addr' SIZE=32 VALUE = '<?php print $row['contact_via'];?>' /></TD>
+            </TR>
+
+        <TR CLASS='even'><TD ALIGN='right'><?php print gettext('Subject');?>: </TD><TD COLSPAN=2><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60 /></TD></TR>
+        <TR CLASS='odd'><TD ALIGN='right'><?php print gettext('Message');?>:</TD><TD COLSPAN=2> <TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA></TD></TR>
+        <TR CLASS='even'><TD ALIGN='center' COLSPAN=3><BR /><BR />
+            <INPUT TYPE='button' 	VALUE='<?php print gettext('Send');?>' onClick = "validate();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+            <INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'/>&nbsp;&nbsp;&nbsp;&nbsp;
+            <INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/><BR /><BR />
+            </TD></TR>
+            </TABLE></FORM>
 <?php
-		}		// end if (empty($_POST)) {
+        }		// end if (empty($_POST)) {
 
-	else {
+    else {
 
-			do_send ($_POST['frm_addr'], $_POST['frm_subj'], $_POST['frm_text'], 0, quote_smart(trim($_GET['the_id'])));	// ($to_str, $subject_str, $text_str )
+            do_send ($_POST['frm_addr'], $_POST['frm_subj'], $_POST['frm_text'], 0, quote_smart(trim($_GET['the_id'])));	// ($to_str, $subject_str, $text_str )
 ?>
-	<BODY><CENTER>		
-	<CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
-	<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'/><BR /><BR />
+    <BODY><CENTER>
+    <CENTER><BR /><BR /><BR /><H3><?php print gettext('Mail sent');?></H3>
+    <BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext('Finished');?>' onClick = 'window.close();'/><BR /><BR />
 
 <?php
 
-	}		// end else
+    }		// end else
 ?> </BODY>
 </HTML>

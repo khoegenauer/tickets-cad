@@ -5,7 +5,7 @@
  * @since version
  * @version string
  */
-error_reporting(E_ALL);	
+error_reporting(E_ALL);
 /**
  * dump
  * Insert description here
@@ -20,10 +20,10 @@ error_reporting(E_ALL);
  * @since
  */
 function dump($variable) {
-	echo "\n<PRE>";				// pretty it a bit
-	var_dump($variable) ;
-	echo "</PRE>\n";
-	}
+    echo "\n<PRE>";				// pretty it a bit
+    var_dump($variable) ;
+    echo "</PRE>\n";
+    }
 
 dump ($_POST);
 ?>
@@ -42,8 +42,8 @@ dump ($_POST);
 <BODY>
 <?php if (empty($_POST)) { ?>
 <h3><?php print gettext('First pass');?></h3>
-<?php 
-	}
+<?php
+    }
 else {	?>
 <h1><?php print gettext('Second pass');?></h1>
 <?php } ?>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * @package text.php
  * @author John Doe <john.doe@example.com>
@@ -16,12 +16,10 @@
 
     </style>
 
-
     <title><?php print gettext('Google Maps');?></title>
     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAPDUET0Qt7p2VcSk6JNU1sBSM5jMcmVqUpI7aqV44cW1cEECiThQYkcZUPRJn9vy_TWxWvuLoOfSFBw" type="text/javascript"></script>
   </head>
   <body onunload="GUnload();">
-
 
     <div id="map" style="width: 550px; height: 450px"></div>
     <a href="elabel.htm"><?php print gettext('Back to the tutorial page');?></a>
@@ -33,11 +31,11 @@
 
     if (GBrowserIsCompatible()) {
 // ______________________________________________
-// ELabel.js 
+// ELabel.js
 //
 //   This Javascript is provided by Mike Williams
 //   Community Church Javascript Team
-//   http://www.bisphamchurch.org.uk/   
+//   http://www.bisphamchurch.org.uk/
 //   http://econym.org.uk/gmap/
 //
 //   This work is licenced under a Creative Commons Licence
@@ -55,7 +53,7 @@
 // version 1.8      remove the old GMarkerManager support due to clashes with v2.143
 
 /**
- * 
+ *
  * @param {type} point
  * @param {type} html
  * @param {type} classname
@@ -68,37 +66,37 @@
         // Mandatory parameters
         this.point = point;
         this.html = html;
-        
+
         // Optional parameters
         this.classname = classname||"";
         this.pixelOffset = pixelOffset||new GSize(0,0);
         if (percentOpacity) {
-          if(percentOpacity<0){percentOpacity=0;}
-          if(percentOpacity>100){percentOpacity=100;}
-        }        
+          if (percentOpacity<0) {percentOpacity=0;}
+          if (percentOpacity>100) {percentOpacity=100;}
+        }
         this.percentOpacity = percentOpacity;
         this.overlap=overlap||false;
         this.hidden = false;
-      } 
-      
+      }
+
       ELabel.prototype = new GOverlay();
 /**
- * 
+ *
  * @param {type} map
  * @returns {undefined}
  */
-      ELabel.prototype.initialize = function(map) {
+      ELabel.prototype.initialize = function (map) {
         var div = document.createElement("div");
         div.style.position = "absolute";
         div.innerHTML = '<div class="' + this.classname + '">' + this.html + '</div>' ;
         map.getPane(G_MAP_FLOAT_SHADOW_PANE).appendChild(div);
         this.map_ = map;
         this.div_ = div;
-        if (this.percentOpacity) {        
-          if(typeof(div.style.filter)=='string'){div.style.filter='alpha(opacity:'+this.percentOpacity+')';}
-          if(typeof(div.style.KHTMLOpacity)=='string'){div.style.KHTMLOpacity=this.percentOpacity/100;}
-          if(typeof(div.style.MozOpacity)=='string'){div.style.MozOpacity=this.percentOpacity/100;}
-          if(typeof(div.style.opacity)=='string'){div.style.opacity=this.percentOpacity/100;}
+        if (this.percentOpacity) {
+          if (typeof(div.style.filter)=='string') {div.style.filter='alpha(opacity:'+this.percentOpacity+')';}
+          if (typeof(div.style.KHTMLOpacity)=='string') {div.style.KHTMLOpacity=this.percentOpacity/100;}
+          if (typeof(div.style.MozOpacity)=='string') {div.style.MozOpacity=this.percentOpacity/100;}
+          if (typeof(div.style.opacity)=='string') {div.style.opacity=this.percentOpacity/100;}
         }
         if (this.overlap) {
           var z = GOverlay.getZIndex(this.point.lat());
@@ -109,35 +107,35 @@
         }
       }
 /**
- * 
+ *
  * @returns {undefined}
  */
-      ELabel.prototype.remove = function() {
+      ELabel.prototype.remove = function () {
         this.div_.parentNode.removeChild(this.div_);
       }
 /**
- * 
+ *
  * @returns {ELabel}
  */
-      ELabel.prototype.copy = function() {
+      ELabel.prototype.copy = function () {
         return new ELabel(this.point, this.html, this.classname, this.pixelOffset, this.percentOpacity, this.overlap);
       }
 /**
- * 
+ *
  * @param {type} force
  * @returns {undefined}
  */
-      ELabel.prototype.redraw = function(force) {
+      ELabel.prototype.redraw = function (force) {
         var p = this.map_.fromLatLngToDivPixel(this.point);
         var h = parseInt(this.div_.clientHeight);
         this.div_.style.left = (p.x + this.pixelOffset.width) + "px";
         this.div_.style.top = (p.y +this.pixelOffset.height - h) + "px";
       }
 /**
- * 
+ *
  * @returns {undefined}
  */
-      ELabel.prototype.show = function() {
+      ELabel.prototype.show = function () {
         if (this.div_) {
           this.div_.style.display="";
           this.redraw();
@@ -145,45 +143,45 @@
         this.hidden = false;
       }
 /**
- * 
+ *
  * @returns {undefined}
- */      
-      ELabel.prototype.hide = function() {
+ */
+      ELabel.prototype.hide = function () {
         if (this.div_) {
           this.div_.style.display="none";
         }
         this.hidden = true;
       }
 /**
- * 
+ *
  * @returns {unresolved}
- */      
-      ELabel.prototype.isHidden = function() {
+ */
+      ELabel.prototype.isHidden = function () {
         return this.hidden;
       }
 /**
- * 
+ *
  * @returns {Boolean}
- */      
-      ELabel.prototype.supportsHide = function() {
+ */
+      ELabel.prototype.supportsHide = function () {
         return true;
       }
 /**
- * 
+ *
  * @param {type} html
  * @returns {undefined}
  */
-      ELabel.prototype.setContents = function(html) {
+      ELabel.prototype.setContents = function (html) {
         this.html = html;
         this.div_.innerHTML = '<div class="' + this.classname + '">' + this.html + '</div>' ;
         this.redraw(true);
       }
 /**
- * 
+ *
  * @param {type} point
  * @returns {undefined}
- */      
-      ELabel.prototype.setPoint = function(point) {
+ */
+      ELabel.prototype.setPoint = function (point) {
         this.point = point;
         if (this.overlap) {
           var z = GOverlay.getZIndex(this.point.lat());
@@ -192,28 +190,28 @@
         this.redraw(true);
       }
 /**
- * 
+ *
  * @param {type} percentOpacity
  * @returns {undefined}
- */      
-      ELabel.prototype.setOpacity = function(percentOpacity) {
+ */
+      ELabel.prototype.setOpacity = function (percentOpacity) {
         if (percentOpacity) {
-          if(percentOpacity<0){percentOpacity=0;}
-          if(percentOpacity>100){percentOpacity=100;}
-        }        
+          if (percentOpacity<0) {percentOpacity=0;}
+          if (percentOpacity>100) {percentOpacity=100;}
+        }
         this.percentOpacity = percentOpacity;
-        if (this.percentOpacity) {        
-          if(typeof(this.div_.style.filter)=='string'){this.div_.style.filter='alpha(opacity:'+this.percentOpacity+')';}
-          if(typeof(this.div_.style.KHTMLOpacity)=='string'){this.div_.style.KHTMLOpacity=this.percentOpacity/100;}
-          if(typeof(this.div_.style.MozOpacity)=='string'){this.div_.style.MozOpacity=this.percentOpacity/100;}
-          if(typeof(this.div_.style.opacity)=='string'){this.div_.style.opacity=this.percentOpacity/100;}
+        if (this.percentOpacity) {
+          if (typeof(this.div_.style.filter)=='string') {this.div_.style.filter='alpha(opacity:'+this.percentOpacity+')';}
+          if (typeof(this.div_.style.KHTMLOpacity)=='string') {this.div_.style.KHTMLOpacity=this.percentOpacity/100;}
+          if (typeof(this.div_.style.MozOpacity)=='string') {this.div_.style.MozOpacity=this.percentOpacity/100;}
+          if (typeof(this.div_.style.opacity)=='string') {this.div_.style.opacity=this.percentOpacity/100;}
         }
       }
 /**
- * 
+ *
  * @returns {unresolved}
  */
-      ELabel.prototype.getPoint = function() {
+      ELabel.prototype.getPoint = function () {
         return this.point;
       }
 // ______________________________________________
@@ -224,12 +222,12 @@
       map.addControl(new GMapTypeControl());
 
       // remember which label was associated with the open info window
-      var lastlabel; 
+      var lastlabel;
 
       // Custom icon is identical to the default icon, except that its invisible
       var invisibleIcon = new GIcon(G_DEFAULT_ICON, "http://www.google.com/intl/en_ALL/mapfiles/markerTransparent.png");
 /**
- * 
+ *
  * @param {type} point
  * @param {type} html
  * @param {type} text
@@ -243,7 +241,7 @@
 
         // Create an invisible GMarker
         var marker = new GMarker(point,invisibleIcon);
-        GEvent.addListener(marker, "click", function() {
+        GEvent.addListener(marker, "click", function () {
           marker.openInfoWindowHtml(html);
           label.setOpacity(100);
           lastlabel = label;
@@ -252,17 +250,16 @@
       }
 
       // Reset the opacity of the label when the info window closes
-      GEvent.addListener(map,"infowindowclose", function() {
+      GEvent.addListener(map,"infowindowclose", function () {
         if (lastlabel) {
           lastlabel.setOpacity(75);
         }
       });
 
-
-/*    
+/*
       var point = new GLatLng(43.64855,-79.38535);
       var marker = createMarkeredLabel(point,'Some stuff to display in the Toronto Info Window','Toronto')
-      
+
       var point = new GLatLng(43.15635, -79.24866);
       var marker = createMarkeredLabel(point,'Some stuff to display in the St Catharine\'s Info Window','St Catharine\'s')
 
@@ -279,9 +276,9 @@
       var marker = createMarkeredLabel(point,'Some stuff to display in the Mississauga Info Window','Mississauga')
 */
       var point = new GLatLng(37.46619, -79.68957);
-      var marker = createMarkeredLabel(point,'<?php print gettext("Some Italic partially opaque text to place on a map");?>','<?php print gettext("Some  partially opaque text");?>');      
+      var marker = createMarkeredLabel(point,'<?php print gettext("Some Italic partially opaque text to place on a map");?>','<?php print gettext("Some  partially opaque text");?>');
     }
-    
+
     // display a warning if the browser was not compatible
     else {
       alert("<?php print gettext('Sorry, the Google Maps API is not compatible with this browser');?>");
@@ -289,7 +286,7 @@
 
     // This Javascript is based on code provided by the
     // Community Church Javascript Team
-    // http://www.bisphamchurch.org.uk/   
+    // http://www.bisphamchurch.org.uk/
     // http://econym.org.uk/gmap/
 
     //]]>
@@ -297,7 +294,3 @@
   </body>
 
 </html>
-
-
-
-

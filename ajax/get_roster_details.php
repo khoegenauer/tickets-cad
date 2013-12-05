@@ -4,19 +4,19 @@
  * Lists personnel for Roster user functionality
  * @since 09/10/13
  * @version 09/10/13
- * @author John Doe <john.doe@example.com> 
+ * @author John Doe <john.doe@example.com>
  */
 
 @session_start();
-require_once('../incs/functions.inc.php');
+require_once '../incs/functions.inc.php';
 
-if(empty($_GET)) {
-	exit();
-	}
+if (empty($_GET)) {
+    exit();
+    }
 
 $the_id = strip_tags($_GET['id']);
 
-$query = "SELECT * FROM `$GLOBALS[mysql_prefix]personnel` WHERE `id` = '" . $the_id . "' LIMIT 1"; 
+$query = "SELECT * FROM `$GLOBALS[mysql_prefix]personnel` WHERE `id` = '" . $the_id . "' LIMIT 1";
 $result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 $row = stripslashes_deep(mysql_fetch_assoc($result));
 
@@ -35,4 +35,3 @@ $ret_arr[11] = $row['person_capabilities'];
 $ret_arr[12] = $row['person_notes'];
 
 print json_encode($ret_arr);
-?>

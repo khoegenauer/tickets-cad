@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package chat_rd.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 error_reporting(E_ALL);
 /*
 9/10/13 New file, read chat messages on mobile page

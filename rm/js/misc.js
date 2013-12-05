@@ -1,6 +1,16 @@
+/**
+ * @package misc.js
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 9/10/13 - New file, miscellaneous JS functions for Tickets mobile screen
 */
+/**
+ * 
+ * @returns {Array}
+ */
 function $() {
 	var elements = new Array();
 	for (var i = 0; i < arguments.length; i++) {
@@ -13,11 +23,17 @@ function $() {
 		}
 	return elements;
 	}
-
+/**
+ * 
+ * @returns {unresolved}
+ */
 String.prototype.trim = function () {
 	return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 	};		
-
+/**
+ * 
+ * @returns {undefined}
+ */
 (function(){
     var DomReady = window.DomReady = {};
 	// Everything that has to do with properly supporting our document ready event. Brought over from the most awesome jQuery. 
@@ -50,6 +66,11 @@ String.prototype.trim = function () {
 		}
 	};
 	// From Simon Willison. A safe way to fire onload w/o screwing up everyone else.
+  /**
+   * 
+   * @param {type} func
+   * @returns {undefined}
+   */
 	function addLoadEvent(func) {
 	  var oldonload = window.onload;
 	  if (typeof window.onload != 'function') {
@@ -150,7 +171,13 @@ String.prototype.trim = function () {
 	bindReady();
 	
 })();
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -169,14 +196,20 @@ String.prototype.trim = function () {
 		if (req.readyState == 4) return;
 		req.send(postData);
 		}	// end function sendRequest()
-	
+	/**
+   * 
+   * @type Array
+   */
 	var XMLHttpFactories = [
 		function () {return new XMLHttpRequest();	},
 		function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
 		function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
 		function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
 		];
-	
+/**
+ * 
+ * @returns {Boolean}
+ */	
 	function createXMLHTTPObject() {
 		var xmlhttp = false;
 		for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -186,12 +219,20 @@ String.prototype.trim = function () {
 			}
 		return xmlhttp;
 		}			// end function createXMLHTTPObject()		
-
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {Boolean}
+ */
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
 		}
-
+/**
+ * 
+ * @returns {undefined}
+ */
 	function navFwd () {				// say 0-9, length 10
 		var idArray=document.navForm.id_str.value.split(","); 
 		if (document.navForm.id.value <  idArray.length-1) {
@@ -200,6 +241,10 @@ String.prototype.trim = function () {
 			document.navForm.submit();
 			}	
 		}
+/**
+ * 
+ * @returns {undefined}
+ */
 	function navBack () {
 		if (document.navForm.id.value >0 ) {
 			document.navForm.id.value--;				// step to prior

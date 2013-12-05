@@ -1,4 +1,15 @@
 <?php
+/**
+ * @package u_conditions.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
+/**
+ * 
+ * @param type $directory
+ * @return type
+ */
 function read_directory($directory) {
 	$the_ret = array();
 	$dirhandler = opendir($directory);
@@ -37,7 +48,7 @@ $theIcons = read_directory($theDirectory);
 	<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Description');?>:</TD>
 		<TD><INPUT  ID="ID2" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_description" VALUE="<?php print $row['description'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
 	<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Icon');?>:</TD>
-		<TD><IMG ID='ID3' SRC="<?php print './mobile/roadinfo_icons/' . $row['icon'];?>"></TD></TR>
+		<TD><IMG ID='ID3' SRC="<?php print './mobile/roadinfo_icons/' . $row['icon'];?>" /></TD></TR>
 	<TR CLASS="even"><TD></TD><TD ALIGN='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <SCRIPT>
 	var theIcons = new Array();

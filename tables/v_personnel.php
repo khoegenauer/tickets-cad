@@ -1,10 +1,23 @@
+<?php
+/**
+ * @package v_personnel.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
+?>
 <SCRIPT>
+/**
+ * 
+ * @param {type} myform
+ * @returns {undefined}
+ */
 function validate_form(myform) {	// reject empty form elements
 	myform.frm_date_of_birth.value = myform.frm_year_date_of_birth.value + "-" + myform.frm_month_date_of_birth.value + "-" + myform.frm_day_date_of_birth.value + " 00:00:00";
 	myform.submit();		
 	}				// end function 
 </SCRIPT>
-		<FORM NAME="v" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF']; ?>" />
+		<FORM NAME="v" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF']; ?>">
 		<INPUT TYPE="hidden" NAME="func" 		VALUE="pu" />
 		<INPUT TYPE="hidden" NAME="tablename" 	VALUE="<?php print $tablename;?>" />
 		<INPUT TYPE="hidden" NAME="indexname" 	VALUE="id" />

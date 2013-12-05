@@ -1,11 +1,21 @@
 <?php
+/**
+ * @package get_latest_ids.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 9/10/13 - New file gets chat invites and new assignments to mobile user.
 */
 error_reporting(E_ALL);
 @session_start();
 require_once('../../incs/functions.inc.php');
-
+/**
+ * 
+ * @param type $err_arg
+ * @return type
+ */
 function error_out($err_arg) {
 	do_log($GLOBALS['LOG_ERROR'], 0, 0, $err_arg);
 	return;

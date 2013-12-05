@@ -1,10 +1,21 @@
 <?php
+/**
+ * @package ticket_markers.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 9/10/13 - New file, gets markers for mobile screen for assigned Tickets
 */
 
 @session_start();
 require_once('../../incs/functions.inc.php');
+/**
+ * 
+ * @param type $input
+ * @return type
+ */
 function br2nl($input) {
 	return preg_replace('/<br(\s+)?\/?>/i', "\n", $input);
 	}

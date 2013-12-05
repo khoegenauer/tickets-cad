@@ -1,4 +1,12 @@
-	<FORM NAME="u" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF']; ?>"/>
+<?php
+/**
+ * @package u_in_types.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
+?>
+<FORM NAME="u" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF']; ?>"/>
 	<INPUT TYPE="hidden" NAME="tablename"	VALUE="<?php print $tablename;?>"/>
 	<INPUT TYPE="hidden" NAME="indexname" 	VALUE="id"/>
 	<INPUT TYPE="hidden" NAME="id" 			VALUE="<?php print $row['id'];?>" />

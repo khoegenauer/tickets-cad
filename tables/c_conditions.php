@@ -1,4 +1,15 @@
 <?php
+/**
+ * @package c_conditions.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
+/**
+ * 
+ * @param type $directory
+ * @return type
+ */
 function read_directory($directory) {
 	$the_ret = array();
 	$dirhandler = opendir($directory);

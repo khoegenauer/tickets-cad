@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package chat_invite_del.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 9/10/13	New file, deletes chat invite on acceptance.
 */

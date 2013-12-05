@@ -1,4 +1,17 @@
+<?php
+/**
+ * @package u_personnel.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
+?>
 <SCRIPT>
+/**
+ * 
+ * @param {type} myform
+ * @returns {undefined}
+ */
 function validate_form(myform) {	// reject empty form elements
 	myform.frm_date_of_birth.value = myform.frm_year_date_of_birth.value + "-" + myform.frm_month_date_of_birth.value + "-" + myform.frm_day_date_of_birth.value + " 00:00:00";
 	myform.frm_year_date_of_birth.disabled=true;

@@ -1,3 +1,12 @@
+<?php
+/**
+ * @package c_places.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
+?>
+
 <!--
 3/18/11 initial release - AS
 -->

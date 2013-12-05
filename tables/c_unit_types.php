@@ -1,4 +1,12 @@
-		<FORM NAME="c" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF']; ?>" /><!-- 1/21/09 - APRS moved to responder schema  -->
+<?php
+/**
+ * @package c_unit_types.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
+?>
+<FORM NAME="c" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF']; ?>" /><!-- 1/21/09 - APRS moved to responder schema  -->
 		<INPUT TYPE="hidden" NAME="func" 		VALUE="pc"/>
 		<INPUT TYPE="hidden" NAME="tablename" 	VALUE="<?php print $tablename;?>" />
 		<INPUT TYPE="hidden" NAME="indexname" 	VALUE="id" />

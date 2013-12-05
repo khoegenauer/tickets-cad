@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package get_latest_messages.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 9/10/13 - New file, checks for new unread messages to light messages button on mobile page
 */

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package update_notes.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 9/10/13 - New file, updates ticket notes for assignment from mobile screen
 */
@@ -6,6 +12,11 @@ error_reporting(E_ALL);
 
 @session_start();
 require_once('../../incs/functions.inc.php');
+/**
+ * 
+ * @param type $input
+ * @return type
+ */
 function br2nl($input) {
 	return preg_replace('/<br(\s+)?\/?>/i', "\n", $input);
 	}

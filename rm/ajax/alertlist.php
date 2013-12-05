@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package alertlist.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 9/10/13 - new file, lists road condition alerts (text) for mobile page - sorts by distance from current position.
 */

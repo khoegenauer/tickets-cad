@@ -1,9 +1,22 @@
-	<FORM NAME="v" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF']; ?>" />
+<?php
+/**
+ * @package v_in_types.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
+?>
+<FORM NAME="v" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF']; ?>" >
 	<INPUT TYPE="hidden" NAME="tablename" 	VALUE="<?php print $tablename;?>"/>
 	<INPUT TYPE="hidden" NAME="indexname" 	VALUE="id"/>
 	<INPUT TYPE="hidden" NAME="sortby" 		VALUE="id"/>
 	<INPUT TYPE="hidden" NAME="sortdir"		VALUE=0 />
 <?php
+/**
+ * 
+ * @param type $id
+ * @return string
+ */
 function get_mailgroup_name($id) {	//	8/28/13
 	if($id == 0) {
 		return "";

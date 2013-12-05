@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package update_message_read.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 9/10/13 - New file, updates read status for message from mobile screen
 */

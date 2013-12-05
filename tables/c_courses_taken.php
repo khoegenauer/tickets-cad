@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package c_courses_taken.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 12/10/11 - initial release
 12/19/11 'group' => group_name

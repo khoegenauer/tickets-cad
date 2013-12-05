@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package chat_wr.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 9/10/13 New file - writes ne chat message - for mobile page
 */

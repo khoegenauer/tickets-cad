@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package messagelist2.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 9/10/13 - new file - gets message detail for mobile screen - for messages associated with a particular ticket and listed from that ticket detail
 */
@@ -8,7 +14,11 @@ $filter = "";
 
 $ret_arr = array();
 $i = 0;
-
+/**
+ * 
+ * @param type $input
+ * @return type
+ */
 function br2nl($input) {
 	return preg_replace('/<br(\s+)?\/?>/i', "\n", $input);
 	}

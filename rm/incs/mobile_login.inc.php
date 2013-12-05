@@ -1,6 +1,10 @@
 <?php
-/*
-*/
+/**
+ * @package mobile_login.inc.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /**
  * 
  * @global type $hide_dispatched
@@ -245,7 +249,7 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 		<title>Tickets Login Screen</title>
-		<LINK REL=StyleSheet HREF="../css/stylesheet.php?version=<?php print time();?>" TYPE="text/css">			
+		<LINK REL="StyleSheet" HREF="../css/stylesheet.php?version=<?php print time();?>" TYPE="text/css" />			
 		<style type="text/css">
 			#outer { width: 100%; height: 100%; }
 			*, html { margin:0; padding:0 }

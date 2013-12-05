@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package u_un_status.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 2/9/10 - initial release
 5/25/10 - Changed display of hide value to what exists in database
@@ -151,7 +157,7 @@ switch($row_hide) {
 		<TR><TD COLSPAN="99" ALIGN="center">
 	<BR />
   <INPUT TYPE="button" 	VALUE="<?php print gettext('Cancel');?>" onClick = "Javascript: document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
-  <INPUT TYPE="reset"		VALUE="<?php print gettext('Reset');?>"  onClick = "do_reset(this.form)"; />&nbsp;&nbsp;&nbsp;&nbsp;
+  <INPUT TYPE="reset"		VALUE="<?php print gettext('Reset');?>"  onClick = "do_reset(this.form);" />&nbsp;&nbsp;&nbsp;&nbsp;
   <INPUT TYPE="button" 	NAME="sub_but" VALUE="               <?php print gettext('Submit');?>                " onclick="this.disabled=true; JSfnCheckInput(this.form, this );"/>&nbsp;&nbsp;&nbsp;&nbsp;
   <INPUT TYPE="button" 	NAME="del_but" VALUE="<?php print gettext('Delete this entry');?>" onclick="if (confirm('Please confirm DELETE action')) {this.form.func.value='d'; this.form.submit();}"/></TD></TR>
 	<INPUT TYPE="hidden" NAME="def_bg_color"  	VALUE="<?php print $row['bg_color'];?>" /> <!-- default values see reset button -->

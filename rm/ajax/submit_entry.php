@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package submit_entry.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 9/10/13 - New file, submits a new road condition alert from mobile screen
 */

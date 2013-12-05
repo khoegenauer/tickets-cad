@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package send_email.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 9/10/13 - new file - sends email from mobile screen.
 */

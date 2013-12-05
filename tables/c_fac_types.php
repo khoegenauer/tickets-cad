@@ -1,4 +1,12 @@
-		<FORM NAME="c" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF']; ?>" />
+<?php
+/**
+ * @package c_fac_types.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
+?>
+<FORM NAME="c" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF']; ?>" />
 		<INPUT TYPE="hidden" NAME="func" 		VALUE="pc"/>
 		<INPUT TYPE="hidden" NAME="tablename" 	VALUE="<?php print $tablename;?>" />
 		<INPUT TYPE="hidden" NAME="indexname" 	VALUE="id" />
@@ -28,7 +36,7 @@
 
 		</TD></TR>
 		<tr><td colspan=99 align='center'>
-		</td></tr
+		</td></tr>
 		<TR><TD COLSPAN="99" ALIGN="center">
 		<BR />
     <INPUT TYPE="button"				VALUE="<?php print gettext('Cancel');?>" onClick = "Javascript: document.retform.func.value='r';document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;

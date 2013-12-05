@@ -1,4 +1,10 @@
 /**
+ * @package mobile_functions.js
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
+/**
  * 
  * @param {type} the_status
  * @returns {undefined}

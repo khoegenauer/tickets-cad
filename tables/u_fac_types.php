@@ -1,4 +1,12 @@
-		<FORM NAME="u" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF']; ?>" />
+<?php
+/**
+ * @package u_fac_types.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
+?>
+<FORM NAME="u" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF']; ?>" />
 		<INPUT TYPE="hidden" NAME="func" 		VALUE="pu" />
 		<INPUT TYPE="hidden" NAME="tablename" 	VALUE="<?php print $tablename;?>" />
 		<INPUT TYPE="hidden" NAME="indexname" 	VALUE="id" />
@@ -18,7 +26,7 @@
 	<TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Description');?>:</TD>
 		<TD><INPUT  ID="ID2" CLASS="dirty" MAXLENGTH="48" SIZE="48" type="text" NAME="frm_description" VALUE="<?php print $row['description'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
 	<TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Icon');?>:</TD>
-		<TD><IMG ID='ID3' SRC="<?php print './our_icons/' . $sm_icons[$row['icon']];?>"></TD></TR>
+		<TD><IMG ID='ID3' SRC="<?php print './our_icons/' . $sm_icons[$row['icon']];?>" /></TD></TR>
 	<TR CLASS="even"><TD></TD><TD ALIGN='center'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <SCRIPT>
 			for (i=0; i<icons.length-1; i++) {						// generate icons display

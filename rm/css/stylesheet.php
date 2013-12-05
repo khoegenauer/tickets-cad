@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package stylesheet.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 header('Content-type: text/css');
 /* 
 9/10/13 - new file, the stylesheet for the mobile page

@@ -1,10 +1,21 @@
 <?php
+/**
+ * @package c_un_status.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 2/9/10 - initial release
 5/25/10 - Changed default value of radio buttons for hid value to "n"
 */
 ?>
 <SCRIPT>
+  /**
+   * 
+   * @param {type} the_form
+   * @returns {undefined}
+   */
 	function set_bg_vals (the_form) {
 		the_form.frm_bg_color.value = the_form.dmy_status_id.options[document.c.dmy_status_id.selectedIndex].style.backgroundColor;
 		the_form.frm_text_color.value = the_form.dmy_status_id.options[document.c.dmy_status_id.selectedIndex].style.color;

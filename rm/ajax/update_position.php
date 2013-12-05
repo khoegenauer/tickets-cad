@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package update_position.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
 /*
 9/10/13 - New file, updates stored position data for mobile user - the tracking script
 */

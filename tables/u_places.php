@@ -1,3 +1,11 @@
+<?php
+/**
+ * @package u_places.php
+ * @author John Doe <john.doe@example.com>
+ * @since
+ * @version
+ */
+?>
 <!--
 3/18/11 initial release - AS
 -->
@@ -7,7 +15,10 @@
 
 	var geocoder;		// note GLOBAL!
 	var map;
-	
+/**
+ * 
+ * @returns {undefined}
+ */	
 	function initialize() {
 	  if (GBrowserIsCompatible()) {
 		geocoder = new GClientGeocoder();
@@ -48,7 +59,11 @@
 		map.addOverlay(marker);
 	  }
 	}			// end function initialize()	
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {undefined}
+ */
 	function addrlkup(theForm) {		   //
 		var address = theForm.the_city.value + " "  + theForm.the_st.value;
 		if (geocoder) {								// defined in function initialize()
@@ -73,11 +88,19 @@
 			}
 		}				// end function addrlkup()
 	
-
+/**
+ * 
+ * @param {type} str
+ * @returns {RegExp}
+ */
 	function is_float(str) {
 	    return /^[-+]?\d+(\.\d+)?$/.test(str);
 		}
-
+/**
+ * 
+ * @param {type} theForm
+ * @returns {Boolean}
+ */
 	function validate(theForm) {	//
 		var errmsg="";
 		if (theForm.frm_name.value == "")		{errmsg+= "\t<?php print gettext('Place Name is required');?>\n";}
@@ -102,7 +125,6 @@
 			theForm.submit();
 			}
 		}				// end function validate(theForm)
-
 
 </SCRIPT>
 		<FORM NAME="u" METHOD="post" ACTION="<?php print $_SERVER['PHP_SELF']; ?>" />

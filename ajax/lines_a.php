@@ -5,10 +5,8 @@
 7/10/10 revised to call get_cb_height ()
 
 */
-error_reporting(E_ALL);	
+error_reporting(E_ALL);
 
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10
 echo (string) get_cb_height ();
-?>
-	

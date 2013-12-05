@@ -406,6 +406,7 @@ require_once 'status_cats.inc.php';				// 12/03/10
  * @static
  * @see
  * @since
+ * @assert ("a\nb") == "a b"
  */
 function remove_nls($instr) {                // 10/20/09
     $nls = array("\r\n", "\n", "\r");        // note order
@@ -1098,9 +1099,9 @@ function show_unit_log($theid, $show_cfs=FALSE) {								// 9/10/13
 
     while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
         if ($i==0) {				// 11/20/09
-            $print .= "<TR CLASS='heading'><TD CLASS='heading' TITLE = \"{$row['tickname']}\" COLSPAN=99 ALIGN='center'><U>Log: <I>". shorten($row['tickname'], 32) . "</I></U></TD></TR>";
-            $cfs_head = ($show_cfs)? "<TD ALIGN='center'>CFS</TD>" : ""  ;
-            $print .= "<TR CLASS='odd'><TD ALIGN='left'>Code</TD>" . $cfs_head . "<TD ALIGN='left'>Unit</TD><TD ALIGN='left'>Status</TD><TD ALIGN='left'>Comment</TD><TD ALIGN='left'>When</TD><TD ALIGN='left'>By</TD></TR>";
+            $print .= "<TR CLASS='heading'><TD CLASS='heading' TITLE = \"{$row['tickname']}\" COLSPAN=99 ALIGN='center'><U>" . gettext('Log') . ": <I>". shorten($row['tickname'], 32) . "</I></U></TD></TR>";
+            $cfs_head = ($show_cfs)? "<TD ALIGN='center'>" . gettext('CFS') . "</TD>" : ""  ;
+            $print .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Code') . "</TD>" . $cfs_head . "<TD ALIGN='left'>" . gettext('Unit') . "</TD><TD ALIGN='left'>" . gettext('Status') . "</TD><TD ALIGN='left'>" . gettext('Comment') . "</TD><TD ALIGN='left'>" . gettext('When') . "</TD><TD ALIGN='left'>" . gettext('By') . "</TD></TR>";
             }
         $print .= "<TR CLASS='" . $evenodd[$i%2] . "' onClick = 'view_log_entry({$row['log_id']});'>" .				// 11/20/09
             "<TD TITLE =\"{$types[$row['code']]}\">". shorten($types[$row['code']], 20) . "</TD>"; //

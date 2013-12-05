@@ -83,8 +83,8 @@ before_script:
   - if [[ "$DB" == "mysql" ]]; then mysql -e "create database IF NOT EXISTS tickets;" -uroot; fi
   # HEY IDIOT: username is travis, password is blank
 #---------------------------------------------------
-  - pear channel-discover pear.phpdoc.org
-  - pear install phpdoc/phpDocumentor
+#  - pear channel-discover pear.phpdoc.org
+#  - pear install phpdoc/phpDocumentor
   - phpenv rehash
 #---------------------------------------------------
 ##DEV TOOLS

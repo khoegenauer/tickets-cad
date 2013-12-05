@@ -24,14 +24,14 @@ USERS: you may replace NULL with $now (EXACTLY THAT!) in the following sql query
 */
 
 // 6/20/12
-$query = "UPDATE `$GLOBALS[mysql_prefix]assigns` SET 
-	`responding` = NULL,
-	`on_scene` = NULL,
-	`u2fenr` = NULL,
-	`u2farr` = NULL,
-	`clear` = NULL,
-	`as_of` = $now
-	WHERE `id` = {$_POST['frm_id']} LIMIT 1;";
+$query = "UPDATE `$GLOBALS[mysql_prefix]assigns` SET
+    `responding` = NULL,
+    `on_scene` = NULL,
+    `u2fenr` = NULL,
+    `u2farr` = NULL,
+    `clear` = NULL,
+    `as_of` = $now
+    WHERE `id` = {$_POST['frm_id']} LIMIT 1;";
 
 $result = mysql_query($query) or do_error($query, "", mysql_error(), basename( __FILE__), __LINE__);
 $query = "SELECT * FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` =  {$_POST['frm_id']} LIMIT 1";
@@ -43,4 +43,3 @@ do_log($GLOBALS['LOG_CALL_RESET'], $row['ticket_id'], $row['responder_id'], $row
 set_u_updated ($_POST['frm_id']); 									// 9/1/10
 
 unset($result);
-?>

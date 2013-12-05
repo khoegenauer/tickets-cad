@@ -27,11 +27,10 @@ $result = mysql_query($query) or do_error($query, "", mysql_error(), basename( _
 $row = mysql_fetch_assoc($result);													// collect for log
 
 do_log($GLOBALS['LOG_CALL_RESET'], $row['ticket_id'], $row['responder_id'], $row['id']);
-					
+
 set_u_updated ($_POST['frm_id']) ;					// 9/1/10
 
 $query = "DELETE FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` = " . $_POST['frm_id'] . " LIMIT 1;";
 $result = mysql_query($query) or do_error($query, "", mysql_error(), basename( __FILE__), __LINE__);
 
 unset($result);
-?>

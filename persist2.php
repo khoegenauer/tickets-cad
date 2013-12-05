@@ -13,13 +13,13 @@ error_reporting(E_ALL);
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10
 
-//if($istest) {
+//if ($istest) {
 //	dump ($_GET);
 //	dump ($_POST);
 //	}
 
 $f_n = 		urldecode($_POST['f_n']);
-$v_n = 		$_POST['v_n']; 
+$v_n = 		$_POST['v_n'];
 $sess_id = 	$_POST['sess_id'];				// sess_id
 
 //$query = "UPDATE `$GLOBALS[mysql_prefix]session` SET `$f_n` ='$v_n' WHERE `sess_id`='$sess_id' LIMIT 1";
@@ -28,4 +28,3 @@ $sess_id = 	$_POST['sess_id'];				// sess_id
 @session_start(); 		// 1/23/10
 $_SESSION[$f_n] = $v_n;
 print"";
-?>

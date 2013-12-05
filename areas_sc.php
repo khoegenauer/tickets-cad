@@ -1,7 +1,7 @@
 <?php
 /**
  * Areas server-side create script
- * 
+ *
  * @package areas_sc.php
  * @author John Doe <john.doe@example.com>
  * @since version
@@ -13,17 +13,17 @@ require_once($_SESSION['fip']);		//7/28/10
 
 $istest=FALSE;
 extract($_POST);
-if(!isset($theTable)) {
-	print "-TABLE NAME ERROR";
-	}
+if (!isset($theTable)) {
+    print "-TABLE NAME ERROR";
+    }
 $temp1 = $temp2 = "";
 foreach ($_POST as $VarName=>$VarValue) {
-	if(substr($VarName, 0, 4)== "frm_" ) {			// substr(  string, start ,length )
-		$temp1 .= "`" . substr($VarName, 4)  . "`,";						// drop 4 fm field names - add tic's
-		$temp2 .= "'" . mysql_real_escape_string(trim($VarValue)) . "',";	// field values, apostrophe-enclosed and NOT escaped
-		}
-	}		// end foreach () ...
-																	// build query and drop trailing comma
+    if (substr($VarName, 0, 4)== "frm_" ) {			// substr(  string, start ,length )
+        $temp1 .= "`" . substr($VarName, 4)  . "`,";						// drop 4 fm field names - add tic's
+        $temp2 .= "'" . mysql_real_escape_string(trim($VarValue)) . "',";	// field values, apostrophe-enclosed and NOT escaped
+        }
+    }		// end foreach () ...
+                                                                    // build query and drop trailing comma
 $query  = "INSERT INTO `$mysql_prefix$theTable` (" . substr($temp1, 0, (strlen($temp1) - 1)) . ") VALUES (" . substr($temp2, 0, (strlen($temp2) - 1)) .")";
 
 print ("-" . $query);
@@ -35,5 +35,3 @@ $insert_id = mysql_insert_id();
 //$query = "UPDATE `{$mysql_prefix}sit_ago`  SET  `e` = NOW() WHERE `id` = 1 LIMIT 1";		//the map date column
 //$result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);
 unset ($result);
-
-?>

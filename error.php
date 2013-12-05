@@ -47,6 +47,7 @@ function myErrorHandler($errno, $errstr, $errfile, $errline)
     }
 
     /* Don't execute PHP internal error handler */
+
     return true;
 }
 
@@ -73,11 +74,12 @@ function scale_by_log($vect, $scale)
 
     if (!is_array($vect)) {
         trigger_error(gettext("Incorrect input vector, array of values expected"), E_USER_WARNING);
+
         return null;
     }
 
     $temp = array();
-    foreach($vect as $pos => $value) {
+    foreach ($vect as $pos => $value) {
         if (!is_numeric($value)) {
             trigger_error(gettext("Value at position {$pos} is not a number, using 0 (zero)"), E_USER_NOTICE);
             $value = 0;
@@ -113,4 +115,3 @@ echo "----\nvector d - fatal error\n";
 /* log(x) for x <= 0 is undefined, you used: scale = $scale" */
 $d = scale_by_log($a, -2.5);
 var_dump($d); // Never reached
-?> 

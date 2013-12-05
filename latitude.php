@@ -11,9 +11,9 @@ error_reporting(E_ALL);
 8/25/10 revised to handle failures gracefully
 3/15/11 changed stylesheet.php to stylesheet.php
 */
- 
+
 @session_start();
-require_once($_SESSION['fip']); 
+require_once($_SESSION['fip']);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
@@ -48,9 +48,9 @@ if (empty($_POST)) {
 </HTML>
 
 <?php
-		}				// end if (empty($_POST)) {
-	else {
-		require_once('./incs/functions.inc.php');
+        }				// end if (empty($_POST)) {
+    else {
+        require_once './incs/functions.inc.php';
 
 /**
  * do_glat_test
@@ -66,72 +66,73 @@ if (empty($_POST)) {
  * @since
  */
 function do_glat_test($user) {				// given user id,  returns Google Latitude id, timestamp and coords as a 4-element array, if found - else FALSE
-	$ret_val = array("", "", "", "");
-	$the_url = "http://www.google.com/latitude/apps/badge/api?user={$user}&type=json";
+    $ret_val = array("", "", "", "");
+    $the_url = "http://www.google.com/latitude/apps/badge/api?user={$user}&type=json";
 
-	if (function_exists("curl_init")) {				// 8/13/10
+    if (function_exists("curl_init")) {				// 8/13/10
 
-		$ch = curl_init();
-		$timeout = 5;
-		curl_setopt($ch, CURLOPT_URL, $the_url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-		$data = curl_exec($ch);
-		curl_close($ch);
-		}
-	else {										// not CURL
-		$data = "";
-		if ($fp = @fopen($the_url, "r")) {
-			while (!feof($fp) && (strlen($data)<9000)) $data .= fgets($fp, 128);
-			fclose($fp);
-			}		
-		else {
-			$message = "CURL and FOPEN FAIL " . basename(__FILE__);
-			}
-		 }
+        $ch = curl_init();
+        $timeout = 5;
+        curl_setopt($ch, CURLOPT_URL, $the_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        }
+    else {										// not CURL
+        $data = "";
+        if ($fp = @fopen($the_url, "r")) {
+            while (!feof($fp) && (strlen($data)<9000)) $data .= fgets($fp, 128);
+            fclose($fp);
+            }
+        else {
+            $message = "CURL and FOPEN FAIL " . basename(__FILE__);
+            }
+         }
 
-	$json = json_decode($data);
-	error_reporting(0);
-	foreach ($json as $key => $value) {				// top
-	    $temp = $value;
-		foreach ($temp as $key1 => $value1) {		// 1
-		    $temp = $value1;
-			foreach ($temp as $key2 => $value2) {		// 2
-				$temp = $value2;
-				foreach ($temp as $key3 => $value3) {		// 3
-					switch (strtolower($key3)) {
-						case "id":
-							$ret_val[0] = $value3;
-						    break;
-						case "timestamp":
-							$ret_val[1] = $value3;
-						    break;
-						case "coordinates":
-							$ret_val[2] = $value3[0];
-							$ret_val[3] = $value3[1];
-						    break;
-						}		// end switch()
-					}		// end for each()
-		    	}		// end for each()
-			}		// end for each()
-		}
-	error_reporting(E_ALL);
+    $json = json_decode($data);
+    error_reporting(0);
+    foreach ($json as $key => $value) {				// top
+        $temp = $value;
+        foreach ($temp as $key1 => $value1) {		// 1
+            $temp = $value1;
+            foreach ($temp as $key2 => $value2) {		// 2
+                $temp = $value2;
+                foreach ($temp as $key3 => $value3) {		// 3
+                    switch (strtolower($key3)) {
+                        case "id":
+                            $ret_val[0] = $value3;
+                            break;
+                        case "timestamp":
+                            $ret_val[1] = $value3;
+                            break;
+                        case "coordinates":
+                            $ret_val[2] = $value3[0];
+                            $ret_val[3] = $value3[1];
+                            break;
+                        }		// end switch()
+                    }		// end for each()
+                }		// end for each()
+            }		// end for each()
+        }
+    error_reporting(E_ALL);
 
-	foreach ($ret_val as $value) {				// any hole?
-		if( empty($value)){
-			return FALSE;
-			}				// end if()
-		}
-	return $ret_val;
-	}			// end function do_glat_test();
+    foreach ($ret_val as $value) {				// any hole?
+        if ( empty($value)) {
+            return FALSE;
+            }				// end if()
+        }
+
+    return $ret_val;
+    }			// end function do_glat_test();
 
 //	$user = "-681721551039318347";				// known good value
-	$user = $_POST['frm_badge'];
-	$results = do_glat_test($user);
-	
-	$caption = ($results)? gettext("Successful"): gettext("Fails");
-	$api_key = get_variable('gmaps_api_key');		// empty($_GET)
-?>	
+    $user = $_POST['frm_badge'];
+    $results = do_glat_test($user);
+
+    $caption = ($results)? gettext("Successful"): gettext("Fails");
+    $api_key = get_variable('gmaps_api_key');		// empty($_GET)
+?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -143,7 +144,7 @@ function do_glat_test($user) {				// given user id,  returns Google Latitude id,
             type="text/javascript"></script>
     <script type="text/javascript">
 /**
- * 
+ *
  * @returns {undefined}
  */
     function initialize() {
@@ -161,17 +162,17 @@ function do_glat_test($user) {				// given user id,  returns Google Latitude id,
   <body onload="initialize();" onunload="GUnload();">
   <CENTER>
   <H3><?php print gettext('Google Latitude Test') . $caption; ?><br />
-	<?php print gettext('with public location badge');?>: <?php print $_POST['frm_badge']; ?></H3>
-	<input type='button' value="<?php print gettext('Again');?>" onClick = 'location.href="<?php print basename(__FILE__); ?>";' />&nbsp;&nbsp;&nbsp;&nbsp;
+    <?php print gettext('with public location badge');?>: <?php print $_POST['frm_badge']; ?></H3>
+    <input type='button' value="<?php print gettext('Again');?>" onClick = 'location.href="<?php print basename(__FILE__); ?>";' />&nbsp;&nbsp;&nbsp;&nbsp;
   </body><input type='button' value="<?php print gettext('Finished');?>" onClick = "self.close();" /><br /><br />
-<?php	if ($results) { ?>	
+<?php	if ($results) { ?>
     <div id="map_canvas" style="width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px"></div>
-<?php } ?>    
+<?php } ?>
   </body>
-</html>	
+</html>
 
 <?php
-	}				// end if/else
+    }				// end if/else
 ?>
 </BODY>
 </HTML>

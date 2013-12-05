@@ -36,7 +36,6 @@ if (!(empty($_POST))) {
 $user = $_POST['dev_key'];
 $url = $_POST['frm_locatea_url'];
 
-
 /**
  * do_gt
  * Insert description here
@@ -52,50 +51,47 @@ $url = $_POST['frm_locatea_url'];
  * @since
  */
 function do_gt($user, $url) {
-	
-		$request_url = "http://" . $url . "/data.php?userid=$user";		//change to reflect the server address
-		$data="";
-		if (function_exists("curl_init")) {
-			$ch = curl_init();
-			$timeout = 5;
-			curl_setopt($ch, CURLOPT_URL, $request_url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-			$data = curl_exec($ch);
-			curl_close($ch);
-			}
-		else {				// not CURL
-			if ($fp = @fopen($request_url, "r")) {
-				while (!feof($fp) && (strlen($data)<9000)) $data .= fgets($fp, 128);
-				fclose($fp);
-				}		
-			else {
-				print "-error 1";		// @fopen fails
-				}
-			}
 
-		$ret_array = new SimpleXMLElement($data);
+        $request_url = "http://" . $url . "/data.php?userid=$user";		//change to reflect the server address
+        $data="";
+        if (function_exists("curl_init")) {
+            $ch = curl_init();
+            $timeout = 5;
+            curl_setopt($ch, CURLOPT_URL, $request_url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+            $data = curl_exec($ch);
+            curl_close($ch);
+            }
+        else {				// not CURL
+            if ($fp = @fopen($request_url, "r")) {
+                while (!feof($fp) && (strlen($data)<9000)) $data .= fgets($fp, 128);
+                fclose($fp);
+                }
+            else {
+                print "-error 1";		// @fopen fails
+                }
+            }
 
-	return $ret_array;
+        $ret_array = new SimpleXMLElement($data);
+
+    return $ret_array;
 
 }	// end function do_gt()
 
-
-	
-	$ary = do_gt($_POST['dev_key'], $_POST['frm_locatea_url']) ;
+    $ary = do_gt($_POST['dev_key'], $_POST['frm_locatea_url']) ;
 //	$api_key = get_variable('gmaps_api_key');		// empty($_GET)
 
-	$user_id = $ary->marker['userid'];
-	$lat = $ary->marker['lat'];
-	$lng = $ary->marker['lng'];
-	$alt = $ary->marker['alt'];
-	$date = $ary->marker['local_date'];
-	$mph = $ary->marker['mph'];
-	$kph = $ary->marker['kph'];
-	$heading = $ary->marker['heading'];
+    $user_id = $ary->marker['userid'];
+    $lat = $ary->marker['lat'];
+    $lng = $ary->marker['lng'];
+    $alt = $ary->marker['alt'];
+    $date = $ary->marker['local_date'];
+    $mph = $ary->marker['mph'];
+    $kph = $ary->marker['kph'];
+    $heading = $ary->marker['heading'];
 
-
-	if (!($user_id)) {
+    if (!($user_id)) {
 ?>
 <BR />
 <FORM NAME= 'frm_locatea' METHOD='get' ACTION = '<?php print basename(__FILE__);?>'>
@@ -103,13 +99,13 @@ function do_gt($user, $url) {
 <TR CLASS  = 'even'><TH COLSPAN=2><?php print gettext('LocateA Test Fails for key');?>: <?php print $_POST['dev_key'];?></TH></TR>
 
 <TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR /><BR />
-	<INPUT TYPE='button' VALUE = '<?php print gettext('Another');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
+    <INPUT TYPE='button' VALUE = '<?php print gettext('Another');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+    <INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
 </TD></TR></TABLE>
 
 <?php
-		}				// end if (fails)
-	else {
+        }				// end if (fails)
+    else {
 ?>
 <FORM NAME= 'frm_locatea' METHOD='get' ACTION = '<?php print basename(__FILE__);?>'>
 <TABLE ALIGN='center'>
@@ -126,15 +122,15 @@ function do_gt($user, $url) {
 <TR ><TD COLSPAN = 2 ALIGN='center'><HR SIZE=1 COLOR='blue'WIDTH='75%'></TD</TR>
 
 <TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR /><BR />
-	<INPUT TYPE='button' VALUE = '<?php print gettext('Another');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
+    <INPUT TYPE='button' VALUE = '<?php print gettext('Another');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+    <INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
 </TD></TR></TABLE>
 
-<?php	
-	
-		}		// end else {}
-	
-	}			// end if (!(empty($_POST))) 
+<?php
+
+        }		// end else {}
+
+    }			// end if (!(empty($_POST)))
 else {
 ?>
 <BR /><BR />
@@ -145,17 +141,17 @@ else {
 <TR CLASS  = 'odd'><TD>
 <?php print gettext('License key');?>:
 </TD><TD>
-	<INPUT NAME = 'dev_key' TYPE = 'text' SIZE = '30' VALUE=''>	<BR /><BR />
+    <INPUT NAME = 'dev_key' TYPE = 'text' SIZE = '30' VALUE=''>	<BR /><BR />
 </TD></TR>
 <TR CLASS  = 'even'><TD COLSPAN=2 ALIGN='center'>
-	<INPUT TYPE='button' VALUE = '<?php print gettext('Test');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-	<INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
-	<INPUT TYPE='hidden' NAME = 'frm_locatea_url' SIZE = '40' value='www.locatea.net'/>
+    <INPUT TYPE='button' VALUE = '<?php print gettext('Test');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+    <INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
+    <INPUT TYPE='hidden' NAME = 'frm_locatea_url' SIZE = '40' value='www.locatea.net'/>
 
 </TD></TR></TABLE>
 <?php
-	}		// end else {}
-?>	
+    }		// end else {}
+?>
 
 </BODY>
 </HTML>

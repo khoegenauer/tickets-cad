@@ -1545,7 +1545,7 @@ setTimeout('do_post()', 1000);
              $dis = ($guest)? " DISABLED": "";								// 9/17/08
             $the_grp = strval(rand());			//  force initial OPTGROUP value
             $i = 0;
-            $outstr = "\n\t\t<SELECT name='frm_status_id'  onFocus = 'show_but($b_id)' $dis STYLE='background-color:{$init_bg_color}; color:{$init_txt_color};' ONCHANGE = 'this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color;'>\n";
+            $outstr = "\n\t\t<SELECT name='frm_status_id'  onFocus = 'show_but($b_id);' $dis STYLE='background-color:{$init_bg_color}; color:{$init_txt_color};' ONCHANGE = 'this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color;'>\n";
             while ($row = stripslashes_deep(mysql_fetch_array($result_st))) {
                 if ($the_grp != $row['group']) {
                     $outstr .= ($i == 0)? "": "\t</OPTGROUP>\n";
@@ -1737,12 +1737,12 @@ setTimeout('do_post()', 1000);
 
                 $hide_sql = " OR `clear`>= '$time_back' ";
 
-                $butn_txt = "Hide ";
+                $butn_txt = gettext("Hide");
                 $butn_val = "h";
                 break;
             case "h":						// hide
                 $hide_sql = "";
-                $butn_txt = "Show ";
+                $butn_txt = gettext("Show");
                 $butn_val = "s";
                 break;
             default:

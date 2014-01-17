@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package index.php
+ * @author John Doe <john.doe@example.com>
+ * @since 2013-09-10
+ * @version 2013-09-10
+ */
 /*
 9/10/13 New file - Index for mobile page
 */

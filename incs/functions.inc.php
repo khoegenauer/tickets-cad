@@ -189,6 +189,7 @@
 8/28/13 Added Mail list notifies to function notify user
 9/6/13 Added tracking type - mobile tracker for mobile screen
 9/10/13 Added function show_unit_log() and function list_files(...)
+1/4/2014 added gmaps link to sending mail
 */
 error_reporting(E_ALL);
 
@@ -2952,7 +2953,7 @@ function do_log($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, 
                 quote_smart(trim($facility_id)),
                 quote_smart(trim($rec_facility_id)),
                 quote_smart(trim($mileage)));
-
+    snap (__LINE__, $query);
     $result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
     unset($result);		// 3/12/09
     }
@@ -3514,6 +3515,10 @@ function mail_it($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_onl
                     $str3 = "";
                     $str3 .= (empty($t_row['to_address']))? 	""  : $t_row['to_address'] . " " ;
                     $message .= empty($str3) ? "" : "{$gt}: " . $str3 . $eol;
+           					if ( $GLOBALS['NM_LAT_VAL'] != $t_row['lat'] ) {						// 1/4/2014
+					             	$message .= "Map: http://maps.google.com/?q=loc:" . $t_row['lat'] . "," . $t_row['lng'] .  $eol;
+					        	    }
+
                     break;
                 case "K":
                     $gt = get_text("Description");

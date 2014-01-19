@@ -15,3 +15,5 @@ if ($result) {
     $ret_arr[0] = 200;
     }
 print json_encode($ret_arr);
+exit();
+?>

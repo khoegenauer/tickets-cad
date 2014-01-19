@@ -73,6 +73,7 @@ if ($_GET['frm_patient'] == "") {
     $comments = $_GET['frm_comments'];
     $street = $_GET['frm_street'];
     $city = $_GET['frm_city'];
+   	$postcode = $_GET['frm_postcode'];
     $state = $_GET['frm_state'];
     $lat = ($_GET['frm_lat'] != "") ? $_GET['frm_lat'] : '0';
     $lng = ($_GET['frm_lng'] != "") ? $_GET['frm_lng'] : '0';
@@ -83,6 +84,8 @@ if ($_GET['frm_patient'] == "") {
     $comments = $_GET['frm_comments'];
     $phone = $_GET['frm_phone'];
     $toAddress = urldecode($_GET['frm_toaddress']);
+   	$pickup = $_GET['frm_pickup'];
+  	$arrival = $_GET['frm_arrival'];
     $patient = $_GET['frm_patient'];
     $origFac = ($_GET['frm_orig_fac'] != "") ? $_GET['frm_orig_fac'] : '0';
     $recFac = ($_GET['frm_rec_fac'] != "") ? $_GET['frm_rec_fac'] : '0';
@@ -91,10 +94,13 @@ if ($_GET['frm_patient'] == "") {
                 `contact`,
                 `street`,
                 `city`,
+        				`postcode`,
                 `state`,
                 `the_name`,
                 `phone`,
                 `to_address`,
+                `pickup`,
+                `arrival`,
                 `orig_facility`,
                 `rec_facility`,
                 `scope`,
@@ -118,10 +124,13 @@ if ($_GET['frm_patient'] == "") {
                 '" . addslashes($userName) . "',
                 '" . addslashes($street) . "',
                 '" . addslashes($city) . "',
+         				'" . addslashes($postcode) . "',
                 '" . addslashes($state) . "',
                 '" . addslashes($patient) . "',
                 '" . addslashes($phone) . "',
                 '" . addslashes($toAddress) . "',
+                '" . addslashes($pickup) . "',
+            		'" . addslashes($arrival) . "',				
                 " . $origFac . ",
                 " . $recFac . ",
                 '" . addslashes($scope) . "',
@@ -148,8 +157,12 @@ if ($_GET['frm_patient'] == "") {
         $the_summary .= get_text('Patient') . " name: " . $_GET['frm_patient'] . "\r\n";
         $the_summary .= get_text('Street') . ": " . $street . ", ";
         $the_summary .= get_text('City') . ": " . $city . ", ";
+    		$the_summary .= get_text('Postcode') . ": " . $city . ", ";	
         $the_summary .= get_text('State') . ": " . $state . "\r\n";
         $the_summary .= get_text('Contact Phone') . ": " . $phone . "\r\n";
+    		$the_summary .= get_text('To Address') . ": " . $toAddress . "\r\n";
+    		$the_summary .= get_text('Pickup Time') . ": " . $pickup . "\r\n";
+      	$the_summary .= get_text('Arrival Time') . ": " . $arrival . "\r\n";
         $orig_Fac = ($_GET['frm_orig_fac'] != "0") ? get_facname($_GET['frm_orig_fac']) : "";
         $rec_Fac =  ($_GET['frm_rec_fac'] != "0") ? get_facname($_GET['frm_rec_fac']) : "";
         $the_summary .= ((is_array($orig_Fac)) && ($orig_Fac[0] != "")) ? "Originating Facility " . $orig_Fac[0] . "\nAddress: " . $orig_Fac[1] . "\nPhone " . $orig_Fac[2] . "\r\n" : "";
@@ -180,3 +193,4 @@ if ($_GET['frm_patient'] == "") {
         }
     }
 print json_encode($ret_arr);
+exit();

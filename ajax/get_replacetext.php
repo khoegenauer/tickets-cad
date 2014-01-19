@@ -194,6 +194,32 @@ function tkt_summary($id) {
 
     return $the_text;
     }
+/**
+ * 
+ * @param type $id
+ * @return string
+ */
+function tkt_shortSummary($id) {
+	$thetxt = "";
+	if($id != 0) {
+		$query	= "SELECT `t`.`scope` AS `scope`,
+					`t`.`id` AS `t_id`,
+					`t`.`contact` AS `contact`,
+					`t`.`street` AS `street`,
+					`t`.`city` AS `city`,
+					`t`.`phone` AS `phone`
+					FROM `$GLOBALS[mysql_prefix]ticket` `t` 
+					WHERE `t`.`id`='$id' LIMIT 1";
+		$result = mysql_query($query) or do_error($query, $query, mysql_error(), basename( __FILE__), __LINE__);
+		$row = stripslashes_deep(mysql_fetch_assoc($result));
+		$thestreet = ($row['street'] != "") ? $row['street'] . ", " : "";
+		$the_text = get_text('Scope') . ": " . $row['scope'] . "\n";
+		$the_text .= get_text('Patient') . ": " . $row['contact'] . ", " . $row['phone'] . "\n";
+		$the_text .= get_text('Address') . ": " . $thestreet . $row['city'] . "\n";
+		}
+
+	return $the_text;
+	}
 
 /**
  * get_replacement_text
@@ -220,9 +246,9 @@ function get_replacement_text($val) {
         $return[] = $row['add_user_unit'];
         $return[] = $row['add_time'];
         $return[] = $row['add_date'];
-        $return[] = $row['add_date'];
         $return[] = $row['app_summ'];
-
+        $return[] = $row['app_shortsumm'];
+        
         return $return;
         } else {
         return false;
@@ -233,20 +259,22 @@ $ret_arr = array();
 $foundtext = GetBetween($text_to_replace,$start_tag,$end_tag);
 $rep_val = get_replacement_text($foundtext);
 
-if ($rep_val) {
-    $tags = array($start_tag,$end_tag);
-    $ret_text = ((isset($rep_val[0])) && ($rep_val[0] != "")) ? $rep_val[0] : "Nothing Found";
-    $the_replaced_text = $rep_val[0];
-    $the_replaced_text .= ($rep_val[1] == "Yes") ? " " . $ticket : "";
-    $the_replaced_text .= ($rep_val[2] == "Yes") ? " " . $user_name : "";
-    $the_replaced_text .= ($rep_val[3] == "Yes") ? " " . get_owner_unit_handle(get_owner_unit($user)) : "";
-    $the_replaced_text .= ($rep_val[4] == "Yes") ? " " . $time : "";
-    $the_replaced_text .= ($rep_val[5] == "Yes") ? " " . $date : "";
-    $thesummary = ($rep_val[6] == "Yes") ? "TKT Summary\n" . tkt_summary($ticket) : "";
-    $the_output = replace_content_inside_delimiters($start_tag, $end_tag, $the_replaced_text, $text_to_replace);
-    $ret_arr[0] = $the_output . "\n" . $thesummary;
-    } else {
-    $ret_arr[0] = "";
-    }
+if($rep_val) {
+	$tags = array($start_tag,$end_tag);
+	$ret_text = ((isset($rep_val[0])) && ($rep_val[0] != "")) ? $rep_val[0] : "Nothing Found";
+	$the_replaced_text = $rep_val[0];
+	$the_replaced_text .= ($rep_val[1] == "Yes") ? " " . $ticket : "";
+	$the_replaced_text .= ($rep_val[2] == "Yes") ? " " . $user_name : "";
+	$the_replaced_text .= ($rep_val[3] == "Yes") ? " " . get_owner_unit_handle(get_owner_unit($user)) : "";
+	$the_replaced_text .= ($rep_val[4] == "Yes") ? " " . $time : "";	
+	$the_replaced_text .= ($rep_val[5] == "Yes") ? " " . $date : "";
+	$thesummary = ($rep_val[6] == "Yes") ? "TKT Summary\n" . tkt_summary($ticket) : "";	
+	$theshortsummary = ($rep_val[7] == "Yes") ? "TKT Summary\n" . tkt_shortSummary($ticket) : "";	
+	$the_output = replace_content_inside_delimiters($start_tag, $end_tag, $the_replaced_text, $text_to_replace);
+	$ret_arr[0] = $the_output . "\n" . $thesummary . "\n" . $theshortsummary;
+	} else {
+	$ret_arr[0] = "";
+	}
 
 print json_encode($ret_arr);
+exit();

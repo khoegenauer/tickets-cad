@@ -270,11 +270,11 @@ $evenodd = array ("even", "odd", "heading");	// class names for alternating tabl
 /* connect to mysql database */
 
 if (!mysql_connect($GLOBALS['mysql_host'], $GLOBALS['mysql_user'], $GLOBALS['mysql_passwd'])) {
-    die ("Connection attempt to MySQL failed - correction required in order to continue.");
+    die (gettext("Connection attempt to MySQL failed - correction required in order to continue."));
     }
 
 if (!mysql_select_db($GLOBALS['mysql_db'])) {
-    print "Connection attempt to database failed. Please run <a href=\"install.php\">install.php</a> with valid  database configuration information.";
+    print gettext("Connection attempt to database failed. Please run <a href=\"install.php\">install.php</a> with valid  database configuration information.");
     exit();
     }
 
@@ -282,7 +282,7 @@ if (!mysql_select_db($GLOBALS['mysql_db'])) {
 $failed = 0;
 if (!mysql_table_exists("$GLOBALS[mysql_prefix]user")) { print "MySQL table '$GLOBALS[mysql_prefix]user' is missing<BR />"; $failed = 1; 	}
 if ($failed) {
-    print "One or more database tables is missing.  Please run <a href=\"install.php\">install.php</a> with valid database configuration information.";
+    print gettext("One or more database tables is missing.  Please run <a href=\"install.php\">install.php</a> with valid database configuration information.");
     exit();
     }
 
@@ -470,7 +470,7 @@ function show_assigns($which, $id) {				// 08/8/5, 4/30/10
     $print = "";
     if (mysql_affected_rows()>0) {
         $print .= "\n<BR /><TABLE ALIGN='center' BORDER=0 width='100%'>";
-        $print .= "\n<TR><TD ALIGN='center' COLSPAN=99><B>Active/Recent Dispatches</B> (" . mysql_affected_rows() . ")</TD>";
+        $print .= "\n<TR><TD ALIGN='center' COLSPAN=99><B>" . gettext('Active/Recent Dispatches') . "</B> (" . mysql_affected_rows() . ")</TD>";
         while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
             $i++;
             $strike = $strikend = "";
@@ -534,7 +534,7 @@ function OLD_show_assigns($which, $id) {				// 08/8/5, 4/30/10
     $print = "";
     if (mysql_affected_rows()>0) {
         $print .= "\n<BR /><TABLE ALIGN='center' BORDER=0 width='100%'>";
-        $print .= "\n<TR><TD ALIGN='center' COLSPAN=99><B>Active/Recent Dispatches</B> (" . mysql_affected_rows() . ")</TD>";
+        $print .= "\n<TR><TD ALIGN='center' COLSPAN=99><B>" . gettext('Active/Recent Dispatches') . "</B> (" . mysql_affected_rows() . ")</TD>";
         while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
             $i++;
             $strike = $strikend = "";
@@ -544,7 +544,7 @@ function OLD_show_assigns($which, $id) {				// 08/8/5, 4/30/10
 
             $print .="\n\t<TR CLASS= '" . $evenodd[($i+1)%2] . "'>";
             if ($which == 1) {															// showing incidents? - 4/30/10
-                $onclick = " onClick = 'open_tick_window ({$row['ticket_id']})'";
+                $onclick = " onClick = 'open_tick_window ({$row['ticket_id']});'";
                 $print .= "<TD TITLE='{$row['ticket']} - {$row['addr']}' {$onclick}>" . $strike . shorten($row['ticket'], 10) . " - " . shorten($row['addr'], 20)	. 	$strikend . "</TD>";
                 }
             else {
@@ -604,8 +604,8 @@ function show_actions($the_id, $theSort="date", $links, $display) {			/* list ac
 
         $print .= ($pat_row['action_type']!=$GLOBALS['ACTION_COMMENT'] ? "*" : "-")."</TD><TD>" . nl2br($pat_row['description']) . "</TD>";
         if ($links) {
-            $print .= "<TD>&nbsp;[<A HREF='patient.php?ticket_id=$the_id&id=" . $pat_row['id'] . "&action=edit'>edit</A>|
-                <A HREF='patient.php?id=" . $pat_row['id'] . "&ticket_id=$the_id&action=delete'>delete</A>]</TD></TR>\n";
+            $print .= "<TD>&nbsp;[<A HREF='patient.php?ticket_id=$the_id&id=" . $pat_row['id'] . "&action=edit'>" . gettext('edit') . "</A>|
+                <A HREF='patient.php?id=" . $pat_row['id'] . "&ticket_id=$the_id&action=delete'>" . gettext('delete') . "</A>]</TD></TR>\n";
                 }
         $caption = "";				// once only
         $actr++;
@@ -617,7 +617,7 @@ function show_actions($the_id, $theSort="date", $links, $display) {			/* list ac
 //		return "";	// 7/10/13 removed as it causes failure to show Patients if no actions present
         }
     else {
-        $caption = "Actions: &nbsp;&nbsp;";
+        $caption = gettext("Actions") . ": &nbsp;&nbsp;";
         $pctr=0;
         while ($act_row = stripslashes_deep(mysql_fetch_assoc($result))) {
             $print .= "<TR CLASS='" . $evenodd[$pctr%2] . "' WIDTH='100%'><TD VALIGN='top' NOWRAP CLASS='td_label'>$caption</TD>";
@@ -635,8 +635,8 @@ function show_actions($the_id, $theSort="date", $links, $display) {			/* list ac
             $print .= ($act_row['action_type']!=$GLOBALS['ACTION_COMMENT'])? '*' : '-';
             $print .= "</TD><TD WIDTH='100%'>" . nl2br($act_row['description']) . "</TD>";
             if ($links) {
-                $print .= "<TD><NOBR>&nbsp;[<A HREF='action.php?ticket_id=$the_id&id=" . $act_row['id'] . "&action=edit'>edit</A>|
-                    <A HREF='action.php?id=" . $act_row['id'] . "&ticket_id=$the_id&action=delete'>delete</A>]</NOBR></TD></TR>\n";
+                $print .= "<TD><NOBR>&nbsp;[<A HREF='action.php?ticket_id=$the_id&id=" . $act_row['id'] . "&action=edit'>" . gettext('edit') . "</A>|
+                    <A HREF='action.php?id=" . $act_row['id'] . "&ticket_id=$the_id&action=delete'>" . gettext('delete') . "</A>]</NOBR></TD></TR>\n";
                 }
             $caption = "";
             $pctr++;
@@ -686,9 +686,9 @@ function show_log($theid, $show_cfs=FALSE) {								// 11/20/09
 
     while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
         if ($i==0) {				// 11/20/09
-            $print .= "<TR CLASS='even'><TD TITLE = \"{$row['tickname']}\" COLSPAN=99 ALIGN='center'><B> Log: <I>". shorten($row['tickname'], 32) . "</I></B></TD></TR>";
-            $cfs_head = ($show_cfs)? "<TD ALIGN='center'>CFS</TD>" : ""  ;
-            $print .= "<TR CLASS='odd'><TD ALIGN='left'>Code</TD>" . $cfs_head . "<TD ALIGN='left'>Unit</TD><TD ALIGN='left'>Status</TD><TD ALIGN='left'>When</TD><TD ALIGN='left'>By</TD><TD ALIGN='left'>From</TD></TR>";
+            $print .= "<TR CLASS='even'><TD TITLE = \"{$row['tickname']}\" COLSPAN=99 ALIGN='center'><B> " . gettext('Log') . ": <I>". shorten($row['tickname'], 32) . "</I></B></TD></TR>";
+            $cfs_head = ($show_cfs)? "<TD ALIGN='center'>" . gettext('CFS') . "</TD>" : ""  ;
+            $print .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Code') . "</TD>" . $cfs_head . "<TD ALIGN='left'>" . gettext('Unit') . "</TD><TD ALIGN='left'>" . gettext('Status') . "</TD><TD ALIGN='left'>" . gettext('When') . "</TD><TD ALIGN='left'>" . gettext('By') . "</TD><TD ALIGN='left'>" . gettext('From') . "</TD></TR>";
             }
 
         $print .= "<TR CLASS='" . $evenodd[$i%2] . "'>" .				// 11/20/09
@@ -710,7 +710,13 @@ function show_log($theid, $show_cfs=FALSE) {								// 11/20/09
     return $print;
     }		// end function get_log ()
 //	} -- dummy
-
+/**
+ * 
+ * @global array $evenodd
+ * @param type $theid
+ * @param type $show_cfs
+ * @return string
+ */
 function show_unit_log($theid, $show_cfs=FALSE) {								// 9/10/13
     global $evenodd ;	// class names for alternating table row colors
     require './incs/log_codes.inc.php';
@@ -737,9 +743,9 @@ function show_unit_log($theid, $show_cfs=FALSE) {								// 9/10/13
 
     while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
         if ($i==0) {				// 11/20/09
-            $print .= "<TR CLASS='heading'><TD CLASS='heading' TITLE = \"{$row['tickname']}\" COLSPAN=99 ALIGN='center'><U>Log: <I>". shorten($row['tickname'], 32) . "</I></U></TD></TR>";
-            $cfs_head = ($show_cfs)? "<TD ALIGN='center'>CFS</TD>" : ""  ;
-            $print .= "<TR CLASS='odd'><TD ALIGN='left'>Code</TD>" . $cfs_head . "<TD ALIGN='left'>Unit</TD><TD ALIGN='left'>Status</TD><TD ALIGN='left'>Comment</TD><TD ALIGN='left'>When</TD><TD ALIGN='left'>By</TD></TR>";
+            $print .= "<TR CLASS='heading'><TD CLASS='heading' TITLE = \"{$row['tickname']}\" COLSPAN=99 ALIGN='center'><U>" . gettext('Log') . ": <I>". shorten($row['tickname'], 32) . "</I></U></TD></TR>";
+            $cfs_head = ($show_cfs)? "<TD ALIGN='center'>" . gettext('CFS') . "</TD>" : ""  ;
+            $print .= "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Code') . "</TD>" . $cfs_head . "<TD ALIGN='left'>" . gettext('Unit') . "</TD><TD ALIGN='left'>" . gettext('Status') . "</TD><TD ALIGN='left'>" . gettext('Comment') . "</TD><TD ALIGN='left'>" . gettext('When') . "</TD><TD ALIGN='left'>" . gettext('By') . "</TD></TR>";
             }
         $print .= "<TR CLASS='" . $evenodd[$i%2] . "' onClick = 'view_log_entry({$row['log_id']});'>" .				// 11/20/09
             "<TD TITLE =\"{$types[$row['code']]}\">". shorten($types[$row['code']], 20) . "</TD>"; //
@@ -892,13 +898,13 @@ function format_date_time($date) {		// mySql format to settings spec - 2/15/09
  */
 function get_status($status) {							/* return status text from code */
     switch ($status) {
-        case 1: return 'Closed';
+        case 1: return gettext('Closed');
             break;
-        case 2: return 'Open';
+        case 2: return gettext('Open');
             break;
-        case 3: return 'Scheduled';
+        case 3: return gettext('Scheduled');
             break;
-        default: return 'Status error';
+        default: return gettext('Status error');
         }
     }
 
@@ -1045,11 +1051,11 @@ function get_variable($which) {								/* get variable from db settings table, r
  * @since
  */
 function do_error($err_function,$err,$custom_err='',$file='',$line='') {/* raise an error event */
-    print "<FONT CLASS=\"warn\">An error occured in function '<B>$err_function</B>': '<B>$err</B>'<BR />";
-    if ($file OR $line) print "Error occured in '$file' at line '$line'<BR />";
-    if ($custom_err != '') print "Additional info: '<B>$custom_err</B>'<BR />";
-    print '<BR />Check your MySQL connection and if the problem persist, contact the <A HREF="help.php?q=credits">author</A>.<BR />';
-    die('<B>Execution stopped.</B></FONT>');
+    print "<FONT CLASS=\"warn\">" . gettext("An error occured in function '<B>$err_function</B>'") . ": '<B>$err</B>'<BR />";
+    if ($file OR $line) print gettext("Error occured in '$file' at line '$line'") . "<BR />";
+    if ($custom_err != '') print gettext("Additional info") . ": '<B>$custom_err</B>'<BR />";
+    print '<BR />' . gettext('Check your MySQL connection and if the problem persist, contact the <A HREF="help.php?q=credits">author') . '</A>.<BR />';
+    die('<B>' . gettext('Execution stopped.') . '</B></FONT>');
     }
 
 /**
@@ -2988,7 +2994,7 @@ function get_status_sel($unit_in, $status_val_in, $tbl_in) {					// returns sele
             $status_field = "status_val";
             break;
         default:
-            print "ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ";
+            print gettext("ERROR") . gettext("ERROR") . gettext("ERROR") . gettext("ERROR") . gettext("ERROR");
             }
 
     $query = "SELECT * FROM `$GLOBALS[mysql_prefix]{$tablename}`, `$GLOBALS[mysql_prefix]{$status_table}` WHERE `$GLOBALS[mysql_prefix]{$tablename}`.`id` = $unit_in
@@ -3044,7 +3050,7 @@ function get_units_legend() {		// returns string as centered span - 2/8/10
         LEFT JOIN `$GLOBALS[mysql_prefix]unit_types` ON `$GLOBALS[mysql_prefix]unit_types`.`id` = `$GLOBALS[mysql_prefix]responder`.`type` ORDER BY `mytype`";
     $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
-    $out_str = "<SPAN CLASS = 'odd' ALIGN = 'center'><SPAN CLASS = 'even' ALIGN = 'center'> Units: </SPAN>&nbsp;";
+    $out_str = "<SPAN CLASS = 'odd' ALIGN = 'center'><SPAN CLASS = 'even' ALIGN = 'center'> " . gettext('Units') . ": </SPAN>&nbsp;";
     while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
         $the_bg_color = 	$GLOBALS['UNIT_TYPES_BG'][$row['icon']];
         $the_text_color = 	$GLOBALS['UNIT_TYPES_TEXT'][$row['icon']];
@@ -3071,7 +3077,7 @@ function get_facilities_legend() {		// returns string as centered row - 2/8/10
         LEFT JOIN `$GLOBALS[mysql_prefix]fac_types` ON `$GLOBALS[mysql_prefix]fac_types`.`id` = `$GLOBALS[mysql_prefix]facilities`.`type` ORDER BY `mytype`";
     $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
-    $out_str = "<TR><TD COLSPAN=99 ALIGN='center'><SPAN CLASS='even'><SPAN CLASS='odd' ALIGN = 'right'> Facilities: </SPAN>";
+    $out_str = "<TR><TD COLSPAN=99 ALIGN='center'><SPAN CLASS='even'><SPAN CLASS='odd' ALIGN = 'right'> " . gettext('Facilities') . ": </SPAN>";
     while ($row = stripslashes_deep(mysql_fetch_array($result))) {
         $the_bg_color = 	$GLOBALS['FACY_TYPES_BG'][$row['icon']];
         $the_text_color = 	$GLOBALS['FACY_TYPES_TEXT'][$row['icon']];
@@ -3117,7 +3123,7 @@ function is_phone($instr) {		// 3/13/10
 function get_unit_status_legend() {		// returns string as div - 3/21/10
     $query = "SELECT * FROM `$GLOBALS[mysql_prefix]un_status` ORDER BY `status_val`";
     $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
-    $out_str = "<DIV><SPAN CLASS = 'even' ALIGN = 'center'> Status legend: </SPAN>&nbsp;";
+    $out_str = "<DIV><SPAN CLASS = 'even' ALIGN = 'center'> " . gettext('Status legend') . ": </SPAN>&nbsp;";
     while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
         $out_str .= "<SPAN STYLE='background-color:{$row['bg_color']}; color:{$row['text_color']}'>&nbsp;{$row['status_val']}&nbsp;</SPAN>&nbsp;";
         }
@@ -3313,7 +3319,7 @@ function get_start($local_func) {						// 5/2/10
             break;
 
         default:
-            echo __LINE__ . " error error error error error \n";
+            echo __LINE__ . gettext('ERROR') . gettext('ERROR') . gettext('ERROR') . gettext('ERROR') . gettext('ERROR') . gettext('ERROR') . "\n";
             }
         }		// end function get_start
 
@@ -3360,7 +3366,7 @@ function get_end($local_func) {
             break;
 
         default:
-            echo __LINE__ . " error error error error error \n";
+            echo __LINE__ . gettext('ERROR') . gettext('ERROR') . gettext('ERROR') . gettext('ERROR') . gettext('ERROR') . "\n";
             }
         }		// end function get_end
 

@@ -600,3 +600,4 @@ $r9 = date("D M j Y G:i:s", time());
 //$ret_arr = array ($num_tick, $num_not_assigned, $num_ass_not_responding, $num_dis_resp_not_os, $num_on_scene, $avg_to_disp, $avg_time_disp2resp, $avg_time_disp2os);
 $ret_arr = array ($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9);
 print json_encode($ret_arr);				// 1/6/11
+exit();

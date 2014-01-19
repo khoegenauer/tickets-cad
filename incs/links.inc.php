@@ -31,6 +31,12 @@ for ($i=0; $i<count($the_keys); $i++) {
 <DIV ID='links' STYLE="display:none;"><?php print $str;?> <br/> <br/></DIV><!-- display:none/block/inline -->
 
 <SCRIPT>
+/**
+ * 
+ * @param {type} obj
+ * @param {type} the_class
+ * @returns {undefined}
+ */
     function ChngClass(obj, the_class) {					// changes object obj to class the_class - 8/24/09
         $(obj).className=the_class;
         }
@@ -39,7 +45,12 @@ for ($i=0; $i<count($the_keys); $i++) {
     var PreviousUrl; 		// global variable - will hold the url currently in the opened window for this link
 
     starting = false;
-
+/**
+ * 
+ * @param {type} strUrl
+ * @param {type} strName
+ * @returns {undefined}
+ */
     function launch(strUrl, strName) {
         var random_x=100 + Math.floor(Math.random()*200);
         var random_y=100 + Math.floor(Math.random(random_x)*200);	// a different random

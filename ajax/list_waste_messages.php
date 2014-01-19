@@ -158,3 +158,4 @@ if (mysql_num_rows($result) == 0) { 				// 8/6/08
         } // end while
     }				// end else
 print json_encode($ret_arr);
+exit();

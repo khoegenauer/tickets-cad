@@ -16,7 +16,7 @@
 11/27/09 corrections to indexing
 3/27/10 added 'elapsed time' to IW
 4/21/10 added closed incidents selection by time period, call history incident display replacing infowin
-8/13/10 map.setUIToDefault();										//
+8/13/10 map.setUIToDefault();
 11/6/10 map size calculations for 2-screen operation
 11/29/10 locale == 2 handling added
 12/1/10 get_text disposition added
@@ -220,7 +220,7 @@ function fs_get_disp_status($row_in) {			// 3/25/11
 
 //			}
 ?>
-        <SPAN class='fs_buttons' onClick = "opener.focus()" STYLE =  'margin-left: 60px'><U><?php print gettext('Back');?></U></SPAN>
+        <SPAN class='fs_buttons' onClick = "opener.focus();" STYLE =  'margin-left: 60px'><U><?php print gettext('Back');?></U></SPAN>
         <SPAN class='fs_buttons' onClick = "window.close();" STYLE =  'margin-left: 60px'><U><?php print gettext('Close');?></U></SPAN>
         <SPAN class='fs_buttons' onClick = "location.reload(true);" STYLE =  'margin-left: 60px'><U><?php print gettext('Refresh');?></U></SPAN> <!-- 5/27/2013 -->
         </NOBR>
@@ -230,9 +230,9 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         </DIV>
 
         <FORM NAME='view_form' METHOD='get' ACTION='units.php'>
-        <INPUT TYPE='hidden' NAME='func' VALUE='responder'>
-        <INPUT TYPE='hidden' NAME='view' VALUE='true'>
-        <INPUT TYPE='hidden' NAME='id' VALUE=''>
+        <INPUT TYPE='hidden' NAME='func' VALUE='responder'/>
+        <INPUT TYPE='hidden' NAME='view' VALUE='true'/>
+        <INPUT TYPE='hidden' NAME='id' VALUE=''/>
         </FORM>
 
     <DIV style='position: fixed; top: 0px; left: 0px; z-index: 1;'>
@@ -259,24 +259,38 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         </TD></TR>
         </TABLE></DIV>
 <SCRIPT>
+/**
+ * 
+ * @returns {undefined}
+ */
     function show_btns_closed() {
         $('btn_go').style.display = 'inline';
         $('btn_can').style.display = 'inline';
         }
+/**
+ * 
+ * @returns {undefined}
+ */
     function hide_btns_closed() {
         $('btn_go').style.display = 'none';
         $('btn_can').style.display = 'none';
         document.dummy.frm_interval.selectedIndex=99;
         }
 
-</SCRIPT>
-
-    <SCRIPT>
+/**
+ * 
+ * @param {type} val
+ * @returns {Boolean}
+ */      
         function isNull(val) {								// checks var stuff = null;
 
             return val === null;
             }
-
+/**
+ * 
+ * @param {type} instr
+ * @returns {String|@exp;@call;to_char}
+ */
         function to_str(instr) {			// 0-based conversion - 2/13/09
     //		alert("143 " + instr);
             function ord(string) {
@@ -295,7 +309,13 @@ function fs_get_disp_status($row_in) {			// 3/25/11
 
             return hop+to_char(lop);
             }
-
+/**
+ * 
+ * @param {type} url
+ * @param {type} callback
+ * @param {type} postData
+ * @returns {unresolved}
+ */
         function sendRequest(url,callback,postData) {								// 2/14/09
             var req = createXMLHTTPObject();
             if (!req) return;
@@ -318,14 +338,20 @@ function fs_get_disp_status($row_in) {			// 3/25/11
             if (req.readyState == 4) return;
             req.send(postData);
             }
-
+/**
+ * 
+ * @type Array
+ */
         var XMLHttpFactories = [
-            function () {return new XMLHttpRequest()	},
-            function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-            function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-            function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+            function () {return new XMLHttpRequest();	},
+            function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+            function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+            function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
             ];
-
+/**
+ * 
+ * @returns {Boolean}
+ */
         function createXMLHTTPObject() {
             var xmlhttp = false;
             for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -346,12 +372,28 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         $("map_canvas").style.backgroundImage = "url('http://maps.google.com/staticmap?center=<?php echo get_variable('def_lat');?>,<?php echo get_variable('def_lng');?>&zoom=<?php echo get_variable('def_zoom');?>&size=<?php echo get_variable('map_width');?>x<?php echo get_variable('map_height');?>&key=<?php echo get_variable('gmaps_api_key');?> ')";
 
         var colors = new Array ('odd', 'even');
-
+/**
+ * 
+ * @param {type} in_str
+ * @returns {String|add_hash.in_str}
+ */
         function add_hash(in_str) { // prepend # if absent
 
             return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
             }
-
+/**
+ * 
+ * @param {type} lat
+ * @param {type} lng
+ * @param {type} radius
+ * @param {type} strokeColor
+ * @param {type} strokeWidth
+ * @param {type} strokeOpacity
+ * @param {type} fillColor
+ * @param {type} fillOpacity
+ * @param {type} name
+ * @returns {undefined}
+ */
     function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity, name) {		// 8/19/09, 2/26/2013
         var circle = new google.maps.Circle({
                 center: new google.maps.LatLng(lat,lng),
@@ -364,7 +406,16 @@ function fs_get_disp_status($row_in) {			// 3/25/11
             });
         circle.setRadius(radius*5000);
         }
-
+/**
+ * 
+ * @param {type} point
+ * @param {type} html
+ * @param {type} text
+ * @param {type} font_size
+ * @param {type} color
+ * @param {type} name
+ * @returns {undefined}
+ */
     function drawBanner(point, html, text, font_size, color, name) {        // Create the banner - 6/5/2013
         var invisibleIcon = new google.maps.MarkerImage("./markers/markerTransparent.png");
         map.setCenter(point, 8);
@@ -384,7 +435,10 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         var marker = new google.maps.Marker(point,invisibleIcon);	        // Create an invisible google.maps.Marker
         marker.setMap(map);
         }				// end function draw Banner()
-
+/**
+ * 
+ * @returns {undefined}
+ */
     function do_landb() {				// JS function - 8/1/11
         var points = new Array();
 <?php
@@ -459,7 +513,11 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         unset($query, $result);
 ?>
         }		// end function do_landb()
-
+/**
+ * 
+ * @param {type} plaintext
+ * @returns {String}
+ */
         function URLEncode(plaintext) {					// The Javascript escape and unescape functions do
                                                             // NOT correspond with what browsers actually do...
             var SAFECHARS = "0123456789" +					// Numeric
@@ -496,7 +554,10 @@ function fs_get_disp_status($row_in) {			// 3/25/11
             };			// end function
 
 //	Tickets show / hide by Priority functions
-
+/**
+ * 
+ * @returns {undefined}
+ */
     function set_initial_pri_disp() {
         $('normal').checked = true;
         $('medium').checked = true;
@@ -507,7 +568,12 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         $('incidents').style.display = '';
         $('assignments').style.display = '';
     }
-
+/**
+ * 
+ * @param {type} color
+ * @param {type} category
+ * @returns {undefined}
+ */
     function hideGroup(color, category) {			// 8/7/09 Revised function to correct incorrect display, revised 12/03/10 completely revised
         var priority = color;
         var priority_name="";
@@ -629,7 +695,11 @@ function fs_get_disp_status($row_in) {			// 3/25/11
             $('pri_none').style.display = 'none';
             }	//	end if priority == 5
         }			// end function hideGroup(color, category)
-
+/**
+ * 
+ * @param {type} control
+ * @returns {undefined}
+ */
     function set_pri_chkbox(control) {
         var pri_control = control;
         if ($(pri_control).checked == true) {
@@ -642,7 +712,10 @@ function fs_get_disp_status($row_in) {			// 3/25/11
 //	End of Tickets show / hide by Priority functions
 
 // 	Units show / hide functions
-
+/**
+ * 
+ * @returns {undefined}
+ */
     function set_categories() {			//	12/03/10 - checks current session values and sets checkboxes and view states for hide and show.
         var curr_cats = <?php echo json_encode($curr_cats); ?>;
         var cat_sess_stat = <?php echo json_encode($cat_sess_stat); ?>;
@@ -697,13 +770,19 @@ function fs_get_disp_status($row_in) {			// 3/25/11
                 }
             }
         }
-
+/**
+ * 
+ * @returns {undefined}
+ */
     function do_view_cats() {							// 12/03/10	Show Hide categories, Showing and setting onClick attribute for Next button for category show / hide.
         $('go_can').style.display = 'inline';
         $('can_button').style.display = 'inline';
         $('go_button').style.display = 'inline';
         }
-
+/**
+ * 
+ * @returns {undefined}
+ */
     function cancel_buttons() {							// 12/03/10	Show Hide categories, Showing and setting onClick attribute for Next button for category show / hide.
         $('go_can').style.display = 'none';
         $('can_button').style.display = 'none';
@@ -711,7 +790,11 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         $('ALL').checked = false;
         $('NONE').checked = false;
         }
-
+/**
+ * 
+ * @param {type} control
+ * @returns {undefined}
+ */
     function set_chkbox(control) {
         var units_control = control;
         if ($(units_control).checked == true) {
@@ -721,7 +804,10 @@ function fs_get_disp_status($row_in) {			// 3/25/11
             }
         do_view_cats();
         }
-
+/**
+ * 
+ * @returns {undefined}
+ */
     function do_go_button() {							// 12/03/10	Show Hide categories
         var curr_cats = <?php echo json_encode(get_category_butts()); ?>;
         if ($('ALL').checked == true) {
@@ -834,12 +920,19 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         }
 
     }	// end function do_go_button()
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
     function gb_handleResult(req) {							// 12/03/10	The persist callback function
         }
 
 // Facilities show / hide functions
-
+/**
+ * 
+ * @returns {undefined}
+ */
     function set_fac_categories() {			//	12/03/10 - checks current session values and sets checkboxes and view states for hide and show.
         var fac_curr_cats = <?php echo json_encode(get_fac_category_butts()); ?>;
         var fac_cat_sess_stat = <?php echo json_encode(get_fac_session_status()); ?>;
@@ -884,13 +977,19 @@ function fs_get_disp_status($row_in) {			// 3/25/11
                 }
             }
         }
-
+/**
+ * 
+ * @returns {undefined}
+ */
     function do_view_fac_cats() {							// 12/03/10	Show Hide categories, Showing and setting onClick attribute for Next button for category show / hide.
         $('fac_go_can').style.display = 'inline';
         $('fac_can_button').style.display = 'inline';
         $('fac_go_button').style.display = 'inline';
         }
-
+/**
+ * 
+ * @returns {undefined}
+ */
     function fac_cancel_buttons() {							// 12/03/10	Show Hide categories, Showing and setting onClick attribute for Next button for category show / hide.
         $('fac_go_can').style.display = 'none';
         $('fac_can_button').style.display = 'none';
@@ -898,7 +997,11 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         $('fac_ALL').checked = false;
         $('fac_NONE').checked = false;
         }
-
+/**
+ * 
+ * @param {type} control
+ * @returns {undefined}
+ */
     function set_fac_chkbox(control) {
         var fac_control = control;
         if ($(fac_control).checked == true) {
@@ -908,7 +1011,10 @@ function fs_get_disp_status($row_in) {			// 3/25/11
             }
         do_view_fac_cats();
         }
-
+/**
+ * 
+ * @returns {undefined}
+ */
     function do_go_facilities_button() {							// 12/03/10	Show Hide categories
         var fac_curr_cats = <?php echo json_encode(get_fac_category_butts()); ?>;
         if ($('fac_ALL').checked == true) {
@@ -1035,12 +1141,22 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         }
 
     }	// end function do_go_button()
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
     function gfb_handleResult(req) {							// 12/03/10	The persist callback function
         }
 
 // end of facilities show / hide function
-
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */
         function hideDiv(div_area, hide_cont, show_cont) {	//	3/29/11, function forhiding DIVS for control areas
             var divarea = div_area
             var hide_cont = hide_cont
@@ -1049,7 +1165,13 @@ function fs_get_disp_status($row_in) {			// 3/25/11
                 $(divarea).style.display = 'none';
                 }
             }
-
+/**
+ * 
+ * @param {type} div_area
+ * @param {type} hide_cont
+ * @param {type} show_cont
+ * @returns {undefined}
+ */
         function showDiv(div_area, hide_cont, show_cont) {	//	3/29/11, function for showing DIVS for control areas
             var divarea = div_area
             var hide_cont = hide_cont
@@ -1060,7 +1182,10 @@ function fs_get_disp_status($row_in) {			// 3/25/11
             }
 
         var starting = false;
-
+/**
+ * 
+ * @returns {undefined}
+ */
         function check_sidemenu() {
             if ($('inc_list').style.display=="block") {
                 $('incs_but').className="right_menu_lit";
@@ -1072,12 +1197,20 @@ function fs_get_disp_status($row_in) {			// 3/25/11
                 $('assign_but').className="right_menu_lit";
                 }
             }
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
         function myclick(id) {					// 3/29/11	For incident list clicks to launch infoWindow
             google.maps.event.trigger(gmarkers[id], "click");
             location.href = "#top";
             }
-
+/**
+ * 
+ * @param {type} id
+ * @returns {unresolved}
+ */
         function do_mail_fac_win(id) {			// Facility email 9/22/09
             if (starting) {return;}
             starting=true;
@@ -1091,19 +1224,38 @@ function fs_get_disp_status($row_in) {			// 3/25/11
             newwindow_in.focus();
             starting = false;
             }
-
+/**
+ * 
+ * @returns {undefined}
+ */
         function do_show_Units() {
             var params = "f_n=show_hide_unit&v_n=s&sess_id=<?php print get_sess_key(basename(__FILE__) . __LINE__); ?>";					// flag 1, value s
             var url = "persist.php";
             sendRequest (url, s_handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
             }			// end function do notify()
-
+/**
+ * 
+ * @param {type} req
+ * @returns {undefined}
+ */
         function s_handleResult(req) {					// the 'called-back' persist function - show
             show_Units();
             }
 
         var open_iw = false;
-
+/**
+ * 
+ * @param {type} point
+ * @param {type} tabs
+ * @param {type} color
+ * @param {type} stat
+ * @param {type} id
+ * @param {type} sym
+ * @param {type} category
+ * @param {type} region
+ * @param {type} tip
+ * @returns {unresolved}
+ */
     function createMarker(point, tabs, color, stat, id, sym, category, region, tip) {		// 1804 - 3/19/11
         var group = category || 0;			// if absent from call
         var region = region || 0;
@@ -1136,7 +1288,59 @@ function fs_get_disp_status($row_in) {			// 3/25/11
 
         return marker;
         }				// end function create Marker()
+/**
+ * 
+ * @param {type} point
+ * @param {type} tabs
+ * @param {type} color
+ * @param {type} stat
+ * @param {type} id
+ * @param {type} sym
+ * @param {type} category
+ * @param {type} region
+ * @param {type} tip
+ * @returns {unresolved}
+ */
+	function createUnitMarker(point, tabs, color, stat, id, sym, category, region, tip) {		// 12/23/13
+		var group = category || 0;			// if absent from call
+		var region = region || 0;
+		var tip_val = tip || "";		// if absent from call
+		got_points = true;				// 6/21/12
+		
+		var origin = ((sym.length)>3)? (sym.length)-3: 0;			// pick low-order three chars 3/22/11
+		var iconStr = sym.substring(origin);						// icon string
+		var image_file = "./our_icons/gen_icon.php?blank=" + escape(icons[color]) + "&text=" + iconStr;
+		var marker = new google.maps.Marker({position: point, map: map, icon: image_file});		
+		marker.id = color;				// for hide/unhide
+		marker.category = category;		// 12/03/10 for show / hide by status
+		marker.region = region;			// 12/03/10 for show / hide by status		
+		marker.stat = stat;				// 10/21/09
 
+		google.maps.event.addListener(marker, "click", function() {		// 1811 - here for both side bar and icon click
+			try  {open_iw.close();} catch (e) {;}
+//			if (open_iw) {open_iw.close();} 							// another IW possibly open
+			map.setCenter(point, 8);
+
+			var infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 400});	 
+			infowindow.open(map, marker);
+			open_iw = infowindow;
+			which = id;
+			});							// end add Listener( ... function())
+		rmarkers[id] = marker;							// marker to array for side_bar click function
+		rmarkers[id]['x'] = "y";							// ????
+		rinfoTabs[id] = tabs;							// tabs to array
+		bounds.extend(point);
+		return marker;
+		}				// end function create Marker()
+/**
+ * 
+ * @param {type} point
+ * @param {type} tabs
+ * @param {type} color
+ * @param {type} id
+ * @param {type} unit_id
+ * @returns {unresolved}
+ */
     function createdummyMarker(point, tabs, color, id, unit_id) {
         got_points = true;											// 6/18/12
         var image_file = "./our_icons/question1.png";
@@ -1163,6 +1367,10 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         }				// end function create dummy Marker()
 
         var grid_bool = false;
+/**
+ * 
+ * @returns {undefined}
+ */        
         function toglGrid() {						// toggle, 4/24/13
             grid_bool = !grid_bool;
             if (grid_bool) { grid = new Graticule(map); }
@@ -1173,7 +1381,10 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         trafficInfo.setMap(map);
 
         var toggleState = true;
-
+/**
+ * 
+ * @returns {undefined}
+ */
         function doTraffic() {				// 10/16/08
             if (toggleState) {
                 trafficInfo.setMap(null);
@@ -1189,7 +1400,10 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         });
 
         var cloudLayer = new google.maps.weather.CloudLayer();
-
+/**
+ * 
+ * @returns {undefined}
+ */
         function doWeather() {
             if (toggleState) {
                 weatherLayer.setMap(null);
@@ -1220,7 +1434,10 @@ function fs_get_disp_status($row_in) {			// 3/25/11
     print (($dzf==1) || ($dzf==3))? "true;\n":"false;\n";
 
 ?>
-
+/**
+ * 
+ * @returns {unresolved}
+ */
     function do_mail_win() {			// 6/13/09
         if (starting) {return;}
         starting=true;
@@ -1235,19 +1452,31 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         newwindow_um.focus();
         starting = false;
         }
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
     function open_tick_window(id) {				// 4/12/10
         var url = "single.php?ticket_id="+ id;
         var tickWindow = window.open(url, 'mailWindow', 'resizable=1, scrollbars, height=600, width=600, left=100,top=100,screenX=100,screenY=100');
         tickWindow.focus();
         }
-
+/**
+ * 
+ * @param {type} id
+ * @returns {undefined}
+ */
     function do_add_note(id) {				// 8/12/09
         var url = "add_note.php?ticket_id="+ id;
         var noteWindow = window.open(url, 'mailWindow', 'resizable=1, scrollbars, height=240, width=600, left=100,top=100,screenX=100,screenY=100');
         noteWindow.focus();
         }
-
+/**
+ * 
+ * @param {type} callsign
+ * @returns {unresolved}
+ */
     function do_track(callsign) {
         if (parent.frames["upper"].logged_in()) {
     //		if (starting) {return;}					// 6/6/08
@@ -1287,14 +1516,20 @@ function fs_get_disp_status($row_in) {			// 3/25/11
 
         var ticket_ids = [];
         var gmarkers = [];
+		    var rmarkers = [];
         var fmarkers = [];
         var infoTabs = [];
+		    var rinfoTabs = [];
         var facinfoTabs = [];
         var which;
         var i = 0;			// sidebar/icon index
 
     var icon_file = "./markers/crosshair.png";
-
+/**
+ * 
+ * @param {type} in_obj
+ * @returns {undefined}
+ */
     function call_back(in_obj) {				// callback function - from gmaps_v3_init()
 //		alert(2052);
         do_lat(in_obj.lat);			// set form values
@@ -1318,7 +1553,7 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         zoomControl: true,
         scaleControl: true,
         mapTypeId: the_type
-        }
+        };
 
     map = new google.maps.Map($('map_canvas'), mapOptions);		// it starts here - 1255
     var bounds = new google.maps.LatLngBounds();				// Initialize map bounds
@@ -1582,7 +1817,7 @@ function fs_get_disp_status($row_in) {			// 3/25/11
                     new GInfoWindowTab("Zoom", "<div id='detailmap' class='detailmap'></div>")
                     ];
 */
-                var category = "Incident";
+                var category = <?php print gettext("Incident");?>;
 //				alert ("1534 " +category);
 
                 var myinfoTabs = "<?php echo nl2brr($tab_1);?>";
@@ -2187,7 +2422,7 @@ function fs_get_disp_status($row_in) {			// 3/25/11
                 }
             if ($row['glat']==1) {
 
-                $the_bull = "<FONT COLOR = 'green'><B>GL</B></FONT>";		// 7/23/09
+                $the_bull = "<FONT COLOR = 'green'><B>" . gettext('GL') . "</B></FONT>";		// 7/23/09
                 if ($glat_updated < $update_error) {$the_bull = "<FONT COLOR = 'black'><B>" . gettext('GL') . "</B></FONT>";}
                 }
                             // end bullet stuff
@@ -2300,7 +2535,7 @@ function fs_get_disp_status($row_in) {			// 3/25/11
 
                 $tab_2 = "<TABLE CLASS='infowin' width='" . $_SESSION['scr_width']/4 . "'>";
                 $tab_2 .="<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . $row_instam['source'] . "</B></TD></TR>";
-                $tab_2 .= "<TR CLASS='odd'><TD>" . gettext('Course') . ": </TD><TD>" . $row_instam['course'] . ", Speed:  " . $row_instam['speed'] . ", " . gettext('Altitude') . ": " . $row_instam['altitude'] . "</TD></TR>";
+                $tab_2 .= "<TR CLASS='odd'><TD>" . gettext('Course') . ": </TD><TD>" . $row_instam['course'] . ", " . gettext('Speed') . ":  " . $row_instam['speed'] . ", " . gettext('Altitude') . ": " . $row_instam['altitude'] . "</TD></TR>";
                 $tab_2 .= "<TR CLASS='even'><TD>" . gettext('As of') . ": </TD><TD> $strike " . format_date($row_instam['updated']) . " $strike_end</TD></TR></TABLE>";
                 $tabs_done=TRUE;
     //			print __LINE__;
@@ -2399,9 +2634,7 @@ function fs_get_disp_status($row_in) {			// 3/25/11
             } else {
 ?>
                 var the_group = '<?php print $the_group;?>';
-
-                var marker = createMarker(point, myinfoTabs, <?php print $the_color;?>, <?php print $hide_unit;?>,  <?php print $sb_indx; ?>, sym, the_group); // 7/28/10
-//				map.addOverlay(marker);
+                var marker = createUnitMarker(point, myinfoTabs, <?php print $the_color;?>, <?php print $hide_unit;?>,  <?php print $sb_indx; ?>, sym, the_group); // 7/28/10, 3/15/11, 12/23/13
                 marker.setMap(map);
 
 <?php
@@ -2475,7 +2708,16 @@ function fs_get_disp_status($row_in) {			// 3/25/11
 
         var fac_icon = new google.maps.MarkerImage(baseIcon);
         fac_icon.image = icons[1];
-
+/**
+ * 
+ * @param {type} fac_point
+ * @param {type} fac_tabs
+ * @param {type} id
+ * @param {type} fac_icon
+ * @param {type} type
+ * @param {type} region
+ * @returns {unresolved}
+ */
     function createfacMarker(fac_point, fac_name, id, fac_icon, type) {
         var fac_marker = new google.maps.Marker(fac_point, fac_icon);
         // Show this markers index in the info window when it is clicked
@@ -2486,7 +2728,16 @@ function fs_get_disp_status($row_in) {			// 3/25/11
 
         return fac_marker;
     }
-
+/**
+ * 
+ * @param {type} fac_point
+ * @param {type} fac_tabs
+ * @param {type} id
+ * @param {type} fac_icon
+ * @param {type} type
+ * @param {type} region
+ * @returns {unresolved}
+ */
     function createfacMarker(fac_point, fac_tabs, id, fac_icon, type, region) {		// 3213
     //	alert("3207 " +fac_icon);
         var region = region || 0;
@@ -2669,11 +2920,19 @@ function fs_get_disp_status($row_in) {			// 3/25/11
 //			echo "\t\t" . $kml_olays[$i] . "\n";
 //			}
 ?>
+/**
+ * 
+ * @param {type} in_str
+ * @returns {String|add_hash.in_str}
+ */
     function add_hash(in_str) { // prepend # if absent
 
         return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
         }
-
+/**
+ * 
+ * @returns {undefined}
+ */
     function do_landb_f() {				// JS function - 8/1/11
 //		alert(2629);
 //		return true;

@@ -13,7 +13,7 @@ if (!(file_exists("./incs/mysql.inc.php"))) {
 
 require_once './incs/functions.inc.php';
 
-$version = "2.41D Beta - 11/21/13";
+$version = "2.41E Beta - 01/02/14";	
 
 /*
 10/1/08 added error reporting
@@ -1763,6 +1763,18 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
             $result = mysql_query($query);
 
             $query = "ALTER TABLE `$GLOBALS[mysql_prefix]in_types` ADD `notify_email` VARCHAR( 256 ) NULL DEFAULT NULL AFTER `notify_mailgroup`";		// 10/31/13
+            $result = mysql_query($query);		
+
+          	$query = "ALTER TABLE `$GLOBALS[mysql_prefix]requests` ADD `postcode` VARCHAR( 16 ) NULL DEFAULT NULL AFTER `city`";		// 12/16/13
+            $result = mysql_query($query);		
+
+      			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]requests` ADD `pickup` VARCHAR( 12 ) NULL DEFAULT NULL AFTER `to_address`";		// 12/16/13
+            $result = mysql_query($query);		
+
+      			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]requests` ADD `arrival` VARCHAR( 12 ) NULL DEFAULT NULL AFTER `pickup`";		// 12/16/13
+            $result = mysql_query($query);
+
+      			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]replacetext` ADD `app_shortsumm` ENUM( 'Yes','No' ) NOT NULL DEFAULT 'No' AFTER `app_summ` ;";		// 12/16/13
             $result = mysql_query($query);
         }		// end (!($version ==...) ==================================================
 

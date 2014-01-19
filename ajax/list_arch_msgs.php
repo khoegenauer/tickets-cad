@@ -292,3 +292,4 @@ foreach ($the_result AS $msg_row) {
     } // end while
 
 print json_encode($ret_arr);
+exit();

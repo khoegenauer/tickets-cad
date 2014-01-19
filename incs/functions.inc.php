@@ -1072,7 +1072,13 @@ function show_log($theid, $show_cfs=FALSE) {								// 11/20/09, 10/20/12
     return $print;
     }		// end function get_log ()
 //	} -- dummy
-
+/**
+ * 
+ * @global array $evenodd
+ * @param type $theid
+ * @param type $show_cfs
+ * @return string
+ */
 function show_unit_log($theid, $show_cfs=FALSE) {								// 9/10/13
     global $evenodd ;	// class names for alternating table row colors
     require './incs/log_codes.inc.php';
@@ -2223,6 +2229,10 @@ function may_email() {
     return (!(is_guest()) || (is_member() || is_unit())) ;						// members, units  allowed
     }
                                                                     /* print date and time in dropdown menus */
+/**
+ * 
+ * @return type
+ */
 function has_admin() {
     return ((is_super()) || (is_administrator())) ;								// 9/22/10
     }
@@ -5072,7 +5082,12 @@ function get_disp_status($row_in) {			// 4/26/11
     if (is_date($responding)) { return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[1]}&nbsp;" . elapsed ($responding) . "</SPAN>";}
     if (is_date($dispatched)) { return "<SPAN CLASS='disp_stat'>&nbsp;{$tags_arr[0]}&nbsp;" . elapsed ($dispatched) . "</SPAN>";}
     }
-
+/**
+ * 
+ * @param type $disp_status
+ * @param type $responder
+ * @return int
+ */
 function auto_disp_status($disp_status, $responder) {	//	8/22/13
     $now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
     $query = "SELECT * FROM `$GLOBALS[mysql_prefix]auto_disp_status` WHERE `id` = " . $disp_status . " LIMIT 1";
@@ -5534,6 +5549,11 @@ function get_index_str($in_str) {
     }
 
 */
+/**
+ * 
+ * @param type $date_in
+ * @return type
+ */
     function format_sb_date_2($date_in) {							// datetime: 2012-11-03 14:13:45 - 11/29/2012
 
         return substr($date_in, 8, 8);
@@ -5557,6 +5577,16 @@ function get_index_str($in_str) {
         if (get_variable('locale')==1) { return date("j/n/y H:i", intval($date_wk));}					// 08/27/10 - Revised to show UK format for locale = 1
         else 							{ return date(get_variable("date_format"), intval($date_wk)); }
         }
+/**
+ * 
+ * @param type $date_in
+ * @return type
+ */
+    function format_dateonly($date_in){								// 12/3/13
+		  $date_wk = (strlen(trim($date_in))== 19)? strtotime(trim($date_in)) : trim($date_in) ;			// force to integer
+		  if (get_variable('locale')==0)	{ return date("n/j/y", intval($date_wk));}					//
+		  else 							{ return date("j/n/y", intval($date_wk));}
+		  }
 
 /**
  * log_error
@@ -5633,7 +5663,15 @@ function get_contact_addr() {		// 6/1/2013 - returns user email addr if availabl
 
     return trim($contact_addr);
     }
-
+/**
+ * 
+ * @param type $ticket_id
+ * @param type $responder_id
+ * @param type $facility_id
+ * @param type $type
+ * @param type $portaluser
+ * @return string
+ */
 function list_files($ticket_id=0, $responder_id=0, $facility_id=0, $type=0, $portaluser=0) {	//	9/10/13, list stored files
     if ($ticket_id != 0) {
         $where = " WHERE `ticket_id` = " . $ticket_id;

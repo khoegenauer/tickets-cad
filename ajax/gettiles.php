@@ -75,3 +75,4 @@ do_file($dir, $subdir, $file);
 $completed[0] = "Completed";
 $completed[2] = $_GET['lastfile'];
 print json_encode($completed);
+exit();

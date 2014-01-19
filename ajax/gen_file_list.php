@@ -36,3 +36,4 @@ $print2 = "<SPAN id='the_go_but' class='plain' onMouseOver='do_hover(this.id);' 
 $ret_arr[0] = $print;
 $ret_arr[1] = $print2;
 print json_encode($ret_arr);
+exit();

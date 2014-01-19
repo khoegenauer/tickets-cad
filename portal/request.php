@@ -24,10 +24,13 @@ $only_view = ((isset($_GET['func'])) && ($_GET['func'] == "view")) ? TRUE : FALS
 $can_edit = ((is_service_user()) && (!$only_view)) ? TRUE : FALSE;
 $query = "SELECT *,
         `r`.`id` AS `request_id`,
+        `r`.`pickup` AS `pickup`,
+        `r`.`arrival` AS `arrival`,
+        `r`.`ticket_id` AS `ticket_id`,
+        `a`.`ticket_id` AS `a_ticket_id`,
         `a`.`id` AS `assigns_id`,
         `a`.`start_miles` AS `start_miles`,
         `a`.`end_miles` AS `end_miles`,
-        `r`.`comments` AS `comments`,
         `a`.`comments` AS `assigns_comments`,
         `request_date` AS `request_date`,
         `tentative_date` AS `tentative_date`,
@@ -77,11 +80,33 @@ function get_contact_details($the_id) {
     $result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
     if (mysql_num_rows($result) == 1) {
         $row = stripslashes_deep(mysql_fetch_assoc($result));
-        $the_ret[] = (($row['name_f'] != "") && ($row['name_l'] != "")) ? $the_ret[] = $row['name_f'] . " " . $row['name_l'] : $the_ret[] = $row['user'];
-        $the_ret[] = ($row['email'] != "") ? $row['email'] : gettext("Unknown");
-        $the_ret[] = ($row['email_s'] != "") ? $row['email_s'] : gettext("Unknown");
-        $the_ret[] = ($row['phone_p'] != "") ? $row['phone_p'] : gettext("Unknown");
-        $the_ret[] = ($row['phone_s'] != "") ? $row['phone_s'] : gettext("Unknown");
+		$the_ret[] = (($row['name_f'] != "") && ($row['name_l'] != "")) ? $row['name_f'] . " " . $row['name_l'] : $row['user'];
+		$the_ret[] = ($row['email'] != "") ? $row['email'] : "Not Set";
+		}
+	return $the_ret;
+	}
+/**
+ * 
+ * @param type $the_id
+ * @return string
+ */	
+function get_requester_details($the_id) {
+	$the_ret = array();
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `id` = " . $the_id . " LIMIT 1";
+	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
+	if(mysql_num_rows($result) == 1) {
+		$row = stripslashes_deep(mysql_fetch_assoc($result));
+		if($row['email'] == "") {
+			if($row['email_s'] == "") {
+				$the_ret[0] = "";
+				} else {
+				$the_ret[0] = $row['email_s'];
+				}
+			} else {
+				$the_ret[0] = $row['email'];
+			}
+		} else {
+		$the_ret[0] = "";
         }
 
     return $the_ret;
@@ -337,9 +362,11 @@ function validate(theForm) {
     var city = theForm.frm_city.value;
     var state = theForm.frm_state.value;
     var theDescription = theForm.frm_description.value;
-    var requestDate = theForm.frm_year_request_date.value + "-" + theForm.frm_month_request_date.value + "-" + theForm.frm_day_request_date.value + " " + theForm.frm_hour_request_date.value + " " + theForm.frm_minute_request_date.value + ":00";
+  	var requestDate = theForm.frm_year_request_date.value + "-" + theForm.frm_month_request_date.value + "-" + theForm.frm_day_request_date.value + " 00:00:00";
     var thePhone = (theForm.frm_phone.value != "") ? theForm.frm_phone.value : "none";
     var ToAddress = theForm.frm_toaddress.value;
+    var ThePickup = theForm.frm_pickup.value;
+    var TheArrival = theForm.frm_arrival.value;
     var dest_address_array = ToAddress.split(",");
     if (dest_address_array[0] == "") {
         ToAddress = "";
@@ -348,7 +375,6 @@ function validate(theForm) {
     var origFac = theForm.frm_orig_fac.value;
     var recFac = theForm.frm_rec_fac.value;
     var theScope = theForm.frm_scope.value;
-    var theComments = theForm.frm_comments.value;
     if (thePatient == "") { err_msg += "\t<?php print gettext('Name of person required');?>\n"; }
     if (theScope == "") { err_msg += "\t<?php print gettext('Request title required');?>\n"; }
     if (street == "") { err_msg += "\t<?php print gettext('Street address required');?>\n"; }
@@ -399,9 +425,9 @@ function validate(theForm) {
                 var the_link = "<?php print gettext('The Request has been cancelled and the controllers have been informed. You will receive an email confirmation.');?><BR /><BR /><BR /><BR />";
                 the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'><?php print gettext('Close');?></SPAN>";
                 $('done').innerHTML = the_link;
+         				window.opener.get_requests();	
                 }
             }
-        window.opener.get_requests();
         }
 
 /**
@@ -432,9 +458,9 @@ function validate(theForm) {
                 the_link += "<SPAN id='the_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.opener.parent.frames[\"main\"].location=\"../edit.php?id=" + the_response[0] + "\"; window.close();'><?php print gettext('Go to Ticket');?></SPAN>";
                 the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'><?php print gettext('Close');?></SPAN>";
                 $('done').innerHTML = the_link;
+                window.opener.get_requests();
                 }
             }
-        window.opener.get_requests();
         }
 /**
  *
@@ -466,8 +492,8 @@ function validate(theForm) {
             var the_link = "<?php print gettext('Status has been updated.');?><BR /><BR /><BR /><BR />";
             the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'><?php print gettext('Close');?></SPAN>";
             $('done').innerHTML = the_link;
+            window.opener.get_requests();
             }
-        window.opener.get_requests();
         }		// end function status_update()
 /**
  *
@@ -497,22 +523,23 @@ function validate(theForm) {
                 the_link += "<SPAN id='the_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.opener.parent.frames[\"main\"].location=\"../edit.php?id=" + the_response[0] + "\"; window.close();'><?php print gettext('Go to Ticket');?></SPAN>";
                 the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'><?php print gettext('Close');?></SPAN>";
                 $('done').innerHTML = the_link;
+                window.opener.get_requests();
                 }
             }
-        window.opener.get_requests();
-        }
+                }
 /**
  *
  * @param {type} id
  * @returns {undefined}
  */
     function decline(id) {
+    		var theReason = prompt("Please enter a reason you are declining this request", "Type reason here");
         randomnumber=Math.floor(Math.random()*99999999);
         $('view').style.display="none";
         $('edit').style.display = 'none';
         $('waiting').style.display='block';
         $('waiting').innerHTML = "<?php print gettext('Please Wait, Declining request.');?><BR /><IMG style='vertical-align: middle;' src='../images/progressbar3.gif'/>";
-        var url ="./ajax/decline.php?id=" + id + "&version=" + randomnumber;
+    		var url ="./ajax/decline.php?id=" + id + "&reason=" + theReason + "&version=" + randomnumber;
         sendRequest (url, requests_cb, "");
         function requests_cb(req) {
             var the_response=JSON.decode(req.responseText);
@@ -528,9 +555,9 @@ function validate(theForm) {
                 var the_link = "<?php print gettext('The request has been declined.');?><BR /><BR /><BR /><BR />";
                 the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'><?php print gettext('Close');?></SPAN>";
                 $('done').innerHTML = the_link;
+                window.opener.get_requests();
                 }
             }
-        window.opener.get_requests();
         }
 /**
  *
@@ -620,7 +647,7 @@ $rec_fac_menu .= "<SELECT>";
 $query_fc2 = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";
 $result_fc2 = mysql_query($query_fc2) or do_error($query_fc2, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 $orig_fac_menu = "<SELECT NAME='frm_orig_fac' onChange='do_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim());'>";
-$orig_fac_menu .= "<OPTION VALUE=0 selected>" . gettext('Receiving Facility') . "</OPTION>";
+$orig_fac_menu .= "<OPTION VALUE=0 selected>" . gettext('Originating Facility') . "</OPTION>";
 while ($row_fc2 = mysql_fetch_array($result_fc2, MYSQL_ASSOC)) {
         $sel = ($row_fc2['id'] == $row['orig_facility']) ? "SELECTED" : "";
         $orig_fac_menu .= "<OPTION VALUE=" . $row_fc2['id'] . " " . $sel . ">" . shorten($row_fc2['name'], 30) . "</OPTION>";
@@ -638,7 +665,7 @@ $orig_fac_menu .= "<SELECT>";
 ?>
 </SCRIPT>
 <?php
-$status_array = array('Open', 'Accepted', 'Resourced', 'Complete');
+$status_array = array('Open', 'Tentative', 'Accepted', 'Resourced', 'Complete');
 $status_sel = "<SELECT NAME='frm_status'>";
 foreach ($status_array AS $val) {
     $sel = ($val == $row['status']) ? "SELECTED": "";
@@ -652,30 +679,93 @@ $onload_str = "load(" .  get_variable('def_lat') . ", " . get_variable('def_lng'
 $now = time() - (intval(get_variable('delta_mins')*60));
 $the_details = get_contact_details($row['requester']);
 $contact_email_p = $the_details[1];
-$contact_email_s = $the_details[2];
-$contact_phone_p = $the_details[3];
-$contact_phone_s = $the_details[4];
+$theDetails = get_requester_details($_SESSION['user_id']);
+$the_email = $theDetails[0];		
 
 if (!empty($_POST)) {
     $meridiem_request_date = ((empty($_POST) || ((!empty($_POST)) && (empty ($_POST['frm_meridiem_request_date'])))) ) ? "" : $_POST['frm_meridiem_request_date'] ;
-    $request_date = "$_POST[frm_year_request_date]-$_POST[frm_month_request_date]-$_POST[frm_day_request_date] $_POST[frm_hour_request_date]:$_POST[frm_minute_request_date]:00$meridiem_request_date";
+  	$request_date = "$_POST[frm_year_request_date]-$_POST[frm_month_request_date]-$_POST[frm_day_request_date] 00:00:00$meridiem_request_date";	
     $query = "UPDATE `$GLOBALS[mysql_prefix]requests` SET
         `street` = " . quote_smart(trim($_POST['frm_street'])) . ",
         `city` = " . quote_smart(trim($_POST['frm_city'])) . ",
+    		`postcode` = " . quote_smart(trim($_POST['frm_postcode'])) . ",
         `state` = " . quote_smart(trim($_POST['frm_state'])) . ",
         `the_name` = " . quote_smart(trim($_POST['frm_patient'])) . ",
         `phone` = " . quote_smart(trim($_POST['frm_phone'])) . ",
         `to_address` = " . quote_smart(trim($_POST['frm_toaddress'])) . ",
+        `pickup` = " . quote_smart(trim($_POST['frm_pickup'])) . ",
+        `arrival` = " . quote_smart(trim($_POST['frm_arrival'])) . ",
         `orig_facility` = " . quote_smart(trim($_POST['frm_orig_fac'])) . ",
         `rec_facility` = " . quote_smart(trim($_POST['frm_rec_fac'])) . ",
         `scope` = " . quote_smart(trim($_POST['frm_scope'])) . ",
         `description` = " . quote_smart(trim($_POST['frm_description'])) . ",
-        `comments` = " . quote_smart(trim($_POST['frm_comments'])) . ",
         `request_date` = " . quote_smart(trim($request_date)) . ",
         `status` = " . quote_smart(trim($_POST['frm_status'])) . "
         WHERE `id` = " . $_POST['id'];
     $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+	$the_ticket = (($_POST['frm_ticket_id'] != NULL) AND ($_POST['frm_ticket_id'] != "0") AND ($_POST['frm_ticket_id'] != "")) ? strip_tags($_POST['frm_ticket_id']) : "0";
+	if($the_ticket != "0") {
+		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id` = " . intval($the_ticket) . " LIMIT 1";
+		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+		if($result) {
+			$row = stripslashes_deep(mysql_fetch_assoc($result));
+			$the_scope = $_POST['frm_scope'];
+			$new_scope = "EDITED " . $the_scope;
+			$output1 = "UPDATE `$GLOBALS[mysql_prefix]ticket` SET ";
+			$output2 = "";
+			$output2 .= "`scope` = " . quote_smart(trim($new_scope)) . ",";
+			$output2 .= ($_POST['frm_street'] == $row['street']) ? "": "`street` = " . quote_smart(trim($_POST['frm_street'])) . ",";
+			$output2 .= ($_POST['frm_city'] == $row['city']) ? "": "`city` = " . quote_smart(trim($_POST['frm_city'])) . ",";
+			$output2 .= ($_POST['frm_state'] == $row['state']) ? "": "`state` = " . quote_smart(trim($_POST['frm_state'])) . ",";
+			$output2 .= ($_POST['frm_patient'] == $row['contact']) ? "": "`contact` = " . quote_smart(trim($_POST['frm_patient'])) . ",";
+			$output2 .= ($_POST['frm_phone'] == $row['phone']) ? "": "`phone` = " . quote_smart(trim($_POST['frm_phone'])) . ",";
+			$output2 .= ($_POST['frm_toaddress'] == $row['to_address']) ? "": "`to_address` = " . quote_smart(trim($_POST['frm_toaddress'])) . ",";
+			$output2 .= ($_POST['frm_orig_fac'] == $row['facility']) ? "": "`facility` = " . quote_smart(trim($_POST['frm_orig_fac'])) . ",";	
+			$output2 .= ($_POST['frm_rec_fac'] == $row['rec_facility']) ? "": "`rec_facility` = " . quote_smart(trim($_POST['frm_rec_fac'])) . ",";	
+			$output2 .= ($_POST['frm_description'] == $row['description']) ? "": "`description` = " . quote_smart(trim($_POST['frm_description'])) . ",";	
+			$output3 = " WHERE `id` = " . $the_ticket;
+			if($output2 != "") {
+				$output2 = substr($output2, 0, -1);
+				$output = $output1 . $output2 . $output3;
+				$result = mysql_query($output) or do_error($output, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+				}
+			}
+		}
     do_log($GLOBALS['LOG_EDIT_REQUEST'], $_POST['id']);
+	$the_summary = "Request from " . get_user_name($_POST['requester']) . "has been edited\r\n";
+	$the_summary .= get_text('Scope') . ": " . $_POST['frm_scope'] . "\r\n\r\n";	
+	$the_summary .= get_text('Patient') . " name: " . $_POST['frm_patient'] . "\r\n";
+	$the_summary .= get_text('Street') . ": " . $_POST['frm_street'] . ", ";	
+	$the_summary .= get_text('City') . ": " . $_POST['frm_city'] . ", ";	
+	$the_summary .= get_text('Postcode') . ": " . $_POST['frm_postcode'] . ", ";	
+	$the_summary .= get_text('State') . ": " . $_POST['frm_state'] . "\r\n";	
+	$the_summary .= get_text('Contact Phone') . ": " . $_POST['frm_phone'] . "\r\n";
+	$the_summary .= get_text('To Address') . ": " . $_POST['frm_toaddress'] . "\r\n";
+	$the_summary .= get_text('Pickup Time') . ": " . $_POST['frm_pickup'] . "\r\n";
+	$the_summary .= get_text('Arrival Time') . ": " . $_POST['frm_arrival'] . "\r\n";
+	$orig_Fac = (intval($_POST['frm_orig_fac']) != 0) ? get_facilityname(intval($_POST['frm_orig_fac'])) : "";
+	$rec_Fac =  (intval($_POST['frm_rec_fac']) != 0) ? get_facilityname(intval($_POST['frm_rec_fac'])) : "";
+	$the_summary .= ((is_array($orig_Fac)) && ($orig_Fac[0] != "")) ? "Originating Facility " . $orig_Fac[0] . "\nAddress: " . $orig_Fac[1] . "\nPhone " . $orig_Fac[2] . "\r\n" : "";
+	$the_summary .= ((is_array($rec_Fac)) && ($rec_Fac[0] != "")) ? "Receiving Facility " . $rec_Fac[0] . "\nAddress: " . $rec_Fac[1] . "\nPhone " . $rec_Fac[2] . "\r\n" : "";
+	$the_summary .= get_text('Description') . "\r\n" . $_POST['frm_description'] . "\r\n";	
+	$the_summary .= get_text('Request Date') . ": " . format_date_2(strtotime($request_date)) . "\r\n";		
+	$addrs = notify_newreq($_SESSION['user_id']);		// returns array of adddr's for notification, or FALSE
+	if ($addrs) {				// any addresses?
+		$to_str = implode("|", $addrs);
+		$smsg_to_str = "";
+		$subject_str = get_text('Service User') . " Request has been edited";
+		$text_str = "A request " . get_text('Service User') . " has been edited by " . $userName . " Dated " . $now . ". \r\nPlease log on to Tickets and check\n\n"; 
+		$text_str .= "Request Summary\r\n" . $the_summary;
+		do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
+		}				// end if/else ($addrs)	
+	if ($the_email != "") {				// any addresses?
+		$to_str = $the_email;
+		$smsg_to_str = "";
+		$subject_str = "Your request " . $_POST['frm_scope'] . " has been changed";
+		$text_str = "Your Request " . $_POST['frm_scope'] . " has been changed\r\n"; 
+		$text_str .= "Request Summary\n\n" . $the_summary;
+		do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);	
+		}				// end if/else ($the_email)	
 
 ?>
     <BODY>
@@ -705,13 +795,13 @@ if (!empty($_POST)) {
                         <TD class='td_label' style='text-align: left;'><?php print gettext('Requested By');?></TD><TD class='td_data' style='text-align: left;'><?php print get_user_name($row['requester']);?></TD>
                     </TR>
                     <TR class='even'>
-                        <TD class='td_label' style='text-align: left;'><?php print gettext('Request Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print format_date($row['request_date']);?></TD>
+            						<TD class='td_label' style='text-align: left;'>Request Date and Time</TD><TD class='td_data' style='text-align: left;'><?php print format_dateonly(strtotime($row['request_date']));?></TD>
                     </TR>
                     <TR class='odd'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Status');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['status'];?></TD>
                     </TR>
                     <TR class='even'>
-                        <TD class='td_label' style='text-align: left;'><?php print get_text('Service User');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['the_name'];?></TD>
+            						<TD class='td_label' style='text-align: left;'><?php print get_text('Patient');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['the_name'];?></TD>
                     </TR>
                     <TR class='odd'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Street');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['street'];?></TD>
@@ -720,37 +810,43 @@ if (!empty($_POST)) {
                         <TD class='td_label' style='text-align: left;'><?php print get_text('City');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['city'];?></TD>
                     </TR>
                     <TR class='odd'>
+                        <TD class='td_label' style='text-align: left;'><?php print get_text('Postcode');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['postcode'];?></TD>
+                    </TR>
+                    <TR class='even'>	
                         <TD class='td_label' style='text-align: left;'><?php print get_text('State');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['state'];?></TD>
                     </TR>
-                    <TR class='even'>
+                    <TR class='odd'>	
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Destination Address');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['to_address'];?></TD>
+                    </TR>	
+                    <TR class='even'>
+            						<TD class='td_label' style='text-align: left;'><?php print get_text('Pickup Time');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['pickup'];?></TD>
                     </TR>
                     <TR class='odd'>
+                      <TD class='td_label' style='text-align: left;'><?php print get_text('Arrival Time');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['arrival'];?></TD>
+                    </TR>	
+                    <TR class='even'>	
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Phone');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['phone'];?></TD>
                     </TR>
-                    <TR class='even'>
+                    <TR class='odd'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Email');?></TD><TD class='td_data' style='text-align: left;'><?php print $contact_email_p;?></TD>
                     </TR>
-                    <TR class='odd'>
+                    <TR class='even'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Originating Facility');?></TD><TD class='td_data' style='text-align: left;'><?php print $orig_facility;?></TD>
                     </TR>
-                    <TR class='even'>
+                    <TR class='odd'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Receiving Facility');?></TD><TD class='td_data' style='text-align: left;'><?php print $rec_facility;?></TD>
                     </TR>
-                    <TR class='odd'>
+                    <TR class='even'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Scope');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['scope'];?></TD>
                     </TR>
-                    <TR class='even'>
-                        <TD class='td_label' style='text-align: left;'><?php print get_text('Description');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['description'];?></TD>
-                    </TR>
                     <TR class='odd'>
-                        <TD class='td_label' style='text-align: left;'><?php print get_text('Comments');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['comments'];?></TD>
+                        <TD class='td_label' style='text-align: left;'><?php print get_text('Description');?></TD><TD class='td_data' style='text-align: left;'><?php print nl2br($row['description']);?></TD>
                     </TR>
                     <TR class='spacer'>
                         <TD class='spacer' COLSPAN=99></TD>
                     </TR>
                     <TR class='heading'>
-                        <TD COLSPAN='2' class='heading' style='text-align: left;'>Status Times and Dates</TD>
+                        <TD COLSPAN='2' class='heading' style='text-align: left;'><?php print gettext('Status Times and Dates');?></TD>
                     </TR>
                     <TR class='even'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Tentative Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print $tentative_date;?></TD>
@@ -782,6 +878,10 @@ if (!empty($_POST)) {
     if ($can_edit) {
 ?>
             <SPAN id='edit_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "do_edit();"><?php print gettext('Edit');?></SPAN>
+<?php
+	}
+	if(($can_edit) && ($row['cancelled'] == "")) {	//	12/3/13
+?>
             <SPAN id='req_can_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "do_cancel(<?php print $row['request_id'];?>);"><?php print gettext('Cancel Request');?></SPAN>
 <?php
     }
@@ -819,7 +919,7 @@ if (!empty($_POST)) {
                         <TD class='td_label' style='text-align: left;'><?php print gettext('Requested By');?></TD><TD class='td_data' style='text-align: left;'><?php print get_user_name($row['requester']);?></TD>
                     </TR>
                     <TR class='even'>
-                        <TD class='td_label' style='text-align: left;'><?php print gettext('Request Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print generate_date_dropdown('request_date',strtotime($row['request_date']),FALSE);?></TD>
+            						<TD class='td_label' style='text-align: left;'><?php print gettext('Request Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print generate_dateonly_dropdown('request_date',strtotime($row['request_date']),FALSE);?></TD>
                     </TR>
                     <TR class='odd'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Status');?></TD><TD class='td_data' style='text-align: left;'><?php print $status_sel;?></TD>
@@ -834,28 +934,34 @@ if (!empty($_POST)) {
                         <TD class='td_label' style='text-align: left;'><?php print get_text('City');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_city' TYPE='TEXT' SIZE='24' MAXLENGTH='64' VALUE="<?php print $row['city'];?>"></TD>
                     </TR>
                     <TR class='odd'>
+                      <TD class='td_label' style='text-align: left;'><?php print get_text('Postcode');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_postcode' TYPE='TEXT' SIZE='24' MAXLENGTH='64' VALUE="<?php print $row['postcode'];?>"></TD>
+                    </TR>						
+                    <TR class='even'>	
                         <TD class='td_label' style='text-align: left;'><?php print get_text('State');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_state' TYPE='TEXT' SIZE='4' MAXLENGTH='4' VALUE="<?php print $row['state'];?>"></TD>
                     </TR>
+                    <TR class='odd'>	
+                      <TD class='td_label' style='text-align: left;'><?php print get_text('Destination Address');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_toaddress' TYPE='TEXT' SIZE='24' MAXLENGTH='128' VALUE="<?php print $row['to_address'];?>"></TD>
+                    </TR>	
                     <TR class='even'>
-                        <TD class='td_label' style='text-align: left;'><?php print get_text('Destination Address');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_toaddress' TYPE='TEXT' SIZE='24' MAXLENGTH='128' VALUE="<?php print $row['to_address'];?>"></TD>
+          						<TD class='td_label' style='text-align: left;'><?php print get_text('Pickup Time');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_pickup' TYPE='TEXT' SIZE='24' MAXLENGTH='128' VALUE="<?php print $row['pickup'];?>"></TD>
                     </TR>
                     <TR class='odd'>
+                      <TD class='td_label' style='text-align: left;'><?php print get_text('Arrival Time');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_arrival' TYPE='TEXT' SIZE='24' MAXLENGTH='128' VALUE="<?php print $row['arrival'];?>"></TD>
+                    </TR>	
+                    <TR class='even'>	
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Phone');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_phone' TYPE='TEXT' SIZE='16' MAXLENGTH='16' VALUE="<?php print $row['phone'];?>"></TD>
                     </TR>
-                    <TR class='even'>
+                    <TR class='odd'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Originating Facility');?></TD><TD class='td_data' style='text-align: left;'><?php print $orig_fac_menu;?></TD>
                     </TR>
-                    <TR class='odd'>
+                    <TR class='even'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Receiving Facility');?></TD><TD class='td_data' style='text-align: left;'><?php print $rec_fac_menu;?></TD>
                     </TR>
-                    <TR class='even'>
+                    <TR class='odd'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Scope');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_scope' TYPE='TEXT' SIZE='24' MAXLENGTH='64' VALUE="<?php print $row['scope'];?>"></TD>
                     </TR>
-                    <TR class='odd'>
-                        <TD class='td_label' style='text-align: left;'><?php print get_text('Description');?></TD><TD class='td_data' style='text-align: left;'><TEXTAREA NAME="frm_description" COLS="45" ROWS="2" WRAP="virtual"><?php print $row['description'];?></TEXTAREA></TD>
-                    </TR>
                     <TR class='even'>
-                        <TD class='td_label' style='text-align: left;'><?php print get_text('Comments');?></TD><TD class='td_data' style='text-align: left;'><TEXTAREA NAME="frm_comments" COLS="45" ROWS="2" WRAP="virtual"><?php print $row['comments'];?></TEXTAREA></TD>
+                        <TD class='td_label' style='text-align: left;'><?php print get_text('Description');?></TD><TD class='td_data' style='text-align: left;'><TEXTAREA NAME="frm_description" COLS="45" ROWS="2" WRAP="virtual"><?php print $row['description'];?></TEXTAREA></TD>
                     </TR>
                     <TR class='spacer'>
                         <TD class='spacer' COLSPAN=99></TD>
@@ -865,9 +971,10 @@ if (!empty($_POST)) {
                 <INPUT NAME='id' TYPE='hidden' SIZE='24' VALUE="<?php print $id;?>">
                 <INPUT NAME='frm_lat' TYPE='hidden' SIZE='10' VALUE="<?php print $row['lat'];?>" />
                 <INPUT NAME='frm_lng' TYPE='hidden' SIZE='10' VALUE="<?php print $row['lng'];?>" />
+         				<INPUT NAME='frm_ticket_id' TYPE='hidden' SIZE='8' VALUE="<?php print $row['ticket_id'];?>">
             </DIV><BR /><BR />
             <SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "validate(document.edit_frm);"><?php print gettext('Update');?></SPAN>
-            <SPAN id='close_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.opener.get_requests(showall); window.close();"><?php print gettext('Cancel');?></SPAN><BR /><BR />
+      			<SPAN id='close_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.opener.get_requests(); window.close();">Cancel</SPAN><BR /><BR />	
             </FORM>
         </DIV>
     </DIV>

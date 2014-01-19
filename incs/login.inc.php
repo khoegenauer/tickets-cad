@@ -237,7 +237,7 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 
     $the_sid = (isset($_SESSION['id']))? $_SESSION['id'] : null;
 //																			7/3/11
-    $warn = ((array_key_exists ('expires', $_SESSION)) && ($now > $_SESSION['expires']))? "Log-in has expired due to inactivity.  Please log in again." : "";
+    $warn = ((array_key_exists ('expires', $_SESSION)) && ($now > $_SESSION['expires']))? gettext("Log-in has expired due to inactivity.  Please log in again.") : "";
 
     $internet = intval(get_variable("internet"));				// 8/22/10
     if ((array_key_exists ('user_id', $_SESSION)) && (is_expired($_SESSION['user_id']))) {
@@ -424,10 +424,17 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
           </STYLE>
 
         <SCRIPT defer="defer">	// 11/18/10
+/**
+ * 
+ * @returns {unresolved}
+ */
         String.prototype.trim = function () {
             return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
             };
-
+/**
+ * 
+ * @returns {Number|@exp;@call;isNaN|@exp;@exp;@call;isNaNval}
+ */
         function getBrowserWidth() {
             var val="";
             if (window.innerWidth) {
@@ -440,6 +447,10 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 
                 return(isNaN(val))? 1024: val;
             }
+/**
+ * 
+ * @returns {Number|@exp;@call;isNaN|@exp;@exp;@call;isNaNval}
+ */
         function getBrowserHeight() {
             var val="";
             if (window.innerHeight) {
@@ -452,7 +463,16 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 
                 return(isNaN(val))? 740: val;
             }
-
+/**
+ * 
+ * @param {type} name
+ * @param {type} value
+ * @param {type} expires
+ * @param {type} path
+ * @param {type} domain
+ * @param {type} secure
+ * @returns {undefined}
+ */
         function Set_Cookie(name, value, expires, path, domain, secure) {
             var today = new Date();	// set time in milliseconds
             today.setTime( today.getTime() );
@@ -471,7 +491,11 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
             // for hours, delete * 24, for minutes, delete * 60 * 24
             // alert('expires ' + expires_date.toGMTString());// this is for testing purposes only
             // alert( 'today ' + today.toGMTString() );// this is for testing purpose only
-
+/**
+ * 
+ * @param {type} check_name
+ * @returns {unresolved}
+ */
             function Get_Cookie(check_name) {
                 var a_all_cookies = document.cookie.split( ';' ); 	// first we'll split this cookie up into name/value pairs
                 var a_temp_cookie = '';							  	// note: document.cookie only returns name=value, not the other components
@@ -498,13 +522,19 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
                     return null;
                     }
                 }		// end function Get_Cookie(
-
+/**
+ * 
+ * @returns {undefined}
+ */
         function do_hh_onload () {				// 2/24/09
             document.login_form.scr_width.value=getBrowserWidth();
             document.login_form.scr_height.value=getBrowserHeight();
             document.login_form.frm_user.focus();
             }		// end function
-
+/**
+ * 
+ * @returns {undefined}
+ */
         function do_onload() {
             if (this.window.name!="main") {self.close();}			// in a popup
             if (self.location.href==parent.location.href) {			// prevent frame jump
@@ -553,7 +583,7 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
         <FORM METHOD="post" ACTION="<?php print $requested_page;?>" NAME="login_form"  onSubmit="return true;">
         <TABLE BORDER=0>
 <?php
-        if (array_key_exists('frm_passwd', $_POST)) {$warn = "Login failed. Pls enter correct values and try again.";}
+        if (array_key_exists('frm_passwd', $_POST)) {$warn = gettext("Login failed. Pls enter correct values and try again.");}
         if (!(empty($warn))) {
             print "<TR CLASS='odd'><TH COLSPAN='99'><FONT CLASS='warn'>
             {$warn}
@@ -594,8 +624,8 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
     if (get_variable("internet") != 2) {
 ?>
         <TR CLASS='even'>
-            <TD CLASS="td_label">Maps: &nbsp;&nbsp;</TD>
-            <TD><INPUT TYPE="radio" NAME="frm_maps" VALUE="Show" checked>Show Maps&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="radio" NAME="frm_maps" value="Hide">Hide Maps</TD>
+            <TD CLASS="td_label"><?php print gettext('Maps');?>: &nbsp;&nbsp;</TD>
+            <TD><INPUT TYPE="radio" NAME="frm_maps" VALUE="Show" checked><?php print gettext('Show Maps');?>&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="radio" NAME="frm_maps" value="Hide"><?php print gettext('Hide Maps');?></TD>
         </TR>
 <?php
         } else {
@@ -618,7 +648,7 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
             }
 ?>
         <TR CLASS='even'><TD CLASS='text_small' COLSPAN=99 ALIGN='CENTER'><BR />
-            <A HREF="mailto:<?php echo get_contact_addr ();?>?subject=Question/Comment on Tickets Dispatch System"><u>Contact us</u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom"></A>
+            <A HREF="mailto:<?php echo get_contact_addr ();?>?subject=Question/Comment on Tickets Dispatch System"><u><?php print gettext('Contact us');?></u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom"></A>
         </TD></TR>
         <TR CLASS='even'><TD COLSPAN=3>&nbsp;</TD></TR>
         <TR CLASS='even'><TD COLSPAN=3>&nbsp;</TD></TR>

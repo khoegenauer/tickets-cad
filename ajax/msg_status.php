@@ -133,3 +133,4 @@ if ($result_code >= 1) {
     }
 
 print json_encode($response);
+exit();

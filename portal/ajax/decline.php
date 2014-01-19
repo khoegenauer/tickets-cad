@@ -12,6 +12,9 @@ require_once '../../incs/functions.inc.php';
 $by = $_SESSION['user_id'];
 $now = mysql_format_date(time() - (intval(get_variable('delta_mins')*60)));
 $regions = array();
+$declined_reason = (isset($_GET['reason'])) ? $_GET['reason'] : "No reason given";
+$description = "";
+
 /**
  *
  * @param type $the_id
@@ -48,15 +51,18 @@ if (mysql_num_rows($result) == 0) {
     $row = stripslashes_deep(mysql_fetch_assoc($result));
     $the_user = $row['requester'];
     $the_scope = $row['scope'];
+    $description .= $row['description'];
     }
-
+$description .= "\r\n";
+$description .= "Declined reason: " . $declined_reason;
+$description .= "\r\n";
 $theDetails = get_requester_details($the_user);
 $the_email = $theDetails[0];
 $the_requester = strip_tags($theDetails[1]);
 
 $theFrom = trim(get_variable('email_reply_to'));
 
-$query = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `status` = 'Declined', `_by` = " . $by . ", `declined_date` = '" .$now . "' WHERE `id` = " . strip_tags($_GET['id']);
+$query = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `status` = 'Declined', `_by` = " . $by . ", `declined_date` = '" .$now . "', `description` = '" . $description . "' WHERE `id` = " . strip_tags($_GET['id']);
 $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 
 if ($result) {
@@ -66,10 +72,11 @@ if ($result) {
         $to_str = $the_email;
         $smsg_to_str = "";
         $subject_str = "Your request '" . $row['scope'] . "' has unfortunately been Declined";
-        $text_str = "Your Request '" . $row['scope'] . "' has unfortunately had to be declined\n\n";
-        $text_str .= "Please contact the Tickets controllers to discuss this.\n\n";
-        $text_str .= "The email address is " . $theFrom . "\n\n";
-        $text_str .= "Thank you for your understanding\n\n";
+    		$text_str = "Your Request '" . $row['scope'] . "' has unfortunately had to be declined\r\n"; 
+        $text_str .= "Declined reason: " . $declined_reason . "\r\n"; 
+        $text_str .= "Please contact the Tickets controllers to discuss this.\r\n";
+        $text_str .= "The email address is " . $theFrom . "\r\n";
+    		$text_str .= "Thank you for your understanding\r\n";
         do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
         }				// end if/else ($addrs)
     $addrs = notify_newreq($_SESSION['user_id']);		// returns array of adddr's for notification, or FALSE
@@ -77,9 +84,9 @@ if ($result) {
         $to_str = implode("|", $addrs);
         $smsg_to_str = "";
         $subject_str = "Service User request declined";
-        $text_str = "Service User Request '" . $row['scope'] . "' has been declined\n\n";
-        $text_str .= "Service User '" . $the_requester . " has been informed and may contact to discuss\n\n";
-        $text_str .= "The Service User email address is " . $the_email . "\n\n";
+		$text_str = "Service User Request '" . $row['scope'] . "' has been declined\r\n"; 
+		$text_str .= "Service User '" . $the_requester . "' has been informed and may contact to discuss\r\n";
+		$text_str .= "The Service User email address is " . $the_email . "\r\n";
         do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
         }				// end if/else ($addrs)
     } else {
@@ -87,3 +94,4 @@ if ($result) {
     }
 
 print json_encode($ret_arr);
+exit();

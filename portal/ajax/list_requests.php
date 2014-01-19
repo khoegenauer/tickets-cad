@@ -59,11 +59,15 @@ function get_contact_details($the_id) {
     }
 
 //$where = ((!empty($_GET)) && (isset($_GET['id']))) ? "WHERE `requester` = " . strip_tags($_GET['id']): "WHERE `status` = 'Open' ";
-$where = ((!empty($_GET)) && (isset($_GET['id']))) ? "WHERE `requester` = " . strip_tags($_GET['id']): " ";
+$where = ((!empty($_GET)) && (isset($_GET['id']))) ? "WHERE `requester` = " . strip_tags($_GET['id']): "";
 $order = "ORDER BY `request_date`";
 $order2 = "ASC";
 $showall = ((isset($_GET['showall'])) && ($_GET['showall'] == 'yes')) ? true : false;
-$where .= ($showall == false) ? " AND `r`.`status` != 'Closed' " : "";
+if($where == "") {
+	$where .= ($showall == false) ? " WHERE `r`.`status` <> 'Closed' " : "";
+	} else {
+	$where .= ($showall == false) ? " AND `r`.`status` <> 'Closed' " : "";
+	}
 
 $query = "SELECT *,
         `r`.`id` AS `request_id`,
@@ -74,17 +78,18 @@ $query = "SELECT *,
         `t`.`phone` AS `tick_phone`,
         `r`.`street` AS `req_street`,
         `r`.`city` AS `req_city`,
+    		`r`.`postcode` AS `req_postcode`,
         `r`.`state` AS `req_state`,
         `r`.`to_address` AS `req_to_address`,
+    		`r`.`pickup` AS `req_pickup`,
+        `r`.`arrival` AS `req_arrival`,
         `r`.`description` AS `req_description`,
-        `r`.`comments` AS `req_comments`,
         `r`.`scope` AS `req_scope`,
         `t`.`street` AS `tick_street`,
         `t`.`city` AS `tick_city`,
         `t`.`state` AS `tick_state`,
         `t`.`to_address` AS `tick_to_address`,
         `t`.`description` AS `tick_description`,
-        `t`.`comments` AS `tick_comments`,
         `t`.`scope` AS `tick_scope`,
         `a`.`id` AS `assigns_id`,
         `a`.`start_miles` AS `start_miles`,
@@ -132,17 +137,20 @@ if (mysql_num_rows($result) == 0) { 				// 8/6/08
         $contact_phone_s = $the_details[4];
         $street = $row['req_street'];
         $city = $row['req_city'];
+    		$postcode = $row['req_postcode'];
         $state = $row['req_state'];
-        $toAddress = $row['req_to_address'];
+    		$toAddress = shorten($row['req_to_address'], 15);
+      	$pickup = $row['req_pickup'];
+        $arrival = $row['req_arrival'];
         $orig_facility = $row['origFacility'];
         $rec_facility = $row['recFacility'];
-        $scope = $row['req_scope'];
-        $description = $row['req_description'];
-        $comments = $row['req_comments'];
+        $scope = shorten($row['req_scope'], 15);	
+        $description = shorten($row['req_description'], 48);
+        $comments = "";
         $lat = (($row['r_lat'] != "") && ($row['r_lat'] != NULL) && ($row['r_lat'] != 0.999999)) ? $row['r_lat'] : 0.999999;
         $lng = (($row['r_lng'] != "") && ($row['r_lng'] != NULL) && ($row['r_lng'] != 0.999999)) ? $row['r_lng'] : 0.999999;
-        $status = (!is_service_user()) ? get_status_selection($request_id, $row['req_status']) : $row['req_status'];
-        $request_date = $row['request_date'];
+        $status = (!is_service_user()) ? get_status_selection($request_id, $row['req_status']) : $row['req_status'];	
+        $request_date = format_dateonly(strtotime($row['request_date']));		//	12/3/13
         $tentative_date = $row['tentative_date'];
         if (($tentative_date != "") && ($row['accepted_date'] == "") && ($row['resourced_date'] == "") && ($row['completed_date'] == "") && ($row['closed'] == "") && ($row['req_status'] != "Tentative")) {
             $update = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `status` = 'Tentative' WHERE `id` = " . $request_id;
@@ -160,17 +168,17 @@ if (mysql_num_rows($result) == 0) { 				// 8/6/08
             }
         $resourced_date = (($row['dispatched'] != "") || ($row['dispatched'] != NULL)) ? $row['dispatched'] : $row['resourced_date'];
         if (($row['dispatched'] != "") && ($row['dispatched'] != NULL) && ($row['resourced_date'] == NULL)) {
-            $update = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `status` = 'Resourced', `resourced_date` = '" . mysql_format_date($row['dispatched']) . "' WHERE `id` = " . $request_id;
+      			$update = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `status` = 'Resourced', `resourced_date` = '" . $row['dispatched'] . "' WHERE `id` = " . $request_id;
             $result = mysql_query($update) or do_error($update, "", mysql_error(), basename( __FILE__), __LINE__);
             }
         $completed_date = (($row['clear'] != "") || ($row['clear'] != NULL)) ? $row['clear'] : $row['completed_date'];
         if (($row['clear'] != "") && ($row['clear'] != NULL) && ($row['completed_date'] == NULL)) {
-            $update = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `status` = 'Complete', `completed_date` = '" . mysql_format_date($row['clear']) . "' WHERE `id` = " . $request_id;
+       			$update = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `status` = 'Complete', `completed_date` = '" . $row['clear'] . "' WHERE `id` = " . $request_id;
             $result = mysql_query($update) or do_error($update, "", mysql_error(), basename( __FILE__), __LINE__);
             }
         $closed = $row['closed'];
         if (($row['tick_status'] == 1) && ($row['closed'] == NULL) && ($row['problemend'] != NULL)) {
-            $update = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `status` = 'Closed', `closed` = '" . mysql_format_date($row['problemend']) . "' WHERE `id` = " . $request_id;
+       			$update = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `status` = 'Closed', `closed` = '" . $row['problemend'] . "' WHERE `id` = " . $request_id;
             $result = mysql_query($update) or do_error($update, "", mysql_error(), basename( __FILE__), __LINE__);
             }
         $updated_by = get_owner($row['r_by']);
@@ -233,6 +241,9 @@ if (mysql_num_rows($result) == 0) { 				// 8/6/08
         $ret_arr[$i][29] = $lat;
         $ret_arr[$i][30] = $lng;
         $ret_arr[$i][31] = $toAddress;
+     		$ret_arr[$i][32] = $postcode;
+        $ret_arr[$i][33] = $pickup;
+        $ret_arr[$i][34] = $arrival;
         $i++;
         } // end while
     }				// end else
@@ -240,3 +251,4 @@ if (mysql_num_rows($result) == 0) { 				// 8/6/08
 //dump($ret_arr);
 
 print json_encode($ret_arr);
+exit();

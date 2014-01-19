@@ -11,7 +11,7 @@ if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09
 error_reporting (E_ALL  ^ E_DEPRECATED);
 @session_start();
 require '../incs/functions.inc.php';
-$user = $_SESSION['user_id'];
+$user = ($_SESSION['level'] == "7") ? $_SESSION['user_id']: 0; 
 /**
  *
  * @param type $value
@@ -25,6 +25,21 @@ function get_facilityname($value) {
     return $row['name'];
     }
 /**
+ * 
+ * @param type $the_id
+ * @return type
+ */	
+function get_user_name($the_id) {
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` `u` WHERE `id` = " . $the_id . " LIMIT 1";
+	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
+	if(mysql_num_rows($result) == 1) {
+		$row = stripslashes_deep(mysql_fetch_assoc($result));
+		$the_ret = (($row['name_f'] != "") && ($row['name_l'] != "")) ? $the_ret[] = $row['name_f'] . " " . $row['name_l'] : $the_ret[] = $row['user'];
+		}
+	return $the_ret;
+	}
+
+/**
  *
  * @param type $user
  * @param type $filename
@@ -35,28 +50,31 @@ function exportMysqlToCsv($user,$filename = 'requests.csv') {
     $csv_enclosed = '"';
     $csv_escaped = "\\";
 
-    $where = (isset($user)) ? "WHERE `requester` = " . $user: "";
+  	$where = ((isset($user)) && ($user != 0)) ? "WHERE `requester` = " . $user: "";
 
     $order = "ORDER BY `request_date`";
     $order2 = "ASC";
 
     $query = "SELECT
-            `r`.`id` AS `id`,
             `r`.`street` AS `street`,
             `r`.`city` AS `city`,
             `r`.`state` AS `state`,
             `r`.`the_name` AS `customer`,
             `r`.`phone` AS `phone`,
             `r`.`to_address` AS `to_address`,
+            `r`.`pickup` AS `pickup`,
+            `r`.`arrival` AS `arrival`,
             `r`.`rec_facility` AS `rec_facility`,
             `r`.`scope` AS `title`,
             `r`.`description` AS `description`,
-            `r`.`comments` AS `comments`,
             `r`.`status` AS `status`,
             `r`.`id` AS `request_id`,
+            `r`.`requester` AS `requester`,
+            `r`.`contact` AS `contact`,
             `a`.`id` AS `assigns_id`,
             `a`.`start_miles` AS `start_miles`,
             `a`.`end_miles` AS `end_miles`,
+      			`a`.`miles` AS `miles`,
             `r`.`request_date` AS `request_date`,
             `r`.`accepted_date` AS `accepted_date`,
             `r`.`declined_date` AS `declined_date`,
@@ -76,6 +94,10 @@ function exportMysqlToCsv($user,$filename = 'requests.csv') {
     $output = array();
     $z=0;
     while ($row = mysql_fetch_array($result)) {
+        $miles = (($row['miles'] != NULL) && ($row['miles'] != 0) && (($row['start_miles'] == NULL) || ($row['start_miles'] == 0)) && (($row['end_miles'] == NULL) || ($row['end_miles'] == 0))) ? $row['miles'] : 0;
+        $miles = ((($row['miles'] == NULL) || ($row['miles'] == 0)) && (($row['start_miles'] != NULL) && ($row['start_miles'] != 0)) && (($row['end_miles'] != NULL) && ($row['end_miles'] != 0))) ? $row['end_miles'] - $row['start_miles'] : $miles;
+        $output[$z][] = get_user_name($row['requester']);
+        $output[$z][] = $row['contact'];
         $output[$z][] = $row['customer'];
         $output[$z][] = $row['street'];
         $output[$z][] = $row['city'];
@@ -87,10 +109,11 @@ function exportMysqlToCsv($user,$filename = 'requests.csv') {
             } else {
             $output[$z][] = $row['to_address'];
             }
+        $output[$z][] = ($row['pickup'] != 0) ? $row['pickup']: "";	
+        $output[$z][] = ($row['arrival'] != 0) ? $row['arrival']: "";	
         $output[$z][] = ($row['rec_facility'] != 0) ? get_facilityname($row['rec_facility']): "Not Set";
         $output[$z][] = $row['title'];
         $output[$z][] = $row['description'];
-        $output[$z][] = $row['comments'];
         $output[$z][] = $row['status'];
         $output[$z][] = ($row['request_date'] != NULL) ? format_date_2(strtotime($row['request_date'])): "";
         $output[$z][] = ($row['accepted_date'] != NULL) ? format_date_2(strtotime($row['accepted_date'])): "";
@@ -99,12 +122,13 @@ function exportMysqlToCsv($user,$filename = 'requests.csv') {
         $output[$z][] = ($row['completed_date'] != NULL) ? format_date_2(strtotime($row['completed_date'])): "";
         $output[$z][] = ($row['closed_date'] != NULL) ? format_date_2(strtotime($row['closed_date'])): "";
         $output[$z][] = ($row['cancelled_date'] != NULL) ? format_date_2(strtotime($row['cancelled_date'])): "";
+     		$output[$z][] = $miles;
         $z++;
         }
     $fields_cnt = count($output[1]);
     $rows_cnt = count($output);
 
-    $headers = array('Customer','Street','City','State','Phone','To Address','Receiving Facility','Title','Description','Comments','Status','Request Date','Accepted Date','Declined Date','Resourced Date','Completed Date','Closed Date','Cancelled Date');
+  	$headers = array('Requester','Approver','Customer','Street','City','State','Phone','To Address','Pickup Time','Arrival Time','Receiving Facility','Title','Description','Status','Request Date','Accepted Date','Declined Date','Resourced Date','Completed Date','Closed Date','Cancelled Date','Mileage');
 
     $headers_cnt = count($headers);
 

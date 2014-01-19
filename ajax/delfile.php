@@ -65,3 +65,5 @@ if (isset($filename)) {
     }
 
 print json_encode($ret_arr);
+exit();
+?>

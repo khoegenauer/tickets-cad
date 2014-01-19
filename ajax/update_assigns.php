@@ -75,3 +75,4 @@ if ($use_status_update == "1") {
     }
 $ret_arr[0] = quote_smart($now);
 print json_encode($ret_arr);
+exit();

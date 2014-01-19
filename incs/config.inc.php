@@ -55,11 +55,15 @@ error_reporting(E_ALL);		// 3/5/12
  */
 $colors = array ('odd', 'even');
 
-/* run the OPTIMIZE sql query on all tables */
+/**
+ *  run the OPTIMIZE sql query on all tables
+ */
 function optimize_db() {
     $result = mysql_query("OPTIMIZE TABLE $GLOBALS[mysql_prefix]ticket, $GLOBALS[mysql_prefix]action, $GLOBALS[mysql_prefix]user, $GLOBALS[mysql_prefix]settings, $GLOBALS[mysql_prefix]notify") or do_error('functions.inc.php::optimize_db()', 'mysql_query(optimize) failed', mysql_error(), __FILE__, __LINE__);
     }
-/* reset database to defaults */
+/**
+ *  reset database to defaults
+ */
 function reset_db($user=0,$ticket=0,$responders=0,$facilities=0,$settings=0,$messages=0,$purge=0) {
     if ($ticket) {
          print '<LI> ' . gettext('Deleting actions.') . '..</LI>';

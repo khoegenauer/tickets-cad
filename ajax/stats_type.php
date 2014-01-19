@@ -44,3 +44,4 @@ function get_stat_type_type($value) {
     }
 
 print json_encode(get_stat_type_type($type));
+exit();

@@ -13,6 +13,17 @@
 4/19/11 corrections re smtp array makeup
 11/10/11 Changed 911 to get_text('911'), Revised Map to included locale settings.
 */
+/**
+ * 
+ * @global type $istest
+ * @param type $to_str
+ * @param type $smsg_to_str
+ * @param type $text
+ * @param type $ticket_id
+ * @param type $text_sel
+ * @param type $txt_only
+ * @return type
+ */
 function mail_it($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_only = FALSE) {	// 10/6/08, 10/15/08,  2/18/09, 3/7/09, 10/23/12, 11/14/2012, 12/14/2012
     global $istest;
 //	if (is_null($text_sel)) {$text_sel = 1;}			//

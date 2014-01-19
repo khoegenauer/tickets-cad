@@ -45,3 +45,4 @@ if ((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 3)
 $ret_arr[] = $response;
 $ret_arr[] = $response2;
 print json_encode($ret_arr);
+exit();

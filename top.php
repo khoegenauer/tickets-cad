@@ -169,6 +169,7 @@ if (file_exists("./incs/modules.inc.php")) {
     var nm_interval = null;			//	10/23/12
     var msgs_interval = null;		//	10/23/12
     var emsgs_interval = null;		//	10/23/12
+    var pos_interval = null;
     var file_interval = null;
     var lit=new Array();
 
@@ -448,6 +449,7 @@ if (file_exists("./incs/modules.inc.php")) {
                         }
                     }
                 mu_get();				// start loop
+                do_positions();	//	12/27/13
                 get_msgs();
                 do_filelist();	//	9/10/13
                 }				// end function init_cb()
@@ -513,6 +515,68 @@ if (file_exists("./incs/modules.inc.php")) {
             }
         messages_get();
         }
+
+// for responder positions		
+	function do_positions() {	//	12/27/13
+		var randomnumber=Math.floor(Math.random()*99999999);		
+	  	// call the server to execute the server side operation
+		if (window.XMLHttpRequest) {
+			respxmlHttp = new XMLHttpRequest();
+			respxmlHttp.open("GET", "./ajax/responder_data.php?version=" + randomnumber, true);
+			respxmlHttp.onreadystatechange = readPositions;
+			respxmlHttp.send(null);
+			}
+		}
+		
+	function readPositions() {	//	12/27/13
+		if (respxmlHttp.readyState == 4) {
+			if (respxmlHttp.status == 200) {
+				var resp_positions = JSON.decode(respxmlHttp.responseText);
+				for(var key in resp_positions) {
+					var the_resp_id = resp_positions[key][0];
+					var the_resp_lat = resp_positions[key][4];
+					var the_resp_lng = resp_positions[key][5];
+					if(typeof parent.frames["main"].set_marker_position == 'function') { 
+						parent.frames["main"].set_marker_position(the_resp_id, the_resp_lat, the_resp_lng);	
+						}
+					}	
+				}
+			}
+//		positions_get();		
+		}
+		
+	function positions_get() {			// set cycle, 12/27/13
+		if (pos_interval!=null) {return;}			// ????
+		pos_interval = window.setInterval('do_pos_loop()', 30000);
+		}			// end function mu get()	
+		
+	function do_positions_loop() {	//	12/27/13
+		var randomnumber=Math.floor(Math.random()*99999999);		
+	  	// call the server to execute the server side operation
+		if (window.XMLHttpRequest) {
+			respxmlHttp = new XMLHttpRequest();
+			respxmlHttp.open("GET", "./ajax/responder_data.php?version=" + randomnumber, true);
+			respxmlHttp.onreadystatechange = readPositions2;
+			respxmlHttp.send(null);
+			}
+		}
+		
+	function readPositions2() {	//	12/27/13
+		if (respxmlHttp.readyState == 4) {
+			if (respxmlHttp.status == 200) {
+				var resp_positions = JSON.decode(respxmlHttp.responseText);
+				for(var key in resp_positions) {
+					var the_resp_id = resp_positions[key][0];
+					var the_resp_lat = resp_positions[key][4];
+					var the_resp_lng = resp_positions[key][5];
+					if(typeof parent.frames["main"].set_marker_position == 'function') { 
+						parent.frames["main"].set_marker_position(the_resp_id, the_resp_lat, the_resp_lng);	
+						}
+					}	
+				}
+			}
+		}
+
 /**
  *
  * @returns {undefined}

@@ -12,6 +12,8 @@ require_once '../../incs/functions.inc.php';
 $by = $_SESSION['user_id'];
 $now = mysql_format_date(time() - (intval(get_variable('delta_mins')*60)));
 $regions = array();
+$nowTimestamp = time() - (intval(get_variable('delta_mins')*60));
+
 /**
  *
  * @param type $the_id
@@ -69,14 +71,34 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
     $regions[] = $row['group'];
     }
 
-$query = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `status` = 'Tentative', `tentative_date` = '" .$now . "' WHERE `id` = " . strip_tags($_GET['id']);
-$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-$query = "SELECT *, UNIX_TIMESTAMP(`request_date`) AS `request_date` FROM `$GLOBALS[mysql_prefix]requests` WHERE `id` = " . strip_tags($_GET['id']) . " LIMIT 1";
+$query = "SELECT * FROM `$GLOBALS[mysql_prefix]requests` WHERE `id` = " . strip_tags($_GET['id']) . " LIMIT 1";
 $result	= mysql_query($query) or do_error($query,'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
 $row = stripslashes_deep(mysql_fetch_assoc($result));
+$thePickup = ($row['pickup'] != "") ? $row['pickup'] : "";
+$theArrival = ($row['arrival'] != "") ? $row['arrival'] : "";
+
+if(($theArrival != "") && ($thePickup == "")) {
+	$theSchedTimepart = $theArrival;
+	} elseif(($theArrival != "") && ($thePickup != "")) {
+	$theSchedTimepart = $thePickup;	
+	} elseif(($theArrival == "") && ($thePickup != "")) {
+	$theSchedTimepart = $thePickup;	
+	} else {
+	$theSchedTimepart = NULL;
+	}
 $theLat = ($row['lat'] == NULL) ? 0.999999 : $row['lat'];
 $theLng = ($row['lng'] == NULL) ? 0.999999 : $row['lng'];
 $theDetails = get_requester_details($row['requester']);
+$requestDate = strtotime($row['request_date']);
+$nowplustwo = strtotime("+2 days",$nowTimestamp);
+$theStatus = ($requestDate > $nowplustwo) ? 3 : 2;
+if($theStatus == 3) {
+	$tempDate = explode(" ", $row['request_date']);
+	$outDate = ($theSchedTimepart) ? $tempDate[0] . " " . $theSchedTimepart . ":00": "";
+	$insertDate = $outDate;
+	} else {
+	$insertDate = $row['request_date'];
+	}
 $the_email = $theDetails[0];
 $the_requester = strip_tags($theDetails[1]);
 $description = (($row['description'] == "") && ($row['comments'] == "")) ? "New Ticket from Portal - Tentatively Accepted " . $now : $row['description'] . $row['comments'];
@@ -95,6 +117,7 @@ $query = "INSERT INTO `$GLOBALS[mysql_prefix]ticket` (
                 `lat`,
                 `lng`,
                 `booked_date`,
+                `date`,
                 `problemstart`,
                 `scope`,
                 `description`,
@@ -116,11 +139,12 @@ $query = "INSERT INTO `$GLOBALS[mysql_prefix]ticket` (
                 " . $row['rec_facility'] . ",
                 " . $theLat . ",
                 " . $theLng . ",
-                '" . $row['request_date'] . "',
-                 " . quote_smart(trim($now)) . ",
+            		'" . $insertDate . "', 
+                " . quote_smart(trim($now)) . ",
+                " . quote_smart(trim($now)) . ",
                 '" . $row['scope'] . "',
                 '" . $description . "',
-                2,
+                " . $theStatus . ",
                 " . $by . ",
                 0,
                  " . quote_smart(trim($now)) . ",
@@ -129,25 +153,48 @@ $query = "INSERT INTO `$GLOBALS[mysql_prefix]ticket` (
 $result	= mysql_query($query) or do_error($query,'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
 if ($result) {
     $last_id = mysql_insert_id();
-    } else {
-    $last_id = 0;
-    }
+	
+	$query = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `status` = 'Tentative', `tentative_date` = '" .$now . "', `ticket_id` = " . $last_id . " WHERE `id` = " . strip_tags($_GET['id']);
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);	
 
-$query = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `ticket_id` = " . $last_id . " WHERE `id` = " . strip_tags($_GET['id']);
-$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
+	$temp = get_variable('_inc_num');										// 3/2/11
+	$inc_num_ary = (strpos($temp, "{")>0)?  unserialize ($temp) :  unserialize (base64_decode($temp));
+	$theScope = $row['scope'];
 
-foreach ($regions as $grp_val) {
-        $query  = "INSERT INTO `$GLOBALS[mysql_prefix]allocates` (`group` , `type`, `al_as_of` , `al_status` , `resource_id` , `sys_comments` , `user_id`) VALUES
-                ($grp_val, 1, '$now', 2, $last_id, 'Allocated to Group' , $by)";
-        $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-    }
-
-do_log($GLOBALS['LOG_INCIDENT_OPEN'], $last_id);
+	if ($inc_num_ary[0] == 0 ) {
+		switch (get_variable('serial_no_ap')) {
+			case 0:								/*  no serial no. */
+				$theScope = $row['scope'];
+				break;
+			case 1:								/*  prepend  */
+				$theScope =  $last_id . "/" . $row['scope'];
+				break;
+			case 2:								/*  append  */
+				$theScope = $row['scope'] . "/" .  $last_id;
+				break;
+			default:							/* error????  */
+				$theScope = " error  error  error ";
+			}				// end switch
+		}		// end if()
+	
+	$query = "UPDATE `$GLOBALS[mysql_prefix]ticket` SET `scope` = '" . $theScope . "' WHERE `id` = " .$last_id;
+	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);	
+		
+	foreach ($regions as $grp_val) {
+		$query  = "INSERT INTO `$GLOBALS[mysql_prefix]allocates` (`group` , `type`, `al_as_of` , `al_status` , `resource_id` , `sys_comments` , `user_id`) VALUES 
+				($grp_val, 1, '$now', 2, $last_id, 'Allocated to Group' , $by)";
+		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);	
+		}
+	
+	do_log($GLOBALS['LOG_INCIDENT_OPEN'], $last_id);	
+	} else {
+	$last_id = 0;
+	}
 
 if ($last_id != 0) {
     $ret_arr[0] = $last_id;
     $the_summary = "Request from " . $the_requester . "\r\n";
-    $the_summary .= get_text('Scope') . ": " . $row['scope'] . "\r\n\r\n";
+  	$the_summary .= get_text('Scope') . ": " . $theScope . "\r\n\r\n";	
     $the_summary .= get_text('Patient') . " name: " . $row['the_name'] . "\r\n";
     $the_summary .= get_text('Street') . ": " . $row['street'] . ", ";
     $the_summary .= get_text('City') . ": " . $row['city'] . ", ";
@@ -166,7 +213,7 @@ if ($last_id != 0) {
         $smsg_to_str = "";
         $subject_str = "Your request " . $row['scope'] . " has been tentatively accepted";
         $text_str = "Your Request " . $row['scope'] . " tentatively accepted\r\n";
-        $text_str .= "When a someone has been found to fulfill the job, the request will be fully accepted and you will recveive another email\r\n";
+        $text_str .= "When a someone has been found to fulfil the job, the request will be fully accepted and you will recveive another email\r\n";
         $text_str .= "Request Summary\n\n" . $the_summary;
         do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
         }				// end if/else ($the_email)
@@ -175,3 +222,4 @@ if ($last_id != 0) {
     }
 
 print json_encode($ret_arr);
+exit();

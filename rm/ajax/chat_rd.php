@@ -34,3 +34,4 @@ require_once '../../incs/functions.inc.php';
         $return .= $row['user_name'] . "\t" . substr($row['when'], 11,5) . "\t" .$row['message'] . "\t" .$row['chat_messages_id'] . "\t". 0xFF;
         }
     print $return;
+exit();

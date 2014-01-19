@@ -51,3 +51,4 @@ $the_tick = ($assign_row)? $assign_row['ticket_id']: 0;
 $the_hash = md5($the_chat_id . $the_tick);
 $ret_arr = array ($the_chat_id, $the_tick, $the_hash);
 print json_encode($ret_arr);
+exit();

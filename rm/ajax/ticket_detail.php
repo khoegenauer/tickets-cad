@@ -223,3 +223,4 @@ $ret_arr[10] = $rec_fac;
 $ret_arr[11] = $print;
 $ret_arr[12] = stripslashes_deep(trim($row['comments']));
 print json_encode($ret_arr);
+exit();

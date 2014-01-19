@@ -22,3 +22,4 @@ $now = mysql_format_date(time() - (get_variable('delta_mins')*60));
 $query  = "INSERT INTO `$GLOBALS[mysql_prefix]chat_invites` (`to`, `_by`, `_from`, _on) VALUES ('{$_GET['frm_to']}', {$_GET['frm_user']}, '{$_SERVER['REMOTE_ADDR']}', '{$now}');";
 $result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 print "";
+exit();

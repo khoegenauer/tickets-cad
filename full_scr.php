@@ -141,7 +141,79 @@ else {
     function do_reload() {
         window.location.reload();				// do the deed!
         }		// end function do reload()
+// for responder positions		
+	function do_positions() {	//	12/27/13
+		var randomnumber=Math.floor(Math.random()*99999999);		
+	  	// call the server to execute the server side operation
+		if (window.XMLHttpRequest) {
+			respxmlHttp = new XMLHttpRequest();
+			respxmlHttp.open("GET", "./ajax/responder_data.php?version=" + randomnumber, true);
+			respxmlHttp.onreadystatechange = readPositions;
+			respxmlHttp.send(null);
+			}
+		}
+		
+	function readPositions() {	//	12/27/13
+		if (respxmlHttp.readyState == 4) {
+			if (respxmlHttp.status == 200) {
+				var resp_positions = JSON.decode(respxmlHttp.responseText);
+				for(var key in resp_positions) {
+					var the_resp_id = resp_positions[key][0];
+					var the_resp_lat = resp_positions[key][4];
+					var the_resp_lng = resp_positions[key][5];
+					if(typeof parent.frames["main"].set_marker_position == 'function') { 
+						set_marker_position(the_resp_id, the_resp_lat, the_resp_lng);	
+						}
+					}	
+				}
+			}
+//		positions_get();		
+		}
+		
+	function positions_get() {			// set cycle, 12/27/13
+		if (pos_interval!=null) {return;}			// ????
+		pos_interval = window.setInterval('do_pos_loop()', 30000);
+		}			// end function mu get()	
+		
+	function do_positions_loop() {	//	12/27/13
+		var randomnumber=Math.floor(Math.random()*99999999);		
+	  	// call the server to execute the server side operation
+		if (window.XMLHttpRequest) {
+			respxmlHttp = new XMLHttpRequest();
+			respxmlHttp.open("GET", "./ajax/responder_data.php?version=" + randomnumber, true);
+			respxmlHttp.onreadystatechange = readPositions2;
+			respxmlHttp.send(null);
+			}
+		}
+		
+	function readPositions2() {	//	12/27/13
+		if (respxmlHttp.readyState == 4) {
+			if (respxmlHttp.status == 200) {
+				var resp_positions = JSON.decode(respxmlHttp.responseText);
+				for(var key in resp_positions) {
+					var the_resp_id = resp_positions[key][0];
+					var the_resp_lat = resp_positions[key][4];
+					var the_resp_lng = resp_positions[key][5];
+					if(typeof parent.frames["main"].set_marker_position == 'function') { 
+						set_marker_position(the_resp_id, the_resp_lat, the_resp_lng);	
+						}
+					}	
+				}
+			}
+		}
 
+	function set_marker_position(id, theLat, theLng) {
+		if(rmarkers) {
+			var theCurrent = rmarkers[id].getPosition();
+			var currentLat = theCurrent.lat().toPrecision(6);
+			var currentLng = theCurrent.lng().toPrecision(6);	
+			var newLat = theLat.toPrecision(6);
+			var newLng = theLng.toPrecision(6);			
+			if((currentLat != newLat) || (currentLng != newLng)) {
+				rmarkers[id].setPosition( new google.maps.LatLng( theLat, theLng ) );
+				}
+			}
+		}
     var watch_val;										// interval var - for clearInterval() - 6/3/2013
 /**
  *
@@ -366,7 +438,7 @@ else {
     $temp =  explode("/", get_variable('auto_refresh'));
     $do_start_watch = ( ( count($temp) == 3 ) && (intval ($temp[1]) == 1 ) ) ? "start_watch();" : "";	// set JS string
 ?>
-<BODY onLoad = "set_initial_pri_disp(); set_categories(); set_fac_categories(); check_sidemenu(); <?php print $do_mu_init;?> <?php print $do_start_watch;?> ">	<!-- 3/15/11 -->
+<BODY onLoad = "set_initial_pri_disp(); set_categories(); set_fac_categories(); check_sidemenu(); do_positions(); <?php print $do_mu_init;?> <?php print $do_start_watch;?> ">	<!-- 3/15/11 -->
 <SCRIPT SRC='./js/wz_tooltip.js' type='text/javascript'></SCRIPT>
 
     <DIV ID = "div_ticket_id" STYLE="display:none;"></DIV>	<!-- 6/3/2013 -->

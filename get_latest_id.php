@@ -284,7 +284,7 @@ $query = "SELECT * FROM `$GLOBALS[mysql_prefix]requests` WHERE `status` = 'Open'
 $result = mysql_query($query) or error_out(basename(__FILE__) . "@"  . __LINE__) ;		// 2/10/12
 $the_reqs = (mysql_affected_rows() > 0) ? mysql_num_rows($result) : "0";
 
-$query = "SELECT * FROM `$GLOBALS[mysql_prefix]requests`";	//	10/23/12
+$query = "SELECT * FROM `$GLOBALS[mysql_prefix]requests` WHERE `closed` = '' OR `closed` IS NULL";	//	10/23/12
 $result = mysql_query($query) or error_out(basename(__FILE__) . "@"  . __LINE__) ;		// 2/10/12
 $the_reqs2 = (mysql_affected_rows() > 0) ? mysql_num_rows($result) : "0";
 
@@ -301,5 +301,6 @@ $status_updated_time = ($row2)? $row2['status_updated'] : "0";		//	9/10/13
 $the_dispatch_change = ($assign_row)? $assign_row['as_of']: "";
 $the_hash = md5($the_chat_id . $the_tick_id . $the_unit_id . $the_updated . $the_dispatch_change . $the_act_id . $the_pat_id . $the_reqs . $the_reqs2 . $status_updated . $the_status . $status_updated_time);	//	10/23/12
 $ret_arr = array ($the_chat_id, $the_tick_id, $the_unit_id, $the_updated, $the_dispatch_change, $the_act_id, $the_pat_id, $the_reqs, $the_reqs2, $status_updated, $the_status, $status_updated_time, $the_hash);	//	10/23/12
-print json_encode($ret_arr);				// 1/6/11
 get_current();								// update remotes position - 5/30/2013
+print json_encode($ret_arr);				// 1/6/11
+exit();

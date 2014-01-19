@@ -206,6 +206,20 @@ if (is_guest()) {													// 8/25/10
                 }
             }
         }
+		
+	function set_marker_position(id, theLat, theLng) {
+		if(rmarkers) {
+			var theCurrent = rmarkers[id].getPosition();
+			var currentLat = theCurrent.lat().toPrecision(6);
+			var currentLng = theCurrent.lng().toPrecision(6);	
+			var newLat = theLat.toPrecision(6);
+			var newLng = theLng.toPrecision(6);			
+			if((currentLat != newLat) || (currentLng != newLng)) {
+				rmarkers[id].setPosition( new google.maps.LatLng( theLat, theLng ) );
+				}
+			}
+		}
+        
 /**
  *
  * @returns {Boolean}

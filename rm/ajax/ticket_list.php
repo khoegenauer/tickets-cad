@@ -52,3 +52,4 @@ if (mysql_num_rows($result) == 0) {
         $print .= "</TABLE>";
     }	//	end else
 print $print;
+exit();

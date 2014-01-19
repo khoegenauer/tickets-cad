@@ -740,6 +740,12 @@ Changes for Tickets 2.41D
 
 237.  4 Fixes to Units, top bar, messaging, notifies, new Incident and Responder Mobile page.
 
-November '13
+Changes for Tickets 2.41E
+
+238.  Added Live tracking of mobile tracked units to situation screen.
+
+239.  Fixes to Units, Routes, Portal, New Incident and Location Warnings.
+
+January '14
 Arnie Shore
 Andy Harvey, UK

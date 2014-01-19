@@ -41,3 +41,4 @@ if (($_GET['lat'] && $_GET['lat'] != "") && ($_GET['lng'] && $_GET['lng'] != "")
     $response_code[] = ($result7) ? 700 : 799;
     }
 print json_encode($response_code);
+exit();

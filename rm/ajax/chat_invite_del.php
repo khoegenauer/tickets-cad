@@ -28,3 +28,4 @@ if (mysql_affected_rows() > 0) {
     }
 
 print json_encode($ret_arr);
+exit();

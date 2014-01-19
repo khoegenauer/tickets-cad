@@ -41,3 +41,4 @@ $print .= "<TD style='width: 30%; border: 1px solid #707070;'>" . gettext('DATE'
 $print .= "<TD style='width: 20%; border: 1px solid #707070;'>" . format_date_2(strtotime($row['_on'])) . "</TD></TR>";
 $print .= "</TABLE>";
 print $print;
+exit();

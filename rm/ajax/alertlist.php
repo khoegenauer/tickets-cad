@@ -120,3 +120,4 @@ if (mysql_num_rows($result) == 0) { 				// 8/6/08
     $print .= "</TABLE>";
     }				// end else
 print $print;
+exit();

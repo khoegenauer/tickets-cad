@@ -94,6 +94,7 @@ $show_tick_left = FALSE;	// controls left-side vs. right-side appearance of inci
 3/13/12 corrected log record written re dispatch
 6/20/12 applied get_text() to "Units"
 3/29/2013 conform to 20C
+12/13/2013 correction to drawCirle
 */
 
 do_login(basename(__FILE__));		//
@@ -332,7 +333,7 @@ function get_icon_legend() {			// returns legend string - 1/1/09
  * @param {type} fillOpacity
  * @returns {undefined}
  */
-    function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity) {		// 8/19/09
+    function drawCircle(lat, lng, radius, strokeColor, strokeWidth, strokeOpacity, fillColor, fillOpacity, name) {		// 8/19/09
 
         var circle = new google.maps.Circle({
                 center: new google.maps.LatLng(lat,lng),
@@ -448,8 +449,8 @@ function get_icon_legend() {			// returns legend string - 1/1/09
                     $lat = $coords[0];
                     $lng = $coords[1];
                     $fill_opacity = (intval($filled) == 0)?  0 : $fill_opacity;
-
-                    echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}, {$name}); // 513\n";
+					$the_name = addslashes ($name);
+					echo "\n drawCircle({$lat}, {$lng}, {$radius}, add_hash('{$line_color}'), {$line_width}, {$line_opacity}, add_hash('{$fill_color}'), {$fill_opacity}, '{$the_name}'); // 354\n";
                     break;
                 case "t":		// text banner
 

@@ -32,3 +32,4 @@ if ($result) {
     $ret_arr[0] = 999;
     }
 print json_encode($ret_arr);
+exit();

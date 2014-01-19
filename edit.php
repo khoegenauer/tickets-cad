@@ -810,14 +810,32 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
         $('the_file_list').innerHTML = "Please Wait, loading files";
         randomnumber=Math.floor(Math.random()*99999999);
         var url ="./ajax/file_list.php?ticket_id=<?php print $_GET['id'];?>&version=" + randomnumber;
-        sendRequest (url, filelist_cb, "");	//	11/18/13
+        theRequest (url, filelist_cb, "");	//	11/18/13
         function filelist_cb(req) {
             var theFiles=req.responseText;
             $('the_file_list').innerHTML = theFiles;
             }
         }
 
-    function sendRequest(url,callback,postData) {	// 9/10/13, 11/14/13, 11/18/13
+/* 	function sendRequest(url,callback,postData) {	// 9/10/13, 11/14/13
+		var req = createXMLHTTPObject();
+		if (!req) return;
+		var method = (postData) ? "POST" : "GET";
+		req.open(method,url,true);
+		if (postData)
+			req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		req.onreadystatechange = function () {
+			if (req.readyState != 4) return;
+			if (req.status != 200 && req.status != 304) {
+				return;
+				}
+			callback(req);
+			}
+		if (req.readyState == 4) return;
+		req.send(postData);
+		} */
+		
+	function theRequest(url,callback,postData) {	// 9/10/13, 11/14/13
         var req = createXMLHTTPObject();
         if (!req) return;
         var method = (postData) ? "POST" : "GET";
@@ -856,7 +874,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
     function find_warnings(tick_lat, tick_lng) {	//	9/10/13
         randomnumber=Math.floor(Math.random()*99999999);
         var theurl ="./ajax/loc_warn_list.php?version=" + randomnumber + "&lat=" + tick_lat + "&lng=" + tick_lng;
-        sendRequest (theurl, loc_w, "");	//	11/18/13
+        theRequest (theurl, loc_w, "");	//	11/18/13
         function loc_w(req) {
             var the_warnings=JSON.decode(req.responseText);
             var the_count = the_warnings[0];
@@ -1043,6 +1061,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
                  UNIX_TIMESTAMP(date) AS date,
                  UNIX_TIMESTAMP(updated) AS updated,
                  `t`.`description` AS `tick_descr`,
+                 `t`.`status` AS `in_status`,
                  `u`.`user` AS `tick_user`
                  FROM `$GLOBALS[mysql_prefix]ticket` `t`
                  LEFT JOIN `$GLOBALS[mysql_prefix]in_types` `ty` ON (`t`.`in_types_id` = `ty`.`id`)
@@ -1250,7 +1269,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 
             print "<TR CLASS='odd' VALIGN='top'>
                     <TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_synop']}');\">" . get_text("Synopsis") . ":</TD>";
-            print 	"<TD CLASS='td_label'><TEXTAREA NAME='frm_description' COLS='45' ROWS='2' {$dis} >" . $row['tick_descr'] . "</TEXTAREA></TD></TR>\n";		// 8/8/09
+            print 	"<TD CLASS='td_label'><TEXTAREA NAME='frm_description' COLS='45' ROWS='8' {$dis} >" . $row['tick_descr'] . "</TEXTAREA></TD></TR>\n";		// 8/8/09
                                                         // 2/11/11
             $query_sigs = "SELECT * FROM `$GLOBALS[mysql_prefix]codes` ORDER BY `sort` ASC, `code` ASC";
             $result_sigs = mysql_query($query_sigs) or do_error($query_sigs, 'mysql query_sigs failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -1338,9 +1357,9 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 
             print "<TR CLASS='odd'><TD COLSPAN='2'>&nbsp;</TD></TR>";
 
-            $selO = ($row['status']==$GLOBALS['STATUS_OPEN'])?   "SELECTED" :"";
-            $selC = ($row['status']==$GLOBALS['STATUS_CLOSED'])? "SELECTED" :"" ;
-            $selP = ($row['status']==$GLOBALS['STATUS_SCHEDULED'])? "SELECTED" :"" ;
+            $selO = ($row['in_status']==$GLOBALS['STATUS_OPEN'])?   "SELECTED" :"";
+            $selC = ($row['in_status']==$GLOBALS['STATUS_CLOSED'])? "SELECTED" :"" ;
+            $selP = ($row['in_status']==$GLOBALS['STATUS_SCHEDULED'])? "SELECTED" :"" ;
 
             $end_date = (intval($row['problemend'])> 1)? $row['problemend']:  (time() - (get_variable('delta_mins')*60));
             $elapsed = my_date_diff($row['problemstart'], $end_date);		// 5/13/10
@@ -1561,7 +1580,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 
             <INPUT TYPE="hidden" NAME="frm_lat" VALUE="<?php print $row['lat'];?>" />				<!-- // 8/9/08 -->
             <INPUT TYPE="hidden" NAME="frm_lng" VALUE="<?php print $row['lng'];?>" />
-            <INPUT TYPE="hidden" NAME="frm_status_default" VALUE="<?php print $row['status'];?>" />
+            <INPUT TYPE="hidden" NAME="frm_status_default" VALUE="<?php print $row['in_status'];?>" />
             <INPUT TYPE="hidden" NAME="frm_affected_default" VALUE="<?php print $row['affected'];?>"/>
             <INPUT TYPE="hidden" NAME="frm_scope_default" VALUE="<?php print $row['scope'];?>" />
             <INPUT TYPE="hidden" NAME="frm_owner_default" VALUE="<?php print $row['owner'];?>" />

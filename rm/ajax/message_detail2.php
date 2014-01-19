@@ -55,3 +55,4 @@ $ret_arr[3] = $row['message'];
 $ret_arr[4] = $print;
 
 print json_encode($ret_arr);
+exit();

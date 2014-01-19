@@ -2737,6 +2737,13 @@ ul {
                 </TR>
             </TABLE>
         <BR />
+        <LI><B><?php print gettext('Service User Portal');?></B><BR />		<!-- 9/10/13 -->
+			<TABLE BORDER=0>
+				<TR CLASS = 'odd'>				
+					<TD><LI><A HREF="./portal/requests.php"><?php print gettext('Service User Requests');?></A></TD>				<!-- 9/10/13 -->	
+				</TR>
+			</TABLE>
+		<BR />
 <?php
         if (get_variable('use_messaging') != 0) {		//10/23/12
 ?>

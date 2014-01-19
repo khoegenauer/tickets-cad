@@ -207,11 +207,11 @@ $logged_in_load = ($logged_in == 1) ? "get_conditions(); get_ticket_markers(" . 
     *, html { margin:0; padding:0 }
     div#map_canvas {z-index: 1; position: fixed; top: 0px; left: 0px;}
     div#map_outer { width:100%; height: auto; z-index: 1;}
-    div#screen_buttons { width: 100%; height: auto; position: fixed; bottom: 2%; z-index: 1000; text-align: center; }
+    div#screen_buttons { width: 100%; height: 50px; position: absolute; bottom: 0px; z-index: 999; text-align: center; }	
     div#app_outer { position: absolute; top: 0px; left: 0%; width: 80%; height: auto; z-index: 6; color: #000000;}
     div#app_title { position: relative; top: 2px; left: 0%; width: 80%; z-index: 6; color: #000000; background-color: #FEFEFE; font-size: 1em; font-weight: bold; display: inline-block; border: 4px outset #DEDEDE;}
     div#info { width:100%; overflow: hidden; text-align: center; top:0; left:0; }
-    div#outer { position: absolute; top: 0px; left: 0px; overflow: hidden; text-align: center; top:0; left:0; }
+    div#outer { position: absolute; top: 0px; left: 0px; overflow: hidden; text-align: center;}	
     div#menu_but { z-index: 99; display: inline-block; position: fixed; top: 100px; left: 0px; float: left; }
     div#menu_but2 { z-index: 99; display: inline-block; position: fixed; top: 100px; left: 0px; float: left; }
     div#toggle_tracks_but { z-index: 5; position: fixed; top: 50px; right: 105px; }
@@ -322,7 +322,7 @@ function set_size() {
         viewportheight = document.getElementsByTagName('body')[0].clientHeight;
         }
     var mapWidth = viewportwidth;
-    var mapHeight = viewportheight;
+    var mapHeight = viewportheight-20;
     var listHeight = viewportheight * .6;
     $('outer').style.width = viewportwidth + "px";
     $('outer').style.height = viewportheight + "px";
@@ -2120,7 +2120,7 @@ function pause_messages() {	//	10/29/13
 </script>
 </head>
 <body onUnload='stop_loop();'>
-    <div id='outer' style='height: auto; width: 100%; background-color: #CECECE;'>
+    <div id='outer' style='height: 80%; width: 100%; background-color: #CECECE;'>
         <div id="map_canvas"></div>
         <div id='plus_but' onClick = "zoomIn();"><IMG SRC = './images/zoomin.png' ALT='<?php print gettext('Zoom In');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>
         <div id='minus_but' onClick = "zoomOut();"><IMG SRC = './images/zoomout.png' ALT='<?php print gettext('Zoom Out');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>
@@ -2196,7 +2196,6 @@ function pause_messages() {	//	10/29/13
         </div>
         <div id='screen1' class='screen' style='display: block;'>
             <div id='menu_but' class='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "slideIt('buttons', this.id);"><?php print gettext('Show Menu');?></div><BR />
-<!-- 			<div id='msg_span' style='position: relative; width: 100%; height: 20px; z-index: 99999999; font-size: 1.5em; color: red; background-color: #FFFFFF; font-weight: bold; text-align: center; display: none;'></div></BR /> -->
         </div>
         <div id='screen2' class='screen' style='display: none;'><BR /><BR />
             <div id="alert_list" class='lists'></div>
@@ -2254,10 +2253,6 @@ function pause_messages() {	//	10/29/13
 ?>
             </div>
         </div>
-<!--		<div id='regions' class='regions_text'>	-->
-<?php
-//print $al_names;?>
-<!-- </div>	-->
     </div>
     <div id='screen_buttons'>
 <?php

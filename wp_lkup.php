@@ -107,7 +107,8 @@ else {													// no priors or constituents - do WP
 
     $jsonresp = json_decode ($data, true);
 
-    if ( ! (array_key_exists ( "errors", $jsonresp ) ) ) {
+//	if ( ! (array_key_exists ( "errors", $jsonresp ) ) ) {
+	if ( ( is_array($jsonresp) ) && ( ! (array_key_exists ( "errors", $jsonresp ) ) ) ) {	// 11/28/2013
         $vals[10] = "3";		// id WP as data source
         $vals[1] = array_key_exists (  "displayname", $jsonresp["listings"][0] ) ?
                     $jsonresp["listings"][0]["displayname"] : "" ;

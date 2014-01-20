@@ -17,31 +17,27 @@ $ini_arr = parse_ini_file ("incs/sp.ini");
 $font_size = 	(array_key_exists('SP', $_SESSION)) ? $_SESSION['SP']['font_size']						:  $def_font_size;	// EM units string
 ?>
 body { background-color: <?php echo $background;?>; margin:0; font-weight: normal; font-size: <?php echo $ini_arr['def_fontsize'];?>em; color: <?php echo $text_color;?>; font-family: Verdana, Arial, Helvetica, sans-serif; text-decoration: none; }
-table				{ border-collapse:collapse; border-spacing:0; margin-top:0px;
-                        max-width:<?php echo round (.6 * $scr_width) ;?>px;
-                        min-width:<?php echo round (.3 * $scr_width );?>px;
-                        font-size: <?php echo $ini_arr['def_fontsize'];?>em;
-
-                        border-radius:.125em;
-                        border:2px solid #1978cf;
-                        box-shadow: 0 0 8px #999;
-                        overflow:auto;
-                        margin-top: 0px ;
-                        margin-left: 0 auto;
-                        margin-right: 0 auto;
-                                            }
-
-table.tablesorter	{ border-collapse:collapse; border-spacing:0; margin-top:0px;
-                        width:auto;
-                        font-size: <?php echo $ini_arr['def_fontsize'];?>em;
-                        border-radius:.125em;
-                        border:2px solid #1978cf;
-                        box-shadow: 0 0 8px #999;
-                        overflow:auto;
-                        margin-top: 0px ;
-                        margin-left: 0 auto;
-                        margin-right: 0 auto;
-                                            }
+table				{ border-collapse:collapse; border-spacing:0; margin-top:0px;  
+						min-width:<?php echo round (.3 * $scr_width );?>px;
+						font-size: <?php echo $ini_arr['def_fontsize'];?>em;
+						
+						border-radius:.125em;
+						border:2px solid #1978cf;
+						box-shadow: 0 0 8px #999;
+						overflow:auto;	
+						margin-top: 0px ; 
+						margin-left: 0 auto; 
+						margin-right: 0 auto; 
+											}
+									
+table.list	{ border-collapse:collapse; border-spacing:0; margin-top:0px;  
+						max-width:<?php echo round (.9 * $scr_width) ;?>px;
+						font-size: <?php echo $ini_arr['def_fontsize'];?>em;						
+						}
+table.single	{ max-width:<?php echo round (.6 * $scr_width) ;?>px;  /* leave space for nav arrows */
+					}
+table.footer	{ max-width:<?php echo round (.6 * $scr_width) ;?>px;  
+					}
 tr 					{ vertical-align: top; }
 tr.even 			{ background: <?php echo $row_light;?>; }
 tr.odd 				{ background: <?php echo $row_dark ;?>; }
@@ -88,10 +84,11 @@ tr:nth-child(odd) 	{ background: <?php echo $row_dark;?>;}
 .click		{ text-align:center; 	font-weight:bold;	background-color:inherit;	color:inherit;	font-weight:inherit;}
 
 td.nav 	{ width:64px; text-align: center; font-size: 1.0em; opacity: 0.25; }
-.tiny 	{ font-size: 0.25em; opacity: 0.25; }
+.tiny 	{ font-size: 0.5em; opacity: 0.25; }
 .link 	{ text-decoration:underline; }
-#context	{   min-width:100px; font-family: Arial, Verdana, sans-serif; font-size: 1.0em; font-weight:bold; text-align:left;}
-#infowin	{   min-width:100px; max-width:280px; font-family: Arial, Verdana, sans-serif; font-size: 1.0em; font-weight:bold; text-align:left;}
+#map_menu		{ min-width:100px; font-family: Arial, Verdana, sans-serif; font-size: 1.0em; font-weight:bold; text-align:left;} 		
+#map_menu_link	{ min-width:60px;font-family: Arial, Verdana, sans-serif; font-size: 1.0em; font-weight:bold; text-align:left;} 		
+#infowin	{   min-width:100px; max-width:280px; font-family: Arial, Verdana, sans-serif; font-size: 1.0em; font-weight:bold; text-align:left;} 		
 #header		{ font-family: Arial, Verdana, sans-serif; font-size: 1.5em; font-weight:bold; height:auto; text-align: center; width:100%; background-color: <?php echo "{$_SESSION['SP']['css']['page_background']};"?>;}
 #footer		{ font-family: Arial, Verdana, sans-serif; font-size: 1.5em; font-weight:bold; height:auto; text-align: center; width:100%; background-color: <?php echo "{$_SESSION['SP']['css']['page_background']};"?>;}
 /* Für ie6*/

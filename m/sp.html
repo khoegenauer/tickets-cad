@@ -1,0 +1,260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+	<title>TicketsSP - sp_map.php</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link rel="stylesheet"  type="text/css" href="./css_default.php?rand=1387228472" />
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href=					"./dist/leaflet.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href=	"./dist/leaflet.ie.css" /><![endif]-->
+	<script src=									"./dist/leaflet.js"></script>
+<!--
+	<link rel="stylesheet" href=					"./dist/leaflet.fullscreen.css"/>
+	<script src=									"./dist/Leaflet.fullscreen.js"></script>	
+-->
+	<link rel="stylesheet" href=					"./dist/leaflet.label.css" />
+	<script src=									"./dist/leaflet.label.js"></script>
+	<script src=									"./js/misc.js"></script>
+
+<!--	https://gist.github.com/2197042 -->	
+	<script src= "./dist/Google.js"></script>
+	<script src= "http://maps.google.com/maps/api/js?sensor=false&amp;v=3.2"></script>
+		
+<script>
+	function do_stop_cycle() {
+		try   		{ parent.frames['top'].stop_cycle();  }
+		catch(err)	{}
+		}
+</script>
+	<style>
+		body { padding: 0; margin: 0; }
+		html, body, #map {height: 100%; }
+	</style>
+
+</head>
+<body>	<!-- 116 -->
+	<div id="map"></div>
+<!-- $("map").style.backgroundImage = "url(./markers/loading.jpg)"; -->
+
+
+	<script>
+		var markers_work;
+		var markers_ary = [];
+		var id_array;
+
+		var latest_position = new L.LatLng( 38.978445, -76.492183);
+//		var my_bounds = new L.LatLngBounds([38.978445, -76.492183], [38.978445, -76.492183]);		
+		var my_bounds = new L.LatLngBounds([38.978445, -76.492183], 
+			[38.978445, -76.492183]);		
+
+		DomReady.ready(function() {			//set initial bounds at map center	
+			parent.frames[0].document.getElementById("the_user").innerHTML = 		'admin';
+			parent.frames[0].document.getElementById("the_unit_id").innerHTML = 	'7';
+			parent.frames[0].document.getElementById("the_user_id").innerHTML = 	'1';
+
+//			var t=setTimeout ( function(){parent.frames[0].start_cycle()}, 1000 );		// location.php always runs
+			id_array = document.navForm.id_str.value.split(",");
+			});		
+	
+		var baseIcon = L.Icon.extend({options: {shadowUrl: './images/sm_shadow.png',
+			iconSize: [12, 20],	shadowSize: [22, 20], iconAnchor: [0, 0],	shadowAnchor: [5, 10], popupAnchor: [6, -5]
+			}
+			});
+
+		var big_tickIcon =	new baseIcon({iconUrl: 'images/red.png', 		iconSize: [20, 34], iconAnchor: [10, 17]}),
+		tickIcon = 			new baseIcon({iconUrl: 'images/sm_red.png', 	iconSize: [12, 20], iconAnchor: [6, 10]}),
+		big_unitIconn =		new baseIcon({iconUrl: 'images/green.png', 		iconSize: [20, 34], iconAnchor: [10, 17]}),
+		unitIcon = 			new baseIcon({iconUrl: 'images/sm_green.png', 	iconSize: [12, 20], iconAnchor: [6, 10]}),
+		big_facIcon =		new baseIcon({iconUrl: 'images/yellow.png', 	iconSize: [20, 34], iconAnchor: [10, 17]}),
+		facIcon = 			new baseIcon({iconUrl: 'images/sm_yellow.png',  iconSize: [12, 20], iconAnchor: [6, 10]}),
+		roadIcon = 			new baseIcon({iconUrl: 'images/sm_white.png', 	iconSize: [12, 20], iconAnchor: [6, 10]}),
+		closedIcon = 		new baseIcon({iconUrl: 'images/sm_black.png', 	iconSize: [12, 20], iconAnchor: [6, 10]}),		
+		pos_unknown_icon =	new baseIcon({iconUrl: 'images/question1.png',  iconSize: [14, 30], iconAnchor: [7, 15]}),
+		meIcon =			new baseIcon({iconUrl: 'images/crosshair.png',  iconSize: [32, 32], iconAnchor: [16, 16]});		//	crosshair_128 reticlebm7
+
+		function on_Click (array_id, table_id, record_id) {							// 1: here on marker click - 2: issue request - 3: IW data returned via callback
+			function iw_callback(req) {
+				markers_ary[array_id].bindPopup(req.responseText).openPopup();		// - array_id?
+				}		// end function my_callback()
+			var params = "table_id="+ table_id + "&record_id=" +record_id;			// 
+			var url = "./ajax/return_iw.php";										//  issue AJAX call ...
+			sendRequest( url, iw_callback, params );								//    for infowindow contents
+			}		// end function on Click ()		
+		
+		var incidents = 	new L.LayerGroup();
+		var units = 		new L.LayerGroup();
+		var hides = 		new L.LayerGroup();
+		var facilities = 	new L.LayerGroup();
+		var roadinfo = 		new L.LayerGroup();
+		var nearby = 		new L.LayerGroup();
+		var me   = 			new L.LayerGroup();
+		var me_is_onscr = 	false;
+		var gglr = 			new L.Google('ROADMAP');
+//		var gglh = 			new L.Google('HYBRID');
+//		var ggls = 			new L.Google('SATELLITE');
+//		var gglt = 			new L.Google('TERRAIN');
+
+		
+		var full_scr = 		false;
+
+		var map = L.map('map', {
+			center: [34.852618, -82.394010],
+			zoom: 8,
+//			layers: [OSM, gglr, gglh, ggls, gglt, me, incidents, units],
+			layers: [ gglr, me, incidents, units],
+			fullscreenControl: full_scr
+			});
+
+		var baseLayers = {
+		
+//			"G_hybrid": 		gglh,
+//			"G_satellite": 		ggls,			
+//			"G_terrain": 		gglt,			
+
+			"G_roads": 			gglr
+			
+			};		// end var baseLayers = ...
+
+		var overlays = {
+			"Me" : 				me
+			};
+
+		function onMapClick(e) {
+			$("map_menu").style.display = "block";			
+			}
+
+		function can_map_menu() {
+			$("map_menu").style.display = "none";			
+			$("map_menu_link").style.display = "block";			
+			}
+
+		map.on('contextmenu', onMapClick);
+
+		var my_circle, radius;
+/*
+ 	if (parent.frames[0].move_circle()) {	}
+*/
+		function move_circle ( lat_in, lng_in ) {						// called from parent.frames[0] on detecting motion
+			console.log("function move_circle @ 42");
+			my_circle.setLatLng([lat_in, lng_in]);						// the circle
+			map.panTo(new L.LatLng(lat_in, lng_in ));					// map center on new position - ????
+			markers_ary[my_marker_index].setLatLng([lat_in, lng_in]);	// the marker
+			}			
+
+		function getMapRadius () {		// returns distance map center to NE in meters
+		    var mapBoundNorthEast = map.getBounds().getNorthEast();
+		    return mapBoundNorthEast.distanceTo(map.getCenter());
+			}
+		if (!me_is_onscr) {
+//			alert(414);
+			my_bounds.extend( [38.978445, -76.492183]);											// to bounding box
+			}
+
+
+		var t=setTimeout(function(){								// delay for map rendering
+//			alert(421);
+			L.control.layers(baseLayers, overlays).addTo(map);
+
+			map.fitBounds(my_bounds);								// show the centered map					
+
+			radius = Math.round(getMapRadius() * 0.20);				// arbitrary
+			my_circle = L.circle( [38.978445, -76.492183 ], radius, { color: 'red', fill: false}).addTo(map);		// center circle on my position
+			
+			},1000) ;												// wait for rendering
+
+
+		map.on('enterFullscreen', function(){		// detect fullscreen toggling
+			if(window.console) window.console.log('enterFullscreen');
+		});
+		map.on('exitFullscreen', function(){
+			if(window.console) window.console.log('exitFullscreen');
+		});		
+
+	function to_tickets () {
+		if (typeof(parent.frames[0].stop_cycle) === 'function') { parent.frames[0].stop_cycle(); }
+		document.toTickets.submit();
+		}	
+//	var popup = L.popup().setLatLng([47.54224, -94.84434]).setContent("I am a standalone popup.").openOn(map);
+
+
+	</script>
+<center>
+<script>
+	function navTo (url, id) {
+		var ts = Math.round((new Date()).getTime() / 1000);
+		document.navForm.action = url +"?rand=" + ts;
+		document.navForm.id.value = (id == null)? "": id;
+		document.navForm.submit();
+		}				// end function navTo ()
+
+	function allowDrop(ev) {
+		ev.preventDefault();
+		}
+	
+	function drag(ev){
+		ev.dataTransfer.setData("Text",ev.target.id);
+		}
+	
+	function drop(ev){
+		ev.preventDefault();
+		var data=ev.dataTransfer.getData("Text");
+		ev.target.appendChild(document.getElementById(data));
+		}
+
+	function do_mail (in_addr) {
+		document.mailform.mail_addr.value = in_addr;
+		document.mailform.submit();
+		}
+</script>
+
+
+<form name = "mailform" method = post 	action = "sp_mail.php?rand=1387228472">
+<input type = hidden name = "mail_addr" value = "" />			
+</form>
+
+<form name = "navForm" method = post action = "sp_map.php">
+<input type = hidden name = "id" 		value = ""/>			<!-- array index of target record -->
+<input type = hidden name = "id_str" 	value = ""/>
+<input type = hidden name = "group" 	value = "" />
+</form>
+
+<form name = 'toTickets' method = 'post' action = 'totickets.php'></form>	
+
+<table id="map_menu_link" width = auto cellpadding = 4 style="position: fixed; top: 8px; left: 660px; display: block; ">
+<tr><td  width = 50px align = center onclick = "$('map_menu_link').style.display = 'none'; $('map_menu').style.display = 'block'; "> Menu </td>
+</tr></table>
+
+
+<table id="map_menu" cellpadding = 4 style="position: fixed; top: 8px; left: 660px; display: none; ">
+<tr><td class = 'my_hover' onclick = 'do_stop_cycle(); navTo("sp_lout.php", "")'>	Logout</td></tr>
+<tr><td class = 'my_hover' onclick = 'can_map_menu();'>				Cancel</td></tr>
+<tr><td class = 'my_hover' onclick = 'navTo("sp_calls.php", "")'>	Calls</td></tr>
+<tr><td class = 'my_hover' onclick = 'navTo("sp_tick.php", "")'>	Incidents</td></tr>
+<tr><td class = 'my_hover' onclick = 'navTo("sp_resp.php", "")'>	Responders</td></tr>
+<tr><td class = 'my_hover' onclick = 'navTo("sp_fac.php", "")'>		Facilities</td></tr>
+<tr><td class = 'my_hover' onclick = 'navTo("sp_mail.php", "")'>	Email</td></tr>
+<tr><td class = 'my_hover' onclick = 'to_tickets ();'>				to Tickets</td></tr>
+<tr><td class = 'my_hover' onclick = 'location.reload();'>			Map refresh</td></tr>
+<tr><td class = 'my_hover' onclick = 'navTo("get_tiles.php", "")'>	Tiles</td></tr>
+
+<!--
+<tr><td class = 'my_hover' onclick = 'markers_ary[1].fire("click")'>	Test</td></tr>
+-->
+</table>
+
+</body>
+<script>
+	function test() {
+		alert("test OK 580");
+			}
+
+var map_2;
+function xopen_map_win() {
+	if (map_2) {map_2.focus();}
+	else {map_2 = window.open("sp_map.php","Map 2", 
+		width=1100, height=619);
+		}
+	}		// end function open_map_win()
+</script>
+</html>
+alert(parent.frames[1].name);

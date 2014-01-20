@@ -104,6 +104,7 @@ if (intval(get_variable('broadcast'))==1) {
 
         $act_id_array = explode (",", $_POST['act_id_str']);
         $the_count =  count ($act_id_array);
+		$the_nth = intval($_POST['id']) + 1;
         $the_pair = $act_id_array[intval($_POST['act_id'])];		// pull nth entry
         $the_array = explode ("/", $the_pair);
         $the_type = ($the_array[0] == 0 )? get_text("Action") : get_text("Patient");

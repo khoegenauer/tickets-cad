@@ -1,31 +1,33 @@
 1.	Tickets SP is an adjunct to standard Tickets CAD, a no-muss no-fuss implementation intended for use by 
 	mobile responders utilizing small-screen devices such as smart-phones (hence 'SP') while on dispatch.  
-	Required: an installed Tickets CAD application.  
+	Required: an installed and functioning Tickets CAD.  
 
-2.	While it works on conventional desktop machines, users will see some waste of screen real-estate.  It's 
+2.	While SP works on conventional desktop machines, users will see some waste of screen real-estate.  It's 
 	been tested and shows satisfactory operation on the android-powered Nexus 4, iPhone and iPad, with Chrome 
 	and Safari browsers.  Given the variety of mobile devices out there, Your Mileage Will Vary!  Let us know.
 
-3.	What's it do?  Well, this version (9/6/2013) has capabilities targeted at mobile incident response, which 
-	is well short of the gamut of a full-fledged Tickets operation.
+3.	What's it do?  Well, this version (12/26/2013) has capabilities targeted at mobile incident response, which 
+	is short of the gamut of a full-fledged Tickets operation.
 	a.	SP uses and requires yr existing and correctly installed Tickets database.
-	b.	SP attempts to locate you while mobile; doing so is controlled by your browser settings.
-	c.  The map is by OpenStreetMap, with Google's an option;  While we also operate with OSM, the combined 
-		downloads overwhelmed smaller devices during early testing.  We expect to get it working, however.
-	d.  SP  provides useful information on existing calls, incidents, responders, facilities, and - new! - road 
+	b.  The 'together' feature is definitely experimental, and we'll appreciate any feedback on its operation.
+		it's a user-to-user collaboration tool based on html5, so you'll need the latest/greatest in browser 
+		versions.  It's by the Mozilla folks, and is claimed to support voice and screen-sharing.
+	c.	It attempts to locate you while mobile; doing so is controlled by your browser settings.
+	d.  The default map is Google's;  While we've been able to operate with that and OpenStreetMap concurrently, 
+		the combined downloads overwhelmed smaller devices during early testing.
+	e.  If you prefer to use OpenStreetMap over Google's, see file 'incs/sp.ini' and comment-out the line
+		that reads 'use_gmaps = On'.  That is, simply insert a leading semi-colon and save the file.  (The 
+		leading semi-colon is common PHP usage for ini files to denote comments.)
+	f.  Maps are full-screen; to navigate away, the Menu button provides for that by bringing up a navigation menu.
+	g.	The smallish control in the map's upper right provides hide/show by layer in order to reduce map 
+		clutter. Changes are immediate; no map reload is done.
+	h.	The mail operation now provides for including a map link to a selected incident.
+	i.	Call/dispatch status may now be updated by users with suitable privileges.
+	j.  SP  provides useful information on existing calls, incidents, responders, facilities, and - new! - road 
 	    information if yr database has any.  You can update status, add information to and close incidents, and 
 	    send email.
-	e.  On any detail page where an arrow icon shows, clicking on that row takes you to some useful page, 
-		depending on the page context.
-	f.	The smallish control in the map's upper right provides hide/show by layer in order to reduce map 
-		clutter. Changes are immediate; no map reload is done.
-	g.  Maps are full-screen; to navigate away, a right-click (desktop) or long-poke (mobile) on the map will 
-	    bring up a navigation menu.
-	h.  If you prefer to use Google maps, see file 'incs/sp.ini' , and 'un-comment' line 8.  That is, simply 
-	    remove the leading semi-colon at the line that reads ";use_gmaps = On" and save the file.  (This is a 
-	    common PHP usage for ini files.)
 
-4.	Installing SP: Simply unzip it into its own directory underneath your Tickets root.  (There's no 
+4.	Installing SP is trivial: Simply unzip it into its own directory underneath your Tickets root.  (There's no 
 	installation process.)  You shd see the SP directory along with those 20-odd of Tickets proper.
 
 5.	Accessing SP:  If your Tickets root is at, say, 'my_server/my_cad' then its URL is 'my_server/my_cad/sp' . 
@@ -42,4 +44,4 @@
 	
 Stay toon'd!
 AS
-September, 2013
+December 2013

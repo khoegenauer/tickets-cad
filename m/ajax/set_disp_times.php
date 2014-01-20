@@ -31,7 +31,7 @@ $log_vals = array(
     "clear" => 			$GLOBALS['LOG_CALL_CLR']
     );
 
-do_log($log_vals[$the_column], $row['ticket_id'], $row['responder_id'], $record_id);
+sp_do_log($log_vals[$the_column], $row['ticket_id'], $row['responder_id'], $record_id);
 
 echo substr($now, 8, 8);					//	2012-11-03 14:13:45  => 03 14:13
 exit (0);

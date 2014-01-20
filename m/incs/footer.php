@@ -1,6 +1,13 @@
 <?php
-//	6/19/2013
-    @session_start();											//
+/*
+6/19/2013
+12/16/2013 if do_map added	
+*/
+
+if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
+error_reporting (E_ALL	^ E_DEPRECATED);
+
+@session_start();	
 ?>
 <script>
     function do_mail(in_addr) {
@@ -24,21 +31,30 @@
 <!-- </div> --> <!-- container bottom -->
 </p>
 <br/><br/>
-<div id= 'footer' style = 'position:fixed; bottom:0px; left:0px; white-space:nowrap; '>
-<table align=center border=0 cellpadding=0 cellspacing=0 width=100%><tr><td>
-<!--
-     <span id = 'ts' class='head_butt' style = 'display: none;'			onclick = 'do_show ()'>Show top</span>
-     <span id = 'th' class='head_butt' style = 'display: inline-block;'	onclick = 'do_hide ()'>Hide top</span><span class = 'butt-sep'>|</span>
--->
-     <span id = 'fm' class='head_butt' onclick = 'navTo("sp_map.php", "")'>Map<span class = 'butt-sep'>&nbsp;&nbsp;|</span></span>
-     <span id = 'fc' class='head_butt' onclick = 'navTo("sp_calls.php", "")'>Calls<span class = 'butt-sep'>&nbsp;&nbsp;|</span></span>
-     <span id = 'fi' class='head_butt' onclick = 'navTo("sp_tick.php", "")'>Incidents<span class = 'butt-sep'>&nbsp;&nbsp;|</span></span>
-     <span id = 'fr' class='head_butt' onclick = 'navTo("sp_resp.php", "")'>Responders<span class = 'butt-sep'>&nbsp;&nbsp;|</span></span>
-     <span id = 'ff' class='head_butt' onclick = 'navTo("sp_fac.php", "")'>Facilities<span class = 'butt-sep'>&nbsp;&nbsp;|</span></span>
-     <span id = 'ff' class='head_butt' onclick = 'navTo("sp_mail.php", "")'>Mail</span>
-<!--
-     <span id = 'du' class='head_butt' onclick = 'navTo("dump.php", "")'>Dump</span>
--->
+<div id = 'footer' style = 'position:fixed; bottom:0px; white-space:nowrap; '>
+<table  class= 'footer' align=center border=0 cellpadding=0 cellspacing=0 width=100%><tr><td>
+<?php
+	if ( intval ( $_SESSION['SP']['do_map'] ) == 1 ) {		// 12/16/2013
+?>
+	 <span id = 'fm' class='head_butt' onclick = 'navTo("sp_map.php", "")'>Map<span class = 'butt-sep'>&nbsp;&nbsp;|</span></span>			
+<?php
+		}
+$ini_arr = parse_ini_file ("incs/sp.ini");
+?>		
+     <span id = 'fc' class='head_butt' onclick = 'navTo("sp_calls.php", "")'>Calls<span class = 'butt-sep'>&nbsp;&nbsp;|</span></span> 		
+	 <span id = 'fi' class='head_butt' onclick = 'navTo("sp_tick.php", "")'>Incidents<span class = 'butt-sep'>&nbsp;&nbsp;|</span></span> 	
+	 <span id = 'fr' class='head_butt' onclick = 'navTo("sp_resp.php", "")'>Responders<span class = 'butt-sep'>&nbsp;&nbsp;|</span></span>	
+	 <span id = 'ff' class='head_butt' onclick = 'navTo("sp_fac.php", "")'>Facilities<span class = 'butt-sep'>&nbsp;&nbsp;|</span></span>
+	 <span id = 'ff' class='head_butt' onclick = 'navTo("sp_mail.php", "")'>Mail</span><span class = 'butt-sep'>&nbsp;&nbsp;|</span></span>
+	 <span id = 'ff' class='head_butt' onclick = 'navTo("sp_log.php", "")'>Logs</span>
+<?php
+if	( array_key_exists ( "debug", $ini_arr ) ) {
+?>
+	 <span class = 'butt-sep'>&nbsp;&nbsp;|</span><span id = 'du' class='head_butt' onclick = 'navTo("dump.php", "")'>Dump</span>
+<?php
+	}
+?>	
+
 </td></tr></table>
 </div>
 

@@ -93,7 +93,6 @@ $disabled = ( ( sp_is_guest() ) || ( sp_is_member() ) ) ? "disabled" : "" ;		//
     <TEXTAREA name='frm_text' COLS=40 ROWS = 2 placeholder="here ..." <?php echo $disabled;?>></TEXTAREA>
     </td></tr>
 <tr valign = 'top'><td>
-    <br/>
     <B>Signal</B> &raquo;
     </td><td>
         <SELECT name='signals' onChange = 'set_signal(this.options[this.selectedIndex].text); this.options[0].selected=true;' <?php echo $disabled;?>>	<!--  11/17/10 -->

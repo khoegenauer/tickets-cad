@@ -1,0 +1,45 @@
+1.	Tickets SP is an adjunct to standard Tickets CAD, a no-muss no-fuss implementation intended for use by 
+	mobile responders utilizing small-screen devices such as smart-phones (hence 'SP') while on dispatch.  
+	Required: an installed Tickets CAD application.  
+
+2.	While it works on conventional desktop machines, users will see some waste of screen real-estate.  It's 
+	been tested and shows satisfactory operation on the android-powered Nexus 4, iPhone and iPad, with Chrome 
+	and Safari browsers.  Given the variety of mobile devices out there, Your Mileage Will Vary!  Let us know.
+
+3.	What's it do?  Well, this version (9/6/2013) has capabilities targeted at mobile incident response, which 
+	is well short of the gamut of a full-fledged Tickets operation.
+	a.	SP uses and requires yr existing and correctly installed Tickets database.
+	b.	SP attempts to locate you while mobile; doing so is controlled by your browser settings.
+	c.  The map is by OpenStreetMap, with Google's an option;  While we also operate with OSM, the combined 
+		downloads overwhelmed smaller devices during early testing.  We expect to get it working, however.
+	d.  SP  provides useful information on existing calls, incidents, responders, facilities, and - new! - road 
+	    information if yr database has any.  You can update status, add information to and close incidents, and 
+	    send email.
+	e.  On any detail page where an arrow icon shows, clicking on that row takes you to some useful page, 
+		depending on the page context.
+	f.	The smallish control in the map's upper right provides hide/show by layer in order to reduce map 
+		clutter. Changes are immediate; no map reload is done.
+	g.  Maps are full-screen; to navigate away, a right-click (desktop) or long-poke (mobile) on the map will 
+	    bring up a navigation menu.
+	h.  If you prefer to use Google maps, see file 'incs/sp.ini' , and 'un-comment' line 8.  That is, simply 
+	    remove the leading semi-colon at the line that reads ";use_gmaps = On" and save the file.  (This is a 
+	    common PHP usage for ini files.)
+
+4.	Installing SP: Simply unzip it into its own directory underneath your Tickets root.  (There's no 
+	installation process.)  You shd see the SP directory along with those 20-odd of Tickets proper.
+
+5.	Accessing SP:  If your Tickets root is at, say, 'my_server/my_cad' then its URL is 'my_server/my_cad/sp' . 
+	There, log-in using yr familiar Tickets login credentials.
+
+6.	Navigate via the nav bar at each page bottom.  With lists displayed, click on the line/item of interest 
+	to bring up its details.  There, wherever you see an arrow icon, clicking on that row will take you to a 
+	page that provides some display or update functionality, depending on the context.	
+
+7.	Futures:  TBD, and influenced by your responses.  (To an extent, this is an exercise to see what the minimal 
+	amount of code can accomplish.)  But look for another mobile-oriented version by Andy Harvey, with a 
+	somewhat different concept to its design and implementation.  It will include a tighter integration with 
+	Tickets proper.  
+	
+Stay toon'd!
+AS
+September, 2013

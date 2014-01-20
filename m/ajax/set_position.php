@@ -8,7 +8,6 @@ error_reporting ( E_ALL ^ E_DEPRECATED );
 
 require_once '../../incs/functions.inc.php';
 require_once '../incs/sp_functions.inc.php';
-snap (basename(__FILE__), __LINE__);
 $now = now_ts() ;										// timestamp format
 
 if ( ! ( is_logged_in ( false ) ) ) {		// check, but don't update expiry - 8/22/2013
@@ -30,7 +29,7 @@ else {
             if ( ! ( array_key_exists($err_key, $_SESSION['SP']) ) ) {				// limit to once per session
                 $_SESSION['SP'][$err_key] = now_ts();
                 $err_arg = "Invalid ajax position data: {$_POST['latitude']} / {$_POST['longitude']}";
-                do_log ($GLOBALS['LOG_ERROR'], 0, 0, $err_arg);
+                sp_do_log ($GLOBALS['LOG_ERROR'], 0, 0, $err_arg);
                 }
             echo "33";
             exit (34);
@@ -82,3 +81,4 @@ else {
         exit (81);
         }
     }
+exit();

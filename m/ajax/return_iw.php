@@ -2,6 +2,7 @@
 /*
 4/18/2013 - initial release
 6/23/2013 - added roadinfo handling
+12/6/2013 - corrected to handle 'me'
 */
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}
 error_reporting ( E_ALL ^ E_DEPRECATED );
@@ -10,7 +11,7 @@ error_reporting(0);
 
 require_once '../../incs/functions.inc.php';
 require_once '../incs/sp_functions.inc.php';
-@session_start();
+
 
 extract ($_POST);
 
@@ -73,8 +74,9 @@ switch ($table_id) {
         break;
 
     case $GLOBALS['TABLE_RESPONDER']:
-//			unit_status
-        $query = get_resp_sql ($the_id);
+    case $GLOBALS['ME']:				// 12/6/2013
+//			unit_status    
+		$query = get_resp_sql ($the_id);		
 //		snap ( __LINE__, $query);
 
         $result = mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
@@ -229,8 +231,8 @@ switch ($table_id) {
 
     default:
         report_error ( basename(__FILE__) . __LINE__);
-
         return "error " . __LINE__;
     }				// end switch()
 
     echo $ret_str;
+    exit();

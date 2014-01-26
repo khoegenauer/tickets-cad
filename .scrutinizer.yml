@@ -4,8 +4,8 @@ filter:
     paths: {  }
 tools:
     js_hint: true
-    php_analyzer: true
-    php_code_sniffer: true
+    php_analyzer: false
+    php_code_sniffer: false
     php_cpd:
         enabled: true
         command: phpcpd
@@ -20,12 +20,12 @@ tools:
                 - 'app/*'
                 - 'web/*'
             paths: {  }
-    php_loc: true
-    php_mess_detector: true
+    php_loc: false
+    php_mess_detector: false
     php_pdepend:
         excluded_dirs:
             - vendor
-        enabled: true
+        enabled: false
         command: pdepend
         configuration_file: null
         suffixes:

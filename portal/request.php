@@ -961,7 +961,7 @@ if (!empty($_POST)) {
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Scope');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_scope' TYPE='TEXT' SIZE='24' MAXLENGTH='64' VALUE="<?php print $row['scope'];?>"></TD>
                     </TR>
                     <TR class='even'>
-                        <TD class='td_label' style='text-align: left;'><?php print get_text('Description');?></TD><TD class='td_data' style='text-align: left;'><TEXTAREA NAME="frm_description" COLS="45" ROWS="2" WRAP="virtual"><?php print $row['description'];?></TEXTAREA></TD>
+                        <TD class='td_label' style='text-align: left;'><?php print get_text('Description');?></TD><TD class='td_data' style='text-align: left;'><TEXTAREA NAME="frm_description" COLS="45" ROWS="10" WRAP="virtual"><?php print $row['description'];?></TEXTAREA></TD>
                     </TR>
                     <TR class='spacer'>
                         <TD class='spacer' COLSPAN=99></TD>

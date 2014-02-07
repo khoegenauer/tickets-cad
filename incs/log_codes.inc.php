@@ -93,3 +93,4 @@ $types = array();
     $types[$GLOBALS['LOG_WARNLOCATION_DELETE']]				="Location Warning Deleted";			// 10/24/13
 
     $types[$GLOBALS['LOG_SPURIOUS']]						="Logged incorrectly - Ignore";			//	10/24/13
+?>

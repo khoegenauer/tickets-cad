@@ -17,3 +17,4 @@ $aprs_poll = @get_variable('auto_poll');		//  possibly not set
 $aprs_poll = (is_null ($aprs_poll))? 0 : $aprs_poll ;
 print $aprs_poll;
 //print "55";
+?>

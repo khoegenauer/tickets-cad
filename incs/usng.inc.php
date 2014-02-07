@@ -556,3 +556,4 @@ function lettersHelper($set, $row, $col) {
         }
 
 // ex:  print LLtoUSNG(-44.12345, 78.25000, 5);
+?>

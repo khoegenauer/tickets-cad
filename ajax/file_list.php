@@ -70,3 +70,4 @@ if (($result) && (mysql_num_rows($result) >=1)) {
 
 print $print;
 exit();
+?>

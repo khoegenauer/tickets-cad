@@ -105,3 +105,4 @@ function do_native_mail($my_smtp_ary, $my_to_ary, $my_subject_str, $my_message_s
 
     return ($temp)? (string) count($my_to_ary) : "0" ;
     } 				// end function do_native_mail
+?>

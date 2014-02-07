@@ -97,3 +97,4 @@ function exportMysqlToCsv($table,$filename, $start, $end, $del) {
         return "100";
         }
     }
+?>

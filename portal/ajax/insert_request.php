@@ -194,3 +194,4 @@ if ($_GET['frm_patient'] == "") {
     }
 print json_encode($ret_arr);
 exit();
+?>

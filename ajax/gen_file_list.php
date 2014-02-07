@@ -37,3 +37,4 @@ $ret_arr[0] = $print;
 $ret_arr[1] = $print2;
 print json_encode($ret_arr);
 exit();
+?>

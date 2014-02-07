@@ -225,3 +225,4 @@ if ($last_id != 0) {
 
 print json_encode($ret_arr);
 exit();
+?>

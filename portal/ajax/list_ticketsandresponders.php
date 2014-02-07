@@ -55,3 +55,4 @@ foreach ($ticket_ids as $val) {
     }
 print json_encode($the_ret);
 exit();
+?>

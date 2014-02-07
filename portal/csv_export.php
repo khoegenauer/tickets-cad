@@ -181,3 +181,4 @@ function exportMysqlToCsv($user,$filename = 'requests.csv') {
     }
 
 exportMysqlToCsv($user);
+?>

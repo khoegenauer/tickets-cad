@@ -601,3 +601,4 @@ $r9 = date("D M j Y G:i:s", time());
 $ret_arr = array ($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9);
 print json_encode($ret_arr);				// 1/6/11
 exit();
+?>

@@ -41,7 +41,7 @@ if (mysql_affected_rows() == 0) {
     $return .= "<TABLE style='width: 100%;'><TR style='width: 100%; font-size: 1em;'><TD style='width: 100%; font-size: 1em; text-align: center;'>" . gettext('No Files') . "</TD></TR></TABLE>";
     } else {
     $return .= "<TABLE style='width: 100%;'>";
-    $return .= "<TR class='heading' style='width: 100%; color: #FFFFFF; font-size: 1.1em;'><TD style='font-size: 1em;; color: #FFFFFF'>" . gettext('File Name') . "</TD><TD style='font-size: 1em;; color: #FFFFFF'>Uploaded By</TD><TD style='font-size: 1em;; color: #FFFFFF'>Date</TD></TR>";
+    $return .= "<TR class='heading' style='width: 100%; color: #FFFFFF; font-size: 1.1em;'><TD style='font-size: 1em;; color: #FFFFFF'>" . gettext('File Name') . "</TD><TD style='font-size: 1em;; color: #FFFFFF'>" . gettext('Uploaded By') . "</TD><TD style='font-size: 1em; color: #FFFFFF'>" . gettext('Date') . "</TD></TR>";
     while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
         $return .= "<TR style='font-size: 1em; background-color: " . $bgcolor . "; font-size: 1em;'>";
         $filename = $row['filename'];
@@ -56,3 +56,4 @@ if (mysql_affected_rows() == 0) {
 
 print $return;
 exit();
+?>

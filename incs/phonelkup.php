@@ -85,3 +85,4 @@ $key = "";  								// free users do not need key (limit 10 addresses), subscrib
 
 //dump ($ret);
 //print eol . "<h3>End</h3>";
+?>

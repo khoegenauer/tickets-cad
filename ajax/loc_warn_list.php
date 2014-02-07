@@ -123,3 +123,4 @@ $ret[1] = $print;
 
 print json_encode($ret);
 exit();
+?>

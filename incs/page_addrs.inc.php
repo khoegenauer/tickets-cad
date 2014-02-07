@@ -66,3 +66,4 @@ $page_addrs = array(
     "sprintpaging.com",
     "webpager.us");
 //print count($page_addrs);
+?>

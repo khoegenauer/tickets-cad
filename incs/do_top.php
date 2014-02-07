@@ -43,3 +43,4 @@ $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_ni
         }
     catch(e) {
         }
+?>

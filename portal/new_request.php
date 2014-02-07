@@ -327,14 +327,14 @@ function sub_request() {
     var recFac = theForm.frm_rec_fac.value;	
     var theScope = theForm.frm_patient.value + " " + requestDate;
     var theComments = "";
-    if(thePatient == "") { err_msg += "\tName of Person required\n"; }
-    if (street == "") { err_msg += "\t<?php print get_text('Street Address');?> required\n"; }
-    if (city == "") { err_msg += "\t<?php print get_text('City');?> is required\n"; }
-    if (state == "") { err_msg += "\t<?php print get_text('State');?> is required, for UK State is UK\n"; }
-  	if(theForm.frm_description.value == "") { err_msg += "\t<?php print get_text('Description');?> is required\n"; }
-    if (requestDate == "") { err_msg += "\tRequest date required\n"; }
+    if(thePatient == "") { err_msg += "\t<?php print gettext('Name of Person required');?>\n"; }
+    if (street == "") { err_msg += "\t<?php print gettext('Street Address required');?>\n"; }
+    if (city == "") { err_msg += "\t<?php print gettext('City is required');?>\n"; }
+    if (state == "") { err_msg += "\t<?php print gettext('State is required, for UK State is UK');?>\n"; }
+  	if(theForm.frm_description.value == "") { err_msg += "\t<?php print gettext('Description is required');?>\n"; }
+    if (requestDate == "") { err_msg += "\t<?php print gettext('Request date required');?>\n"; }
     if (err_msg != "") {
-        alert ("Please correct the following and re-submit:\n\n" + err_msg);
+        alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + err_msg);
 
         return;
         } else {

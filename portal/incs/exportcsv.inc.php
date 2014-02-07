@@ -96,7 +96,7 @@ function exportMysqlToCsv($user,$filename = 'requests.csv') {
         $output[$z][] = $row['state'];
         $output[$z][] = $row['phone'];
      		$theToAddress = explode(',',$row['to_address']);
-		if($theToAddress[0] == "") {
+		if ($theToAddress[0] == "") {
 			$output[$z][] = "";
 			} else {
 			$output[$z][] = $row['to_address'];
@@ -172,3 +172,4 @@ function exportMysqlToCsv($user,$filename = 'requests.csv') {
     exit;
 
 }
+?>

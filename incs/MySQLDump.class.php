@@ -166,3 +166,4 @@ function get_table_structure($tablename) {
     }
 
     }
+?>

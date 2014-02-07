@@ -257,7 +257,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
         }
 
     $heading = $captions[($func)] . " - " . get_variable('map_caption');
-    $regs_string = "<FONT SIZE='-1'>" . get_text("Allocated Regions") . ":&nbsp;&nbsp;" . $al_names . "&nbsp;&nbsp;|&nbsp;&nbsp;Currently Viewing " . get_text("Regions") . ":&nbsp;&nbsp;" . $curr_names . "</FONT>";	//	5/4/11
+    $regs_string = "<FONT SIZE='-1'>" . get_text("Allocated Regions") . ":&nbsp;&nbsp;" . $al_names . "&nbsp;&nbsp;|&nbsp;&nbsp;" . gettext('Currently Viewing') . get_text("Regions") . ":&nbsp;&nbsp;" . $curr_names . "</FONT>";	//	5/4/11
     $eols = array ("\r\n", "\n", "\r");		// all flavors of eol
 
     $query = "SELECT `id` FROM `$GLOBALS[mysql_prefix]responder`";		// 5/12/10
@@ -310,32 +310,32 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
         </TD></TD></TR></TABLE>
     </TD></TR>				<!-- 3/15/11 -->
     <TR><TD CLASS='td_label' COLSPAN='99' ALIGN='center'>
-        <A HREF="mailto:info@TicketsCAD.org?subject=Question/Comment on Tickets Dispatch System"><u><?php print gettext('Contact us');?></u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom"></A>
+        <A HREF="mailto:info@TicketsCAD.org?subject=Question/Comment on Tickets Dispatch System"><u><?php print gettext('Contact us');?></u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom" /></A>
         </TD></TR></TABLE></DIV>
 
     <FORM NAME='unit_form' METHOD='get' ACTION='<?php echo $_SESSION['unitsfile'];?>'>
-    <INPUT TYPE='hidden' NAME='func' VALUE='responder'>
-    <INPUT TYPE='hidden' NAME='view' VALUE=''>
-    <INPUT TYPE='hidden' NAME='edit' VALUE=''>
-    <INPUT TYPE='hidden' NAME='id' VALUE=''>
+    <INPUT TYPE='hidden' NAME='func' VALUE='responder' />
+    <INPUT TYPE='hidden' NAME='view' VALUE='' />
+    <INPUT TYPE='hidden' NAME='edit' VALUE='' />
+    <INPUT TYPE='hidden' NAME='id' VALUE='' />
     </FORM>
 
     <FORM NAME='tick_form' METHOD='get' ACTION='edit.php'>				<!-- 11/27/09 -->
-    <INPUT TYPE='hidden' NAME='id' VALUE=''>
+    <INPUT TYPE='hidden' NAME='id' VALUE='' />
     </FORM>
 
     <FORM NAME='sort_form' METHOD='post' ACTION='main.php'>				<!-- 6/11/10 -->
-    <INPUT TYPE='hidden' NAME='order' VALUE=''>
+    <INPUT TYPE='hidden' NAME='order' VALUE='' />
     </FORM>
 
     <FORM NAME='fac_sort_form' METHOD='post' ACTION='main.php'>				<!-- 3/15/11 -->
-    <INPUT TYPE='hidden' NAME='forder' VALUE=''>
+    <INPUT TYPE='hidden' NAME='forder' VALUE='' />
     </FORM>
 
     <FORM NAME='facy_form' METHOD='get' ACTION='<?php echo $_SESSION['facilitiesfile'];?>'>		<!-- 11/27/09 -->
-    <INPUT TYPE='hidden' NAME='id' VALUE=''>
-    <INPUT TYPE='hidden' NAME='edit' VALUE=''>
-    <INPUT TYPE='hidden' NAME='view' VALUE=''>
+    <INPUT TYPE='hidden' NAME='id' VALUE='' />
+    <INPUT TYPE='hidden' NAME='edit' VALUE='' />
+    <INPUT TYPE='hidden' NAME='view' VALUE='' />
     </FORM>
 
 <SCRIPT>
@@ -904,7 +904,7 @@ function cs_handleResult(req) {					// the 'called-back' function for show curre
 ?>
     side_bar_html_hdr += get_chg_disp_tr();		// adds the "Chg display' row at top of tickets list - 5/6/11
     side_bar_html_hdr +="<br /><br /></TD></TR>\n";
-    side_bar_html_hdr += "<TR class='odd'><TD align='left' width='5%'><B><?php print gettext('ID');?></B></TD><TD align='left' width='15%'><B><?php print $incident; ?></B></TD><TD align='left' width='15%'><B>Address</B></TD><TD align='left' width='15%'><B><?php print $nature;?></B></TD><TD align='left' width='15%'><B>Comments</B></TD><TD align='left' width='15%'><B>Description</B></TD><TD align='left' width='2%'><B>P</B></TD><TD align='left' width='2%'><B>A</B></TD><TD align='left' width='2%'><B><?php print gettext('U');?></B></TD><TD align='center' width='14%'><B><?php print gettext('As of');?></B></TD></TR>";
+    side_bar_html_hdr += "<TR class='odd'><TD align='left' width='5%'><B><?php print gettext('ID');?></B></TD><TD align='left' width='15%'><B><?php print $incident; ?></B></TD><TD align='left' width='15%'><B><?php print gettext('Address');?></B></TD><TD align='left' width='15%'><B><?php print $nature;?></B></TD><TD align='left' width='15%'><B><?php print gettext('Comments');?></B></TD><TD align='left' width='15%'><B><?php print gettext('Description');?></B></TD><TD align='left' width='2%'><B><?php print gettext('P');?></B></TD><TD align='left' width='2%'><B><?php print gettext('A');?></B></TD><TD align='left' width='2%'><B><?php print gettext('U');?></B></TD><TD align='center' width='14%'><B><?php print gettext('As of');?></B></TD></TR>";
     side_bar_html_hdr += "</TABLE>";
 
     var rowIds = [];		// 3/8/10
@@ -1181,7 +1181,7 @@ $temp  = (string) ( round((microtime(true) - $time), 3));
                 }
             }
 //		$sev_string = "Severities: normal ({$by_severity[$GLOBALS['SEVERITY_NORMAL']]}), Medium ({$by_severity[$GLOBALS['SEVERITY_MEDIUM']]}), High ({$by_severity[$GLOBALS['SEVERITY_HIGH']]})";
-        $sev_string = "Severities: <SPAN CLASS='severity_normal'>Normal ({$by_severity[$GLOBALS['SEVERITY_NORMAL']]})</SPAN>,&nbsp;&nbsp;<SPAN CLASS='severity_medium'>Medium ({$by_severity[$GLOBALS['SEVERITY_MEDIUM']]})</SPAN>,&nbsp;&nbsp;<SPAN CLASS='severity_high'>High ({$by_severity[$GLOBALS['SEVERITY_HIGH']]})</SPAN>";
+        $sev_string = gettext('Severities') . ": <SPAN CLASS='severity_normal'>" . gettext('Normal') . " ({$by_severity[$GLOBALS['SEVERITY_NORMAL']]})</SPAN>,&nbsp;&nbsp;<SPAN CLASS='severity_medium'>" . gettext('Medium') . " ({$by_severity[$GLOBALS['SEVERITY_MEDIUM']]})</SPAN>,&nbsp;&nbsp;<SPAN CLASS='severity_high'>" . gettext('High') . " ({$by_severity[$GLOBALS['SEVERITY_HIGH']]})</SPAN>";
 
         unset($acts_ary, $pats_ary, $result_temp, $result_cl);
 
@@ -2128,7 +2128,7 @@ function do_ticket_only($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						//
     $print .= empty($theRow['comments'])? "" : "<TR CLASS='odd'  VALIGN='top'><TD ALIGN='left'>{$disposition}:</TD>	<TD ALIGN='left'>" . replace_quotes(highlight($search, nl2br($theRow['comments']))) . "</TD></TR>\n";
     $print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("Run Start") . ":</TD> <TD ALIGN='left'>" . format_date_2($theRow['problemstart']);
     $end_str = (good_date_time($theRow['problemend']))? format_date_2(strtotime($theRow['problemend'])) : "";
-    $print .= 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End:&nbsp;&nbsp;{$end_str}&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
+    $print .= 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('End') . ":&nbsp;&nbsp;{$end_str}&nbsp;&nbsp;{$elapsed_str}</TD></TR>\n";
     $locale = get_variable('locale');	// 08/03/09
     switch ($locale) {
         case "0":

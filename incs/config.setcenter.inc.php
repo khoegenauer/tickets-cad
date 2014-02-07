@@ -219,7 +219,7 @@ error_reporting (E_ALL  ^ E_DEPRECATED);
                 <TD COLSPAN=2><INPUT TYPE="text" NAME="frm_utm" VALUE="<?php print toUTM($coords);?>" SIZE=22 DISABLED />
                 </TD></TR>
             <TR CLASS = "odd">
-                <TD ALIGN='right'>&nbsp;&nbsp;Zoom:&nbsp;</TD>
+                <TD ALIGN='right'>&nbsp;&nbsp;<?php print gettext('Zoom');?>:&nbsp;</TD>
                 <TD><INPUT TYPE="text" NAME="frm_zoom" VALUE="<?php print get_variable('def_zoom');?>" SIZE=4 disabled /></TD></TR>	<!-- 4/5/09 -->
             <TR VALIGN='baseline'><TD CLASS="td_label" ALIGN='right'><?php print gettext('Dynamic zoom');?>:</TD><TD ALIGN='center' COLSPAN=2>&nbsp;&nbsp;
                      <?php print gettext('Yes');?> &raquo;<INPUT TYPE='radio' NAME='frm_zoom_fixed' VALUE='0' <?php print $checks_ar[0]; ?> onClick = "document.cen_Form.frm_dfz.value=0;" /> &nbsp;&nbsp;
@@ -229,7 +229,7 @@ error_reporting (E_ALL  ^ E_DEPRECATED);
 
             <TR><TD>&nbsp;</TD></TR>
             <TR CLASS = "even"><TD COLSPAN=5 ALIGN='center'>
-                <INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='history.back();'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='reset' VALUE='Reset' onClick = "map_cen_reset();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='submit' VALUE='Submit'></TD></TR>
+                <INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='history.back();'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='reset' VALUE="<?php print gettext('Reset');?>" onClick = "map_cen_reset();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='submit' VALUE="<?php print gettext('Submit');?>"></TD></TR>
                 <INPUT TYPE="hidden" NAME="frm_lat" VALUE="<?php print $lat;?>" />				<!-- // 9/16/08 -->
                 <INPUT TYPE="hidden" NAME="frm_lng" VALUE="<?php print $lng;?>" />
                 <INPUT TYPE="hidden" NAME="frm_dfz" VALUE="<?php print $which;?>" />

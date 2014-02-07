@@ -74,3 +74,4 @@ function module_active($module) {
         return $status;
         }
     }
+?>

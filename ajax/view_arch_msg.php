@@ -174,3 +174,4 @@ $ret_arr[13] = $msg_row['resp_id'];
 $ret_arr[14] = $numrows;
 print json_encode($ret_arr);
 exit();
+?>

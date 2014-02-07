@@ -14,3 +14,4 @@ CREATE TABLE IF NOT EXISTS `snap_data` (
 
 */
 error_reporting(E_ALL);
+?>

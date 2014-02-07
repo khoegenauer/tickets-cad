@@ -706,3 +706,4 @@ function get_msg_settings_help($setting) {/* get help for color settings	3/15/11
 
 //		case 'kml files':  				return 'Dont/Do display KML files - 0/1'; break;
 //def_zoom_fixed
+?>

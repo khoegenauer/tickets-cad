@@ -393,7 +393,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
             <DIV ID='map_canvas' STYLE='WIDTH: <?php print round ($map_factor * get_variable('map_width'));?>PX; HEIGHT: <?php print round ($map_factor * get_variable('map_height'));?>PX; z-index: 999;'></DIV>
         </TD></TR>
         <TR><TD ALIGN='center' style='padding: 0'>
-            <BR /><CENTER><A HREF='#' onClick='toglGrid();'><u><?php print gettext('Grid');?></U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doTraffic()'><U><?php print gettext('Traffic');?></U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doWeather()'><U><?php print gettext('Weather');?></U></A></CENTER>
+            <BR /><CENTER><A HREF='#' onClick='toglGrid();'><u><?php print gettext('Grid');?></U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doTraffic();'><U><?php print gettext('Traffic');?></U></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick='doWeather();'><U><?php print gettext('Weather');?></U></A></CENTER>
         </TD></TR>
         <TR><TD>&nbsp;</TD></TR>				<!-- 3/15/11 -->
         <TR><TD>
@@ -409,11 +409,11 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
                                 <TABLE>
                                     <TR class='heading_2'><TH ALIGN='center' WIDTH='<?php print $ctrls_width;?>'><?php print gettext('Incidents');?></TH></TR>
                                     <TR><TD>				<!-- 3/15/11 -->
-                                        <DIV class='pri_button' onClick="set_pri_chkbox('normal'); hideGroup(1, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' STYLE = 'vertical-align: middle' BORDER=0>&nbsp;&nbsp;<?php print gettext('Normal');?>: <input type=checkbox id='normal'  onClick="set_pri_chkbox('normal');"/>&nbsp;&nbsp;</DIV>
-                                        <DIV class='pri_button' onClick="set_pri_chkbox('medium'); hideGroup(2, 'Incident');"><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;<?php print gettext('Medium');?>: <input type=checkbox id='medium'  onClick="set_pri_chkbox('medium');"/>&nbsp;&nbsp;</DIV>
-                                        <DIV class='pri_button' onClick="set_pri_chkbox('high'); hideGroup(3, 'Incident');"><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle'>&nbsp;&nbsp;<?php print gettext('High');?>: <input type=checkbox id='high'  onClick="set_pri_chkbox('high')"/>&nbsp;&nbsp;</DIV>
-                                        <DIV class='pri_button' ID = 'pri_all' STYLE = 'display: none; width: 70px;' onClick="set_pri_chkbox('all'); hideGroup(4, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' BORDER=0 STYLE = 'vertical-align: middle' /><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle' /><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle' />&nbsp;&nbsp;<?php print gettext("All");?> <input type=checkbox id='all'  STYLE = 'display:none;' onClick="set_pri_chkbox('all');"/>&nbsp;&nbsp;</DIV>
-                                        <DIV class='pri_button' ID = 'pri_none' STYLE = 'width: 60px;' onClick="set_pri_chkbox('none'); hideGroup(5, 'Incident');"><IMG SRC = './our_icons/sm_white.png' BORDER=0 STYLE = 'vertical-align: middle' />&nbsp;&nbsp;<?php print gettext("None");?> <input type=checkbox id='none' STYLE = 'display:none;' onClick="set_pri_chkbox('none');"/>&nbsp;&nbsp;</DIV>
+                                        <DIV class='pri_button' onClick="set_pri_chkbox('normal'); hideGroup(1, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' STYLE = 'vertical-align: middle' BORDER=0 />&nbsp;&nbsp;<?php print gettext('Normal');?>: <input type=checkbox id='normal'  onClick="set_pri_chkbox('normal');"/>&nbsp;&nbsp;</DIV>
+                                        <DIV class='pri_button' onClick="set_pri_chkbox('medium'); hideGroup(2, 'Incident');"><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle' />&nbsp;&nbsp;<?php print gettext('Medium');?>: <input type=checkbox id='medium'  onClick="set_pri_chkbox('medium');"/>&nbsp;&nbsp;</DIV>
+                                        <DIV class='pri_button' onClick="set_pri_chkbox('high'); hideGroup(3, 'Incident');"><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle' />&nbsp;&nbsp;<?php print gettext('High');?>: <input type=checkbox id='high'  onClick="set_pri_chkbox('high')"/>&nbsp;&nbsp;</DIV>
+                                        <DIV class='pri_button' ID = 'pri_all' class='pri_button' STYLE = 'display: none; width: 70px;' onClick="set_pri_chkbox('all'); hideGroup(4, 'Incident');"><IMG SRC = './our_icons/sm_blue.png' BORDER=0 STYLE = 'vertical-align: middle' /><IMG SRC = './our_icons/sm_green.png' BORDER=0 STYLE = 'vertical-align: middle' /><IMG SRC = './our_icons/sm_red.png' BORDER=0 STYLE = 'vertical-align: middle' />&nbsp;&nbsp;<?php print gettext("All");?> <input type=checkbox id='all'  STYLE = 'display:none;' onClick="set_pri_chkbox('all');"/>&nbsp;&nbsp;</DIV>
+                                        <DIV class='pri_button' ID = 'pri_none' class='pri_button' STYLE = 'width: 60px;' onClick="set_pri_chkbox('none'); hideGroup(5, 'Incident');"><IMG SRC = './our_icons/sm_white.png' BORDER=0 STYLE = 'vertical-align: middle' />&nbsp;&nbsp;<?php print gettext("None");?> <input type=checkbox id='none' STYLE = 'display:none;' onClick="set_pri_chkbox('none');"/>&nbsp;&nbsp;</DIV>
                                     </TD></TR>
                                 </TABLE>
                             </TD></TR>
@@ -432,7 +432,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
             </TABLE>
         </TD></TR>
         <TR><TD CLASS='td_label' COLSPAN=99 ALIGN='CENTER'>
-            &nbsp;&nbsp;&nbsp;&nbsp;<A HREF="mailto:<?php echo get_contact_addr();?>?subject=Question/Comment on Tickets Dispatch System"><u><?php print gettext('Contact us');?></u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom"></A>
+            &nbsp;&nbsp;&nbsp;&nbsp;<A HREF="mailto:<?php echo get_contact_addr();?>?subject=Question/Comment on Tickets Dispatch System"><u><?php print gettext('Contact us');?></u>&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="mail.png" BORDER="0" STYLE="vertical-align: text-bottom" /></A>
         </TD></TR>
     </TABLE>
     </TD></TR>
@@ -891,7 +891,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
         chg_disp_tr +="\t\t<OPTION VALUE='9'><?php print $incidents;?> <?php print gettext('closed last year');?></OPTION>\n";
         chg_disp_tr +="\t\t</SELECT>\n</FORM>\n";
                 // 3/30/2013
-         chg_disp_tr +="\t\t<SPAN ID = 'btn_go' onClick='document.to_listtype.submit()' CLASS='conf_button' STYLE = 'margin-left: 10px; display:none; color: green;'><U><?php print gettext('Next');?></U></SPAN>";
+         chg_disp_tr +="\t\t<SPAN ID = 'btn_go' onClick='document.to_listtype.submit();' CLASS='conf_button' STYLE = 'margin-left: 10px; display:none; color: green;'><U><?php print gettext('Next');?></U></SPAN>";
          chg_disp_tr +="\t\t<SPAN ID = 'btn_can' onClick='hide_btns_closed(); hide_btns_scheduled(); ' CLASS='conf_button' STYLE = 'margin-left: 10px; display:none; color: red;'><U><?php print gettext('Cancel');?></U></SPAN>";
          chg_disp_tr +="</TD></TR>\n";
 
@@ -2321,7 +2321,7 @@ var divarea;
         dummymarker.id = color;				// for hide/unhide - unused
         google.maps.event.addListener(dummymarker, "click", function () {		// here for both side bar and icon click
             if (dummymarker) {
-                try {open_iw.close()} catch (err) {;}
+                try {open_iw.close();} catch (err) {;}
                 map.setZoom(8);
                 map.setCenter(point);
                 infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});
@@ -3045,7 +3045,7 @@ if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for 
                     $tab_1 .= "&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='#' onClick = do_close_tick('{$the_id}');><U>" . get_text("Close incident") . " </U></A><BR /><BR /> ";  // 3/3/11
                     }
                 $tab_1 .= 	"&nbsp;&nbsp;&nbsp;&nbsp;<SPAN onClick = do_popup('{$the_id}');><FONT COLOR='blue'><B><U>" . gettext('Popup') . "</B></U></FONT></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ;	// 7/7/09
-                $tab_1 .= 	"<SPAN onClick = 'do_add_note ({$the_id});'><FONT COLOR='blue'><B><U>" . gettext('Add note') . "</B></U></FONT></SPAN><BR /><BR />" ;	// 7/7/09
+                $tab_1 .= 	"<SPAN onClick = 'do_add_note({$the_id});'><FONT COLOR='blue'><B><U>" . gettext('Add note') . "</B></U></FONT></SPAN><BR /><BR />" ;	// 7/7/09
                 if (can_edit()) {							//8/27/10
                     $tab_1 .= 	"<A HREF='patient.php?ticket_id={$the_id}{$rand}'><U>" . gettext("Add {$patient}") . "</U></A>&nbsp;&nbsp;&nbsp;&nbsp;";	// 7/9/09
                     $tab_1 .= 	"<A HREF='action.php?ticket_id={$the_id}{$rand}'><U>" . gettext('Add Action') . "</U></A>&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -3450,7 +3450,8 @@ if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for 
         $latitude = $row['lat'];		// 7/18/10
         $longitude = $row['lng'];		// 7/18/10
 
-		$on_click =  ((!(my_is_float($row['lat']))) || ($quick))? " myclick_nm({$row['unit_id']}) ": "myclick_u({$row['unit_id']})";		// 1/2/10, 1/10/14        $got_point = FALSE;
+		$on_click =  ((!(my_is_float($row['lat']))) || ($quick))? " myclick_nm({$row['unit_id']}) ": "myclick_u({$row['unit_id']})";		// 1/2/10, 1/10/14
+        $got_point = FALSE;
 
         $name = $row['name'];			//	10/8/09
         $index = $row['icon_str'];	// 4/27/11
@@ -3649,12 +3650,12 @@ if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for 
         var rowId = <?php print $row['unit_id']; ?>;			// row index for row hide/show - 3/2/10
         rowIds.push(rowId);													// form is "tr_id_??" where ?? is the row no.
 <?php
-    $row['unit_id']++;				// zero-based
+    $u_sb_indx++;				// zero-based, 12/23/13
     }				// end  ==========  while() for RESPONDER ==========
 ?>
     var legends = "<TR class='even'><TD ALIGN='center' COLSPAN='99'><TABLE ALIGN='center' WIDTH = <?php print max(320, intval($_SESSION['scr_width']* 0.4));?> >";	//	3/15/11
     legends += "<TR CLASS='spacer'><TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;</TD></TR><TR class='even'><TD ALIGN='center' COLSPAN='99'><B><?php print gettext("Units Legend");?></B></TD></TR>";	//	3/15/11
-    legends += "<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'>&nbsp;&nbsp;<?php print gettext('<B>M</B>obility');?>:&nbsp;&nbsp; <?php print gettext('stopped');?>: <FONT COLOR='red'>&bull;</FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('moving');?>: <FONT COLOR='green'>&bull;</FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('fast');?>: <FONT COLOR='white'>&bull;</FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('silent');?>: <FONT COLOR='black'>&bull;</FONT>&nbsp;&nbsp;</TD></TR>";	//	3/15/11
+    legends += "<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'>&nbsp;&nbsp;<?php print gettext('<B>M</B>obility stopped');?>: <FONT COLOR='red'>&bull;</FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('moving');?>: <FONT COLOR='green'>&bull;</FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('fast');?>: <FONT COLOR='white'>&bull;</FONT>&nbsp;&nbsp;&nbsp;<?php print gettext('silent');?>: <FONT COLOR='black'>&bull;</FONT>&nbsp;&nbsp;</TD></TR>";	//	3/15/11
     legends += "<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'><?php print get_units_legend();?></TD></TR></TABLE>";	//	3/15/11
 
     $("side_bar_r").innerHTML = side_bar_html;		//	12/03/10
@@ -3880,9 +3881,9 @@ function createfacMarker(fac_point, fac_tabs, id, fac_icon, type, region) {		// 
 ?>
         side_bar_html += "<TR CLASS = 'even'><TD COLSPAN=99 ALIGN='center'>";	//	3/15/11
         side_bar_html += "<I><B><?php print gettext('Sort');?></B>:&nbsp;&nbsp;&nbsp;&nbsp;";
-        side_bar_html += "<?php print gettext('Handle');?>&raquo; 	<input type = radio name = 'frm_order' value = 1 <?php print $fs_checked[1];?> onClick = 'do_fac_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";	//	3/15/11, 5/3/11
-        side_bar_html += "<?php print gettext('Type');?>&raquo; 	<input type = radio name = 'frm_order' value = 2 <?php print $fs_checked[2];?> onClick = 'do_fac_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";	//	3/15/11, 5/3/11
-        side_bar_html += "<?php print gettext('Status');?>&raquo; <input type = radio name = 'frm_order' value = 3 <?php print $fs_checked[3];?> onClick = 'do_fac_sort_sub(this.value);' />";	//	3/15/11, 5/3/11
+        side_bar_html += "<?php print gettext('Handle');?>&raquo; 	<input type = 'radio' name = 'frm_order' value = 1 <?php print $fs_checked[1];?> onClick = 'do_fac_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";	//	3/15/11, 5/3/11
+        side_bar_html += "<?php print gettext('Type');?>&raquo; 	<input type = 'radio' name = 'frm_order' value = 2 <?php print $fs_checked[2];?> onClick = 'do_fac_sort_sub(this.value);' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";	//	3/15/11, 5/3/11
+        side_bar_html += "<?php print gettext('Status');?>&raquo; <input type = 'radio' name = 'frm_order' value = 3 <?php print $fs_checked[3];?> onClick = 'do_fac_sort_sub(this.value);' />";	//	3/15/11, 5/3/11
         side_bar_html += "</I></TD></TR>";	//	3/15/11
 <?php
 
@@ -4109,10 +4110,10 @@ if (!empty($fac_categories)) {
     $all="fac_ALL";		//	12/03/10
     $none="fac_NONE";				//	12/03/10
 ?>
-    side_bar_html += "<DIV ID = 'fac_ALL_BUTTON'  class='cat_button' onClick='set_fac_chkbox(\"<?php print $all;?>\")'><FONT COLOR = 'red'><?php print gettext('ALL');?></FONT><input type=checkbox id='<?php print $all;?>' onClick='set_fac_chkbox(\"<?php print $all;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
-    side_bar_html += "<DIV ID = 'fac_NONE_BUTTON'  class='cat_button' onClick='set_fac_chkbox(\"<?php print $none;?>\")'><FONT COLOR = 'red'><?php print gettext('NONE');?></FONT><input type=checkbox id='<?php print $none;?>' onClick='set_fac_chkbox(\"<?php print $none;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
-    side_bar_html += "<DIV ID = 'fac_go_can' style='float:right; padding:2px;'><SPAN ID = 'fac_go_button' onClick='do_go_facilities_button()' class='conf_next_button' STYLE = 'display:none;'><U><?php print gettext('Next');?></U></SPAN>";
-    side_bar_html += "<SPAN ID = 'fac_can_button'  onClick='fac_cancel_buttons()' class='conf_can_button' STYLE = 'display:none;'><U><?php print gettext('Cancel');?></U></SPAN></DIV>";
+    side_bar_html += "<DIV ID = 'fac_ALL_BUTTON'  class='cat_button' onClick='set_fac_chkbox(\"<?php print $all;?>\");'><FONT COLOR = 'red'><?php print gettext('ALL');?></FONT><input type=checkbox id='<?php print $all;?>' onClick='set_fac_chkbox(\"<?php print $all;?>\");'/></FONT></DIV>";			<!-- 12/03/10 -->
+    side_bar_html += "<DIV ID = 'fac_NONE_BUTTON'  class='cat_button' onClick='set_fac_chkbox(\"<?php print $none;?>\");'><FONT COLOR = 'red'><?php print gettext('NONE');?></FONT><input type=checkbox id='<?php print $none;?>' onClick='set_fac_chkbox(\"<?php print $none;?>\");'/></FONT></DIV>";			<!-- 12/03/10 -->
+    side_bar_html += "<DIV ID = 'fac_go_can' style='float:right; padding:2px;'><SPAN ID = 'fac_go_button' onClick='do_go_facilities_button();' class='conf_next_button' STYLE = 'display:none;'><U><?php print gettext('Next');?></U></SPAN>";
+    side_bar_html += "<SPAN ID = 'fac_can_button'  onClick='fac_cancel_buttons();' class='conf_can_button' STYLE = 'display:none;'><U><?php print gettext('Cancel');?></U></SPAN></DIV>";
     side_bar_html+="</DIV></form></TD></TR></TABLE>";			<!-- 12/03/10, 3/15/11 -->
     $("fac_boxes").innerHTML = side_bar_html;										// 12/03/10 side_bar_html to responders div
 
@@ -4583,23 +4584,23 @@ print get_buttons_inner2();	//	4/12/12
 
         print	"<DIV style='background-color: #707070; color: #FFFFFF; position: relative; text-align: center;'>
                     <FORM NAME='the_filter'>
-                        <SPAN style='vertical-align: middle; text-align: center;'><B>" . gettext('FILTER') . ": &nbsp;&nbsp;</B><INPUT TYPE='text' NAME='frm_filter' size='60' MAXLENGTH='128' VALUE=''>
-                        <SPAN id = 'filter_box' class='plain' style='float: none; vertical-align: middle;' onMouseover = 'do_hover(this);' onMouseout='do_plain(this);' onClick='do_filter(the_ticket,\"\")'>&nbsp;&nbsp;&#9654;&nbsp;&nbsp;" . gettext('GO') . "</SPAN>
-                        <SPAN id = 'the_clear' class='plain' style='float: none; display: none; vertical-align: middle;' onMouseover = 'do_hover(this);' onMouseout='do_plain(this);' onClick='clear_filter(the_ticket,\"\")'>&nbsp;&nbsp;X&nbsp;&nbsp;" . gettext('Clear') . "</SPAN>
+                        <SPAN style='vertical-align: middle; text-align: center;'><B>" . gettext('FILTER') . ": &nbsp;&nbsp;</B><INPUT TYPE='text' NAME='frm_filter' size='60' MAXLENGTH='128' VALUE='' />
+                        <SPAN id = 'filter_box' class='plain' style='float: none; vertical-align: middle;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='do_filter(the_ticket,\"\");'>&nbsp;&nbsp;&#9654;&nbsp;&nbsp;" . gettext('GO') . "</SPAN>
+                        <SPAN id = 'the_clear' class='plain' style='float: none; display: none; vertical-align: middle;' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='clear_filter(the_ticket,\"\");'>&nbsp;&nbsp;X&nbsp;&nbsp;" . gettext('Clear') . "</SPAN>
                         </SPAN><BR /><BR />
                     </FORM>
                 </DIV>";
         print "	<TABLE cellspacing='0' cellpadding='0' style='width: 98%; background-color: #CECECE;'>
                     <TR style='background-color: #CECECE; color: #FFFFFF; width: 100%;'>";
                         $print = "";
-    //					$print .= (in_array('1', $column_arr)) ? "<TD id='ticket' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`ticket_id`',filter)\">" . gettext('Tkt') . "</TD>" : "";
-                        $print .= (in_array('2', $column_arr)) ? "<TD id='type' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`msg_type`',filter)\">" . gettext('Typ') . "</TD>" : "";
-                        $print .= (in_array('3', $column_arr)) ? "<TD id='from' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`fromname`',filter)\">" . gettext('From') . "</TD>" : "";
-                        $print .= (in_array('4', $column_arr)) ? "<TD id='recipients' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`recipients`',filter)\">" . gettext('To') . "</TD>" : "";
-                        $print .= (in_array('5', $column_arr)) ? "<TD id='subject' class='cols_h' NOWRAP style='width: 20%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`subject`',filter)\">" . gettext('Subject') . "</TD>" : "";
-                        $print .= (in_array('6', $column_arr)) ? "<TD id='message' class='msg_col_h' NOWRAP style='width: 40%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`message`',filter)\">" . gettext('Message') . "</TD>" : "";
-                        $print .= (in_array('7', $column_arr)) ? "<TD id='date' class='cols_h' style='width: 10%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`date`',filter)\">" . gettext('Date') . "</TD>" : "";
-                        $print .= (in_array('8', $column_arr)) ? "<TD id='owner' class='cols_h' NOWRAP style='width: 7%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`_by`',filter)\">" . gettext('Owner') . "</TD>" : "";
+    //					$print .= (in_array('1', $column_arr)) ? "<TD id='ticket' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`ticket_id`',filter);\">" . gettext('Tkt') . "</TD>" : "";
+                        $print .= (in_array('2', $column_arr)) ? "<TD id='type' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`msg_type`',filter);\">" . gettext('Typ') . "</TD>" : "";
+                        $print .= (in_array('3', $column_arr)) ? "<TD id='from' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`fromname`',filter);\">" . gettext('From') . "</TD>" : "";
+                        $print .= (in_array('4', $column_arr)) ? "<TD id='recipients' class='cols_h' NOWRAP style='width: 5%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`recipients`',filter);\">" . gettext('To') . "</TD>" : "";
+                        $print .= (in_array('5', $column_arr)) ? "<TD id='subject' class='cols_h' NOWRAP style='width: 20%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`subject`',filter);\">" . gettext('Subject') . "</TD>" : "";
+                        $print .= (in_array('6', $column_arr)) ? "<TD id='message' class='msg_col_h' NOWRAP style='width: 40%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`message`',filter);\">" . gettext('Message') . "</TD>" : "";
+                        $print .= (in_array('7', $column_arr)) ? "<TD id='date' class='cols_h' style='width: 10%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`date`',filter);\">" . gettext('Date') . "</TD>" : "";
+                        $print .= (in_array('8', $column_arr)) ? "<TD id='owner' class='cols_h' NOWRAP style='width: 7%;' onClick=\"sort_switcher('ticket', the_selected_ticket,'','`_by`',filter);\">" . gettext('Owner') . "</TD>" : "";
                         $print .= "<TD class='cols_h' NOWRAP style='width: 4%;'>" . gettext('Del') . "</TD>";
                         print $print;
         print "		</TR>

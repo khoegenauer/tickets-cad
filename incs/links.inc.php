@@ -22,7 +22,7 @@ for ($i=0; $i<count($the_keys); $i++) {
     $func_key = explode(",", get_variable($the_keys[$i]));			//8/5/09
     if (count($func_key) == 2) {
 //		$str.="<SPAN id = 'func_key{$i}'  CLASS = 'unselected'  onMouseover = \"ChngClass(this.id, 'selected');\" onMouseout = \"ChngClass(this.id, 'unselected');\"	onClick = 'launch(\"$func_key[0]\", \"$func_key[1]\");'>$func_key[1]&nbsp;&nbsp;&nbsp;&nbsp;</SPAN>\n";
-        $str.="<A ID = 'func_key{$i}'  CLASS = 'unselected' href='$func_key[0]' target='$func_key[1]' onMouseover = \"ChngClass(this.id, 'selected');\" onMouseout = \"ChngClass(this.id, 'unselected');\" onClick = 'launch(\"$func_key[0]\", \"$func_key[1]\")'; return false;\">$func_key[1]</a>\n";
+        $str.="<A ID = 'func_key{$i}'  CLASS = 'unselected' href='$func_key[0]' target='$func_key[1]' onMouseover = \"ChngClass(this.id, 'selected');\" onMouseout = \"ChngClass(this.id, 'unselected');\" onClick = 'launch(\"$func_key[0]\", \"$func_key[1]\"); return false;'>$func_key[1]</a>\n";
 
         }
     }

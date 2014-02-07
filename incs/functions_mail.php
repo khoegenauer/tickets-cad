@@ -379,3 +379,4 @@ function is_email($email) {		   //  validate email, code courtesy of Jerrett Tay
             return TRUE;
             }
         }							  // end function is_email()
+?>

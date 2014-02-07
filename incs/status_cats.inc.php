@@ -742,3 +742,4 @@ function count_facilities() {
 
     return $facilities_no;
     }
+?>

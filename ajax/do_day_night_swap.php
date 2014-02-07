@@ -14,3 +14,4 @@ session_start();
 $_SESSION['day_night'] = ($_SESSION['day_night']=="Day")? "Night" : "Day";	// swap
 //snap(basename(__FILE__),  $_SESSION['day_night']) ;
 echo $_SESSION['day_night'];
+?>

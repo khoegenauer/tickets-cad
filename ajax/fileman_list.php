@@ -44,3 +44,4 @@ if (mysql_num_rows($result) == 0) {
 
 print json_encode($ret_arr);
 exit();
+?>

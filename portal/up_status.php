@@ -48,3 +48,4 @@ $result = mysql_query($query) or do_error($query, "", mysql_error(), basename( _
 set_sess_exp();				// update session time
 print date("H:i", $now);
 exit();
+?>

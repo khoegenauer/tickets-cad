@@ -195,9 +195,9 @@ function fs_get_disp_status($row_in) {			// 3/25/11
     <B><NOBR>	<!-- 2/16/11 Change CSS classes -->
     <FORM>
         <SPAN class='fs_buttons' onClick='maxWindow();'><U><?php print gettext('Full screen');?></U></SPAN>
-        <SPAN class='fs_buttons' onClick='toglGrid()' STYLE = 'margin-left: 60px'><U><?php print gettext('Grid');?></U></SPAN> <!-- 4/24/13 -->
-        <SPAN class='fs_buttons' onClick='doTraffic()' STYLE = 'margin-left: 60px'><U><?php print gettext('Traffic');?></U></SPAN>
-        <SPAN class='fs_buttons' onClick='doWeather()' STYLE = 'margin-left: 60px'><U><?php print gettext('Weather');?></U></SPAN> <!-- 4/24/13 -->
+        <SPAN class='fs_buttons' onClick='toglGrid();' STYLE = 'margin-left: 60px'><U><?php print gettext('Grid');?></U></SPAN> <!-- 4/24/13 -->
+        <SPAN class='fs_buttons' onClick='doTraffic();' STYLE = 'margin-left: 60px'><U><?php print gettext('Traffic');?></U></SPAN>
+        <SPAN class='fs_buttons' onClick='doWeather();' STYLE = 'margin-left: 60px'><U><?php print gettext('Weather');?></U></SPAN> <!-- 4/24/13 -->
 <?php
 //		if (((!empty($num_closed)) && ($num_closed > 0)) || ($num_scheduled > 0)) {					// 10/26/09  added button, 10/21/09 added check for closed incidents on the database, 3/29/11 added scheduled runs option
             echo "<SPAN class='fs_buttons' STYLE =  'margin-left: 60px'><U>" . gettext('Change display') . "</U>&nbsp;&raquo;&nbsp;</SPAN>";
@@ -2634,7 +2634,7 @@ function fs_get_disp_status($row_in) {			// 3/25/11
             } else {
 ?>
                 var the_group = '<?php print $the_group;?>';
-                var marker = createUnitMarker(point, myinfoTabs, <?php print $the_color;?>, <?php print $hide_unit;?>,  <?php print $sb_indx; ?>, sym, the_group); // 7/28/10, 3/15/11, 12/23/13
+                var marker = createUnitMarker(point, myinfoTabs, <?php print $the_color;?>, <?php print $hide_unit;?>,  <?php print $row['unit_id']; ?>, sym, the_group); // 7/28/10, 3/15/11, 12/23/13
                 marker.setMap(map);
 
 <?php
@@ -2665,8 +2665,8 @@ function fs_get_disp_status($row_in) {			// 3/25/11
 ?>
             side_bar_html += "<DIV ID = 'ALL_BUTTON' class='cat_button' onClick='set_chkbox(\"<?php print $all;?>\")'><FONT COLOR = 'red'>ALL</FONT><input type=checkbox id='<?php print $all;?>' onClick='set_chkbox(\"<?php print $all;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
             side_bar_html += "<DIV ID = 'NONE_BUTTON' class='cat_button'  onClick='set_chkbox(\"<?php print $none;?>\")'><FONT COLOR = 'red'>NONE</FONT><input type=checkbox id='<?php print $none;?>' onClick='set_chkbox(\"<?php print $none;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
-            side_bar_html += "<DIV ID = 'go_can' style='float:right; padding:2px;'><SPAN ID = 'go_button' onClick='do_go_button()' class='conf_next_button' STYLE = 'display:none;'><U><?php print gettext('Next');?></U></SPAN>";
-            side_bar_html += "<SPAN ID = 'can_button'  onClick='cancel_buttons()' class='conf_can_button' STYLE = 'display:none;'><U><?php print gettext('Cancel');?></U></SPAN></DIV>";
+            side_bar_html += "<DIV ID = 'go_can' style='float:right; padding:2px;'><SPAN ID = 'go_button' onClick='do_go_button();' class='conf_next_button' STYLE = 'display:none;'><U><?php print gettext('Next');?></U></SPAN>";
+            side_bar_html += "<SPAN ID = 'can_button'  onClick='cancel_buttons();' class='conf_can_button' STYLE = 'display:none;'><U><?php print gettext('Cancel');?></U></SPAN></DIV>";
             side_bar_html+="</form></TD></TR></TABLE>";			<!-- 12/03/10 -->
 <?php
     } else {
@@ -3072,10 +3072,10 @@ function fs_get_disp_status($row_in) {			// 3/25/11
         $all="fac_ALL";		//	12/03/10
         $none="fac_NONE";				//	12/03/10
 ?>
-        side_bar_html += "<DIV ID = 'fac_ALL_BUTTON'  class='cat_button_fs' onClick='set_fac_chkbox(\"<?php print $all;?>\")'><FONT COLOR = 'red'><?php print gettext('ALL');?></FONT><input type=checkbox id='<?php print $all;?>' onClick='set_fac_chkbox(\"<?php print $all;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
-        side_bar_html += "<DIV ID = 'fac_NONE_BUTTON'  class='cat_button_fs' onClick='set_fac_chkbox(\"<?php print $none;?>\")'><FONT COLOR = 'red'><?php print gettext('NONE');?></FONT><input type=checkbox id='<?php print $none;?>' onClick='set_fac_chkbox(\"<?php print $none;?>\")'/></FONT></DIV>";			<!-- 12/03/10 -->
-        side_bar_html += "<DIV ID = 'fac_go_can' style='float:middle; padding:2px;'><SPAN ID = 'fac_go_button' onClick='do_go_facilities_button()' class='conf_next_button' STYLE = 'display:none;'><U><?php print gettext('Next');?></U></SPAN>";
-        side_bar_html += "<SPAN ID = 'fac_can_button'  onClick='fac_cancel_buttons()' class='conf_can_button' STYLE = 'display:none;'><U><?php print gettext('Cancel');?></U></SPAN></DIV>";
+        side_bar_html += "<DIV ID = 'fac_ALL_BUTTON'  class='cat_button_fs' onClick='set_fac_chkbox(\"<?php print $all;?>\");'><FONT COLOR = 'red'><?php print gettext('ALL');?></FONT><input type=checkbox id='<?php print $all;?>' onClick='set_fac_chkbox(\"<?php print $all;?>\");'/></FONT></DIV>";			<!-- 12/03/10 -->
+        side_bar_html += "<DIV ID = 'fac_NONE_BUTTON'  class='cat_button_fs' onClick='set_fac_chkbox(\"<?php print $none;?>\");'><FONT COLOR = 'red'><?php print gettext('NONE');?></FONT><input type=checkbox id='<?php print $none;?>' onClick='set_fac_chkbox(\"<?php print $none;?>\");'/></FONT></DIV>";			<!-- 12/03/10 -->
+        side_bar_html += "<DIV ID = 'fac_go_can' style='float:middle; padding:2px;'><SPAN ID = 'fac_go_button' onClick='do_go_facilities_button();' class='conf_next_button' STYLE = 'display:none;'><U><?php print gettext('Next');?></U></SPAN>";
+        side_bar_html += "<SPAN ID = 'fac_can_button'  onClick='fac_cancel_buttons();' class='conf_can_button' STYLE = 'display:none;'><U><?php print gettext('Cancel');?></U></SPAN></DIV>";
         side_bar_html+="</form>";			<!-- 12/03/10 -->
         $("fac_boxes").innerHTML = side_bar_html;										// 12/03/10 side_bar_html to responders div
 

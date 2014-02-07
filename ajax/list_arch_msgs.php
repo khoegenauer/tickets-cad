@@ -293,3 +293,4 @@ foreach ($the_result AS $msg_row) {
 
 print json_encode($ret_arr);
 exit();
+?>

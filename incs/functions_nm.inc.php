@@ -3565,3 +3565,4 @@ function short_ts($in_str) {		// ex:10/29/10 12:22 - 10/2/10
 
     return substr($in_str, -5);
     }
+?>

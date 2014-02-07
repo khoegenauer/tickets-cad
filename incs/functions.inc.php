@@ -5726,3 +5726,4 @@ function list_files($ticket_id=0, $responder_id=0, $facility_id=0, $type=0, $por
 
     return $print;
     }
+?>

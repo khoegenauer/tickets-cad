@@ -439,7 +439,7 @@ function auto_status($message, $responder, $datestring) {	//	6/21/13
  */
 function ReplaceImap($txt) {	//	function to clean up body text
     $carimap = array("=C3=A9", "=C3=A8", "=C3=AA", "=C3=AB", "=C3=A7", "=C3=A0", "=20", "=C3=80", "=C3=89");
-    $carhtml = array("ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½", "&nbsp;", "ï¿½", "ï¿½");
+    $carhtml = array("é", "è", "ê", "ë", "ç", "à", "&nbsp;", "À", "É");
     $txt = str_replace($carimap, $carhtml, $txt);
 
     return $txt;

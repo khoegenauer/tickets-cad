@@ -190,3 +190,4 @@ $graph->SetShadow();
 $graph->xaxis->SetTextLabelInterval(4);
 $graph->SetTickDensity(TICKD_DENSE);
 $graph->Stroke();									// Display the graph
+?>

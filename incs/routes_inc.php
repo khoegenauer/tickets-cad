@@ -263,7 +263,7 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
                 var marker = new google.maps.Marker({position: point, map: map, icon: image_file});
                 marker.id = color;				// for hide/unhide - unused
                 google.maps.event.addListener(marker, "click", function () {		// here for both side bar and icon click
-                    try {open_iw.close()} catch (err) {;}
+                    try {open_iw.close();} catch (err) {;}
                     map.setCenter(point, 8);
                     var infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});
                     open_iw = infowindow;
@@ -284,7 +284,7 @@ function get_assigned_td($unit_id, $on_click = "") {		// returns td string - 3/1
                 dummymarker.id = color;				// for hide/unhide - unused
                 google.maps.event.addListener(dummymarker, "click", function () {		// here for both side bar and icon click
                     if (dummymarker) {
-                        try {open_iw.close()} catch (err) {;}
+                        try {open_iw.close();} catch (err) {;}
                         map.setZoom(8);
                         map.setCenter(point);
                         infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});
@@ -1071,3 +1071,4 @@ $query = "SELECT * FROM `$GLOBALS[mysql_prefix]allocates` WHERE `type`= 1 AND `r
 
 <?php
         }			// end function do_list() ===========================================================
+?>

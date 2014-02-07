@@ -655,8 +655,8 @@ select.sit {
 .infowindow-content {
   scrollbar-base-color:#369;
 	width: 300px;
+    height: 200px;
 	padding: 10px;
-  height: 200px;
 	overflow: auto;
 	}
 	

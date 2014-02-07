@@ -117,6 +117,7 @@ script:
 ##    UNIT TESTING
 #PHPUnit
 #  - phpunit --configuration phpunit_$DB.xml --coverage-text
+- phpunit --version
 after_script:
 #-----------------------------------------
 ## Database Tools

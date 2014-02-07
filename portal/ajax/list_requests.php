@@ -252,3 +252,4 @@ if (mysql_num_rows($result) == 0) { 				// 8/6/08
 
 print json_encode($ret_arr);
 exit();
+?>

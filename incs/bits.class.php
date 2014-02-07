@@ -143,3 +143,4 @@ echo $bits -> QueryBit(BIT_1).",";
 echo $bits -> QueryBit(BIT_2).",";
 echo $bits -> QueryBit(BIT_3);
 */
+?>

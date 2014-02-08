@@ -42,3 +42,4 @@ if (($_GET['lat'] && $_GET['lat'] != "") && ($_GET['lng'] && $_GET['lng'] != "")
     }
 print json_encode($response_code);
 exit();
+?>

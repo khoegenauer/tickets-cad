@@ -2218,7 +2218,7 @@ function pause_messages() {	//	10/29/13
                         <div style='width: 20%; display: inline-block;'><?php print gettext('To:');?></div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_to"></div><BR />
                         <div style='width: 20%; display: inline-block;'><?php print gettext('From:');?></div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_from"></div><BR />
                         <div style='width: 20%; display: inline-block;'><?php print gettext('Subject:');?></div><div style='width: 70%; display: inline-block;'><input type="text" size='35' maxlength='128' name="frm_subject"></div><BR />
-                        <div style='width: 20%; display: inline-block; vertical-align: top;'><?php print gettext('Message:');?></div><div style='width: 70%; display: inline-block;'><textarea name='frm_msg' rows="10" cols="30">Basic Message</textarea></div>
+                        <div style='width: 20%; display: inline-block; vertical-align: top;'><?php print gettext('Message:');?></div><div style='width: 70%; display: inline-block;'><textarea name='frm_msg' rows="10" cols="30"><?php print gettext('Basic Message');?></textarea></div>
                     </form>
                 </div>
                 <div id='directions_wrapper' style='z-index: 5; text-align: left; height: 100%; display: none; background-color: #EFEFEF;'><BR />

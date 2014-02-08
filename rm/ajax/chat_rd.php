@@ -35,3 +35,4 @@ require_once '../../incs/functions.inc.php';
         }
     print $return;
 exit();
+?>

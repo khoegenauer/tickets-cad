@@ -56,3 +56,4 @@ $ret_arr[4] = $print;
 
 print json_encode($ret_arr);
 exit();
+?>

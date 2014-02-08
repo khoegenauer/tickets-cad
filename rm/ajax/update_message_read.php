@@ -73,3 +73,4 @@ if (($the_readers[0] != "") && (in_array($the_user, $the_readers, true))) {
 
 print json_encode($the_return);
 exit();
+?>

@@ -23,3 +23,4 @@ $query  = sprintf("INSERT INTO `$GLOBALS[mysql_prefix]chat_messages` (`when`, `m
 $result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 print mysql_insert_id();
 exit();
+?>

@@ -54,7 +54,7 @@ $signals_list .= "</SELECT>\n";
         <FORM METHOD="post" NAME='chat_form' onSubmit="return false;">
             <NOBR>
             <DIV style='width: 20%; display: inline-block; vertical-align: top;'>
-                <B>Message</B>
+                <B><?php print gettext('Message');?></B>
             </DIV>
             <DIV style='width: 80%; display: inline-block;'>
                 <INPUT TYPE="text" NAME="frm_message" MAXLENGTH="255" SIZE="25" value = "" onChange = "clear_to();" onBlur = 'set_to();' ><BR />
@@ -63,7 +63,7 @@ $signals_list .= "</SELECT>\n";
             </DIV><BR />
             <DIV class='spacer'></div>
             <DIV style='width: 20%; display: inline-block;'>
-                <B>Signals</B>
+                <B><?php print gettext('Signals');?></B>
             </DIV>
             <DIV style='width: 80%; display: inline-block;'>
                 <?php print  $signals_list; ?><br />

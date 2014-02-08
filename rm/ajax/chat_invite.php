@@ -23,3 +23,4 @@ $query  = "INSERT INTO `$GLOBALS[mysql_prefix]chat_invites` (`to`, `_by`, `_from
 $result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
 print "";
 exit();
+?>

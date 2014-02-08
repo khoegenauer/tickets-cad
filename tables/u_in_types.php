@@ -39,12 +39,12 @@
         </TD></TR>
 
     <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Group');?>:</TD>
-        <TD><INPUT MAXLENGTH="20" SIZE="20" type="text" NAME="frm_group" VALUE="<?php print $row['group'] ;?>" onChange = "this.value=JSfnTrim(this.value);"/> <SPAN class='opt' >text</SPAN></TD></TR>
+        <TD><INPUT MAXLENGTH="20" SIZE="20" type="text" NAME="frm_group" VALUE="<?php print $row['group'] ;?>" onChange = "this.value=JSfnTrim(this.value);"/> <SPAN class='opt' ><?php print gettext('text');?></SPAN></TD></TR>
     <TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Sort');?>:</TD><TD><INPUT MAXLENGTH=11 SIZE=11 TYPE= "text" NAME="frm_sort" VALUE="<?php print $row['sort'] ;?>" onChange = "this.value=JSfnTrim(this.value);"/> <SPAN class='opt' ><?php print gettext('numeric');?></SPAN></TD></TR>
     <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Radius');?>:</TD><TD><INPUT MAXLENGTH=4 SIZE=4 TYPE= "text" NAME="frm_radius" VALUE="<?php print $row['radius'] ;?>" onChange = "this.value=JSfnTrim(this.value);"/> <SPAN class='opt' ><?php print gettext('numeric');?></SPAN></TD></TR>
 
     <TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Color');?>:</TD>
-        <TD><INPUT MAXLENGTH="8" SIZE="8" type="text" NAME="frm_color" VALUE="<?php print $row['color'] ;?>" onChange = "this.value=JSfnTrim(this.value);"/> <SPAN class='opt' >text</SPAN></TD></TR>
+        <TD><INPUT MAXLENGTH="8" SIZE="8" type="text" NAME="frm_color" VALUE="<?php print $row['color'] ;?>" onChange = "this.value=JSfnTrim(this.value);"/> <SPAN class='opt' ><?php print gettext('text');?></SPAN></TD></TR>
     <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Opacity');?>:</TD><TD><INPUT MAXLENGTH=3 SIZE=3 TYPE= "text" NAME="frm_opacity" VALUE="<?php print $row['opacity'] ;?>" onChange = "this.value=JSfnTrim(this.value);"/> <SPAN class='opt' ><?php print gettext('numeric');?></SPAN></TD></TR>
 <?php
     $mg_select = "<SELECT NAME='frm_notify_mailgroup'>";
@@ -65,7 +65,7 @@
 
     <INPUT TYPE="reset" 	VALUE="<?php print gettext('Reset');?>"/>&nbsp;&nbsp;&nbsp;&nbsp;
     <INPUT TYPE="button" 	NAME="sub_but" VALUE="               <?php print gettext('Submit');?>                " onclick="this.disabled=true; JSfnCheckInput(this.form, this);"/>&nbsp;&nbsp;&nbsp;&nbsp;
-    <INPUT TYPE="button" 	NAME="del_but" VALUE="<?php print gettext('Delete this entry');?>" onclick="if (confirm('Please confirm DELETE action')) {this.form.func.value='d'; this.form.submit();}"/></TD></TR>
+    <INPUT TYPE="button" 	NAME="del_but" VALUE="<?php print gettext('Delete this entry');?>" onclick="if (confirm('<?php print gettext('Please confirm DELETE action');?>')) {this.form.func.value='d'; this.form.submit();}"/></TD></TR>
     </FORM>
     </TD></TR></TABLE>
 <?php

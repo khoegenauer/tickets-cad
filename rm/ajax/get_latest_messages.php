@@ -27,3 +27,4 @@ if ($num_new_msgs != 0) {
     }
 print json_encode($the_return);
 exit();
+?>

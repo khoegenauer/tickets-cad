@@ -106,7 +106,7 @@ switch ($row_hide) {
 
     <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Group');?>:</TD>
         <TD><INPUT MAXLENGTH="20" SIZE="20" type="text" NAME="frm_group" VALUE="<?php print $row['group'] ;?>" onChange = "this.value=JSfnTrim(this.value);"/> <SPAN class='opt' ><?php print gettext('text');?></SPAN></TD></TR>
-    <TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Sort');?>:</TD><TD><INPUT MAXLENGTH="int(11)" SIZE="int(11)" TYPE= "text" NAME="frm_sort" VALUE="<?php print $row['sort'] ;?>" onChange = "this.value=JSfnTrim(this.value);"/> <SPAN class='opt' >numeric</SPAN></TD></TR>
+    <TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Sort');?>:</TD><TD><INPUT MAXLENGTH="int(11)" SIZE="int(11)" TYPE= "text" NAME="frm_sort" VALUE="<?php print $row['sort'] ;?>" onChange = "this.value=JSfnTrim(this.value);"/> <SPAN class='opt' ><?php print gettext('numeric');?></SPAN></TD></TR>
         <TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Background color');?>:</TD>
             <TD>
                 <SELECT name='dmy_status_id' STYLE='background-color:<?php print $row['bg_color']; ?>; color:<?php print $row['text_color']; ?>;' ONCHANGE =  "set_bg_vals (this.form);this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor; this.style.color=this.options[this.selectedIndex].style.color;">
@@ -158,7 +158,7 @@ switch ($row_hide) {
   <INPUT TYPE="button" 	VALUE="<?php print gettext('Cancel');?>" onClick = "Javascript: document.retform.submit();"/>&nbsp;&nbsp;&nbsp;&nbsp;
   <INPUT TYPE="reset"		VALUE="<?php print gettext('Reset');?>"  onClick = "do_reset(this.form);" />&nbsp;&nbsp;&nbsp;&nbsp;
   <INPUT TYPE="button" 	NAME="sub_but" VALUE="               <?php print gettext('Submit');?>                " onclick="this.disabled=true; JSfnCheckInput(this.form, this );"/>&nbsp;&nbsp;&nbsp;&nbsp;
-  <INPUT TYPE="button" 	NAME="del_but" VALUE="<?php print gettext('Delete this entry');?>" onclick="if (confirm('Please confirm DELETE action')) {this.form.func.value='d'; this.form.submit();}"/></TD></TR>
+  <INPUT TYPE="button" 	NAME="del_but" VALUE="<?php print gettext('Delete this entry');?>" onclick="if (confirm('<?php print gettext('Please confirm DELETE action');?>')) {this.form.func.value='d'; this.form.submit();}"/></TD></TR>
     <INPUT TYPE="hidden" NAME="def_bg_color"  	VALUE="<?php print $row['bg_color'];?>" /> <!-- default values see reset button -->
     <INPUT TYPE="hidden" NAME="def_text_color"	VALUE="<?php print $row['text_color'];?>" />
 

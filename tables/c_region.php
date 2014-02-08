@@ -32,19 +32,19 @@
             </SELECT>
             </TD></TR>
     <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Description');?>:</TD>
-        <TD><INPUT ID="ID2" CLASS="dirty" MAXLENGTH="60" SIZE="48" type="text" NAME="frm_description" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('Integer');?></SPAN></TD></TR>
+        <TD><INPUT ID="ID2" CLASS="dirty" MAXLENGTH="60" SIZE="48" type="text" NAME="frm_description" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);" /> <SPAN class='warn' ><?php print gettext('Integer');?></SPAN></TD></TR>
     <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Def Area Code');?>:</TD>
-        <TD><INPUT ID="ID3" CLASS="dirty" MAXLENGTH="4" SIZE="4" type="text" NAME="frm_def_area_code" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('Integer');?></SPAN></TD></TR>
+        <TD><INPUT ID="ID3" CLASS="dirty" MAXLENGTH="4" SIZE="4" type="text" NAME="frm_def_area_code" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);" /> <SPAN class='warn' ><?php print gettext('Integer');?></SPAN></TD></TR>
     <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Def City');?>:</TD>
-        <TD><INPUT ID="ID4" CLASS="dirty" MAXLENGTH="20" SIZE="20" type="text" NAME="frm_def_city" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+        <TD><INPUT ID="ID4" CLASS="dirty" MAXLENGTH="20" SIZE="20" type="text" NAME="frm_def_city" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);" /> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
     <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Def Latitude');?>:</TD>
-        <TD><INPUT ID="ID5" CLASS="dirty" MAXLENGTH="10" SIZE="10" type="text" NAME="frm_def_lat" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('Double');?></SPAN></TD></TR>
+        <TD><INPUT ID="ID5" CLASS="dirty" MAXLENGTH="10" SIZE="10" type="text" NAME="frm_def_lat" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);" /> <SPAN class='warn' ><?php print gettext('Double');?></SPAN></TD></TR>
     <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Def Longitude');?>:</TD>
-        <TD><INPUT ID="ID6" CLASS="dirty" MAXLENGTH="10" SIZE="10" type="text" NAME="frm_def_lng" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('Double');?></SPAN></TD></TR>
+        <TD><INPUT ID="ID6" CLASS="dirty" MAXLENGTH="10" SIZE="10" type="text" NAME="frm_def_lng" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);" /> <SPAN class='warn' ><?php print gettext('Double');?></SPAN></TD></TR>
     <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Def State');?>:</TD>
-        <TD><INPUT ID="ID7" CLASS="dirty" MAXLENGTH="20" SIZE="20" type="text" NAME="frm_def_st" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
+        <TD><INPUT ID="ID7" CLASS="dirty" MAXLENGTH="20" SIZE="20" type="text" NAME="frm_def_st" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);" /> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
     <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Def Zoom');?>:</TD>
-        <TD><INPUT ID="ID8" CLASS="dirty" MAXLENGTH="2" SIZE="2" type="text" NAME="frm_def_zoom" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('Integer');?></SPAN></TD></TR>
+        <TD><INPUT ID="ID8" CLASS="dirty" MAXLENGTH="2" SIZE="2" type="text" NAME="frm_def_zoom" VALUE="" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);" /> <SPAN class='warn' ><?php print gettext('Integer');?></SPAN></TD></TR>
     <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Boundary');?>:</TD>
                 <TD CLASS="td_data"><SELECT NAME="frm_boundary" onChange = "this.value=JSfnTrim(this.value);">	<!--  11/17/10 -->
                 <OPTION VALUE=0 SELECTED><?php print gettext('Select');?></OPTION>

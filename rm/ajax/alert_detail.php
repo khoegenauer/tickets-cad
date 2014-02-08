@@ -42,3 +42,4 @@ $print .= "<TD style='width: 20%; border: 1px solid #707070;'>" . format_date_2(
 $print .= "</TABLE>";
 print $print;
 exit();
+?>

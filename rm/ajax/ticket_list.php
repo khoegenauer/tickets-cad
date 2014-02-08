@@ -41,7 +41,7 @@ if (mysql_num_rows($result) == 0) {
         $result2 = mysql_query($query2) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
         while ($row2 = stripslashes_deep(mysql_fetch_assoc($result2))) {
-            $print .= "<TR title='Click for detail' style='width: 100%; cursor: pointer; background-color: " . $bgcolor . ";' onClick='get_ticket(" . $row2['id'] . ");'>";
+            $print .= "<TR title='{gettext('Click for detail')}' style='width: 100%; cursor: pointer; background-color: " . $bgcolor . ";' onClick='get_ticket(" . $row2['id'] . ");'>";
             $print .= "<TD style='width: 30%;'>" . $row2['scope'] . "</TD>";
             $print .= "<TD style='width: 50%;'>" . stripslashes_deep(shorten($row2['description'], 30)) . "</TD>";
             $print .= "<TD style='width: 20%;'>" . format_date_2(strtotime($row2['problemstart'])) . "</TD>";
@@ -53,3 +53,4 @@ if (mysql_num_rows($result) == 0) {
     }	//	end else
 print $print;
 exit();
+?>

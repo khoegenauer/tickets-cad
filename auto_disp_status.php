@@ -127,7 +127,7 @@ if (!empty($_POST)) {
         <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
         <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" />
         <TITLE>Tickets</TITLE>
-        <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+        <LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />
         <link rel="shortcut icon" href="favicon.ico" />
         <STYLE>
             .table_header	{ color: #FFFFFF; text-align: left; height: 20px; border: 1px solid #000000; background: #707070;}

@@ -693,7 +693,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">			<!-- 3/15/11 -->
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">			<!-- 3/15/11 -->
     <STYLE TYPE="text/css">
     #suggest{background:#fff; width:150px;	}
     #suggest div{ background:#ddd; color:#000; padding-left:4px; cursor:hand; text-align:left;position:relative;	}
@@ -2255,7 +2255,7 @@ while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {	// 6/10/11
 
     }
 if (is_super()) {
-    $al_names .= "&nbsp;&nbsp;" . gettext('Superadmin Level') . '"';
+    $al_names .= "&nbsp;&nbsp;" . gettext('Superadmin Level');
 }
 
 if (isset($_SESSION['viewed_groups'])) {	//	6/10/11
@@ -2326,7 +2326,7 @@ function do_nearby(the_form) {		// 11/22/2012
 <TR CLASS='even'>
     <TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_loca"];?>');"><?php print get_text("Location"); ?></A>:</TD>
     <TD></TD>
-    <TD><INPUT NAME="frm_street" tabindex=1 SIZE="72" TYPE="text" VALUE="<?php print $street;?>" MAXLENGTH="96"></TD>
+    <TD><INPUT NAME="frm_street" tabindex=1 SIZE="72" TYPE="text" VALUE="<?php print $street;?>" MAXLENGTH="96" /></TD>
     </TR>
 <TR CLASS='odd'>
     <TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print gettext('About Address - for instance, round the back, building number etc.');?>');"><?php print get_text("Address About"); ?></A>:</TD>	<!-- 9/10/13 -->
@@ -2447,7 +2447,7 @@ if (get_num_groups()) {
         } else {
 ?>
         <TR CLASS='even' VALIGN="top">	<!--  6/10/11 -->
-        <TD CLASS="td_label" onmouseout='UnTip();' onmouseover="Tip('Sets groups that Incident is allocated to - click + to expand, - to collapse');"><?php print get_text("Regions");?></A>:
+        <TD CLASS="td_label" onmouseout='UnTip();' onmouseover="Tip('<?php print gettext('Sets groups that Incident is allocated to - click + to expand, - to collapse');?>');"><?php print get_text("Regions");?></A>:
         </TD>
         <TD>
         <SPAN id='expand_gps' onClick="$('checkButts').style.display = 'inline-block'; $('groups_sh').style.display = 'inline-block'; $('expand_gps').style.display = 'none'; $('collapse_gps').style.display = 'inline-block';" style = 'display: inline-block; font-size: 16px; border: 1px solid;'><B>+</B></SPAN>

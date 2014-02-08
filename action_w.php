@@ -47,7 +47,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
     <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
     <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
     <META HTTP-EQUIV="Script-date" CONTENT="8/24/08" />
-    <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+    <LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
 <SCRIPT src="./js/multiSelect.js"></SCRIPT>
 <SCRIPT>
 /**
@@ -618,3 +618,4 @@ function init() {
 //	return (empty($addrs))? FALSE: $addrs;
 //	}
 //
+?>

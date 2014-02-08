@@ -45,3 +45,4 @@ else {		// a WTF situation?
     $err_arg = basename(__FILE__) . "/" . __LINE__;
     do_log ($GLOBALS['LOG_ERROR'], 0, 0, $err_arg);		// log error message
     }
+?>

@@ -22,3 +22,4 @@ require_once($_SESSION['fip']);		//7/28/10
 
     $result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename( __FILE__), __LINE__);
     print mysql_insert_id();
+?>

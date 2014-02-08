@@ -28,3 +28,4 @@ else {
     }
 
 //snap (__LINE__, $query);
+?>

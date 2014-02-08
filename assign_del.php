@@ -34,3 +34,4 @@ $query = "DELETE FROM `$GLOBALS[mysql_prefix]assigns` WHERE `id` = " . $_POST['f
 $result = mysql_query($query) or do_error($query, "", mysql_error(), basename( __FILE__), __LINE__);
 
 unset($result);
+?>

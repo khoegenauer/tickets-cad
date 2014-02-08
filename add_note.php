@@ -147,3 +147,4 @@ Signal &raquo;
         unset($result);
         }		// end if/else (quick)
     }		// end if/else (empty())
+?>

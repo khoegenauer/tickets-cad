@@ -35,3 +35,4 @@ $insert_id = mysql_insert_id();
 //$query = "UPDATE `{$mysql_prefix}sit_ago`  SET  `e` = NOW() WHERE `id` = 1 LIMIT 1";		//the map date column
 //$result = mysql_query($query) or myerror(get_file(__file__), __line__, 'mysql_error', $query);
 unset ($result);
+?>

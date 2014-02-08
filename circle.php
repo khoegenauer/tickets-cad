@@ -52,7 +52,7 @@ if (array_key_exists("id", $_POST) && (!(empty($_POST['id'])))) {
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE"/>
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript"/>
 <META HTTP-EQUIV="Script-date" CONTENT="12/15/10 3:55"> <!-- 7/7/09 -->
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />
 <STYLE>
 /* comment */
 A:hover 					{text-decoration: underline; color: red;}
@@ -847,14 +847,14 @@ function buildMap_c() {															// 'create' version
 <?php
     print (array_key_exists("caption", $_POST))? "<H3>{$_POST['caption']}</H3>" : "";
 
-    $type_ary = array( "p" =>gettext("Polygon"),	"c" => gettext("Circle"), "t" => gettext("Banner"), "k" => gettext("kml"));
+    $type_ary = array( "p" =>"Polygon",	"c" => "Circle", "t" => "Banner", "k" => "kml");
     $capt_ary = array( "p" =>gettext("click map - drag icons"),	"c" => gettext("Click map and enter form values"), "t" => gettext("Click map and enter form values"),  "k" => gettext("kml"));
-    $line_ary = array( "p" =>gettext("Line"),	"c" =>gettext("Circle"), "t" =>gettext("Text"), "k" => gettext("kml"));
+    $line_ary = array( "p" =>"Line",	"c" =>"Circle", "t" => "Text", "k" => "kml");
 
     $query = "SELECT * FROM `$GLOBALS[mysql_prefix]mmarkup_cats` ORDER BY `category` ASC";
     $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
     $cats_sel = "<SELECT NAME = 'frm_cat_list' onChange = 'this.form.frm_line_cat_id.value = this.options[this.selectedIndex].value;'>\n";
-    $cats_sel .= "<OPTION VALUE=0 SELECTED >Select</OPTION>\n";
+    $cats_sel .= "<OPTION VALUE=0 SELECTED >" . gettext('Select') . "</OPTION>\n";
     while ($row = mysql_fetch_assoc($result)) {
         $cats_sel .= "<OPTION VALUE=\"{$row['id']}\">" . shorten($row['category'], 30) . "</OPTION>\n";
         }
@@ -1309,7 +1309,7 @@ else {
         <TR><TD>&nbsp;</TD></TR>
         <TR CLASS="odd" VALIGN = baseline >
             <TD CLASS="td_label" ALIGN="left"><?php print gettext('Description');?>:</TD>
-            <TD><INPUT MAXLENGTH="32" SIZE="32" type="text" NAME="frm_name" VALUE="<?php print $row['line_name'];?>" <?php print $dis;?> onChange = "this.value.trim();">
+            <TD><INPUT MAXLENGTH="32" SIZE="32" type="text" NAME="frm_name" VALUE="<?php print $row['line_name'];?>" <?php print $dis;?> onChange = "this.value.trim();" />
             <SPAN CLASS = 'td_label' STYLE = 'margin-left:20px;'><?php print gettext('Visible');?>:
 <?php if ($_func == "r") {?>
 
@@ -1366,7 +1366,7 @@ else {
             </TD></TR>
 
         <TR CLASS="even" ID = 'fill_tr'  VALIGN = baseline STYLE = 'display:<?php echo $tr_display;?>' >
-            <TD CLASS="td_label" ALIGN="left">Fill: &nbsp; &nbsp; &nbsp;</TD>
+            <TD CLASS="td_label" ALIGN="left"><?php print gettext('Fill');?>: &nbsp; &nbsp; &nbsp;</TD>
             <TD ALIGN="left"><SPAN CLASS="td_label" >
                     <?php print gettext('Color');?> &raquo;&nbsp;<INPUT MAXLENGTH="8" SIZE="8" type="text" NAME="frm_fill_color" VALUE="<?php print $row['fill_color'];?>"  class="color" <?php print $dis;?> />&nbsp;&nbsp;&nbsp;&nbsp;
                     <?php print gettext('Opacity');?> &raquo;&nbsp;<INPUT MAXLENGTH=3 SIZE=3 TYPE= "text" NAME="frm_fill_opacity" VALUE="<?php print $row['fill_opacity'];?>" <?php print $dis;?> />&nbsp;&nbsp;&nbsp;&nbsp;

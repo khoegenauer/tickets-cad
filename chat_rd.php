@@ -37,3 +37,4 @@ require_once($_SESSION['fip']);		//7/28/10
         $return .= $row['user_name'] . "\t" . substr($row['when'], 11,5) . "\t" .$row['message'] . "\t" .$row['chat_messages_id'] . "\t". 0xFF;
         }
     print $return;
+?>

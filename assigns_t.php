@@ -75,3 +75,4 @@ $use_status_update = get_variable("use_disp_autostat");
 if ($use_status_update == "1") {
     auto_disp_status($disp_status, $frm_unit);
     }
+?>

@@ -43,3 +43,4 @@ do_log($GLOBALS['LOG_CALL_RESET'], $row['ticket_id'], $row['responder_id'], $row
 set_u_updated ($_POST['frm_id']); 									// 9/1/10
 
 unset($result);
+?>

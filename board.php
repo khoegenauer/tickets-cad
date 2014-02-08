@@ -168,7 +168,7 @@ function show_top() {				// generates the document introduction
         <META HTTP-EQUIV="Pragma" 				CONTENT="NO-CACHE"/>
         <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript"/>
         <META HTTP-EQUIV="Script-date" 			CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
-        <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"> <!-- 3/15/11 -->
+        <LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" /> <!-- 3/15/11 -->
     <STYLE>
         span.even 	{ background-color: #DEE3E7;}
         .odd 	{ background-color: #EFEFEF;}
@@ -1214,10 +1214,10 @@ setTimeout('do_post()', 1000);
                 <TR VALIGN = 'bottom'>
                 <TD COLSPAN=2></TD>
                 <TD ALIGN='left' COLSPAN=2>
-                    <INPUT TYPE='button' VALUE='    <?php print gettext('Reset');?>    ' onClick = "document.add_mail_form.reset();"  CLASS = 'btn'>&nbsp;&nbsp;&nbsp;
-                    <INPUT TYPE='button' VALUE='<?php print gettext('Send message');?>' onClick = "do_send_it ();"  CLASS = 'btn'>&nbsp;&nbsp;&nbsp;
-                    <INPUT TYPE='button' VALUE='<?php print gettext('Do NOT send');?>' onClick = "window.close();"  CLASS = 'btn'> 	<!-- 6/16/09 - force refresh -->
-                    <INPUT TYPE='hidden' NAME='func' VALUE='list'>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <INPUT TYPE='button' VALUE='    <?php print gettext('Reset');?>    ' onClick = "document.add_mail_form.reset();"  CLASS = 'btn' />&nbsp;&nbsp;&nbsp;
+                    <INPUT TYPE='button' VALUE='<?php print gettext('Send message');?>' onClick = "do_send_it ();"  CLASS = 'btn' />&nbsp;&nbsp;&nbsp;
+                    <INPUT TYPE='button' VALUE='<?php print gettext('Do NOT send');?>' onClick = "window.close();"  CLASS = 'btn' /> 	<!-- 6/16/09 - force refresh -->
+                    <INPUT TYPE='hidden' NAME='func' VALUE='list' />&nbsp;&nbsp;&nbsp;&nbsp;
                     <SPAN ID = 'sending' CLASS = 'header' STYLE = 'display: none'><?php print gettext('Sending!');?><SPAN>
                     </FORM>
                 </TD>
@@ -1273,11 +1273,11 @@ setTimeout('do_post()', 1000);
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Add Complete');?></TITLE>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<META HTTP-EQUIV="Expires" CONTENT="0" />
+<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 <SCRIPT>
 //	alert(<?php echo __LINE__; ?>);
     window.opener.do_refresh();
@@ -1891,7 +1891,7 @@ setTimeout('do_post()', 1000);
                         <TD ALIGN='left'>" . cb_shorten("Addr", $COLS_ADDR) . "</TD>
                         <TD ALIGN='center'>&nbsp;</TD>
                         <TD ALIGN='left' CLASS='emph'> " . cb_shorten("Name", $COLS_UNIT) . "</TD>
-                        <TD ALIGN='center' TITLE='" . gettext('E-mail') . "'><IMG SRC='mail.png'></TD>
+                        <TD ALIGN='center' TITLE='" . gettext('E-mail') . "'><IMG SRC='mail.png' /></TD>
                         <TD ALIGN='center' TITLE= '" . gettext('Dispatched') . "'>{$tags_arr[0]}</TD>
                         <TD ALIGN='center' TITLE= '" . gettext('Responding') . "'>{$tags_arr[1]}</TD>
                         <TD ALIGN='center' TITLE= '" . gettext('On scene') . "'>{$tags_arr[2]}</TD>
@@ -1990,7 +1990,7 @@ setTimeout('do_post()', 1000);
                         print "\t<TD  CLASS='mylink' onmouseover =\"$('c{$i}').style.visibility='visible';\" onmouseout = \"$('c{$i}').style.visibility='hidden'; \" ALIGN='center'>
                             \n\t<SPAN id=\"c{$i}\" style=\"visibility: hidden\">
                             &nbsp;<IMG SRC='mail.png' BORDER=0 TITLE = '" . gettext('click to email unit {$unit_name}') . "'
-                             onclick = \"do_mail_win(F{$i}.frm_contact_via.value, {$row['ticket_id']}); \">
+                             onclick = \"do_mail_win(F{$i}.frm_contact_via.value, {$row['ticket_id']}); \" />
                             </SPAN></TD>\n";		// 4/26/09
 
                         echo get_disp_cell($row['dispatched'], 	"frm_dispatched", $theClass );		// 1/8/2013
@@ -2009,8 +2009,8 @@ setTimeout('do_post()', 1000);
                                 print "\t<TD ALIGN='left' onmouseover=\"Tip('{$unit_st_val}');\" TITLE= '$unit_st_val' onmouseout=\"UnTip();\">" .  get_un_stat_sel($row['un_status_id'], $i) . "</TD>\n";						// 4/4/10 status
                                 }
 
-                            print "\t<TD>\n\t<SPAN ID='TD{$i}' STYLE='display:none'><INPUT TYPE='button' VALUE='" . gettext('Go') . "'  CLASS = 'btn' onClick=\"to_server(F$i); do_refresh();\">\n"; 		// 9/28/08
-                            print "\t<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "'   CLASS = 'btn' onClick=\"document.F$i.reset();hide_but($i);\"></SPAN></TD>\n";
+                            print "\t<TD>\n\t<SPAN ID='TD{$i}' STYLE='display:none'><INPUT TYPE='button' VALUE='" . gettext('Go') . "'  CLASS = 'btn' onClick=\"to_server(F$i); do_refresh();\" />\n"; 		// 9/28/08
+                            print "\t<INPUT TYPE='button' VALUE='" . gettext('Cancel') . "'   CLASS = 'btn' onClick=\"document.F$i.reset();hide_but($i);\" /></SPAN></TD>\n";
                             array_push($unit_ids, $row['unit_id']);
                             }
                         else {
@@ -2244,7 +2244,7 @@ setTimeout('do_post()', 1000);
                 print $asgn_row['status_val'];
                 }		// end if (!$asgn_row['resp_id']=="0")
             else {
-                print "NA";
+                print gettext("NA");
                 }
 ?>
             </TD></TR>
@@ -3193,3 +3193,4 @@ setTimeout('do_post()', 1000);
     </BODY></HTML><!-- <?php echo __LINE__;?> -->
 <?php
     }		// end else ...		1/13/09
+?>

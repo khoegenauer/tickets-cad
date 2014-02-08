@@ -36,3 +36,4 @@ set_sess_exp();				// update session time
 print date("H:i", $now) ;
 
 //date("H:i", $row['as_of'])
+?>

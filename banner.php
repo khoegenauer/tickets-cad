@@ -663,7 +663,7 @@ switch ($_POST["_func"]) {
         }		// end if/else (mysql_num_rows($result)==0)
 ?>
         <TR CLASS = 'odd'><TD COLSPAN=99 ALIGN='center'  STYLE = 'white-space:nowrap;'><BR />
-              <INPUT TYPE="button" VALUE="<?php print gettext('Add new');?> =>" >
+              <INPUT TYPE="button" VALUE="<?php print gettext('Add new');?> =>" />
               <INPUT TYPE = 'button' VALUE = "<?php print gettext('Polygon');?>" onClick = "document.new_form._type.value='p'; document.new_form.submit();"/>
               <INPUT TYPE = 'button' VALUE = "<?php print gettext('Circle');?>" onClick = "location.href='circle.php';"/>
               <INPUT TYPE = 'button' VALUE = "<?php print gettext('Banner');?>" onClick = "location.href='banner.php';"/>

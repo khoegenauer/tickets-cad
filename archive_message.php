@@ -53,12 +53,12 @@ $now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('Message');?></TITLE>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<META HTTP-EQUIV="Expires" CONTENT="0" />
+<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />
 <SCRIPT SRC="./js/messaging.js" TYPE="text/javascript"></SCRIPT>
 <SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
 <SCRIPT>

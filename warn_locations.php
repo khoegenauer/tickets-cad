@@ -362,7 +362,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
  * @param {type} theForm
  * @returns {Boolean}
  */
-    function validate(theForm) {						// Facility form contents validation
+    function validate(theForm) {						// form contents validation
         if (theForm.frm_remove) {
             if (theForm.frm_remove.checked) {
                 var str = "Please confirm removing '" + theForm.frm_name.value + "'";
@@ -1087,7 +1087,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
     $i=1;				// counter
 // =============================================================================
     $utc = gmdate ("U");
-    while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {		// ==========  major while() for Facility ==========
+    while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {		// ==========  major while() for Location ==========
         $the_bg_color = 	$GLOBALS['LOC_TYPES_BG'];
         $the_text_color = 	$GLOBALS['LOC_TYPES_TEXT'];
         $the_on_click = (my_is_float($row['lat']))? " onClick = myclick({$i}); " : " onClick = myclick_nm({$row['id']}); ";
@@ -1179,7 +1179,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
             print "\tdo_sidebar_nm (\" {$sidebar_line} \" , i, {$row['id']}, loc_id);\n";	// sidebar only - no map
             }
     $i++;				// zero-based
-    }				// end  ==========  while() for Facility ==========
+    }				// end  ==========  while() for Location ==========
 
 ?>
     if (!(map_is_fixed)) {

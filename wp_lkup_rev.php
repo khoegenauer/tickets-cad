@@ -41,7 +41,7 @@ $query  = "SELECT  * FROM `$GLOBALS[mysql_prefix]constituents` WHERE `phone`= '{
 $result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
 if (mysql_num_rows($result)==1) {
-	$cons_row = stripslashes_deep(mysql_fetch_array($result))
+	$cons_row = stripslashes_deep(mysql_fetch_array($result));
 	$apartment = 	$aptStr . $cons_row['apartment']; 						// note brackets
 	$misc = 		$cons_row['miscellaneous'];
 	}

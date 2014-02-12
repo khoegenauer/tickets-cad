@@ -41,7 +41,7 @@ $disposition = get_text("Disposition");				// 12/1/10
 <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" /> <!-- 7/7/09 -->
-<LINK REL=StyleSheet HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
+<LINK REL="StyleSheet" HREF="stylesheet.php" TYPE="text/css" />	<!-- 3/15/11 -->
 </HEAD>
 <?php
 
@@ -446,3 +446,4 @@ function do_is_start($in_row) {				// 3/22/10
         } 			// end function do_is_finished()
 
 //	 window.opener.parent.frames["main"].location="edit.php?ticket_id={$_GET['ticket_id']};
+?>

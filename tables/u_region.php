@@ -19,7 +19,7 @@
         <TR><TD>&nbsp;</TD></TR>
     <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Region or Group name');?>:</TD>
         <TD><INPUT  ID="ID1" CLASS="dirty" MAXLENGTH="16" SIZE="16" type="text" NAME="frm_group_name" VALUE="<?php print $row['group_name'];?>" onFocus="JSfnChangeClass(this.id, 'dirty');" onChange = "this.value=JSfnTrim(this.value);"> <SPAN class='warn' ><?php print gettext('text');?></SPAN></TD></TR>
-    <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label ALIGN="right"><?php print gettext('Group Category');?>:</TD>
+    <TR VALIGN="baseline" CLASS="even"><TD CLASS="td_label" ALIGN="right"><?php print gettext('Group Category');?>:</TD>
                 <TD CLASS="td_data"><SELECT NAME="frm_category" onChange = "this.value=JSfnTrim(this.value);">	<!--  11/17/10 -->
                 <OPTION VALUE=0><?php print gettext('Select');?></OPTION>
 <?php

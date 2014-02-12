@@ -219,3 +219,4 @@ if (isset($_POST['module_choice'])) { // Handle the form.
     </DIV>
     <?php
     }
+?>

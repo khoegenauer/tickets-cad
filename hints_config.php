@@ -33,13 +33,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <HEAD><TITLE><?php print gettext('Tickets - Hints Configuration Module');?></TITLE>
-    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-    <META HTTP-EQUIV="Expires" CONTENT="0">
-    <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-    <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-    <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-    <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
-    <LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+    <META HTTP-EQUIV="Expires" CONTENT="0" />
+    <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
+    <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
+    <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
+    <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" />
+    <LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />	<!-- 3/15/11 -->
     <STYLE>
     LI { margin-left: 20px;}
     .spl { FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #000099; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none}

@@ -19,14 +19,14 @@ require_once($_SESSION['fip']);		//7/28/10
 <HTML>
 <HEAD>
 <TITLE><?php print LessExtension(basename(__FILE__));?> </TITLE>
-<META NAME="Description" CONTENT="Email to units">
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<META NAME="Description" CONTENT="Email to units" />
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<META HTTP-EQUIV="Expires" CONTENT="0" />
+<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
+<META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" />
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />	<!-- 3/15/11 -->
 <STYLE>
 #.plain 	{ background-color: #FFFFFF;}
 </STYLE>

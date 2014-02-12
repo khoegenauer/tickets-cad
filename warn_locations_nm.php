@@ -233,7 +233,7 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
         ShowLayer(elid, "block");
         }
 
-    function validate(theForm) {						// Facility form contents validation
+    function validate(theForm) {						//  form contents validation
         if (theForm.frm_remove) {
             if (theForm.frm_remove.checked) {
                 var str = "Please confirm removing '" + theForm.frm_name.value + "'";
@@ -536,7 +536,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
     $i=1;				// counter
 // =============================================================================
     $utc = gmdate ("U");
-    while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {		// ==========  major while() for Facility ==========
+    while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {		// ==========  major while() for Location ==========
         $the_bg_color = 	$GLOBALS['LOC_TYPES_BG'];
         $the_text_color = 	$GLOBALS['LOC_TYPES_TEXT'];
         $the_on_click = (my_is_float($row['lat']))? " onClick = myclick({$i}); " : " onClick = myclick_nm({$row['id']}); ";	//	3/15/11
@@ -579,7 +579,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
         do_sidebar_nm("<?php print $sidebar_line;?>" , i, <?php print $row['id'];?>, loc_id);
 <?php
     $i++;				// zero-based
-    }				// end  ==========  while() for Facility ==========
+    }				// end  ==========  while() for Location ==========
 
 ?>
 var buttons_html = "";
@@ -618,7 +618,7 @@ var buttons_html = "";
 
     $now = mysql_format_date(time() - (get_variable('delta_mins')*60));
     $caption = "";
-    if ($_postfrm_remove == 'yes') {					//delete Facility - checkbox
+    if ($_postfrm_remove == 'yes') {					//delete Location - checkbox
         $query = "DELETE FROM $GLOBALS[mysql_prefix]warnings WHERE `id`=" . $_POST['frm_id'];
         $result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
         $caption = "<B>Location <I>" . stripslashes_deep($_POST['frm_name']) . "</I> has been deleted from database.</B><BR /><BR />";

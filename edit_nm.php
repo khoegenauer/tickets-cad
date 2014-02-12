@@ -343,9 +343,9 @@ function edit_ticket($id) {							/* post changes */
 //		alert (theForm);
         var errmsg="";
         if ((document.edit.frm_status.value == <?php print $GLOBALS['STATUS_CLOSED'];?>) && (document.edit.frm_year_problemend.disabled))
-                                                        {errmsg+= "\t<?php print gettext('Closed ticket requires run end date');?>\n";}
+            {errmsg+= "\t<?php print gettext('Closed ticket requires run end date');?>\n";}
         if ((document.edit.frm_status.value == <?php print $GLOBALS['STATUS_CLOSED'];?>) && (document.edit.frm_comments==""))
-                                                        {errmsg+= "\t<?php print gettext('Closed ticket requires {$disposition} data');?>\n";}
+            {errmsg+= "\t<?php print gettext('Closed ticket requires {$disposition} data');?>\n";}
         if (theForm.frm_contact.value == "") {errmsg+= "\t<?php print gettext('Reported-by is required');?>\n";}
         if (theForm.frm_scope.value == "") {errmsg+= "\t<?php print gettext('Incident name is required');?>\n";}		// 10/21/08
 //		if (theForm.frm_description.value == "") {errmsg+= "\t<?php print gettext('Synopsis is required');?>\n";}
@@ -361,8 +361,8 @@ function edit_ticket($id) {							/* post changes */
 <?php		/* 6/4/2013  */
         if ( ( intval ( get_variable ('broadcast')==1 ) ) &&  ( intval ( get_variable ('internet')==1 ) ) ) { 		// 7/2/2013
 ?>
-            var theMessage = "<?php print gettext('Updated');?>  <?php print get_text('Incident');?> (" + theForm.frm_scope.value + ") by <?php echo $_SESSION['user'];?>";
-            broadcast(theMessage ) ;
+            var theMessage = "<?php print gettext('Updated') . get_text('Incident');?> (" + theForm.frm_scope.value + ") by <?php echo $_SESSION['user'];?>";
+            broadcast(theMessage);
 <?php
     }			// end if (broadcast)
 ?>

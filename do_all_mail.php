@@ -20,14 +20,14 @@ require_once 'incs/functions.inc.php';		//7/28/10
 <HTML>
 <HEAD>
 <TITLE><?php print LessExtension(basename(__FILE__));?> </TITLE>
-<META NAME="Description" CONTENT="Email to units">
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<META HTTP-EQUIV="Script-date" CONTENT="6/13/09">
-<LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+<META NAME="Description" CONTENT="Email to units" />
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<META HTTP-EQUIV="Expires" CONTENT="0" />
+<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
+<META HTTP-EQUIV="Script-date" CONTENT="6/13/09" />
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />	<!-- 3/15/11 -->
 <STYLE>
 #.plain 	{ background-color: #FFFFFF;}
 </STYLE>
@@ -168,9 +168,10 @@ if (empty($_POST)) {
     <P>
         <FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
         <INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''/>	<!-- for pipe-delim'd addr string -->
+        <TABLE ALIGN = 'center' BORDER=0 WIDTH=500>
 <?php
-        print "<TABLE ALIGN = 'center' BORDER=0 WIDTH=500>\n";
-        for ($i=0; $i < count($rows); $i++) {
+		print "<TABLE ALIGN = 'center' BORDER=0 WIDTH=500>\n";
+          for ($i=0; $i < count($rows); $i++) {
             $row = stripslashes_deep($rows[$i]);
             print "\t<TR CLASS= '{$evenodd[($i)%2]}'>
                 <TD ALIGN='right'><INPUT TYPE='checkbox' CHECKED NAME='cb{($i+1)}'VALUE='{$row['email']}'> </TD>

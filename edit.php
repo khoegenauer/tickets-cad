@@ -634,9 +634,9 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 //		alert (theForm);
         var errmsg="";
         if ((document.edit.frm_status.value == <?php print $GLOBALS['STATUS_CLOSED'];?>) && (document.edit.frm_year_problemend.disabled))
-                                                        {errmsg+= "\t<?php print gettext('Closed ticket requires run end date.');?>\n";}
+             {errmsg+= "\t<?php print gettext('Closed ticket requires run end date.');?>\n";}
         if ((document.edit.frm_status.value == <?php print $GLOBALS['STATUS_CLOSED'];?>) && (document.edit.frm_comments==""))
-                                                        {errmsg+= "\t<?php print gettext('Closed ticket requires {$disposition} data');?>\n";}
+            {errmsg+= "\t<?php print gettext('Closed ticket requires {$disposition} data');?>\n";}
         if (theForm.frm_contact.value == "") {errmsg+= "\t<?php print gettext('Reported-by is required');?>\n";}
         if (theForm.frm_scope.value == "") {errmsg+= "\t<?php print gettext('Incident name is required');?>\n";}		// 10/21/08
 //		if (theForm.frm_description.value == "") {errmsg+= "\t<?php print gettext('Synopsis is required');?>\n";}
@@ -1139,9 +1139,9 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 
             print "<TR CLASS='even'>
                     <TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_loca']}');\">" . get_text("Location") . ": </TD><TD><INPUT SIZE='48' TYPE='text' NAME='frm_street' VALUE=\"{$row['street']}\" MAXLENGTH='48' {$dis}></TD></TR>\n";
-            print "<TR CLASS='odd'><TD CLASS='td_label' onmouseout='UnTip();' onmouseover='Tip(\"Anout Address, for instance round the back or building number\");'>" . get_text('Address About') . "</A>:</TD>
+            print "<TR CLASS='odd'><TD CLASS='td_label' onmouseout='UnTip();' onmouseover='Tip(\"" . gettext('Anout Address, for instance round the back or building number') . "\");'>" . get_text('Address About') . "</A>:</TD>
                     <TD></TD>
-                    <TD><INPUT NAME='frm_address_about' tabindex=1 SIZE='72' TYPE='text' VALUE=\"{$row['address_about']}\" MAXLENGTH='512'></TD>
+                    <TD><INPUT NAME='frm_address_about' tabindex=1 SIZE='72' TYPE='text' VALUE=\"{$row['address_about']}\" MAXLENGTH='512' /></TD>
                     </TR>";	//	9/10/13
             print "<TR CLASS='even'>
                     <TD CLASS='td_label' onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_city']}');\">" . get_text("City") . ":</TD>";
@@ -1151,10 +1151,10 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
                 print "<button type='button' onClick='Javascript:loc_lkup(document.edit);'><img src='./markers/glasses.png' alt='" . gettext('Lookup location.') . "' /></button>";
                  }				// end if($gmaps)
             print 		"</TD>";
-            print 		"<TD><INPUT SIZE='32' TYPE='text' 	NAME='frm_city' VALUE=\"{$row['city']}\" MAXLENGTH='32' onChange = 'this.value=capWords(this.value);' {$dis}>\n";
+            print 		"<TD><INPUT SIZE='32' TYPE='text' 	NAME='frm_city' VALUE=\"{$row['city']}\" MAXLENGTH='32' onChange = 'this.value=capWords(this.value);' {$dis} />\n";
             $st_size = (get_variable("locale") ==0)?  2: 4;												// 11/23/10, 3/27/2013
 
-            print 	"<SPAN STYLE='margin-left:24px'  onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_state']}');\">" . get_text("St") . "</SPAN>:&nbsp;&nbsp;<INPUT SIZE='{$st_size}' TYPE='text' NAME='frm_state' VALUE='" . $row['state'] . "' MAXLENGTH='{$st_size}' {$dis}>";
+            print 	"<SPAN STYLE='margin-left:24px'  onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_state']}');\">" . get_text("St") . "</SPAN>:&nbsp;&nbsp;<INPUT SIZE='{$st_size}' TYPE='text' NAME='frm_state' VALUE='" . $row['state'] . "' MAXLENGTH='{$st_size}' {$dis} />";
 
             if ($gmaps) {						// 6/4/2013
                 print "<BUTTON type='button' onClick='Javascript:do_nearby(this.form); return false;'>" . gettext('Nearby?') . "</BUTTON>";
@@ -1180,7 +1180,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
                 }
             print "<TR CLASS='odd'><TD CLASS='td_label' onmouseout='UnTip();' onmouseover='Tip(\"To Address, Not plotted on map, for information only\");'>" . get_text('To Address') . "</A>:</TD>
                     <TD></TD>
-                    <TD><INPUT NAME='frm_to_address' tabindex=1 SIZE='72' TYPE='text' VALUE=\"{$row['to_address']}\" MAXLENGTH='512'></TD>
+                    <TD><INPUT NAME='frm_to_address' tabindex=1 SIZE='72' TYPE='text' VALUE=\"{$row['to_address']}\" MAXLENGTH='512' /></TD>
                     </TR>";	//	9/10/13
             print "<TR CLASS='even'>
                 <TD CLASS='td_label' COLSPAN=2 >";
@@ -1264,7 +1264,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
                     print "</DIV></TD></TR>";		// 6/10/11
                 }
             } else {
-            print "<INPUT TYPE='hidden' NAME='frm_group[]' VALUE='1'>";
+            print "<INPUT TYPE='hidden' NAME='frm_group[]' VALUE='1' />";
             }
 
             print "<TR CLASS='odd' VALIGN='top'>
@@ -1342,7 +1342,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 
             if ($has_portal == 1) {
                 print "<TR CLASS='odd'>
-                    <TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('Associated Portal User - this user can see this ticket as a request');\">" . get_text("Portal User") . ":</TD>
+                    <TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('" . gettext('Associated Portal User - this user can see this ticket as a request') . "');\">" . get_text("Portal User") . ":</TD>
                     <TD>";
 
                 print $portal_user_control;
@@ -1500,7 +1500,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
             print "<TR CLASS='odd'><TD COLSPAN=3 ALIGN='center'><HR SIZE=1 COLOR=BLUE WIDTH='67%' /></TD></TR>\n";
 
             print "\n<TR CLASS='even'>
-                <TD CLASS='td_label' onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_start']}');\">" . get_text("Run Start") . ":</TD><TD ALIGN='center'><img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'st_unlk(document.edit);'></TD><TD>";
+                <TD CLASS='td_label' onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_start']}');\">" . get_text("Run Start") . ":</TD><TD ALIGN='center'><img id='lock' border=0 src='unlock.png' STYLE='vertical-align: middle' onClick = 'st_unlk(document.edit);' /></TD><TD>";
             print  generate_date_dropdown("problemstart",$row['problemstart'],0, $disallow);
             print "&nbsp;&nbsp;&nbsp;&nbsp;</TD></TR>\n";
             if (good_date($row['problemend'])) {
@@ -1545,8 +1545,8 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 
             print "<TR CLASS='odd'>
                 <TD CLASS='td_label' COLSPAN=2 onClick = 'javascript: do_coords(document.edit.frm_lat.value ,document.edit.frm_lng.value);'><U><A HREF=\"#\" TITLE=\"" . gettext('Position - Lat and Lng for Incident position. Click to show all position data.') . "\">" . gettext('Position') . "</A></U>:</TD><TD>";
-            print	 "<INPUT SIZE='13' TYPE='text' NAME='show_lat' VALUE='" . get_lat($row['lat']) . "' DISABLED>\n";
-            print 	 "<INPUT SIZE='13' TYPE='text' NAME='show_lng' VALUE='" . get_lng($row['lng']) . "' DISABLED>&nbsp;&nbsp;";
+            print	 "<INPUT SIZE='13' TYPE='text' NAME='show_lat' VALUE='" . get_lat($row['lat']) . "' DISABLED />\n";
+            print 	 "<INPUT SIZE='13' TYPE='text' NAME='show_lng' VALUE='" . get_lng($row['lng']) . "' DISABLED />&nbsp;&nbsp;";
 
             $locale = get_variable('locale');	// 08/03/09
             switch ($locale) {

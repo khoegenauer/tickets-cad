@@ -57,7 +57,7 @@ if ($_SESSION['internet']) {				// 8/22/10
 $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <HEAD><TITLE><?php print gettext('Tickets - Service User Portal');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
@@ -134,6 +134,7 @@ function set_size() {
     $('tophalf').style.height = viewportheight * .60 + "px";
     $('bottomhalf').style.width = viewportwidth + "px";
     $('bottomhalf').style.height = viewportheight * .35 + "px";
+	$('bottomhalf').style.textAlign = "center";
     $('controls').style.width = viewportwidth * .4 + "px";
     $('controls').style.height = viewportheight * .5 + "px";
     $('map_wrapper').style.width = viewportwidth * .5 + "px";
@@ -487,7 +488,7 @@ function get_requests() {
         theClass = "background-color: #CECECE";
         the_string = "<TABLE cellspacing='0' cellpadding='1' style='width: 100%; table-layout: fixed;'>";
         the_string += "<TR class='list_heading' style='text-align: left;'>";
-        the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Service User');?></TD>";
+		the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Patient');?></TD>";
         the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Phone');?></TD>";
         the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Contact');?></TD>";
         the_string += "<TD class='list_heading' style='" + width + "'><?php print get_text('Scope');?></TD>";

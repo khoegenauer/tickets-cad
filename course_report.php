@@ -93,7 +93,7 @@ require_once './incs/functions.inc.php';
 ?>
             </SELECT>
 
-<INPUT TYPE = 'button' VALUE= "<?php print gettext('Finished');?>" onClick = "window.close();" STYLE = 'margin-left: 40px;'>
+<INPUT TYPE = 'button' VALUE= "<?php print gettext('Finished');?>" onClick = "window.close();" STYLE = 'margin-left: 40px;' />
 </span>
 </BODY>
 </HTML>

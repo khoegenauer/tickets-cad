@@ -366,7 +366,7 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
                     <TD><INPUT TYPE='text' NAME='frm_add_str' VALUE='<?php print $row['contact_via']; ?>' SIZE = 36></TD></TR>
 
                 <TR VALIGN = 'TOP' CLASS='odd'>
-                    <TD ALIGN='right' CLASS="td_label"><?php print gettext('Subject');?>: </TD><TD><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60></TD></TR>
+                    <TD ALIGN='right' CLASS="td_label"><?php print gettext('Subject');?>: </TD><TD><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60 /></TD></TR>
                 <TR VALIGN = 'TOP' CLASS='even'>
                     <TD ALIGN='right' CLASS="td_label"><?php print gettext('Message');?>: </TD><TD><TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA><?php print get_text("mail_help"); ?></TD></TR>
                 <TR VALIGN = 'TOP' CLASS='odd'>		<!-- 11/15/10 -->
@@ -616,7 +616,7 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
             </TABLE>
             </TD><TD>
             <TABLE BORDER=0>
-            <TR VALIGN='top' CLASS='even'><TD CLASS="td_label" ALIGN='right'><?php print gettext('Subject');?>: </TD><TD><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60 VALUE='<?php print $default_msg;?>'></TD></TR>	<!-- 10/23/12 -->
+            <TR VALIGN='top' CLASS='even'><TD CLASS="td_label" ALIGN='right'><?php print gettext('Subject');?>: </TD><TD><INPUT TYPE = 'text' NAME = 'frm_subj' SIZE = 60 VALUE='<?php print $default_msg;?>' /></TD></TR>	<!-- 10/23/12 -->
             <TR VALIGN='top' CLASS='odd'><TD CLASS="td_label" ALIGN='right'><?php print gettext('Message');?>: </TD><TD><TEXTAREA NAME='frm_text' COLS=60 ROWS=4></TEXTAREA><BR /><SPAN CLASS='warn'><?php print get_text("messaging help"); ?></SPAN></TD></TR>
 
             <TR VALIGN = 'TOP' CLASS='even'>
@@ -635,8 +635,8 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 ?>
                     </SELECT>
                     <BR />
-                    <SPAN STYLE='margin-left:20px;'><?php print gettext('Apply to') . ": " . gettext('Subject');?> &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='0' CHECKED onClick = 'set_text = false;'></SPAN>
-                    <SPAN STYLE='margin-left:20px;'><?php print gettext('Text');?> &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='1' CHECKED onClick = 'set_text = true;'></SPAN>
+                    <SPAN STYLE='margin-left:20px;'><?php print gettext('Apply to') . ": " . gettext('Subject');?> &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='0' CHECKED onClick = 'set_text = false;' /></SPAN>
+                    <SPAN STYLE='margin-left:20px;'><?php print gettext('Text');?> &raquo;<INPUT TYPE='radio' NAME='frm_set_where' VALUE='1' CHECKED onClick = 'set_text = true;' /></SPAN>
                 </TD>
             </TR>
             <TR VALIGN = 'TOP' CLASS='even'>
@@ -704,7 +704,7 @@ if ((!(empty($_GET))) && (isset($_GET['name']))) {	//	10/23/12
 ?>
 <BODY scroll='auto' onLoad = "reSizeScr(2);"><CENTER>		<!-- 1/14/10 -->
 <CENTER><BR /><BR /><BR /><H3><?php print gettext("Messages sent") . ": " . $count;?></H3>
-<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext("Finished");?>' onClick = 'window.close();'><BR /><BR />
+<BR /><BR /><BR /><INPUT TYPE='button' VALUE='<?php print gettext("Finished");?>' onClick = 'window.close();' /><BR /><BR />
 
 <?php
             break;

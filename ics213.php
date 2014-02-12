@@ -282,14 +282,14 @@ switch ($step) {
 <HTML>
 <HEAD>
 <TITLE><?php print LessExtension(basename(__FILE__));?> </TITLE>
-<META NAME="Description" CONTENT="Email to units">
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<META HTTP-EQUIV="Script-date" CONTENT="6/13/09">
-<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
+<META NAME="Description" CONTENT="Email to units" />
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<META HTTP-EQUIV="Expires" CONTENT="0" />
+<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
+<META HTTP-EQUIV="Script-date" CONTENT="6/13/09" />
+<LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />	<!-- 3/15/11 -->
 <SCRIPT>
 /**
  *
@@ -401,7 +401,7 @@ switch ($step) {
 ?>
     <P>
         <TABLE ALIGN='center'>
-        <TR CLASS = 'even'><TH>ICS Form to Contacts</TH></TR>
+        <TR CLASS = 'even'><TH><?php print gettext('ICS Form to Contacts');?></TH></TR>
         <TR CLASS = 'odd'><TD ALIGN = 'center'><BR />
             <SPAN ID='clr_spn' STYLE = 'display:block' onClick = 'do_clear();'>&raquo; <U><?php print gettext('Un-check all');?></U></SPAN>
             <SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check();'>&raquo; <U><?php print gettext('Check all');?></U></SPAN><BR />
@@ -579,11 +579,11 @@ addresses: $Result = preg_replace("/([\w\s]+)<([\S@._-]*)>/", "$2", $Input);
 <HTML>
 <HEAD>
 <TITLE>ICS-213 <?php print gettext('Mail sent');?></TITLE>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<META HTTP-EQUIV="Expires" CONTENT="0" />
+<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 <SCRIPT>
 </SCRIPT>
 </HEAD>

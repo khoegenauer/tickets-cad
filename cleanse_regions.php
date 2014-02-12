@@ -447,8 +447,8 @@ if ((isset($_GET['func'])) && ($_GET['func']=='clean')) {
                         print "Ticket ID: " . $value2 . "<br />";
                         } elseif ($num_entries >=2) {
                         $counter++;
-                        $the_errors	.= "Ticket ID: " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext('Duplicate Entries') . "<BR />";
-                        print "<FONT COLOR='red'>Ticket ID: " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext('Duplicate Entries') . "</FONT>";
+                        $the_errors	.= gettext("Ticket ID") . ": " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext('Duplicate Entries') . "<BR />";
+                        print "<FONT COLOR='red'>" . gettext('Ticket ID') . ": " . $value2 . "&nbsp;&nbsp;&nbsp;" . gettext('Duplicate Entries') . "</FONT>";
                         }
                     }
                 } else {
@@ -573,7 +573,7 @@ if ((isset($_GET['func'])) && ($_GET['func']=='clean')) {
     <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
     <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" />
     <TITLE>Tickets <?php print $disp_version;?></TITLE>
-    <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+    <LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />
     <link rel="shortcut icon" href="favicon.ico" />
     <SCRIPT>
 /**
@@ -632,3 +632,4 @@ if ((isset($_GET['func'])) && ($_GET['func']=='clean')) {
     </HTML>
 <?php
     }
+?>

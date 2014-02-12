@@ -44,13 +44,13 @@ if (!(empty($_GET))) {
 <HTML>
 <HEAD>
 <TITLE><?php print gettext('CSS Color Checker');?></TITLE>
-<META NAME="Description" CONTENT="Tickets CSS Color Checker">
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<META HTTP-EQUIV="Script-date" CONTENT="6/13/09">
+<META NAME="Description" CONTENT="Tickets CSS Color Checker" />
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<META HTTP-EQUIV="Expires" CONTENT="0" />
+<META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
+<META HTTP-EQUIV="Script-date" CONTENT="6/13/09" />
 <STYLE type="text/css">
 BODY { background-color: <?php print $doc_gb;?>;	margin:0; font-weight: normal; font-size: 12px; color: <?php print $doc_txt;?>;
     font-family: Verdana, Arial, Helvetica, sans-serif; text-decoration: none;}

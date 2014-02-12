@@ -107,7 +107,7 @@ else {
 <?php
 	$text = (is_dir($tiles_dir) ) ? "add to tiles already downloaded" : "download tiles to your server";
 ?>
-<div id = 'zero' style = "margin-left:50px; display:block;>" /> <h3>This page will <?php echo $text; ?> for <em>server-stored maps</em>. </h3>
+<div id = 'zero' style = "margin-left:50px; display:block;"> <h3>This page will <?php echo $text; ?> for <em>server-stored maps</em>. </h3>
 </div>
 <br />
 <div id = 'one' style = "margin-left:50px; display:block;">Step 1:  <b>Zoom and pan map until <u>your area of interest</u> is centered within the map.  

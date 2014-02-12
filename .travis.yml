@@ -1,22 +1,18 @@
 #TODO: 
-# mysql database user
+# Configure PHPUnit
 # database credentials, user, and permissions
 # passwordless apt-get install
 # SauceLabs Config
 # Split with Buildhive? (Requires adding delay to avoid infinite commit-build-commit loop)
 # Apache, Nginx, Cherokee, Hiawatha, etc Servers
 # Possible to test caching, minification, etc?
-# Fix exception error and uncomment PHPCallGraph
 # PHP Documentation Generator
 # JS Documentation Generator (YUI Docs)
 # Test and Uncomment ERD Generation / Database Tools
 # Add and Test Security Tools (OWASP-ZAP with Selenium)
 # Static Code Analyzers (Scrutinizer, etc)
-# Scrutinizer Free CI for Open Source?
 # Include Codeception to consolidate testing?
-# PHPUnit.xml needed
 # Unit Testing for Javascript?
-# Specify custom rules/config xml files for PHPQATools and PHPDoc
 # QA Tools for Javascript?
 
 # see http://about.travis-ci.org/docs/user/languages/php/ for more hints

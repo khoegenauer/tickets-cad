@@ -62,6 +62,7 @@ require_once($the_inc);
 9/10/13 Changed logic to show full screen button, now shows if internet is available but maps are switched off by user choice.
 10/23/13 Revisions for user selectable maps
 10/31/13 Revisions for user selectable maps
+1/3/14 Added Live moving Responder markers, added Road Condition Alert Markers
 */
 
 if (isset($_GET['logout'])) {
@@ -69,7 +70,11 @@ if (isset($_GET['logout'])) {
     exit();
     }
 else {		//
+	if(isset($_GET['noaf'])) {	//	1/30/14
+		do_login(basename(__FILE__), FALSE, FALSE, TRUE);
+		} else {
     do_login(basename(__FILE__));
+		}
     $do_mu_init = (array_key_exists('log_in', $_GET))? "parent.frames['upper'].mu_init();" : "";	// start multi-user function
     }
 
@@ -116,8 +121,13 @@ if (file_exists("./incs/modules.inc.php")) {	//	10/28/10
 if ($_SESSION['internet']) {				// 8/22/10
     $api_key = trim(get_variable('gmaps_api_key'));
     $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
+	if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
+		$gmaps_url =  "https://maps.google.com/maps/api/js?" . $key_str . "libraries=geometry,weather&sensor=false";
+		} else {
+		$gmaps_url =  "http://maps.google.com/maps/api/js?" . $key_str . "libraries=geometry,weather&sensor=false";
+		}
 ?>
-    <SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry,weather&sensor=false"></SCRIPT>
+	<SCRIPT TYPE="text/javascript" src="<?php print $gmaps_url;?>"></SCRIPT>
     <SCRIPT  TYPE="text/javascript"SRC="./js/epoly.js"></SCRIPT>
     <!--
     <SCRIPT  TYPE="text/javascript"SRC="./js/epoly_v3.js"></SCRIPT>
@@ -209,13 +219,15 @@ if (is_guest()) {													// 8/25/10
 		
 	function set_marker_position(id, theLat, theLng) {
 		if(rmarkers) {
+			if(theLat && theLng) {
 			var theCurrent = rmarkers[id].getPosition();
-			var currentLat = theCurrent.lat().toPrecision(6);
-			var currentLng = theCurrent.lng().toPrecision(6);	
-			var newLat = theLat.toPrecision(6);
-			var newLng = theLng.toPrecision(6);			
-			if((currentLat != newLat) || (currentLng != newLng)) {
-				rmarkers[id].setPosition( new google.maps.LatLng( theLat, theLng ) );
+				var currentLat = theCurrent.lat().toFixed(6);
+				var currentLng = theCurrent.lng().toFixed(6);	
+				var newLat = parseFloat(theLat).toFixed(6);
+				var newLng = parseFloat(theLng).toFixed(6);			
+				if((currentLat != newLat) || (currentLng != newLng)) {
+					rmarkers[id].setPosition( new google.maps.LatLng( theLat, theLng ) );
+					}
 				}
 			}
 		}

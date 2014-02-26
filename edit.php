@@ -374,11 +374,18 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
     <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
     <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
     <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
-    <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">		<!-- 3/15/11 -->
+    <LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />		<!-- 3/15/11 -->
 <?php
     if ($gmaps) {		// 1/1/11
+		$api_key = trim(get_variable('gmaps_api_key'));
+		$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
+		if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
+			$gmaps_url =  "https://maps.google.com/maps/api/js?" . $key_str . "sensor=false";
+			} else {
+			$gmaps_url =  "http://maps.google.com/maps/api/js?" . $key_str . "sensor=false";
+			}
 ?>
-    <SCRIPT TYPE="text/javascript" SRC="http://maps.google.com/maps/api/js?sensor=false"></SCRIPT>
+	<SCRIPT TYPE="text/javascript" SRC="<?php print $gmaps_url;?>"></SCRIPT>
     <SCRIPT SRC="./js/gmaps_v3_init.js"	TYPE="text/javascript" ></SCRIPT>
     <SCRIPT SRC="./js/graticule_V3.js" type="text/javascript"></SCRIPT>
 

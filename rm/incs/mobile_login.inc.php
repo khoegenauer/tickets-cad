@@ -107,8 +107,14 @@ function check_conn_mob() {				// returns TRUE/FALSE
  * @param type $internet
  */
 function set_filenames_mob($internet) {
-    $normal = (($internet == 1) || (($internet == 3) && (check_conn ())));		// check_conn()  returns TRUE/FALSE = 8/31/10
+	$internet_good = (($internet == 1) || (($internet == 3) && (check_conn()))) ? true: false;		// check_conn()  returns TRUE/FALSE = 8/31/10
+	if($internet_good) {	//	10/29/13
+		$normal = true;
+		} else {
+		$normal = false;
+		}
     $_SESSION['internet'] = $normal;
+	$_SESSION['good_internet'] = $internet_good;
     $_SESSION['fip'] ="./incs/functions.inc.php";                        // 8/27/10
     $_SESSION['fmp'] = ($normal)? "./incs/functions_major.inc.php": "./incs/functions_major_nm.inc.php";
     $_SESSION['addfile'] = ($normal)? "add.php": "add.php";
@@ -183,6 +189,7 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
                 $query = "UPDATE `$GLOBALS[mysql_prefix]user` SET `sid` = '{$sid}', `expires`= '{$the_date}', `login` = '{$now}', `_from`= '{$_SERVER['REMOTE_ADDR']}', `browser` = '{$browser}'  WHERE `id` = {$row['id']} LIMIT 1";
                 $result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
+				$_SESSION['noautoforward'] = FALSE;	//	1/30/14
                 $_SESSION['id'] = 			$sid;
                 $_SESSION['expires'] = 		time();
                 $_SESSION['user_id'] = 		$row['id'];
@@ -207,6 +214,7 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
                 $_SESSION['list_type'] = 0;
                 $_SESSION['show_hide_Deployed'] = "s";	// Show all deployed tickets
                 $_SESSION['day_night'] = "Day";
+				$_SESSION['maps_sh'] = "Show";
                 $_SESSION['hide_controls'] = "s";
                 $_SESSION['incs_list'] = "s";
                 $_SESSION['resp_list'] = "s";
@@ -218,8 +226,11 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
                 set_filenames_mob($internet);			// 8/31/10
                 do_log($GLOBALS['LOG_SIGN_IN'],0,0,"{$browser}");		// log it - 12/1/2012
 
+				$query = "DELETE FROM `$GLOBALS[mysql_prefix]ticket` WHERE `status` = {$GLOBALS['STATUS_RESERVED']} AND `_by` = {$_SESSION['user_id']};";
+				$result = mysql_query($query);
+				
                 $to = "";
-                $subject = "Tickets Membership Database Login";
+				$subject = "Tickets Mobile Page Login";
                 $message = "From: " . gethostbyaddr($_SERVER['REMOTE_ADDR']) ."\nBrowser:" . $_SERVER['HTTP_USER_AGENT'];
                 $message .= "\nBy: " . $_POST['frm_user'];
                 $message .= "\nScreen: " . $_POST['scr_width'] . " x " .$_POST['scr_height'];
@@ -390,7 +401,6 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
 
             }		// end function do_onload ()
 
-        var theToken = '<?php echo $token;?>';
 /**
  *
  * @param {type} the_form
@@ -469,6 +479,10 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
             return elements;
             }
 
+		function do_tickets_main() {
+			document.norm_form.submit();
+			}
+
         window.setTimeout("document.forms[0].frm_user.focus()", 1000);
         </SCRIPT>
         </HEAD>
@@ -493,7 +507,9 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
 ?>
                 <div style='display: inline; font-size: 1.5em; font-weight: bold;'><?php print get_text("User"); ?><BR /><INPUT TYPE="text" NAME="frm_user" onChange = "document.login_form.frm_user.value = document.login_form.frm_user.value.trim();" VALUE=""></div><BR />
                 <div style='display: inline; font-size: 1.5em; font-weight: bold;'><?php print get_text("Password"); ?><BR /><INPUT TYPE="password" NAME="frm_passwd" onChange = "document.login_form.frm_passwd.value = document.login_form.frm_passwd.value.trim();"  VALUE=""></div><BR /><BR /><BR />
-                <span id="sub_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.forms.login_form.submit();"><?php print get_text("Log In"); ?></span>
+				<span id="sub_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.forms.login_form.submit();"><?php print get_text("Log In"); ?></span><BR />
+				<span id="tick_norm_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'do_tickets_main();'><?php print get_text("Tickets Normal Screen"); ?></span>	<!-- 1/30/14 -->
+
             </div>
 
             <INPUT TYPE='hidden' NAME = 'encoding' VALUE=''/>
@@ -503,6 +519,9 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
             </FORM><BR /><BR />
             <a href="http://www.ticketscad.org/"><SPAN CLASS='text_small'><?php print gettext('Tickets CAD Project home');?></SPAN></a><BR /><BR />
             <div><IMG BORDER=0 SRC='../open_source_button.png' <?php print $my_click; ?>>&nbsp;&nbsp;<img src="../php.png" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+			<FORM NAME="norm_form" method='post' action="../index.php">
+			<INPUT TYPE='hidden' NAME = 'noautoforward' VALUE=1 />			
+			</FORM>				
         </div>
         </CENTER>
         </HTML>

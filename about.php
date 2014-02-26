@@ -777,10 +777,29 @@ Changes for Tickets 2.41E
 
 239.  Fixes to Units, Routes, Portal, New Incident and Location Warnings.
 
+Changes for Tickets 2.41F
+
+240.  Fixed google maps api for use with SSL.
+
+Changes for Tickets 2.41G
+
+241.  Added change password capability to portal.
+
+242.  Added Xastir tracking- requires Xastir server to be setup and creation of Xastir DFB (from within Xastir). Xastir DB must be
+      on the same server as Tickets but not necessarily on the same DB. 
+	  
+243.  Added sound to new message notification and modified new request notification. Adde flag for number of unread messages to message button.
+
+244.  Revised handling of Instamapper to support new Instamapper API.
+
+245.  Fixed the units show / hide on the situation screen for incorrectly handling persistence across pages.
+
+246.  Various other fixes
+
 Let us know if the above is too terse and where further expansion wd be useful.
 <A NAME = 'bottom'></A>
 
-January '14
+February '14
 Arnie Shore
 Andy Harvey, UK
 

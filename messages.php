@@ -177,7 +177,6 @@ function get_archive(thearchive, button) {
     if ($('empty_waste')) { $('empty_waste').style.display = "none"; }
     if ($('del')) { $('del').innerHTML = "&nbsp;&nbsp;";	}
     folder = "archive";
-    clear_filter(folder);
     thebutton = button;
     light_butt(button);
     the_list="archive";
@@ -194,10 +193,9 @@ function get_wastebin() {
     if ($('empty_waste')) { $('empty_waste').style.display = "inline-block"; }
     if ($('del')) { $('del').innerHTML = "Res"; }
     folder = "wastebasket";
-    clear_filter(folder);
     light_butt('deleted');
     archive = "";
-    get_wastelist('','',sortby, 'DESC','');
+	get_wastelist('','',sortby, 'DESC','','msg_win');
     }
 /**
  *
@@ -239,8 +237,8 @@ thelevel = "<?php print can_delete_msg();?>";
     <DIV id='folderlist' style='position: absolute; left: 0px; top: 0px; width: 18%; height: 100%;'>
         <SPAN id='folders_header' class='heading' style='margin-left: 2%; width: 96%; float: none; display: inline-block; font-size: 18px; border: 4px outset #FFFFFF;'><?php print gettext('MESSAGE FOLDERS');?></SPAN><BR /><BR />
         <SPAN id='inbox_header' class='heading' style='margin-left: 2%; width: 97%; float: none; display: inline-block;'><?php print gettext('Current Messages');?></SPAN><BR /><BR />
-        <SPAN id='inbox' class='plain' style='margin-left: 5%; width: 80%; float: none; display: inline-block;' onMouseover='do_hover(this.id);' onMouseout='do_plain(this.id);' onClick='get_inbox();'><?php print gettext('Inbox');?></SPAN><BR /><BR />
-        <SPAN id='sent' class='plain' style='margin-left: 5%; width: 80%; float: none; display: inline-block;' onMouseover='do_hover(this.id);' onMouseout='do_plain(this.id);' onClick='get_sent();'><?php print gettext('Sent Messages');?></SPAN><BR /><BR />
+        <SPAN id='inbox' class='plain' style='margin-left: 5%; width: 80%; float: none; display: inline-block;' onMouseover='do_hover(this.id);' onMouseout='do_plain(this.id);' onClick='get_inbox();'><?php print gettext('Inbox');?><SPAN id='inbox_new' style='font-weight: bold; float: right;'></SPAN></SPAN><BR /><BR />
+        <SPAN id='sent' class='plain' style='margin-left: 5%; width: 80%; float: none; display: inline-block;' onMouseover='do_hover(this.id);' onMouseout='do_plain(this.id);' onClick='get_sent();'><?php print gettext('Sent Messages');?><SPAN id='sent_new' style='font-weight: bold; float: right;'></SPAN></SPAN><BR /><BR />
         <SPAN id='deleted' class='plain' style='margin-left: 5%; width: 80%; float: none; display: inline-block;' onMouseover='do_hover(this.id);' onMouseout='do_plain(this.id);' onClick='get_wastebin();'><?php print gettext('Deleted Items');?></SPAN><BR /><BR />
         <SPAN id='archive_header' class='heading' style='margin-left: 2%; width: 97%; float: none; display: inline-block;'><?php print gettext('Archive');?></SPAN><BR /><BR />
         <DIV id='archivelist' style='position: relative; left: 0px; top: 0px; width: 95%; height: 75%; overflow-y: scroll;'>

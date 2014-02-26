@@ -955,7 +955,7 @@ if (mysql_num_rows($result)>0) {
     $i = 0;
     while ($row = stripslashes_deep(mysql_fetch_array($result))) {
 
-        $mg_select = "<SELECT NAME='frm_mailgroup'>";
+		$mg_select = "<SELECT NAME='frm_mailgroup[$i]'>";
         $mg_select .= "<OPTION VALUE=0>" . gettext('Select Mail List') . "</OPTION>";
         $query_mg = "SELECT * FROM `$GLOBALS[mysql_prefix]mailgroup` ORDER BY `id` ASC";
         $result_mg = mysql_query($query_mg) or do_error($query_mg, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -1079,13 +1079,14 @@ if (mysql_num_rows($result)>0) {
 
                         $email = validate_email($_POST['frm_email'][$i]);
                         $email_address = $_POST['frm_email'][$i];
-                        if ((!$email['status']) && ($_POST['frm_mailgroup'] == 0)) {
+                        if ((!$email['status']) && ($_POST['frm_mailgroup'][$i] == 0)) {
                             print "<FONT CLASS='warn'>Error: email validation failed for '$email_address', $email[msg]. Go back and check this email address.</FONT>";
                             exit();
                             }
                         $on_ticket_val  = empty($_POST['frm_on_ticket'][$i])? "":  "1";
                         $on_action_val  = empty($_POST['frm_on_action'][$i])? "":  "1";
                         $on_patient_val = empty($_POST['frm_on_patient'][$i])? "": "1";		// 5/23/11
+						$mailGroup = ($_POST['frm_mailgroup'][$i]) ? $_POST['frm_mailgroup'][$i] : 0;
 
     //					$query = "UPDATE `$GLOBALS[mysql_prefix]notify` SET `execute_path`='".$_POST['frm_execute'][$i]."', `email_address`='".$_POST['frm_email'][$i]."', `on_action`='".$on_action_val."', `on_patient`='".$on_patient_val ."', `on_ticket`='".$on_ticket_val ."' WHERE `id`='".$_POST['frm_id'][$i]."'";
                         $now = mysql_format_date(time() - (get_variable('delta_mins')*60));
@@ -1093,7 +1094,7 @@ if (mysql_num_rows($result)>0) {
                         $query = "UPDATE `$GLOBALS[mysql_prefix]notify` SET
                             `execute_path`=".	quote_smart($_POST['frm_execute'][$i]) .",
                             `email_address`=".	quote_smart($_POST['frm_email'][$i]) .",
-                            `mailgroup`=".	quote_smart($_POST['frm_mailgroup'][$i]) .",
+							`mailgroup`=".		quote_smart($mailGroup) .",
                             `on_action`='".		$on_action_val ."',
                             `on_patient`='".	$on_patient_val ."',
                             `on_ticket`='".		$on_ticket_val ."',
@@ -1122,12 +1123,13 @@ if (mysql_num_rows($result)>0) {
                 $on_ticket = (isset($_POST['frm_on_ticket']))? $_POST['frm_on_ticket']:0 ;
                 $on_action = (isset($_POST['frm_on_action']))? $_POST['frm_on_action']:0 ;
                 $now = mysql_format_date(time() - (get_variable('delta_mins')*60));				// 1/22/11
+				$mailGroup = ($_POST['frm_mailgroup']) ? $_POST['frm_mailgroup'] : 0;
 
                 $query = "INSERT INTO `$GLOBALS[mysql_prefix]notify` SET
                     `ticket_id`=		'$_POST[frm_id]',
                     `user`=				'$_SESSION[user_id]',
                     `email_address`=	'$_POST[frm_email]',
-                    `mailgroup`=	'$_POST[frm_mailgroup]',
+					`mailgroup`=		'$mailGroup',
                     `execute_path`=		'$_POST[frm_execute]',
                     `on_action`=		'$on_action',
                     `on_patient`=		'$on_action',
@@ -1159,7 +1161,7 @@ if (mysql_num_rows($result)>0) {
                     $i = 0;
                     while ($row = stripslashes_deep(mysql_fetch_array($result))) {
 
-                        $mg_select = "<SELECT NAME='frm_mailgroup'>";
+                        $mg_select = "<SELECT NAME='frm_mailgroup[$i]'>";
                         $mg_select .= "<OPTION VALUE=0>Select Mail List</OPTION>";
                         $query_mg = "SELECT * FROM `$GLOBALS[mysql_prefix]mailgroup` ORDER BY `id` ASC";
                         $result_mg = mysql_query($query_mg) or do_error($query_mg, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);

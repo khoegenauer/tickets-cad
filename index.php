@@ -13,7 +13,7 @@ if (!(file_exists("./incs/mysql.inc.php"))) {
 
 require_once './incs/functions.inc.php';
 
-$version = "2.41F Beta - 01/10/14";
+$version = "2.41G Beta - 02/19/14";	
 
 /*
 10/1/08 added error reporting
@@ -1774,7 +1774,24 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
       		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]requests` ADD `arrival` VARCHAR( 12 ) NULL DEFAULT NULL AFTER `pickup`";		// 12/16/13
             $result = mysql_query($query);
 
-      		$query = "ALTER TABLE `$GLOBALS[mysql_prefix]replacetext` ADD `app_shortsumm` ENUM( 'Yes','No' ) NOT NULL DEFAULT 'No' AFTER `app_summ` ;";		// 12/16/13
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]replacetext` ADD `app_shortsumm` ENUM( 'Yes','No' ) NOT NULL DEFAULT 'No' AFTER `app_summ`";		// 12/16/13
+			$result = mysql_query($query);
+
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]replacetext` ADD `app_desc` ENUM( 'Yes','No' ) NOT NULL DEFAULT 'No' AFTER `app_shortsumm`";		// 12/16/13
+			$result = mysql_query($query);		
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `xastir_tracker` TINYINT( 2 ) NOT NULL DEFAULT 0 COMMENT 'APRS tracking using XASTIR' AFTER `mob_tracker`;";	//	1/30/14
+			$result = mysql_query($query);		// 9/10/13	
+
+			$query = "UPDATE `gw4x4r`.`$GLOBALS[mysql_prefix]msg_settings` SET `name` = 'smsg_use_server' WHERE `$GLOBALS[mysql_prefix]msg_settings`.`id` =15 LIMIT 1";	//	1/11/14	
+			$result = mysql_query($query);
+
+			do_setting ('xastir_server','localhost');			// 1/30/14				
+			do_setting ('xastir_db','');			// 1/30/14	
+			do_setting ('xastir_dbuser','');		// 1/30/14				
+			do_setting ('xastir_dbpass','');		// 1/30/14			
+
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]requests` ADD `email` VARCHAR( 128 ) NULL DEFAULT NULL AFTER `contact`";		// 1/30/14
             $result = mysql_query($query);
         }		// end (!($version ==...) ==================================================
 
@@ -1953,10 +1970,10 @@ if ((count_responders()== 0) && (get_variable('title_string') == "") && ((!empty
 <?php			// 7/14/09
 //	cache buster and logout from statistics module.
 $_SESSION = array();	//	6/14/13
-
+$noforward_string = "";
 // Mobile redirect
-
-if (get_variable('use_responder_mobile') == "1") {	//	8/1/13
+if((!isset($_POST) || (!array_key_exists('noautoforward', $_POST))) && ((!isset($_SESSION)) || ((array_key_exists('noautoforward', $_SESSION)) && ($_SESSION['noautoforward'] == FALSE)))) {	//	1/30/14
+	if(get_variable('use_responder_mobile') == "1") {	//	8/1/13
     $text = $_SERVER['HTTP_USER_AGENT'];
     $var[0] = 'Mozilla/4.';
     $var[1] = 'Mozilla/3.0';
@@ -2043,6 +2060,9 @@ if (get_variable('use_responder_mobile') == "1") {	//	8/1/13
         }
     //	End of Mobile redirect
     }
+	} else {
+	$noforward_string = "&noaf=1";	//	1/30/14
+	}
 
 if (isset($_POST['logout'])) {
     $buster = strval(rand()) . "&logout=1";
@@ -2054,14 +2074,14 @@ if (get_variable('call_board') == 2) {
     <FRAMESET ID = 'the_frames' ROWS="<?php print (get_variable('framesize') + 25);?>, 0 ,*" BORDER="<?php print get_variable('frameborder');?>" BORDERCOLOR="#ff0000">
     <FRAME SRC="top.php?stuff=<?php print $buster;?>" NAME="upper" SCROLLING="no" />
     <FRAME SRC='board.php?stuff=<?php print $buster;?>' ID = 'what' NAME='calls' SCROLLING='AUTO' />	<FRAME SRC="main.php?stuff=<?php print $buster;?>" NAME="main" />
-    <FRAME SRC="main.php?stuff=<?php print $buster;?>" NAME="main" />
+	<FRAME SRC="main.php?stuff=<?php print $buster;?><?php print $noforward_string;?>" NAME="main" />	<!-- 1/30/14 -->
 <?php
     }
 else  {
 ?>
     <FRAMESET ID = 'the_frames' ROWS="<?php print (get_variable('framesize') + 25);?>, *" BORDER="<?php print get_variable('frameborder');?>">
     <FRAME SRC="top.php?stuff=<?php print $buster;?>" NAME="upper" SCROLLING="no" />
-    <FRAME SRC="main.php?stuff=<?php print $buster;?>" NAME="main" />
+	<FRAME SRC="main.php?stuff=<?php print $buster;?><?php print $noforward_string;?>" NAME="main" />	<!-- 1/30/14 -->
 <?php
     }
 ?>
@@ -2076,3 +2096,4 @@ else  {
 
     $query = "ALTER TABLE `$GLOBALS[mysql_prefix]in_types` ADD `set_severity` INT( 1 ) NOT NULL DEFAULT '0' COMMENT 'sets incident severity' AFTER `protocol`";
     $result = mysql_query($query);
+?>

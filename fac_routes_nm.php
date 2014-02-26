@@ -514,8 +514,14 @@ if (!empty($_POST)) {
 <?php
     }		// end if (!empty($_POST))
 else {		// 201-439
+$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
+if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
+	$gmaps_url =  "https://maps.google.com/maps/api/js?" . $key_str . "libraries=geometry,weather&sensor=false";
+	} else {
+	$gmaps_url =  "http://maps.google.com/maps/api/js?" . $key_str . "libraries=geometry,weather&sensor=false";
+	}
 ?>
-<SCRIPT SRC="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $api_key; ?>"></SCRIPT>
+<SCRIPT TYPE="text/javascript" src="<?php print $gmaps_url;?>"></SCRIPT>
 <SCRIPT SRC="./js/usng.js"></SCRIPT>		<!-- 10/14/08 -->
 <SCRIPT SRC="./js/graticule.js"></SCRIPT>
 

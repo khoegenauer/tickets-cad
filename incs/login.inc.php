@@ -159,7 +159,6 @@ function set_filenames($internet, $userchoice) {
         }
     $_SESSION['internet'] = $normal;
     $_SESSION['good_internet'] = $internet_good;
-//	$_SESSION['fip'] =($normal)? "./incs/functions.inc.php":	"./incs/functions_nm.inc.php";
     $_SESSION['fip'] ="./incs/functions.inc.php";                        // 8/27/10
     $_SESSION['fmp'] = ($normal)? "./incs/functions_major.inc.php": "./incs/functions_major_nm.inc.php";
     $_SESSION['addfile'] = ($normal)? "add.php": "add.php";
@@ -229,10 +228,11 @@ function redir($url, $time = 0) {
  * @see
  * @since
  */
-function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do login/ses sion code - returns array - 2/12/09, 3/8/09
+function do_login($requested_page, $outinfo = FALSE, $hh = FALSE, $na = FALSE) {			// do login/ses sion code - returns array - 2/12/09, 3/8/09,	1/30/14
     global $hide_dispatched, $hide_status_groups;
     @session_start();
     global $expiry, $istest;
+	$no_autoforward = ($na) ? 1 : 0;	//	1/30/14
     $now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
 
     $the_sid = (isset($_SESSION['id']))? $_SESSION['id'] : null;
@@ -314,6 +314,7 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
 
                 $result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 
+				$_SESSION['noautoforward'] = ($_POST['no_autoforward']==1) ? TRUE : FALSE;	//	1/30/14
                 $_SESSION['id'] = 			$sid;
                 $_SESSION['expires'] = 		time();
                 $_SESSION['user_id'] = 		$row['id'];
@@ -394,11 +395,9 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
                     } else {
                     $extra = 'main.php?log_in=1';
                     }
-//				$extra = (($row['level']== $GLOBALS['LEVEL_UNIT']) ||($unit_id))? 'mobile.php' : 'main.php?log_in=1';				// 8/29/10
 
                 $url = "http://" . $host . $uri . "/" . $extra;
                 redir($url);
-//				header("Location: http://$host$uri/$extra");								// to top of calling script
                 exit();
 
                 }			// end if (mysql_affected_rows()==1)
@@ -656,6 +655,7 @@ function do_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// do logi
         <INPUT TYPE='hidden' NAME = 'scr_width' VALUE='' />
         <INPUT TYPE='hidden' NAME = 'scr_height' VALUE='' />
         <INPUT TYPE='hidden' NAME = 'frm_referer' VALUE="<?php print $temp; ?>" />
+		<INPUT TYPE='hidden' NAME = 'no_autoforward' VALUE=<?php print $no_autoforward; ?> />
         </FORM><BR /><BR />
 <!--		<a href="<?php echo get_contact_addr ();?>/"><SPAN CLASS='text_small'>Contact us</SPAN></a>	 6/1/2013 -->
         </CENTER></HTML>

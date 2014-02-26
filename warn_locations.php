@@ -57,13 +57,17 @@ $osgb = get_text('OSGB');
     <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
     <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
     <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
-    <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>
+    <LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />
 <?php
 $api_key = trim(get_variable('gmaps_api_key'));
 $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
+if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
+	$gmaps_url =  "https://maps.google.com/maps/api/js?" . $key_str . "libraries=geometry,weather&sensor=false";
+	} else {
+	$gmaps_url =  "http://maps.google.com/maps/api/js?" . $key_str . "libraries=geometry,weather&sensor=false";
+	}
 ?>
-    <SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>sensor=false"></SCRIPT>
-
+	<SCRIPT TYPE="text/javascript" src="<?php print $gmaps_url;?>"></SCRIPT>
     <SCRIPT SRC="./js/usng.js" 			TYPE="text/javascript"></SCRIPT>
     <SCRIPT SRC="./js/lat_lng.js" 		TYPE="text/javascript"></SCRIPT>
     <SCRIPT SRC="./js/geotools2.js" 	TYPE="text/javascript"></SCRIPT>

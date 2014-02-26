@@ -458,41 +458,41 @@ elseif ((!empty($_POST)) && (isset($_POST['country']))) {
 
     if (isset($_POST['frm_title'])) {
         do_setting ('title_string', $_POST['frm_title']);
-        $output_text .= gettext('Title String Set') . "<BR />" . '"';
+        $output_text .= gettext('Title String Set') . "<BR />";
         }
 
     if ((isset($_POST['lat'])) && (isset($_POST['lng']))) {
         do_setting ('def_lat', $_POST['lat']);
         do_setting ('def_lng', $_POST['lng']);
-        $output_text .= gettext('Default Latitude and Longitude Set') . "<BR />" . '"';
+        $output_text .= gettext('Default Latitude and Longitude Set') . "<BR />";
         }
 
     if (isset($_POST['state'])) {
         do_setting ('def_st', $_POST['state']);
-        $output_text .= gettext('Default State Set') . "<BR />" . '"';
+        $output_text .= gettext('Default State Set') . "<BR />";
         }
 
     if (isset($_POST['delta'])) {
         do_setting ('delta_mins', $_POST['delta']);
-        $output_text .= gettext('Default Server Time Difference Set') . "<BR />" . '"';
+        $output_text .= gettext('Default Server Time Difference Set') . "<BR />";
         }
 
     if ((isset($_POST['locale'])) && ($_POST['locale'] != "undefined")) {
         do_setting ('locale', $_POST['locale']);
-        $output_text .= gettext('Default Date Format Set') . "<BR />" . '"';
+        $output_text .= gettext('Default Date Format Set') . "<BR />";
         }
 
     if (isset($_POST['frm_name'])) {
         $i=0;
         foreach ($_POST['frm_name'] as $val) {
             $inc_type = substr($_POST['frm_name'][$i], 0, 20);
-            $description = ($_POST['frm_desc'][$i] != "") ? substr($_POST['frm_desc'][$i], 0, 60) : "Not Completed";
+            $description = ($_POST['frm_desc'][$i] != "") ? substr($_POST['frm_desc'][$i], 0, 60) : gettext("Not Completed");
             $severity = ($_POST['frm_sev'][$i] != NULL) ? $_POST['frm_sev'][$i] : 0;
-            $grouping = ($_POST['frm_grp'][$i] != "") ? $_POST['frm_grp'][$i] : "Not Grouped";
+            $grouping = ($_POST['frm_grp'][$i] != "") ? $_POST['frm_grp'][$i] : gettext("Not Grouped");
             $query = "INSERT INTO `$GLOBALS[mysql_prefix]in_types` (`type`,`description`,`set_severity`,`group`) VALUES('$inc_type','$description',$severity,'$grouping')";
-            $result = mysql_query($query) or die('"' . gettext('Incident types insertion failed, execution halted') . '"');
+            $result = mysql_query($query) or die(gettext('Incident types insertion failed, execution halted'));
             if ($result) {
-                $output_text .= gettext('Incident Type') . " " . $_POST['frm_name'] . " " . gettext('inserted') . "<BR />";
+				$output_text .= gettext("Incident Type {$inc_type} inserted") . "<BR />";	
                 }
             $i++;
             }
@@ -502,12 +502,12 @@ elseif ((!empty($_POST)) && (isset($_POST['country']))) {
         $i=0;
         foreach ($_POST['frm_rtype_name'] as $val) {
             $resp_type = substr($_POST['frm_rtype_name'][$i], 0, 16);
-            $description = ($_POST['frm_rtype_desc'][$i] != "") ? substr($_POST['frm_rtype_desc'][$i], 0, 48) : '"' . gettext('Not Completed') . '"';
+            $description = ($_POST['frm_rtype_desc'][$i] != "") ? substr($_POST['frm_rtype_desc'][$i], 0, 48) : gettext('Not Completed');
             $icon = ($_POST['frm_rtype_icon'][$i] != 99) ? $_POST['frm_rtype_icon'][$i] : 0 ;
             $query = "INSERT INTO `$GLOBALS[mysql_prefix]unit_types` (`name`,`description`,`icon`,`_on`,`_from`,`_by`) VALUES('$resp_type','$description','$icon','$now','$from',$user)";
-            $result = mysql_query($query) or die('"' . gettext('Unit types insertion failed, execution halted') . '"');
+            $result = mysql_query($query) or die(gettext('Unit types insertion failed, execution halted'));
             if ($result) {
-                $output_text .= '"' . gettext('Responder Type') . " " . $_POST['frm_rtype_name'] . " " . gettext('inserted') . "<BR />";
+				$output_text .= gettext("Responder Type {$resp_type} inserted") . "<BR />";	
                 }
             $i++;
             }
@@ -517,16 +517,16 @@ elseif ((!empty($_POST)) && (isset($_POST['country']))) {
         $i=0;
         foreach ($_POST['frm_rstat_name'] as $val) {
             $resp_stat = substr($_POST['frm_rstat_name'][$i], 0, 20);
-            $description = ($_POST['frm_rstat_desc'][$i] != "") ? substr($_POST['frm_rstat_desc'][$i], 0, 60) : '"' . gettext('Not Completed') . '"';
+            $description = ($_POST['frm_rstat_desc'][$i] != "") ? substr($_POST['frm_rstat_desc'][$i], 0, 60) : gettext('Not Completed');
             $can_dispatch = 0;
             $can_hide = "y";
-            $grouping = ($_POST['frm_rstat_group'][$i] != "") ? $_POST['frm_rstat_group'][$i] : '"' . gettext('Not Grouped') . '"';
+            $grouping = ($_POST['frm_rstat_group'][$i] != "") ? $_POST['frm_rstat_group'][$i] : gettext('Not Grouped');
             $bgcolor = ($_POST['frm_rstat_bgcol'][$i] != "") ?  "#" . $_POST['frm_rstat_bgcol'][$i] : "#FFFFFF";
             $textcol = ($_POST['frm_rstat_col'][$i] != "") ?  "#" . $_POST['frm_rstat_col'][$i] : "#000000";
             $query = "INSERT INTO `$GLOBALS[mysql_prefix]un_status` (`status_val`,`description`,`dispatch`,`hide`,`group`,`bg_color`,`text_color`) VALUES('$resp_stat','$description','$can_dispatch','$can_hide','$grouping','$bgcolor','$textcol')";
-            $result = mysql_query($query) or die('"' . gettext('Unit Status types insertion failed, execution halted') . '"');
+            $result = mysql_query($query) or die(gettext('Unit Status types insertion failed, execution halted'));
             if ($result) {
-                $output_text .= gettext("Responder Status {$_POST['frm_rstat_name']} inserted") . "<BR />";
+				$output_text .= gettext("Responder Status {$resp_stat} inserted") . "<BR />";	
                 }
             $i++;
             }
@@ -535,7 +535,7 @@ elseif ((!empty($_POST)) && (isset($_POST['country']))) {
     if (isset($_POST['frm_num_responders'])) {
         $counter = $_POST['frm_num_responders'];
         $resp_prefix = (isset($_POST['frm_responder_prefix'])) ? $_POST['frm_responder_prefix'] : "Unit";
-        $description = '"' . gettext('Auto entered') . '"';
+        $description = gettext('Auto entered');
         $un_status = 1;
         $lat = "0.999999";
         $lng = "0.999999";
@@ -582,7 +582,7 @@ elseif ((!empty($_POST)) && (isset($_POST['country']))) {
                         'Allocated to Group' ,
                         $by)";
                 $result_a = mysql_query($query_a) or do_error($query_a, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
-                $output_text .= '"' . gettext('Responder') . " " . $resp_prefix . $i . " " . gettext('inserted') . "<BR />";
+				$output_text .= gettext("Responder {$resp_prefix} {$i} inserted") . "<BR />";	
                 }
             }
         }

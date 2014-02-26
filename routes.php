@@ -885,9 +885,14 @@ else {
     $the_ticket_id = get_ticket_id ();
     $api_key = trim(get_variable('gmaps_api_key'));
     $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
-?>
-<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>sensor=false"></SCRIPT>
+	if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
+		$gmaps_url =  "https://maps.google.com/maps/api/js?" . $key_str . "sensor=false";
+		} else {
+		$gmaps_url =  "http://maps.google.com/maps/api/js?" . $key_str . "sensor=false";
+		}
 
+?>
+<SCRIPT TYPE="text/javascript" src="<?php print $gmaps_url;?>"></SCRIPT>
 <SCRIPT SRC="./js/usng.js"></SCRIPT>		<!-- 10/14/08 -->
 <SCRIPT SRC="./js/graticule_V3.js"></SCRIPT>
 <SCRIPT SRC="./js/elabel_v3.js" TYPE="text/javascript"></SCRIPT><!-- 8/1/11 -->

@@ -125,7 +125,7 @@ function exportMysqlToCsv($user,$filename = 'requests.csv') {
      		$output[$z][] = $miles;
         $z++;
         }
-    $fields_cnt = count($output[1]);
+	$fields_cnt = count($output[0]);
     $rows_cnt = count($output);
 
   	$headers = array('Requester','Approver','Customer','Street','City','State','Phone','To Address','Pickup Time','Arrival Time','Receiving Facility','Title','Description','Status','Request Date','Accepted Date','Declined Date','Resourced Date','Completed Date','Closed Date','Cancelled Date','Mileage');

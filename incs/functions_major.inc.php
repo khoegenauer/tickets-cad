@@ -171,7 +171,9 @@ $iw_width = 	"300px";		// map infowindow with
 7/30/13 Revised to solve issue with showing and hiding individual Facility categories
 9/10/13 Added "Address About" and "To Address" fields, fixed on click event in maps mode for ticket entered in no maps mode.
 12/23/13 Revised sidebar numbering and unit marker creation to separate units markers from ticket markers in preparation for dynamic unit markers
+1/3/14 Added Road Condition Alert markers to map
 1/10/14 Revised sidebar click numbering to cure wrong infowindow being opened.
+1/30/14 Added specific Unit dummy marker to fix problem with not IW when clicking unit with dummy position
 */
 
 $nature = get_text("Nature");			// 12/03/10
@@ -820,7 +822,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
  * @param {type} postData
  * @returns {unresolved}
  */
-    function sendRequest(url,callback,postData) {								// 2/14/09
+/*    function sendRequest(url,callback,postData) {								// 2/14/09
         var req = createXMLHTTPObject();
         if (!req) return;
         var method = (postData) ? "POST" : "GET";
@@ -869,7 +871,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
             }
 
         return xmlhttp;
-        }
+        } */
 /**
  * 
  * @returns {String}
@@ -1046,11 +1048,9 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
             for (var i = 0; i < gmarkers.length; i++) {
                 if (gmarkers[i]) {
                     if ((gmarkers[i].id == priority) && (gmarkers[i].category == category)) {
-//						gmarkers[i].show();
                         gmarkers[i].setMap(map);
                         }
                     if ((gmarkers[i].id != priority) && (gmarkers[i].category == category)) {
-//						gmarkers[i].hide();
                         gmarkers[i].setMap(null);
                         }
 
@@ -1068,11 +1068,9 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
             for (var i = 0; i < gmarkers.length; i++) {
                 if (gmarkers[i]) {
                     if ((gmarkers[i].id == priority) && (gmarkers[i].category == category)) {
-//						gmarkers[i].show();
                         gmarkers[i].setMap(map);
                         }
                     if ((gmarkers[i].id != priority) && (gmarkers[i].category == category)) {
-//						gmarkers[i].hide();
                         gmarkers[i].setMap(null);
                         }
 
@@ -1090,11 +1088,9 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
             for (var i = 0; i < gmarkers.length; i++) {
                 if (gmarkers[i]) {
                     if ((gmarkers[i].id == priority) && (gmarkers[i].category == category)) {
-//						gmarkers[i].show();
                         gmarkers[i].setMap(map);
                         }
                     if ((gmarkers[i].id != priority) && (gmarkers[i].category == category)) {
-//						gmarkers[i].hide();
                         gmarkers[i].setMap(null);
                         }
 
@@ -1112,7 +1108,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
             for (var i = 0; i < gmarkers.length; i++) {
                 if (gmarkers[i]) {
                     if (gmarkers[i].category == category) {
-//						gmarkers[i].show();
                         gmarkers[i].setMap(map);
                         }
                     }		// end if (gmarkers[i])
@@ -1129,7 +1124,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
             for (var i = 0; i < gmarkers.length; i++) {
                 if (gmarkers[i]) {
                     if (gmarkers[i].category == category) {
-//						gmarkers[i].hide();
                         gmarkers[i].setMap(null);
                         }
                     }		// end if (gmarkers[i])
@@ -1193,10 +1187,9 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
         for (var i = 0; i < curr_cats.length; i++) {
             var catname = curr_cats[i];
             if (cat_sess_stat[i]=="s") {
-                for (var j = 0; j < gmarkers.length; j++) {
-                    if ((gmarkers[j]) && (gmarkers[j].category) && (gmarkers[j].category == catname)) {
-//						gmarkers[j].show();
-                        gmarkers[j].setMap(map);
+                for (var j = 0; j < rmarkers.length; j++) {
+                    if ((rmarkers[j]) && (rmarkers[j].category) && (rmarkers[j].category == catname)) {
+                        rmarkers[j].setMap(map);
                         var catid = catname + j;
                         if ($(catid)) {
                             $(catid).style.display = "";
@@ -1205,10 +1198,9 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
                     }
                 $(catname).checked = true;
             } else {
-                for (var j = 0; j < gmarkers.length; j++) {
-                    if ((gmarkers[j]) && (gmarkers[j].category) && (gmarkers[j].category == catname)) {
-//						gmarkers[j].hide();
-                        gmarkers[j].setMap(null);
+                for (var j = 0; j < rmarkers.length; j++) {
+                    if ((rmarkers[j]) && (rmarkers[j].category) && (rmarkers[j].category == catname)) {
+                        rmarkers[j].setMap(null);
                         var catid = catname + j;
                         if ($(catid)) {
                             $(catid).style.display = "none";
@@ -1273,7 +1265,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
                         $(catid).style.display = "";
                     }
                     if ((rmarkers[j]) && (rmarkers[j].category!="Incident")) {
-//					gmarkers[j].show();
                     rmarkers[j].setMap(map);
                     }
                     }
@@ -1299,7 +1290,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
                         $(catid).style.display = "none";
                     }
                     if ((rmarkers[j]) && (rmarkers[j].category!="Incident")) {
-//						gmarkers[j].hide();
                         rmarkers[j].setMap(null);
                     }
                     }
@@ -1329,7 +1319,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
                             $(catid).style.display = "";
                             }
                         if ((rmarkers[j]) && (rmarkers[j].category) && (rmarkers[j].category == category)) {
-//							gmarkers[j].show();
                             rmarkers[j].setMap(map);
                             }
                         }
@@ -1350,7 +1339,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
                             $(catid).style.display = "none";
                             }
                         if ((rmarkers[j]) && (rmarkers[j].category) && (rmarkers[j].category == category)) {
-//							gmarkers[j].hide();
                             rmarkers[j].setMap(null);
                             }
                         }
@@ -1423,7 +1411,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
             if (fac_cat_sess_stat[i]=="s") {
                 for (var j = 0; j < fmarkers.length; j++) {
                     if (fmarkers[j].category == fac_catname) {
-//						fmarkers[j].show();
                         fmarkers[j].setMap(map);
                         var fac_catid = fac_catname + j;
                         if ($(fac_catid)) {
@@ -1435,7 +1422,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
             } else {
                 for (var j = 0; j < fmarkers.length; j++) {
                     if (fmarkers[j].category == fac_catname) {
-//						fmarkers[j].hide();
                         fmarkers[j].setMap(null);
                         var fac_catid = fac_catname + j;
                         if ($(fac_catid)) {
@@ -1500,7 +1486,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
                         $(fac_catid).style.display = "";
                     }
                     if (fmarkers[j].category != "Incident") {
-//					fmarkers[j].show();
                     fmarkers[j].setMap(map);
                     }
                     }
@@ -1526,7 +1511,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
                         $(fac_catid).style.display = "none";
                     }
                     if (fmarkers[j].category != "Incident") {
-//						fmarkers[j].hide();
                         fmarkers[j].setMap(null);
                     }
                     }
@@ -1560,7 +1544,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
                             $(fac_catid).style.display = "";
                             }
                         if (fmarkers[j].category == fac_category) {
-//							fmarkers[j].show();
                             fmarkers[j].setMap(map);
                             }
                         }
@@ -1582,7 +1565,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
                             $(fac_catid).style.display = "none";
                             }
                         if (fmarkers[j].category == fac_category) {
-//							fmarkers[j].hide();
                             fmarkers[j].setMap(null);
                             }
                         }
@@ -1675,7 +1657,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
                 sendRequest (url, gbb_handleResult, params);
                 $(bnds).checked = true;
                 if (boundary[i]) {
-//					boundary[i].show();
                     boundary[i].setMap(map);
                     }
                 }
@@ -1695,7 +1676,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
                 sendRequest (url, gbb_handleResult, params);
                 $(bnds).checked = false;
                 if (boundary[i]) {
-//					boundary[i].hide();
                     boundary[i].setMap(null);
                     }
                 }
@@ -1718,7 +1698,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
                     sendRequest (url, gbb_handleResult, params);
                     $(bnds).checked = true;
                     if ((boundary[i]) && (bound_names.contains(bnds))) {
-//						boundary[i].show();
                         boundary[i].setMap(map);
                         }
                     }
@@ -1732,7 +1711,6 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
                     sendRequest (url, gbb_handleResult, params);
                     $(bnds).checked = false;
                     if ((boundary[i]) && (bound_names.contains(bnds))) {
-//						boundary[i].hide();
                         boundary[i].setMap(null);
                         }
                     }
@@ -1795,11 +1773,9 @@ var tr_id_fixed_part = "tr_id_";		// 3/2/10
             var bnds = bnd_curr[i];
             var bnd_nm = bnd_names_curr[i];
             if (bnds == "s") {
-//				boundary[i].show();
                 boundary[i].setMap(map);
                 $(bnd_nm).checked = true;
                 } else {
-//				boundary[i].hide();
                 boundary[i].setMap(null);
                 $(bnd_nm).checked = false;
                 }
@@ -1895,7 +1871,6 @@ var divarea;
        for (var i = 0; i < gmarkers.length; i++) {
             if (gmarkers[i]) {
                 if (gmarkers[i].category == "Incident") {
-//				gmarkers[i].show();
                 gmarkers[i].setMap(map);
                 }
                 }
@@ -1934,7 +1909,6 @@ var divarea;
             var params = "f_n=viewed_groups&v_n=" +itemsChecked+ "&sess_id=<?php print get_sess_key(__LINE__); ?>";	//	3/15/11
             var url = "persist3.php";	//	3/15/11
             sendRequest (url, fvg_handleResult, params);
-//			form.submit();
         } else {
             errmsg+= "\t<?php print gettext('You cannot Hide all the regions');?>\n";
             if (errmsg!="") {
@@ -1958,7 +1932,6 @@ var divarea;
  * @returns {undefined}
  */
     function form_validate(theForm) {	//	5/3/11
-//		alert("Validating");
         checkForm(theForm);
         }				// end function validate(theForm)
 /**
@@ -2297,6 +2270,29 @@ var divarea;
 		return marker;
 		}				// end function create Marker()
 
+	function createConditionMarker(lat, lng, id, tabs, category, image_file) {		// 1/3/14
+		var point = new google.maps.LatLng(lat, lng);	// for each ticket
+		var group = category || 0;
+		got_points = true;
+		var marker = new google.maps.Marker({position: point, map: map, icon: image_file});		
+		marker.id = id;				// for hide/unhide
+		marker.category = category;	
+
+		google.maps.event.addListener(marker, "click", function() {
+			try  {open_iw.close()} catch (e) {;}
+			map.setCenter(point, 8);
+
+			var infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 400});	 
+			infowindow.open(map, marker);
+			open_iw = infowindow;
+			which = id;
+			});							// end add Listener( ... function())
+		cmarkers[id] = marker;							// marker to array for side_bar click function
+		cinfoTabs[id] = tabs;							// tabs to array
+		bounds.extend(point);
+		return marker;
+		}				// end function create Marker()
+
 /**
  * 
  * @param {type} location
@@ -2314,11 +2310,10 @@ var divarea;
  * @param {type} unit_id
  * @returns {unresolved}
  */
-    function createdummyMarker(point, tabs, color, id, unit_id) {
+    function createdummyMarker(point, tabs, id) {
         got_points = true;											// 6/18/12
         var image_file = "./our_icons/question1.png";
         var dummymarker = new google.maps.Marker({position: point, map: map, icon: image_file});
-        dummymarker.id = color;				// for hide/unhide - unused
         google.maps.event.addListener(dummymarker, "click", function () {		// here for both side bar and icon click
             if (dummymarker) {
                 try {open_iw.close();} catch (err) {;}
@@ -2338,6 +2333,30 @@ var divarea;
 
         return dummymarker;
         }				// end function create dummy Marker()
+
+	function createdummyUnitMarker(point, tabs, id) {		//	1/30/14
+		got_points = true;
+		var image_file = "./our_icons/question1.png";
+		var dummymarker = new google.maps.Marker({position: point, map: map, icon: image_file});		
+		google.maps.event.addListener(dummymarker, "click", function() {		// here for both side bar and icon click
+			if (dummymarker) {
+				try {open_iw.close()} catch(err) {;}
+				map.setZoom(8);
+				map.setCenter(point);
+				infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});	 
+				open_iw = infowindow;				
+				infowindow.open(map, dummymarker);
+				}		// end if (marker)
+			});			// end google.maps.Event.add Listener()
+		rmarkers[id] = dummymarker;									// marker to array for side bar click function
+		rinfoTabs[id] = tabs;									// tabs to array
+		if (!(map_is_fixed)) {				// 4/3/09
+			bounds.extend(point);
+			map.fitBounds(bounds);			
+			}
+		return dummymarker;
+		}				// end function create dummy Marker()
+
 
     var grid_bool = false;
 /**
@@ -2583,9 +2602,11 @@ function cs_handleResult(req) {					// the 'called-back' function for show curre
     var gmarkers = [];
     var fmarkers = [];
     var rmarkers = [];		//	6/27/12
+	var cmarkers = [];		//	1/3/14
     var rowIds = [];		// 3/8/10
     var infoTabs = [];
     var rinfoTabs = [];
+	var cinfoTabs = [];		//	1/3/14
     var theTabs = [];		//	6/27/12
     var facinfoTabs = [];
     var which;
@@ -3631,7 +3652,7 @@ if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for 
             echo "\t\tvar point = new google.maps.LatLng(" . $dummylat . ", " . $dummylng ."); // 677\n";
 ?>
             var myinfoTabs = "<?php echo nl2brr($tab_1);?>";		// V3
-            var dummymarker = createdummyMarker(point, myinfoTabs, <?php print $row['unit_id']; ?>);	// 859  - 7/28/10. Plots dummy icon in default position for units added in no maps operation
+            var dummymarker = createdummyUnitMarker(point, myinfoTabs, <?php print $row['unit_id']; ?>);	// 859  - 7/28/10. Plots dummy icon in default position for units added in no maps operation
             dummymarker.setMap(map);
 <?php
         } else {

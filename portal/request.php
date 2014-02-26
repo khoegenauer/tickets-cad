@@ -27,6 +27,7 @@ $query = "SELECT *,
         `r`.`pickup` AS `pickup`,
         `r`.`arrival` AS `arrival`,
         `r`.`ticket_id` AS `ticket_id`,
+		`r`.`email` AS `email`,
         `a`.`ticket_id` AS `a_ticket_id`,
         `a`.`id` AS `assigns_id`,
         `a`.`start_miles` AS `start_miles`,
@@ -179,9 +180,18 @@ function get_facilitydetails($value) {
         $return['city'] = "";
         $return['state'] = "";
         }
+	return $return;
+	}
 
-    return $return;
+if ($_SESSION['internet']) {				// 8/22/10
+	$api_key = trim(get_variable('gmaps_api_key'));
+	$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
+	} else {
+	$api_key = "";
+	$key_str = "";	
     }
+	
+$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 ?>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -191,7 +201,7 @@ function get_facilitydetails($value) {
     <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
     <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
     <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
-    <LINK REL=StyleSheet HREF="../stylesheet.php?version=<?php print time();?>" TYPE="text/css">
+    <LINK REL="StyleSheet" HREF="../stylesheet.php?version=<?php print time();?>" TYPE="text/css" />
     <SCRIPT SRC="../js/misc_function.js" TYPE="text/javascript"></SCRIPT>
     <SCRIPT TYPE="text/javascript" SRC="../js/domready.js"></script>
     <SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry,weather&sensor=false"></SCRIPT>
@@ -388,7 +398,7 @@ function validate(theForm) {
         return;
         } else {
         var geocoder = new google.maps.Geocoder();
-        var myAddress = theForm.frm_street.value.trim() + ", " +theForm.frm_city.value.trim() + " "  +theForm.frm_state.value.trim();
+        var myAddress = theForm.frm_street.value.trim() + ", " + theForm.frm_city.value.trim() + ", "  + theForm.frm_state.value.trim();
         geocoder.geocode( { 'address': myAddress}, function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             theForm.frm_lat.value = results[0].geometry.location.lat();
@@ -679,13 +689,15 @@ $onload_str = "load(" .  get_variable('def_lat') . ", " . get_variable('def_lng'
 $now = time() - (intval(get_variable('delta_mins')*60));
 $the_details = get_contact_details($row['requester']);
 $contact_email_p = $the_details[1];
-$theDetails = get_requester_details($_SESSION['user_id']);
-$the_email = $theDetails[0];		
-
-if (!empty($_POST)) {
+if(!empty($_POST)) {
+	$theDetails = get_requester_details($_SESSION['user_id']);
+	$userEmail = $theDetails[0];
+	$appEmail = ($_GET['frm_app_email'] != "") ? $_GET['frm_app_email'] : NULL;
+	$the_email = (($appEmail != NULL) && (is_email($appEmail))) ? $appEmail : $theDetails[0];
     $meridiem_request_date = ((empty($_POST) || ((!empty($_POST)) && (empty ($_POST['frm_meridiem_request_date'])))) ) ? "" : $_POST['frm_meridiem_request_date'] ;
   	$request_date = "$_POST[frm_year_request_date]-$_POST[frm_month_request_date]-$_POST[frm_day_request_date] 00:00:00$meridiem_request_date";	
     $query = "UPDATE `$GLOBALS[mysql_prefix]requests` SET
+		`email` = " . quote_smart(trim($appEmail)) . ",
         `street` = " . quote_smart(trim($_POST['frm_street'])) . ",
         `city` = " . quote_smart(trim($_POST['frm_city'])) . ",
     		`postcode` = " . quote_smart(trim($_POST['frm_postcode'])) . ",
@@ -766,7 +778,14 @@ if (!empty($_POST)) {
 		$text_str .= "Request Summary\n\n" . $the_summary;
 		do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);	
 		}				// end if/else ($the_email)	
-
+	if ($userEmail != "") {				// any addresses?
+		$to_str = $userEmail;
+		$smsg_to_str = "";
+		$subject_str = "Your request " . $scope . " has been registered";
+		$text_str = "Your Request " . $scope . " has been registered\r\n"; 
+		$text_str .= "Request Summary\n\n" . $the_summary;
+		do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);	
+		}				// end if/else ($userEmail)	
 ?>
     <BODY>
         <CENTER>
@@ -795,7 +814,7 @@ if (!empty($_POST)) {
                         <TD class='td_label' style='text-align: left;'><?php print gettext('Requested By');?></TD><TD class='td_data' style='text-align: left;'><?php print get_user_name($row['requester']);?></TD>
                     </TR>
                     <TR class='even'>
-            						<TD class='td_label' style='text-align: left;'>Request Date and Time</TD><TD class='td_data' style='text-align: left;'><?php print format_dateonly(strtotime($row['request_date']));?></TD>
+            						<TD class='td_label' style='text-align: left;'><?php print gettext('Request Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print format_dateonly(strtotime($row['request_date']));?></TD>
                     </TR>
                     <TR class='odd'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Status');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['status'];?></TD>
@@ -919,7 +938,7 @@ if (!empty($_POST)) {
                         <TD class='td_label' style='text-align: left;'><?php print gettext('Requested By');?></TD><TD class='td_data' style='text-align: left;'><?php print get_user_name($row['requester']);?></TD>
                     </TR>
                     <TR class='even'>
-            						<TD class='td_label' style='text-align: left;'><?php print gettext('Request Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print generate_dateonly_dropdown('request_date',strtotime($row['request_date']),FALSE);?></TD>
+            			<TD class='td_label' style='text-align: left;'><?php print gettext('Request Date and Time');?></TD><TD class='td_data' style='text-align: left;'><?php print generate_dateonly_dropdown('request_date',strtotime($row['request_date']),FALSE);?></TD>
                     </TR>
                     <TR class='odd'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Status');?></TD><TD class='td_data' style='text-align: left;'><?php print $status_sel;?></TD>
@@ -967,11 +986,12 @@ if (!empty($_POST)) {
                         <TD class='spacer' COLSPAN=99></TD>
                     </TR>
                 </TABLE>
-                <INPUT NAME='requester' TYPE='hidden' SIZE='24' VALUE="<?php print $_SESSION['user_id'];?>">
-                <INPUT NAME='id' TYPE='hidden' SIZE='24' VALUE="<?php print $id;?>">
+                <INPUT NAME='requester' TYPE='hidden' SIZE='24' VALUE="<?php print $_SESSION['user_id'];?>" />
+                <INPUT NAME='id' TYPE='hidden' SIZE='24' VALUE="<?php print $id;?>" />
                 <INPUT NAME='frm_lat' TYPE='hidden' SIZE='10' VALUE="<?php print $row['lat'];?>" />
                 <INPUT NAME='frm_lng' TYPE='hidden' SIZE='10' VALUE="<?php print $row['lng'];?>" />
-         				<INPUT NAME='frm_ticket_id' TYPE='hidden' SIZE='8' VALUE="<?php print $row['ticket_id'];?>">
+         		<INPUT NAME='frm_ticket_id' TYPE='hidden' SIZE='8' VALUE="<?php print $row['ticket_id'];?>" />
+				<INPUT NAME='frm_app_email' TYPE='hidden' SIZE='128' VALUE="<?php print $row['email'];?>" />
             </DIV><BR /><BR />
             <SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "validate(document.edit_frm);"><?php print gettext('Update');?></SPAN>
       			<SPAN id='close_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.opener.get_requests(); window.close();">Cancel</SPAN><BR /><BR />	

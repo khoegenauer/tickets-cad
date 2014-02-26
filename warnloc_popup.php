@@ -53,7 +53,15 @@ $row = mysql_fetch_assoc($result);
     .wrap_label { width: 100px; background-color: #707070; font-size: 12px; color: #FFFFFF; font-weight: bold; font-style: normal; font-family: Verdana, Arial, Helvetica, sans-serif; text-decoration: none; }
     .tab_row { border: 1px solid #CECECE; width: 300px; }
       </STYLE>
-    <SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $api_key;?>&libraries=geometry&sensor=false"></SCRIPT>
+<?php
+	$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
+	if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
+		$gmaps_url =  "https://maps.google.com/maps/api/js?" . $key_str . "libraries=geometry&sensor=false";
+		} else {
+		$gmaps_url =  "http://maps.google.com/maps/api/js?" . $key_str . "libraries=geometry&sensor=false";
+		}
+?>
+	<SCRIPT TYPE="text/javascript" src="<?php print $gmaps_url;?>"></SCRIPT>
     <SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT>
     <SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>
     <SCRIPT SRC="./js/graticule_V3.js" type="text/javascript"></SCRIPT>

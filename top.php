@@ -46,6 +46,8 @@
 7/2/2013 include setting internet in HAS include
 7/16/13 Revisions to strings for top bars which fail on intial load after install and stop buttons from showing.
 10/25/13 Revised get_filelist and associated timer.
+1/3/14 Added Road Condition Alert markers and live moving unit markers
+1/30/14 Revised new message handling and added unread messages flag
 */
 
 error_reporting(E_ALL);
@@ -80,6 +82,8 @@ $browser = trim(checkBrowser(FALSE));						// 6/12/10
     table, td, th	{border:0px solid black;}
     .signal_r { margin-left: 4px;  font: normal 12px Arial, Helvetica, sans-serif; color:#FFFFFF; border-width: 1px; border-STYLE: inset; border-color: #FF3366;
                     padding: 1px 0.5em;text-decoration: none;float: left;color: black;background-color: #FF3366;font-weight: bolder;}
+	.signal_o { margin-left: 4px;  font: normal 12px Arial, Helvetica, sans-serif; color:#FFFFFF; border-width: 1px; border-STYLE: inset; border-color: #FF3366;
+  				  padding: 1px 0.5em;text-decoration: none;float: left;color: black;background-color: #CC9900;font-weight: bolder;}
     .signal_b { margin-left: 4px;  font: normal 12px Arial, Helvetica, sans-serif; color:#FFFFFF; border-width: 1px; border-STYLE: inset; border-color: #00CCFF;
                     padding: 1px 0.5em;text-decoration: none;float: left;color: black;background-color: #00CCFF;font-weight: bolder;}
     .signal_w { margin-left: 4px; font: normal 12px Arial, Helvetica, sans-serif; color:#FFFFFF; border-width: 2px; border-STYLE: inset; border-color: #3366FF;
@@ -172,6 +176,9 @@ if (file_exists("./incs/modules.inc.php")) {
     var pos_interval = null;
     var file_interval = null;
     var lit=new Array();
+	var lit_r = new Array();
+	var lit_o = new Array();
+	var unread_messages = 0;
 
     var chat_id = 0;				// new chat invite - 8/25/10
     var ticket_id = 0;				// new ticket
@@ -216,6 +223,8 @@ if (file_exists("./incs/modules.inc.php")) {
                     if (the_stored != 0) {
                         show_msg("<?php gettext('There are');?> " + the_stored + " <?php gettext('new messages');?>");
                         msg_signal_r();								// light the msg button
+						} else {
+						msg_signal_r_off();								// unlight the msg button
                         }
                     }
                 }
@@ -235,7 +244,7 @@ if (file_exists("./incs/modules.inc.php")) {
  */
     function do_latest_msgs_loop() {	//	10/23/12
         var randomnumber=Math.floor(Math.random()*99999999);
-        sendRequest ('./ajax/get_latest_messages.php?version=' + randomnumber,get_latest_messages_cb, "");
+		sendRequest ('./ajax/list_message_totals.php?version=' + randomnumber,get_latest_messages_cb, "");	
         }
 /**
  *
@@ -351,22 +360,19 @@ if (file_exists("./incs/modules.inc.php")) {
  * @param {type} req
  * @returns {unresolved}
  */
-    function get_latest_messages_cb(req) {					// get_latest_messages callback(), 10/23/12
-        try {
-            var the_msg_arr=JSON.decode(req.responseText);	// 1/7/11
-            }
-        catch (e) {
-            alert("<?php echo 'error: ' . basename(__FILE__) . '@' .  __LINE__;?>");
-//			do_logout();				// 2/10/12
-            return;
-            }
-
-        var msgtemp = parseInt(the_msg_arr[0]);				// new message?
-        if (msgtemp > new_msg) {
-            new_msg = msgtemp;
-            msg_signal_r();								// light the msg button
-            }
-        }			// end function get_latest_messages_cb()
+	function get_latest_messages_cb(req) {					// get_latest_messages callback(), 10/23/12, 1/30/14
+		var the_msg_arr=JSON.decode(req.responseText);
+		var the_number = parseInt(the_msg_arr[0][0]);
+		unread_messages = the_number;
+		if(unread_messages != 0) {
+			$("msg").innerHTML = "Msgs (" + unread_messages + ")";
+			msg_signal_o();
+			} else {
+			$("msg").innerHTML = "Msgs";
+			msg_signal_o_off();
+			}
+		new_msgs_get();					
+		}			// end function get_latest_messages_cb()	
 /**
  *
  * @param {type} x
@@ -395,7 +401,7 @@ if (file_exists("./incs/modules.inc.php")) {
  */
     function new_msgs_get() {								// set cycle, 10/23/12
         if (nm_interval!=null) {return;}			// ????
-        nm_interval = window.setInterval('do_latest_msgs_loop()', 180000);
+		nm_interval = window.setInterval('do_latest_msgs_loop()', 30000); 
         }			// end function mu get()
 /**
  *
@@ -403,7 +409,7 @@ if (file_exists("./incs/modules.inc.php")) {
  */
     function messages_get() {								// set cycle, 10/23/12
         if (msgs_interval!=null) {return;}			// ????
-        msgs_interval = window.setInterval('do_msgs_loop()', 180000);
+		msgs_interval = window.setInterval('do_msgs_loop()', 30000);
         }			// end function mu get()
 /**
  *
@@ -449,8 +455,13 @@ if (file_exists("./incs/modules.inc.php")) {
                         }
                     }
                 mu_get();				// start loop
-                do_positions();	//	12/27/13
+				do_positions();	//	1/3/14
+				do_conditions(); //	1/3/14
+				var is_messaging = parseInt("<?php print get_variable('use_messaging');?>");
+				if((is_messaging == 1) || (is_messaging == 2) || (is_messaging == 3)) {
                 get_msgs();
+					nm_init();
+					}
                 do_filelist();	//	9/10/13
                 }				// end function init_cb()
         }				// end function mu_init()
@@ -462,12 +473,17 @@ if (file_exists("./incs/modules.inc.php")) {
         var randomnumber=Math.floor(Math.random()*99999999);
         if (nmis_initialized) { return; }
         nmis_initialized = true;
-        sendRequest ('./ajax/get_latest_messages.php?version=' + randomnumber,msg_cb, "");
+		sendRequest ('./ajax/list_message_totals.php?version=' + randomnumber,msg_cb, "");		
             function msg_cb(req) {
                 var the_msg_arr=JSON.decode(req.responseText);
-                if (the_msg_arr[0] == 1) {
-                    msg_signal_r();
+				var the_number = parseInt(the_msg_arr[0][0]);
+				unread_messages = the_number;
+				if(unread_messages != 0) {
+					$("msg").innerHTML = "Msgs (" + unread_messages + ")";
+					msg_signal_o();
                     } else {
+					$("msg").innerHTML = "Msgs";
+					msg_signal_o_off();
                     }
                 new_msgs_get();
                 }			// end function msg_cb()
@@ -509,6 +525,8 @@ if (file_exists("./incs/modules.inc.php")) {
                     if (the_stored != 0) {
                         show_msg("<?php print gettext('There are');?> " + the_stored + " <?php print gettext('new messages');?>");
                         msg_signal_r();								// light the msg button
+						} else {
+						msg_signal_r_off();								// unlight the msg button
                         }
                     }
                 }
@@ -534,20 +552,20 @@ if (file_exists("./incs/modules.inc.php")) {
 				var resp_positions = JSON.decode(respxmlHttp.responseText);
 				for(var key in resp_positions) {
 					var the_resp_id = resp_positions[key][0];
-					var the_resp_lat = resp_positions[key][4];
-					var the_resp_lng = resp_positions[key][5];
+					var the_resp_lat = parseFloat(resp_positions[key][4]);
+					var the_resp_lng = parseFloat(resp_positions[key][5]);
 					if(typeof parent.frames["main"].set_marker_position == 'function') { 
 						parent.frames["main"].set_marker_position(the_resp_id, the_resp_lat, the_resp_lng);	
 						}
 					}	
 				}
 			}
-//		positions_get();		
+		positions_get();		
 		}
 		
 	function positions_get() {			// set cycle, 12/27/13
 		if (pos_interval!=null) {return;}			// ????
-		pos_interval = window.setInterval('do_pos_loop()', 30000);
+		pos_interval = window.setInterval('do_positions_loop()', 30000);
 		}			// end function mu get()	
 		
 	function do_positions_loop() {	//	12/27/13
@@ -567,8 +585,8 @@ if (file_exists("./incs/modules.inc.php")) {
 				var resp_positions = JSON.decode(respxmlHttp.responseText);
 				for(var key in resp_positions) {
 					var the_resp_id = resp_positions[key][0];
-					var the_resp_lat = resp_positions[key][4];
-					var the_resp_lng = resp_positions[key][5];
+					var the_resp_lat = parseFloat(resp_positions[key][4]);
+					var the_resp_lng = parseFloat(resp_positions[key][5]);
 					if(typeof parent.frames["main"].set_marker_position == 'function') { 
 						parent.frames["main"].set_marker_position(the_resp_id, the_resp_lat, the_resp_lng);	
 						}
@@ -577,6 +595,88 @@ if (file_exists("./incs/modules.inc.php")) {
 			}
 		}
 
+// for road conditions		
+	function do_conditions() {	//	1/3/14
+		var randomnumber=Math.floor(Math.random()*99999999);		
+	  	// call the server to execute the server side operation
+		if (window.XMLHttpRequest) {
+			condxmlHttp = new XMLHttpRequest();
+			condxmlHttp.open("GET", "./ajax/alertlist.php?version=" + randomnumber, true);
+			condxmlHttp.onreadystatechange = readConditions;
+			condxmlHttp.send(null);
+			}
+		}
+		
+	function readConditions() {	//	1/3/14
+		if (condxmlHttp.readyState == 4) {
+			if (condxmlHttp.status == 200) {
+				var conditions = JSON.decode(condxmlHttp.responseText);
+				for(var key in conditions) {
+					var the_condID = conditions[key][0];
+					var the_condTitle = conditions[key][1];
+					var the_condTypeTitle = conditions[key][2];
+					var the_condAddress = conditions[key][3];
+					var the_condDescription = conditions[key][4];
+					var the_iconurl = "./rm/roadinfo_icons/" + conditions[key][5];
+					var the_condDate = conditions[key][6];
+					var the_condLat = conditions[key][7];
+					var the_condLng = conditions[key][8];
+					var info = "<TABLE class='infowin'>";
+					info += "<TH COLSPAN=2 class='header'>" + the_condTitle + "</TH>";
+					info += "<TR class='even'><TD class='td_label'><B><?php print get_text('Type');?></B></TD><TD class='td_data'>" + the_condTypeTitle + "</TD></TR>";
+					info += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Address');?></B></TD><TD class='td_data'>" + the_condAddress + "</TD></TR>";
+					info += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Updated');?></B></TD><TD class='td_data'>" + the_condDate + "</TD></TR></TABLE>";
+					if(typeof parent.frames["main"].createConditionMarker == 'function') { 
+						parent.frames["main"].createConditionMarker(the_condLat, the_condLng, the_condID, info, "roadinfo", the_iconurl)
+						}
+					}	
+				}
+			}
+		conditions_get();		
+		}
+		
+	function conditions_get() {			// set cycle, 1/3/14
+		if (pos_interval!=null) {return;}			// ????
+		pos_interval = window.setInterval('do_conditions_loop()', 30000);
+		}			// end function mu get()	
+		
+	function do_conditions_loop() {	//	1/3/14
+		var randomnumber=Math.floor(Math.random()*99999999);		
+	  	// call the server to execute the server side operation
+		if (window.XMLHttpRequest) {
+			condxmlHttp = new XMLHttpRequest();
+			condxmlHttp.open("GET", "./ajax/responder_data.php?version=" + randomnumber, true);
+			condxmlHttp.onreadystatechange = readConditions2;
+			condxmlHttp.send(null);
+			}
+		}
+		
+	function readConditions2() {	//	1/3/14
+		if (condxmlHttp.readyState == 4) {
+			if (condxmlHttp.status == 200) {
+				var conditions = JSON.decode(condxmlHttp.responseText);
+				for(var key in conditions) {
+					var the_condID = conditions[key][0];
+					var the_condTitle = conditions[key][1];
+					var the_condTypeTitle = conditions[key][2];
+					var the_condAddress = conditions[key][3];
+					var the_condDescription = conditions[key][4];
+					var the_iconurl = "./rm/roadinfo_icons/" + conditions[key][5];
+					var the_condDate = conditions[key][6];
+					var the_condLat = conditions[key][7];
+					var the_condLng = conditions[key][8];
+					var info = "<TABLE class='infowin'>";
+					info += "<TH class='header'>" + the_condTitle + "</TH>";
+					info += "<TR class='even'><TD class='td_label'><B><?php print get_text('Alert Type');?></B></TD><TD class='td_data'>" + the_condTypeTitle + "</TD></TR>";
+					info += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Address');?></B></TD><TD class='td_data'>" + the_condAddress + "</TD></TR>";
+					info += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Updated');?></B></TD><TD class='td_data'>" + the_condDate + "</TD></TR></TABLE>";
+					if(typeof parent.frames["main"].createConditionMarker == 'function') { 
+						parent.frames["main"].createConditionMarker(the_condLat, the_condLng, the_condID, info, "roadinfo", the_iconurl)
+						}
+					}	
+				}
+			}
+		}
 /**
  *
  * @returns {undefined}
@@ -701,7 +801,6 @@ if (file_exists("./incs/modules.inc.php")) {
  * @returns {unresolved}
  */
     function unit_signal() {										// light the units button and - if not already lit red - the situation button
-//		CngClass("resp", "signal_b");								//
         if (lit["main"]) {return; }									// already lit - possibly red
         CngClass("main", "signal_b");
         lit["main"] = true;
@@ -719,11 +818,53 @@ if (file_exists("./incs/modules.inc.php")) {
  *
  * @returns {unresolved}
  */
-    function msg_signal_r() {										// light the msg button, 10/23/12
-        if (lit["msg"]) {return; }									// already lit - possibly red
-        CngClass("msg", "signal_r");
-        lit["msg"] = true;
-        }
+	function msg_signal_r() {										// light the msg button, 10/23/12, 1/30/14
+		if (lit_r["msg"]) {return; }									// already lit - possibly red
+		CngClass("msg", "signal_r");
+		lit_r["msg"] = true;
+		do_audible();				// 1/20/14
+		}
+
+	function msg_signal_r_off() {										// light the msg button, 10/23/12, 1/30/14
+		if (!lit_r["msg"]) {return; }									// not lit ignore
+		if(unread_messages != 0) {
+			CngClass("msg", "signal_o");
+			lit_o["msg"] = true;
+			} else {
+			if(lit["msg"]) {
+				CngClass("msg", "signal_b");
+				lit_o["msg"] = false;					
+				} else {
+				CngClass("msg", "plain");
+				lit_o["msg"] = false;	
+				}
+			}
+		lit_r["msg"] = false;
+		lit_o["msg"] = true;
+		}
+		
+	function msg_signal_o() {										// light the msg button, 10/23/12, 1/30/14
+		if (lit_o["msg"]) {return; }									// already lit - possibly red
+		if (lit_r["msg"]) {return; }
+		CngClass("msg", "signal_o");
+		lit_o["msg"] = true;
+		}
+
+	function msg_signal_o_off() {										// light the msg button, 10/23/12, 1/30/14
+		if (!lit_o["msg"]) {return; }									// not lit ignore
+		if (lit_r["msg"]) {
+			CngClass("msg", "signal_r");
+			} else {
+			if(lit["msg"]) {
+				CngClass("msg", "signal_b");
+				lit_o["msg"] = false;					
+				} else {
+				CngClass("msg", "plain");
+				lit_o["msg"] = false;	
+				}			
+			}
+		lit_o["msg"] = false;
+		}
 /**
  *
  * @returns {undefined}
@@ -1264,12 +1405,7 @@ function get_daynight() {
             $("user_id").innerHTML  = "<?php print $the_userid;?>";		//	7/16/13
             $("whom").innerHTML  = "<?php print $the_whom;?>";			// user name, 7/1613
             $("level").innerHTML = "<?php print $the_level;?>";		//	7/16/13
-            var is_messaging = <?php print get_variable('use_messaging');?>;
-            if (((is_messaging == 1) || (is_messaging == 2) || (is_messaging == 3)) && (internet == true)) {
-                nm_init();
-                }
             mu_init();			// start polling
-//			get_msgs();		//	Get messages from SMS Gateway and Email;
 <?php
             }				// end if/else (empty($_SESSION))
 ?>

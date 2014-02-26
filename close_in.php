@@ -22,7 +22,6 @@ error_reporting(E_ALL);
 require_once 'incs/functions.inc.php';		//7/28/10
 
 if ($istest) {
-//	dump(basename(__FILE__));
     print "GET<br />\n";
     dump($_GET);
     print "POST<br />\n";
@@ -383,10 +382,6 @@ function do_is_start($in_row) {				// 3/22/10
  * @returns {undefined}
  */
             function handleResult(req) {				// the 'called-back' function
-<?php
-
-            if ($istest) {print "\t\t\talert('HTTP error ' + req.status + '" . __LINE__ . "');\n";}
-?>
             }
 /**
  *
@@ -405,9 +400,6 @@ function do_is_start($in_row) {				// 3/22/10
                 req.onreadystatechange = function () {
                     if (req.readyState != 4) return;
                     if (req.status != 200 && req.status != 304) {
-<?php
-                if ($istest) {print "\t\t\talert('HTTP error ' + req.status + '" . __LINE__ . "');\n";}
-?>
 
                         return;
                         }

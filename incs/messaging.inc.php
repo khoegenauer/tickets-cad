@@ -501,7 +501,7 @@ function clean_hdr_fm_text($thetext) {
  * @see
  * @since
  */
-function get_emails($url, $user, $password, $port, $ssl="", $timeout=10) {	//	Called from AJAX file to get emails in background - AJAX file called by top.php
+function get_emails($url, $user, $password, $port, $ssl="", $timeout=30) {	//	Called from AJAX file to get emails in background - AJAX file called by top.php
 //	print $url . "," . $user . "," . $password . "," . $port . "," . $ssl . "," . $timeout . "<BR />";
     $no_whitelist = intval(get_msg_variable('no_whitelist'));
     $del_emails = intval(get_msg_variable('email_del'));
@@ -807,7 +807,6 @@ function get_resp_name($resp_handle) {	//	Gets responder ID from SMS Gateway ID
  * @since
  */
 function send_message($server,$orgcode,$apipin,$message,$reciptype,$recipients,$importance,$replyto,$mode) {	//	Sends message to SMS Gateway
-//	print $server . "," . $orgcode . "," . $apipin . "," . $message . "," . $reciptype . "," . $recipients . "," . $importance . "," . $replyto . "," . $mode . "<BR />";
     $smsg_server_inuse = array();
     $smsg_server_inuse[0] = ($server == 1) ? get_msg_variable('smsg_og_serv1') : get_msg_variable('smsg_og_serv2');
     if ($smsg_server_inuse[0] == get_msg_variable('smsg_og_serv1')) {
@@ -839,7 +838,7 @@ function send_message($server,$orgcode,$apipin,$message,$reciptype,$recipients,$
 
         //open connection
         $ch = curl_init();
-        $timeout = 10;
+        $timeout = 30;
 
         //set the url, number of POST vars, POST data
         curl_setopt($ch,CURLOPT_URL,$url);
@@ -935,7 +934,7 @@ function get_responses($server,$orgcode,$apipin,$messageid,$mode) {	//	Polls SMS
 
         //open connection
         $ch = curl_init();
-        $timeout = 10;
+        $timeout = 30;
 
         //set the url, number of POST vars, POST data
         curl_setopt($ch,CURLOPT_URL,$url);
@@ -1136,7 +1135,18 @@ function xml2array($contents, $get_attributes=1, $priority = 'tag') { 	//	functi
  * @since
  */
 function check_xml_response() {
-    $server = (get_msg_variable('smsg_force_sec') == 0) ? (get_msg_variable('smsg_server_inuse')) : 2; 	//	Gets current server in use - primary or backup
+	$server_choice = get_msg_variable('smsg_use_server');
+	switch($server_choice) {		
+		case 0: 		
+			$server = get_msg_variable('smsg_server_inuse');
+			break;
+		case 1: 
+			$server = 1;
+			break;			
+		case 2: 
+			$server = 2;
+			break;
+		}				// end switch($server_choice)
     $data = send_message($server,'','','','','','','','');	//	Calls function that does the sending
     if (!$data) {
         if (get_msg_variable('smsg_server_inuse') == 1) {	//	If current server in use is set as 1, change to 2.
@@ -1193,19 +1203,31 @@ function check_xml_response() {
  * @see
  * @since
  */
-function do_smsg_send($orgcode,$apipin,$subject,$message,$reciptype,$recipients,$importance,$replyto,$mode,$ticket_id) {	//	Collects data for message - called from FIP function do_send(...)
+function do_smsg_send($orgcode,$apipin,$subject,$message,$reciptype,$recipients,$importance,$replyto,$mode,$ticket_id,$the_messageid,$the_server) {	//	Collects data for message - called from FIP function do_send(...)
     $now = time() - (intval(intval(get_variable('delta_mins')))*60);
     $ret_arr=array();
     $each_recipient=array();
-    if (check_xml_response()) {
-        $server = (get_msg_variable('smsg_force_sec') == 0) ? (get_msg_variable('smsg_server_inuse')) : 2; 	//	Gets current server in use - primary or backup
-        $data = send_message($server,$orgcode,$apipin,$message,$reciptype,$recipients,$importance,$replyto,$mode);	//	Calls function that does the sending
+	if(check_xml_response()) {
+		$server_choice = get_msg_variable('smsg_use_server');
+		switch($server_choice) {		
+			case 0: 		
+				$server = get_msg_variable('smsg_server_inuse');
+				break;
+			case 1: 
+				$server = 1;
+				break;			
+			case 2: 
+				$server = 2;
+				break;
+			}				// end switch($server_choice)
+		$actual_server = ($the_server) ? $the_server : $server;
+		$data = send_message($actual_server,$orgcode,$apipin,$message,$reciptype,$recipients,$importance,$replyto,$mode);	//	Calls function that does the sending
         $ret_arr=xml2array($data);
         $count = $ret_arr['SMSRESPONDER']['RECIPIENTCOUNT'];
-        $messageid = $ret_arr['SMSRESPONDER']['MESSAGEID'];
+		$messageid = ($the_messageid) ? $the_messageid : $ret_arr['SMSRESPONDER']['MESSAGEID'];
         $datestring = date("Y-m-d H:i:s", $now);
         if ($count >= 1) {
-            store_msg($recipients, $messageid, $subject, $message, 'TICKETS', $ticket_id, $datestring, $datestring, 3);
+			store_msg($recipients, $messageid, $subject, $message, 'TICKETS', $ticket_id, $datestring, $datestring, 3, $server);
             }
         } else {
         $count = 0;
@@ -1262,16 +1284,15 @@ function do_smsg_retrieve($orgcode,$apipin,$mode) {	// retrieves responses from 
     $rtn_msg = "";
     $stat_up = array();
     $query = "SELECT * FROM `$GLOBALS[mysql_prefix]messages` WHERE `msg_type` = '3' AND `date` >= (NOW() - INTERVAL 2 DAY)";	//	Select messages to query for updates - only ones where the OG message has been sent by Tickets
-//	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]messages` WHERE `msg_type` = '3'";	//	Select messages to query for updates - only ones where the OG message has been sent by Tickets
     $result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
     while ($row = stripslashes_deep(mysql_fetch_assoc($result))) {
         $the_response=array();
         $ticket_id = $row['ticket_id'];
         $messageid = $row['message_id'];
-        $server = (get_msg_variable('smsg_force_sec') == 0) ? (get_msg_variable('smsg_server_inuse')) : 2; 	//	Gets current server in use - primary or backup
+		$server = ($row['server_number'] != NULL) ? $row['server_number'] : NULL;
+		if($server != NULL) {
         $data = get_responses($server,$orgcode,$apipin,$messageid,$mode);	//	Calls function that does the sending
         $the_response=xml2array($data);
-        if (check_xml_response()) {
             $response_count = count($the_response['SMSRESPONDER']['RECIPIENT']);
             $now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
         // Messages and status updates
@@ -1332,7 +1353,7 @@ function do_smsg_retrieve($orgcode,$apipin,$mode) {	// retrieves responses from 
                         $datestring = ($datestring == "???") ? $now : $datestring;
                         $respname = (get_resp_name($replyto) != "") ? get_resp_name($replyto): "NA";
                         $resp_id = intval(get_resp_id($replyto));
-                        $temp = store_msg($replyto, $messageid, "SMS Reply", $message, $respname, $ticket_id, $datestring, 0, 4);
+						$temp = store_msg($replyto, $messageid, "SMS Reply", $message, $respname, $ticket_id, $datestring, 0, 4, $server);
                         if (get_msg_variable('use_autostat') == 1) {	//	 Check if Auto Status Updates is set as on and if so check replies for smart text.
                             $the_return = auto_status($message, $replyto, $datestring);
                             if ($the_return != 0) {
@@ -1342,8 +1363,6 @@ function do_smsg_retrieve($orgcode,$apipin,$mode) {	// retrieves responses from 
                         }
                     }
                 }
-            } else {
-            $stat_up[0] = 99;
             }
         }
     if ((empty($stat_up)) || ($stat_up[0] == "")) {
@@ -1374,7 +1393,7 @@ function do_smsg_retrieve($orgcode,$apipin,$mode) {	// retrieves responses from 
  * @see
  * @since
  */
-function store_msg($recipients, $messageid, $subject, $message, $fromname, $ticket_id, $time, $ogtime, $type) {	//	Stores incoming and outgoing SMS Messages from or to Gateway in Messages table
+function store_msg($recipients, $messageid, $subject, $message, $fromname, $ticket_id, $time, $ogtime, $type, $server) {	//	Stores incoming and outgoing SMS Messages from or to Gateway in Messages table
     $message = addslashes($message);
     $subject = addslashes($subject);
     $stored = 0;
@@ -1389,11 +1408,6 @@ function store_msg($recipients, $messageid, $subject, $message, $fromname, $tick
     $who = (array_key_exists('user_id', $_SESSION))? $_SESSION['user_id']: 1;
     $now = mysql_format_date(time() - (intval(get_variable('delta_mins'))*60));
     $resp_id = ((isset($recipients)) && ($recipients != "Tickets")) ? $the_resp_list : $recipients;
-    // if (($time != "") && ($time != 0)) {
-        // $datestring = $time;
-        // } else {
-        // $datestring = $now;
-        // }
     $datestring = $now;
     if (($ogtime != "") && ($ogtime != 0)) {
         $datestring = $ogtime;
@@ -1409,14 +1423,14 @@ function store_msg($recipients, $messageid, $subject, $message, $fromname, $tick
                 $result1 = mysql_query($query1) or do_error($query1, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
                 if (mysql_num_rows($result1) != 0) {
                     while ($row1 = stripslashes_deep(mysql_fetch_assoc($result1))) {
-                        $query2 = "INSERT INTO `$GLOBALS[mysql_prefix]messages` (msg_type, message_id, ticket_id, resp_id, recipients, subject, message, from_address, fromname, date, `read_status`, _by, _from, _on) VALUES(4,'{$messageid}',{$ticket_id},'{$resp_id}','{$recipients}','{$subject}','{$message}','{$recipients}','{$fromname}','{$datestring}',0,{$who},'{$from}','{$now}')";
+						$query2 = "INSERT INTO `$GLOBALS[mysql_prefix]messages` (msg_type, message_id, server_number, ticket_id, resp_id, recipients, subject, message, from_address, fromname, date, `read_status`, _by, _from, _on) VALUES(4,'{$messageid}', {$server}, {$ticket_id},'{$resp_id}','{$recipients}','{$subject}','{$message}','{$recipients}','{$fromname}','{$datestring}',0,{$who},'{$from}','{$now}')";
                         $result2 = mysql_query($query2) or do_error($query2, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
                         if ($result2) {
                             $stored = 1;
                             }
                         }
                     } else {
-                    $query2 = "INSERT INTO `$GLOBALS[mysql_prefix]messages` (msg_type, message_id, ticket_id, resp_id, recipients, subject, message, from_address, fromname, date, `read_status`, _by, _from, _on) VALUES(3,'{$messageid}',{$ticket_id},'{$resp_id}','{$recipients}','{$subject}','{$message}','{$recipients}','{$fromname}','{$datestring}',0,{$who},'{$from}','{$now}')";
+					$query2 = "INSERT INTO `$GLOBALS[mysql_prefix]messages` (msg_type, message_id, server_number, ticket_id, resp_id, recipients, subject, message, from_address, fromname, date, `read_status`, _by, _from, _on) VALUES(3,'{$messageid}', {$server},{$ticket_id},'{$resp_id}','{$recipients}','{$subject}','{$message}','{$recipients}','{$fromname}','{$datestring}',0,{$who},'{$from}','{$now}')";
                     $result2 = mysql_query($query2) or do_error($query2, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
                     if ($result2) {
                         $stored = 1;
@@ -1425,7 +1439,7 @@ function store_msg($recipients, $messageid, $subject, $message, $fromname, $tick
                 }
             }
         } elseif ($type == 3) {
-        $query2 = "INSERT INTO `$GLOBALS[mysql_prefix]messages` (msg_type, message_id, ticket_id, resp_id, recipients, subject, message, from_address, fromname, date, `read_status`, _by, _from, _on) VALUES(3,'{$messageid}',{$ticket_id},'{$resp_id}','{$recipients}','{$subject}','{$message}','{$recipients}','{$fromname}','{$datestring}',0,{$who},'{$from}','{$now}')";
+		$query2 = "INSERT INTO `$GLOBALS[mysql_prefix]messages` (msg_type, message_id, server_number, ticket_id, resp_id, recipients, subject, message, from_address, fromname, date, `read_status`, _by, _from, _on) VALUES(3,'{$messageid}', {$server},{$ticket_id},'{$resp_id}','{$recipients}','{$subject}','{$message}','{$recipients}','{$fromname}','{$datestring}',0,{$who},'{$from}','{$now}')";
         $result2 = mysql_query($query2) or do_error($query2, 'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
         if ($result2) {
             $stored = 1;

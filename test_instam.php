@@ -14,7 +14,15 @@
 error_reporting(E_ALL);
 
 @session_start();
-require_once($_SESSION['fip']);		//7/28/10
+require_once('./incs/functions.inc.php');
+
+/*
+log_error(basename(__FILE__), __LINE__);			// 2/12/2014 - debug function_exists('imap_open')
+
+get_current() ;
+
+log_error(basename(__FILE__), __LINE__);			// 2/12/2014 - debug function_exists('imap_open')
+*/
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
@@ -28,7 +36,7 @@ require_once($_SESSION['fip']);		//7/28/10
 <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>"> <!-- 7/7/09 -->
 <LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css"/>	<!-- 3/15/11 -->
 </HEAD>
-<BODY>
+<BODY onload = "if (document.frm_instam) {document.frm_instam.dev_key.focus();}">
 
 <?php
 
@@ -48,22 +56,22 @@ if (!(empty($_POST))) {
  * @since
  */
         function test_instam($key) {		// returns array, or FALSE
+			$start_at = time();			
 
             // snap(basename(__FILE__) . __LINE__, $key_val);
-            // http://www.instamapper.com/api?action=getPositions&key=4899336036773934943
 
-            $url = "http://www.instamapper.com/api?action=getPositions&key={$key}";
+			$the_url = "http://www.insta-mapper.com/api/api_single.php?device_id={$key}";
 
             $data="";
             if (function_exists("curl_init")) {
                 $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_URL, $the_url);
                 curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
                 $data = curl_exec ($ch);
                 curl_close ($ch);
                 }
             else {				// not CURL
-                if ($fp = @fopen($url, "r")) {
+				if ($fp = @fopen($the_url, "r")) {
                     while (!feof($fp) && (strlen($data)<9000)) $data .= fgets($fp, 128);
                     fclose($fp);
                     }
@@ -73,15 +81,32 @@ if (!(empty($_POST))) {
                     }
                 }
 
-            /*
-            InstaMapper API v1.00
-            1263013328977,bold,1236239763,34.07413,-118.34940,25.0,0.0,335
-            1088203381874,CABOLD,1236255869,34.07701,-118.35262,27.0,0.4,72
-            */
-//			dump($data);
+			$elapsed = time() - $start_at;
+
+			if (is_null (json_decode($data ) ) ) {
+				echo "<br /><center><h3>Instamapper server says:</h3></center><br />";
+				echo "<br /><center><h3><i>{$data}</i></h3></center><br />";
+				return false;
+				}			
+			else {
+				$data = get_remote($the_url, FALSE);		// no JSON decode - 4/23/11
+				$arr = @json_decode( $data );
+//				dump(gettype($arr));
+				
+				$temp = @get_object_vars($arr[0]);	
+
+				echo "<center>\n<table style = 'margin-top: 6px;'>";
+				echo "<tr><td colspan=2 align='center'><h3>Results</h3></td></tr>";
+				foreach ($arr[0] as $key => $value) {
+				    echo "<tr><td>{$key}</td><td>{$value}</td></tr>\n";
+					}
+				echo "<tr><td colspan=2 align='center'><h3>Time: {$elapsed} seconds</h3></td></tr>";
+				echo "</table>";
+				
             $ary_data = explode ("\n", $data);
 
             return $ary_data;
+				}
         }		// end function
 
     $ary = test_instam(trim($_POST['dev_key'])) ;
@@ -94,7 +119,7 @@ if (!(empty($_POST))) {
 
 <TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR /><BR />
     <INPUT TYPE='button' VALUE = '<?php print gettext("Another");?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-    <INPUT TYPE='button' VALUE = '<?php print gettext("Cancel");?>' onClick = 'window.close();' />
+    <INPUT TYPE='button' VALUE = '<?php print gettext("Finished");?>' onClick = 'window.close();' />
 </TD></TR></TABLE>
 
 <?php
@@ -102,7 +127,7 @@ if (!(empty($_POST))) {
     else {
 ?>
 <FORM NAME= 'frm_instam' METHOD='get' ACTION = '<?php print basename(__FILE__);?>'>
-<TABLE ALIGN='center'>
+<TABLE ALIGN='center' style = "margin-top:40px;">
 <TR CLASS  = 'even'><TH COLSPAN=2><?php print gettext('Instamapper Test Succeeds for key');?>: <?php print $_POST['dev_key'];?></TH></TR>
 <TR><TD>&nbsp;</TD></TR>
 <?php
@@ -125,7 +150,7 @@ for ($i = 1; $i<(count($ary) - 2); $i++) {
 
 <TR CLASS  = 'odd'><TD COLSPAN=2 ALIGN='center'><BR /><BR />
     <INPUT TYPE='button' VALUE = '<?php print gettext('Another');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-    <INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
+    <INPUT TYPE='button' VALUE = '<?php print gettext('Finished');?>' onClick = 'window.close();' />
 </TD></TR></TABLE>
 
 <?php
@@ -135,19 +160,20 @@ for ($i = 1; $i<(count($ary) - 2); $i++) {
     }			// end if (!(empty($_POST)))
 else {
 ?>
-<TABLE ALIGN = 'center' cellpadding = 4 BORDER = 0>
+<TABLE id = 'in_table' ALIGN = 'center' cellpadding = 4 BORDER = 0>
 <TR CLASS  = 'even'><TH COLSPAN=2><?php print gettext('Instamapper Test');?></TH></TR>
 <FORM NAME= 'frm_instam' METHOD='post' ACTION = '<?php print basename(__FILE__);?>'>
 </TD></TR>
-<TR CLASS  = 'odd'><TD>
-<?php print gettext('Master API key');?>:
-</TD><TD>
-    <INPUT NAME = 'dev_key' TYPE = 'text' SIZE = '30' VALUE=''>	<BR /><BR />
+<TR CLASS  = 'odd'><TD><?php print gettext('API key');?>:</TD>
+<TD>
+    <INPUT NAME = 'dev_key' TYPE = 'text' SIZE = '30' VALUE='' />	<BR /><BR />
 </TD></TR>
 <TR CLASS  = 'even'><TD COLSPAN=2 ALIGN='center'>
-    <INPUT TYPE='button' VALUE = '<?php print gettext('Test');?>' onClick = 'this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
-    <INPUT TYPE='button' VALUE = '<?php print gettext('Cancel');?>' onClick = 'window.close();' />
+    <INPUT TYPE='button' VALUE = '<?php print gettext('Test');?>' onClick = 'document.getElementById("spinner").style.display = "";document.getElementById("in_table").style.display = "none"; this.form.submit();' />&nbsp;&nbsp;&nbsp;&nbsp;
+    <INPUT TYPE='button' VALUE = '<?php print gettext('Finished');?>' onClick = 'window.close();' />
 </TD></TR></TABLE>
+<center>
+<img id = "spinner" src = "./images/animated_spinner.gif" style = "margin-top:100px; display:none" />
 <?php
     }		// end else {}
 ?>

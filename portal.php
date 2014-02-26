@@ -55,9 +55,13 @@ if ($_SESSION['internet']) {				// 8/22/10
     }
 
 $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
-
+if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
+	$gmaps_url =  "https://maps.google.com/maps/api/js?" . $key_str . "libraries=geometry,weather&sensor=false";
+	} else {
+	$gmaps_url =  "http://maps.google.com/maps/api/js?" . $key_str . "libraries=geometry,weather&sensor=false";
+	}
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Strict//EN">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <HEAD><TITLE><?php print gettext('Tickets - Service User Portal');?></TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
@@ -70,8 +74,8 @@ $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 body {overflow:hidden}
 </style>
 <SCRIPT SRC="./js/misc_function.js" TYPE="text/javascript"></SCRIPT>
-<SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry,weather&sensor=false"></SCRIPT>
-<SCRIPT  TYPE="text/javascript"SRC="./js/epoly.js"></SCRIPT>
+<SCRIPT TYPE="text/javascript" src="<?php print $gmaps_url;?>"></SCRIPT>
+<SCRIPT TYPE="text/javascript" SRC="./js/epoly.js"></SCRIPT>
 <SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 8/1/11 -->
 <SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 1/29/2013 -->
 <SCRIPT TYPE="text/javascript" SRC="./js/misc_function.js"></SCRIPT>	<!-- 5/3/11 -->
@@ -364,7 +368,7 @@ function do_viewwindow(id) {				// 1/19/09
         viewwindow.focus();
         starting = false;
         }
-    }		// end function do_window()
+    }		// end function do_viewwindow()
 
 var newreq = null;
 var starting;
@@ -377,7 +381,7 @@ function do_newreq() {				// 1/19/09
     if (logged_in()) {
         if (starting) {return;}						// 6/6/08
         starting=true;
-        newreq=window.open("./portal/new_request.php", "view_request",  "titlebar, location=0, resizable=1, scrollbars=yes, height=700, width=600, status=0, toolbar=0, menubar=0, location=0, left=100, top=300, screenX=100, screenY=300");
+		newreq=window.open("./portal/new_request.php", "new_request",  "titlebar, location=0, resizable=1, scrollbars=yes, height=700, width=600, status=0, toolbar=0, menubar=0, location=0, left=100, top=300, screenX=100, screenY=300");
         if (isNull(newreq)) {
             alert ("<?php print gettext('Portal operation requires popups to be enabled. Please adjust your browser options.');?>");
 
@@ -386,7 +390,23 @@ function do_newreq() {				// 1/19/09
         newreq.focus();
         starting = false;
         }
-    }		// end function do_window()
+    }		// end function do_newreq()
+var dopasswd = null;
+var starting;
+function do_passwdchange() {				// 1/19/09
+	if ((dopasswd) && (!(dopasswd.closed))) {dopasswd.focus(); return;}		// 7/28/10	
+	if (logged_in()) {
+		if(starting) {return;}						// 6/6/08
+		starting=true;	
+		dopasswd=window.open("./portal/profile.php", "change_password",  "titlebar, location=0, resizable=1, scrollbars=yes, height=700, width=600, status=0, toolbar=0, menubar=0, location=0, left=100, top=300, screenX=100, screenY=300");
+		if (isNull(dopasswd)) {
+			alert ("Portal operation requires popups to be enabled. Please adjust your browser options.");
+			return;
+			}
+		dopasswd.focus();
+		starting = false;
+		}
+	}		// end function do_passwdchange()
 /**
  *
  * @param {type} req
@@ -1040,6 +1060,9 @@ if ((!isset($_SESSION)) && (empty($_POST))) {
                                     <TR style='font-size: 1em;'>
                                         <TD style='font-size: 1em;'><SPAN ID='showhide_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="toggle_closed();"><?php print get_text('Show Closed');?></SPAN></TD>
                                     </TR>
+									<TR style='font-size: 1em;'>
+										<TD style='font-size: 1em;'><SPAN ID='profile_but' CLASS='plain' style='font-size: 1em; vertical-align: middle; width: 150px;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="do_passwdchange();"><?php print get_text('Change Password');?></SPAN></TD>
+									</TR>
                                 </TABLE><BR /><BR />
                                 <DIV style='border: 2px outset #707070;'>
                                     <DIV class='heading' style='font-size: 1.1em;'><?php print get_text('Useful Documents');?></DIV><BR />

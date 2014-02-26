@@ -30,6 +30,7 @@ $zoom_tight = FALSE;		// replace with a decimal number to over-ride the standard
 7/2/13 Revised SQL in query that builds Ticket list to dispatch
 9/6/13 Added Native "Mobile Tracker" to tracking options, also status about field
 9/10/13 Added Unit Log functions
+1/30/14 Added Xastir APRS tracking
 */
 
 session_start();
@@ -624,7 +625,7 @@ function get_user_details($rosterID) {	//	9/6/13
  * @returns {undefined}
  */
     function do_tracking(theForm, theVal) {							// 7/10/09, 7/24/09 added specific code to switch off unselected
-        theForm.frm_aprs.value=theForm.frm_instam.value=theForm.frm_locatea.value=theForm.frm_gtrack.value= theForm.frm_glat.value= theForm.frm_ogts.value = theForm.frm_t_tracker.value = theForm.frm_mob_tracker = 0;		//	 9/6/13
+		theForm.frm_aprs.value=theForm.frm_instam.value=theForm.frm_locatea.value=theForm.frm_gtrack.value= theForm.frm_glat.value= theForm.frm_ogts.value = theForm.frm_t_tracker.value = theForm.frm_mob_tracker.value = theForm.frm_xastir_tracker.value = 0;		//	 9/6/13, 1/30/14
         switch (parseInt(theVal)) {
             case <?php print $GLOBALS['TRACK_NONE'];?>:		 break;
             case <?php print $GLOBALS['TRACK_APRS'];?>:		 theForm.frm_aprs.value=1;	 break;
@@ -635,6 +636,7 @@ function get_user_details($rosterID) {	//	9/6/13
             case <?php print $GLOBALS['TRACK_T_TRACKER'];?>:	theForm.frm_t_tracker.value=1;	break;
             case <?php print $GLOBALS['TRACK_OGTS'];?>:		 theForm.frm_ogts.value=1;	 break;
             case <?php print $GLOBALS['TRACK_MOBILE'];?>:	 theForm.frm_mob_tracker.value=1;	 break;	//	9/6/13
+			case <?php print $GLOBALS['TRACK_XASTIR'];?>:	 theForm.frm_xastrir_tracker.value=1;	 break;	//	1/30/14
             default:  alert("error <?php print __LINE__;?>");
             }		// end switch()
         }				// end function do tracking()
@@ -983,7 +985,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
             }
         $grp_names .= " / ";
 
-        $aprs = $instam = $locatea = $gtrack = $glat = $t_tracker = FALSE;			// all trackers off, 5/11/11 added internal Tickets Tracker
+		$aprs = $instam = $locatea = $gtrack = $glat = $t_tracker = $mob_tracker = $xastir_tracker = FALSE;			// all trackers off, 5/11/11 added internal Tickets Tracker
         $temp = explode("/", $row['name'] );
         $index = substr($temp[count($temp) -1], -6, strlen($temp[count($temp) -1]));	// 3/19/11
 
@@ -1193,6 +1195,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
                 `t_tracker`= " . 		quote_smart(trim($_POST['frm_t_tracker'])) . ",
                 `ogts`= " . 		quote_smart(trim($_POST['frm_ogts'])) . ",
                 `mob_tracker`= " . 	quote_smart(trim($_POST['frm_mob_tracker'])) . ",
+				`xastir_tracker`= " . 	quote_smart(trim($_POST['frm_xastir_tracker'])) . ",
                 `direcs`= " . 		quote_smart(trim($_POST['frm_direcs'])) . ",
                 `lat`= " . 			$the_lat . ",
                 `lng`= " . 			$the_lng . ",
@@ -1236,7 +1239,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
         $frm_lng = (empty($_POST['frm_lng']))? '0.999999': quote_smart(trim($_POST['frm_lng']));						// 9/3/08
         $now = mysql_format_date(time() - (get_variable('delta_mins')*60));							// 1/27/09
         $query = "INSERT INTO `$GLOBALS[mysql_prefix]responder` (
-            `roster_user`, `name`, `street`, `city`, `state`, `phone`, `handle`,  `icon_str`, `description`, `capab`, `un_status_id`, `status_about`, `callsign`, `mobile`, `multi`, `aprs`, `instam`, `locatea`, `gtrack`, `glat`, `t_tracker`, `ogts`, `mob_tracker`, `direcs`, `contact_name`, `contact_via`, `smsg_id`, `lat`, `lng`, `type`, `user_id`, `updated`, `status_updated` )
+			`roster_user`, `name`, `street`, `city`, `state`, `phone`, `handle`,  `icon_str`, `description`, `capab`, `un_status_id`, `status_about`, `callsign`, `mobile`, `multi`, `aprs`, `instam`, `locatea`, `gtrack`, `glat`, `t_tracker`, `ogts`, `mob_tracker`, `xastir_tracker`, `direcs`, `contact_name`, `contact_via`, `smsg_id`, `lat`, `lng`, `type`, `user_id`, `updated`, `status_updated` )
             VALUES (" .
                 quote_smart(trim($_POST['frm_roster_id'])) . "," .
                 quote_smart(trim($_POST['frm_name'])) . "," .
@@ -1261,6 +1264,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
                 quote_smart(trim($_POST['frm_t_tracker'])) . "," .
                 quote_smart(trim($_POST['frm_ogts'])) . "," .
                 quote_smart(trim($_POST['frm_mob_tracker'])) . "," .
+				quote_smart(trim($_POST['frm_xastir_tracker'])) . "," .
                 quote_smart(trim($_POST['frm_direcs'])) . "," .
                 quote_smart(trim($_POST['frm_contact_name'])) . "," .
                 quote_smart(trim($_POST['frm_contact_via'])) . "," .
@@ -1466,11 +1470,12 @@ if (get_num_groups()) {
                     <OPTION VALUE='<?php print $GLOBALS['TRACK_T_TRACKER'];?>'><?php print gettext('Tickets Tracker');?></OPTION>
                     <OPTION VALUE='<?php print $GLOBALS['TRACK_OGTS'];?>'><?php print gettext('OpenGTS');?></OPTION>
                     <OPTION VALUE='<?php print $GLOBALS['TRACK_MOBILE'];?>'><?php print gettext('Mobile Tracking');?></OPTION>	<!-- 9/6/13 -->
+					<OPTION VALUE='<?php print $GLOBALS['TRACK_XASTIR'];?>'><?php print gettext('Xastir');?></OPTION>	<!-- 1/30/14 -->
                     </SELECT>&nbsp;&nbsp;
             <A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Callsign / License key - required for all tracking types - APRS will be unit radio callsign, others will be license key given by provider');?>">
                 </A>
 <SCRIPT>
-                var track_info = "APRS:   callsign\nInstamapper:   Device key\nLocateA:   Userid\nGtrack:   Userid\nLatitude:   Badge\nOpenGTS:   Device\n";
+				var track_info = "APRS:   callsign\nInstamapper:   Device key\nLocateA:   Userid\nGtrack:   Userid\nLatitude:   Badge\nOpenGTS:   Device\nMobile Tracker:   Automatic\nXastir:   Callsign\n";
 </SCRIPT>
                 <INPUT TYPE = 'button' onClick='alert(track_info);' value="?" />&nbsp;&raquo;&nbsp;&nbsp;
 
@@ -1590,6 +1595,7 @@ if (get_num_groups()) {
         <INPUT TYPE='hidden' NAME = 'frm_t_tracker' VALUE=0 />	  <!-- 5/11/11 -->
         <INPUT TYPE='hidden' NAME = 'frm_ogts' VALUE=0 />
         <INPUT TYPE='hidden' NAME = 'frm_mob_tracker' VALUE=0 />	<!-- 9/6/13 -->
+		<INPUT TYPE='hidden' NAME = 'frm_xastir_tracker' VALUE=0 />	<!-- 1/30/14 -->
         <INPUT TYPE='hidden' NAME = 'frm_direcs' VALUE=1 />  <!-- note default -->
         </FORM></TABLE> <!-- end inner left -->
         </TD></TR></TABLE><!-- end outer -->
@@ -1649,13 +1655,14 @@ if (get_num_groups()) {
             the_Form.frm_ogts.value = <?php echo $row['ogts'];?>;
             the_Form.frm_t_tracker.value = <?php echo $row['t_tracker'];?>;
             the_Form.frm_mob_tracker.value = <?php echo $row['mob_tracker'];?>;		//	9/6/13
+			the_Form.frm_xastir_tracker.value = <?php echo $row['xastir_tracker'];?>;		//	1/30/14		
             }		// end function track reset()
 
-        var track_captions = ["", "Callsign&nbsp;&raquo;", "Device key&nbsp;&raquo;", "Userid&nbsp;&raquo;", "Userid&nbsp;&raquo;", "Badge&nbsp;&raquo;", "Device&nbsp;&raquo;", "Userid&nbsp;&raquo;", "Automatic&nbsp;&raquo;"];	//	9/6/13
+		var track_captions = ["", "Callsign&nbsp;&raquo;", "Device key&nbsp;&raquo;", "Userid&nbsp;&raquo;", "Userid&nbsp;&raquo;", "Badge&nbsp;&raquo;", "Device&nbsp;&raquo;", "Userid&nbsp;&raquo;", "Automatic&nbsp;&raquo;", "Callsign&nbsp;&raquo;"];	//	9/6/13
         </SCRIPT>
         </HEAD>
         <BODY onLoad = "ck_frames(); do_tracking(document.res_edit_Form, <?php print $track_type;?>); get_files();"> <!-- <?php print __LINE__;?> -->
-        <A NAME='top'>		<!-- 11/11/09 -->
+        <A NAME='top'></A>		<!-- 11/11/09 -->
         <DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0 /></div>
         <?php
         require_once './incs/links.inc.php';
@@ -1751,10 +1758,11 @@ if (get_num_groups()) {
     print "<OPTION VALUE={$GLOBALS['TRACK_OGTS']} 		{$selects[$GLOBALS['TRACK_OGTS']]} > 	{$GLOBALS['TRACK_NAMES'][$GLOBALS['TRACK_OGTS']]} </OPTION>";
     print "<OPTION VALUE={$GLOBALS['TRACK_T_TRACKER']} 		{$selects[$GLOBALS['TRACK_T_TRACKER']]} > 	{$GLOBALS['TRACK_NAMES'][$GLOBALS['TRACK_T_TRACKER']]} </OPTION>";
     print "<OPTION VALUE={$GLOBALS['TRACK_MOBILE']} 		{$selects[$GLOBALS['TRACK_MOBILE']]} > 	{$GLOBALS['TRACK_NAMES'][$GLOBALS['TRACK_MOBILE']]} </OPTION>";	//	9/6/13
+	print "<OPTION VALUE={$GLOBALS['TRACK_XASTIR']} 		{$selects[$GLOBALS['TRACK_XASTIR']]} > 	{$GLOBALS['TRACK_NAMES'][$GLOBALS['TRACK_XASTIR']]} </OPTION>";	//	1/30/14
 ?>
             </SELECT>&nbsp;&nbsp;&nbsp;&nbsp;
 <SCRIPT>
-                var track_info = "APRS:   callsign\nInstamapper:   Device key\nLocateA:   Userid\nGtrack:   Userid\nLatitude:   Badge\nOpenGTS:   Device\nMobile Tracker:    Automatic\n";	//	9/6/13
+				var track_info = "APRS:   callsign\nInstamapper:   Device key\nLocateA:   Userid\nGtrack:   Userid\nLatitude:   Badge\nOpenGTS:   Device\nMobile Tracker:    Automatic\nXastir:    Callsign\n";	//	9/6/13
 </SCRIPT>
                 <INPUT TYPE = 'button' onClick='alert(track_info);' value="?" />
 
@@ -1857,6 +1865,7 @@ if (get_num_groups()) {
         <INPUT TYPE="hidden" NAME = "frm_t_tracker" VALUE=<?php print $row['t_tracker'] ;?> />	 <!-- 5/11/11 -->
         <INPUT TYPE="hidden" NAME = "frm_ogts" VALUE=<?php print $row['ogts'] ;?> />
         <INPUT TYPE="hidden" NAME = "frm_mob_tracker" VALUE=<?php print $row['mob_tracker'] ;?> />	 <!-- 9/6/13 -->
+		<INPUT TYPE="hidden" NAME = "frm_xastir_tracker" VALUE=<?php print $row['xastir_tracker'] ;?> />	 <!-- 1/30/14 -->
         <INPUT TYPE="hidden" NAME = "frm_direcs" VALUE=<?php print $row['direcs'] ;?> />
         <INPUT TYPE="hidden" NAME="frm_exist_groups" VALUE="<?php print (isset($alloc_groups)) ? $alloc_groups : 1;?>">	 <!-- 2/8/12 -->
         <INPUT TYPE="hidden" NAME = "frm_status_updated" VALUE="<?php print $row['status_updated'] ;?>" />	 <!-- 6/21/13 -->
@@ -1945,11 +1954,12 @@ if (get_num_groups()) {
             $t_tracker_checked = (!empty($row['t_tracker']))? " checked" : "" ;		// 5/11/11
             $ogts_checked = (!empty($row['ogts']))? " checked" : "" ;		// 5/11/11
             $mob_tracker_checked = (!empty($row['mob_tracker']))? " checked" : "" ;		// 9/6/13
+			$xastir_tracker_checked = (!empty($row['xastir_tracker']))? " checked" : "" ;		// 1/30/14				
             $direcs_checked = (!empty($row['direcs']))? " checked" : "" ;			// 3/19/09
 ?>
         </HEAD><!-- 1387 -->
         <BODY onLoad = "ck_frames(); get_files();">
-        <A NAME='top'>		<!-- 11/11/09 -->
+        <A NAME='top'></A>		<!-- 11/11/09 -->
         <DIV ID='to_bottom' style="position:fixed; top:2px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png"  BORDER=0 /></div>
 <?php
         if ($_dodisp == 'true') {				// dispatch

@@ -340,9 +340,10 @@ $GLOBALS['TRACK_GLAT']			=5;
 $GLOBALS['TRACK_OGTS']			=6;     	// 7/6/11
 $GLOBALS['TRACK_T_TRACKER']		=7;  	 	//	5/11/11
 $GLOBALS['TRACK_MOBILE']		=8;  	 	//	9/6/13
+$GLOBALS['TRACK_XASTIR']		=9;  	 	//	1/30/14
 
-$GLOBALS['TRACK_2L']		= array("", "AP", "IN", "GT", "LO", "GL", "OG", "TT", "MT" ); 	// 7/6/11, 9/6/13
-$GLOBALS['TRACK_NAMES']		= array("", "APRS", "Instamapper", "GTrack", "LocateA", "Latitude", "OpenGTS", "Internal", "Mobile Tracker" ); 	// 7/6/11, 9/16/13
+$GLOBALS['TRACK_2L']		= array("", "AP", "IN", "GT", "LO", "GL", "OG", "TT", "MT", "XA" ); 	// 7/6/11, 9/6/13, 1/30/14
+$GLOBALS['TRACK_NAMES']		= array("", "APRS", "Instamapper", "GTrack", "LocateA", "Latitude", "OpenGTS", "Internal", "Mobile Tracker", "Xastir" ); 	// 7/6/11, 9/16/13, 1/30/14
 
 $GLOBALS['UNIT_TYPES_BG']	= array("#000000", "#5A59FF", "#63DB63", "#FF3C4A", "#FFFFFF", "#F7F363", "#C6C3C6", "#00FFFF");	// keyed to unit_types - 2/8/10
 $GLOBALS['UNIT_TYPES_TEXT']	= array("#FFFFFF", "#FFFFFF", "#000000", "#000000", "#000000", "#000000", "#000000", "#000000");	// 2/8/10
@@ -2953,7 +2954,6 @@ function do_log($code, $ticket_id=0, $responder_id=0, $info="", $facility_id=0, 
                 quote_smart(trim($facility_id)),
                 quote_smart(trim($rec_facility_id)),
                 quote_smart(trim($mileage)));
-    snap (__LINE__, $query);
     $result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
     unset($result);		// 3/12/09
     }
@@ -3674,7 +3674,7 @@ function mail_it($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_onl
         }
     else {
         $smsg_to_str = ($smsg_to_str == NULL) ? "" : $smsg_to_str;
-        do_send ($to_str, $smsg_to_str, $subject, $message, $ticket_id, 0);	//	10/23/12
+		do_send ($to_str, $smsg_to_str, $subject, $message, $ticket_id, 0, NULL, NULL);	//	10/23/12
         }
     }				// end function mail_it ()
 // ________________________________________________________
@@ -3719,7 +3719,7 @@ function smtp($my_to, $my_subject, $my_message, $my_params, $my_from) {
  * @see
  * @since
  */
-function do_send($to_str, $smsg_to_str, $subject_str, $text_str, $ticket_id, $responder_ids=0) {					// 7/7/09 - 5/25/2013
+function do_send ($to_str, $smsg_to_str, $subject_str, $text_str, $ticket_id, $responder_ids=0, $messageid=NULL, $server=NULL) {					// 7/7/09 - 5/25/2013
 //	print $to_str . "," . $smsg_to_str . "," . $subject_str . "," . $text_str . "," . $ticket_id . "," . $responder_ids . "<BR />";
     $the_resp_ids = "";
     if ($responder_ids != 0) {
@@ -3846,7 +3846,7 @@ function do_send($to_str, $smsg_to_str, $subject_str, $text_str, $ticket_id, $re
             if (count($to_smsg_array)>0) {		// got sms gateway addresses?
                 $addressess = "";
                 $cell_text_str = stripLabels($text_str);								// strip labels 5/10/10
-                $count_smsg = do_smsg_send(get_msg_variable('smsg_orgcode'),get_msg_variable('smsg_apipin'),"OG SMS Dispatch Message",$cell_text_str,"CALLSIGNS",$smsg_to_str,"standard_priority",get_msg_variable('smsg_replyto'),"SENDXML", $ticket_id);
+				$count_smsg = do_smsg_send(get_msg_variable('smsg_orgcode'),get_msg_variable('smsg_apipin'),"OG SMS Dispatch Message",$cell_text_str,"CALLSIGNS",$smsg_to_str,"standard_priority",get_msg_variable('smsg_replyto'),"SENDXML", $ticket_id, $messageid, $server);			
                 }	// end if (count($to_smsg_array)>0)
             }	// end if((get_variable('use_messaging') == 2) || (get_variable('use_messaging') == 3))
         }	//	end if($smsg_to_str != "")
@@ -5442,6 +5442,7 @@ function get_remote_type($inrow) { 							// returns type of remote - 12/3/10
     elseif ((int) $inrow['t_tracker'] == 1) { return $GLOBALS['TRACK_T_TRACKER']; }
     elseif ((int) $inrow['ogts'] == 1) { return $GLOBALS['TRACK_OGTS']; }		// 7/5/11
     elseif ((int) $inrow['mob_tracker'] == 1) { return $GLOBALS['TRACK_MOBILE']; }		// 9/6/13
+	elseif ((int) $inrow['xastir_tracker'] == 1) { return $GLOBALS['TRACK_XASTIR']; }		// 1/30/14
     else 									 { return $GLOBALS['TRACK_NONE']; }
     }  				// end function
 

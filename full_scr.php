@@ -64,6 +64,11 @@ else {
     do_log ($GLOBALS['LOG_ERROR'], 0, 0, $err_arg);		// logs supplied error message
     $key_str = "";
     }
+if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
+	$gmaps_url =  "https://maps.google.com/maps/api/js?" . $key_str . "libraries=geometry,weather&sensor=false";
+	} else {
+	$gmaps_url =  "http://maps.google.com/maps/api/js?" . $key_str . "libraries=geometry,weather&sensor=false";
+	}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
@@ -75,12 +80,8 @@ else {
     <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
     <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
     <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-
-    <SCRIPT TYPE="text/javascript" src="http://maps.google.com/maps/api/js?<?php echo $key_str;?>&libraries=geometry,weather&sensor=false"></SCRIPT>
+	<SCRIPT TYPE="text/javascript" src="<?php print $gmaps_url;?>"></SCRIPT>
     <SCRIPT  TYPE="text/javascript"SRC="./js/epoly.js"></SCRIPT>
-    <!--
-    <SCRIPT  TYPE="text/javascript"SRC="./js/epoly_v3.js"></SCRIPT>
-    -->
     <SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 8/1/11 -->
     <SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 1/29/2013 -->
     <SCRIPT TYPE="text/javascript" SRC="./js/misc_function.js"></SCRIPT>	<!-- 5/3/11 -->

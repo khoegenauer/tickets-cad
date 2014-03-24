@@ -484,8 +484,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
         var url = (isNull(the_name))? "do_unit_mail.php?" : "do_unit_mail.php?name=" + escape(the_name) + "&addrs=" + escape(the_addrs);	//
         newwindow_mail=window.open(url, "mail_edit",  "titlebar, location=0, resizable=1, scrollbars, height=320,width=720,status=0,toolbar=0,menubar=0,location=0, left=100,top=300,screenX=100,screenY=300");
         if (isNull(newwindow_mail)) {
-            alert ("<?php print gettext("Email edit operation requires popups to be enabled -- please adjust your browser options.");?>";
-
+			alert ("Email edit operation requires popups to be enabled -- please adjust your browser options.");
             return;
             }
         newwindow_mail.focus();
@@ -521,8 +520,7 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
         var url = "close_in.php?ticket_id=" + escape(the_id);	//
         newwindow_close = window.open(url, "close_ticket", "titlebar, location=0, resizable=1, scrollbars, height=300, width=700, status=0, toolbar=0, menubar=0, left=100,top=100,screenX=100,screenY=100");
         if (isNull(newwindow_close)) {
-            alert (<?php print gettext("Close Ticket operation requires popups to be enabled -- please adjust your browser options.");?>");
-
+			alert ("Close Ticket operation requires popups to be enabled -- please adjust your browser options.");
             return;
             }
         newwindow_close.focus();
@@ -1164,7 +1162,7 @@ $temp  = (string) ( round((microtime(true) - $time), 3));
 //		}		// end if ($any_closed_tickets)
         if ($sb_indx == 0) {
             $txt_str = ($func>0)? "closed tickets this period!": "current tickets!";
-            print "\n\t\tside_bar_html += \"<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'><I><B>" . gettext('No {$txt_str}') . "</B></I></TD></TR>\";";
+			print "\n\t\tside_bar_html += \"<TR CLASS='even'><TD COLSPAN='99' ALIGN='center'><I><B>No {$txt_str}</B></I></TD></TR>\";";
             print "\n\t\tside_bar_html += \"<TR CLASS='odd'><TD COLSPAN='99' ><BR /><BR /></TD></TR>\";";
             }
         $limit = 1000;
@@ -2123,7 +2121,7 @@ function do_ticket_only($theRow, $theWidth, $search=FALSE, $dist=TRUE) {						//
     $print .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . gettext('Updated') . ":&nbsp;&nbsp;" . format_date_2($theRow['updated']) . "</TD></TR>\n";
     $print .=  empty($theRow['booked_date']) ? "" : "<TR CLASS='odd'><TD ALIGN='left'>" . gettext('Scheduled date') . ":</TD>		<TD ALIGN='left'>" . format_date_2($theRow['booked_date']) . "</TD></TR>\n";	// 10/6/09
     $print .= "<TR CLASS='even' ><TD ALIGN='left' COLSPAN='2'>&nbsp;	<TD ALIGN='left'></TR>\n";			// separator
-    $print .= empty($theRow['fac_name']) ? "" : "<TR CLASS='odd' ><TD ALIGN='left'>" . gettext('{$incident} at Facility') . ":</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['fac_name']) . "</TD></TR>\n";	// 8/1/09
+    $print .= empty($theRow['fac_name']) ? "" : "<TR CLASS='odd' ><TD ALIGN='left'>{$incident} at Facility:</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['fac_name']) . "</TD></TR>\n";	// 8/1/09
     $print .= empty($theRow['rec_fac_name']) ? "" : "<TR CLASS='even' ><TD ALIGN='left'>" . gettext('Receiving Facility') . ":</TD>		<TD ALIGN='left'>" . highlight($search, $theRow['rec_fac_name']) . "</TD></TR>\n";	// 10/6/09
     $print .= empty($theRow['comments'])? "" : "<TR CLASS='odd'  VALIGN='top'><TD ALIGN='left'>{$disposition}:</TD>	<TD ALIGN='left'>" . replace_quotes(highlight($search, nl2br($theRow['comments']))) . "</TD></TR>\n";
     $print .= "<TR CLASS='even' ><TD ALIGN='left'>" . get_text("Run Start") . ":</TD> <TD ALIGN='left'>" . format_date_2($theRow['problemstart']);

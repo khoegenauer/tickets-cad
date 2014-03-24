@@ -33,12 +33,20 @@ extract($_GET);
 extract($_POST);
 if ((($istest)) && (!empty($_GET))) {dump ($_GET);}
 if ((($istest)) && (!empty($_POST))) {dump ($_POST);}
-
+/**
+ * 
+ * @param type $date
+ * @return type
+ */
 function loc_format_date($date) {
     if (get_variable('locale')==1) {return date("j/n/y H:i",$date);}					// 08/27/10 - Revised to show UK format for locale = 1
     else 							{return date(get_variable("date_format"),$date);}	// return date(get_variable("date_format"),strtotime($date));
     }				// end function fac format date
-
+/**
+ * 
+ * @param type $arg
+ * @return type
+ */
 function isempty($arg) {
     return (bool) (strlen($arg) == 0) ;
     }
@@ -163,7 +171,7 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
             }
 
         var lop = (instr % 26);								// low-order portion, a number
-        var hop = ((instr - lop)==0)? "" : to_char(((instr - lop)/26)-1) ;		// high-order portion, a string
+        var hop = ((instr - lop)==0)? "" : to_char(((instr - lop)/26)-1);		// high-order portion, a string
 
         return hop+to_char(lop);
         }
@@ -461,7 +469,11 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
             });				// end geocoder.geocode()
 
         }				// end function loc_lkup()
-
+/**
+ * 
+ * @param {type} in_obj
+ * @returns {undefined}
+ */
     function getAddress(latlng, currform) {
         var rev_coding_on = '<?php print get_variable('reverse_geo');?>';
         if (rev_coding_on == 0) return;
@@ -706,6 +718,14 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
         }
 </SCRIPT>
 <?php
+/**
+ * 
+ * @global string $iw_width
+ * @global type $f_types
+ * @global type $tolerance
+ * @param type $addon
+ * @param type $start
+ */
 function list_locations($addon = '', $start) {
     global $iw_width, $f_types, $tolerance;
 
@@ -1809,7 +1829,7 @@ var buttons_html = "";
 <?php
         $buttons = "<TR><TD COLSPAN=99 ALIGN='center'>";
         if ((!(is_guest())) && (!(is_unit()))) {		// 7/27/10
-            $buttons .="<INPUT TYPE='button' value= '" . gettext('Add a Location') . "  onClick ='document.add_Form.submit();'  STYLE = 'margin-left: 60px;'/>";
+            $buttons .="<INPUT TYPE='button' value= '" . gettext('Add a Location') . "'  onClick ='document.add_Form.submit();'  STYLE = 'margin-left: 60px;'/>";
             }
         $buttons .= "</TD></TR>";
 

@@ -844,20 +844,13 @@ function list_tickets($sort_by_field='',$sort_value='', $my_offset=0) {	// list 
         if (req.readyState == 4) return;
         req.send(postData);
         }
-/**
- * 
- * @type Array
- */
     var XMLHttpFactories = [
-        function () {return new XMLHttpRequest()	},
-        function () {return new ActiveXObject("Msxml2.XMLHTTP")	},
-        function () {return new ActiveXObject("Msxml3.XMLHTTP")	},
-        function () {return new ActiveXObject("Microsoft.XMLHTTP")	}
+        function () {return new XMLHttpRequest();	},
+        function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
+        function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
+        function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
         ];
-/**
- * 
- * @returns {Boolean}
- */
+
     function createXMLHTTPObject() {
         var xmlhttp = false;
         for (var i=0;i<XMLHttpFactories.length;i++) {

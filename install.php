@@ -85,12 +85,12 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<META HTTP-EQUIV="Expires" CONTENT="0">
-<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
-<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-<LINK REL=StyleSheet HREF="default.css" TYPE="text/css">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+<META HTTP-EQUIV="Expires" CONTENT="0" />
+<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache" />
+<META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
+<META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
+<LINK REL="StyleSheet" HREF="default.css" TYPE="text/css" />
 </HEAD><BODY>
 <FONT CLASS="header"><?php print gettext('Installing') . $version; ?> </FONT><BR /><BR />
 <SCRIPT>
@@ -1126,8 +1126,8 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
         do_insert_settings('lat_lng','0');			// 9/13/08
         do_insert_settings('link_capt','');
         do_insert_settings('link_url','');
-        do_insert_settings('login_banner', "'" . gettext('Welcome to Tickets - an Open Source Dispatch System') . "'");
-        do_insert_settings('map_caption',"'" . gettext('Your area') . "'");
+        do_insert_settings('login_banner', gettext('Welcome to Tickets - an Open Source Dispatch System'));
+        do_insert_settings('map_caption',gettext('Your area'));
         do_insert_settings('map_height','512');
         do_insert_settings('map_width','512');
         do_insert_settings('military_time','1');				// 7/16/08
@@ -1147,7 +1147,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
         do_insert_settings('wp_key','729c1a751fd3d2428cfe2a7b43442c64');		// 9/13/08
         do_insert_settings ('internet','1');		// 8/5/10
 
-        print "<LI> " . gettext('Inserted default settings') . "";
+        print "<LI> " . gettext('Inserted default settings');
         }
 
     //output mysql settings to mysql.inc.php

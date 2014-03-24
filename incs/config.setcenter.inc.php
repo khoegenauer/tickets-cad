@@ -195,7 +195,7 @@ error_reporting (E_ALL  ^ E_DEPRECATED);
             <FORM METHOD="POST" NAME= "cen_Form"  onSubmit="return validate_cen(document.cen_Form);" ACTION="config.php?func=center&update=true">
             <TR CLASS = "even"><TD CLASS="td_label"><?php print gettext('Lookup');?>:</TD><TD COLSPAN=3>&nbsp;&nbsp;<?php print gettext('City');?>:&nbsp;<INPUT MAXLENGTH="24" SIZE="24" TYPE="text" NAME="frm_city" VALUE="" />
             &nbsp;&nbsp;&nbsp;&nbsp;<?php print gettext('State');?>:&nbsp;<INPUT MAXLENGTH="2" SIZE="2" TYPE="text" NAME="frm_st" VALUE="" /></TD></TR>
-            <TR CLASS = "odd"><TD COLSPAN=4 ALIGN="center"><button type="button" onClick="addrlkup();"><img src="./markers/glasses.png" alt="<?php print gettext('Lookup location.');?>" /></TD></TR> <!-- 1/21/09 -->
+            <TR CLASS = "odd"><TD COLSPAN=4 ALIGN="center"><button type="button" onClick="addrlkup();"><img src="./markers/glasses.png" alt="<?php print gettext('Lookup location.');?>" /></button></TD></TR> <!-- 1/21/09 -->
             <TR><TD><BR /><BR /><BR /><BR /><BR /></TD></TR>
             <TR CLASS = "even"><TD CLASS="td_label"><?php print gettext('Caption');?>:</TD><TD COLSPAN=3><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_map_caption" VALUE="<?php print get_variable('map_caption');?>" onChange = "document.getElementById('caption').innerHTML=this.value;"/></TD></TR>
             <TR CLASS = "odd" VALIGN='baseline'>
@@ -229,10 +229,11 @@ error_reporting (E_ALL  ^ E_DEPRECATED);
 
             <TR><TD>&nbsp;</TD></TR>
             <TR CLASS = "even"><TD COLSPAN=5 ALIGN='center'>
-                <INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='history.back();'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='reset' VALUE="<?php print gettext('Reset');?>" onClick = "map_cen_reset();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='submit' VALUE="<?php print gettext('Submit');?>"></TD></TR>
+                <INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick='history.back();' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='reset' VALUE="<?php print gettext('Reset');?>" onClick = "map_cen_reset();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE='submit' VALUE="<?php print gettext('Submit');?>" />
                 <INPUT TYPE="hidden" NAME="frm_lat" VALUE="<?php print $lat;?>" />				<!-- // 9/16/08 -->
                 <INPUT TYPE="hidden" NAME="frm_lng" VALUE="<?php print $lng;?>" />
                 <INPUT TYPE="hidden" NAME="frm_dfz" VALUE="<?php print $which;?>" />
+                </TD></TR>
             </FORM></TABLE>
             </TD><TD><DIV ID='map_canvas' style='width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px; border-style: outset'></DIV>
             <BR><CENTER><FONT CLASS="header"><SPAN ID="caption"><?php print gettext('Click/Drag/Zoom to new default position');?></SPAN></FONT></CENTER>

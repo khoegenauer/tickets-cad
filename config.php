@@ -189,13 +189,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <HEAD><TITLE><?php print gettext('Tickets - Configuration Module');?></TITLE>
-    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-    <META HTTP-EQUIV="Expires" CONTENT="0">
-    <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-    <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-    <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-    <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
-    <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">			<!-- 3/15/11 -->
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+    <META HTTP-EQUIV="Expires" CONTENT="0" />
+    <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
+    <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
+    <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
+    <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" />
+    <LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />    <!-- 3/15/11 -->
     <STYLE>
     LI { margin-left: 20px;}
     .spl { FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #000099; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none}
@@ -926,10 +926,10 @@ print "//" . date("n/j/y", filemtime(basename(__FILE__))) . "\n";
         switch ($func) {
 
             case 'notify':
-                print "</HEAD>\n<BODY onLoad = 'ck_frames()'>\n";
+                print "</HEAD>\n<BODY onLoad = 'ck_frames();'>\n";
             if (array_key_exists('id', ($_GET))) {			// 0 -> all tickets notify
                 print "<FONT CLASS='header' STYLE = 'margin-left:80px'>" . gettext('Add Notify') . "</FONT><BR /><BR />";
-                if (!get_variable('allow_notify')) print "<FONT CLASS='warn'>" . gettext('Warning: Notification is disabled by administrator') . "</FONT><BR /><BR />";
+                if (!get_variable('allow_notify')) {print "<FONT CLASS='warn'>" . gettext('Warning: Notification is disabled by administrator') . "</FONT><BR /><BR />";}
                 if ($_GET['id']!=0) {
                     $query = "SELECT `id`, `scope` FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id` = ${_GET['id']} LIMIT 1";
     //				dump($query);
@@ -978,7 +978,7 @@ if (mysql_num_rows($result)>0) {
         print "<TD ALIGN='center'><INPUT TYPE='checkbox' VALUE='1' NAME='frm_on_patient[$i]'"; print $row['on_patient'] ? " checked DISABLED /></TD>\n" : " DISABLED /></TD>\n";
         print "<TD ALIGN='center'><INPUT TYPE='checkbox' VALUE='1' NAME='frm_on_ticket[$i]'"; print $row['on_ticket'] ? " checked DISABLED/></TD>\n" : " DISABLED /></TD>\n";
         print "<TD ALIGN='center'><INPUT TYPE='checkbox' VALUE='1' NAME='frm_delete[$i]' DISABLED /></TD>\n";
-        print "<INPUT TYPE='hidden' NAME='frm_id[$i]' VALUE='" . $row['id'] . "'></TR>\n";
+        print "<INPUT TYPE='hidden' NAME='frm_id[$i]' VALUE='" . $row['id'] . "'/></TR>\n";
         $i++;
         }
     print "</TABLE><BR />";
@@ -1070,7 +1070,7 @@ if (mysql_num_rows($result)>0) {
                 for ($i = 0; $i<count($_POST["frm_id"]); $i++) {
 
                     if (isset($_POST['frm_delete'][$i])) {
-                        $msg = "Notify deletion complete!";					// pre-set
+                        $msg = gettext("Notify deletion complete!");					// pre-set
                         $query = "DELETE from $GLOBALS[mysql_prefix]notify WHERE id='".$_POST['frm_id'][$i]."' LIMIT 1";
                         $result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
                         }
@@ -1080,7 +1080,7 @@ if (mysql_num_rows($result)>0) {
                         $email = validate_email($_POST['frm_email'][$i]);
                         $email_address = $_POST['frm_email'][$i];
                         if ((!$email['status']) && ($_POST['frm_mailgroup'][$i] == 0)) {
-                            print "<FONT CLASS='warn'>Error: email validation failed for '$email_address', $email[msg]. Go back and check this email address.</FONT>";
+                            print "<FONT CLASS='warn'>" . gettext("Error: email validation failed for '$email_address', $email[msg]. Go back and check this email address.") . "</FONT>";
                             exit();
                             }
                         $on_ticket_val  = empty($_POST['frm_on_ticket'][$i])? "":  "1";
@@ -1094,7 +1094,7 @@ if (mysql_num_rows($result)>0) {
                         $query = "UPDATE `$GLOBALS[mysql_prefix]notify` SET
                             `execute_path`=".	quote_smart($_POST['frm_execute'][$i]) .",
                             `email_address`=".	quote_smart($_POST['frm_email'][$i]) .",
-							`mailgroup`=".		quote_smart($mailGroup) .",
+							              `mailgroup`=".		quote_smart($mailGroup) .",
                             `on_action`='".		$on_action_val ."',
                             `on_patient`='".	$on_patient_val ."',
                             `on_ticket`='".		$on_ticket_val ."',
@@ -1116,20 +1116,20 @@ if (mysql_num_rows($result)>0) {
             else if ((array_key_exists('add', ($_GET))) && ($_GET['add']== 'true')) {	//email validation check
                 $email = validate_email($_POST['frm_email']);
                 if ((!$email['status']) && ($_POST['frm_mailgroup'] == 0)) {
-                    print "<FONT CLASS='warn'>Error: email validation failed for '" . $_POST['frm_email'] . "', " . $email['msg'] . ". Go back and check this email address.</FONT>";
+                    print "<FONT CLASS='warn'>" . gettext('Error') . ": email validation failed for '" . $_POST['frm_email'] . "', " . $email['msg'] . ". " . gettext("Go back and check this email address.") . "</FONT>";
                     exit();
                     }
 
                 $on_ticket = (isset($_POST['frm_on_ticket']))? $_POST['frm_on_ticket']:0 ;
                 $on_action = (isset($_POST['frm_on_action']))? $_POST['frm_on_action']:0 ;
                 $now = mysql_format_date(time() - (get_variable('delta_mins')*60));				// 1/22/11
-				$mailGroup = ($_POST['frm_mailgroup']) ? $_POST['frm_mailgroup'] : 0;
+				        $mailGroup = ($_POST['frm_mailgroup']) ? $_POST['frm_mailgroup'] : 0;
 
                 $query = "INSERT INTO `$GLOBALS[mysql_prefix]notify` SET
                     `ticket_id`=		'$_POST[frm_id]',
                     `user`=				'$_SESSION[user_id]',
                     `email_address`=	'$_POST[frm_email]',
-					`mailgroup`=		'$mailGroup',
+					          `mailgroup`=		'$mailGroup',
                     `execute_path`=		'$_POST[frm_execute]',
                     `on_action`=		'$on_action',
                     `on_patient`=		'$on_action',
@@ -1215,7 +1215,7 @@ if (mysql_num_rows($result)>0) {
         <INPUT TYPE = 'hidden' NAME = 'id' VALUE = '0' />
         <INPUT TYPE = 'button' VALUE = '<?php print gettext('Add a notify');?>' onClick = 'this.form.submit();' STYLE = 'margin-left:1px;' />
         </FORM
-</DIV.
+</DIV>
         </BODY></HTML>
 <?php
                     exit();
@@ -1278,14 +1278,14 @@ if (mysql_num_rows($result)>0) {
         function validate_prof(theForm) {			// profile form contents validation
             var errmsg="";
             if (theForm.frm_passwd.value!=theForm.frm_passwd_confirm.value) {
-                errmsg+="\tPASSWORD and CONFIRM fail to match.\n";
+                errmsg+="\t<?php print gettext('PASSWORD and CONFIRM fail to match.');?>\n";
                 }
             else {				// 8/27/10
                 if ((theForm.frm_passwd.value.trim()=="") || (theForm.frm_passwd.value.trim().length<6)) {errmsg+="\tPasswd length 6 or more is required.\n";}
                 }
 
             if (errmsg!="") {
-                alert ("Please correct the following and re-submit:\n\n" + errmsg);
+                alert ("<?php print gettext('Please correct the following and re-submit');?>:\n\n" + errmsg);
 
                 return false;
                 }
@@ -2732,7 +2732,8 @@ ul {
         }
 ?>
         <BR /><BR />
-        <LI><B><?php print gettext('Files');?></B></LI><BR />		<!-- 9/10/13 -->
+        
+        <b><?php print gettext('Files');?></b><BR />		<!-- 9/10/13 -->
             <TABLE BORDER=0>
                 <TR CLASS = 'odd'>
                     <TD><LI><A HREF="#" onClick='file_window();'><?php print gettext('Upload File');?></A></LI></TD>	<!-- 9/10/13 -->
@@ -2740,17 +2741,17 @@ ul {
                 </TR>
             </TABLE>
         <BR />
-        <LI><B><?php print gettext('Service User Portal');?></B></LI><BR />		<!-- 9/10/13 -->
+        <b><?php print gettext('Service User Portal');?></b><BR />		<!-- 9/10/13 -->
 			<TABLE BORDER=0>
 				<TR CLASS = 'odd'>				
 					<TD><LI><A HREF="./portal/requests.php"><?php print gettext('Service User Requests');?></A></LI></TD>				<!-- 9/10/13 -->	
 				</TR>
-			</TABLE>
-		<BR />
+			</TABLE>   
+        <BR />
 <?php
         if (get_variable('use_messaging') != 0) {		//10/23/12
 ?>
-            <LI><B><?php print gettext('Messaging');?></B></LI><BR />
+            <b><?php print gettext('Messaging');?></b><BR />
             <TABLE BORDER=0><TR CLASS = 'odd'>
             <TD><LI><A HREF="config.php?func=msg_settings"><?php print gettext('Messaging Settings');?></A></LI></TD>	<!-- 10/23/12 -->
             <TD><LI><A HREF="msg_archive.php"><?php print gettext('Message Archiving');?></A></LI></TD>				<!-- 10/23/12 -->
@@ -2765,33 +2766,34 @@ ul {
 <?php
                 }
 ?>
-            </TR></TABLE><BR />
+            </TR></TABLE>
+            <BR />
 <?php
             }
         if ((is_administrator()) || (is_super())) {
             if (get_variable('use_disp_autostat') == 1) {		//9/10/13
 ?>
-            <LI><B><?php print gettext('Auto Dispatch Status');?></B></LI><BR />
+            <b><?php print gettext('Auto Dispatch Status');?></b><BR />
             <TABLE BORDER=0><TR CLASS = 'odd'>
             <TD><LI><A HREF="auto_disp_status.php" ><?php print gettext('Auto Status Values');?></A></LI></TD>		<!-- 9/10/13 -->
-            </TR></TABLE><BR />
+              </TR></TABLE><BR />
 <?php
             }
 ?>
-            <LI><B><?php print gettext('Email Lists');?></B></LI><BR />
+            <b><?php print gettext('Email Lists');?></b><BR />
             <TABLE BORDER=0><TR CLASS = 'odd'>
             <TD><LI><A HREF="#" onClick = "do_Post('mailgroup');"><?php print gettext('Email Lists');?></A></LI></TD>			<!-- 8/27/13 -->
             <TD><LI><A HREF="email_lists.php?func=list" ><?php print gettext('Email List Members');?></A></LI></TD>		<!-- 8/27/13 -->
-            </TR></TABLE><BR />
+              </TR></TABLE><BR />
 
-            <LI><B><?php print gettext('Regions');?></B></LI><BR />
+            <b><?php print gettext('Regions');?></b><BR />
             <TABLE BORDER=0><TR CLASS = 'odd'>
             <TD><LI><A HREF="#" onClick = "do_Post('region');"><?php print get_text("Regions");?></A></LI></TD>
             <TD><LI><A HREF="#" onClick = "do_Post('region_type');"><?php print get_text("Region");?> <?php print gettext('Type');?></A></LI></TD>
             <TD><LI><A HREF="reset_regions.php"><?php print gettext('Reset');?> <?php print get_text("Regions");?></A></LI></TD>
             <TD><LI><A HREF="cleanse_regions.php?func=list"><?php print gettext('List and Cleanse') . " " . get_text("Region") . " " . gettext('Allocations');?></A></LI></TD>	<!-- 3/11/11 -->
-            </TR></TABLE><BR />
-            <LI><B><?php print gettext('Display Colors');?></B></LI><BR />
+              </TR></TABLE><BR />
+            <b><?php print gettext('Display Colors');?></b><BR />
             <TABLE BORDER=0>
                 <TR CLASS = 'odd'>
                     <TD><LI><A HREF="config.php?func=css_day"><?php print gettext('Edit Day Colors');?></A></LI></TD>	<!-- 3/15/11 -->
@@ -2800,7 +2802,7 @@ ul {
                 </TR><!-- 3/15/11 -->
             </TABLE>
             <BR />
-            <LI><B><?php print gettext('Maps Configuration');?></B></LI><BR />
+            <b><?php print gettext('Maps Configuration');?></b><BR />
             <TABLE BORDER=0>
                 <TR CLASS = 'odd'><!-- 3/15/11 -->
                     <TD><LI><A HREF="config.php?func=center"><?php print gettext('Set Default Map');?></A></LI></TD>
@@ -2816,7 +2818,7 @@ ul {
                 </TR>
             </TABLE>
             <BR />
-            <LI><B><?php print gettext('Database Functions');?></B></LI><BR />
+            <b><?php print gettext('Database Functions');?></b><BR />
             <TABLE BORDER=0>
                 <TR CLASS = 'odd'><!-- 3/15/11 -->
                     <TD><LI><A HREF="config.php?func=dump"><?php print gettext('Dump DB to screen');?></A></LI></TD>
@@ -2825,7 +2827,7 @@ ul {
                 </TR>
             </TABLE>
             <BR />
-            <LI><B><?php print gettext('Road Conditions');?></B></LI><BR />			<!-- 9/10/13 -->
+            <b><?php print gettext('Road Conditions');?></b><BR />			<!-- 9/10/13 -->
             <TABLE BORDER=0>
                 <TR CLASS = 'odd'><!-- 3/15/11 -->
                     <TD><LI><A HREF="#" onClick = "do_Post('conditions');"><?php print gettext('Conditions Table');?></A></LI></TD>
@@ -2835,15 +2837,15 @@ ul {
 <?php
         }								// end if (is_administrator()|| is_super() ) -- latitude.php
 ?>
-        <LI><B><?php print gettext('Outgoing email and Unit Tracking Tests');?></B></LI><BR />
+        <b><?php print gettext('Outgoing email and Unit Tracking Tests');?></b><BR />
         <TABLE BORDER=0>
             <TR CLASS = 'odd'><!-- 3/15/11 -->
                 <TD><LI><A HREF="#" onClick = "do_test();"><U><?php print gettext('APRS');?></U></A></LI></TD>
                 <TD><LI><A HREF="#" onClick = "do_instam();"><U><?php print gettext('Instamapper');?></U></A></LI></TD>
 <?php 				// 7/5/10
         if (is_super()) {
-            print "\t\t<TD><LI><A HREF=\"#\" onClick = \"do_smtp();\"><U><?php print gettext('SMTP Mail');?></U></A></LI></TD>\n";
-            print "\t\t<TD><LI><A HREF=\"#\" onClick = \"do_native();\"><U><?php print gettext('Native PHP Mail');?></U></A></LI></TD>\n";
+            print "\t\t<TD><LI><A HREF=\"#\" onClick = \"do_smtp();\"><U>" . gettext('SMTP Mail') . "</U></A></LI></TD>\n";
+            print "\t\t<TD><LI><A HREF=\"#\" onClick = \"do_native();\"><U>" . gettext('Native PHP Mail') . "</U></A></LI></TD>\n";
             }
 ?>
                 <TD><LI><A HREF="#" onClick = "do_glat();"><U><?php print gettext('Google Latitude');?></U></A></LI></TD>	<!-- 7/28/09 -->
@@ -2856,19 +2858,19 @@ ul {
 <?php
     if (is_super()) {									// super or admin - 9/24/08
 ?>
-        <LI><B><?php print gettext('{get_text("Incidents")} Configuration');?></B></LI><BR />
+        <b><?php print get_text("Incidents") . " " . gettext('Configuration');?></b><BR />
         <TABLE BORDER=0 STYLE = 'margin-left:0px'>
             <TR CLASS = 'odd'><!-- 3/15/11 -->
                 <TD><LI><A HREF="config.php?func=in_nums"><?php print gettext('Incident Numbers');?></A></LI></TD>
                 <TD><LI><A HREF="#" onClick = "do_Post('in_types');"><?php print gettext('Incident types');?></A></LI></TD>
             </TR>
         </TABLE><BR />
-        <LI><B><?php print get_text("Units") . " " . gettext('Configuration');?></B></LI><BR />
+        <b><?php print get_text("Units") . " " . gettext('Configuration');?></b><BR />
         <TABLE BORDER=0 STYLE = 'margin-left:0px'>
             <TR CLASS = 'odd'><!-- 3/15/11 -->
                 <TD><LI><A HREF="#" onClick = "do_Post('unit_types');"><?php print get_text("Units") . " " . gettext('types');?></A></LI></TD><!-- 10/8/08,  6/4/09 -->
                 <TD><LI><A HREF="#" onClick = "do_Post('un_status');"><?php print get_text("Units") . " " . gettext('status');?></A>&nbsp;&nbsp;</LI></TD>
-                <TD><LI><A HREF="reset_responder_status.php" ><?php print gettext('Set {get_text("Units")} Status to a common setting');?> </A></LI></TD>		<!-- 10/23/12 -->
+                <TD><LI><A HREF="reset_responder_status.php" ><?php print gettext('Set') . " " . get_text("Units") . " " . gettext('Status to a common setting');?>  </A></LI></TD>		<!-- 10/23/12 -->
             </TR>
         </TABLE><BR />
 <?php
@@ -2876,7 +2878,7 @@ ul {
 
         if (mysql_table_exists("$GLOBALS[mysql_prefix]fac_status")) {		// 10/5/09
 ?>
-            <LI><B><?php print gettext('Facilities Configuration');?></B></LI><BR />
+            <b><?php print gettext('Facilities Configuration');?></b><BR />
             <TABLE BORDER=0 STYLE = 'margin-left:0px'>
                 <TR CLASS = 'odd'><!-- 3/15/11 -->
                     <TD><LI><A HREF="#" onClick = "do_Post('fac_status');"><?php print gettext('Facility Status');?></A></LI></TD>
@@ -2888,14 +2890,14 @@ ul {
 <?php
         }
 ?>
-        <LI><B><?php print gettext('Warn Locations');?></B></LI><BR />		<!-- 9/10/13 -->
+        <b><?php print gettext('Warn Locations');?></b><BR />		<!-- 9/10/13 -->
         <TABLE BORDER=0 STYLE = 'margin-left:0px'>
             <TR CLASS = 'odd'><!-- 3/15/11 -->
                 <TD><LI><A HREF="warn_locations.php"><?php print gettext('Warn Locations');?></A></LI></TD>
             </TR>
         </TABLE><BR />
 
-        <LI><B><?php print gettext('Captions, Signals, Hints and Places');?></B></LI><BR />
+        <b><?php print gettext('Captions, Signals, Hints and Places');?></b><BR />
         <TABLE BORDER=0 STYLE = 'margin-left:0px'>
             <TR CLASS = 'odd'><!-- 3/15/11 -->
                 <TD><LI><A HREF="capts.php"><?php print gettext('Captions');?></A></LI></TD>
@@ -2904,7 +2906,7 @@ ul {
                 <TD><LI><A HREF="#" onClick = "do_Post('places');"><?php print gettext('Places');?></A></LI></TD>	<!-- 2/28/11 -->
             </TR>
         </TABLE><BR />
-        <LI><B><?php print gettext('Map Markup');?></B></LI><BR />
+        <b><?php print gettext('Map Markup');?></b><BR />
         <TABLE BORDER=0 STYLE = 'margin-left:0px'>
             <TR CLASS = 'odd'><!-- 7/30/11 -->
                 <TD><LI><A HREF= "./landb.php"><?php print gettext('Map Markup');?></A></LI></TD>
@@ -2916,7 +2918,7 @@ ul {
     $result = mysql_query($query_update) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	5/4/11
     if ((mysql_num_rows($result) > 0) && (is_super())) {
 ?>
-        <LI><B><?php print gettext('Cloud');?></B></LI><BR />
+        <b><?php print gettext('Cloud');?></b><BR />
         <TABLE BORDER=0 STYLE = 'margin-left:0px'>
             <TR  CLASS = 'odd'>
                 <TD><LI><A HREF="http://www.ticketscad.org/support" target="_blank"><?php print gettext('Support');?></A></LI></TD>
@@ -2929,7 +2931,7 @@ ul {
     $course_table = "$GLOBALS[mysql_prefix]courses_taken";		// 12/19/11
     if (mysql_table_exists($course_table)) {
 ?>
-        <LI><B><?php print gettext('Courses');?></B></LI><BR />
+        <b><?php print gettext('Courses');?></b><BR />
         <TABLE BORDER=0 STYLE = 'margin-left:0px'>
             <FORM NAME = 'course_form' METHOD = 'post' ACTION = 'course_report.php' TARGET = '_blank'>
             <INPUT TYPE = 'hidden' NAME = 'user_id' VALUE = '' />
@@ -2954,7 +2956,7 @@ ul {
 
     if (is_super()) {									// super or admin - 10/28/10
 ?>
-        <LI><B><?php print gettext('Modules');?></B></LI><BR />
+        <b><?php print gettext('Modules');?></b><BR />
         <TABLE BORDER=0 STYLE = 'margin-left:0px'>
         <TR CLASS = 'odd'><!-- 3/15/11 -->
 <?php
@@ -2982,7 +2984,6 @@ ul {
             }		// end if ($istest)
         }
 ?>
-
 <?php
 //		}		// if (is_administrator() || is_super())
 

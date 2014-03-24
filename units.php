@@ -203,7 +203,7 @@ $sm_icons = $GLOBALS['sm_icons'];
 
 /**
  * get_icon_legend
- * Insert description here
+ * returns legend string - 1/1/09
  *
  *
  * @return
@@ -213,7 +213,7 @@ $sm_icons = $GLOBALS['sm_icons'];
  * @see
  * @since
  */
-function get_icon_legend() {			// returns legend string - 1/1/09
+function get_icon_legend() {
     global $u_types, $sm_icons;
     $query = "SELECT DISTINCT `type` FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `name`";
     $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -264,13 +264,13 @@ function get_user_details($rosterID) {	//	9/6/13
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <HEAD><TITLE><?php print gettext("Tickets - Units Module");?></TITLE>
-    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-    <META HTTP-EQUIV="Expires" CONTENT="0">
-    <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE">
-    <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
-    <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
-    <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>">
-    <LINK REL=StyleSheet HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css">	<!-- 3/15/11 -->
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" />
+    <META HTTP-EQUIV="Expires" CONTENT="0" />
+    <META HTTP-EQUIV="Cache-Control" CONTENT="NO-CACHE" />
+    <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
+    <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
+    <META HTTP-EQUIV="Script-date" CONTENT="<?php print date("n/j/y G:i", filemtime(basename(__FILE__)));?>" />
+    <LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />	<!-- 3/15/11 -->
     <STYLE>
         .link {font-weight: bold; font-size: 12px; font-style: normal; font-family: Verdana, Arial, Helvetica, sans-serif; text-decoration: underline;	}
     </STYLE>
@@ -1344,10 +1344,10 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
             }
         }				// end function validate(theForm)
 /**
- *
+ * turns on add responder form
  * @returns {undefined}
  */
-    function add_res() {		// turns on add responder form
+    function add_res() {
         showit('res_add_form');
         hideit('tbl_responders');
         hideIcons();			// hides responder icons
@@ -1637,10 +1637,10 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
         document.forms[0].frm_ngs.disabled=true;
         }
 /**
- *
+ * constructs a string of id's for deletion
  * @returns {undefined}
  */
-    function collect() {				// constructs a string of id's for deletion
+    function collect() {
         var str = sep = "";
         for (i=0; i< document.del_Form.elements.length; i++) {
             if (document.del_Form.elements[i].type == 'checkbox' && (document.del_Form.elements[i].checked==true)) {
@@ -2125,14 +2125,7 @@ var color=0;
         return xmlhttp;
         }
 //				<?php echo __LINE__;?>
-/**
- *
- * @param {type} point
- * @param {type} tabs
- * @param {type} color
- * @param {type} id
- * @param {type} unit_id
- */
+
     function createMarker(point, tabs, color, id, unit_id) {		// (point, myinfoTabs,<?php print $row['type'];?>, i)
         got_points = true;													// at least one
         var image_file = "./our_icons/gen_icon.php?blank=" + color + "&text=" + unit_id;		// 4/1/2013
@@ -3638,7 +3631,7 @@ function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 
                 `user_id`= " . 		quote_smart(trim($_SESSION['user_id'])) . ",
                 `updated`= " . 		quote_smart(trim($now)) . ",
                 `status_updated`= '" . $status_updated . "'
-                WHERE `id`= " . 	quote_smart(trim($_POST['frm_id'])) . ";";	//	5/11/11 added internal Tickets tracker, 6/21/13 added field status_updated for auto status function. 9/6/13, 11/18/13
+				WHERE `id`= " . 	quote_smart(trim($_POST['frm_id'])) . ";";	//	5/11/11 added internal Tickets tracker, 6/21/13 added field status_updated for auto status function. 9/6/13, 11/18/13, 1/30/14 added xastir tracker
             $result = mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(),basename( __FILE__), __LINE__);
             if (!empty($_POST['frm_log_it'])) { do_log($GLOBALS['LOG_UNIT_STATUS'], 0, $_POST['frm_id'], $_POST['frm_un_status_id']);}	// 6/2/08
 
@@ -4026,7 +4019,7 @@ function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 
     switch ($locale) {
         case "0":
 ?>
-        <SPAN ID = 'usng_link' onClick = "do_usng_conv(res_add_Form)"><?php print gettext('USNG');?>:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled /></TD></TR>
+        <SPAN ID = 'usng_link' onClick = "do_usng_conv(res_add_Form);"><?php print gettext('USNG');?>:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled /></TD></TR>
 <?php
         break;
 
@@ -4429,9 +4422,9 @@ function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 
         <TR CLASS="odd" VALIGN='baseline'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('Delete unit from system - disallowed if unit is assigned to any calls.');?>"><?php print gettext('Remove Unit');?></A>:&nbsp;</TD><TD><INPUT TYPE="checkbox" VALUE="yes" NAME="frm_remove" <?php print $dis_rmv; ?>/>
         <?php print $cbtext; ?></TD></TR>
         <TR CLASS = "even">
-            <TD COLSPAN=4 ALIGN='center'><BR><INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick="track_reset(this.form); map_reset();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>" onClick="validate(document.res_edit_Form);"></TD></TR>
+            <TD COLSPAN=4 ALIGN='center'><BR><INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>" onClick="document.can_Form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onClick="track_reset(this.form); map_reset();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>" onClick="validate(document.res_edit_Form);" /></TD></TR>
         <INPUT TYPE="hidden" NAME="frm_id" VALUE="<?php print $row['id'] ;?>" />
         <INPUT TYPE="hidden" NAME = "frm_lat" VALUE="<?php print $row['lat'] ;?>"/>
         <INPUT TYPE="hidden" NAME = "frm_lng" VALUE="<?php print $row['lng'] ;?>"/>
@@ -5306,3 +5299,4 @@ if ((get_variable('use_messaging') == 1) || (get_variable('use_messaging') == 2)
             }
         exit();
     break;
+?>

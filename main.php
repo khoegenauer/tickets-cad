@@ -217,7 +217,7 @@ if (is_guest()) {													// 8/25/10
             }
         }
 		
-	function set_marker_position(id, theLat, theLng) {
+	function set_marker_position(id, theLat, theLng) {	//	1/3/14
 		if(rmarkers) {
 			if(theLat && theLng) {
 			var theCurrent = rmarkers[id].getPosition();
@@ -325,7 +325,7 @@ if (is_guest()) {													// 8/25/10
     function unblink_text(id) {	//	6/10/11
         if (!document.getElementById(id)) {
         } else {
-        if (document.getElementById (id)) {
+        if (document.getElementById(id)) {
             var unblink = document.getElementById (id);
             unblink.style.background = "";
             unblink.style.color = "";
@@ -1176,7 +1176,7 @@ if ((get_num_groups()) && (COUNT(get_allocates(4, $_SESSION['user_id'])) > 1)) {
                 <DIV class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;"><?php print gettext('Viewed Regions');?>
                 <DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';"><?php print gettext('Dock');?></DIV><BR /><BR />
                 <DIV class="bar" STYLE="color:red; z-index: 1000; position: relative; top: 2px;"
-                    onmousedown="dragStart(event, 'boxB')"><i><?php print gettext('Drag me');?></i></DIV>
+                    onmousedown="dragStart(event, 'boxB');"><i><?php print gettext('Drag me');?></i></DIV>
 -->
                  <DIV class="bar_header" class="heading_2" STYLE="z-index: 1000; height: 30px;"><?php print gettext('Viewed Regions');?>
                  <DIV id="collapse_regs" class='plain' style =" display: inline-block; z-index:1001; cursor: pointer; float: right;" onclick="$('top_reg_box').style.display = 'block'; $('regions_outer').style.display = 'none';"><?php print gettext('Dock');?></DIV><BR /><BR />

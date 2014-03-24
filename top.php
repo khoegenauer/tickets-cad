@@ -1654,7 +1654,7 @@ function get_daynight() {
                 <SPAN ID='msg_span' CLASS = 'message'></SPAN>
                 <br />
             </TD></TR>
-        <TR><TD ID = 'buttons' STYLE = "display:none;">
+        <TR><TD ID = 'buttons' STYLE = "display: inline;">
             <SPAN ID = 'main'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"
                 onClick ="go_there('main.php', this.id);"><?php print get_text("Situation"); ?></SPAN>
             <SPAN ID = 'add'  CLASS = 'plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"

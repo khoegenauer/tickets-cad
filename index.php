@@ -13,7 +13,7 @@ if (!(file_exists("./incs/mysql.inc.php"))) {
 
 require_once './incs/functions.inc.php';
 
-$version = "2.41G Beta - 02/19/14";	
+$version = "2.41H Beta - 03/19/14";	
 
 /*
 10/1/08 added error reporting
@@ -102,6 +102,7 @@ $version = "2.41G Beta - 02/19/14";
 8/1/13 Added Mobile redirect for mobile devices
 9/10/13 Added Warnings, mailgroups, personnel and various settings to support those features and mobile
 10/31/13 Added fields to in_types.
+2/24/14 Added Setting to restrict units to only see their own mobile screen
 */
 
 //snap(basename(__FILE__) . " " . __LINE__  , count($_SESSION));
@@ -1790,6 +1791,7 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 			do_setting ('xastir_db','');			// 1/30/14	
 			do_setting ('xastir_dbuser','');		// 1/30/14				
 			do_setting ('xastir_dbpass','');		// 1/30/14			
+			do_setting ('restrict_units','0');		// 2/24/14			
 
 			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]requests` ADD `email` VARCHAR( 128 ) NULL DEFAULT NULL AFTER `contact`";		// 1/30/14
             $result = mysql_query($query);

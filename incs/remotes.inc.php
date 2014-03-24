@@ -38,6 +38,17 @@ error_reporting(E_ALL);
 */
 
 $thirty_days = 30*24*60*60;							// seconds - 7/4/2013
+$sixty_days = 60*24*60*60;
+$onetwenty_days = 120*24*60*60;
+$threesixty_days = 360*24*60*60;
+
+$sanetimes = array();
+$sanetimes[0] = $thirty_days;
+$sanetimes[1] = $sixty_days;
+$sanetimes[2] = $onetwenty_days;
+$sanetimes[3] = $threesixty_days;
+
+$timeinuse = $sanetimes[3];	//	Change for testing to allow greater time lapse for old data.
 
 /**
  * sane
@@ -55,14 +66,14 @@ $thirty_days = 30*24*60*60;							// seconds - 7/4/2013
  * @since
  */
 function sane($in_lat, $in_lng, $in_time) {		// applies sanity check to input values - returns boolean - 6/24/2013
-    global $thirty_days;
+    global $sanetimes, $timeinuse;
     if ( ( ! ( is_float ( $in_lat ) ) ) ||
          ( ! ( is_float ( $in_lng ) ) ) ||
          ( ! ( is_int ( $in_time ) ) ) ) 								return FALSE;	// 2/22/12
     if ( abs ( $in_lat> 90.0 ) ) 										return FALSE;
     if ( ( abs ( $in_lat == 0.0 ) ) || ( abs ( $in_lng == 0.0 ) ) ) 	return FALSE;
     if ( abs ( $in_lng ) > 180.0 ) 										return FALSE;
-    if ( ( now ( ) - $in_time ) > $thirty_days ) 						return FALSE;	// 7/4/2013
+    if ( ( now ( ) - $in_time ) > $timeinuse ) 						return FALSE;	// 7/4/2013
     return 																TRUE;
     }				// end function sane()
 
@@ -769,7 +780,6 @@ function do_mob_tracker() {	//	9/6/13
 	
 function do_xastir() {				// 1/30/14 - track responder locations with Xastir server - uses Xastir mysql DB.
 	global $istest;
-	
 	function log_xastir_err($message) {					// error logger
 		@session_start();
 		if (!(array_key_exists ( "xastir_err", $_SESSION ))) {		// limit to once per session
@@ -780,15 +790,15 @@ function do_xastir() {				// 1/30/14 - track responder locations with Xastir ser
 
 	$xastir_server = get_variable("xastir_server");
 	$xastir_db = get_variable("xastir_db");
-	$xastir_user = get_variable("xastir_user");
-	$xastir_pass = get_variable("xastir_pass");
+	$xastir_user = get_variable("xastir_dbuser");
+	$xastir_pass = get_variable("xastir_dbpass");
 	
 	if(($xastir_server == "") || ($xastir_db == "") || ($xastir_user == "") || ($xastir_pass == "")) {
 		log_xastir_err("Xastir settings not complete, check in settings");
 		return FALSE;
 		}	
 											
-	$query	= "DELETE FROM `$GLOBALS[mysql_prefix]tracks` WHERE `updated`< (NOW() - INTERVAL 7 DAY)"; 
+	$query	= "DELETE FROM `$GLOBALS[mysql_prefix]tracks` WHERE `updated` < (NOW() - INTERVAL 7 DAY)"; 
 	$resultd = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	unset($resultd);														
 
@@ -806,7 +816,8 @@ function do_xastir() {				// 1/30/14 - track responder locations with Xastir ser
 		if(!mysql_select_db($xastir_db)){
 			exit();
 			}			
-		$query = "SELECT * FROM `simplestation` WHERE `station`= '{$row1['callsign']}' ORDER BY `transmit_time` DESC LIMIT 1";	// possibly none
+
+		$query = "SELECT * FROM `simpleStation` WHERE `station` = '{$row1['callsign']}' ORDER BY `transmit_time` DESC LIMIT 1";	// possibly none
 		$result2 = mysql_query($query);
 		while ($row2 = mysql_fetch_assoc($result2)) {
 			$lat = $row2['latitude'];
@@ -823,15 +834,15 @@ function do_xastir() {				// 1/30/14 - track responder locations with Xastir ser
 					exit();
 					}
 				$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET 
-					`lat` = '$lat', `lng` ='$lng'						
-					WHERE ( (`aprs` = 1 )
+					`lat` = '$lat', `lng` = '$lng'						
+					WHERE ( (`xastir_tracker` = 1 )
 					AND (`callsign` = '{$callsign_in}' ) )";
 				$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 //									any movement?
 				if (mysql_affected_rows() > 0 ) {
 					$query = "UPDATE `$GLOBALS[mysql_prefix]responder` SET 
 						`updated` = '" . now_ts() . "'
-						WHERE ( (`aprs` = 1)
+						WHERE ( (`xastir_tracker` = 1)
 						AND (`callsign` = '{$callsign_in}'))";
 					$result_temp = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);									
 					$our_hash = $callsign_in . (string) (abs($lat) + abs($lng)) ;				// a hash - for dupe prevention

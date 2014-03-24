@@ -145,6 +145,11 @@ if ($istest) {
     dump($_POST);
     }
 
+if(($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']) && (intval(get_variable('restrict_units')) == 1)) {
+	print "Not Authorized";
+	exit();
+	}
+
 /**
  * show_top
  * Insert description here

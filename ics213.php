@@ -7,6 +7,8 @@
  */
 /*
 3/22/12 - initial release
+3/8/2014 - additional ICS forms, cancel button added
+
 */
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09
 error_reporting (E_ALL  ^ E_DEPRECATED);
@@ -65,7 +67,7 @@ function html_mail($to, $subject, $html_message, $from_address, $from_display_na
  */
 function template_213($do_form = TRUE) {
     global $item;
-    $out_str = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
+	$out_str = "<!DOCTYPE html>
 <HTML>
 <HEAD>
     <META HTTP-EQUIV=\"CONTENT-TYPE\" CONTENT=\"text/html; charset=windows-1252\">
@@ -239,6 +241,7 @@ function template_213($do_form = TRUE) {
         $out_str .= "<SPAN ID = 'do_form' ALIGN='center' STYLE = 'MARGIN-LEFT:250px;'>
             <INPUT TYPE = 'button' VALUE= '" . gettext('Submit') . "' onclick = \"if (validate(document.ics213_form)) {document.ics213_form.submit();}\" />
             <INPUT TYPE = 'reset' VALUE= '" . gettext('Reset') . "' STYLE = 'MARGIN-LEFT:40px;' onclick = \"document.ics213_form.reset();\"></SPAN><BR /><BR />";
+			<INPUT TYPE = 'button' VALUE= '" . gettext('Cancel') . "' STYLE = 'MARGIN-LEFT:40px;' onclick = \"window.close();\"></SPAN><BR /><BR />";
         }				// end if ($do_form)
     $out_str .=  "</BODY></HTML>";
 
@@ -278,7 +281,7 @@ $step = (array_key_exists ("step", $_POST))? $_POST['step']: 0 ;
 switch ($step) {
     case 0:								/*  collect addresses */
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!DOCTYPE html>
 <HTML>
 <HEAD>
 <TITLE><?php print LessExtension(basename(__FILE__));?> </TITLE>
@@ -290,7 +293,7 @@ switch ($step) {
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
 <META HTTP-EQUIV="Script-date" CONTENT="6/13/09" />
 <LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />	<!-- 3/15/11 -->
-<SCRIPT>
+<script type="application/javascript">
 /**
  *
  * @returns {unresolved}
@@ -319,7 +322,7 @@ switch ($step) {
  *
  * @returns {Boolean}
  */
-    function do_step_2() {
+    function do_mail_str(in_action) {
         sep = "";
         for (i=0;i<document.mail_form.elements.length; i++) {
             if ((document.mail_form.elements[i].type =='checkbox') && (document.mail_form.elements[i].checked)) {		// frm_add_str
@@ -332,7 +335,9 @@ switch ($step) {
 
             return false;
             }
+		document.mail_form.action = in_action;
         document.mail_form.submit();
+		return true;
         }
 /**
  *
@@ -365,6 +370,7 @@ switch ($step) {
     </HEAD>
     <BODY><CENTER><BR /><BR />
 <?php
+	$i=0;		// 3/6/2014
     $query = "SELECT * FROM `$GLOBALS[mysql_prefix]contacts`
         ORDER BY `organization` ASC,`name` ASC" ;
     $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -397,7 +403,6 @@ switch ($step) {
         return $return_str;
         }				// end function do_row()
 
-    $i=0;
 ?>
     <P>
         <TABLE ALIGN='center'>
@@ -407,13 +412,12 @@ switch ($step) {
             <SPAN ID='chk_spn' STYLE = 'display:none'  onClick = 'do_check();'>&raquo; <U><?php print gettext('Check all');?></U></SPAN><BR />
         </TD></TR>
 
-        <FORM NAME='mail_form' METHOD='post' ACTION='<?php print basename(__FILE__); ?>'>
+        <FORM NAME='mail_form' METHOD='post' ACTION='void(0)'>
         <INPUT TYPE='hidden' NAME='step' VALUE='1'/>
         <INPUT TYPE='hidden' NAME='frm_add_str' VALUE=''/>	<!-- for pipe-delim'd addr string -->
 <?php
-    $i=0;
     while ($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)) {
-
+																				// count valid addresses
         if (is_email($row['email'])) { echo do_row($i, $row['email'], $row['name'], $row['organization']);$i++;}
         if (is_email($row['mobile'])) { echo do_row($i, $row['mobile'], $row['name'], $row['organization']);$i++;}
         if (is_email($row['other'])) { echo do_row($i, $row['other'], $row['name'], $row['organization']);$i++;}
@@ -421,9 +425,25 @@ switch ($step) {
 
 ?>
         <TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD ALIGN='center' COLSPAN=3><BR /><BR />&nbsp;
-            <INPUT TYPE='button' 	VALUE='<?php print gettext('Next');?>' onClick = "do_step_2();"/>&nbsp;&nbsp;&nbsp;&nbsp;
-            <INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>'/>&nbsp;&nbsp;&nbsp;&nbsp;
-            <INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/>&nbsp;<BR /><BR />
+<!--		
+			<INPUT TYPE='button' 	VALUE='ICS205' 		onClick = "do_205();" />
+			<INPUT TYPE='button' 	VALUE='ICS205-A' 	onClick = "do_205a();"  style = "margin-left:20px;" />
+			<INPUT TYPE='button' 	VALUE='ICS213' 		onClick = "do_213();"   style = "margin-left:20px;" />
+			<INPUT TYPE='button' 	VALUE='ICS214' 		onClick = "do_214();"   style = "margin-left:20px;" />
+			<INPUT TYPE='button' 	VALUE='ICS205' 		onClick = "this.form.action = 'ics205.php'; this.form.submit();" />
+			<INPUT TYPE='button' 	VALUE='ICS205-A' 	onClick = "this.form.action = 'ics205a.php'; this.form.submit();"  style = "margin-left:20px;" />
+			<INPUT TYPE='button' 	VALUE='ICS213' 		onClick = "this.form.action = 'ics213.php'; this.form.submit();"   style = "margin-left:20px;" />
+			<INPUT TYPE='button' 	VALUE='ICS214' 		onClick = "this.form.action = 'ics214.php'; this.form.submit();"   style = "margin-left:20px;" />
+3/8/2014
+-->			
+			<INPUT TYPE='button' 	VALUE='ICS205' 		onClick = "do_mail_str('ics205.php');" />
+			<INPUT TYPE='button' 	VALUE='ICS205-A' 	onClick = "do_mail_str('ics205a.php');"  style = "margin-left:20px;" />
+			<INPUT TYPE='button' 	VALUE='ICS213' 		onClick = "do_mail_str('ics213.php');"   style = "margin-left:20px;" />
+			<INPUT TYPE='button' 	VALUE='ICS214' 		onClick = "do_mail_str('ics214.php');"   style = "margin-left:20px;" />
+			<p>
+			<INPUT TYPE='reset' 	VALUE='<?php print gettext('Reset');?>' />
+			<INPUT TYPE='button' 	VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();' style = "margin-left:60px;" />
+			</p>
             </TD></TR>
             </TABLE></FORM>
 
@@ -431,7 +451,7 @@ switch ($step) {
             }		// end if(mysql_affected_rows()>0)
         if (($i==0) || (mysql_affected_rows()==0)) {
 ?>
-    <H3><?php print gettext('No Contact addresses!');?></H3><BR /><BR />
+    <H3><?php print gettext('No Contact e-mail addresses!');?></H3><BR /><BR />
     <INPUT TYPE='button' VALUE='<?php print gettext('Cancel');?>' onClick = 'window.close();'/><BR /><BR />
 <?php
             }
@@ -587,7 +607,7 @@ addresses: $Result = preg_replace("/([\w\s]+)<([\S@._-]*)>/", "$2", $Input);
 <SCRIPT>
 </SCRIPT>
 </HEAD>
-<BODY onLoad = "setTimeout('window.close()',5000);">
+<BODY onLoad = "setTimeout('window.close()',2500);">
 <DIV style = 'margin-left:400px; margin-top100px;'><H2>ICS-213 <?php print gettext('MAIL SENT - window closing');?> ... </H2></DIV>
 </BODY>
 </HTML>
@@ -597,5 +617,5 @@ addresses: $Result = preg_replace("/([\w\s]+)<([\S@._-]*)>/", "$2", $Input);
         break;							/* end process form and address data */
 
     default:							/* error????  */
-        echo gettext('Error') . gettext('Error') . gettext('Error');
+        echo gettext('Error') . gettext('Error') . gettext('Error') . __LINE__;
     }				// end switch

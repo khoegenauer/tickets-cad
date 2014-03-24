@@ -65,6 +65,11 @@ extract($_POST);
 if ((($istest)) && (!empty($_GET))) {dump ($_GET);}
 if ((($istest)) && (!empty($_POST))) {dump ($_POST);}
 
+if(($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']) && (intval(get_variable('restrict_units')) == 1)) {
+	print "Not Authorized";
+	exit();
+	}
+
 /**
  * do_updated
  * Insert description here
@@ -189,6 +194,7 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 	}
 ?>
 	<SCRIPT TYPE="text/javascript" src="<?php print $gmaps_url;?>"></SCRIPT>
+	<script type="text/javascript" src="./js/KmlMapParser.js"></script>
     <SCRIPT SRC="./js/usng.js" 			TYPE="text/javascript"></SCRIPT>
     <SCRIPT SRC="./js/lat_lng.js" 		TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->
     <SCRIPT SRC="./js/geotools2.js" 	TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->
@@ -1879,7 +1885,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
         }
 
     if (!isset($curr_viewed)) {
-        if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+        if (count($al_groups) == 0) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
             $where2 = "WHERE `a`.`type` = 3";
             } else {
             $x=0;	//	6/10/11
@@ -2142,7 +2148,7 @@ var buttons_html = "";
     $("num_facilities").innerHTML = <?php print $num_facilities;?>;
 
 <?php
-//	do_kml();
+	do_kml();
 ?>
 // end function list_facilities()
 //	alert(1628);

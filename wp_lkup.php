@@ -18,6 +18,7 @@
 9/30/10 fix per JB email
 6/9/2013 revised for general code cleanup, WP json data
 11/15/2013 corrections for short array; no geodata
+11/28/2013 handle null WP returns
 */
 
 require_once 'incs/functions.inc.php';		//7/28/10
@@ -140,3 +141,4 @@ else {													// no priors or constituents - do WP
 $val_str = implode(";", $vals);			// success
 print $val_str;
 return;
+?>

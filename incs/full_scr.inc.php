@@ -817,10 +817,9 @@ function fs_get_disp_status($row_in) {			// 3/25/11
                 var url = "persist2.php";
                 sendRequest (url, gb_handleResult, params);
                 $(category).checked = true;
-                for (var j = 0; j < gmarkers.length; j++) {
-                    if ((gmarkers[j]) && (gmarkers[j].category!="Incident")) {
-//					gmarkers[j].show();
-                    gmarkers[j].setMap(map);
+				for (var j = 0; j < rmarkers.length; j++) {
+					if((rmarkers[j]) && (rmarkers[j].category!="Incident")) {				
+					rmarkers[j].setMap(map);
                     }
                     }
                 }
@@ -839,10 +838,9 @@ function fs_get_disp_status($row_in) {			// 3/25/11
                 var url = "persist2.php";
                 sendRequest (url, gb_handleResult, params);
                 $(category).checked = false;
-                for (var j = 0; j < gmarkers.length; j++) {
-                    if ((gmarkers[j]) && (gmarkers[j].category!="Incident")) {
-//						gmarkers[j].hide();
-                        gmarkers[j].setMap(null);
+				for (var j = 0; j < rmarkers.length; j++) {
+					if((rmarkers[j]) && (rmarkers[j].category!="Incident")) {
+						rmarkers[j].setMap(null);
                     }
                     }
                 }
@@ -865,11 +863,9 @@ function fs_get_disp_status($row_in) {			// 3/25/11
                         var url = "persist2.php";
                         sendRequest (url, gb_handleResult, params);
                         $(category).checked = true;
-                        for (var j = 0; j < gmarkers.length; j++) {
-                            if ((gmarkers[j]) && (gmarkers[j].category) && (gmarkers[j].category == category)) {
-//								alert("Showing gmarker " + j + " in Category " + category);
-//								gmarkers[j].show();
-                                gmarkers[j].setMap(map);
+						for (var j = 0; j < rmarkers.length; j++) {
+							if ((rmarkers[j]) && (rmarkers[j].category) && (rmarkers[j].category == category)) {	
+								rmarkers[j].setMap(map);
                                 }
                             }
                         }
@@ -885,11 +881,9 @@ function fs_get_disp_status($row_in) {			// 3/25/11
                         sendRequest (url, gb_handleResult, params);
                         $(category).checked = false;
                         var y=0;
-                        for (var j = 0; j < gmarkers.length; j++) {
-                            if ((gmarkers[j]) && (gmarkers[j].category) && (gmarkers[j].category == category)) {
-//								alert("Hiding gmarker " + j + " in Category " + category);
-//								gmarkers[j].hide();
-                                gmarkers[j].setMap(null);
+						for (var j = 0; j < rmarkers.length; j++) {
+							if ((rmarkers[j]) && (rmarkers[j].category) && (rmarkers[j].category == category)) {
+								rmarkers[j].setMap(null);
                                 }
                             }
                         }
@@ -1515,12 +1509,12 @@ function fs_get_disp_status($row_in) {			// 3/25/11
     //	}				// end function do popup()
 
         var ticket_ids = [];
-        var gmarkers = [];
-		    var rmarkers = [];
-        var fmarkers = [];
-        var infoTabs = [];
-		    var rinfoTabs = [];
-        var facinfoTabs = [];
+		var gmarkers = new Array();
+		var rmarkers = new Array();
+		var fmarkers = new Array();
+		var infoTabs = new Array();
+		var rinfoTabs = new Array();
+		var facinfoTabs = new Array();
         var which;
         var i = 0;			// sidebar/icon index
 

@@ -2418,26 +2418,6 @@ var divarea;
 $dzf = get_variable('def_zoom_fixed');
 print "\tvar map_is_fixed = ";
 print (($dzf==1) || ($dzf==3))? "true;\n":"false;\n";
-
-$kml_olays = array();
-$dir = "./kml_files";
-if ($dh = @opendir($dir)) {				// 12/8/10
-    $i = 1;
-    $temp = explode ("/", $_SERVER['REQUEST_URI']);
-    $temp[count($temp)-1] = "kml_files";				//
-    $server_str = "http://" . $_SERVER['SERVER_NAME'] .":" .  $_SERVER['SERVER_PORT'] .  implode("/", $temp) . "/";
-    while (false !== ($filename = @readdir($dh))) {				// 12/8/10
-        if (!is_dir($filename)) {
-            echo "\tvar kml_{$i} = new google.maps.KmlLayer(\"{$server_str}{$filename}\");\n";		// V3
-            echo "\tkml_{$i}.setMap(map);\n";
-            $i++;
-            }
-        }		// end if ($dh = @opendir($dir))
-    }
-
-//	var ctaLayer = new google.maps.KmlLayer('http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml');
-//	ctaLayer.setMap(map);
-
 ?>
 /**
  * 
@@ -2592,16 +2572,16 @@ function cs_handleResult(req) {					// the 'called-back' function for show curre
 ?>
     var incs_array = new Array();
     var incs_groups = new Array();
-    var gmarkers = [];
-    var fmarkers = [];
-    var rmarkers = [];		//	6/27/12
-	var cmarkers = [];		//	1/3/14
-    var rowIds = [];		// 3/8/10
-    var infoTabs = [];
-    var rinfoTabs = [];
-	var cinfoTabs = [];		//	1/3/14
-    var theTabs = [];		//	6/27/12
-    var facinfoTabs = [];
+	var gmarkers = new Array();
+	var fmarkers = new Array();
+	var rmarkers = new Array();		//	6/27/12
+	var cmarkers = new Array();		//	1/3/14
+	var rowIds = new Array();		// 3/8/10
+	var infoTabs = new Array();
+	var rinfoTabs = new Array();
+	var cinfoTabs = new Array();		//	1/3/14
+	var theTabs = new Array();		//	6/27/12
+	var facinfoTabs = new Array();
     var which;
     var i = 0;			// sidebar/icon index
 
@@ -2662,6 +2642,9 @@ function cs_handleResult(req) {					// the 'called-back' function for show curre
 //	 <?php echo __LINE__ ;?>
 
     var map = new google.maps.Map($('map_canvas'), mapOptions);				//
+<?php
+	do_kml();			// kml display - 6/28/11
+?>	
     var bounds = new google.maps.LatLngBounds();		// Initialize bounds for the map
     var listIcon = new google.maps.MarkerImage("./markers/yellow.png");
     listIcon.shadow = "./markers/sm_shadow.png";
@@ -2805,7 +2788,7 @@ if (isset($_SESSION['viewed_groups'])) {		//	6/10/11
     $curr_viewed= explode(",",$_SESSION['viewed_groups']);
     }
 
-if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+if (count($al_groups) == 0) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
     $where2 = " AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
     } else {
     if (!isset($curr_viewed)) {			//	6/10/11
@@ -3268,7 +3251,7 @@ if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for 
     if (isset($_SESSION['viewed_groups'])) {
         $curr_viewed= explode(",",$_SESSION['viewed_groups']);
         }
-    if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+    if (count($al_groups) == 0) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
         $where2 = "WHERE `a`.`type` = 2";
         } else {
         if (!isset($curr_viewed)) {
@@ -3785,7 +3768,7 @@ function createfacMarker(fac_point, fac_tabs, id, fac_icon, type, region) {		// 
         $curr_viewed= explode(",",$_SESSION['viewed_groups']);
         }
 
-    if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+    if (count($al_groups) == 0) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
         $where2 = "WHERE `$GLOBALS[mysql_prefix]allocates`.`type` = 3";
         } else {
         if (!isset($curr_viewed)) {
@@ -4252,9 +4235,6 @@ if ($counter == 0) {
     if (!empty($addon)) {
         print "\n\tside_bar_html +=\"" . $addon . "\"\n";
         }
-
-    do_kml();			// kml display - 6/28/11
-
 ?>
 // ===============================================  3633  ==============================================
 //	}		// end if (GBrowserIsCompatible())

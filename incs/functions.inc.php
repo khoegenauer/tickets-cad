@@ -3229,15 +3229,20 @@ function do_kml() {									// emits JS for kml-type files in noted directory - 
         $dh  = opendir($dir);
         $temp = explode ("/", $_SERVER['REQUEST_URI']);
         $temp[count($temp)-1] = substr($dir, 2);				// home subdir
-        $server_str = "http://" . $_SERVER['SERVER_NAME'] .":" .  $_SERVER['SERVER_PORT'] .  implode("/", $temp) . "/";
+		$server_str = "./kml_files/";
+//		$server_str = "http://" . $_SERVER['SERVER_NAME'] .":" .  $_SERVER['SERVER_PORT'] . implode("/", $temp) . "/";
+		$i=1;
         while (false !== ($filename = readdir($dh))) {
             switch (get_ext($filename)) {						// drop all other types, incl directories
                 case "kml":
                 case "kmz":
                 case "xml":
                     $url = $server_str . $filename;
-                    echo "\tvar kml_layer = new google.maps.KmlLayer(\"" . $url . "\");\n";	//	4/10/13
-                    echo "kml_layer.setMap(map);";			//	4/10/13
+					echo "\tvar xml_" . $i . " = new KmlMapParser({ map: map});\n"; 
+					echo "xml_" . $i . ".parse(['" . $url . "']);";     					
+					echo "xml_" . $i . ".setVisibility(true);";
+					echo "xml_" . $i . ".setOverlayVisibility(true);";	
+					$i++;
                     break;
 // ---------------------------------
 
@@ -3245,10 +3250,13 @@ function do_kml() {									// emits JS for kml-type files in noted directory - 
                     $the_addr = "{$dir}/{$filename}";
                     $lines = file($the_addr );
                     foreach ($lines as $line_num => $line) {				// Loop through our array.
-                        if (isValidURL( trim($line))) {
-                            echo "\tvar kml_layer = new google.maps.KmlLayer(\"" . trim($line) . "\");\n";	//	4/10/13
-                            echo "kml_layer.setMap(map);";						//	4/10/13
+						if(isValidURL( trim($line))) {
+							echo "\tvar xml_" . $i . " = new KmlMapParser({ map: map});\n"; 
+							echo "xml_" . $i . ".parse(['" . trim($line) . "']);";     					
+							echo "xml_" . $i . ".setVisibility(true);";
+							echo "xml_" . $i . ".setOverlayVisibility(true);";	
                             }
+						$i++;
                         }
                         break;
 

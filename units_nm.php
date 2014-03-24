@@ -916,7 +916,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
         }
 
     if (!isset($curr_viewed)) {
-        if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+        if (count($al_groups) == 0) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
             $where2 = "WHERE `a`.`type` = 2";
             } else {
             $x=0;	//	6/10/11
@@ -2077,7 +2077,7 @@ if (get_num_groups()) {
             }
 
         if (!isset($curr_viewed)) {	//	7/2/13	revised WHERE to AND - Where clause was repeated
-            if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+            if (count($al_groups) == 0) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
                 $where2 = "AND `$GLOBALS[mysql_prefix]allocates`.`type` = 1";
                 } else {
                 $x=0;	//	6/10/11

@@ -53,6 +53,11 @@ if ($istest) {
         }
     }
 
+if(($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']) && (intval(get_variable('restrict_units')) == 1)) {
+	print "Not Authorized";
+	exit();
+	}
+
 // $remotes = get_current();								// returns array - 3/16/09 - removed 6/3/2013
 // snap(basename(__FILE__), __LINE__);
 if ($_SESSION['internet']) {				// 8/22/10
@@ -81,6 +86,7 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
     <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
     <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<SCRIPT TYPE="text/javascript" src="<?php print $gmaps_url;?>"></SCRIPT>
+	<script type="text/javascript" src="./js/KmlMapParser.js"></script>
     <SCRIPT  TYPE="text/javascript"SRC="./js/epoly.js"></SCRIPT>
     <SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 8/1/11 -->
     <SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 1/29/2013 -->
@@ -160,14 +166,12 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 				var resp_positions = JSON.decode(respxmlHttp.responseText);
 				for(var key in resp_positions) {
 					var the_resp_id = resp_positions[key][0];
-					var the_resp_lat = resp_positions[key][4];
-					var the_resp_lng = resp_positions[key][5];
-					if(typeof parent.frames["main"].set_marker_position == 'function') { 
+					var the_resp_lat = parseFloat(resp_positions[key][4]);
+					var the_resp_lng = parseFloat(resp_positions[key][5]);
 						set_marker_position(the_resp_id, the_resp_lat, the_resp_lng);	
 						}
 					}	
 				}
-			}
 //		positions_get();		
 		}
 		
@@ -195,21 +199,19 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 					var the_resp_id = resp_positions[key][0];
 					var the_resp_lat = resp_positions[key][4];
 					var the_resp_lng = resp_positions[key][5];
-					if(typeof parent.frames["main"].set_marker_position == 'function') { 
 						set_marker_position(the_resp_id, the_resp_lat, the_resp_lng);	
 						}
 					}	
 				}
 			}
-		}
 
 	function set_marker_position(id, theLat, theLng) {
 		if(rmarkers) {
 			var theCurrent = rmarkers[id].getPosition();
-			var currentLat = theCurrent.lat().toPrecision(6);
-			var currentLng = theCurrent.lng().toPrecision(6);	
-			var newLat = theLat.toPrecision(6);
-			var newLng = theLng.toPrecision(6);			
+			var currentLat = theCurrent.lat().toFixed(6);
+			var currentLng = theCurrent.lng().toFixed(6);	
+			var newLat = parseFloat(theLat).toFixed(6);
+			var newLng = parseFloat(theLng).toFixed(6);		
 			if((currentLat != newLat) || (currentLng != newLng)) {
 				rmarkers[id].setPosition( new google.maps.LatLng( theLat, theLng ) );
 				}

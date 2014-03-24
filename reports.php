@@ -73,6 +73,12 @@ if ((($istest)) && (!empty($_POST))) {dump ($_POST);}
 
 extract($_GET);
 extract($_POST);
+
+if(($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']) && (intval(get_variable('restrict_units')) == 1)) {
+	print "Not Authorized";
+	exit();
+	}
+
 $locale = get_variable('locale');	// 08/03/09
 
 $nature = get_text("Nature");			// 12/03/10

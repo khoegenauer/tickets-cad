@@ -92,6 +92,12 @@ if ($istest) {
         dump ($_SESSION);
         }
     }
+
+if(($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']) && (intval(get_variable('restrict_units')) == 1)) {
+	print "Not Authorized";
+	exit();
+	}
+
                                                         // set auto-refresh if any mobile units
 $temp = get_variable('auto_poll');				// 1/28/09
 $poll_val = ($temp==0)? "none" : $temp ;
@@ -109,6 +115,7 @@ $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_ni
     <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
     <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
     <LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />
+	<link rel="stylesheet" type="text/css" href="./js/KmlMapParser.css"/>
     <STYLE>
         .disp_stat	{ FONT-WEIGHT: bold; FONT-SIZE: 9px; COLOR: #FFFFFF; BACKGROUND-COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;}
     </STYLE>
@@ -128,7 +135,8 @@ if ($_SESSION['internet']) {				// 8/22/10
 		}
 ?>
 	<SCRIPT TYPE="text/javascript" src="<?php print $gmaps_url;?>"></SCRIPT>
-    <SCRIPT  TYPE="text/javascript"SRC="./js/epoly.js"></SCRIPT>
+	<script type="text/javascript" src="./js/KmlMapParser.js"></script>
+    <SCRIPT  TYPE="text/javascript" SRC="./js/epoly.js"></SCRIPT>
     <!--
     <SCRIPT  TYPE="text/javascript"SRC="./js/epoly_v3.js"></SCRIPT>
     -->
@@ -218,7 +226,7 @@ if (is_guest()) {													// 8/25/10
         }
 		
 	function set_marker_position(id, theLat, theLng) {	//	1/3/14
-		if(rmarkers) {
+		if (typeof rmarkers != 'undefined') {
 			if(theLat && theLng) {
 			var theCurrent = rmarkers[id].getPosition();
 				var currentLat = theCurrent.lat().toFixed(6);
@@ -1162,7 +1170,6 @@ if (is_guest()) {													// 8/25/10
 <DIV ID='to_bottom' style="position: fixed; top: 20px; left: 20px; height: 12px; width: 10px;" onclick = "location.href = '#bottom';"><IMG SRC="markers/down.png" BORDER=0 ID = "down"/></div>
 <SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT><!-- 1/3/10 -->
 
-<A NAME="top" /> <!-- 11/11/09 -->
 <DIV ID = "div_ticket_id" STYLE="display:none;"></DIV>	<!-- 3/23/12 -->
 <DIV ID = "div_assign_id" STYLE="display:none;"></DIV>
 <DIV ID = "div_action_id" STYLE="display:none;"></DIV>

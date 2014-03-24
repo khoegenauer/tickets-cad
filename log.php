@@ -22,6 +22,12 @@ error_reporting(E_ALL);
 
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10
+
+if(($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']) && (intval(get_variable('restrict_units')) == 1)) {
+	print "Not Authorized";
+	exit();
+	}
+
 //dump($_POST);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">

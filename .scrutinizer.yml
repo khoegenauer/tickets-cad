@@ -1,6 +1,7 @@
 filter:
     excluded_paths:
         - 'vendor/*'
+		- 'DEV/*'
     paths: {  }
 tools:
     js_hint: true

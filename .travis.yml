@@ -28,7 +28,8 @@ php:
 
 # optionally specify a list of environments, for example to test different RDBMS
 env:
-  - DB=mysql
+  matrix:
+    DB=mysql
 #  - DB=pgsql
 
   global:
@@ -153,4 +154,4 @@ after_script:
 notifications:
 # configure notifications (email, IRC, campfire etc)
 #  - irc: "irc.freenode.org#travis"
-  - email: false
+  email: false

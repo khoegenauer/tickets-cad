@@ -1,16 +1,11 @@
 #TODO: 
-# Configure PHPUnit
-# database credentials, user, and permissions
 # passwordless apt-get install
-# SauceLabs Config
 # Split with Buildhive? (Requires adding delay to avoid infinite commit-build-commit loop)
-# Apache, Nginx, Cherokee, Hiawatha, etc Servers
 # Possible to test caching, minification, etc?
 # PHP Documentation Generator
 # JS Documentation Generator (YUI Docs)
 # Test and Uncomment ERD Generation / Database Tools
 # Add and Test Security Tools (OWASP-ZAP with Selenium)
-# Static Code Analyzers (Scrutinizer, etc)
 # Include Codeception to consolidate testing?
 # Unit Testing for Javascript?
 # QA Tools for Javascript?
@@ -36,19 +31,23 @@ env:
   - DB=mysql
 #  - DB=pgsql
 
-#  global:
-#    - SAUCE_USERNAME=myusername
-#    - secure: my_accesskey_encrypted_using_the_travis_gem
+  global:
+    - secure: "PJPBRPKwEDGx1wJxj0odM4Q4acpKUaTLctAPfjGvCi5VX+yIlEfgL16bq+D7HGTTmQHMkvJcoF1fTjBY1GwV8Gu3XwmSQ1qPJQRbGiPfFtDh3Sj7svknQGSfk0lF82uNkPRhYCvUJPuz+/Im3M9QZKhzKYuLL6MfIJjpOaCr1dw="
+    - secure: "XX2hKgDsr10lr7sbsxzBC9WQyTjnuxntNxsjeiT4NXVbTSMPblsjQww5BDNRe4RoNoeJzCv4eYV6CuCBVzS/pMcfVVx1xJ5361vzUOHPfSpUCMzdsjqy2ANf9t2NNBSXNn4P4NbvxxABkOD+RC7Hq4seUvrkSwTOt/0oWnZ4ul4="
 
+#============================================================================================
 before_script:
 # execute any number of scripts before the test run, custom env's are available as variables
 #-----------------------------------------------------
+#SAUCELABS
+  - ./DEV/tests/setup/before_script.sh
+  - ./DEV/tests/setup/apache.sh
+  - ./DEV/tests/setup/selenium.sh
+  - ./DEV/tests/setup/saucelabs_setup.sh
+  - ./DEV/tests/setup/saucelabs_test.sh
+
 ## Install / Update
 #  - sudo apt-get update -qq
-## Selenium Interpreter (for Saucelabs integration)
-# - sudo apt-get install nodejs
-# - npm install -g se-interpreter
-## Webservers, Browsers, etc for Selenium testing?
 
 ## For SQL ERD Generation
 #  - sudo apt-get install sqlfairy
@@ -56,11 +55,9 @@ before_script:
 ## For PHP_UML 
 #  - sudo apt-get install -qq php5-xsl
 #  - pear install PHP_UML  
+
 ## w3af
 # - sudo apt-get install -qq w3af-console
-## APACHE
-#  - sudo apt-get update > /dev/null
-#  - sudo apt-get install -y --force-yes apache2 libapache2-mod-php5 php5-curl php5-mysql php5-intl
 
 ## For YUI Docs
 #  - sudo apt-get install -qq nodejs
@@ -95,8 +92,12 @@ before_script:
 
 # omitting "script:" will default to phpunit
 # use the $DB env variable to determine the phpunit.xml to use
+
+#==================================================================================
 script: 
 ##TESTING
+- phpunit --verbose -c tests/phpunit.xml
+
 ##    UI TESTING
 #Selenium and Appium(SauceLabs) (Sauce Connect?)
 # - "se-interpreter selenium/interpreter_config.json

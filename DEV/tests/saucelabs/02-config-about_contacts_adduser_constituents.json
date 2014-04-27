@@ -1,0 +1,706 @@
+{
+  "type": "script",
+  "seleniumVersion": "2",
+  "formatVersion": 2,
+  "steps": [
+    {
+      "type": "get",
+      "url": "http://localhost/tickets/ticketsv2-30c/"
+    },
+    {
+      "type": "switchToFrame",
+      "identifier": "upper"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "id",
+        "value": "conf"
+      }
+    },
+    {
+      "type": "switchToFrame",
+      "identifier": "relative=up"
+    },
+    {
+      "type": "switchToFrame",
+      "identifier": "main"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "link text",
+        "value": "About this version ..."
+      }
+    },
+    {
+      "type": "waitForAlertPresent"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "link text",
+        "value": "Contacts"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//input[@value='Add new Contacts entry']"
+      }
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID1"
+      },
+      "text": "Bob"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID2"
+      },
+      "text": "Anytown FD"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID3"
+      },
+      "text": "123-555-7890"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID4"
+      },
+      "text": "234-555-8901"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID5"
+      },
+      "text": "bob@example.com"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID6"
+      },
+      "text": "Stuff and Things"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "name",
+        "value": "sub_but"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": "Id:\t1\r\nName:\tBob\r\nOrganization:\tAnytown FD\r\nPhone:\t123-555-7890\r\nMobile:\t234-555-8901\r\nEmail:\tbob@example.com\r\nOther:\tStuff and Things\r\nAs-of:\t2013-07-23 01:26:00"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"button\"]"
+      }
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID1"
+      },
+      "text": "Jane"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID2"
+      },
+      "text": "Anytown FD"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID3"
+      },
+      "text": "123-555-7890"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID4"
+      },
+      "text": "234-555-8901"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID5"
+      },
+      "text": "jane@example.com"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID6"
+      },
+      "text": "More stuff. more things."
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "name",
+        "value": "sub_but"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": "Id:\t2\r\nName:\tJane\r\nOrganization:\tAnytown FD\r\nPhone:\t123-555-7890\r\nMobile:\t234-555-8901\r\nEmail:\tjane@example.com\r\nOther:\tMore stuff. more things."
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//input[@value='Continue']"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": "Jane \tAnytown FD \t123-555-7890 \t234-555-8901 \tjane@example.com \tMore stuff. more things."
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "#c2 > img[title=\"click to view this\"]"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": "Id:\t2\r\nName:\tJane\r\nOrganization:\tAnytown FD\r\nPhone:\t123-555-7890\r\nMobile:\t234-555-8901\r\nEmail:\tjane@example.com\r\nOther:\tMore stuff. more things."
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"button\"]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "#c2 > img[title=\"click to edit this\"]"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": ""
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": ""
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": ""
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": ""
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": ""
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": ""
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "name",
+        "value": "frm_other"
+      },
+      "text": "Less Stuff. Less Things"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "name",
+        "value": "sub_but"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"button\"]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "(//td[@onclick=\"JSfnToFunc('v',2);\"])[6]"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": "Less Stuff. Less Things"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "name",
+        "value": "el_but"
+      }
+    },
+    {
+      "type": "assertAlertText",
+      "text": "Please confirm item deletion?"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"button\"]"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": "Bob \tAnytown FD \t123-555-7890 \t234-555-8901 \tbob@example.com \tStuff and Things"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//input[@value='Add new Contacts entry']"
+      }
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID1"
+      },
+      "text": "Jim"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID2"
+      },
+      "text": "Anytown PD"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID3"
+      },
+      "text": "345-555-6789"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID4"
+      },
+      "text": "123-555-7890"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID5"
+      },
+      "text": "jim@example.com"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID6"
+      },
+      "text": "Related stuff, Related T"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"reset\"]"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": ""
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": ""
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"button\"]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"button\"]"
+      }
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "name",
+        "value": "argument"
+      },
+      "text": "Bob"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//input[@value='Next']"
+      }
+    },
+    {
+      "type": "assertAlertText",
+      "text": "Please correct the following and re-submit:\n\n\tField(s) to search is required"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "name",
+        "value": "name"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//input[@value='Next']"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": "Bob \tAnytown FD \t123-555-7890 \t234-555-8901 \tbob@example.com \tStuff and Things"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//input[@value='Contacts Properties']"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": "name"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"button\"]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "form[name=\"finform\"] > input[type=\"button\"]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "link text",
+        "value": "Edit My Profile"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"button\"]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "link text",
+        "value": "Add user"
+      }
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "name",
+        "value": "frm_user"
+      },
+      "text": "test-admin"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "name",
+        "value": "frm_passwd"
+      },
+      "text": "test-admin!"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "name",
+        "value": "frm_passwd_confirm"
+      },
+      "text": "test-admin!"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "id",
+        "value": ""
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"submit\"]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "link text",
+        "value": "Edit Settings"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//input[@value='Reset form']"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"button\"]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "link text",
+        "value": "Add/Edit Notifies"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"button\"]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"reset\"]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"button\"]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "link text",
+        "value": "Constituents"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//input[@value='Add new Constituents entry']"
+      }
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID1"
+      },
+      "text": "John Q"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID2"
+      },
+      "text": "1600 Pennsylvania Ave"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID3"
+      },
+      "text": "1C"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID4"
+      },
+      "text": "New Braunfels"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID5"
+      },
+      "text": "TX"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID7"
+      },
+      "text": "123-555-7890"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID8"
+      },
+      "text": "912"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID9"
+      },
+      "text": "311"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID10"
+      },
+      "text": "111-555-2345"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID11"
+      },
+      "text": "johnq@example.com"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "name",
+        "value": "sub_but"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"button\"]"
+      }
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID1"
+      },
+      "text": "Suzie Q"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "ID11"
+      },
+      "text": "suzieq@example.com"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"reset\"]"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": ""
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "input[type=\"button\"]"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": "John Q \t1600 Pennsylvania Ave \t1C"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "form[name=\"finform\"] > input[type=\"button\"]"
+      }
+    }
+  ],
+  "data": {
+    "configs": {},
+    "source": "none"
+  },
+  "inputs": []
+}

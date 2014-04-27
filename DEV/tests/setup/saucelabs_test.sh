@@ -1,2 +1,2 @@
 # run tests
-vendor/bin/phpunit tests/saucelabs/simpleTest.php
+vendor/bin/phpunit DEV/tests/saucelabs/simpleTest.php

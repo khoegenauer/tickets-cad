@@ -41,34 +41,44 @@ before_script:
 # execute any number of scripts before the test run, custom env's are available as variables
 #-----------------------------------------------------
 #SAUCELABS
-  - ./DEV/tests/setup/before_script.sh
+  - sudo apt-get -qq install nodejs
+  - npm install -g se-interpreter
+#  - ./DEV/tests/setup/before_script.sh
   - ./DEV/tests/setup/apache.sh
   - ./DEV/tests/setup/selenium.sh
-  - ./DEV/tests/setup/saucelabs_setup.sh
-  - ./DEV/tests/setup/saucelabs_test.sh
-
+#  - ./DEV/tests/setup/saucelabs_setup.sh
+#  - ./DEV/tests/setup/saucelabs_test.sh
+##SauceConnect
+## (?) Already be covered in saucelabs_setup.sh
+#  - curl https://gist.github.com/santiycr/5139565/raw/sauce_connect_setup.sh | bash
 ## Install / Update
-#  - sudo apt-get update -qq
+  - sudo apt-get update -qq
 
 ## For SQL ERD Generation
-#  - sudo apt-get install sqlfairy
+  - sudo apt-get install -qq sqlfairy
 
 ## For PHP_UML 
 #  - sudo apt-get install -qq php5-xsl
 #  - pear install PHP_UML  
 
 ## w3af
-# - sudo apt-get install -qq w3af-console
+#  - sudo apt-get install -qq w3af-console
 
 ## For YUI Docs
 #  - sudo apt-get install -qq nodejs
 #  - npm -g install yuidocjs
 
+## For JSCodeSniffer (Assumes node.js already installed)
+## https://github.com/dsheiko/jscodesniffer
+#  - npm -g install --save jscodesniffer
+#  - npm i
+#  - chmod +x jscs
+#  - ln -s jscs /usr/local/bin/jscs
+#  - jscs /path/to/source/code --standard=Jquery
+
 ## Only if SQLFairy doesn't work (Backup Plan: SchemaSpy)
 #  - sudo apt-get install -qq graphviz
 #--------------------------------------------------
-##Sauce Connect ???
-#  - curl https://gist.github.com/santiycr/5139565/raw/sauce_connect_setup.sh | bash
 
 #---------------------------------------------------
 ## DB Setup
@@ -97,23 +107,22 @@ before_script:
 #==================================================================================
 script: 
 ##TESTING
-- phpunit --verbose -c tests/phpunit.xml
 
 ##    UI TESTING
 #Selenium and Appium(SauceLabs) (Sauce Connect?)
-# - "se-interpreter selenium/interpreter_config.json
+ - se-interpreter ./DEV/tests/setup/interpreter_config.json
 ##    SECURITY TESTING
 #W3AF
 #Skipfish
 #OWASP-ZAP
 # /path/to/ZapDir/zap.jar -daemon (Starts zap with no UI)
 #RIPS
-#Scrutinizer
 #Vega
 ##    BEHAVIOR TESTING
 #Behat
 ##    UNIT TESTING
 #PHPUnit
+#  - phpunit --verbose -c tests/phpunit.xml
 #  - phpunit --configuration phpunit_$DB.xml --coverage-text
 - phpunit --version
 after_script:
@@ -121,8 +130,8 @@ after_script:
 ## Database Tools
 #SQLFairy ERD Generation 
 #(http://nsaunders.wordpress.com/2009/01/11/easy-visualisation-of-database-schemas-using-sqlfairy/)
-#  - mysqldump -u username -p -d tickets > ./DEV/build/DB/tickets.sql
-#  - sqlt-graph -f MySQL -o ./DEV/build/DB/tickets.png -t png ./DEV/build/DB/tickets.sql
+  - mysqldump -u travis -p -d tickets > ./DEV/build/DB/tickets.sql
+  - sqlt-graph -f MySQL -o ./DEV/build/DB/tickets.png -t png ./DEV/build/DB/tickets.sql
 
 #Backup Plan: SchemaSpy (Java Command Line for Generating Database ERDs)
 ##  requires Java be installed

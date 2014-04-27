@@ -4,7 +4,7 @@ sudo apt-get install -y --force-yes apache2 libapache2-mod-php5 php5-curl php5-i
 
 sudo a2enmod rewrite
 
-sudo sed -i -e "s,/var/www,/home/travis/build/cioddi/travis-ci-saucelabs-template,g" /etc/apache2/sites-available/default
+sudo sed -i -e "s,/var/www,/home/travis/build/khoegenauer/tickets-cad,g" /etc/apache2/sites-available/default
 sudo sed -i -e "s,AllowOverride[ ]None,AllowOverride All,g" /etc/apache2/sites-available/default
 
 

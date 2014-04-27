@@ -1,0 +1,425 @@
+{
+  "type": "script",
+  "seleniumVersion": "2",
+  "formatVersion": 2,
+  "steps": [
+    {
+      "type": "get",
+      "url": "http://localhost/tickets/ticketsv2-30c/index.php"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "xpath",
+        "value": "//center/form/table/tbody/tr[1]/td[3]/input"
+      },
+      "text": "admin"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "xpath",
+        "value": "//center/form/table/tbody/tr[2]/td[2]/input"
+      },
+      "text": "admin"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//center/form/table/tbody/tr[6]/td[2]/input"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr[2]/td/span[4]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "id",
+        "value": ""
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//div[3]/table/tbody/tr[4]/td[1]/table/tbody/tr[7]/td/div/input[1]"
+      }
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[1]/table/tbody/tr[2]/td[2]/input"
+      },
+      "text": "Facility 1"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[1]/table/tbody/tr[3]/td[2]/input[1]"
+      },
+      "text": "Fac1"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[1]/table/tbody/tr[3]/td[2]/input[2]"
+      },
+      "text": "F1"
+    },
+    {
+      "type": "setElementSelected",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[1]/table/tbody/tr[6]/td[2]/select//option[2]"
+      }
+    },
+    {
+      "type": "setElementSelected",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[1]/table/tbody/tr[7]/td[2]/select//option[2]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[3]/div[2]/div[2]/img"
+      }
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[1]/table/tbody/tr[10]/td[2]/textarea"
+      },
+      "text": "Test Facility"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[1]/table/tbody/tr[11]/td[2]/input[1]"
+      },
+      "text": "10"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[1]/table/tbody/tr[11]/td[2]/input[2]"
+      },
+      "text": "2"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[1]/table/tbody/tr[27]/td/input[3]"
+      }
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[1]/table/tbody/tr[8]/td[2]/input"
+      },
+      "text": "6551 N SH 123"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[1]/table/tbody/tr[9]/td[2]/input[1]"
+      },
+      "text": "Geronimo"
+    },
+    {
+      "type": "doubleClickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[1]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[3]/div[2]/div[2]/img"
+      }
+    },
+    {
+      "type": "doubleClickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[6]/div/div[1]/img"
+      }
+    },
+    {
+      "type": "doubleClickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[3]/div[2]/div[2]/map/area"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[1]"
+      }
+    },
+    {
+      "type": "doubleClickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[6]/div/div[1]/img"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[1]"
+      }
+    },
+    {
+      "type": "doubleClickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[6]/div/div[1]/img"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[3]/div[2]/div[2]/img"
+      }
+    },
+    {
+      "type": "doubleClickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[6]/div/div[1]/img"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[8]/div[4]/div[1]/img"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[3]/div[2]/div[2]/img"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[8]/div[4]/div[1]/img"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[1]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[8]/div[4]/div[1]/img"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[8]/div[4]/div[1]/img"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[1]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[4]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[3]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[2]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[5]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[8]/div[4]/div[1]/img"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[8]/div[4]/div[1]/img"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[2]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[6]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[8]/div[4]/div[1]/img"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[8]/div[4]/div[1]/img"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[1]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[3]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[7]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[2]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div[2]/div/div[7]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[1]/table/tbody/tr[9]/td[1]/button"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr/td[1]/table/tbody/tr[27]/td/input[3]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr[2]/td/span[4]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr[2]/td/span[4]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr[2]/td/span[4]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr[1]/td[2]/span[4]/span[8]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr[1]/td[2]/span[4]/span[8]"
+      }
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "xpath",
+        "value": "//table/tbody/tr[1]/td[2]/span[4]/span[8]"
+      }
+    }
+  ],
+  "data": {
+    "configs": {},
+    "source": "none"
+  },
+  "inputs": []
+}

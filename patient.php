@@ -6,6 +6,9 @@
  * @version string
  */
 /*
+
+ALTER TABLE `pre_patient` CHANGE `insurance_id` `insurance_id` INT( 3 ) NULL DEFAULT NULL 
+
 8/16/08	lots of changes; date_dropdown used, lock icon for date entry control, date validation, 'mysql_fetch_assoc' vs 'fetch_array', 'delete' process, 'LIMIT 1' added
 10/1/08	added error reporting
 10/7/08	set  WRAP="virtual"
@@ -184,9 +187,9 @@ function ck_frames() {		//  onLoad = "ck_frames()"
  */
     function validate(theForm) {
         var errmsg="";
-        if (theForm.frm_name.value == "") {errmsg+= "\t<?php print gettext('Name is required');?>\n";}
+        if (theForm.frm_name.value == "") {errmsg+= "\t<?php print gettext('ID/Name is required');?>\n";}
         if (theForm.frm_gender_val.value==0) {errmsg+= "\t<?php echo $gender;?> <?php print gettext('required');?>\n";}
-        if (theForm.frm_ins_id.value==0) {errmsg+= "\t<?php echo $insurance;?> <?php print gettext('selection required');?>\n";}
+//      if (theForm.frm_ins_id.value==0) {errmsg+= "\t<?php echo $insurance;?> <?php print gettext('selection required');?>\n";}
         if (theForm.frm_description.value == "") {errmsg+= "\t<?php print gettext('Description is required');?>\n";}
         do_unlock(theForm) ;
         if (!chkval(theForm.frm_hour_asof.value, 0,23)) {errmsg+= "\t<?php print gettext('As-of time error - Hours');?>\n";}

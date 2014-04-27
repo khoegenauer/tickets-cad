@@ -13,7 +13,7 @@ if (!(file_exists("./incs/mysql.inc.php"))) {
 
 require_once './incs/functions.inc.php';
 
-$version = "2.41H Beta - 03/19/14";	
+$version = "2.41J Beta - 04/25/14";	
 
 /*
 10/1/08 added error reporting
@@ -1782,9 +1782,9 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 			$result = mysql_query($query);		
 			
 			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]responder` ADD `xastir_tracker` TINYINT( 2 ) NOT NULL DEFAULT 0 COMMENT 'APRS tracking using XASTIR' AFTER `mob_tracker`;";	//	1/30/14
-			$result = mysql_query($query);		// 9/10/13	
+			$result = mysql_query($query);
 
-			$query = "UPDATE `gw4x4r`.`$GLOBALS[mysql_prefix]msg_settings` SET `name` = 'smsg_use_server' WHERE `$GLOBALS[mysql_prefix]msg_settings`.`id` =15 LIMIT 1";	//	1/11/14	
+			$query = "UPDATE `$GLOBALS[mysql_prefix]msg_settings` SET `name` = 'smsg_use_server' WHERE `$GLOBALS[mysql_prefix]msg_settings`.`id` =15 LIMIT 1";	//	1/11/14	
 			$result = mysql_query($query);
 
 			do_setting ('xastir_server','localhost');			// 1/30/14				
@@ -1795,6 +1795,20 @@ if (!($version == $old_version)) {		// current? - 6/6/2013  ====================
 
 			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]requests` ADD `email` VARCHAR( 128 ) NULL DEFAULT NULL AFTER `contact`";		// 1/30/14
             $result = mysql_query($query);
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]messages` ADD `server_number` TINYINT( 2 ) NULL DEFAULT NULL AFTER `message_id`;";	//	4/1/14
+			$result = mysql_query($query);	
+			
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]patient` CHANGE `insurance_id` `insurance_id` INT( 3 ) NULL DEFAULT NULL ";	//	4/24/14
+			$result = mysql_query($query) ;		// note STFU
+
+			$query = "ALTER TABLE `$GLOBALS[mysql_prefix]places` 
+					ADD `apply_to` 	ENUM( 'city', 'bldg' ) NOT NULL DEFAULT 'city' AFTER `name` ,
+					ADD `street` 	VARCHAR( 96 ) NULL DEFAULT NULL AFTER `apply_to` ,
+					ADD `city` 		VARCHAR( 32 ) NULL DEFAULT NULL AFTER `street` ,
+					ADD `state` 	VARCHAR( 4 ) NULL DEFAULT NULL AFTER `city` ,
+					ADD `information` VARCHAR( 1024 ) NULL DEFAULT NULL AFTER `state` ";	//	4/24/14
+			$result = mysql_query($query) ;		// note STFU
         }		// end (!($version ==...) ==================================================
 
 /**

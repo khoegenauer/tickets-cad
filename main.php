@@ -115,7 +115,6 @@ $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_ni
     <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE" />
     <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript" />
     <LINK REL="StyleSheet" HREF="stylesheet.php?version=<?php print time();?>" TYPE="text/css" />
-	<link rel="stylesheet" type="text/css" href="./js/KmlMapParser.css"/>
     <STYLE>
         .disp_stat	{ FONT-WEIGHT: bold; FONT-SIZE: 9px; COLOR: #FFFFFF; BACKGROUND-COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;}
     </STYLE>
@@ -135,11 +134,8 @@ if ($_SESSION['internet']) {				// 8/22/10
 		}
 ?>
 	<SCRIPT TYPE="text/javascript" src="<?php print $gmaps_url;?>"></SCRIPT>
-	<script type="text/javascript" src="./js/KmlMapParser.js"></script>
+	<script type="text/javascript" src="./js/geoxml_v3.js"></script>
     <SCRIPT  TYPE="text/javascript" SRC="./js/epoly.js"></SCRIPT>
-    <!--
-    <SCRIPT  TYPE="text/javascript"SRC="./js/epoly_v3.js"></SCRIPT>
-    -->
     <SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 8/1/11 -->
     <SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 1/29/2013 -->
 <?php } ?>

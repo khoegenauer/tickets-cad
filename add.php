@@ -119,6 +119,8 @@ if ($istest) {print "_POST"; dump($_POST);}
 7/3/2013 - socket2me conditioned on internet and broadcast settings, enforce reverse-geo values size limits
 9/10/13 - Added "address about" and "To address" fields. Also Location warnings capability
 10/11/2013 - corrected auto incident numbering - relocated else {} closure
+3/29/2014 - added buildings operations
+4/7/2014 - revised per nm operation
 */
 
 if (empty($_GET)) {
@@ -712,6 +714,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 		}
 ?>
 <SCRIPT TYPE="text/javascript" SRC="<?php print $gmaps_url;?>"></SCRIPT>
+<script type="text/javascript" src="./js/geoxml_v3.js"></script>
 <SCRIPT SRC="./js/graticule_V3.js" type="text/javascript"></SCRIPT>
 <?php
         }
@@ -1051,10 +1054,10 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  * @returns {undefined}
  */
     function call_back(in_obj) {				// callback function - from gmaps_v3_init()
-//		alert(756);
         do_lat(in_obj.lat);			// set form values
         do_lng(in_obj.lng);
         do_ngs();
+		$("do_sv").style.display = "block";				// show streetview link	
 <?php								// 6/2/2013
     if (intval(get_variable('reverse_geo'))==1) {
 ?>
@@ -1079,7 +1082,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
             false);
 
 <?php
-//			do_kml();
+  			do_kml();
 ?>
         var do_rev_geo = true;
 
@@ -1431,6 +1434,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  * @returns {Boolean}
  */
     function loc_lkup(my_form) {		   						// 7/5/10
+		if (!geocoder) {return;}		// no maps
         if ((my_form.frm_city.value.trim()==""  || my_form.frm_state.value.trim()=="")) {
             alert ("<?php print gettext('City and State are required for location lookup.');?>");
 
@@ -1441,6 +1445,8 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 
         geocoder.geocode( { 'address': myAddress}, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
+//				myMarker.setMap(null);									// clear existing/default icon 
+
                 pt_to_map (my_form, results[0].geometry.location.lat(), results[0].geometry.location.lng());
                 var tick_lat = results[0].geometry.location.lat();	//	8/14/13
                 var tick_lng = results[0].geometry.location.lng();	//	8/14/13
@@ -1516,13 +1522,14 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
         return xmlhttp;
         }
 
+	var geocoder;		// 4/7/2014
 <?php
     if ($gmaps) {		// 6/4/2013
 ?>
 
 // **************************************************** Reverse Geocoder 10/13/09, 7/5/10
 
-    var geocoder = new google.maps.Geocoder();
+    geocoder = new google.maps.Geocoder();
     var address;
     var rev_coding_on = '<?php print get_variable('reverse_geo');?>';		// 7/5/10
 /**
@@ -2187,7 +2194,7 @@ $onload_str .= (is_float($cid_lat))? " pt_to_map( add, {$cid_lat} ,{$cid_lng});"
   </div>
 </div>
 </div>
-
+<div id = "bldg_info" class = "even" style = "display: none; position:fixed; left:500px; top:30px; z-index: 998; width:300px; height:auto;"></div> <!-- 4/1/2014  -->
 <?php
 require_once './incs/links.inc.php';
 
@@ -2219,8 +2226,8 @@ $do_inc_nature = (bool) ($inc_num_ary[4]==1)? "true": "false" ;		//
 print "\n<SCRIPT>\n\t var do_inc_nature={$do_inc_nature};\n</SCRIPT>\n";
 
 if (!(mysql_table_exists("$GLOBALS[mysql_prefix]places"))) {$city_name_array_str="";}		// 2/21/11 - build array of city names for JS usage
-else {
-    $query = "SELECT * FROM `$GLOBALS[mysql_prefix]places` ORDER BY `id`";		// get all names
+else {				// 3/29/2014
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]places` WHERE `apply_to` =  'city' ORDER BY `id`";		// get all city names
     $place_result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
     $num_places = mysql_num_rows($result);	//	3/17/11
     $city_name_array_str = $sep = "";
@@ -2318,6 +2325,47 @@ function do_nearby(the_form) {		// 11/22/2012
     newwindow.focus();
     }		// end do_nearby()
 
+function do_bldg(in_val) {									// called with zero-based array index - 3/29/2014
+	if (myMarker) {myMarker.setMap(null);}	// clear existing/default icon 
+
+	var obj_bldg = bldg_arr[in_val];						// nth object
+	document.add.frm_street.value = obj_bldg.bldg_street;
+	document.add.frm_city.value = obj_bldg.bldg_city;
+	document.add.frm_state.value = obj_bldg.bldg_state;
+	if (document.add.frm_lat) {
+		document.add.frm_lat.value = document.add.show_lat.value = obj_bldg.bldg_lat.toString();
+		document.add.frm_lng.value = document.add.show_lng.value = obj_bldg.bldg_lon.toString();
+		}
+	if (obj_bldg.bldg_info.length > 0 ) {
+		var close_str = "<span onclick = \"$('bldg_info').style.display = 'none';\"><b><center><u>X</u></center></b></span>";
+		$('bldg_info').innerHTML = obj_bldg.bldg_info + close_str;		// 
+		$('bldg_info').style.display = "inline";	
+		}
+	loc_lkup(document.add) ;			// to map
+	$("do_sv").style.display = "block";				// show streetview link  			
+
+	}		// end function do_bldg()
+
+<?php								// 3/29/2014
+
+$query_bldg = "SELECT * FROM `$GLOBALS[mysql_prefix]places` WHERE `apply_to` = 'bldg' ORDER BY `name` ASC";		// types in use
+$result_bldg = mysql_query($query_bldg) or do_error($query_bldg, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+if (mysql_num_rows($result_bldg) > 0) {
+	$i = 0;
+	$sel_str = "<select name='bldg' onChange = 'do_bldg(this.options[this.selectedIndex].value); '>\n";
+	$sel_str .= "\t<option value = '' selected>Select building</option>\n";
+	echo "\n\t var bldg_arr = new Array();\n";
+	while ($row_bldg = stripslashes_deep(mysql_fetch_assoc($result_bldg))) {
+		extract ($row_bldg);
+		$sel_str .= "\t<option value = {$i} >{$name}</option>\n";		
+		echo "\t var bldg={ bldg_name:\"{$name}\", bldg_street:\"{$street}\", bldg_city:\"{$city}\", bldg_state:\"{$state}\", bldg_lat:\"{$lat}\", bldg_lon:\"{$lon}\", bldg_info:\"{$information}\"};\n";
+		echo "\t bldg_arr.push(bldg);\n";		// object onto array
+		$i++;
+		}		// end while ()
+
+	$sel_str .= "\t</SELECT>\n";
+	}		// end if (mysql... )
+?>
 </SCRIPT>
 <DIV>
 <TABLE BORDER="0" ID = "form_outer" >
@@ -2329,6 +2377,20 @@ function do_nearby(the_form) {		// 11/22/2012
     <FONT SIZE=-1>(<?php print gettext('mouseover caption for help information');?>)</FONT></FONT><BR /><BR /></TD>
     </TR>
 <FORM NAME="add" METHOD="post" ENCTYPE="multipart/form-data" ACTION="<?php print basename(__FILE__);?>?add=true" onSubmit="return validate(document.add);">
+<!--  new bldg stuff  -->
+<?php
+if (mysql_num_rows($result_bldg) > 0) {
+?>
+<TR CLASS='odd'>
+	<TD CLASS="td_label" ><?php print get_text("Building"); ?></A>:</TD>
+	<TD></TD>
+	<TD><?php echo $sel_str;?></TD>
+	</TR>
+<?php
+	}		// end if()
+?>	
+<!-- / -->
+
 <TR CLASS='even'>
     <TD CLASS="td_label" onmouseout="UnTip();" onmouseover="Tip('<?php print $titles["_loca"];?>');"><?php print get_text("Location"); ?></A>:</TD>
     <TD></TD>
@@ -2712,6 +2774,12 @@ if ($has_portal == 1) {
     $grid_types = array("USNG", "OSGB", "UTM");				// 4/23/11
     print "<B><SPAN ID = 'grid_link' onClick = 'do_grid_to_ll();'>{$grid_types[$locale]}:</SPAN></B>&nbsp;<INPUT SIZE='19' TYPE='text' NAME='frm_ngs' VALUE='' DISABLED ></TD></TR>";
     }		// end if ($gmaps)
+	else {
+?>	
+	<INPUT TYPE="hidden" NAME="show_lat" VALUE="" />
+	<INPUT TYPE="hidden" NAME="show_lng" VALUE=""/ >
+<?php
+		}		// end else
 ?>
     <TR CLASS='even'>
         <TD COLSPAN="3" ALIGN="center"><br /><IMG SRC="glasses.png" BORDER="0"/>: <?php print gettext('Lookup');?> </TD>
@@ -2753,8 +2821,11 @@ if ($has_portal == 1) {
                     <div id='map_canvas' style='z-index:1; width: <?php print get_variable('map_width');?>px; height: <?php print get_variable('map_height');?>px'>
                     </div>
                     <BR /><CENTER><FONT CLASS='header'><?php echo get_variable('map_caption');?></FONT><BR /><BR />
+					</TD></TR>
+			<TR><TD ALIGN='center' style = "white-space: nowrap;"><NOBR>
                     <SPAN ID='do_grid' onclick = "toglGrid();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<U><?php print gettext('Grid');?></U></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <SPAN ID='do_sv' onClick = "sv_win(document.add);" style='display:none'><U><?php print gettext('Street view');?></U></SPAN> <!-- 2/11/09 -->
+                    <SPAN ID='do_sv' onClick = "sv_win(document.add);" style='margin-left: 40px; display:none'><U><?php print gettext('Street view');?></U></SPAN> <!-- 2/11/09 -->
+					</NOBR>
                 </TD>
             </TR>
         </TABLE>

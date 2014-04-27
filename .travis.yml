@@ -9,6 +9,7 @@
 # Include Codeception to consolidate testing?
 # Unit Testing for Javascript?
 # QA Tools for Javascript?
+# DOT and GraphViz
 
 # see http://about.travis-ci.org/docs/user/languages/php/ for more hints
 language: php
@@ -124,7 +125,7 @@ script:
 #PHPUnit
 #  - phpunit --verbose -c tests/phpunit.xml
 #  - phpunit --configuration phpunit_$DB.xml --coverage-text
-- phpunit --version
+ - phpunit --version
 after_script:
 #-----------------------------------------
 ## Database Tools

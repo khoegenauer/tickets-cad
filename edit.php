@@ -386,6 +386,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 			}
 ?>
 	<SCRIPT TYPE="text/javascript" SRC="<?php print $gmaps_url;?>"></SCRIPT>
+	<script type="text/javascript" src="./js/geoxml_v3.js"></script>
     <SCRIPT SRC="./js/gmaps_v3_init.js"	TYPE="text/javascript" ></SCRIPT>
     <SCRIPT SRC="./js/graticule_V3.js" type="text/javascript"></SCRIPT>
 
@@ -1079,6 +1080,9 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
             $row = stripslashes_deep(mysql_fetch_array($result));
 ?>
             <BODY onLoad = "ck_frames(); find_warnings(<?php print $row['lat'];?>, <?php print $row['lng'];?>); get_files();">	<!-- 628, 11/18/13 -->
+
+			<div id = "bldg_info" class = "even" style = "display: none; position:fixed; left:500px; top:70px; z-index: 998; width:300px; height:auto;"></div> <!-- 4/1/2014  -->
+			
             <SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT>
             <SCRIPT SRC="./js/misc_function.js"></SCRIPT>
 <?php
@@ -1116,6 +1120,26 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
                 $heading = gettext('Edit Ticket') . " - " . get_variable('map_caption');	//	6/10/11
             }
 
+			echo "\n<SCRIPT>\n";
+			$query_bldg = "SELECT * FROM `$GLOBALS[mysql_prefix]places` WHERE `apply_to` = 'bldg' ORDER BY `name` ASC";		// types in use
+			$result_bldg = mysql_query($query_bldg) or do_error($query_bldg, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+			if (mysql_num_rows($result_bldg) > 0) {
+				$i = 0;
+				$sel_str = "<select name='bldg' onChange = 'do_bldg(this.options[this.selectedIndex].value); '>\n";
+				$sel_str .= "\t<option value = '' selected>Select building</option>\n";
+				echo "\n\t var bldg_arr = new Array();\n";
+				while ($row_bldg = stripslashes_deep(mysql_fetch_assoc($result_bldg))) {
+					extract ($row_bldg);
+					$sel_str .= "\t<option value = {$i} >{$name}</option>\n";		
+					echo "\t var bldg={ bldg_name:\"{$name}\", bldg_street:\"{$street}\", bldg_city:\"{$city}\", bldg_state:\"{$state}\", bldg_lat:\"{$lat}\", bldg_lon:\"{$lon}\", bldg_info:\"{$information}\"};\n";
+					echo "\t bldg_arr.push(bldg);\n";		// object onto array
+					$i++;
+					}		// end while ()
+			
+				$sel_str .= "\t</SELECT>\n";
+				}		// end if (mysql... )
+			echo "\n</SCRIPT>\n";
+
             print "<TABLE BORDER='0' ID = 'outer' ALIGN='left' CLASS = 'BGCOLOR'>\n";
             if ($gmaps) {	//	6/10/11
                 print "<TR CLASS='header'><TD COLSPAN='99' ALIGN='center'><FONT CLASS='header' STYLE='background-color: inherit;'>" . $heading . "</FONT></TD></TR>";	//	6/10/11
@@ -1143,6 +1167,15 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
                 }
             print "<TR CLASS='odd'><TD ALIGN='center' COLSPAN=3><FONT CLASS='$theClass'><B>" . gettext('Edit Run Ticket') . "</FONT> (#{$id})</B></TD></TR>";
             print "<TR CLASS='odd'><TD ALIGN='center' COLSPAN=3><FONT CLASS='header'><FONT SIZE='-2'>(" . gettext('mouseover caption for help information') . ")</FONT></FONT><BR /><BR /></TD></TR>";
+			if (mysql_num_rows($result_bldg) > 0) {			// 4/7/2014
+?>
+		<TR CLASS='odd'>
+			<TD CLASS="td_label" ><?php print get_text("Building"); ?></A>:</TD>
+			<TD></TD>
+			<TD><?php echo $sel_str;?></TD>
+			</TR>
+<?php
+				}		// end if()
 
             print "<TR CLASS='even'>
                     <TD CLASS='td_label'  COLSPAN=2 onmouseout='UnTip();' onmouseover=\"Tip('{$titles['_loca']}');\">" . get_text("Location") . ": </TD><TD><INPUT SIZE='48' TYPE='text' NAME='frm_street' VALUE=\"{$row['street']}\" MAXLENGTH='48' {$dis}></TD></TR>\n";
@@ -1649,6 +1682,8 @@ if (!$disallow) {
         }
 ?>
                     </DIV>
+<div id = "bldg_info" class = "even" style = "display: none; position:fixed; left:500px; top:70px; z-index: 998; width:300px; height:auto;"></div> <!-- 4/1/2014  -->
+					
 <?php
     if ($gmaps) {				// 1/1/11
 ?>
@@ -1687,6 +1722,7 @@ if (!$disallow) {
         do_lng(in_obj.lng);
         find_warnings(in_obj.lat, in_obj.lng);	//	9/10/13
         do_ngs();
+		do_kml();
 <?php								// 6/2/2013
     if (intval(get_variable('reverse_geo'))==1) {
 ?>
@@ -1990,6 +2026,27 @@ if (!$disallow) {
             find_warnings(lng, lng);	//	9/10/13
             }
         }				// end function pt_to_map ()
+
+	function do_bldg(in_val) {							// called with zero-based array index - 3/29/2014				
+		if (myMarker) {myMarker.setMap(null);}			// clear existing/default icon 
+	
+		var obj_bldg = bldg_arr[in_val];						// nth object
+		document.edit.frm_street.value = obj_bldg.bldg_street;
+		document.edit.frm_city.value = obj_bldg.bldg_city;
+		document.edit.frm_state.value = obj_bldg.bldg_state;
+		if (document.edit.frm_lat) {
+			document.edit.frm_lat.value = document.edit.show_lat.value = obj_bldg.bldg_lat.toString();		// parseFloat() - .toFixed(2); 
+			document.edit.frm_lng.value = document.edit.show_lng.value = obj_bldg.bldg_lon.toString();
+			}
+		if (obj_bldg.bldg_info.length > 0 ) {
+			var close_str = "<span onclick = \"$('bldg_info').style.display = 'none';\"><b><center><u>X</u></center></b></span>";
+			$('bldg_info').innerHTML = obj_bldg.bldg_info + close_str;		// 
+			$('bldg_info').style.display = "inline";	
+			}
+		loc_lkup(document.edit) ;			// to map
+		}		// end function do_bldg()
+
+
 /**
  *
  * @param {type} my_form

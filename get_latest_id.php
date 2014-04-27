@@ -66,7 +66,7 @@ $the_chat_id = ($row)? $row['id'] : "0";
                 // most recent ticket other than written by 'me'
 
 if (!isset($curr_viewed)) {
-    if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+    if (count($al_groups) == 0) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
         $where2 = "AND `a`.`type` = 1";
         } else {
         $x=0;
@@ -77,7 +77,7 @@ if (!isset($curr_viewed)) {
             $where2 .= $where3;
             $x++;
             }
-        $where2 .= "AND `a`.`type` = 1";
+        $where2 .= " AND `a`.`type` = 1";
         }
     } else {
     if (count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
@@ -91,7 +91,7 @@ if (!isset($curr_viewed)) {
             $where2 .= $where3;
             $x++;
             }
-        $where2 .= "AND `a`.`type` = 1";
+        $where2 .= " AND `a`.`type` = 1";
         }
     }
                                             // 2/21/12
@@ -106,7 +106,7 @@ if (!isset($curr_viewed)) {
                             // position updates?
 
 if (!isset($curr_viewed)) {
-    if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+    if (count($al_groups) == 0) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
         $where2 = "AND `a`.`type` = 2";
         } else {
         $x=0;
@@ -117,21 +117,21 @@ if (!isset($curr_viewed)) {
             $where2 .= $where3;
             $x++;
             }
-        $where2 .= "AND `a`.`type` = 2";
+        $where2 .= " AND `a`.`type` = 2";
         }
     } else {
     if (count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
-        $where2 = "AND `a`.`type` = 2";
+        $where2 = " AND `a`.`type` = 2";
         } else {
         $x=0;
-        $where2 = "AND (";
+        $where2 = " AND (";
         foreach ($curr_viewed as $grp) {
             $where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";
             $where2 .= "`a`.`group` = '{$grp}'";
             $where2 .= $where3;
             $x++;
             }
-        $where2 .= "AND `a`.`type` = 2";
+        $where2 .= " AND `a`.`type` = 2";
         }
     }
 
@@ -146,32 +146,32 @@ if ($row) {	//	Latest unit Status update written by current user.
 //	$_SESSION['unit_flag_2'] = $me;		// 6/11/10
     } else {				// latest unit status updates written by others
     if (!isset($curr_viewed)) {
-        if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+        if (count($al_groups) == 0) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
             $where2 = "AND `a`.`type` = 2";
             } else {
             $x=0;
-            $where2 = "AND (";
+            $where2 = " AND (";
             foreach ($al_groups as $grp) {
                 $where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";
                 $where2 .= "`a`.`group` = '{$grp}'";
                 $where2 .= $where3;
                 $x++;
                 }
-            $where2 .= "AND `a`.`type` = 2";
+            $where2 .= " AND `a`.`type` = 2";
             }
         } else {
         if (count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
-            $where2 = "AND `a`.`type` = 2";
+            $where2 = " AND `a`.`type` = 2";
             } else {
             $x=0;
-            $where2 = "AND (";
+            $where2 = " AND (";
             foreach ($curr_viewed as $grp) {
                 $where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";
                 $where2 .= "`a`.`group` = '{$grp}'";
                 $where2 .= $where3;
                 $x++;
                 }
-            $where2 .= "AND `a`.`type` = 2";
+            $where2 .= " AND `a`.`type` = 2";
             }
         }
 
@@ -190,32 +190,32 @@ if ($row) {
 
                         //	9/10/13 Most recent status updates
 if (!isset($curr_viewed)) {
-    if (count($al_groups == 0)) {
+    if (count($al_groups) == 0) {
         $where2 = "AND `a`.`type` = 2";
         } else {
         $x=0;
-        $where2 = "AND (";
+        $where2 = " AND (";
         foreach ($al_groups as $grp) {
             $where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";
             $where2 .= "`a`.`group` = '{$grp}'";
             $where2 .= $where3;
             $x++;
             }
-        $where2 .= "AND `a`.`type` = 2";
+        $where2 .= " AND `a`.`type` = 2";
         }
     } else {
     if (count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.
-        $where2 = "AND `a`.`type` = 2";
+        $where2 = " AND `a`.`type` = 2";
         } else {
         $x=0;
-        $where2 = "AND (";
+        $where2 = " AND (";
         foreach ($curr_viewed as $grp) {
             $where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";
             $where2 .= "`a`.`group` = '{$grp}'";
             $where2 .= $where3;
             $x++;
             }
-        $where2 .= "AND `a`.`type` = 2";
+        $where2 .= " AND `a`.`type` = 2";
         }
     }
 
@@ -234,32 +234,32 @@ if ($row2) {		//	9/10/13
                         // 1/21/11 - get most recent dispatch
 
 if (!isset($curr_viewed)) {
-    if (count($al_groups == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
-        $where2 = "AND `a`.`type` = 1";
+    if (count($al_groups) == 0) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
+        $where2 = " AND `a`.`type` = 1";
         } else {
         $x=0;
-        $where2 = "AND (";
+        $where2 = " AND (";
         foreach ($al_groups as $grp) {
             $where3 = (count($al_groups) > ($x+1)) ? " OR " : ")";
             $where2 .= "`a`.`group` = '{$grp}'";
             $where2 .= $where3;
             $x++;
             }
-        $where2 .= "AND `a`.`type` = 1";
+        $where2 .= " AND `a`.`type` = 1";
         }
     } else {
     if (count($curr_viewed == 0)) {	//	catch for errors - no entries in allocates for the user.	//	5/30/13
-        $where2 = "AND `a`.`type` = 1";
+        $where2 = " AND `a`.`type` = 1";
         } else {
         $x=0;
-        $where2 = "AND (";
+        $where2 = " AND (";
         foreach ($curr_viewed as $grp) {
             $where3 = (count($curr_viewed) > ($x+1)) ? " OR " : ")";
             $where2 .= "`a`.`group` = '{$grp}'";
             $where2 .= $where3;
             $x++;
             }
-        $where2 .= "AND `a`.`type` = 1";
+        $where2 .= " AND `a`.`type` = 1";
         }
     }
 

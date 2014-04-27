@@ -507,9 +507,8 @@ function do_mobile_login($requested_page, $outinfo = FALSE, $hh = FALSE) {			// 
 ?>
                 <div style='display: inline; font-size: 1.5em; font-weight: bold;'><?php print get_text("User"); ?><BR /><INPUT TYPE="text" NAME="frm_user" onChange = "document.login_form.frm_user.value = document.login_form.frm_user.value.trim();" VALUE=""></div><BR />
                 <div style='display: inline; font-size: 1.5em; font-weight: bold;'><?php print get_text("Password"); ?><BR /><INPUT TYPE="password" NAME="frm_passwd" onChange = "document.login_form.frm_passwd.value = document.login_form.frm_passwd.value.trim();"  VALUE=""></div><BR /><BR /><BR />
-				<span id="sub_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "document.forms.login_form.submit();"><?php print get_text("Log In"); ?></span><BR />
-				<span id="tick_norm_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'do_tickets_main();'><?php print get_text("Tickets Normal Screen"); ?></span>	<!-- 1/30/14 -->
-
+				<INPUT id="sub_but2" TYPE="submit" VALUE="<?php print get_text("Log In"); ?>" class="plain" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" style="width: auto; font-size: 1.3em;"><BR /><BR />
+				<INPUT id="tick_norm_but2" TYPE="button" VALUE="<?php print get_text("Tickets Normal Screen"); ?>" class="plain" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" style="width: auto; font-size: 1.3em;" onClick = 'do_tickets_main();' >
             </div>
 
             <INPUT TYPE='hidden' NAME = 'encoding' VALUE=''/>

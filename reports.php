@@ -934,10 +934,13 @@ p.page { page-break-after: always; }
                 if ($istest) {print "<TH ALIGN='left'>" . gettext('ID') . "</TH>";}
                 print "</TR>\n";
 
+			$of_interest = array($GLOBALS['LOG_ERROR'], $GLOBALS['LOG_INTRUSION'], $GLOBALS['LOG_ICS_MESSAGE_SEND']);
             while ($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)) {			// main loop - top
 //				dump(mysql_format_date(mysql2timestamp($row['when'])));
 //				dump(mysql_format_date($row['when']));
-                if (($row['code']<20) || ($row['code'] == $GLOBALS['LOG_ERROR']) || ($row['code'] == $GLOBALS['LOG_INTRUSION'])  ) {
+//              if (($row['code']<20) || ($row['code'] == $GLOBALS['LOG_ERROR']) || ($row['code'] == $GLOBALS['LOG_INTRUSION'])  ) {
+
+				if (($row['code']<20) || in_array( $row['code'], $of_interest) ) {		// 4/7/2014
                     print "<TR CLASS='" . $evenodd[$i%2] . "'>";
 
                     if (!(date("z", mysql2timestamp($row['when'])) == $curr_date)) {								// date change?

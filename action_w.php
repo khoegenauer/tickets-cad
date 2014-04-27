@@ -24,6 +24,7 @@
 8/27/10 missing fmp call
 3/15/11 changed default.css to stylesheet.php
 1/22/11 Added refresh of window opener when Finished adding action.
+4/9/2014 addslashes included for string apostrophe handling
 */
 error_reporting(E_ALL);
 
@@ -227,6 +228,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 
             $frm_asof = "$_POST[frm_year_asof]-$_POST[frm_month_asof]-$_POST[frm_day_asof] $_POST[frm_hour_asof]:$_POST[frm_minute_asof]:00$frm_meridiem_asof";
                                                                                 // 8/15/10
+/*
              $query 	= "SELECT * FROM `$GLOBALS[mysql_prefix]action` WHERE
                  `description` = '{$_POST['frm_description']}' AND
                  `ticket_id` = '{$_GET['ticket_id']}' AND
@@ -234,13 +236,31 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
                  `action_type` = '{$GLOBALS['ACTION_COMMENT']}' AND
                  `updated` = '{$frm_asof}' AND
                  `responder` = '{$responder}' ";
+*/													// 4/9/2014
+	     		$query 	= "INSERT INTO `$GLOBALS[mysql_prefix]action` 
+	     			(`description`,`ticket_id`,`date`,`user`,`action_type`, `updated`, `responder`) VALUES (
+	     				addslashes({$_POST['frm_description']}), 
+	     				'{$_GET['ticket_id']}', 
+	     				'{$now}', 
+	     				{$_SESSION['user_id']}, 
+	     				addslashes({$GLOBALS['ACTION_COMMENT']}), 
+	     				'{$frm_asof}', 
+	     				addslashes({$responder}}
+	     				)";		
+
 
             $result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename(__FILE__), __LINE__);
             if (mysql_affected_rows()==0) {		// not a duplicate - 8/15/10
 
                  $query 	= "INSERT INTO `$GLOBALS[mysql_prefix]action`
-                     (`description`,`ticket_id`,`date`,`user`,`action_type`, `updated`, `responder`) VALUES
-                     ('{$_POST['frm_description']}', '{$_GET['ticket_id']}', '{$now}', {$_SESSION['user_id']}, {$GLOBALS['ACTION_COMMENT']}, '{$frm_asof}', '{$responder}')";		// 8/24/08
+	     			(`description`,`ticket_id`,`date`,`user`,`action_type`, `updated`, `responder`) VALUES (
+	     				'{$_POST['frm_description']}', 
+	     				'{$_GET['ticket_id']}', 
+	     				'{$now}', 
+	     				{$_SESSION['user_id']}, 
+	     				{$GLOBALS['ACTION_COMMENT']}, 
+	     				'{$frm_asof}', 
+	     				'{$responder}')";		// 8/24/08
                 $result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename(__FILE__), __LINE__);
 
                 $ticket_id = mysql_insert_id();								// just inserted action id
@@ -453,15 +473,15 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
             $the_text_color = 	$GLOBALS['UNIT_TYPES_TEXT'][$row['icon']];		//
 
             $checked = (in_array($row['unit_id'], $responders))? "CHECKED" : "";
-            $ct_str = ($row['nr_assigned']==0) ? ""  : "&nbsp;({$row['nr_assigned']})" ;
+//          $ct_str = ($row['nr_assigned']==0) ? ""  : "&nbsp;({$row['nr_assigned']})" ;
 //    		dump($ct_str);
 
             $the_name = "frm_cb_" . stripslashes ($row['unit_name']);
-            print "\t<INPUT TYPE = 'checkbox' VALUE='{$row['unit_id']}' NAME = \"{$the_name}\" $checked />
+			print "\t<INPUT TYPE = 'checkbox' VALUE='{$row['unit_id']}' NAME = \"{$the_name}\" $checked />XX
                 <SPAN STYLE='width:300px; display:inline; background-color:{$the_bg_color}; color:{$the_text_color};'>" .
                 stripslashes ($row['unit_name']) . "&nbsp;</SPAN>{$ct_str}";
             print "&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;<SPAN STYLE = 'width:200px; background-color:{$row['bg_color']}; color:{$row['text_color']};'>
-                {$row['stat_descr']}</SPAN><BR />\n";		// 7/20/10
+				{$row['stat_descr']}</SPAN>ZZZZ<BR />\n";		// 7/20/10
 
             }
         unset ($row);
@@ -521,11 +541,11 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
             $type_text_color = 	$GLOBALS['UNIT_TYPES_TEXT'][$row['icon']];		//
 
             $ct_str = ($row['nr_assigned']==0) ? ""  : "&nbsp;({$row['nr_assigned']})" ;
-//    		dump($ct_str);
             $the_name = "frm_cb_" . stripslashes ($row['unit_name']);
             print "\t<INPUT TYPE = 'checkbox' VALUE='{$row['unit_id']}' NAME = \"{$the_name}\" />
                 <SPAN STYLE = 'width:300px; display:inline; background-color:{$type_bg_color}; color:{$type_text_color};'>" .
                 stripslashes ($row['unit_name']) . "</SPAN> &nbsp; {$ct_str}";
+//			dump($ct_str);
             print " - <SPAN STYLE = 'width:200px; background-color:{$row['bg_color']}; color:{$row['text_color']};'>
                 {$row['stat_descr']}</SPAN><BR />\n";		// 7/20/10
             }

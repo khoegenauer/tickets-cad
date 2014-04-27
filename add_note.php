@@ -113,7 +113,10 @@ Signal &raquo;
         }		// end if (empty($_POST))
     else {
         $field_name = array('description', 'comments');
-        $query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id` = {$_POST['frm_ticket_id']} LIMIT 1";
+		$frm_ticket_id=(int)$_POST['frm_ticket_id'];	//	4/4/14
+		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id` = {$frm_ticket_id} LIMIT 1";	//	4/4/14
+		
+//		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id` = {$_POST['frm_ticket_id']} LIMIT 1";
         $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
         $row = stripslashes_deep(mysql_fetch_assoc($result));
         $now = (time() - (get_variable('delta_mins')*60));

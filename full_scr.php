@@ -86,7 +86,7 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
     <META HTTP-EQUIV="Pragma" CONTENT="NO-CACHE">
     <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 	<SCRIPT TYPE="text/javascript" src="<?php print $gmaps_url;?>"></SCRIPT>
-	<script type="text/javascript" src="./js/KmlMapParser.js"></script>
+	<script type="text/javascript" src="./js/geoxml_v3.js"></script>
     <SCRIPT  TYPE="text/javascript"SRC="./js/epoly.js"></SCRIPT>
     <SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT> 	<!-- 8/1/11 -->
     <SCRIPT TYPE="text/javascript" SRC="./js/gmaps_v3_init.js"></script>	<!-- 1/29/2013 -->

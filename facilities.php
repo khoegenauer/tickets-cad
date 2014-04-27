@@ -194,7 +194,7 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 	}
 ?>
 	<SCRIPT TYPE="text/javascript" src="<?php print $gmaps_url;?>"></SCRIPT>
-	<script type="text/javascript" src="./js/KmlMapParser.js"></script>
+	<script type="text/javascript" src="./js/geoxml_v3.js"></script>
     <SCRIPT SRC="./js/usng.js" 			TYPE="text/javascript"></SCRIPT>
     <SCRIPT SRC="./js/lat_lng.js" 		TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->
     <SCRIPT SRC="./js/geotools2.js" 	TYPE="text/javascript"></SCRIPT>	<!-- 11/8/11 -->

@@ -15,7 +15,7 @@
 5/25/11 intrusion detection added
 6/19/11 add LOG_CALL_EDIT
 3/11/12 add to_quarters
-3/22/12 add ICS message code
+4/7/2014 ICS message code revised
 */
 error_reporting(E_ALL);
 $patient = get_text("Patient");
@@ -69,7 +69,7 @@ $types = array();
     $types[$GLOBALS['LOG_FACILITY_CLR']]					="{$facility} cleared";
     $types[$GLOBALS['LOG_FACILITY_RESET']]					="{$facility} reset";
 
-    $types[$GLOBALS['LOG_ICS213_MESSAGE_SEND']]				="ICS213 message sent";				// 3/22/12
+	$types[$GLOBALS['LOG_ICS_MESSAGE_SEND']]				="ICS message sent";				// 4/7/2014
     $types[$GLOBALS['LOG_ERROR']]							="Error";
     $types[$GLOBALS['LOG_INTRUSION']]						="Security alert: intrusion detected";
 

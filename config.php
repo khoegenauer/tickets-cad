@@ -1783,8 +1783,6 @@ if (mysql_num_rows($result)>0) {
                             }
                         }
                     }
-    //			$query = "UPDATE `$GLOBALS[mysql_prefix]user` SET `user`='$_POST[frm_user]', `callsign`='$_POST[frm_callsign]'," . $pass . " `info`='$_POST[frm_info]',`level`='$_POST[frm_level]' WHERE `id`='$_POST[frm_id]'";
-
                 print "<B>" . gettext('User') . " <I>{$_POST['frm_user']}</I> " . gettext('data has been updated.') . "</B><BR /><BR />";
                 }
             }		// end if ($_GET['edit']

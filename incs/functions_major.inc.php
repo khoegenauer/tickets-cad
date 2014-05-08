@@ -174,6 +174,7 @@ $iw_width = 	"300px";		// map infowindow with
 1/3/14 Added Road Condition Alert markers to map
 1/10/14 Revised sidebar click numbering to cure wrong infowindow being opened.
 1/30/14 Added specific Unit dummy marker to fix problem with not IW when clicking unit with dummy position
+5/7/2014 Removed redundant show_action call, per B email
 */
 
 $nature = get_text("Nature");			// 12/03/10
@@ -4538,7 +4539,7 @@ print get_buttons_inner2();	//	4/12/12
 <?php
 
     print do_ticket($row, $col_width, $search) ;				// 2/25/09
-    print show_actions($row['id'], "date", FALSE, TRUE);		/* lists actions and patient data belonging to ticket */
+//  print show_actions($row['id'], "date", FALSE, TRUE);		/* lists actions and patient data belonging to ticket */
     $column_arr = explode(',', get_msg_variable('columns'));
     print "<TD ALIGN='left'>";
     print "<TABLE ID='theMap' BORDER=0><TR CLASS='odd' ><TD  ALIGN='center'>

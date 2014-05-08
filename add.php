@@ -121,6 +121,8 @@ if ($istest) {print "_POST"; dump($_POST);}
 10/11/2013 - corrected auto incident numbering - relocated else {} closure
 3/29/2014 - added buildings operations
 4/7/2014 - revised per nm operation
+4/27/2014 - correction re bldg per YG email
+5/7/2014 - prepend bldg name to location string
 */
 
 if (empty($_GET)) {
@@ -1007,7 +1009,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
         print "\n\t return;\n";
         }
 ?>
-        map.clearOverlays();
+//      map.clearOverlays();
         load(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>, <?php echo get_variable('def_zoom'); ?>);
 //		if (grid) {map.addOverlay(new LatLonGraticule());}
         }
@@ -1536,6 +1538,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
  *
  * @param {type} lat
  * @param {type} lng
+ * @version 2014-05-06
  * @returns {undefined}
  */
     function codeLatLng(lat, lng) {
@@ -1547,35 +1550,40 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
                 switch (addr_pieces.length) {
                     case 1:
                         document.add.frm_street.value = document.add.frm_city.value = "";				// state or country
-                        document.add.frm_state.value=addr_pieces[0].substring(0,5).trim() ;			// state or country
+                        document.add.frm_state.value=addr_pieces[0].substring(0,4).trim() ;			// state or country
                         break;
 
                     case 2:
                         document.add.frm_street.value = "";
                         document.add.frm_city.value=addr_pieces[0].substring(0,33).trim() ;			// city
                         var temp = addr_pieces[1].substring(0,5).trim().split(" ");					// zipcode
-                        document.add.frm_state.value=temp[0].substring(0,5).trim() ;				// state or country
+                        document.add.frm_state.value=temp[0].substring(0,4).trim() ;				// state or country
                         break;
 
                     case 3:
-                        document.add.frm_street.value=addr_pieces[0].substring(0,97).trim() ;		// street
-                        document.add.frm_city.value=addr_pieces[1].substring(0,33).trim() ;			// city
+//						document.add.frm_street.value+=addr_pieces[0].substring(0,97).trim() ;		// street
+						var temp = document.add.frm_street.value+=addr_pieces[0].trim() ;			// append - 5/6/2014
+						document.add.frm_street.value = temp.trim().substring(0,96);				// 0-95
+
+						document.add.frm_city.value=addr_pieces[1].substring(0,32).trim() ;			// city
                         var temp = addr_pieces[2].substring(0,5).trim().split(" ");					// zipcode
-                        document.add.frm_state.value=temp[0].substring(0,5).trim() ;				// state or country
+						document.add.frm_state.value=temp[0].substring(0,4).trim() ;				// state or country
                         break;
 
                     default:
-                        document.add.frm_street.value=addr_pieces[0].substring(0,97).trim() ;							// street
-                        document.add.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,33).trim() ;		// city
+//						document.add.frm_street.value=addr_pieces[0].substring(0,97).trim() ;							// street
+						var temp = document.add.frm_street.value+=addr_pieces[0].trim() ;								// append
+						document.add.frm_street.value = temp.trim().substring(0,96);									// 0-95
+						document.add.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,32).trim() ;		// city
                         var temp = addr_pieces[(addr_pieces.length-2)].substring(0,5).trim().split(" ");				// zipcode
                         if (temp.length == 2) {
-                            document.add.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,33).trim() ;	// city
-                            document.add.frm_state.value=temp[0].substring(0,5).trim() ;								// US state
+							document.add.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,32).trim() ;	// city						
+							document.add.frm_state.value=temp[0].substring(0,4).trim() ;								// US state							
                             }
                         else {
-                            var the_city = addr_pieces[(addr_pieces.length-3)] + ", " + addr_pieces[(addr_pieces.length-2)];
-                            document.add.frm_city.value=the_city.substring(0,33).trim();								// city
-                            document.add.frm_state.value=addr_pieces[(addr_pieces.length-1)].substring(0,5).trim();		// country
+							var the_city = addr_pieces[(addr_pieces.length-3)] + ", " + addr_pieces[(addr_pieces.length-2)] ;
+							document.add.frm_city.value=the_city.substring(0,32).trim() ;								// city						
+							document.add.frm_state.value=addr_pieces[(addr_pieces.length-1)].substring(0,4).trim()		// country							
                             }
                     }				// end switch
                 }
@@ -1841,6 +1849,8 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
         $('tr_misc').style.display='none';
         user_inc_name = false;							// no incident name input 4/21/10
         $('proto_cell').innerHTML = "";					// 8/7/10
+		$('bldg_info').innerHTML = "";					// 4/27/2014
+		theForm.reset();
 
         }		// end function reset()
 /**
@@ -2185,7 +2195,7 @@ $onload_str .= (is_float($cid_lat))? " pt_to_map( add, {$cid_lat} ,{$cid_lng});"
   <div class="content" style="width:auto;">
           <INPUT TYPE="button" VALUE="<?php print gettext('History');?>"  onClick="do_hist_win();" STYLE = 'margin-top:0;'/><BR />
           <INPUT TYPE="button" VALUE="<?php print get_text("Cancel"); ?>"  onClick="do_cancel(document.add);" STYLE = 'margin-top:4px;'/><BR />
-          <INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onclick= "do_reset(this.form);"  STYLE = 'margin-top:4px;'/><BR />
+          <INPUT TYPE="reset" VALUE="<?php print get_text("Reset"); ?>" onclick= "do_reset(document.add);"  STYLE = 'margin-top:4px;'/><BR />
           <INPUT TYPE="button" VALUE="<?php print get_text("Next"); ?>"  onClick="validate(document.add);" STYLE = 'margin-top:4px;'/><BR />
 <?php if (!($in_win )) { ?>
           <INPUT TYPE="button" VALUE="<?php print get_text("Action"); ?>"  onClick="do_act_window('action_w.php?ticket_id=<?php echo $ticket_id;?>');" STYLE = 'margin-top:4px;'/> <BR />
@@ -2329,7 +2339,8 @@ function do_bldg(in_val) {									// called with zero-based array index - 3/29/
 	if (myMarker) {myMarker.setMap(null);}	// clear existing/default icon 
 
 	var obj_bldg = bldg_arr[in_val];						// nth object
-	document.add.frm_street.value = obj_bldg.bldg_street;
+//	document.add.frm_street.value = obj_bldg.bldg_street;	- limit to 96 chars - ex; str.substring(1, 4) gets 1-3; 
+	document.add.frm_street.value = (obj_bldg.bldg_name+ "/" +obj_bldg.bldg_street+ "/" + document.add.frm_street.value).substring(0, 96);	// limit to 96 chars 
 	document.add.frm_city.value = obj_bldg.bldg_city;
 	document.add.frm_state.value = obj_bldg.bldg_state;
 	if (document.add.frm_lat) {
@@ -2356,9 +2367,10 @@ if (mysql_num_rows($result_bldg) > 0) {
 	$sel_str .= "\t<option value = '' selected>Select building</option>\n";
 	echo "\n\t var bldg_arr = new Array();\n";
 	while ($row_bldg = stripslashes_deep(mysql_fetch_assoc($result_bldg))) {
-		extract ($row_bldg);
-		$sel_str .= "\t<option value = {$i} >{$name}</option>\n";		
-		echo "\t var bldg={ bldg_name:\"{$name}\", bldg_street:\"{$street}\", bldg_city:\"{$city}\", bldg_state:\"{$state}\", bldg_lat:\"{$lat}\", bldg_lon:\"{$lon}\", bldg_info:\"{$information}\"};\n";
+//			4/27/2014
+		$sel_str .= "\t<option value = {$i} >{$row_bldg['name']}</option>\n";		
+		echo "\t var bldg={ bldg_name:\"{$row_bldg['name']}\", bldg_street:\"{$row_bldg['street']}\", bldg_city:\"{$row_bldg['city']}\", 
+			bldg_state:\"{$row_bldg['state']}\", bldg_lat:\"{$row_bldg['lat']}\", bldg_lon:\"{$row_bldg['lon']}\", bldg_info:\"{$row_bldg['information']}\"};\n";
 		echo "\t bldg_arr.push(bldg);\n";		// object onto array
 		$i++;
 		}		// end while ()

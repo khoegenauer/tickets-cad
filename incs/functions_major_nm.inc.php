@@ -27,6 +27,7 @@
 11/3/2012 facilities beds handling added
 5/20/2013 - revised get_elapsed_time calls, corrected function show_ticket()
 5/26/2013 added 'hide_booked' variable handling
+5/7/2014 removed redundant show_actions call
 */
 
 @session_start();
@@ -1829,7 +1830,7 @@ function show_ticket($id,$print='false', $search = FALSE) {								/* show speci
     <DIV id='loc_warnings' style='z-index: 1000; display: none; height: 100px; width: 100%; font-size: 1.5em; font-weight: bold; border: 2px outset #707070;'></DIV>
 <?php
     print do_ticket($row, max(320, intval($_SESSION['scr_width']* 0.4)), $search) ;				// 2/25/09
-    print show_actions($row['id'], "date", FALSE, TRUE);		/* lists actions and patient data belonging to ticket */
+//  print show_actions($row['id'], "date", FALSE, TRUE);		/* lists actions and patient data belonging to ticket */
 
     print "</TR>";
     print "<TR CLASS='odd' ><TD COLSPAN='2' CLASS='print_TD'>";

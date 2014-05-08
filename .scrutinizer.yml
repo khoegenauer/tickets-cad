@@ -18,7 +18,7 @@ tools:
                 ask_for_return_if_not_inferrable:  true
                 ask_for_param_type_annotation:  true
     php_code_sniffer: 
-        enabled: true
+        enabled: false
         config:
             ruleset: ../PHPCompatibility/ruleset.xml
             ruleset: ../Pheromone/example_base_ruleset.xml

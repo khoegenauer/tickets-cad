@@ -189,8 +189,10 @@
 8/28/13 Added Mail list notifies to function notify user
 9/6/13 Added tracking type - mobile tracker for mobile screen
 9/10/13 Added function show_unit_log() and function list_files(...)
+9/10/13 Added Xastir APR tracking
 1/4/2014 added gmaps link to sending mail
 4/7/2014 ICS message code revised
+5/8/14 Revised call to format_sb_date_2 in function show_log to correct incorrect display.
 */
 error_reporting(E_ALL);
 
@@ -1027,9 +1029,9 @@ function show_messages($the_id, $theSort="date", $links, $display) {			/* list m
  * @see
  * @since
  */
-function show_log($theid, $show_cfs=FALSE) {								// 11/20/09, 10/20/12
+function show_log($theid, $show_cfs=FALSE) {	// 11/20/09, 10/20/12, 5/8/14
     global $evenodd ;	// class names for alternating table row colors
-    require './incs/log_codes.inc.php'; 									// 9/29/10
+    require './incs/log_codes.inc.php'; 		// 9/29/10
 
     $query = "
         SELECT *,
@@ -1064,7 +1066,7 @@ function show_log($theid, $show_cfs=FALSE) {								// 11/20/09, 10/20/12
         $print .=
             "<TD TITLE =\"{$row['unitname']}\">". 	shorten($row['unitname'], 16) . "</TD>".
             "<TD TITLE =\"{$row['theinfo']}\">". 	shorten($row['theinfo'], 16) . "</TD>".
-            "<TD TITLE =\"" . format_date_2(strtotime($row['when'])) . "\">". format_sb_date_2(strtotime($row['when'])) . "</TD>".
+            "<TD TITLE =\"" . format_date_2(strtotime($row['when'])) . "\">". format_sb_date_2($row['when']) . "</TD>".
             "<TD TITLE =\"{$row['thename']}\">". 	shorten($row['thename'], 8) . "</TD>".
             "<TD TITLE =\"{$row['from']}\">". 		substr($row['from'], -4) . "</TD>".
             "</TR>";

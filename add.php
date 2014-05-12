@@ -123,6 +123,8 @@ if ($istest) {print "_POST"; dump($_POST);}
 4/7/2014 - revised per nm operation
 4/27/2014 - correction re bldg per YG email
 5/7/2014 - prepend bldg name to location string
+5/9/2014 - revised query for consistency with edit.php
+5/10/2014 - revised bldg sql to preclude field-name collision
 */
 
 if (empty($_GET)) {
@@ -553,6 +555,8 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 //		mail_it ($to_str, $text, $theId, $text_sel=1;, $txt_only = FALSE)
 
         var params = "frm_to="+ escape(theAddresses) + "&frm_text=" + escape(theText) + "&frm_ticket_id=" + theId + "&text_sel=1";		// ($to_str, $text, $ticket_id)   10/15/08
+		alert(520);
+		alert(escape(theAddresses));
         sendRequest ('mail_it.php',handleResult, params);	// ($to_str, $text, $ticket_id)   10/15/08
         }			// end function do notify()
 /**
@@ -2358,19 +2362,37 @@ function do_bldg(in_val) {									// called with zero-based array index - 3/29/
 	}		// end function do_bldg()
 
 <?php								// 3/29/2014
+//		5/10/2014
+$query_bldg = "SELECT 
+		`name`			AS `bldg_name`,
+		`apply_to`		AS `bldg_apply_to`,
+		`street`		AS `bldg_street`,
+		`city`			AS `bldg_city`,
+		`state`			AS `bldg_state`,
+		`information`	AS `bldg_information`,
+		`lat`			AS `bldg_lat`,
+		`lon`			AS `bldg_lon`
+		FROM `$GLOBALS[mysql_prefix]places` WHERE `apply_to` = 'bldg' ORDER BY `bldg_name` ASC";		
 
-$query_bldg = "SELECT * FROM `$GLOBALS[mysql_prefix]places` WHERE `apply_to` = 'bldg' ORDER BY `name` ASC";		// types in use
 $result_bldg = mysql_query($query_bldg) or do_error($query_bldg, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 if (mysql_num_rows($result_bldg) > 0) {
-	$i = 0;
+	$i = 0;  // bldg array index
 	$sel_str = "<select name='bldg' onChange = 'do_bldg(this.options[this.selectedIndex].value); '>\n";
 	$sel_str .= "\t<option value = '' selected>Select building</option>\n";
 	echo "\n\t var bldg_arr = new Array();\n";
 	while ($row_bldg = stripslashes_deep(mysql_fetch_assoc($result_bldg))) {
 //			4/27/2014
-		$sel_str .= "\t<option value = {$i} >{$row_bldg['name']}</option>\n";		
-		echo "\t var bldg={ bldg_name:\"{$row_bldg['name']}\", bldg_street:\"{$row_bldg['street']}\", bldg_city:\"{$row_bldg['city']}\", 
-			bldg_state:\"{$row_bldg['state']}\", bldg_lat:\"{$row_bldg['lat']}\", bldg_lon:\"{$row_bldg['lon']}\", bldg_info:\"{$row_bldg['information']}\"};\n";
+        extract ($row_bldg);
+		$sel_str .= "\t<option value = {$i} >{$bldg_name}</option>\n";		
+		
+		echo "\t var bldg={ bldg_name:\"{$bldg_name}\",
+			 bldg_street:\"{$bldg_street}\",
+			 bldg_city:\"{$bldg_city}\",
+			 bldg_state:\"{$bldg_state}\",
+			 bldg_lat:\"{$bldg_lat}\",
+			 bldg_lon:\"{$bldg_lon}\",
+			 bldg_info:\"{$bldg_information}\"};\n";
+
 		echo "\t bldg_arr.push(bldg);\n";		// object onto array
 		$i++;
 		}		// end while ()

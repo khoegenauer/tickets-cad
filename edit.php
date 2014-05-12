@@ -97,6 +97,8 @@ $zoom_tight = FALSE;		// default is FALSE (no tight zoom); replace with a decima
 7/3/2013 - socket2me conditioned on internet and broadcast settings, reverse geo field size limits corrected
 9/10/13 - Added "Address About" and "To Address" fields and File storage
 11/18/13 - Fix for notifies on edit.
+5/10/2014 - revised bldg sql to preclude field-name collision
+
 */
     $addrs = FALSE;										// notifies address array doesn't exist
 
@@ -1121,7 +1123,17 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
             }
 
 			echo "\n<SCRIPT>\n";
-			$query_bldg = "SELECT * FROM `$GLOBALS[mysql_prefix]places` WHERE `apply_to` = 'bldg' ORDER BY `name` ASC";		// types in use
+											// 5/9/2014
+			$query_bldg = "SELECT 
+					`name`			AS `bldg_name`,
+					`street`		AS `bldg_street`,
+					`city`			AS `bldg_city`,
+					`state`			AS `bldg_state`,
+					`information`	AS `bldg_information`,
+					`lat`			AS `bldg_lat`,
+					`lon`			AS `bldg_lon`
+					FROM `$GLOBALS[mysql_prefix]places` WHERE `apply_to` = 'bldg' ORDER BY `bldg_name` ASC";		
+
 			$result_bldg = mysql_query($query_bldg) or do_error($query_bldg, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 			if (mysql_num_rows($result_bldg) > 0) {
 				$i = 0;
@@ -1130,8 +1142,15 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
 				echo "\n\t var bldg_arr = new Array();\n";
 				while ($row_bldg = stripslashes_deep(mysql_fetch_assoc($result_bldg))) {
 					extract ($row_bldg);
-					$sel_str .= "\t<option value = {$i} >{$name}</option>\n";		
-					echo "\t var bldg={ bldg_name:\"{$name}\", bldg_street:\"{$street}\", bldg_city:\"{$city}\", bldg_state:\"{$state}\", bldg_lat:\"{$lat}\", bldg_lon:\"{$lon}\", bldg_info:\"{$information}\"};\n";
+					$sel_str .= "\t<option value = {$i} >{$bldg_name}</option>\n";		
+																	// define the bldg object
+					echo "\t var bldg={ bldg_name:\"{$bldg_name}\",
+						 bldg_street:\"{$bldg_street}\",
+						 bldg_city:\"{$bldg_city}\",
+						 bldg_state:\"{$bldg_state}\",
+						 bldg_lat:\"{$bldg_lat}\",
+						 bldg_lon:\"{$bldg_lon}\",
+						 bldg_info:\"{$bldg_information}\"};\n";
 					echo "\t bldg_arr.push(bldg);\n";		// object onto array
 					$i++;
 					}		// end while ()

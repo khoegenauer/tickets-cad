@@ -765,6 +765,40 @@ Changes for Tickets 2.41G
 
 246.  Various other fixes
 
-February '14
+Changes for 2.41H
+
+247.  Additional ICS forms now available (now supports 205, 205a, 213 and 214.
+
+248.  Fix to Whitepages Looup
+
+249.  Fix to KML file display.
+
+250.  New system setting to restrict unit level users from viewing other data on the system apart from the mobile
+      or Responder Mobile pages. Default for this is switched off, if you want to restrict units set the system setting 
+      "restrict Units" to 1.
+
+Changes for 2.41J
+
+251.  Fix to KML display, fixes issue with polygons showing filled even though they shouldn't be.
+
+252.  A 'buildings' capability has been added to the existing 'places' operation.  Using it when callers often  
+      identify location by building name - as in residential and campus complexes - facilitates rapid  incident
+      location, saving precious seconds in writing new incidents.
+
+253.  Revision to mail handling defaulting assigned units to be checked ready to send.
+
+254.  As usual, various fixes.
+
+Changes for 2.41K
+
+255.  Fix to KML display for new incident and edit incident.
+
+256.  Fixed email sending from portal when using smtp mail.
+
+257.  Fixed issue with messages stored for responder who no longer exists.
+
+258.  Revised link within notify email.
+
+June '14
 Arnie Shore
 Andy Harvey, UK

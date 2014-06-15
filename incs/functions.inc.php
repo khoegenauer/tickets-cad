@@ -2071,9 +2071,9 @@ function is_closed($id) {/* is ticket closed? */
  * @see
  * @since
  */
-function is_super() {				// added 6/9/08
+function is_super() {				// added 6/9/08, 6/12/14
 
-    return ($_SESSION['level'] == $GLOBALS['LEVEL_SUPER']);		// 5/11/10
+    return ((array_key_exists('level', $_SESSION)) && ($_SESSION['level'] == $GLOBALS['LEVEL_SUPER']));		// 5/11/10, 4/29/14
     }
 /**
  * is_administrator
@@ -2089,7 +2089,7 @@ function is_super() {				// added 6/9/08
  */
 function is_administrator() {		/* is user admin or super? */
 
-    return (($_SESSION['level'] == $GLOBALS['LEVEL_ADMINISTRATOR']) || ($_SESSION['level'] == $GLOBALS['LEVEL_SUPER']));		// 5/11/10
+    return ((array_key_exists('level', $_SESSION)) && (($_SESSION['level'] == $GLOBALS['LEVEL_ADMINISTRATOR']) || ($_SESSION['level'] == $GLOBALS['LEVEL_SUPER'])));		// 5/11/10, 4/29/14
     }
 /**
  * is_admin
@@ -2105,7 +2105,7 @@ function is_administrator() {		/* is user admin or super? */
  */
 function is_admin() {		/* is user admin but not super? */
 
-    return (($_SESSION['level'] == $GLOBALS['LEVEL_ADMINISTRATOR']));		// 10/26/11
+    return ((array_key_exists('level', $_SESSION)) && ($_SESSION['level'] == $GLOBALS['LEVEL_ADMINISTRATOR']));		// 10/26/11, 4/29/14
     }
 /**
  * is_guest
@@ -2121,7 +2121,7 @@ function is_admin() {		/* is user admin but not super? */
  */
 function is_guest() {				/* is user guest? */
 
-    return (($_SESSION['level'] == $GLOBALS['LEVEL_GUEST']) || ($_SESSION['level'] == $GLOBALS['LEVEL_MEMBER']));				// 6/25/10
+    return ((array_key_exists('level', $_SESSION)) && (($_SESSION['level'] == $GLOBALS['LEVEL_GUEST']) || ($_SESSION['level'] == $GLOBALS['LEVEL_MEMBER'])));				// 6/25/10, 4/29/14
     }
 /**
  * is_member
@@ -2137,7 +2137,7 @@ function is_guest() {				/* is user guest? */
  */
 function is_member() {				/* is user member? */
 
-    return (($_SESSION['level'] == $GLOBALS['LEVEL_MEMBER']));				// 7/2/10
+    return ((array_key_exists('level', $_SESSION)) && ($_SESSION['level'] == $GLOBALS['LEVEL_MEMBER']));				// 7/2/10, 4/29/14
     }
 /**
  * is_user
@@ -2153,7 +2153,7 @@ function is_member() {				/* is user member? */
  */
 function is_user() {					/* is user operator/dispatcher? */
 
-    return ($_SESSION['level'] == $GLOBALS['LEVEL_USER']);		// 5/11/10
+    return ((array_key_exists('level', $_SESSION)) && ($_SESSION['level'] == $GLOBALS['LEVEL_USER']));		// 5/11/10, 4/29/14
     }
 /**
  * is_unit
@@ -2169,7 +2169,7 @@ function is_user() {					/* is user operator/dispatcher? */
  */
 function is_unit() {					/* is user unit? */
 
-    return ($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']);						// 7/12/10
+    return ((array_key_exists('level', $_SESSION)) && ($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']));						// 7/12/10, 4/29/14
     }
 /**
  * is_statistics
@@ -2185,7 +2185,7 @@ function is_unit() {					/* is user unit? */
  */
 function is_statistics() {					/* is user statistics? */
 
-    return ($_SESSION['level'] == $GLOBALS['LEVEL_STATISTICS']);						// 10/23/12
+    return ((array_key_exists('level', $_SESSION)) && ($_SESSION['level'] == $GLOBALS['LEVEL_STATISTICS']));						// 10/23/12, 4/29/14
     }
 /**
  * is_service_user
@@ -2201,7 +2201,7 @@ function is_statistics() {					/* is user statistics? */
  */
 function is_service_user() {					/* is user service user? */
 
-    return ($_SESSION['level'] == $GLOBALS['LEVEL_SERVICE_USER']);						// 10/23/12
+    return ((array_key_exists('level', $_SESSION)) && ($_SESSION['level'] == $GLOBALS['LEVEL_SERVICE_USER']));						// 10/23/12, 4/29/14
     }
 /**
  * see_buttons
@@ -2216,7 +2216,7 @@ function is_service_user() {					/* is user service user? */
  * @since
  */
 function see_buttons() {
-    return (($_SESSION['level'] == $GLOBALS['LEVEL_ADMINISTRATOR']) || ($_SESSION['level'] == $GLOBALS['LEVEL_SUPER']) || ($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']) || ($_SESSION['level'] == $GLOBALS['LEVEL_USER']) || ($_SESSION['level'] == $GLOBALS['LEVEL_MEMBER']));		// 10/11/12
+    return ((array_key_exists('level', $_SESSION)) && (($_SESSION['level'] == $GLOBALS['LEVEL_ADMINISTRATOR']) || ($_SESSION['level'] == $GLOBALS['LEVEL_SUPER']) || ($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']) || ($_SESSION['level'] == $GLOBALS['LEVEL_USER']) || ($_SESSION['level'] == $GLOBALS['LEVEL_MEMBER'])));		// 10/11/12, 4/29/14
     }
 /**
  * may_email
@@ -3233,7 +3233,6 @@ function do_kml() {									// emits JS for kml-type files in noted directory - 
         $temp = explode ("/", $_SERVER['REQUEST_URI']);
         $temp[count($temp)-1] = substr($dir, 2);				// home subdir
 		$server_str = "./kml_files/";
-//		$server_str = "http://" . $_SERVER['SERVER_NAME'] .":" .  $_SERVER['SERVER_PORT'] . implode("/", $temp) . "/";
 		$i=1;
         while (false !== ($filename = readdir($dh))) {
             switch (get_ext($filename)) {						// drop all other types, incl directories
@@ -3241,7 +3240,7 @@ function do_kml() {									// emits JS for kml-type files in noted directory - 
                 case "kmz":
                 case "xml":
                     $url = $server_str . $filename;
-					echo "\tvar xml_" . $i . " = new GeoXml(\"xml_" . $i . "\", map, \"" . $url . "\", {nozoom: true});\n";
+					echo "\twindow.xml_" . $i . " = new GeoXml(\"xml_" . $i . "\", map, \"" . $url . "\", {nozoom: true});\n";
 					echo "xml_" . $i . ".parse();";
 					$i++;
                     break;
@@ -3252,7 +3251,7 @@ function do_kml() {									// emits JS for kml-type files in noted directory - 
                     $lines = file($the_addr );
                     foreach ($lines as $line_num => $line) {				// Loop through our array.
 						if(isValidURL( trim($line))) {
-							echo "\tvar xml_" . $i . " = new GeoXml(\"xml_" . $i . "\", map, \"" . $url . "\", {nozoom: true});\n";
+							echo "\twindow.xml_" . $i . " = new GeoXml(\"xml_" . $i . "\", map, \"" . $url . "\", {nozoom: true});\n";
 							echo "xml_" . $i . ".parse();";
                             }
 						$i++;
@@ -3508,6 +3507,9 @@ function mail_it($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_onl
                     $message .= "{$gt}: " . get_type($t_row['in_types_id']) . $eol;
                     break;
                 case "J":
+					if ( $GLOBALS['NM_LAT_VAL'] != $t_row['lat'] ) {						// 1/4/2014
+						$message .= "Map: http://maps.google.com/?q=loc:" . $t_row['lat'] . "," . $t_row['lng'] .  $eol;
+						}
                     $gt = get_text("Addr");
                     $str = "";
                     $str .= (empty($t_row['street']))? 	""  : $t_row['street'] . " " ;
@@ -3522,10 +3524,6 @@ function mail_it($to_str, $smsg_to_str, $text, $ticket_id, $text_sel=1, $txt_onl
                     $str3 = "";
                     $str3 .= (empty($t_row['to_address']))? 	""  : $t_row['to_address'] . " " ;
                     $message .= empty($str3) ? "" : "{$gt}: " . $str3 . $eol;
-           					if ( $GLOBALS['NM_LAT_VAL'] != $t_row['lat'] ) {						// 1/4/2014
-					             	$message .= "Map: http://maps.google.com/?q=loc:" . $t_row['lat'] . "," . $t_row['lng'] .  $eol;
-					        	    }
-
                     break;
                 case "K":
                     $gt = get_text("Description");
@@ -5499,7 +5497,22 @@ function get_unit() {									//			returns unit index string - 3/19/11
                 }
             }		// end if/else
         }		// end function get_unit()
-
+/**
+ * 
+ * 
+ */
+function get_respondername($id) {
+	$query = "SELECT `id`, `name`, `handle` FROM `$GLOBALS[mysql_prefix]responder` WHERE `id`=" . $id . " LIMIT 1";
+	$result = mysql_query($query) or do_error($query, $query, mysql_error(), basename( __FILE__), __LINE__);
+	if ((mysql_num_rows($result))==0)  {
+		$ret_val = "NA";
+		} else {
+		$row = stripslashes_deep(mysql_fetch_array($result));
+		$ret_val = $row['handle'];
+		}
+	return $ret_val;
+	}
+	
 /**
  * shut_down
  * Insert description here

@@ -206,7 +206,7 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 			}
 
 	function set_marker_position(id, theLat, theLng) {
-		if(rmarkers) {
+		if((rmarkers) && (rmarkers[id])) {
 			var theCurrent = rmarkers[id].getPosition();
 			var currentLat = theCurrent.lat().toFixed(6);
 			var currentLng = theCurrent.lng().toFixed(6);	

@@ -156,6 +156,18 @@ if($_GET['frm_patient'] == "") {
     $result	= mysql_query($query) or do_error($query,'mysql_query() failed', mysql_error(), basename( __FILE__), __LINE__);
     if ($result) {
         do_log($GLOBALS['LOG_NEW_REQUEST'], $_SESSION['user_id']);
+		$to_str1 = "";
+		$smsg_to_str1 = "";
+		$subject_str1 = "";
+		$text_str1 = "";	
+		$to_str2 = "";
+		$smsg_to_str2 = "";
+		$subject_str2 = "";
+		$text_str2 = "";		
+		$to_str3 = "";
+		$smsg_to_str3 = "";
+		$subject_str3 = "";
+		$text_str3 = "";				
         $the_summary = "New Request from " . $userName . "\r\n";
         $the_summary .= get_text('Scope') . ": " . $_GET['frm_scope'] . "\r\n\r\n";
         $the_summary .= get_text('Patient') . " name: " . $_GET['frm_patient'] . "\r\n";
@@ -176,30 +188,42 @@ if($_GET['frm_patient'] == "") {
         $the_summary .= get_text('Request Date') . ": " . format_date_2(strtotime($request_date)) . "\r\n";
         $addrs = notify_newreq($_SESSION['user_id']);		// returns array of adddr's for notification, or FALSE
         if ($addrs) {				// any addresses?
-            $to_str = implode("|", $addrs);
-            $smsg_to_str = "";
-            $subject_str = "New " . get_text('Service User') . " Request";
-            $text_str = "A new request has been loaded by " . $userName . " Dated " . $now . ". \r\nPlease log on to Tickets and check\n\n";
-            $text_str .= "Request Summary\r\n" . $the_summary;
-            do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
+			$to_str1 = implode("|", $addrs);
+			$smsg_to_str1 = "";
+			$subject_str1 = "New " . get_text('Service User') . " Request";
+			$text_str1 = "A new request has been loaded by " . $userName . " Dated " . $now . ". \r\nPlease log on to Tickets and check\n\n"; 
+			$text_str1 .= "Request Summary\r\n" . $the_summary;
+//			do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
             }				// end if/else ($addrs)
         if ($the_email != "") {				// any addresses?
-            $to_str = $the_email;
-            $smsg_to_str = "";
-            $subject_str = "Your request " . $scope . " has been registered";
-            $text_str = "Your Request " . $scope . " has been registered\r\n";
-            $text_str .= "Request Summary\n\n" . $the_summary;
-            do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
+			$to_str2 = $the_email;
+			$smsg_to_str2 = "";
+			$subject_str2 = "Your request " . $scope . " has been registered";
+			$text_str2 = "Your Request " . $scope . " has been registered\r\n"; 
+			$text_str2 .= "Request Summary\n\n" . $the_summary;
+//			do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);	
             }				// end if/else ($the_email)
 		if ($userEmail != "") {				// any addresses?
-			$to_str = $userEmail;
-			$smsg_to_str = "";
-			$subject_str = "Your request " . $scope . " has been registered";
-			$text_str = "Your Request " . $scope . " has been registered\r\n"; 
-			$text_str .= "Request Summary\n\n" . $the_summary;
-			do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);	
+			$to_str3 = $userEmail;
+			$smsg_to_str3 = "";
+			$subject_str3 = "Your request " . $scope . " has been registered";
+			$text_str3 = "Your Request " . $scope . " has been registered\r\n"; 
+			$text_str3 .= "Request Summary\n\n" . $the_summary;
+//			do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);	
 			}				// end if/else ($userEmail)	
         $ret_arr[0] = 100;
+		$ret_arr[1] = $to_str1;
+		$ret_arr[2] = $smsg_to_str1;
+		$ret_arr[3] = $subject_str1;
+		$ret_arr[4] = $text_str1;	
+		$ret_arr[5] = $to_str2;
+		$ret_arr[6] = $smsg_to_str2;
+		$ret_arr[7] = $subject_str2;
+		$ret_arr[8] = $text_str2;
+		$ret_arr[9] = $to_str3;
+		$ret_arr[10] = $smsg_to_str3;
+		$ret_arr[11] = $subject_str3;
+		$ret_arr[12] = $text_str3;		
         } else {
         $ret_arr[0] = 999;
         }

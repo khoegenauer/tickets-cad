@@ -4539,7 +4539,7 @@ print get_buttons_inner2();	//	4/12/12
 <?php
 
     print do_ticket($row, $col_width, $search) ;				// 2/25/09
-//  print show_actions($row['id'], "date", FALSE, TRUE);		/* lists actions and patient data belonging to ticket */
+    print show_actions($row['id'], "date", FALSE, TRUE);		/* lists actions and patient data belonging to ticket */
     $column_arr = explode(',', get_msg_variable('columns'));
     print "<TD ALIGN='left'>";
     print "<TABLE ID='theMap' BORDER=0><TR CLASS='odd' ><TD  ALIGN='center'>

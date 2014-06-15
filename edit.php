@@ -1064,7 +1064,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
             }
 
         else {				// OK, do form - 7/7/09, 4/1/11
-
+             $tick_id = $_GET['id'];
              $query = "SELECT *,UNIX_TIMESTAMP(problemstart) AS problemstart,
                  UNIX_TIMESTAMP(problemend) AS problemend,
                  UNIX_TIMESTAMP(booked_date) AS booked_date,
@@ -1076,7 +1076,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
                  FROM `$GLOBALS[mysql_prefix]ticket` `t`
                  LEFT JOIN `$GLOBALS[mysql_prefix]in_types` `ty` ON (`t`.`in_types_id` = `ty`.`id`)
                  LEFT JOIN `$GLOBALS[mysql_prefix]user` `u` ON (`t`.`_by` = `u`.`id`)
-                 WHERE `t`.`id`='$id' LIMIT 1";
+                 WHERE `t`.`id`='$tick_id' LIMIT 1";
             $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 
             $row = stripslashes_deep(mysql_fetch_array($result));
@@ -1169,7 +1169,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
                 print "<TR CLASS='spacer'><TD CLASS='spacer' ALIGN='center'>&nbsp;</TD></TR><TR><TD>";	//	6/10/11
                 print "<TR CLASS='odd'><TD ALIGN='left'>";
                 }
-            print add_header($id, TRUE);
+            print add_header($tick_id, TRUE);
             print "</TD></TR>\n";
             print "<TR CLASS='odd'><TD>&nbsp;</TD></TR>\n";
             if ($gmaps) {	//	6/10/11
@@ -1178,13 +1178,13 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
             print "<TR CLASS='even' valign='top'><TD CLASS='print_TD' ALIGN='left' style='width: 100%;' COLSPAN=99>";
             }
 
-            print "<FORM NAME='edit' METHOD='post' onSubmit='return validate(document.edit);' ACTION='" . basename(__FILE__) . "?id=$id&action=update'>";
+            print "<FORM NAME='edit' METHOD='post' onSubmit='return validate(document.edit);' ACTION='" . basename(__FILE__) . "?id=$tick_id&action=update'>";
             if ($gmaps) {	//	6/10/11
                 print "<TABLE BORDER='0' ID='data'>\n";
                 } else {
                 print "<TABLE BORDER='0' ID='data' WIDTH='100%'>\n";
                 }
-            print "<TR CLASS='odd'><TD ALIGN='center' COLSPAN=3><FONT CLASS='$theClass'><B>" . gettext('Edit Run Ticket') . "</FONT> (#{$id})</B></TD></TR>";
+            print "<TR CLASS='odd'><TD ALIGN='center' COLSPAN=3><FONT CLASS='$theClass'><B>" . gettext('Edit Run Ticket') . "</FONT> (#{$tick_id})</B></TD></TR>";
             print "<TR CLASS='odd'><TD ALIGN='center' COLSPAN=3><FONT CLASS='header'><FONT SIZE='-2'>(" . gettext('mouseover caption for help information') . ")</FONT></FONT><BR /><BR /></TD></TR>";
 			if (mysql_num_rows($result_bldg) > 0) {			// 4/7/2014
 ?>
@@ -1714,7 +1714,7 @@ if (!$disallow) {
  */
     function toglGrid() {						// toggle
         grid_bool = !grid_bool;
-        if (grid_bool) { grid = new Graticule(map_obj); }
+        if (grid_bool) { grid = new Graticule(map); }
         else 			{ grid.setMap(null); }
         }		// end function toglGrid()
 
@@ -1726,7 +1726,7 @@ if (!$disallow) {
         icons[<?php print $GLOBALS['SEVERITY_HIGH']; ?>] =  "./our_icons/red.png";		// red
         icons[<?php print $GLOBALS['SEVERITY_HIGH']; ?>+1] =  "./our_icons/white.png";	// white - not in use
 //										some globals
-        var map_obj = null;				// the map object - note GLOBAL
+        var map = null;				// the map object - note GLOBAL
         var myMarker;					// the marker object
         var lat_var;					// see init.js
         var lng_var;
@@ -1741,8 +1741,8 @@ if (!$disallow) {
         do_lng(in_obj.lng);
         find_warnings(in_obj.lat, in_obj.lng);	//	9/10/13
         do_ngs();
-		do_kml();
-<?php								// 6/2/2013
+<?php
+						// 6/2/2013
     if (intval(get_variable('reverse_geo'))==1) {
 ?>
         codeLatLng (in_obj.lat, in_obj.lng);				// 6/2/2013 do reverse geo
@@ -1756,7 +1756,7 @@ if (!$disallow) {
 <?php
         $the_icon_file = ($lat == $GLOBALS['NM_LAT_VAL'])? "./our_icons/question1.png" : "./markers/crosshair.png";
 ?>
-        map_obj = gmaps_v3_init(call_back, 'map_canvas',
+        map = gmaps_v3_init(call_back, 'map_canvas',
             <?php echo $lat;?>,
             <?php echo $lng;?>,
             <?php echo (get_variable('def_zoom')*2);?>,
@@ -1764,6 +1764,9 @@ if (!$disallow) {
             <?php echo get_variable('maptype');?>,
             false);
 
+<?php
+		do_kml();
+?>
 /**
  *
  * @param {type} lat
@@ -2027,7 +2030,7 @@ if (!$disallow) {
         if (loc == 1) { my_form.frm_ngs.value=LLtoOSGB(lat, lng, 5); }
         if (loc == 2) { my_form.frm_ngs.value=LLtoUTM(lat, lng, 5); }
 
-        map_obj.setCenter(new google.maps.LatLng(lat, lng), <?php print get_variable('def_zoom');?>);
+        map.setCenter(new google.maps.LatLng(lat, lng), <?php print get_variable('def_zoom');?>);
 
         var iconImg = new Image();														// obtain icon dimensions
         iconImg.src ='./markers/crosshair.png';
@@ -2038,9 +2041,9 @@ if (!$disallow) {
             position: dp_latlng,
             icon: myIcon,
             draggable: true,
-            map: map_obj
+            map: map
             });
-        myMarker.setMap(map_obj);		// add marker with icon
+        myMarker.setMap(map);		// add marker with icon
         if ((lat) && (lng)) {		//	8/14/13
             find_warnings(lng, lng);	//	9/10/13
             }
@@ -2058,7 +2061,7 @@ if (!$disallow) {
 			document.edit.frm_lng.value = document.edit.show_lng.value = obj_bldg.bldg_lon.toString();
 			}
 		if (obj_bldg.bldg_info.length > 0 ) {
-			var close_str = "<span onclick = \"$('bldg_info').style.display = 'none';\"><b><center><u>X</u></center></b></span>";
+			var close_str = "<span onclick = \"$('bldg_info').style = 'display:none';\"><b><center><u>X</u></center></b></span>";
 			$('bldg_info').innerHTML = obj_bldg.bldg_info + close_str;		// 
 			$('bldg_info').style.display = "inline";	
 			}

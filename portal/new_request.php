@@ -104,6 +104,8 @@ var theLat;
 var theLng;
 var showall = "yes";
 var ct = 1;
+var countmail = 0;
+var the_link = "";
 /**
  *
  * @returns {undefined}
@@ -384,23 +386,80 @@ function sub_request() {
         }
     }
 /**
+ * 
+ * 
+ */
+function pausejs(millis) {
+	var date = new Date();
+	var curDate = null;
+	do { curDate = new Date(); }
+	while(curDate-date < millis);
+	}
+/**
  *
  * @param {type} req
  * @returns {undefined}
  */
 function local_handleResult(req) {			// the called-back function
+	countmail = 0;
     var the_response=JSON.decode(req.responseText);
-    if (the_response[0] = 100) {
+    if (the_response[0] == 0) {
         $('waiting').style.display='none';
-        $('finish_but').style.display = "inline";
-        $('flag').innerHTML = "Request inserted successfully.";
-        } else {
-        $('waiting').style.display='none';
-        $('finish_but').style.display = "inline";
-        $('flag').innerHTML = "Couldn't insert your request at this time due to an error, please try again.";
-        }
+		$('result').style.display = 'inline-block';
+		the_link = "Could not insert new Ticket, please try again<BR /><BR /><BR /><BR />";		
+		the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
+		$('done').innerHTML = the_link;	
+		} else {
+		var to_str1 = the_response[1];
+		var smsg_to_str1 = the_response[2];
+		var subject_str1 = the_response[3];
+		var text_str1 = the_response[4];
+		var to_str2 = the_response[5];
+		var smsg_to_str2 = the_response[6];
+		var subject_str2 = the_response[7];
+		var text_str2 = the_response[8];
+		var to_str3 = the_response[9];
+		var smsg_to_str3 = the_response[10];
+		var subject_str3 = the_response[11];
+		var text_str3 = the_response[12];	
+		var randomnumber = Math.floor(Math.random()*99999999);	
+		if((to_str1 == "") && (smsg_to_str1 == "") && (text_str1 == "")) {
+			} else {
+			var url ="../do_send_mail.php?to_str=" + to_str1 + "&smsg_to_str=" + smsg_to_str1 + "&subject_str=" + subject_str1 + "&text_str=" + text_str1 + "&version=" + randomnumber;
+			sendRequest (url,mail_handleResult, "");
+			}
+		pausejs(2000);
+		if((to_str2 == "") && (smsg_to_str2 == "") && (text_str2 == "")) {
+			} else {
+			var url ="../do_send_mail.php?to_str=" + to_str2 + "&smsg_to_str=" + smsg_to_str2 + "&subject_str=" + subject_str2 + "&text_str=" + text_str2 + "&version=" + randomnumber;
+			sendRequest (url,mail_handleResult, "");
+			}
+		pausejs(2000);
+		if((to_str3 == "") && (smsg_to_str3 == "") && (text_str3 != "")) {
+			} else {
+			var url ="../do_send_mail.php?to_str=" + to_str3 + "&smsg_to_str=" + smsg_to_str3 + "&subject_str=" + subject_str3 + "&text_str=" + text_str3 + "&version=" + randomnumber;
+			}
+		the_link = "<SPAN>Your request has been inserted successfully</SPAN><BR /><BR /><BR /><BR />";		
+		the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
+//		the_link += "<BR /><BR />" + countmail + " messages have been sent";
+		if($('waiting')) {$('waiting').style.display='none';}
+		$('result').style.display = 'inline-block';
+		$('done').innerHTML = the_link;
     window.opener.get_requests();
+		}
     }			// end function local handleResult
+/**
+ * 
+ * 
+ */	
+function mail_handleResult(req) {
+	var the_response=JSON.decode(req.responseText);	
+	if(parseInt(the_response[0]) > 0) {
+		countmail++;
+		}
+	}
+	
+
 /**
  *
  * @param {type} url
@@ -735,21 +794,19 @@ $orig_fac_menu .= "<SELECT>";
                         <TD class='td_label' COLSPAN=2 style='text-align: center;'><FONT COLOR='RED' SIZE='-1'>*</FONT>&nbsp;&nbsp;&nbsp;<B>Required</B></TD></TD>
                     </TR>
                 </TABLE>
-                <INPUT NAME='requester' TYPE='hidden' SIZE='24' VALUE="<?php print $_SESSION['user_id'];?>">
-                <INPUT NAME='frm_lat' TYPE='hidden' SIZE='10' VALUE="">
-                <INPUT NAME='frm_lng' TYPE='hidden' SIZE='10' VALUE="">
+                <INPUT NAME='requester' TYPE='hidden' SIZE='24' VALUE="<?php print $_SESSION['user_id'];?>" />
+                <INPUT NAME='frm_lat' TYPE='hidden' SIZE='10' VALUE="" />
+                <INPUT NAME='frm_lng' TYPE='hidden' SIZE='10' VALUE="" />
                 </FORM>
                 <FORM METHOD='POST' NAME="gout_form" action="index.php">
                 <INPUT TYPE='hidden' NAME = 'logout' VALUE = 1 />
                 </FORM>
             </DIV>
         </DIV>
-        <DIV id='waiting' style='display: none;'></DIV>
-        <DIV id='confirmation'>
-            <BR /><BR /><BR />
-            <DIV id='flag'></DIV>
-            <BR /><BR />
-            <SPAN id='finish_but' CLASS ='plain' style='float: none; display: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.close();"><?php print gettext('Finish');?></SPAN>
+	</DIV>
+	<DIV id='waiting' style='display: none; text-align: center;'></DIV>
+	<DIV id='result' style='position: absolute; width: 95%; text-align: center; margin: 10px;'>
+		<DIV id='done'></DIV>
         </DIV>
 </BODY>
 </HTML>

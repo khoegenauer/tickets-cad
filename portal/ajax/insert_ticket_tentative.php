@@ -193,6 +193,18 @@ if ($result) {
 
 if ($last_id != 0) {
     $ret_arr[0] = $last_id;
+	$to_str1 = "";
+	$smsg_to_str1 = "";
+	$subject_str1 = "";
+	$text_str1 = "";	
+	$to_str2 = "";
+	$smsg_to_str2 = "";
+	$subject_str2 = "";
+	$text_str2 = "";		
+	$to_str3 = "";
+	$smsg_to_str3 = "";
+	$subject_str3 = "";
+	$text_str3 = "";	
     $the_summary = "Request from " . $the_requester . "\r\n";
   	$the_summary .= get_text('Scope') . ": " . $theScope . "\r\n\r\n";	
     $the_summary .= get_text('Patient') . " name: " . $row['the_name'] . "\r\n";
@@ -209,16 +221,28 @@ if ($last_id != 0) {
     $the_summary .= get_text('Request Date') . ": " . format_date_2(strtotime($row['request_date'])) . "\r\n";
 
     if ($the_email != "") {				// any addresses?
-        $to_str = $the_email;
-        $smsg_to_str = "";
-        $subject_str = "Your request " . $row['scope'] . " has been tentatively accepted";
-        $text_str = "Your Request " . $row['scope'] . " tentatively accepted\r\n";
-        $text_str .= "When a someone has been found to fulfil the job, the request will be fully accepted and you will recveive another email\r\n";
-        $text_str .= "Request Summary\n\n" . $the_summary;
-        do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
+		$to_str1 = $the_email;
+		$smsg_to_str1 = "";
+		$subject_str1 = "Your request " . $row['scope'] . " has been tentatively accepted";
+		$text_str1 = "Your Request " . $row['scope'] . " tentatively accepted\r\n"; 
+		$text_str1 .= "When a someone has been found to fulfil the job, the request will be fully accepted and you will recveive another email\r\n";
+		$text_str1 .= "Request Summary\n\n" . $the_summary;
+//		do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);	
         }				// end if/else ($the_email)
+	$ret_arr[1] = $to_str1;
+	$ret_arr[2] = $smsg_to_str1;
+	$ret_arr[3] = $subject_str1;
+	$ret_arr[4] = $text_str1;	
+	$ret_arr[5] = $to_str2;
+	$ret_arr[6] = $smsg_to_str2;
+	$ret_arr[7] = $subject_str2;
+	$ret_arr[8] = $text_str2;
+	$ret_arr[9] = $to_str3;
+	$ret_arr[10] = $smsg_to_str3;
+	$ret_arr[11] = $subject_str3;
+	$ret_arr[12] = $text_str3;	
     } else {
-    $ret_arr[0] = 999;
+	$ret_arr[0] = 0;
     }
 
 print json_encode($ret_arr);

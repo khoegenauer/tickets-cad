@@ -66,24 +66,36 @@ $query = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `status` = 'Closed', `clos
 $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 if (mysql_affected_rows() > 0) {
     $ret_arr[0] = 100;
+	$to_str1 = "";
+	$smsg_to_str1 = "";
+	$subject_str1 = "";
+	$text_str1 = "";	
+	$to_str2 = "";
+	$smsg_to_str2 = "";
+	$subject_str2 = "";
+	$text_str2 = "";		
+	$to_str3 = "";
+	$smsg_to_str3 = "";
+	$subject_str3 = "";
+	$text_str3 = "";	
     do_log($GLOBALS['LOG_CANCEL_REQUEST'], $_SESSION['user_id']);
     if ($the_email != "") {				// any addresses?
-        $to_str = $the_email;
-        $smsg_to_str = "";
-        $subject_str = "Your request " . $row['scope'] . " has been cancelled";
-        $text_str = "Your Request " . $row['scope'] . " has been cancelled\n\n";
-        $text_str .= "Thank you for your informing us of the change\n\n";
-        do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
+		$to_str1 = $the_email;
+		$smsg_to_str1 = "";
+		$subject_str1 = "Your request " . $row['scope'] . " has been cancelled";
+		$text_str1 = "Your Request " . $row['scope'] . " has been cancelled\n\n"; 
+		$text_str1 .= "Thank you for your informing us of the change\n\n";
+//		do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);	
         }				// end if/else ($addrs)
     $addrs = notify_newreq($_SESSION['user_id']);		// returns array of adddr's for notification, or FALSE
     if ($addrs) {				// any addresses?
-        $to_str = implode("|", $addrs);
-        $smsg_to_str = "";
-        $subject_str = "Service User request declined";
-        $text_str = "Service User Request " . $row['scope'] . " has been cancelled\n\n";
-        $text_str .= "This has been confirmed to Service User " . $the_requester . "\n\n";
-        $text_str .= "The Service User email address is " . $the_email . "\n\n";
-        do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
+		$to_str2 = implode("|", $addrs);
+		$smsg_to_str2 = "";
+		$subject_str2 = "Service User request declined";
+		$text_str2 = "Service User Request " . $row['scope'] . " has been cancelled\n\n"; 
+		$text_str2 .= "This has been confirmed to Service User " . $the_requester . "\n\n";
+		$text_str2 .= "The Service User email address is " . $the_email . "\n\n";
+//		do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);	
         }				// end if/else ($addrs)
     if ($the_ticket != 0) {
 		    $new_scope = "CANCELLED " . $the_scope;
@@ -91,7 +103,18 @@ if (mysql_affected_rows() > 0) {
         $query = "UPDATE `$GLOBALS[mysql_prefix]ticket` SET `scope` = '" . $new_scope . "', `description` = '" . $new_description . "' WHERE `id` = " . $the_ticket;
         $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
         }
-
+	$ret_arr[1] = $to_str1;
+	$ret_arr[2] = $smsg_to_str1;
+	$ret_arr[3] = $subject_str1;
+	$ret_arr[4] = $text_str1;	
+	$ret_arr[5] = $to_str2;
+	$ret_arr[6] = $smsg_to_str2;
+	$ret_arr[7] = $subject_str2;
+	$ret_arr[8] = $text_str2;
+	$ret_arr[9] = $to_str3;
+	$ret_arr[10] = $smsg_to_str3;
+	$ret_arr[11] = $subject_str3;
+	$ret_arr[12] = $text_str3;	
     } else {
     $ret_arr[0] = 999;
     }

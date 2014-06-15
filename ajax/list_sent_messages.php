@@ -68,15 +68,6 @@ $order = (isset($sort)) ? "ORDER BY `read_status`, " . $sort : "ORDER BY `date`"
 $order2 = (isset($way)) ? $way : "DESC";
 $actr=0;
 
-$query = "SELECT `id`, `name`, `handle` FROM `$GLOBALS[mysql_prefix]responder`";
-$result = mysql_query($query) or do_error($query, $query, mysql_error(), basename( __FILE__), __LINE__);
-$responderlist = array();
-$responderlist[0] = "NA";
-$caption = "Messages: ";
-while ($act_row = stripslashes_deep(mysql_fetch_assoc($result))) {
-    $responderlist[$act_row['id']] = $act_row['handle'];
-    }
-
 $the_user = $_SESSION['user_id'];
 
 $query = "SELECT *, `date` AS `date`, `_on` AS `_on`,
@@ -116,23 +107,17 @@ if (mysql_num_rows($result) == 0) { 				// 8/6/08
             if ($n == count($the_resp_ids)) {
                 $thesep = "";
                 }
-            $resp_names .= $responderlist[$val] . $thesep;
+			$resp_names .= get_respondername($val) . $thesep;
             $n++;
             }
-        $resp_name = (isset($responderlist[$the_responder])) ? $responderlist[$the_responder] : "INCOMING";
         $the_message = ($msg_row['message'] != "") ? strip_tags($msg_row['message']) : "";
         if ($msg_row['recipients'] == NULL) {
             $respstring = $resp_names;
             } else {
-            $responders = explode (" ", trim($msg_row['recipients']));	// space-separated list to array
+			$responders = explode (" ", trim($msg_row['recipients']));	// space-separated list to array#
             $sep = $respstring = "";
             for ($k=0 ;$k < count($responders);$k++) {				// build string of responder names
-                if (in_array($responders[$k], $responderlist)) {
                     $respstring .= $sep . $responders[$k];
-                    $sep = "<BR />";
-                    } else {
-                    $respstring .= $responders[$k];
-                    }
                 }
             }
 

@@ -245,7 +245,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 	     				{$_SESSION['user_id']}, 
 	     				addslashes({$GLOBALS['ACTION_COMMENT']}), 
 	     				'{$frm_asof}', 
-	     				addslashes({$responder}}
+	     				addslashes({$responder})
 	     				)";		
 
 

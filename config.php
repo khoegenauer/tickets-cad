@@ -2419,7 +2419,7 @@ if (mysql_num_rows($result)>0) {
             </TR>
 
         <TR ALIGN="left" VALIGN="baseline" CLASS='even'>
-            <TD CLASS='td_label' ALIGN='right'>&nbsp;<B><?php print gettext('Append {get_text("Incident")} nature');?>: </B></TD>
+            <TD CLASS='td_label' ALIGN='right'>&nbsp;<B><?php sprintf( gettext('Append %s nature'),get_text("Incident"));?>: </B></TD>
             <TD>&nbsp;
                 <SPAN STYLE='margin-left:40px'> <?php print gettext('No');?> &raquo; <INPUT TYPE='radio' NAME='frm_do_nature' VALUE="0" <?php print $do_nature_n ;?> /></SPAN>
                 <SPAN STYLE='margin-left:40px'> <?php print gettext('Yes');?> &raquo; <INPUT TYPE='radio' NAME='frm_do_nature' VALUE="1" <?php print $do_nature_y ;?> /></SPAN>

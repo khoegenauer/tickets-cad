@@ -183,14 +183,14 @@ else {
         //Send the message
     //	$result = $mailer->send($message, $failures);
         $failures="";
-        $caption = "Sent";
+        $caption = gettext("Sent");
         if (!($mailer->send($message, $failures))) {
             $errs = "";
             dump ($failures);
             foreach ($failures as $value) {
                 $errs .= $value . " ";
                 }
-            $caption = gettext('Mail to \'{$errs}\' failed');
+            $caption = sprintf(gettext('Mail to \'%s\' failed'), $errs);
             }
         else {
             if ($errors) {

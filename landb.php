@@ -840,7 +840,7 @@ function buildMap_c() {															// 'create' version - 691
         <TR VALIGN="baseline" CLASS="odd"><TD CLASS="td_label" ALIGN="left"><?php print gettext('Apply to');?>:</TD>
             <TD ALIGN='left' CLASS="td_label"  STYLE = 'white-space:nowrap;' >
                 <SPAN STYLE="margin-left: 20px;border:1px; width:20%"><?php print gettext('Base Map');?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_bm" onClick = "this.form.frm_use_with_bm.value=1;"/></SPAN>
-                <SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print get_text("Regions');?>");?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_r"  onClick = 	"this.form.frm_use_with_r.value=1;"/></SPAN>
+                <SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print get_text("Regions");?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_r"  onClick = 	"this.form.frm_use_with_r.value=1;"/></SPAN>
                 <SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Facilities');?>&nbsp;&raquo;&nbsp;<INPUT TYPE= "checkbox" NAME="box_use_with_f"  onClick = "this.form.frm_use_with_f.value=1;"/></SPAN>
                 <SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Unit Exclusion Zone');?>&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" NAME="box_use_with_u_ex"  onClick = "this.form.frm_use_with_u_ex.value=1;"/></SPAN>
                 <SPAN STYLE="border:1px; width:20%">&nbsp;&nbsp;<?php print gettext('Unit Ringfence');?>&nbsp;&raquo;&nbsp;<INPUT  TYPE= "checkbox" NAME="box_use_with_u_rf"  onClick = "this.form.frm_use_with_u_rf.value=1;"/></SPAN>

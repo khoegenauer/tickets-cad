@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TicketsCAD-2.40A\n"
-"POT-Creation-Date: 2014-04-16 01:57-0600\n"
-"PO-Revision-Date: 2014-04-16 02:15-0600\n"
+"POT-Creation-Date: 2014-06-14 08:18-0600\n"
+"PO-Revision-Date: 2014-06-14 23:51-0600\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.6.5\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;get_text\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -19,53 +19,53 @@ msgstr ""
 "X-Poedit-SearchPath-3: ./incs\n"
 "X-Poedit-SearchPath-4: ./portal\n"
 
-#: action.php:51 action_w.php:43
+#: action.php:51 action_w.php:44
 msgid "Tickets - Action Module"
 msgstr ""
 
-#: action.php:245 action_w.php:171 banner.php:247 circle.php:338 landb.php:384
-#: patient.php:190 patient_w.php:176 portal/new_request.php:335
+#: action.php:245 action_w.php:172 banner.php:247 circle.php:338 landb.php:384
+#: patient.php:193 patient_w.php:177 portal/new_request.php:335
 #, fuzzy
 msgid "Description is required"
 msgstr "Description"
 
-#: action.php:247 action_w.php:173
+#: action.php:247 action_w.php:174
 msgid "As-of date error - Year"
 msgstr ""
 
-#: action.php:248 action_w.php:174
+#: action.php:248 action_w.php:175
 msgid "As-of date error - Month"
 msgstr ""
 
-#: action.php:249 action_w.php:175
+#: action.php:249 action_w.php:176
 msgid "As-of date error - Day"
 msgstr ""
 
-#: action.php:250 action_w.php:176 patient.php:192 patient_w.php:178
+#: action.php:250 action_w.php:177 patient.php:195 patient_w.php:179
 msgid "As-of time error - Hours"
 msgstr ""
 
-#: action.php:251 action_w.php:177 patient.php:193 patient_w.php:179
+#: action.php:251 action_w.php:178 patient.php:196 patient_w.php:180
 msgid "As-of time error - Minutes"
 msgstr ""
 
-#: action.php:252 action_w.php:178 patient.php:194 patient_w.php:180
+#: action.php:252 action_w.php:179 patient.php:197 patient_w.php:181
 msgid "As-of date/time error - future?"
 msgstr ""
 
-#: action.php:256 action.php:305 action_w.php:182 add.php:1744 add_nm.php:1466
+#: action.php:256 action.php:305 action_w.php:183 add.php:1763 add_nm.php:1466
 #: banner.php:263 board.php:951 board.php:2353 circle.php:355 config.php:592
 #: config.php:638 config.php:667 config.php:684 config.php:700 config.php:1041
 #: config.php:1288 config.php:1315 do_direcs_mail.php:106 do_fac_mail.php:97
-#: do_indiv_mail.php:80 edit.php:651 edit_nm.php:353 fac_routes.php:386
+#: do_indiv_mail.php:80 edit.php:654 edit_nm.php:353 fac_routes.php:386
 #: fac_routes_nm.php:383 facilities.php:695 facilities.php:726
 #: facilities.php:1475 facilities_nm.php:458 file_upload.php:193
-#: hints_config.php:198 ics213.php:104 incs/functions_major.inc.php:1908
-#: incs/functions_major_nm.inc.php:669 install.php:108 landb.php:399
-#: mail.php:115 patient_w.php:184 portal/new_request.php:338
+#: hints_config.php:198 ics213.php:104 incs/functions_major.inc.php:1909
+#: incs/functions_major_nm.inc.php:670 install.php:108 landb.php:399
+#: mail.php:115 patient_w.php:185 portal/new_request.php:338
 #: quick_start.php:76 routes.php:1168 routes_nm.php:860 tables.php:547
-#: tables.php:636 tables.php:2040 tables/c_places.php:112
-#: tables/u_places.php:121 units.php:1341 units.php:2065 units_nm.php:544
+#: tables.php:636 tables.php:2040 tables/c_places.php:165
+#: tables/u_places.php:133 units.php:1341 units.php:2065 units_nm.php:544
 #: units_nm.php:791 warn_locations.php:395 warn_locations_nm.php:253
 msgid "Please correct the following and re-submit"
 msgstr ""
@@ -75,18 +75,18 @@ msgid "New Action record by"
 msgstr ""
 
 #: action.php:303 fac_routes.php:384 fac_routes_nm.php:381 facilities.php:1473
-#: incs/functions_major.inc.php:1906 incs/functions_major_nm.inc.php:667
+#: incs/functions_major.inc.php:1907 incs/functions_major_nm.inc.php:668
 #: routes.php:1166 routes_nm.php:858 units.php:2063 units_nm.php:789
 msgid "You cannot Hide all the regions"
 msgstr ""
 
-#: action.php:436 action_w.php:212 edit.php:1060 edit_nm.php:535
-#: edit_nm.php:556 incs/functions_major.inc.php:5401
-#: incs/functions_major_nm.inc.php:1673 patient_w.php:265
+#: action.php:436 action_w.php:213 edit.php:1063 edit_nm.php:535
+#: edit_nm.php:556 incs/functions_major.inc.php:5402
+#: incs/functions_major_nm.inc.php:1674 patient_w.php:266
 msgid "Invalid Ticket ID"
 msgstr ""
 
-#: action.php:438 action_w.php:214 patient_w.php:267
+#: action.php:438 action_w.php:215 patient_w.php:268
 #, fuzzy
 msgid "Please enter Description."
 msgstr "Description"
@@ -95,72 +95,72 @@ msgstr "Description"
 msgid "Action record has been added."
 msgstr ""
 
-#: action.php:480 board.php:2744 board.php:2762 config.php:2234
-#: config.php:2280 email_lists.php:183 fac_routes.php:517
+#: action.php:480 board.php:2744 board.php:2762 config.php:2232
+#: config.php:2278 email_lists.php:183 fac_routes.php:517
 #: fac_routes_nm.php:512 fileman.php:260 routes_i.php:92 routes_nm.php:588
 #: tables.php:1846 tables.php:1903 tables.php:1928 tables.php:2003
 #, fuzzy
 msgid "Continue"
 msgstr "Contact name"
 
-#: action.php:600 action_w.php:376
+#: action.php:600 action_w.php:396
 #, fuzzy
 msgid "Action deleted"
 msgstr "Action"
 
-#: action.php:609 action_w.php:385
+#: action.php:609 action_w.php:405
 msgid "Really delete action record"
 msgstr ""
 
-#: action.php:611 action_w.php:387 banner.php:827 banner.php:1275
+#: action.php:611 action_w.php:407 banner.php:827 banner.php:1275
 #: banner.php:1278 circle.php:884 circle.php:917 circle.php:1321
-#: circle.php:1324 circle.php:1369 config.php:2427
+#: circle.php:1324 circle.php:1369 config.php:2425
 #: incs/config.setcenter.inc.php:225 landb.php:829 landb.php:861
-#: landb.php:1221 landb.php:1224 landb.php:1268 patient.php:464
-#: patient_w.php:443 tables/c_un_status.php:38 tables/c_un_status.php:44
+#: landb.php:1221 landb.php:1224 landb.php:1268 patient.php:467
+#: patient_w.php:444 tables/c_un_status.php:38 tables/c_un_status.php:44
 #: tables/u_un_status.php:76 tables/u_un_status.php:104
 msgid "Yes"
 msgstr ""
 
-#: action.php:612 action.php:708 action.php:874 action_w.php:388
-#: action_w.php:478 action_w.php:544 add.php:2180 add_nm.php:2108
+#: action.php:612 action.php:708 action.php:874 action_w.php:408
+#: action_w.php:498 action_w.php:564 add.php:2201 add_nm.php:2108
 #: add_note.php:105 archive_message.php:299 banner.php:881 banner.php:1352
 #: board.php:839 board.php:987 board.php:990 board.php:1699 board.php:2018
 #: board.php:2298 board.php:2398 board.php:2625 capts.php:163 chat.php:537
 #: circle.php:942 circle.php:1399 class_init.php:92 close_in.php:105
 #: close_in.php:276 config.php:1021 config.php:1192 config.php:1266
 #: config.php:1366 config.php:1414 config.php:1526 config.php:1690
-#: config.php:1863 config.php:1967 config.php:2103 config.php:2223
-#: config.php:2250 config.php:2435 config.php:2452 config.php:2558
-#: config.php:2627 delete_module.php:108 do_all_mail.php:219
+#: config.php:1861 config.php:1965 config.php:2101 config.php:2221
+#: config.php:2248 config.php:2433 config.php:2450 config.php:2556
+#: config.php:2625 delete_module.php:108 do_all_mail.php:219
 #: do_all_mail.php:239 do_direcs_mail.php:165 do_fac_mail.php:148
 #: do_indiv_mail.php:111 do_unit_mail.php:410 do_unit_mail.php:484
-#: do_unit_mail.php:662 do_unit_mail.php:691 edit.php:1642 edit_nm.php:837
+#: do_unit_mail.php:681 do_unit_mail.php:710 edit.php:1694 edit_nm.php:837
 #: edit_nm.php:838 fac_routes.php:744 fac_routes_nm.php:743
 #: facilities.php:2656 facilities.php:2955 facilities.php:3179
 #: facilities_nm.php:1345 facilities_nm.php:1538 facilities_nm.php:1671
 #: file_upload.php:445 ics213.php:445 ics213.php:455 incs/capts.inc.php:40
 #: incs/config.setcenter.inc.php:232 incs/full_scr.inc.php:219
 #: incs/full_scr.inc.php:2663 incs/full_scr.inc.php:3072
-#: incs/full_scr.inc.php:3088 incs/functions_major.inc.php:890
-#: incs/functions_major.inc.php:3675 incs/functions_major.inc.php:4113
-#: incs/functions_major.inc.php:4214 incs/functions_major_nm.inc.php:611
+#: incs/full_scr.inc.php:3088 incs/functions_major.inc.php:891
+#: incs/functions_major.inc.php:3676 incs/functions_major.inc.php:4114
+#: incs/functions_major.inc.php:4215 incs/functions_major_nm.inc.php:612
 #: landb.php:885 landb.php:1298 locatea.php:103 locatea.php:126
 #: locatea.php:148 log.php:85 log.php:101 log.php:197 mail.php:176
 #: mail_all.php:188 mail_all.php:200 message.php:609 native.php:86
-#: patient.php:465 patient.php:577 patient.php:724 patient_w.php:444
-#: patient_w.php:564 patient_w.php:611 patient_w.php:692
+#: patient.php:468 patient.php:580 patient.php:727 patient_w.php:445
+#: patient_w.php:565 patient_w.php:612 patient_w.php:693
 #: portal/import_requests.php:345 portal/import_requests.php:360
-#: rm/chat.php:98 rm/index.php:2257 rm/index.php:2279 road_conditions.php:1143
+#: rm/chat.php:98 rm/index.php:2259 rm/index.php:2281 road_conditions.php:1143
 #: road_conditions.php:1304 routes.php:1457 routes_i.php:719
 #: routes_nm.php:1041 search.php:298 smtp_test.php:112 stats_scr.php:1558
 #: t_tracker.php:131 t_tracker.php:166 t_tracker.php:180 tables.php:1251
 #: tables.php:1518 tables.php:1700 tables.php:2132 tables/c_conditions.php:100
 #: tables/c_courses_taken.php:65 tables/c_fac_types.php:42
-#: tables/c_in_types.php:57 tables/c_personnel.php:79 tables/c_places.php:152
+#: tables/c_in_types.php:57 tables/c_personnel.php:79 tables/c_places.php:259
 #: tables/c_region.php:64 tables/c_un_status.php:75 tables/c_unit_types.php:42
 #: tables/u_conditions.php:98 tables/u_fac_types.php:40
-#: tables/u_in_types.php:64 tables/u_personnel.php:78 tables/u_places.php:162
+#: tables/u_in_types.php:64 tables/u_personnel.php:78 tables/u_places.php:198
 #: tables/u_region.php:64 tables/u_un_status.php:158
 #: tables/u_unit_types.php:40 top.php:1752 unit_log_view.php:97
 #: unit_ticket_log.php:133 unit_ticket_log.php:155 units.php:4075
@@ -172,17 +172,17 @@ msgstr ""
 msgid "Cancel"
 msgstr "Cancel"
 
-#: action.php:632 action_w.php:408
+#: action.php:632 action_w.php:428
 #, fuzzy
 msgid "Action updated"
 msgstr "Action"
 
-#: action.php:646 action_w.php:422
+#: action.php:646 action_w.php:442
 #, fuzzy
 msgid "Edit Action"
 msgstr "Add Action"
 
-#: action.php:649 action.php:761 action_w.php:425 action_w.php:492
+#: action.php:649 action.php:761 action_w.php:445 action_w.php:512
 #: add_note.php:103 banner.php:824 banner.php:1271 circle.php:881
 #: circle.php:1316 config.php:1260 fac_routes.php:131 fac_routes.php:1332
 #: fac_routes_nm.php:128 fac_routes_nm.php:1328 facilities.php:2065
@@ -190,20 +190,20 @@ msgstr "Add Action"
 #: facilities_nm.php:1282 facilities_nm.php:1495 facilities_nm.php:1640
 #: incs/capts.inc.php:56 incs/config.inc.php:392 incs/full_scr.inc.php:1764
 #: incs/full_scr.inc.php:1774 incs/full_scr.inc.php:2494
-#: incs/full_scr.inc.php:2835 incs/functions.inc.php:3532
-#: incs/functions_mail.php:83 incs/functions_major.inc.php:3033
-#: incs/functions_major.inc.php:3055 incs/functions_major.inc.php:3583
-#: incs/functions_major.inc.php:3967 incs/functions_major.inc.php:4966
-#: incs/functions_major.inc.php:5720 incs/functions_major_nm.inc.php:905
+#: incs/full_scr.inc.php:2835 incs/functions.inc.php:3531
+#: incs/functions_mail.php:83 incs/functions_major.inc.php:3034
+#: incs/functions_major.inc.php:3056 incs/functions_major.inc.php:3584
+#: incs/functions_major.inc.php:3968 incs/functions_major.inc.php:4967
+#: incs/functions_major.inc.php:5721 incs/functions_major_nm.inc.php:906
 #: incs/functions_nm.inc.php:2290 install_module.php:282 landb.php:826
-#: landb.php:1217 m/sp_add_note.php:111 m/sp_edit_call.php:185 patient.php:555
-#: patient.php:720 patient_w.php:542 patient_w.php:674
+#: landb.php:1217 m/sp_add_note.php:111 m/sp_edit_call.php:185 patient.php:558
+#: patient.php:723 patient_w.php:543 patient_w.php:675
 #: portal/ajax/insert_request.php:174 portal/ajax/insert_ticket.php:209
 #: portal/ajax/insert_ticket_tentative.php:207 portal/new_request.php:729
 #: portal/request.php:762 portal/request.php:862 portal/request.php:983
 #: portal/requests.php:267 portal/requests.php:340 quick_start.php:1011
-#: quick_start.php:1109 quick_start.php:1179 reports.php:1245
-#: rm/ajax/ticket_detail.php:189 rm/index.php:936 road_conditions.php:1403
+#: quick_start.php:1109 quick_start.php:1179 reports.php:1248
+#: rm/ajax/ticket_detail.php:189 rm/index.php:938 road_conditions.php:1403
 #: routes_i.php:603 search.php:235 search.php:277 tables/c_fac_types.php:25
 #: tables/c_in_types.php:23 tables/c_region.php:34 tables/c_un_status.php:42
 #: tables/c_unit_types.php:25 tables/u_conditions.php:49
@@ -220,14 +220,14 @@ msgstr "Add Action"
 msgid "Description"
 msgstr "Description"
 
-#: action.php:679 action.php:847 action_w.php:449 action_w.php:516
+#: action.php:679 action.php:847 action_w.php:469 action_w.php:536
 #: board.php:2026 board.php:2252 board.php:3083 incs/config.inc.php:303
-#: incs/full_scr.inc.php:2445 incs/functions_major.inc.php:3509
-#: incs/functions_major.inc.php:3527
+#: incs/full_scr.inc.php:2445 incs/functions_major.inc.php:3510
+#: incs/functions_major.inc.php:3528
 msgid "NA"
 msgstr ""
 
-#: action.php:700 action.php:865 action_w.php:470 action_w.php:534
+#: action.php:700 action.php:865 action_w.php:490 action_w.php:554
 #: banner.php:647 board.php:2241 board.php:2619 circle.php:761
 #: fac_routes.php:1229 fac_routes.php:1335 fac_routes.php:1379
 #: fac_routes_nm.php:1227 fac_routes_nm.php:1331 fac_routes_nm.php:1375
@@ -236,13 +236,13 @@ msgstr ""
 #: incs/full_scr.inc.php:2497 incs/full_scr.inc.php:2513
 #: incs/full_scr.inc.php:2533 incs/full_scr.inc.php:2553
 #: incs/full_scr.inc.php:2572 incs/full_scr.inc.php:2589
-#: incs/full_scr.inc.php:2839 incs/functions_major.inc.php:3017
-#: incs/functions_major.inc.php:3420 incs/functions_major.inc.php:3586
-#: incs/functions_major.inc.php:3601 incs/functions_major.inc.php:3887
-#: incs/functions_major.inc.php:3975 incs/functions_major.inc.php:4970
-#: incs/functions_major.inc.php:5724 incs/functions_major_nm.inc.php:905
-#: incs/functions_major_nm.inc.php:1544 landb.php:693 patient.php:571
-#: patient.php:722 patient_w.php:690 road_conditions.php:806 routes_i.php:502
+#: incs/full_scr.inc.php:2839 incs/functions_major.inc.php:3018
+#: incs/functions_major.inc.php:3421 incs/functions_major.inc.php:3587
+#: incs/functions_major.inc.php:3602 incs/functions_major.inc.php:3888
+#: incs/functions_major.inc.php:3976 incs/functions_major.inc.php:4971
+#: incs/functions_major.inc.php:5725 incs/functions_major_nm.inc.php:906
+#: incs/functions_major_nm.inc.php:1545 landb.php:693 patient.php:574
+#: patient.php:725 patient_w.php:691 road_conditions.php:806 routes_i.php:502
 #: routes_i.php:606 routes_i.php:631 routes_nm.php:1588 tracks.php:409
 #: tracks.php:625 tracks.php:650 tracks_hh.php:397 tracks_hh.php:562
 #: tracks_hh.php:587 units.php:175 units.php:2834 units.php:2855
@@ -251,23 +251,23 @@ msgstr ""
 msgid "As of"
 msgstr "As of"
 
-#: action.php:709 action_w.php:479
+#: action.php:709 action_w.php:499
 msgid "Form reset"
 msgstr ""
 
-#: action.php:710 action.php:876 action_w.php:480 action_w.php:546
-#: add.php:2182 add_nm.php:2110 add_note.php:107 add_note.php:109
+#: action.php:710 action.php:876 action_w.php:500 action_w.php:566
+#: add.php:2203 add_nm.php:2110 add_note.php:107 add_note.php:109
 #: archive_message.php:245 banner.php:883 banner.php:1362 board.php:994
 #: board.php:2631 capts.php:165 circle.php:944 circle.php:1409
-#: close_in.php:278 config.php:2437 do_unit_mail.php:408 do_unit_mail.php:483
-#: do_unit_mail.php:660 edit.php:1647 facilities.php:2658 facilities.php:2957
+#: close_in.php:278 config.php:2435 do_unit_mail.php:408 do_unit_mail.php:483
+#: do_unit_mail.php:679 edit.php:1699 facilities.php:2658 facilities.php:2957
 #: facilities_nm.php:1347 facilities_nm.php:1540 incs/capts.inc.php:99
 #: incs/full_scr.inc.php:2662 incs/full_scr.inc.php:3071
-#: incs/full_scr.inc.php:3087 incs/functions_major.inc.php:889
-#: incs/functions_major.inc.php:3674 incs/functions_major.inc.php:4112
-#: incs/functions_major.inc.php:4213 incs/functions_major_nm.inc.php:610
+#: incs/full_scr.inc.php:3087 incs/functions_major.inc.php:890
+#: incs/functions_major.inc.php:3675 incs/functions_major.inc.php:4113
+#: incs/functions_major.inc.php:4214 incs/functions_major_nm.inc.php:611
 #: landb.php:887 landb.php:1309 mail_all.php:186 message.php:431
-#: patient.php:726 patient_w.php:694 quick_start.php:887 quick_start.php:971
+#: patient.php:729 patient_w.php:695 quick_start.php:887 quick_start.php:971
 #: quick_start.php:995 quick_start.php:1051 quick_start.php:1079
 #: quick_start.php:1163 road_conditions.php:1145 road_conditions.php:1306
 #: search.php:298 tables.php:2131 units.php:4077 units.php:4432
@@ -276,31 +276,31 @@ msgstr ""
 msgid "Next"
 msgstr "Next"
 
-#: action.php:754 action_w.php:489 incs/capts.inc.php:27
-#: incs/functions.inc.php:2022 incs/functions_major.inc.php:3048
-#: incs/functions_nm.inc.php:1089 main.php:941
+#: action.php:754 action_w.php:509 incs/capts.inc.php:27
+#: incs/functions.inc.php:2025 incs/functions_major.inc.php:3049
+#: incs/functions_nm.inc.php:1089 main.php:937
 msgid "Add Action"
 msgstr "Add Action"
 
-#: action.php:778 add.php:2520 add.php:2682 add_nm.php:1909 add_nm.php:2050
+#: action.php:778 add.php:2616 add.php:2778 add_nm.php:1909 add_nm.php:2050
 #: close_in.php:199 close_in.php:217 do_all_mail.php:201 do_unit_mail.php:373
-#: do_unit_mail.php:623 edit.php:1311 edit.php:1539 edit_nm.php:763
-#: edit_nm.php:801 patient.php:557 patient.php:706 patient_w.php:544
-#: patient_w.php:678
+#: do_unit_mail.php:642 edit.php:1363 edit.php:1591 edit_nm.php:763
+#: edit_nm.php:801 patient.php:560 patient.php:709 patient_w.php:545
+#: patient_w.php:679
 msgid "Signal"
 msgstr ""
 
-#: action.php:780 add.php:2523 add.php:2685 add_nm.php:1836 add_nm.php:1912
+#: action.php:780 add.php:2619 add.php:2781 add_nm.php:1836 add_nm.php:1912
 #: add_nm.php:2053 add_note.php:92 banner.php:805 board.php:824 board.php:2345
 #: board.php:2348 board.php:2444 board.php:2486 chat.php:522 circle.php:862
-#: close_in.php:202 close_in.php:220 config.php:2944 course_report.php:84
+#: close_in.php:202 close_in.php:220 config.php:2942 course_report.php:84
 #: do_all_mail.php:204 do_unit_mail.php:376 do_unit_mail.php:393
-#: do_unit_mail.php:626 do_unit_mail.php:646 edit.php:1314 edit.php:1542
+#: do_unit_mail.php:645 do_unit_mail.php:665 edit.php:1366 edit.php:1594
 #: edit_nm.php:766 edit_nm.php:804 email_lists.php:370 email_lists.php:385
 #: email_lists.php:400 email_lists.php:453 email_lists.php:467
 #: facilities.php:2514 facilities.php:2815 incs/full_scr.inc.php:205
-#: landb.php:807 mail_edit.php:178 patient.php:560 patient.php:709
-#: patient_w.php:547 patient_w.php:647 patient_w.php:680 rm/chat.php:84
+#: landb.php:807 mail_edit.php:178 patient.php:563 patient.php:712
+#: patient_w.php:548 patient_w.php:648 patient_w.php:681 rm/chat.php:84
 #: stats_scr.php:1302 stats_scr.php:1336 stats_scr.php:1359 stats_scr.php:1369
 #: stats_scr.php:1402 stats_scr.php:1435 stats_scr.php:1468 stats_scr.php:1491
 #: stats_scr.php:1501 stats_scr.php:1524 stats_scr.php:1534 tables.php:1628
@@ -311,113 +311,113 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: action.php:875 action_w.php:545 config.php:1418 config.php:1530
-#: config.php:2456 config.php:2562 config.php:2631 install.php:1376
+#: action.php:875 action_w.php:565 config.php:1418 config.php:1530
+#: config.php:2454 config.php:2560 config.php:2629 install.php:1376
 #, fuzzy
 msgid "Reset form"
 msgstr "Reset"
 
-#: action_w.php:254
+#: action_w.php:274
 msgid "Action record has been added"
 msgstr ""
 
-#: action_w.php:257 add_note.php:142 audio.php:67 board.php:3139
+#: action_w.php:277 add_note.php:145 audio.php:67 board.php:3139
 #: call_hist.php:102 class_init.php:77 close_in.php:79 course_report.php:96
 #: do_all_mail.php:251 do_direcs_mail.php:176 do_fac_mail.php:175
-#: do_indiv_mail.php:123 do_unit_mail.php:707 gtrack.php:51 gtrack.php:157
+#: do_indiv_mail.php:123 do_unit_mail.php:726 gtrack.php:51 gtrack.php:157
 #: incident_popup.php:251 incident_popup_nm.php:182 latitude.php:46
 #: latitude.php:176 log.php:140 mail_all.php:212 map_popup.php:153
 #: native.php:117 nearby.php:84 opena.php:99 opengts.php:143 opengts.php:161
-#: opengts.php:202 opengts.php:216 patient_w.php:313 routes.php:872
+#: opengts.php:202 opengts.php:216 patient_w.php:314 routes.php:872
 #: routes_nm.php:583 single.php:73 tables.php:2244 test_glat.php:40
 #: test_glat.php:195 test_instam.php:122 test_instam.php:153
 #: test_instam.php:173 warnloc_popup.php:182 warnloc_popup_nm.php:136
 msgid "Finished"
 msgstr ""
 
-#: action_w.php:257
+#: action_w.php:277
 #, fuzzy
 msgid "Action added!"
 msgstr "Action"
 
-#: add.php:453 facilities.php:2372 facilities_nm.php:1108 file_upload.php:296
+#: add.php:459 facilities.php:2372 facilities_nm.php:1108 file_upload.php:296
 #: portal/import_requests.php:254 units_nm.php:1313
 msgid "Attached file is too large!"
 msgstr ""
 
-#: add.php:456 facilities.php:2375 facilities_nm.php:1111 file_upload.php:299
+#: add.php:462 facilities.php:2375 facilities_nm.php:1111 file_upload.php:299
 #: units_nm.php:1316
 msgid "Error uploading file"
 msgstr ""
 
-#: add.php:524 add.php:690 add_nm.php:331 add_nm.php:513 edit_nm.php:512
+#: add.php:530 add.php:698 add_nm.php:331 add_nm.php:513 edit_nm.php:512
 msgid "Tickets - Add Module"
 msgstr ""
 
-#: add.php:546 add.php:675 add.php:1755 add_nm.php:486 add_nm.php:1478
+#: add.php:552 add.php:683 add.php:1774 add_nm.php:486 add_nm.php:1478
 #: board.php:821 board.php:1885 board.php:2226 board.php:2426 board.php:2974
-#: close_in.php:371 do_unit_mail.php:470 edit.php:354 edit.php:662
-#: edit_nm.php:55 edit_nm.php:364 incident_popup.php:65
+#: close_in.php:371 config.php:2422 do_unit_mail.php:470 edit.php:356
+#: edit.php:665 edit_nm.php:55 edit_nm.php:364 incident_popup.php:65
 #: incident_popup_nm.php:58 incs/capts.inc.php:82 incs/full_scr.inc.php:1670
 #: incs/full_scr.inc.php:1814 incs/full_scr.inc.php:1936
-#: incs/functions.inc.php:3500 incs/functions.inc.php:3678
+#: incs/functions.inc.php:3499 incs/functions.inc.php:3677
 #: incs/functions_mail.php:63 incs/functions_mail.php:230
-#: incs/functions_major.inc.php:182 incs/functions_major_nm.inc.php:37
+#: incs/functions_major.inc.php:183 incs/functions_major_nm.inc.php:38
 #: incs/functions_nm.inc.php:2262 incs/log_codes.inc.php:24 index.php:853
 #: m/ajax/return_iw.php:33 m/sp_add_note.php:68 m/sp_tick.php:187
-#: m/sp_tick.php:283 main.php:940 map_popup.php:52 message.php:14
-#: nearby.php:69 nearby.php:70 reports.php:87 reports.php:616 rm/index.php:934
+#: m/sp_tick.php:283 main.php:936 map_popup.php:52 message.php:14
+#: nearby.php:69 nearby.php:70 reports.php:87 reports.php:616 rm/index.php:936
 #: search.php:290 unit_ticket_log.php:145
 msgid "Incident"
 msgstr "Incident"
 
-#: add.php:651 add_nm.php:462 rm/index.php:2303
+#: add.php:659 add_nm.php:462 rm/index.php:2305
 msgid "Main"
 msgstr ""
 
-#: add.php:656 add_nm.php:467
+#: add.php:664 add_nm.php:467
 msgid "Routes"
 msgstr ""
 
-#: add.php:663 add_nm.php:474
+#: add.php:671 add_nm.php:474
 msgid ""
 "Guest/member users may not add tickets on this system.  Contact "
 "administrator for further information."
 msgstr ""
 
-#: add.php:672 add_nm.php:483 edit.php:351 edit_nm.php:52
-#: incs/capts.inc.php:97 incs/functions.inc.php:3508
-#: incs/functions_mail.php:71 incs/functions_major.inc.php:179
-#: incs/functions_major_nm.inc.php:34 incs/functions_nm.inc.php:2270
+#: add.php:680 add_nm.php:483 edit.php:353 edit_nm.php:52
+#: incs/capts.inc.php:97 incs/functions.inc.php:3507
+#: incs/functions_mail.php:71 incs/functions_major.inc.php:180
+#: incs/functions_major_nm.inc.php:35 incs/functions_nm.inc.php:2270
 #: index.php:850 message.php:11 reports.php:84
 msgid "Nature"
 msgstr "Nature"
 
-#: add.php:673 add_nm.php:484 add_note.php:30 close_in.php:30 edit.php:352
+#: add.php:681 add_nm.php:484 add_note.php:30 close_in.php:30 edit.php:354
 #: edit_nm.php:53 help.php:13 incs/capts.inc.php:59 incs/full_scr.inc.php:1766
-#: incs/full_scr.inc.php:1775 incs/functions.inc.php:3556
-#: incs/functions_mail.php:108 incs/functions_major.inc.php:180
-#: incs/functions_major_nm.inc.php:35 incs/functions_nm.inc.php:2315
+#: incs/full_scr.inc.php:1775 incs/functions.inc.php:3555
+#: incs/functions_mail.php:108 incs/functions_major.inc.php:181
+#: incs/functions_major_nm.inc.php:36 incs/functions_nm.inc.php:2315
 #: index.php:851 m/sp_add_note.php:112 m/sp_close_in.php:18 message.php:12
 #: reports.php:85
 msgid "Disposition"
 msgstr "Disposition"
 
-#: add.php:674 add.php:2185 add_nm.php:485 ajax/get_replacetext.php:225
-#: config.php:112 config.php:1010 edit.php:353 edit_nm.php:54 help.php:12
-#: incs/capts.inc.php:106 incs/functions.inc.php:842
-#: incs/functions.inc.php:2509 incs/functions.inc.php:2510
-#: incs/functions.inc.php:3580 incs/functions_mail.php:133
-#: incs/functions_major.inc.php:181 incs/functions_major_nm.inc.php:36
+#: add.php:682 add.php:2206 add_nm.php:485 ajax/get_replacetext.php:225
+#: config.php:112 config.php:1010 edit.php:355 edit_nm.php:54 help.php:12
+#: incs/capts.inc.php:106 incs/functions.inc.php:845
+#: incs/functions.inc.php:2512 incs/functions.inc.php:2513
+#: incs/functions.inc.php:3579 incs/functions_mail.php:133
+#: incs/functions_major.inc.php:182 incs/functions_major_nm.inc.php:37
 #: incs/functions_nm.inc.php:175 incs/functions_nm.inc.php:598
 #: incs/functions_nm.inc.php:1373 incs/functions_nm.inc.php:1374
 #: incs/functions_nm.inc.php:2340 incs/functions_nm.inc.php:2504
 #: incs/log_codes.inc.php:21 index.php:852 m/incs/sp_functions.inc.php:279
-#: m/sp_act.php:110 message.php:13 mobile.php:71 patient.php:58
-#: patient.php:206 patient.php:335 patient.php:454 patient.php:463
-#: patient.php:505 patient.php:516 patient.php:666 patient_JF.php:42
+#: m/sp_act.php:110 message.php:13 mobile.php:71 patient.php:61
+#: patient.php:209 patient.php:338 patient.php:457 patient.php:466
+#: patient.php:508 patient.php:519 patient.php:669 patient_JF.php:42
 #: patient_JF.php:364 patient_JF.php:372 patient_JF.php:389 patient_JF.php:400
-#: patient_JF.php:420 patient_w.php:63 portal.php:511
+#: patient_JF.php:420 patient_w.php:64 portal.php:511
 #: portal/ajax/insert_request.php:161 portal/ajax/insert_ticket.php:200
 #: portal/ajax/insert_ticket_tentative.php:198 portal/new_request.php:193
 #: portal/new_request.php:661 portal/new_request.php:664
@@ -426,219 +426,219 @@ msgstr "Disposition"
 msgid "Patient"
 msgstr "Patient"
 
-#: add.php:676 add_nm.php:487 config.php:2861 edit.php:355 edit_nm.php:56
+#: add.php:684 add_nm.php:487 config.php:2859 edit.php:357 edit_nm.php:56
 #: incs/capts.inc.php:83 incs/full_scr.inc.php:144 incs/full_scr.inc.php:175
-#: incs/functions_major.inc.php:183 incs/functions_major.inc.php:353
-#: incs/functions_major.inc.php:412 incs/functions_major_nm.inc.php:38
-#: incs/functions_major_nm.inc.php:295 index.php:854 m/sp_map.php:720
+#: incs/functions_major.inc.php:184 incs/functions_major.inc.php:354
+#: incs/functions_major.inc.php:413 incs/functions_major_nm.inc.php:39
+#: incs/functions_major_nm.inc.php:296 index.php:854 m/sp_map.php:720
 #: m/sp_map_spec.php:661 m/sp_tick.php:52 m/sp_tick.php:316 m/sp_tick.php:320
-#: message.php:15 reports.php:88 reports.php:1031 reports.php:1032
-#: reports.php:1033 reports.php:1034 reports.php:1035 reports.php:1036
-#: reports.php:1037 reports.php:1465 rm/index.php:2308
+#: message.php:15 reports.php:88 reports.php:1034 reports.php:1035
+#: reports.php:1036 reports.php:1037 reports.php:1038 reports.php:1039
+#: reports.php:1040 reports.php:1468 rm/index.php:2310
 msgid "Incidents"
 msgstr "Incidents"
 
-#: add.php:798 add_nm.php:602 edit.php:484 fac_routes.php:1117
+#: add.php:807 add_nm.php:602 edit.php:487 fac_routes.php:1117
 #: fac_routes_nm.php:1115 facilities.php:3077
-#: incs/functions_major.inc.php:4638 units.php:603 warn_locations.php:1616
+#: incs/functions_major.inc.php:4639 units.php:603 warn_locations.php:1616
 msgid ""
 "Street view operation requires popups to be enabled. Please adjust your "
 "browser options - or else turn off the Call Board option."
 msgstr ""
 
-#: add.php:854 add_nm.php:658
+#: add.php:863 add_nm.php:658
 msgid ""
 "Call history operation requires popups to be enabled. Please adjust your "
 "browser options."
 msgstr ""
 
-#: add.php:963 add_nm.php:779 config.php:3165 incs/functions_major.inc.php:613
-#: incs/functions_major_nm.inc.php:375 units.php:3023 units.php:3232
+#: add.php:972 add_nm.php:779 config.php:3163 incs/functions_major.inc.php:614
+#: incs/functions_major_nm.inc.php:376 units.php:3023 units.php:3232
 msgid "Console"
 msgstr ""
 
-#: add.php:1110 add_nm.php:1033 board.php:1360 chat.php:135 edit.php:1836
-#: edit_nm.php:896 incs/full_scr.inc.php:539 incs/functions_major.inc.php:985
+#: add.php:1119 add_nm.php:1033 board.php:1360 chat.php:135 edit.php:1891
+#: edit_nm.php:896 incs/full_scr.inc.php:539 incs/functions_major.inc.php:986
 msgid "Unicode Character"
 msgstr ""
 
-#: add.php:1112 add_nm.php:1035 board.php:1362 chat.php:137 edit.php:1838
-#: edit_nm.php:898 incs/full_scr.inc.php:541 incs/functions_major.inc.php:987
+#: add.php:1121 add_nm.php:1035 board.php:1362 chat.php:137 edit.php:1893
+#: edit_nm.php:898 incs/full_scr.inc.php:541 incs/functions_major.inc.php:988
 msgid "cannot be encoded using standard URL encoding."
 msgstr ""
 
-#: add.php:1113 add_nm.php:1036 board.php:1363 chat.php:138 edit.php:1839
-#: edit_nm.php:899 incs/full_scr.inc.php:542 incs/functions_major.inc.php:988
+#: add.php:1122 add_nm.php:1036 board.php:1363 chat.php:138 edit.php:1894
+#: edit_nm.php:899 incs/full_scr.inc.php:542 incs/functions_major.inc.php:989
 msgid "URL encoding only supports 8-bit characters."
 msgstr ""
 
-#: add.php:1114 add_nm.php:1037 board.php:1364 chat.php:139 edit.php:1840
-#: edit_nm.php:900 incs/full_scr.inc.php:543 incs/functions_major.inc.php:989
+#: add.php:1123 add_nm.php:1037 board.php:1364 chat.php:139 edit.php:1895
+#: edit_nm.php:900 incs/full_scr.inc.php:543 incs/functions_major.inc.php:990
 msgid "A space (+) will be substituted."
 msgstr ""
 
-#: add.php:1147 add_nm.php:1070 board.php:1397 chat.php:172
+#: add.php:1156 add_nm.php:1070 board.php:1397 chat.php:172
 msgid "invalid escape combination near"
 msgstr ""
 
-#: add.php:1349 add_nm.php:1217 edit.php:1919
+#: add.php:1358 add_nm.php:1217 edit.php:1974
 msgid "lookup failed"
 msgstr ""
 
-#: add.php:1382 add_nm.php:647 add_nm.php:1250 edit.php:1943 edit_nm.php:1001
+#: add.php:1391 add_nm.php:647 add_nm.php:1250 edit.php:1998 edit_nm.php:1001
 msgid "10-digit phone no. required - any format"
 msgstr ""
 
-#: add.php:1435 edit.php:2000 facilities.php:790 portal.php:810 units.php:1407
+#: add.php:1445 edit.php:2076 facilities.php:790 portal.php:810 units.php:1407
 #: warn_locations.php:459
 msgid "City and State are required for location lookup."
 msgstr ""
 
-#: add.php:1460
+#: add.php:1472
 msgid ""
 "There is at least one location nearby with a warning registered for it."
 "\\nPlease view the Ticket to see the warnings"
 msgstr ""
 
-#: add.php:1475 edit.php:902 incs/functions_major_nm.inc.php:1874
+#: add.php:1487 edit.php:905 incs/functions_major_nm.inc.php:1875
 msgid ""
 "Locations warning operation requires popups to be enabled. Please adjust "
 "your browser options - or else turn off the Call Board option."
 msgstr ""
 
-#: add.php:1575 edit.php:2117
+#: add.php:1594 edit.php:2193
 msgid "Geocoder lookup failed due to"
 msgstr ""
 
-#: add.php:1593
+#: add.php:1612
 msgid "address unavailable"
 msgstr ""
 
-#: add.php:1703 add_nm.php:1431
+#: add.php:1722 add_nm.php:1431
 msgid "Run end-date is required for Status=Closed"
 msgstr ""
 
-#: add.php:1705 add_nm.php:1433
+#: add.php:1724 add_nm.php:1433
 msgid "Run end-date not allowed for Status=Open"
 msgstr ""
 
-#: add.php:1709 add_nm.php:1434
+#: add.php:1728 add_nm.php:1434
 msgid "Nature of Incident is required"
 msgstr ""
 
-#: add.php:1713 add_nm.php:1435 edit.php:647 edit_nm.php:349
+#: add.php:1732 add_nm.php:1435 edit.php:650 edit_nm.php:349
 msgid "Reported-by is required"
 msgstr ""
 
-#: add.php:1714 add_nm.php:1436 edit.php:648 edit_nm.php:350
+#: add.php:1733 add_nm.php:1436 edit.php:651 edit_nm.php:350
 #, fuzzy
 msgid "Incident name is required"
 msgstr "Incident name"
 
-#: add.php:1715 add_nm.php:1437 edit.php:649 edit_nm.php:351
+#: add.php:1734 add_nm.php:1437 edit.php:652 edit_nm.php:351
 msgid "Synopsis is required"
 msgstr ""
 
-#: add.php:1720 add_nm.php:1442
+#: add.php:1739 add_nm.php:1442
 msgid "Map position is required"
 msgstr ""
 
-#: add.php:1725 add_nm.php:1447
+#: add.php:1744 add_nm.php:1447
 msgid "Scheduled date time error - Hours"
 msgstr ""
 
-#: add.php:1726 add_nm.php:1448
+#: add.php:1745 add_nm.php:1448
 msgid "Scheduled date time error - Minutes"
 msgstr ""
 
-#: add.php:1730 add_nm.php:1452
+#: add.php:1749 add_nm.php:1452
 msgid "Run start time error - Hours"
 msgstr ""
 
-#: add.php:1731 add_nm.php:1453
+#: add.php:1750 add_nm.php:1453
 msgid "Run start time error - Minutes"
 msgstr ""
 
-#: add.php:1732 add_nm.php:1454
+#: add.php:1751 add_nm.php:1454
 msgid "Run start time error - future date"
 msgstr ""
 
-#: add.php:1736 add.php:1737 add.php:1738 add_nm.php:1458 add_nm.php:1459
+#: add.php:1755 add.php:1756 add.php:1757 add_nm.php:1458 add_nm.php:1459
 #: add_nm.php:1460
 msgid "Run start time error - future"
 msgstr ""
 
-#: add.php:1740 add_nm.php:1462
+#: add.php:1759 add_nm.php:1462
 msgid "Run end time error - Hours"
 msgstr ""
 
-#: add.php:1741 add_nm.php:1463
+#: add.php:1760 add_nm.php:1463
 msgid "Run end time error - Minutes"
 msgstr ""
 
-#: add.php:2001
+#: add.php:2022
 #, fuzzy
 msgid "Unavailable"
 msgstr "Available"
 
-#: add.php:2014 units.php:3051 units.php:3259
+#: add.php:2035 units.php:3051 units.php:3259
 msgid "You can't change this value"
 msgstr ""
 
-#: add.php:2066 add_nm.php:1717 incs/functions_major.inc.php:5186
-#: incs/functions_major.inc.php:5278 incs/functions_major.inc.php:5900
+#: add.php:2087 add_nm.php:1717 incs/functions_major.inc.php:5187
+#: incs/functions_major.inc.php:5279 incs/functions_major.inc.php:5901
 #, fuzzy
 msgid "Incident at Facility"
 msgstr "Originating Facility"
 
-#: add.php:2079 add_nm.php:1728
+#: add.php:2100 add_nm.php:1728
 #, fuzzy
 msgid "Receiving facility"
 msgstr "Receiving Facility"
 
-#: add.php:2093 edit.php:1339
+#: add.php:2114 edit.php:1391
 #, fuzzy
 msgid "Select User"
 msgstr "Service User"
 
-#: add.php:2127 add.php:2141 top.php:1179
+#: add.php:2148 add.php:2162 top.php:1179
 msgid ""
 "Station log operation requires popups to be enabled. Please adjust your "
 "browser options."
 msgstr ""
 
-#: add.php:2177 edit.php:1640 facilities.php:3408 facilities_nm.php:1797
-#: main.php:1186 main.php:1191 routes.php:1438 routes_nm.php:1023
+#: add.php:2198 edit.php:1692 facilities.php:3408 facilities_nm.php:1797
+#: main.php:1182 main.php:1187 routes.php:1438 routes_nm.php:1023
 #: units.php:5213 units_nm.php:2305
 msgid "Drag me"
 msgstr ""
 
-#: add.php:2179 add_nm.php:2107
+#: add.php:2200 add_nm.php:2107
 msgid "History"
 msgstr ""
 
-#: add.php:2181 add_nm.php:2109 add_note.php:106 banner.php:882
+#: add.php:2202 add_nm.php:2109 add_note.php:106 banner.php:882
 #: banner.php:1361 board.php:993 board.php:1222 board.php:2399 board.php:2630
 #: capts.php:164 chat.php:510 circle.php:943 circle.php:1408 close_in.php:277
 #: config.php:1022 config.php:1193 config.php:1267 config.php:1366
-#: config.php:1692 config.php:1863 config.php:1968 config.php:2103
-#: config.php:2225 config.php:2436 config.php:2793 do_all_mail.php:218
+#: config.php:1692 config.php:1861 config.php:1966 config.php:2101
+#: config.php:2223 config.php:2434 config.php:2791 do_all_mail.php:218
 #: do_direcs_mail.php:164 do_fac_mail.php:147 do_indiv_mail.php:110
-#: do_unit_mail.php:409 do_unit_mail.php:661 edit.php:1646 edit_nm.php:839
+#: do_unit_mail.php:409 do_unit_mail.php:680 edit.php:1698 edit_nm.php:839
 #: fac_routes.php:742 fac_routes_nm.php:741 facilities.php:2657
 #: facilities.php:2956 facilities_nm.php:1346 facilities_nm.php:1539
 #: ics213.php:243 ics213.php:444 incs/config.setcenter.inc.php:232
 #: landb.php:886 landb.php:1308 log.php:95 mail.php:170 mail_all.php:187
-#: mail_edit.php:221 native.php:85 patient.php:578 patient.php:725
-#: patient_w.php:565 patient_w.php:693 rm/chat.php:62 road_conditions.php:1144
+#: mail_edit.php:221 native.php:85 patient.php:581 patient.php:728
+#: patient_w.php:566 patient_w.php:694 rm/chat.php:62 road_conditions.php:1144
 #: road_conditions.php:1305 routes.php:1455 routes_i.php:721
 #: routes_nm.php:1039 search.php:298 smtp_test.php:112 tables.php:1252
 #: tables.php:1701 tables.php:2130 tables/c_conditions.php:101
 #: tables/c_courses_taken.php:66 tables/c_fac_types.php:43
-#: tables/c_in_types.php:58 tables/c_personnel.php:80 tables/c_places.php:153
+#: tables/c_in_types.php:58 tables/c_personnel.php:80
 #: tables/c_un_status.php:76 tables/c_unit_types.php:43
 #: tables/u_conditions.php:99 tables/u_fac_types.php:41
-#: tables/u_in_types.php:66 tables/u_personnel.php:79 tables/u_places.php:163
+#: tables/u_in_types.php:66 tables/u_personnel.php:79 tables/u_places.php:199
 #: tables/u_un_status.php:159 tables/u_unit_types.php:41
 #: unit_ticket_log.php:154 units.php:4076 units.php:4431 units_nm.php:1852
 #: warn_locations.php:1394 warn_locations.php:1534 warn_locations_nm.php:724
@@ -646,57 +646,57 @@ msgstr ""
 msgid "Reset"
 msgstr "Reset"
 
-#: add.php:2184 config.php:1009 m/sp_act.php:110 mobile.php:120
+#: add.php:2205 config.php:1009 m/sp_act.php:110 mobile.php:120
 msgid "Action"
 msgstr "Action"
 
-#: add.php:2264
+#: add.php:2285
 msgid "Superadmin Level"
 msgstr ""
 
-#: add.php:2282
+#: add.php:2303
 #, fuzzy
 msgid "Add Ticket"
 msgstr "Add Patient"
 
-#: add.php:2284 facilities_nm.php:1759
+#: add.php:2305 facilities_nm.php:1759
 msgid "Allocated"
 msgstr ""
 
-#: add.php:2284 add.php:2420 add.php:2438 add.php:2456 banner.php:841
+#: add.php:2305 add.php:2516 add.php:2534 add.php:2552 banner.php:841
 #: banner.php:1292 board.php:1860 circle.php:899 circle.php:1339
-#: config.php:2789 config.php:2791 config.php:2793 facilities.php:2794
-#: facilities.php:3109 facilities_nm.php:1759 incs/functions.inc.php:5422
-#: incs/functions_major.inc.php:310 incs/functions_major_nm.inc.php:260
-#: landb.php:1238 patient.php:624 units.php:3838 units.php:3854 units.php:3872
-#: units.php:4202 units.php:4214 units.php:4226 units.php:4714
-#: units_nm.php:1405 units_nm.php:1424 units_nm.php:1689 units_nm.php:1701
-#: units_nm.php:1713
+#: config.php:2787 config.php:2789 config.php:2791 facilities.php:2794
+#: facilities.php:3109 facilities_nm.php:1759 incs/functions.inc.php:5394
+#: incs/functions.inc.php:5421 incs/functions_major.inc.php:311
+#: incs/functions_major_nm.inc.php:261 landb.php:843 landb.php:1238
+#: patient.php:627 units.php:3838 units.php:3854 units.php:3872 units.php:4202
+#: units.php:4214 units.php:4226 units.php:4714 units_nm.php:1405
+#: units_nm.php:1424 units_nm.php:1689 units_nm.php:1701 units_nm.php:1713
 msgid "Regions"
 msgstr "Regions"
 
-#: add.php:2284 facilities_nm.php:1759 incs/functions_major.inc.php:310
-#: incs/functions_major_nm.inc.php:260
+#: add.php:2305 facilities_nm.php:1759 incs/functions_major.inc.php:311
+#: incs/functions_major_nm.inc.php:261
 #, fuzzy
 msgid "Currently Viewing"
 msgstr "Current situation"
 
-#: add.php:2307
+#: add.php:2328
 msgid "Map Location is required for nearby Incident lookup."
 msgstr ""
 
-#: add.php:2314 edit.php:2168
+#: add.php:2335 edit.php:2244
 msgid ""
 "Nearby operation requires popups to be enabled. Please adjust your browser "
 "options."
 msgstr ""
 
-#: add.php:2328 add_nm.php:1810
+#: add.php:2410 add_nm.php:1810
 msgid "New Call"
 msgstr ""
 
-#: add.php:2329 add_nm.php:1811 config.php:1393 config.php:1467
-#: config.php:2606 edit.php:1145 edit_nm.php:598 facilities.php:2437
+#: add.php:2411 add_nm.php:1811 config.php:1393 config.php:1467
+#: config.php:2604 edit.php:1188 edit_nm.php:598 facilities.php:2437
 #: facilities.php:2756 facilities_nm.php:1171 facilities_nm.php:1398
 #: incs/capts.inc.php:95 units.php:3821 units.php:4186 units_nm.php:1376
 #: units_nm.php:1673 warn_locations.php:1351 warn_locations.php:1474
@@ -704,7 +704,11 @@ msgstr ""
 msgid "mouseover caption for help information"
 msgstr ""
 
-#: add.php:2333 add_nm.php:1815 edit.php:1148 edit_nm.php:641
+#: add.php:2419 edit.php:1192
+msgid "Building"
+msgstr ""
+
+#: add.php:2429 add_nm.php:1815 edit.php:1200 edit_nm.php:641
 #: facilities.php:2563 facilities.php:2871 facilities.php:3103
 #: facilities_nm.php:1278 facilities_nm.php:1491 facilities_nm.php:1626
 #: incs/capts.inc.php:87 road_conditions.php:1401 search.php:236
@@ -714,30 +718,30 @@ msgstr ""
 msgid "Location"
 msgstr "Location"
 
-#: add.php:2338
+#: add.php:2434
 msgid "About Address - for instance, round the back, building number etc."
 msgstr ""
 
-#: add.php:2338 edit.php:1149
+#: add.php:2434 edit.php:1201
 #, fuzzy
 msgid "Address About"
 msgstr "Addr"
 
-#: add.php:2343 add_nm.php:1820 config.php:1675 config.php:1953 edit.php:1154
+#: add.php:2439 add_nm.php:1820 config.php:1675 config.php:1951 edit.php:1206
 #: edit_nm.php:642 facilities.php:2564 facilities.php:2872 facilities.php:3104
 #: facilities_nm.php:1279 facilities_nm.php:1492 facilities_nm.php:1627
 #: incs/capts.inc.php:44 incs/config.setcenter.inc.php:196
-#: incs/functions_major.inc.php:4376 incs/functions_major.inc.php:5167
-#: incs/functions_major.inc.php:5259 incs/functions_major.inc.php:5881
-#: incs/functions_major_nm.inc.php:1729 incs/functions_major_nm.inc.php:1918
-#: incs/functions_major_nm.inc.php:2011 incs/functions_major_nm.inc.php:2105
+#: incs/functions_major.inc.php:4377 incs/functions_major.inc.php:5168
+#: incs/functions_major.inc.php:5260 incs/functions_major.inc.php:5882
+#: incs/functions_major_nm.inc.php:1730 incs/functions_major_nm.inc.php:1919
+#: incs/functions_major_nm.inc.php:2012 incs/functions_major_nm.inc.php:2106
 #: message.php:110 portal/ajax/insert_request.php:163
 #: portal/ajax/insert_ticket.php:202
 #: portal/ajax/insert_ticket_tentative.php:200 portal/new_request.php:201
 #: portal/new_request.php:679 portal/new_request.php:694
 #: portal/request.php:751 portal/request.php:829 portal/request.php:953
-#: road_conditions.php:1402 search.php:275 tables/c_places.php:137
-#: tables/u_places.php:147 units.php:3984 units.php:4350 units.php:4711
+#: road_conditions.php:1402 search.php:275 tables/c_places.php:218
+#: tables/u_places.php:163 units.php:3984 units.php:4350 units.php:4711
 #: units_nm.php:1542 units_nm.php:1837 units_nm.php:2015
 #: warn_locations.php:1358 warn_locations.php:1485 warn_locations.php:1638
 #: warn_locations_nm.php:717 warn_locations_nm.php:774
@@ -745,91 +749,90 @@ msgstr "Addr"
 msgid "City"
 msgstr "City"
 
-#: add.php:2344 add_nm.php:1821 edit.php:1158 facilities.php:2564
+#: add.php:2440 add_nm.php:1821 edit.php:1210 facilities.php:2564
 #: facilities.php:2872 facilities_nm.php:1279 facilities_nm.php:1492
-#: incs/config.setcenter.inc.php:198 tables/c_places.php:141
-#: tables/u_places.php:151 units.php:3984 units.php:4350
+#: incs/config.setcenter.inc.php:198 units.php:3984 units.php:4350
 #: warn_locations.php:1358 warn_locations_nm.php:717 warn_locations_nm.php:774
 #, fuzzy
 msgid "Lookup location."
 msgstr "Location"
 
-#: add.php:2351 edit.php:1167
+#: add.php:2447 edit.php:1219
 msgid "Nearby?"
 msgstr ""
 
-#: add.php:2355 add_nm.php:1823 config.php:1677 config.php:1955 edit.php:1164
+#: add.php:2451 add_nm.php:1823 config.php:1677 config.php:1953 edit.php:1216
 #: edit_nm.php:646 facilities.php:2566 facilities.php:2874
 #: facilities_nm.php:1281 facilities_nm.php:1494 incs/capts.inc.php:133
-#: tables/c_places.php:138 tables/u_places.php:148 units.php:3986
+#: tables/c_places.php:219 tables/u_places.php:164 units.php:3986
 #: units.php:4352 units_nm.php:1544 units_nm.php:1839 units_nm.php:2017
 #: warn_locations.php:1360 warn_locations.php:1487 warn_locations_nm.php:719
 #: warn_locations_nm.php:776
 msgid "St"
 msgstr "St"
 
-#: add.php:2361 add_nm.php:1827 config.php:1679 config.php:1957 edit.php:1173
+#: add.php:2457 add_nm.php:1827 config.php:1679 config.php:1955 edit.php:1225
 #: edit_nm.php:649 incs/capts.inc.php:110 incs/full_scr.inc.php:1750
-#: incs/full_scr.inc.php:2838 incs/functions.inc.php:3540
-#: incs/functions_mail.php:91 incs/functions_major.inc.php:3022
-#: incs/functions_major.inc.php:3974 incs/functions_major.inc.php:4390
-#: incs/functions_major.inc.php:4969 incs/functions_major.inc.php:5177
-#: incs/functions_major.inc.php:5269 incs/functions_major.inc.php:5723
-#: incs/functions_major.inc.php:5891 incs/functions_major_nm.inc.php:1743
-#: incs/functions_major_nm.inc.php:1928 incs/functions_major_nm.inc.php:2021
-#: incs/functions_major_nm.inc.php:2115 incs/functions_nm.inc.php:2298
+#: incs/full_scr.inc.php:2838 incs/functions.inc.php:3539
+#: incs/functions_mail.php:91 incs/functions_major.inc.php:3023
+#: incs/functions_major.inc.php:3975 incs/functions_major.inc.php:4391
+#: incs/functions_major.inc.php:4970 incs/functions_major.inc.php:5178
+#: incs/functions_major.inc.php:5270 incs/functions_major.inc.php:5724
+#: incs/functions_major.inc.php:5892 incs/functions_major_nm.inc.php:1744
+#: incs/functions_major_nm.inc.php:1929 incs/functions_major_nm.inc.php:2022
+#: incs/functions_major_nm.inc.php:2116 incs/functions_nm.inc.php:2298
 #: message.php:120 portal.php:427 portal.php:512 portal/new_request.php:664
 #: portal/request.php:847 portal/request.php:971 portal/requests.php:264
-#: portal/requests.php:337 reports.php:1250 rm/ajax/ticket_detail.php:173
+#: portal/requests.php:337 reports.php:1253 rm/ajax/ticket_detail.php:173
 #: units.php:4008 units.php:4374 units.php:4712 units_nm.php:1545
 #: units_nm.php:1840 units_nm.php:2018
 msgid "Phone"
 msgstr "Phone"
 
-#: add.php:2362 edit.php:1174
+#: add.php:2458 edit.php:1226
 msgid "Lookup phone number"
 msgstr ""
 
-#: add.php:2366
+#: add.php:2462
 msgid "To address - Not plotted on map, for information only"
 msgstr ""
 
-#: add.php:2366 smtp_test.php:109
+#: add.php:2462 smtp_test.php:109
 msgid "To address"
 msgstr ""
 
-#: add.php:2375 board.php:1050
+#: add.php:2471 board.php:1050
 msgid "TBD"
 msgstr ""
 
-#: add.php:2400 add_nm.php:1861 edit.php:1227 edit_nm.php:600
-#: incs/capts.inc.php:115 incs/functions.inc.php:3504
-#: incs/functions_mail.php:67 incs/functions_major.inc.php:4362
-#: incs/functions_major.inc.php:5169 incs/functions_major.inc.php:5261
-#: incs/functions_major.inc.php:5883 incs/functions_major_nm.inc.php:1721
-#: incs/functions_major_nm.inc.php:1920 incs/functions_major_nm.inc.php:2013
-#: incs/functions_major_nm.inc.php:2107 incs/functions_nm.inc.php:2266
-#: message.php:112 reports.php:1238
+#: add.php:2496 add_nm.php:1861 edit.php:1279 edit_nm.php:600
+#: incs/capts.inc.php:115 incs/functions.inc.php:3503
+#: incs/functions_mail.php:67 incs/functions_major.inc.php:4363
+#: incs/functions_major.inc.php:5170 incs/functions_major.inc.php:5262
+#: incs/functions_major.inc.php:5884 incs/functions_major_nm.inc.php:1722
+#: incs/functions_major_nm.inc.php:1921 incs/functions_major_nm.inc.php:2014
+#: incs/functions_major_nm.inc.php:2108 incs/functions_nm.inc.php:2266
+#: message.php:112 reports.php:1241
 msgid "Priority"
 msgstr "Priority"
 
-#: add.php:2411 add_nm.php:1872 edit.php:1239 edit_nm.php:637
-#: incs/capts.inc.php:116 incs/functions_major.inc.php:4367
-#: incs/functions_major.inc.php:5174 incs/functions_major.inc.php:5266
-#: incs/functions_major.inc.php:5888 incs/functions_major_nm.inc.php:1726
-#: incs/functions_major_nm.inc.php:1925 incs/functions_major_nm.inc.php:2018
-#: incs/functions_major_nm.inc.php:2112 message.php:117 reports.php:1242
+#: add.php:2507 add_nm.php:1872 edit.php:1291 edit_nm.php:637
+#: incs/capts.inc.php:116 incs/functions_major.inc.php:4368
+#: incs/functions_major.inc.php:5175 incs/functions_major.inc.php:5267
+#: incs/functions_major.inc.php:5889 incs/functions_major_nm.inc.php:1727
+#: incs/functions_major_nm.inc.php:1926 incs/functions_major_nm.inc.php:2019
+#: incs/functions_major_nm.inc.php:2113 message.php:117 reports.php:1245
 #: tables/c_in_types.php:26 tables/u_in_types.php:27 tables/v_in_types.php:36
 msgid "Protocol"
 msgstr "Protocol"
 
-#: add.php:2420 add.php:2438 add.php:2456 edit.php:1245 edit.php:1255
-#: edit.php:1265
+#: add.php:2516 add.php:2534 add.php:2552 edit.php:1297 edit.php:1307
+#: edit.php:1317
 msgid ""
 "Sets groups that Incident is allocated to - click + to expand, - to collapse"
 msgstr ""
 
-#: add.php:2426 add.php:2463 config.php:1908 config.php:1921
+#: add.php:2522 add.php:2559 config.php:1906 config.php:1919
 #: facilities.php:2456 facilities.php:2472 facilities.php:2490
 #: facilities_nm.php:1191 facilities_nm.php:1207 facilities_nm.php:1225
 #: units.php:3844 units.php:3860 units.php:3878 units_nm.php:1396
@@ -837,7 +840,7 @@ msgstr ""
 msgid "Check All"
 msgstr ""
 
-#: add.php:2427 add.php:2464 config.php:1909 config.php:1922
+#: add.php:2523 add.php:2560 config.php:1907 config.php:1920
 #: facilities.php:2457 facilities.php:2473 facilities.php:2491
 #: facilities_nm.php:1192 facilities_nm.php:1208 facilities_nm.php:1226
 #: units.php:3845 units.php:3861 units.php:3879 units_nm.php:1397
@@ -845,85 +848,85 @@ msgstr ""
 msgid "Uncheck All"
 msgstr ""
 
-#: add.php:2481 add_nm.php:1901 ajax/get_replacetext.php:243 board.php:2986
-#: close_in.php:165 edit.php:1278 edit_nm.php:736 incs/capts.inc.php:135
-#: incs/full_scr.inc.php:1938 incs/functions_major.inc.php:4379
-#: incs/functions_major.inc.php:5173 incs/functions_major.inc.php:5265
-#: incs/functions_major.inc.php:5887 incs/functions_major_nm.inc.php:1732
-#: incs/functions_major_nm.inc.php:1924 incs/functions_major_nm.inc.php:2017
-#: incs/functions_major_nm.inc.php:2111 message.php:116
+#: add.php:2577 add_nm.php:1901 ajax/get_replacetext.php:243 board.php:2986
+#: close_in.php:165 edit.php:1330 edit_nm.php:736 incs/capts.inc.php:135
+#: incs/full_scr.inc.php:1938 incs/functions_major.inc.php:4380
+#: incs/functions_major.inc.php:5174 incs/functions_major.inc.php:5266
+#: incs/functions_major.inc.php:5888 incs/functions_major_nm.inc.php:1733
+#: incs/functions_major_nm.inc.php:1925 incs/functions_major_nm.inc.php:2018
+#: incs/functions_major_nm.inc.php:2112 message.php:116
 msgid "Synopsis"
 msgstr "Synopsis"
 
-#: add.php:2539 add_nm.php:1925 edit.php:1327 edit_nm.php:779
-#: incs/capts.inc.php:24 incs/functions.inc.php:3612
-#: incs/functions_mail.php:165 incs/functions_major.inc.php:4382
-#: incs/functions_major.inc.php:5175 incs/functions_major.inc.php:5267
-#: incs/functions_major.inc.php:5889 incs/functions_major_nm.inc.php:1735
-#: incs/functions_major_nm.inc.php:1926 incs/functions_major_nm.inc.php:2019
-#: incs/functions_major_nm.inc.php:2113 incs/functions_nm.inc.php:2372
+#: add.php:2635 add_nm.php:1925 edit.php:1379 edit_nm.php:779
+#: incs/capts.inc.php:24 incs/functions.inc.php:3611
+#: incs/functions_mail.php:165 incs/functions_major.inc.php:4383
+#: incs/functions_major.inc.php:5176 incs/functions_major.inc.php:5268
+#: incs/functions_major.inc.php:5890 incs/functions_major_nm.inc.php:1736
+#: incs/functions_major_nm.inc.php:1927 incs/functions_major_nm.inc.php:2020
+#: incs/functions_major_nm.inc.php:2114 incs/functions_nm.inc.php:2372
 #: message.php:118 rm/ajax/ticket_detail.php:185
 msgid "911 Contacted"
 msgstr "911 Contacted"
 
-#: add.php:2545 add_nm.php:1931 edit.php:1331 edit_nm.php:648
+#: add.php:2641 add_nm.php:1931 edit.php:1383 edit_nm.php:648
 #: incs/capts.inc.php:117 incs/full_scr.inc.php:1749
-#: incs/functions.inc.php:3536 incs/functions_mail.php:87
-#: incs/functions_major.inc.php:3021 incs/functions_major.inc.php:4388
-#: incs/functions_major.inc.php:5176 incs/functions_major.inc.php:5268
-#: incs/functions_major.inc.php:5890 incs/functions_major_nm.inc.php:1741
-#: incs/functions_major_nm.inc.php:1927 incs/functions_major_nm.inc.php:2020
-#: incs/functions_major_nm.inc.php:2114 incs/functions_nm.inc.php:2294
-#: message.php:119 reports.php:1249 search.php:273
+#: incs/functions.inc.php:3535 incs/functions_mail.php:87
+#: incs/functions_major.inc.php:3022 incs/functions_major.inc.php:4389
+#: incs/functions_major.inc.php:5177 incs/functions_major.inc.php:5269
+#: incs/functions_major.inc.php:5891 incs/functions_major_nm.inc.php:1742
+#: incs/functions_major_nm.inc.php:1928 incs/functions_major_nm.inc.php:2021
+#: incs/functions_major_nm.inc.php:2115 incs/functions_nm.inc.php:2294
+#: message.php:119 reports.php:1252 search.php:273
 msgid "Reported by"
 msgstr "Reported by"
 
-#: add.php:2553
+#: add.php:2649
 msgid "Associate this ticket with a specific portal user so they can see it."
 msgstr ""
 
-#: add.php:2553 edit.php:1352 file_upload.php:429
+#: add.php:2649 edit.php:1404 file_upload.php:429
 #, fuzzy
 msgid "Portal User"
 msgstr "Current situation"
 
-#: add.php:2565 add_nm.php:1936
+#: add.php:2661 add_nm.php:1936
 #, fuzzy
 msgid "Additional"
 msgstr "Add Action"
 
-#: add.php:2593 add_nm.php:1964 edit.php:1362 edit_nm.php:57
+#: add.php:2689 add_nm.php:1964 edit.php:1414 edit_nm.php:57
 #: incs/capts.inc.php:80
 msgid "Incident name"
 msgstr "Incident name"
 
-#: add.php:2614 add_nm.php:1985 edit.php:1493 edit.php:1499 edit_nm.php:783
+#: add.php:2710 add_nm.php:1985 edit.php:1545 edit.php:1551 edit_nm.php:783
 #: edit_nm.php:788 incs/capts.inc.php:123
 msgid "Scheduled Date"
 msgstr "Scheduled Date"
 
-#: add.php:2626 edit.php:1458 edit_nm.php:707
+#: add.php:2722 edit.php:1510 edit_nm.php:707
 #, fuzzy
 msgid "Facility?"
 msgstr "Facility"
 
-#: add.php:2646 add_nm.php:2017 config.php:1261 search.php:289
+#: add.php:2742 add_nm.php:2017 config.php:1261 search.php:289
 msgid "Affected"
 msgstr ""
 
-#: add.php:2652 add_nm.php:2023 edit.php:1510 edit_nm.php:815
-#: incs/capts.inc.php:122 incs/functions.inc.php:3560
-#: incs/functions_mail.php:113 incs/functions_major.inc.php:4406
-#: incs/functions_major.inc.php:5189 incs/functions_major.inc.php:5281
-#: incs/functions_major.inc.php:5903 incs/functions_major_nm.inc.php:1759
-#: incs/functions_major_nm.inc.php:1942 incs/functions_major_nm.inc.php:2033
-#: incs/functions_major_nm.inc.php:2127 incs/functions_nm.inc.php:2320
-#: message.php:133 reports.php:1260
+#: add.php:2748 add_nm.php:2023 edit.php:1562 edit_nm.php:815
+#: incs/capts.inc.php:122 incs/functions.inc.php:3559
+#: incs/functions_mail.php:113 incs/functions_major.inc.php:4407
+#: incs/functions_major.inc.php:5190 incs/functions_major.inc.php:5282
+#: incs/functions_major.inc.php:5904 incs/functions_major_nm.inc.php:1760
+#: incs/functions_major_nm.inc.php:1943 incs/functions_major_nm.inc.php:2034
+#: incs/functions_major_nm.inc.php:2128 incs/functions_nm.inc.php:2320
+#: message.php:133 reports.php:1263
 msgid "Run Start"
 msgstr "Run Start"
 
-#: add.php:2656 add_nm.php:2027 board.php:1907 board.php:2247 board.php:2348
-#: board.php:2432 board.php:2461 edit.php:1375 edit_nm.php:671
+#: add.php:2752 add_nm.php:2027 board.php:1907 board.php:2247 board.php:2348
+#: board.php:2432 board.php:2461 edit.php:1427 edit_nm.php:671
 #: fac_routes.php:133 fac_routes.php:1229 fac_routes.php:1333
 #: fac_routes.php:1378 fac_routes_nm.php:130 fac_routes_nm.php:1227
 #: fac_routes_nm.php:1329 fac_routes_nm.php:1374 facilities.php:1720
@@ -932,23 +935,23 @@ msgstr "Run Start"
 #: facilities_nm.php:1465 facilities_nm.php:1637 incident_popup.php:206
 #: incs/capts.inc.php:134 incs/full_scr.inc.php:1754
 #: incs/full_scr.inc.php:2495 incs/full_scr.inc.php:2512
-#: incs/full_scr.inc.php:2836 incs/functions.inc.php:1055
-#: incs/functions.inc.php:1112 incs/functions.inc.php:3552
-#: incs/functions_mail.php:104 incs/functions_major.inc.php:184
-#: incs/functions_major.inc.php:3026 incs/functions_major.inc.php:3417
-#: incs/functions_major.inc.php:3420 incs/functions_major.inc.php:3883
-#: incs/functions_major.inc.php:3887 incs/functions_major.inc.php:3968
-#: incs/functions_major.inc.php:4386 incs/functions_major.inc.php:4967
-#: incs/functions_major.inc.php:5180 incs/functions_major.inc.php:5272
-#: incs/functions_major.inc.php:5721 incs/functions_major.inc.php:5894
-#: incs/functions_major_nm.inc.php:1312 incs/functions_major_nm.inc.php:1539
-#: incs/functions_major_nm.inc.php:1544 incs/functions_major_nm.inc.php:1739
-#: incs/functions_major_nm.inc.php:1931 incs/functions_major_nm.inc.php:2024
-#: incs/functions_major_nm.inc.php:2118 incs/functions_nm.inc.php:691
+#: incs/full_scr.inc.php:2836 incs/functions.inc.php:1058
+#: incs/functions.inc.php:1115 incs/functions.inc.php:3551
+#: incs/functions_mail.php:104 incs/functions_major.inc.php:185
+#: incs/functions_major.inc.php:3027 incs/functions_major.inc.php:3418
+#: incs/functions_major.inc.php:3421 incs/functions_major.inc.php:3884
+#: incs/functions_major.inc.php:3888 incs/functions_major.inc.php:3969
+#: incs/functions_major.inc.php:4387 incs/functions_major.inc.php:4968
+#: incs/functions_major.inc.php:5181 incs/functions_major.inc.php:5273
+#: incs/functions_major.inc.php:5722 incs/functions_major.inc.php:5895
+#: incs/functions_major_nm.inc.php:1313 incs/functions_major_nm.inc.php:1540
+#: incs/functions_major_nm.inc.php:1545 incs/functions_major_nm.inc.php:1740
+#: incs/functions_major_nm.inc.php:1932 incs/functions_major_nm.inc.php:2025
+#: incs/functions_major_nm.inc.php:2119 incs/functions_nm.inc.php:691
 #: incs/functions_nm.inc.php:748 incs/functions_nm.inc.php:2311 message.php:16
 #: message.php:124 mobile.php:1032 portal.php:480 portal.php:565
 #: portal/request.php:820 portal/request.php:944 portal/requests.php:268
-#: portal/requests.php:341 quick_start.php:1178 reports.php:1248
+#: portal/requests.php:341 quick_start.php:1178 reports.php:1251
 #: rm/ajax/ticket_detail.php:165 routes_i.php:502 routes_i.php:604
 #: routes_i.php:630 routes_nm.php:1588 search.php:293
 #: tables/c_un_status.php:34 tracks.php:409 tracks.php:649 tracks_hh.php:397
@@ -958,71 +961,70 @@ msgstr "Run Start"
 msgid "Status"
 msgstr "Status"
 
-#: add.php:2657 add_nm.php:2028 board.php:2433 edit.php:1376 edit_nm.php:672
-#: incs/functions.inc.php:1735 incs/functions_major.inc.php:290
+#: add.php:2753 add_nm.php:2028 board.php:2433 edit.php:1428 edit_nm.php:672
+#: incs/functions.inc.php:1738 incs/functions_major.inc.php:291
 #: incs/functions_nm.inc.php:903 portal.php:1124 search.php:295
 msgid "Open"
 msgstr ""
 
-#: add.php:2658 add_nm.php:2029 board.php:2434 board.php:3100 config.php:2199
-#: edit.php:1376 edit_nm.php:672 incs/functions.inc.php:1734
+#: add.php:2754 add_nm.php:2029 board.php:2434 board.php:3100 config.php:2197
+#: edit.php:1428 edit_nm.php:672 incs/functions.inc.php:1737
 #: incs/functions_nm.inc.php:901 portal.php:716 portal.php:735 portal.php:1130
-#: reports.php:1730 search.php:296
+#: reports.php:1733 search.php:296
 #, fuzzy
 msgid "Closed"
 msgstr "Close incident"
 
-#: add.php:2659 add_nm.php:2030 edit.php:1376 edit_nm.php:672
-#: incs/functions.inc.php:1736 incs/functions_major.inc.php:291
-#: incs/functions_major_nm.inc.php:888 incs/functions_nm.inc.php:905
+#: add.php:2755 add_nm.php:2030 edit.php:1428 edit_nm.php:672
+#: incs/functions.inc.php:1739 incs/functions_major.inc.php:292
+#: incs/functions_major_nm.inc.php:889 incs/functions_nm.inc.php:905
 #, fuzzy
 msgid "Scheduled"
 msgstr "Scheduled For"
 
-#: add.php:2664 add_nm.php:2035 close_in.php:159 edit.php:1516 edit.php:1522
+#: add.php:2760 add_nm.php:2035 close_in.php:159 edit.php:1568 edit.php:1574
 #: edit_nm.php:819 edit_nm.php:824 incs/capts.inc.php:121
 msgid "Run End"
 msgstr "Run End"
 
-#: add.php:2704 add_nm.php:2071 facilities.php:2590 facilities.php:2909
+#: add.php:2800 add_nm.php:2071 facilities.php:2590 facilities.php:2909
 #: facilities.php:3143 incs/capts.inc.php:85 road_conditions.php:1113
 #: units.php:4017 units.php:4391 units.php:4747 warn_locations.php:1364
 #: warn_locations.php:1498 warn_locations.php:1644
 msgid "Lat/Lng"
 msgstr "Lat/Lng"
 
-#: add.php:2717 add_nm.php:2113 incs/config.setcenter.inc.php:196
-#: tables/c_places.php:136 tables/u_places.php:146
+#: add.php:2819 add_nm.php:2113 incs/config.setcenter.inc.php:196
 msgid "Lookup"
 msgstr ""
 
-#: add.php:2726 facilities.php:2637 facilities_nm.php:1325 units.php:4056
+#: add.php:2828 facilities.php:2637 facilities_nm.php:1325 units.php:4056
 #: units_nm.php:1560
 msgid "File Upload"
 msgstr ""
 
-#: add.php:2729 facilities_nm.php:1328 units.php:4059 units_nm.php:1563
+#: add.php:2831 facilities_nm.php:1328 units.php:4059 units_nm.php:1563
 msgid "Choose a file to upload"
 msgstr ""
 
-#: add.php:2733 facilities.php:2644 facilities_nm.php:1332 file_upload.php:386
+#: add.php:2835 facilities.php:2644 facilities_nm.php:1332 file_upload.php:386
 #: portal/ajax/file_list.php:44 units.php:4063 units_nm.php:1567
 #, fuzzy
 msgid "File Name"
 msgstr "Facility State"
 
-#: add.php:2756 add_nm.php:2131 do_color_checker.php:192 edit.php:1611
+#: add.php:2860 add_nm.php:2131 do_color_checker.php:192 edit.php:1663
 #: fac_routes.php:696 fac_routes_nm.php:695 facilities.php:2667
 #: facilities.php:2967 facilities.php:3194 facilities.php:3370
-#: incs/full_scr.inc.php:198 incs/functions_major.inc.php:398
-#: incs/functions_major.inc.php:4547 routes.php:1354 units.php:4097
+#: incs/full_scr.inc.php:198 incs/functions_major.inc.php:399
+#: incs/functions_major.inc.php:4548 routes.php:1354 units.php:4097
 #: units.php:4456 units.php:4925 units.php:5172 warn_locations.php:1403
 #: warn_locations.php:1544 warn_locations.php:1692
 msgid "Grid"
 msgstr ""
 
-#: add.php:2757 add_nm.php:2132 edit.php:1612 fac_routes.php:698
-#: fac_routes_nm.php:697 facilities.php:3197 incs/functions_major.inc.php:4548
+#: add.php:2861 add_nm.php:2132 edit.php:1664 fac_routes.php:698
+#: fac_routes_nm.php:697 facilities.php:3197 incs/functions_major.inc.php:4549
 #: routes.php:1356 units.php:4459 units.php:4927 warn_locations.php:1695
 #, fuzzy
 msgid "Street view"
@@ -1062,7 +1064,7 @@ msgstr ""
 msgid "911 contact information"
 msgstr "Beds information"
 
-#: add_nm.php:862 reports.php:2013 units.php:4044
+#: add_nm.php:862 reports.php:2016 units.php:4044
 msgid "ERROR in"
 msgstr ""
 
@@ -1071,35 +1073,35 @@ msgstr ""
 msgid "Lookup phone no."
 msgstr "Location"
 
-#: add_nm.php:2082 edit.php:1562 facilities.php:125 facilities.php:2600
+#: add_nm.php:2082 edit.php:1614 facilities.php:125 facilities.php:2600
 #: facilities.php:3156 facilities_nm.php:67 incs/capts.inc.php:146
 #: incs/config.setcenter.inc.php:210 incs/full_scr.inc.php:1781
-#: incs/functions_major.inc.php:3062 incs/functions_major.inc.php:4342
-#: incs/functions_major.inc.php:4415 incs/functions_major.inc.php:5195
-#: incs/functions_major.inc.php:5287 incs/functions_major.inc.php:5909
-#: message.php:139 reports.php:1267 road_conditions.php:32 units.php:4027
+#: incs/functions_major.inc.php:3063 incs/functions_major.inc.php:4343
+#: incs/functions_major.inc.php:4416 incs/functions_major.inc.php:5196
+#: incs/functions_major.inc.php:5288 incs/functions_major.inc.php:5910
+#: message.php:139 reports.php:1270 road_conditions.php:32 units.php:4027
 #: units.php:4384 units.php:4755 warn_locations.php:54 warn_locations.php:1374
 #: warn_locations_nm.php:37
 msgid "USNG"
 msgstr "USNG"
 
-#: add_nm.php:2090 edit.php:1567 facilities.php:126 facilities.php:2606
+#: add_nm.php:2090 edit.php:1619 facilities.php:126 facilities.php:2606
 #: facilities.php:3161 incs/config.setcenter.inc.php:214
-#: incs/full_scr.inc.php:1785 incs/functions_major.inc.php:3066
-#: incs/functions_major.inc.php:4346 incs/functions_major.inc.php:4419
-#: incs/functions_major.inc.php:5199 incs/functions_major.inc.php:5291
-#: incs/functions_major.inc.php:5913 message.php:143 reports.php:1271
+#: incs/full_scr.inc.php:1785 incs/functions_major.inc.php:3067
+#: incs/functions_major.inc.php:4347 incs/functions_major.inc.php:4420
+#: incs/functions_major.inc.php:5200 incs/functions_major.inc.php:5292
+#: incs/functions_major.inc.php:5914 message.php:143 reports.php:1274
 #: road_conditions.php:33 units.php:4033 units.php:4385 units.php:4759
 #: warn_locations.php:55 warn_locations.php:1380 warn_locations_nm.php:38
 msgid "OSGB"
 msgstr "OSGB"
 
-#: add_nm.php:2096 edit.php:1572 facilities.php:2612 facilities.php:3166
+#: add_nm.php:2096 edit.php:1624 facilities.php:2612 facilities.php:3166
 #: incs/config.setcenter.inc.php:218 incs/full_scr.inc.php:1790
-#: incs/functions_major.inc.php:3071 incs/functions_major.inc.php:4351
-#: incs/functions_major.inc.php:4424 incs/functions_major.inc.php:5204
-#: incs/functions_major.inc.php:5296 incs/functions_major.inc.php:5918
-#: message.php:148 reports.php:1276 units.php:4039 units.php:4386
+#: incs/functions_major.inc.php:3072 incs/functions_major.inc.php:4352
+#: incs/functions_major.inc.php:4425 incs/functions_major.inc.php:5205
+#: incs/functions_major.inc.php:5297 incs/functions_major.inc.php:5919
+#: message.php:148 reports.php:1279 units.php:4039 units.php:4386
 #: units.php:4764 warn_locations.php:1386
 msgid "UTM"
 msgstr ""
@@ -1117,12 +1119,12 @@ msgid "Enter note text"
 msgstr ""
 
 #: add_note.php:102 banner.php:838 banner.php:1289 circle.php:896
-#: circle.php:1336 do_unit_mail.php:385 do_unit_mail.php:638 landb.php:840
+#: circle.php:1336 do_unit_mail.php:385 do_unit_mail.php:657 landb.php:840
 #: landb.php:1235
 msgid "Apply to"
 msgstr ""
 
-#: add_note.php:141
+#: add_note.php:144
 msgid "Note added to Incident"
 msgstr ""
 
@@ -1140,8 +1142,8 @@ msgstr "Contact phone"
 msgid "Scope"
 msgstr "Scope"
 
-#: ajax/get_replacetext.php:226 incs/functions_major_nm.inc.php:905
-#: reports.php:1243 reports.php:1736 rm/ajax/ticket_detail.php:177
+#: ajax/get_replacetext.php:226 incs/functions_major_nm.inc.php:906
+#: reports.php:1246 reports.php:1739 rm/ajax/ticket_detail.php:177
 #: road_conditions.php:1108 search.php:274 tables/c_personnel.php:41
 #: tables/u_personnel.php:42 tables/v_personnel.php:38 top.php:628 top.php:674
 #, fuzzy
@@ -1154,10 +1156,10 @@ msgstr ""
 
 #: archive_message.php:55 archive_message.php:325 config.php:1497
 #: do_all_mail.php:198 do_direcs_mail.php:156 do_fac_mail.php:144
-#: do_indiv_mail.php:107 do_unit_mail.php:371 do_unit_mail.php:620
-#: incs/functions.inc.php:757 incs/functions_major.inc.php:4595 mail.php:134
+#: do_indiv_mail.php:107 do_unit_mail.php:371 do_unit_mail.php:639
+#: incs/functions.inc.php:760 incs/functions_major.inc.php:4596 mail.php:134
 #: mail_all.php:184 message.php:228 message.php:648 messages.php:303
-#: native.php:77 rm/chat.php:57 rm/index.php:2285 smtp_test.php:111
+#: native.php:77 rm/chat.php:57 rm/index.php:2287 smtp_test.php:111
 #: units.php:4961
 msgid "Message"
 msgstr ""
@@ -1175,7 +1177,7 @@ msgstr ""
 msgid "CLOSE"
 msgstr ""
 
-#: archive_message.php:294 incs/capts.inc.php:114 incs/functions.inc.php:2027
+#: archive_message.php:294 incs/capts.inc.php:114 incs/functions.inc.php:2030
 #: incs/functions_nm.inc.php:1094 message.php:595
 msgid "Print"
 msgstr "Print"
@@ -1190,8 +1192,8 @@ msgstr ""
 
 #: archive_message.php:297 chat.php:509 do_all_mail.php:217
 #: do_direcs_mail.php:163 do_fac_mail.php:146 do_indiv_mail.php:109
-#: mail.php:172 message.php:601 rm/chat.php:61 rm/index.php:2256
-#: rm/index.php:2278 smtp_test.php:112 top.php:1751
+#: mail.php:172 message.php:601 rm/chat.php:61 rm/index.php:2258
+#: rm/index.php:2280 smtp_test.php:112 top.php:1751
 msgid "Send"
 msgstr ""
 
@@ -1204,10 +1206,10 @@ msgid "Already Read by"
 msgstr ""
 
 #: archive_message.php:313 board.php:2990 config.php:1494
-#: incs/config.inc.php:394 incs/functions.inc.php:757
-#: incs/functions.inc.php:1055 incs/functions_major.inc.php:4592
+#: incs/config.inc.php:394 incs/functions.inc.php:760
+#: incs/functions.inc.php:1058 incs/functions_major.inc.php:4593
 #: incs/functions_nm.inc.php:691 log.php:142 message.php:636 messages.php:300
-#: reports.php:933 reports.php:1052 reports.php:1326 rm/index.php:2283
+#: reports.php:933 reports.php:1055 reports.php:1329 rm/index.php:2285
 #: tables/v_conditions.php:23 tables/v_fac_types.php:23
 #: tables/v_unit_types.php:23 units.php:4958
 msgid "From"
@@ -1215,27 +1217,27 @@ msgstr ""
 
 #: archive_message.php:316 archive_message.php:343 archive_message.php:387
 #: board.php:2990 config.php:1495 do_direcs_mail.php:132 do_indiv_mail.php:99
-#: incs/functions.inc.php:757 incs/functions_major.inc.php:4593
+#: incs/functions.inc.php:760 incs/functions_major.inc.php:4594
 #: message.php:639 message.php:676 message.php:728 messages.php:301
-#: native.php:65 rm/index.php:2282 units.php:4959
+#: native.php:65 rm/index.php:2284 units.php:4959
 msgid "To"
 msgstr ""
 
 #: archive_message.php:319 archive_message.php:347 archive_message.php:391
-#: config.php:1259 config.php:1498 incs/functions.inc.php:757
-#: incs/functions_major.inc.php:4596 message.php:642 message.php:680
+#: config.php:1259 config.php:1498 incs/functions.inc.php:760
+#: incs/functions_major.inc.php:4597 message.php:642 message.php:680
 #: message.php:732 messages.php:304 portal/ajax/file_list.php:44
-#: reports.php:926 reports.php:1047 reports.php:1728 units.php:4962
+#: reports.php:926 reports.php:1050 reports.php:1731 units.php:4962
 msgid "Date"
 msgstr ""
 
 #: archive_message.php:322 archive_message.php:351 archive_message.php:395
 #: config.php:1496 do_all_mail.php:185 do_direcs_mail.php:155
 #: do_fac_mail.php:143 do_indiv_mail.php:106 do_unit_mail.php:369
-#: do_unit_mail.php:385 do_unit_mail.php:619 do_unit_mail.php:638
-#: incs/functions.inc.php:757 incs/functions_major.inc.php:4594
+#: do_unit_mail.php:385 do_unit_mail.php:638 do_unit_mail.php:657
+#: incs/functions.inc.php:760 incs/functions_major.inc.php:4595
 #: mail_all.php:183 message.php:645 message.php:684 message.php:736
-#: messages.php:302 native.php:73 rm/index.php:2284 smtp_test.php:110
+#: messages.php:302 native.php:73 rm/index.php:2286 smtp_test.php:110
 #: units.php:4960
 msgid "Subject"
 msgstr ""
@@ -1255,7 +1257,7 @@ msgid "Response"
 msgstr "Responding"
 
 #: archive_message.php:363 archive_message.php:407 do_direcs_mail.php:144
-#: do_unit_mail.php:420 do_unit_mail.php:671 mail_edit.php:203 message.php:699
+#: do_unit_mail.php:420 do_unit_mail.php:690 mail_edit.php:203 message.php:699
 #: message.php:751
 #, fuzzy
 msgid "Use"
@@ -1363,38 +1365,52 @@ msgstr ""
 msgid "Select Status Value"
 msgstr ""
 
-#: auto_disp_status.php:249
-msgid ""
-"\n"
-"            This page is to set the Auto Dispatch Status values and their "
-"associated status values.<BR /><BR />\n"
-"            On the left side are the Dispatch status values and on the right "
-"are select controls with the status values currently configured on the "
-"Tickets CAD system.\n"
-"            These can be changed through Config / Units Status.<BR /><BR />\n"
-"            To configure the auto status values, for each Dispatch status "
-"value that you want a specific unit status to be set, select the unit status "
-"next to that dispatch status and then click submit."
+#: auto_disp_status.php:248 auto_status.php:263 email_lists.php:550
+msgid "HELP"
 msgstr ""
 
-#: auto_disp_status.php:257 auto_status.php:274 config.php:1023
-#: config.php:1193 config.php:1268 config.php:1693 config.php:1863
-#: config.php:1969 config.php:2103 config.php:2226 delete_module.php:108
+#: auto_disp_status.php:250
+msgid ""
+"This page is to set the Auto Dispatch Status values and their associated "
+"status values."
+msgstr ""
+
+#: auto_disp_status.php:251
+msgid ""
+"On the left side are the Dispatch status values and on the right are select "
+"controls with the status values currently configured on the Tickets CAD "
+"system."
+msgstr ""
+
+#: auto_disp_status.php:252
+msgid "These can be changed through Config / Units Status."
+msgstr ""
+
+#: auto_disp_status.php:253
+msgid ""
+"To configure the auto status values, for each Dispatch status value that you "
+"want a specific unit status to be set, select the unit status next to that "
+"dispatch status and then click submit."
+msgstr ""
+
+#: auto_disp_status.php:257 auto_status.php:271 config.php:1023
+#: config.php:1193 config.php:1268 config.php:1693 config.php:1861
+#: config.php:1967 config.php:2101 config.php:2224 delete_module.php:108
 #: delete_module.php:213 edit_nm.php:840 email_lists.php:429
 #: file_upload.php:444 hints_config.php:321 ics213.php:242
 #: incs/config.setcenter.inc.php:232 install_module.php:299 log.php:94
-#: msg_archive.php:181 msg_archive.php:221 native.php:84 patient.php:579
-#: patient_w.php:566 portal/import_requests.php:124
+#: msg_archive.php:181 msg_archive.php:221 native.php:84 patient.php:582
+#: patient_w.php:567 portal/import_requests.php:124
 #: portal/import_requests.php:346 reset_responder_status.php:179
 #: stats_scr.php:1559 tables.php:1253 tables.php:1702
 #: tables/c_conditions.php:102 tables/c_courses_taken.php:67
 #: tables/c_fac_types.php:44 tables/c_in_types.php:59
-#: tables/c_personnel.php:81 tables/c_places.php:154 tables/c_region.php:65
-#: tables/c_un_status.php:77 tables/c_unit_types.php:44
-#: tables/u_conditions.php:100 tables/u_fac_types.php:42
-#: tables/u_in_types.php:67 tables/u_personnel.php:80 tables/u_places.php:164
-#: tables/u_region.php:65 tables/u_un_status.php:160
-#: tables/u_unit_types.php:42 unit_ticket_log.php:153
+#: tables/c_personnel.php:81 tables/c_region.php:65 tables/c_un_status.php:77
+#: tables/c_unit_types.php:44 tables/u_conditions.php:100
+#: tables/u_fac_types.php:42 tables/u_in_types.php:67
+#: tables/u_personnel.php:80 tables/u_places.php:200 tables/u_region.php:65
+#: tables/u_un_status.php:160 tables/u_unit_types.php:42
+#: unit_ticket_log.php:153
 msgid "Submit"
 msgstr "Submit"
 
@@ -1418,28 +1434,29 @@ msgstr ""
 msgid "Select or type in box"
 msgstr ""
 
-#: auto_status.php:263 email_lists.php:550
-msgid "HELP"
+#: auto_status.php:265
+msgid ""
+"This page is to set the Auto Status text values and their associated status "
+"values."
 msgstr ""
 
-#: auto_status.php:264
+#: auto_status.php:266
 msgid ""
-"\n"
-"            This page is to set the Auto Status text values and their "
-"associated status values.<BR /><BR />\n"
-"            On the left side sre the status values currently configured on "
-"the Tickets CAD system. These can be changed through Config / Units Status. "
-"Next to these are a text box\n"
-"            where you can type in the text values you want to search for in "
-"incoming SMS messages. The Responder sending the message will put this text "
-"between the start and end tags\n"
-"            configured in Messaging settings (default *). Next to the text "
-"box is a select control where you can select from pre-configured signals "
-"that are configured in Config / Signals.<BR /><BR />\n"
-"            To congigure the auto status values, for each status value that "
-"you want to be automatically set by incoming SMS message, type the text "
-"value that you want to trigger this or\n"
-"            select from the pre-configured signals and then click Submit."
+"On the left side sre the status values currently configured on the Tickets "
+"CAD system. These can be changed through Config / Units Status. Next to "
+"these are a text box where you can type in the text values you want to "
+"search for in incoming SMS messages. The Responder sending the message will "
+"put this text between the start and end tags configured in Messaging "
+"settings (default *). Next to the text box is a select control where you can "
+"select from pre-configured signals that are configured in Config / Signals."
+msgstr ""
+
+#: auto_status.php:267
+msgid ""
+"To congigure the auto status values, for each status value that you want to "
+"be automatically set by incoming SMS message, type the text value that you "
+"want to trigger this on select from the pre-configured signals and then "
+"click Submit."
 msgstr ""
 
 #: banner.php:47
@@ -1491,26 +1508,25 @@ msgstr ""
 #: facilities.php:1718 facilities.php:2439 facilities.php:2759
 #: facilities.php:3102 facilities_nm.php:712 facilities_nm.php:1173
 #: facilities_nm.php:1400 facilities_nm.php:1625 incs/capts.inc.php:96
-#: incs/functions_major_nm.inc.php:1537 landb.php:685 quick_start.php:1010
-#: quick_start.php:1108 road_conditions.php:1400 tables/c_places.php:143
-#: tables/u_places.php:153 test_instam.php:138 tracks.php:409
-#: tracks_hh.php:397 units.php:3826 units.php:4191 units.php:4705
-#: units_nm.php:1380 units_nm.php:1678 warn_locations.php:1072
+#: incs/functions_major_nm.inc.php:1538 landb.php:685 quick_start.php:1010
+#: quick_start.php:1108 road_conditions.php:1400 test_instam.php:138
+#: tracks.php:409 tracks_hh.php:397 units.php:3826 units.php:4191
+#: units.php:4705 units_nm.php:1380 units_nm.php:1678 warn_locations.php:1072
 #: warn_locations.php:1353 warn_locations.php:1477 warn_locations.php:1636
 #: warn_locations_nm.php:526 warn_locations_nm.php:712
 #: warn_locations_nm.php:767 warn_locations_nm.php:827
 msgid "Name"
 msgstr "Name"
 
-#: banner.php:640 circle.php:754 config.php:1493 config.php:2792
+#: banner.php:640 circle.php:754 config.php:1493 config.php:2790
 #: facilities.php:1719 facilities.php:2527 facilities.php:2830
 #: facilities.php:3111 facilities_nm.php:712 facilities_nm.php:1242
 #: facilities_nm.php:1450 facilities_nm.php:1634 fileman.php:212
 #: incs/capts.inc.php:138 incs/full_scr.inc.php:1671
-#: incs/functions.inc.php:757 incs/functions_major.inc.php:3416
-#: incs/functions_major.inc.php:3882 incs/functions_major.inc.php:3887
-#: incs/functions_major_nm.inc.php:1311 incs/functions_major_nm.inc.php:1538
-#: incs/functions_major_nm.inc.php:1544 landb.php:686 road_conditions.php:1094
+#: incs/functions.inc.php:760 incs/functions_major.inc.php:3417
+#: incs/functions_major.inc.php:3883 incs/functions_major.inc.php:3888
+#: incs/functions_major_nm.inc.php:1312 incs/functions_major_nm.inc.php:1539
+#: incs/functions_major_nm.inc.php:1545 landb.php:686 road_conditions.php:1094
 #: road_conditions.php:1238 tables.php:1979 tables/c_in_types.php:21
 #: tables/u_in_types.php:22 tables/v_in_types.php:34 top.php:627
 #: units.php:3923 units.php:4242 units.php:4716 units_nm.php:1729
@@ -1543,7 +1559,7 @@ msgstr ""
 msgid "Apply to facilities"
 msgstr "Facilities"
 
-#: banner.php:644 circle.php:758 landb.php:690 patient.php:544
+#: banner.php:644 circle.php:758 landb.php:690 patient.php:547
 msgid "F"
 msgstr ""
 
@@ -1593,21 +1609,21 @@ msgid "kml"
 msgstr ""
 
 #: banner.php:817 circle.php:874 do_color_checker.php:155
-#: do_color_checker.php:210 incs/capts.inc.php:98 landb.php:819 main.php:939
-#: mobile.php:111 patient.php:206 tables.php:1787 top.php:1665
+#: do_color_checker.php:210 incs/capts.inc.php:98 landb.php:819 main.php:935
+#: mobile.php:111 patient.php:209 tables.php:1787 top.php:1665
 msgid "New"
 msgstr "New"
 
 #: banner.php:828 banner.php:1276 banner.php:1279 circle.php:885
 #: circle.php:916 circle.php:1322 circle.php:1325 circle.php:1368
-#: config.php:2426 landb.php:830 landb.php:860 landb.php:1222 landb.php:1225
+#: config.php:2424 landb.php:830 landb.php:860 landb.php:1222 landb.php:1225
 #: landb.php:1267 reports.php:857 routes.php:1366 tables/c_un_status.php:44
 #: tables/u_un_status.php:103
 msgid "No"
 msgstr ""
 
 #: banner.php:833 banner.php:1284 circle.php:890 circle.php:1330
-#: config.php:1667 config.php:1945 landb.php:835 landb.php:1230
+#: config.php:1667 config.php:1943 landb.php:835 landb.php:1230
 #, fuzzy
 msgid "Ident"
 msgstr "Incident"
@@ -1625,9 +1641,9 @@ msgstr ""
 #: banner.php:842 banner.php:1293 circle.php:900 circle.php:1340
 #: cleanse_regions.php:415 do_color_checker.php:157 do_color_checker.php:212
 #: facilities.php:3329 facilities_nm.php:1774 incs/full_scr.inc.php:187
-#: incs/functions.inc.php:4624 incs/functions_major.inc.php:378
-#: incs/functions_major.inc.php:4069 incs/functions_major.inc.php:4158
-#: incs/functions_major_nm.inc.php:307 incs/functions_nm.inc.php:3080
+#: incs/functions.inc.php:4623 incs/functions_major.inc.php:379
+#: incs/functions_major.inc.php:4070 incs/functions_major.inc.php:4159
+#: incs/functions_major_nm.inc.php:308 incs/functions_nm.inc.php:3080
 #: landb.php:844 landb.php:1239 m/sp_fac.php:22 m/sp_fac.php:275
 #: m/sp_fac.php:280 m/sp_map.php:722 m/sp_map_spec.php:663
 msgid "Facilities"
@@ -1682,26 +1698,26 @@ msgstr ""
 msgid "Really, really DELETE this boundary?"
 msgstr ""
 
-#: banner.php:1299 do_unit_mail.php:386 do_unit_mail.php:639
+#: banner.php:1299 do_unit_mail.php:386 do_unit_mail.php:658
 msgid "Text"
 msgstr ""
 
 #: banner.php:1350 board.php:2644 circle.php:1397 config.php:953
-#: config.php:1159 incs/functions.inc.php:687 incs/functions.inc.php:723
-#: incs/functions.inc.php:862 incs/functions.inc.php:901
-#: incs/functions.inc.php:999 landb.php:1296 portal/new_request.php:190
+#: config.php:1159 incs/functions.inc.php:690 incs/functions.inc.php:726
+#: incs/functions.inc.php:865 incs/functions.inc.php:904
+#: incs/functions.inc.php:1002 landb.php:1296 portal/new_request.php:190
 #: quick_start.php:166 quick_start.php:211 quick_start.php:245
 msgid "Delete"
 msgstr ""
 
 #: banner.php:1356 board.php:2301 circle.php:1403 facilities.php:2013
 #: incs/full_scr.inc.php:2273 incs/full_scr.inc.php:2821
-#: incs/functions.inc.php:686 incs/functions.inc.php:722
-#: incs/functions.inc.php:861 incs/functions.inc.php:2019
-#: incs/functions_major.inc.php:3039 incs/functions_major.inc.php:3459
-#: incs/functions_major.inc.php:3929 incs/functions_major_nm.inc.php:1349
+#: incs/functions.inc.php:689 incs/functions.inc.php:725
+#: incs/functions.inc.php:864 incs/functions.inc.php:2022
+#: incs/functions_major.inc.php:3040 incs/functions_major.inc.php:3460
+#: incs/functions_major.inc.php:3930 incs/functions_major_nm.inc.php:1350
 #: incs/functions_nm.inc.php:1086 landb.php:1302 mobile.php:112
-#: patient.php:516 portal/request.php:899 single.php:75 tracks.php:516
+#: patient.php:519 portal/request.php:899 single.php:75 tracks.php:516
 #: tracks_hh.php:470 units.php:4185 units_nm.php:1002 warn_locations.php:1125
 #: warn_locations.php:1681 warn_locations_nm.php:842
 msgid "Edit"
@@ -1711,10 +1727,10 @@ msgstr "Edit"
 msgid "deleted"
 msgstr ""
 
-#: banner.php:1452 capts.php:181 config.php:2657 incs/functions.inc.php:4435
-#: incs/functions.inc.php:4883 incs/functions.inc.php:4930
+#: banner.php:1452 capts.php:181 config.php:2655 incs/functions.inc.php:4434
+#: incs/functions.inc.php:4882 incs/functions.inc.php:4929
 #: incs/functions_nm.inc.php:2997 incs/functions_nm.inc.php:3322
-#: incs/functions_nm.inc.php:3369 log.php:213 rm/index.php:75
+#: incs/functions_nm.inc.php:3369 log.php:213 rm/index.php:76
 msgid "ERROR"
 msgstr ""
 
@@ -1725,8 +1741,8 @@ msgstr ""
 #: board.php:319 board.php:587 config.php:377 facilities.php:599
 #: facilities.php:617 facilities_nm.php:363 facilities_nm.php:381
 #: incs/full_scr.inc.php:1214 incs/full_scr.inc.php:1442
-#: incs/functions_major.inc.php:1941 incs/functions_major.inc.php:2015
-#: incs/functions_major_nm.inc.php:691 main.php:878 units.php:1209
+#: incs/functions_major.inc.php:1942 incs/functions_major.inc.php:2016
+#: incs/functions_major_nm.inc.php:692 main.php:874 units.php:1209
 #: units.php:1227 units_nm.php:434
 msgid "This requires popups to be enabled. Please adjust your browser options."
 msgstr ""
@@ -1774,7 +1790,7 @@ msgstr ""
 msgid "Total mileage error"
 msgstr ""
 
-#: board.php:982 config.php:2485 log.php:170 track_u.php:377
+#: board.php:982 config.php:2483 log.php:170 track_u.php:377
 msgid "to top"
 msgstr ""
 
@@ -1788,17 +1804,17 @@ msgstr ""
 
 #: board.php:1010 board.php:1887 board.php:2244 board.php:2247 board.php:2345
 #: board.php:2348 board.php:2439 board.php:2461 board.php:2978 config.php:636
-#: config.php:1629 config.php:1656 config.php:1896 config.php:1935
-#: config.php:2868 config.php:2871 config.php:2872 config.php:2873
-#: config.php:2978 do_color_checker.php:156 do_color_checker.php:211
-#: do_unit_mail.php:461 do_unit_mail.php:470 do_unit_mail.php:561
+#: config.php:1629 config.php:1656 config.php:1894 config.php:1933
+#: config.php:2866 config.php:2869 config.php:2870 config.php:2871
+#: config.php:2976 do_color_checker.php:156 do_color_checker.php:211
+#: do_unit_mail.php:461 do_unit_mail.php:470 do_unit_mail.php:575
 #: incs/capts.inc.php:143 incs/full_scr.inc.php:183
-#: incs/functions.inc.php:3646 incs/functions.inc.php:4597
-#: incs/functions_mail.php:199 incs/functions_major.inc.php:364
-#: incs/functions_major.inc.php:3415 incs/functions_major.inc.php:3420
-#: incs/functions_major.inc.php:3661 incs/functions_major_nm.inc.php:302
-#: incs/functions_major_nm.inc.php:421 incs/functions_major_nm.inc.php:1310
-#: incs/functions_major_nm.inc.php:1315 incs/functions_major_nm.inc.php:1461
+#: incs/functions.inc.php:3645 incs/functions.inc.php:4596
+#: incs/functions_mail.php:199 incs/functions_major.inc.php:365
+#: incs/functions_major.inc.php:3416 incs/functions_major.inc.php:3421
+#: incs/functions_major.inc.php:3662 incs/functions_major_nm.inc.php:303
+#: incs/functions_major_nm.inc.php:422 incs/functions_major_nm.inc.php:1311
+#: incs/functions_major_nm.inc.php:1316 incs/functions_major_nm.inc.php:1462
 #: incs/functions_nm.inc.php:2406 incs/functions_nm.inc.php:3053
 #: incs/routes_inc.php:737 incs/routes_inc.php:742 incs/routes_inc.php:995
 #: m/ajax/return_iw.php:88 m/incs/sp_functions.inc.php:443 m/sp_resp.php:17
@@ -1811,18 +1827,18 @@ msgstr ""
 #: units_nm.php:541 units_nm.php:542 units_nm.php:856 units_nm.php:1159
 #: units_nm.php:1231 units_nm.php:1353 units_nm.php:1354 units_nm.php:1375
 #: units_nm.php:1380 units_nm.php:1447 units_nm.php:1456 units_nm.php:1457
-#: units_nm.php:1547 units_nm.php:1548 units_nm.php:1549 units_nm.php:1678
-#: units_nm.php:1729 units_nm.php:1740 units_nm.php:1741 units_nm.php:1772
-#: units_nm.php:1841 units_nm.php:1842 units_nm.php:1843 units_nm.php:1846
-#: units_nm.php:1981 units_nm.php:2252 units_nm.php:2265 units_nm.php:2276
-#: units_nm.php:2279 units_nm.php:2281
+#: units_nm.php:1485 units_nm.php:1547 units_nm.php:1548 units_nm.php:1549
+#: units_nm.php:1678 units_nm.php:1729 units_nm.php:1740 units_nm.php:1741
+#: units_nm.php:1772 units_nm.php:1841 units_nm.php:1842 units_nm.php:1843
+#: units_nm.php:1846 units_nm.php:1981 units_nm.php:2252 units_nm.php:2265
+#: units_nm.php:2276 units_nm.php:2279 units_nm.php:2281
 msgid "Units"
 msgstr "Units"
 
 #: board.php:1048 board.php:2293 board.php:2494
-#: incs/functions_major_nm.inc.php:905 m/sp_edit_call.php:186
+#: incs/functions_major_nm.inc.php:906 m/sp_edit_call.php:186
 #: portal/ajax/insert_request.php:175 portal/ajax/insert_ticket.php:210
-#: portal/ajax/insert_ticket_tentative.php:208 reports.php:1734
+#: portal/ajax/insert_ticket_tentative.php:208 reports.php:1737
 #: rm/ajax/ticket_detail.php:206 search.php:278
 msgid "Comments"
 msgstr "Comments"
@@ -1832,7 +1848,7 @@ msgid "Mileage"
 msgstr ""
 
 #: board.php:1054 board.php:2500 incs/full_scr.inc.php:1673
-#: incs/functions.inc.php:604 reports.php:617
+#: incs/functions.inc.php:607 reports.php:617
 #, fuzzy
 msgid "Start"
 msgstr "Run Start"
@@ -1844,11 +1860,11 @@ msgid "On scene"
 msgstr "On-scene"
 
 #: board.php:1058 board.php:2504 board.php:3004 board.php:3134
-#: incs/functions_mail.php:55 incs/functions_major.inc.php:4410
-#: incs/functions_major.inc.php:5191 incs/functions_major.inc.php:5283
-#: incs/functions_major.inc.php:5905 incs/functions_major_nm.inc.php:1763
-#: incs/functions_major_nm.inc.php:1944 incs/functions_major_nm.inc.php:2035
-#: incs/functions_major_nm.inc.php:2129 reports.php:1261
+#: incs/functions_mail.php:55 incs/functions_major.inc.php:4411
+#: incs/functions_major.inc.php:5192 incs/functions_major.inc.php:5284
+#: incs/functions_major.inc.php:5906 incs/functions_major_nm.inc.php:1764
+#: incs/functions_major_nm.inc.php:1945 incs/functions_major_nm.inc.php:2036
+#: incs/functions_major_nm.inc.php:2130 reports.php:1264
 #, fuzzy
 msgid "End"
 msgstr "Run End"
@@ -1915,8 +1931,8 @@ msgid "Please complete button action."
 msgstr ""
 
 #: board.php:1676 fac_routes.php:485 fac_routes.php:972 fac_routes_nm.php:483
-#: fac_routes_nm.php:971 incs/functions_major.inc.php:747
-#: incs/functions_major.inc.php:766 incs/functions_major_nm.inc.php:505
+#: fac_routes_nm.php:971 incs/functions_major.inc.php:748
+#: incs/functions_major.inc.php:767 incs/functions_major_nm.inc.php:506
 #: routes_nm.php:549
 msgid ""
 "Email edit operation requires popups to be enabled -- please adjust your "
@@ -1935,7 +1951,7 @@ msgstr ""
 msgid "Apply all"
 msgstr ""
 
-#: board.php:1701 patient.php:666 patient_w.php:612 units_nm.php:1375
+#: board.php:1701 patient.php:669 patient_w.php:613 units_nm.php:1375
 #, fuzzy
 msgid "Add"
 msgstr "Addr"
@@ -1955,12 +1971,12 @@ msgstr ""
 #: portal/request.php:436 portal/request.php:462 portal/request.php:469
 #: portal/request.php:503 portal/request.php:527 portal/request.php:534
 #: portal/request.php:560 portal/request.php:566 portal/request.php:928
-#: rm/index.php:2235 smtp_test.php:213 track_u.php:351 unit_log_view.php:132
+#: rm/index.php:2237 smtp_test.php:213 track_u.php:351 unit_log_view.php:132
 #: unit_ticket_log.php:168
 msgid "Close"
 msgstr ""
 
-#: board.php:1719 incs/full_scr.inc.php:225 rm/index.php:2177 track_u.php:352
+#: board.php:1719 incs/full_scr.inc.php:225 rm/index.php:2179 track_u.php:352
 msgid "Refresh"
 msgstr ""
 
@@ -1969,9 +1985,9 @@ msgstr ""
 msgid "Cleared"
 msgstr "Clear"
 
-#: board.php:1745 edit.php:1632 facilities.php:3008 facilities.php:3233
+#: board.php:1745 edit.php:1684 facilities.php:3008 facilities.php:3233
 #: facilities_nm.php:1554 facilities_nm.php:1694
-#: incs/functions_major.inc.php:5125 message.php:620 routes.php:1285
+#: incs/functions_major.inc.php:5126 message.php:620 routes.php:1285
 #: routes.php:1287 tables.php:2203 tables/c_un_status.php:44
 #: tables/u_un_status.php:101 units.php:4592 units.php:5013 units_nm.php:1885
 #: units_nm.php:2179
@@ -2005,29 +2021,29 @@ msgid "Click to sort by Unit"
 msgstr ""
 
 #: board.php:1889 board.php:2981 incs/full_scr.inc.php:2272
-#: incs/full_scr.inc.php:2815 incs/functions_major.inc.php:3458
-#: incs/functions_major_nm.inc.php:1146 incs/functions_major_nm.inc.php:1348
+#: incs/full_scr.inc.php:2815 incs/functions_major.inc.php:3459
+#: incs/functions_major_nm.inc.php:1147 incs/functions_major_nm.inc.php:1349
 #: message.php:599 mobile.php:128 units.php:4734 units_nm.php:1001
 #: units_nm.php:2010
 #, fuzzy
 msgid "Dispatch"
 msgstr "Dispatched"
 
-#: board.php:1899 incs/capts.inc.php:61 incs/functions.inc.php:2029
+#: board.php:1899 incs/capts.inc.php:61 incs/functions.inc.php:2032
 #: incs/functions_nm.inc.php:1096 mobile.php:127
 msgid "E-mail"
 msgstr "E-mail"
 
 #: board.php:1900 board.php:2261 board.php:2523 board.php:2995 board.php:3092
-#: incs/capts.inc.php:58 incs/functions.inc.php:587 m/sp_edit_call.php:194
-#: mobile.php:704 mobile.php:979 rm/index.php:963 rm/index.php:2192
+#: incs/capts.inc.php:58 incs/functions.inc.php:590 m/sp_edit_call.php:194
+#: mobile.php:704 mobile.php:979 rm/index.php:965 rm/index.php:2194
 #: units.php:176
 msgid "Dispatched"
 msgstr "Dispatched"
 
 #: board.php:1901 board.php:2265 board.php:2541 board.php:2996 board.php:3093
 #: incs/capts.inc.php:120 m/sp_edit_call.php:211 mobile.php:705 mobile.php:987
-#: rm/index.php:965 rm/index.php:2193
+#: rm/index.php:967 rm/index.php:2195
 msgid "Responding"
 msgstr "Responding"
 
@@ -2040,9 +2056,9 @@ msgid "Fac arr"
 msgstr ""
 
 #: board.php:1905 board.php:2281 board.php:2613 board.php:3003
-#: incs/capts.inc.php:45 incs/functions_major.inc.php:4583
+#: incs/capts.inc.php:45 incs/functions_major.inc.php:4584
 #: m/sp_edit_call.php:276 messages.php:290 mobile.php:699 mobile.php:707
-#: mobile.php:1022 rm/index.php:973 rm/index.php:2197 units.php:4948
+#: mobile.php:1022 rm/index.php:975 rm/index.php:2199 units.php:4948
 msgid "Clear"
 msgstr "Clear"
 
@@ -2054,8 +2070,8 @@ msgstr ""
 msgid "click to email unit {$unit_name}"
 msgstr ""
 
-#: board.php:2011 incs/functions_major_nm.inc.php:1419
-#: incs/functions_major_nm.inc.php:1592 top.php:1598
+#: board.php:2011 incs/functions_major_nm.inc.php:1420
+#: incs/functions_major_nm.inc.php:1593 top.php:1598
 msgid "N/A"
 msgstr ""
 
@@ -2081,11 +2097,11 @@ msgstr "Assignments"
 msgid "UNASSIGNED"
 msgstr ""
 
-#: board.php:2242 board.php:2620 board.php:3005 incs/functions.inc.php:1055
-#: incs/functions.inc.php:1112 incs/functions_nm.inc.php:691
+#: board.php:2242 board.php:2620 board.php:3005 incs/functions.inc.php:1058
+#: incs/functions.inc.php:1115 incs/functions_nm.inc.php:691
 #: incs/functions_nm.inc.php:748 log.php:142 portal.php:437 portal.php:482
 #: portal.php:522 portal.php:567 portal/requests.php:271
-#: portal/requests.php:344 reports.php:1325 tables/v_conditions.php:22
+#: portal/requests.php:344 reports.php:1328 tables/v_conditions.php:22
 #: tables/v_fac_types.php:22 tables/v_unit_types.php:22
 msgid "By"
 msgstr ""
@@ -2125,30 +2141,30 @@ msgstr "Dispatched"
 msgid "mouseover for details"
 msgstr ""
 
-#: board.php:2977 edit.php:1425 edit_nm.php:679 fac_routes.php:129
+#: board.php:2977 edit.php:1477 edit_nm.php:679 fac_routes.php:129
 #: fac_routes.php:1229 fac_routes_nm.php:126 fac_routes_nm.php:1227
 #: facilities.php:2415 facilities_nm.php:959 facilities_nm.php:1149
-#: incs/capts.inc.php:72 incs/functions.inc.php:3626
-#: incs/functions_mail.php:179 incs/functions_major.inc.php:3887
-#: incs/functions_major_nm.inc.php:1544 incs/functions_nm.inc.php:2386
+#: incs/capts.inc.php:72 incs/functions.inc.php:3625
+#: incs/functions_mail.php:179 incs/functions_major.inc.php:3888
+#: incs/functions_major_nm.inc.php:1545 incs/functions_nm.inc.php:2386
 #: incs/log_codes.inc.php:22 m/ajax/return_iw.php:167 m/sp_fac.php:114
-#: patient.php:698 reports.php:1323 reports.php:1735 units_nm.php:44
+#: patient.php:701 reports.php:1326 reports.php:1738 units_nm.php:44
 msgid "Facility"
 msgstr "Facility"
 
 #: board.php:2987 do_direcs_mail.php:136 do_indiv_mail.php:103
 #: incs/capts.inc.php:34 incs/full_scr.inc.php:1672 incs/full_scr.inc.php:1751
-#: incs/full_scr.inc.php:1939 incs/functions.inc.php:3512
-#: incs/functions_mail.php:75 incs/functions_major.inc.php:3023
-#: incs/functions_major.inc.php:4368 incs/functions_major.inc.php:5164
-#: incs/functions_major.inc.php:5258 incs/functions_major.inc.php:5880
-#: incs/functions_major_nm.inc.php:1727 incs/functions_major_nm.inc.php:1917
-#: incs/functions_major_nm.inc.php:2010 incs/functions_major_nm.inc.php:2104
+#: incs/full_scr.inc.php:1939 incs/functions.inc.php:3511
+#: incs/functions_mail.php:75 incs/functions_major.inc.php:3024
+#: incs/functions_major.inc.php:4369 incs/functions_major.inc.php:5165
+#: incs/functions_major.inc.php:5259 incs/functions_major.inc.php:5881
+#: incs/functions_major_nm.inc.php:1728 incs/functions_major_nm.inc.php:1918
+#: incs/functions_major_nm.inc.php:2011 incs/functions_major_nm.inc.php:2105
 #: incs/functions_nm.inc.php:2274 message.php:109 nearby.php:69
 msgid "Addr"
 msgstr "Addr"
 
-#: board.php:2994 board.php:3091 incident_popup.php:206 reports.php:1729
+#: board.php:2994 board.php:3091 incident_popup.php:206 reports.php:1732
 #: search.php:234
 msgid "Opened"
 msgstr ""
@@ -2179,7 +2195,7 @@ msgstr "Dispatched"
 msgid "Incident closed"
 msgstr "Incidents"
 
-#: board.php:3006 incs/functions.inc.php:1112 incs/functions_nm.inc.php:748
+#: board.php:3006 incs/functions.inc.php:1115 incs/functions_nm.inc.php:748
 #: reports.php:745 unit_log_view.php:130
 #, fuzzy
 msgid "Comment"
@@ -2207,7 +2223,7 @@ msgstr ""
 msgid "Calls for"
 msgstr ""
 
-#: call_hist.php:89 incs/full_scr.inc.php:180 incs/functions_major.inc.php:418
+#: call_hist.php:89 incs/full_scr.inc.php:180 incs/functions_major.inc.php:419
 #: smtp_test.php:96 tables/c_un_status.php:51 tables/u_un_status.php:114
 #: units.php:3940 units.php:4265 units_nm.php:1464 units_nm.php:1752
 msgid "None"
@@ -2268,7 +2284,7 @@ msgstr ""
 msgid "Checking..."
 msgstr ""
 
-#: chat.php:494 rm/index.php:2156
+#: chat.php:494 rm/index.php:2158
 msgid "Click Cancel to return to chat messages"
 msgstr ""
 
@@ -2278,7 +2294,7 @@ msgstr ""
 
 #: chat.php:523 config.php:969 config.php:1013 config.php:1175
 #: hints_config.php:312 incs/full_scr.inc.php:179
-#: incs/functions_major.inc.php:417 reports.php:1892 reports.php:1933
+#: incs/functions_major.inc.php:418 reports.php:1895 reports.php:1936
 #: rm/chat.php:85 search.php:272 search.php:294
 msgid "All"
 msgstr ""
@@ -2414,11 +2430,11 @@ msgstr ""
 msgid "Cancel / Return to Config"
 msgstr ""
 
-#: cleanse_regions.php:415 config.php:1642 config.php:2792 config.php:2794
+#: cleanse_regions.php:415 config.php:1642 config.php:2790 config.php:2792
 #: facilities.php:2451 facilities.php:2467 facilities.php:2485
 #: facilities.php:2770 facilities.php:2782 facilities_nm.php:1186
 #: facilities_nm.php:1202 facilities_nm.php:1220 facilities_nm.php:1412
-#: facilities_nm.php:1423 facilities_nm.php:1434 rm/index.php:181
+#: facilities_nm.php:1423 facilities_nm.php:1434 rm/index.php:182
 #: stats_scr.php:55 units_nm.php:1391
 msgid "Region"
 msgstr "Region"
@@ -2428,8 +2444,8 @@ msgstr "Region"
 msgid "Users"
 msgstr "User"
 
-#: cleanse_regions.php:415 config.php:2977 file_upload.php:423 patient.php:58
-#: patient_w.php:73 reset_regions.php:24 reset_responder_status.php:76
+#: cleanse_regions.php:415 config.php:2975 file_upload.php:423 patient.php:61
+#: patient_w.php:74 reset_regions.php:24 reset_responder_status.php:76
 #, fuzzy
 msgid "Tickets"
 msgstr "Tickets host"
@@ -2530,15 +2546,15 @@ msgstr ""
 msgid "Enter Incident Close Information"
 msgstr ""
 
-#: config.php:160 config.php:2161
+#: config.php:160 config.php:2159
 msgid "start"
 msgstr ""
 
-#: config.php:161 config.php:2162
+#: config.php:161 config.php:2160
 msgid "Dumping tables for database"
 msgstr ""
 
-#: config.php:177 config.php:2178
+#: config.php:177 config.php:2176
 #, fuzzy
 msgid "end"
 msgstr "Gender"
@@ -2639,16 +2655,16 @@ msgid "Current Notifies"
 msgstr "Current situation"
 
 #: config.php:952 config.php:1001 config.php:1158 config.php:1492
-#: config.php:2199 edit_nm.php:547 incident_popup.php:206 mail.php:133
+#: config.php:2197 edit_nm.php:547 incident_popup.php:206 mail.php:133
 #: portal.php:617 portal.php:659 search.php:233
 #, fuzzy
 msgid "Ticket"
 msgstr "Tickets host"
 
 #: config.php:952 config.php:1158 config.php:1254 config.php:1670
-#: config.php:1948 facilities.php:2014 facilities_nm.php:828
-#: incs/full_scr.inc.php:2822 incs/functions_major.inc.php:3930
-#: incs/functions_major.inc.php:5722 m/sp_map.php:723 m/sp_map_spec.php:664
+#: config.php:1946 facilities.php:2014 facilities_nm.php:828
+#: incs/full_scr.inc.php:2822 incs/functions_major.inc.php:3931
+#: incs/functions_major.inc.php:5723 m/sp_map.php:723 m/sp_map_spec.php:664
 #: portal.php:1084 portal/request.php:850 tables/c_personnel.php:51
 #: tables/u_personnel.php:52 tables/v_personnel.php:48 units.php:5156
 #: units_nm.php:2281
@@ -2718,7 +2734,7 @@ msgstr ""
 msgid "Notify update complete."
 msgstr ""
 
-#: config.php:1119 config.php:2140 facilities.php:937 ics213.php:620
+#: config.php:1119 config.php:2138 facilities.php:937 ics213.php:620
 #: opengts.php:50
 msgid "Error"
 msgstr ""
@@ -2747,8 +2763,8 @@ msgstr "Notify"
 msgid "Notifies"
 msgstr "Notify"
 
-#: config.php:1212 config.php:2400 facilities.php:1294 reports.php:1741
-#: reports.php:1811 warn_locations_nm.php:372
+#: config.php:1212 config.php:2398 facilities.php:1294 reports.php:1744
+#: reports.php:1814 warn_locations_nm.php:372
 msgid "none"
 msgstr ""
 
@@ -2761,7 +2777,7 @@ msgstr "Add note"
 msgid "Your profile has been updated."
 msgstr ""
 
-#: config.php:1251 config.php:2679 incs/capts.inc.php:62
+#: config.php:1251 config.php:2677 incs/capts.inc.php:62
 msgid "Edit My Profile"
 msgstr ""
 
@@ -2770,12 +2786,12 @@ msgstr ""
 msgid "New Password"
 msgstr "Password"
 
-#: config.php:1253 config.php:1611 config.php:1887 edit_nm.php:551
+#: config.php:1253 config.php:1611 config.php:1885 edit_nm.php:551
 #, fuzzy
 msgid "Confirm"
 msgstr "Config"
 
-#: config.php:1255 config.php:1669 config.php:1947 log.php:142 reports.php:931
+#: config.php:1255 config.php:1669 config.php:1945 log.php:142 reports.php:931
 msgid "Info"
 msgstr ""
 
@@ -2816,7 +2832,7 @@ msgstr ""
 msgid "Database Backed Up"
 msgstr ""
 
-#: config.php:1355 config.php:2825 incs/capts.inc.php:119
+#: config.php:1355 config.php:2823 incs/capts.inc.php:119
 msgid "Reset Database"
 msgstr ""
 
@@ -2874,12 +2890,12 @@ msgid ""
 "start"
 msgstr ""
 
-#: config.php:1393 config.php:2685 incs/capts.inc.php:63
+#: config.php:1393 config.php:2683 incs/capts.inc.php:63
 msgid "Edit Settings"
 msgstr ""
 
-#: config.php:1419 config.php:1531 config.php:2457 config.php:2563
-#: config.php:2632
+#: config.php:1419 config.php:1531 config.php:2455 config.php:2561
+#: config.php:2630
 msgid "Apply changes"
 msgstr ""
 
@@ -2887,7 +2903,7 @@ msgstr ""
 msgid "Edit Messaging Settings"
 msgstr ""
 
-#: config.php:1499 incs/functions_major.inc.php:4597 messages.php:305
+#: config.php:1499 incs/functions_major.inc.php:4598 messages.php:305
 #: search.php:279 search.php:291 units.php:4963
 msgid "Owner"
 msgstr ""
@@ -2914,90 +2930,90 @@ msgstr ""
 msgid "User Data"
 msgstr "User"
 
-#: config.php:1610 config.php:1886 fileman.php:216 t_tracker.php:140
+#: config.php:1610 config.php:1884 fileman.php:216 t_tracker.php:140
 #: t_tracker.php:177
 #, fuzzy
 msgid "User ID"
 msgstr "User"
 
-#: config.php:1611 config.php:1843 config.php:1887 incs/capts.inc.php:108
+#: config.php:1611 config.php:1841 config.php:1885 incs/capts.inc.php:108
 #: incs/login.inc.php:609 opengts.php:197 rm/incs/mobile_login.inc.php:509
 #: smtp_test.php:102
 msgid "Password"
 msgstr "Password"
 
-#: config.php:1612 config.php:1846 config.php:1888 incs/config.inc.php:390
+#: config.php:1612 config.php:1844 config.php:1886 incs/config.inc.php:390
 msgid "Level"
 msgstr ""
 
-#: config.php:1615 config.php:1855 config.php:1893 do_all_mail.php:226
-#: incs/functions.inc.php:2745 mail_all.php:220
+#: config.php:1615 config.php:1853 config.php:1891 do_all_mail.php:226
+#: incs/functions.inc.php:2748 mail_all.php:220
 msgid "Operator"
 msgstr ""
 
-#: config.php:1617 config.php:1856 config.php:1894 do_all_mail.php:227
-#: incs/functions.inc.php:2746 mail_all.php:221
+#: config.php:1617 config.php:1854 config.php:1892 do_all_mail.php:227
+#: incs/functions.inc.php:2749 mail_all.php:221
 msgid "Guest"
 msgstr ""
 
-#: config.php:1619 config.php:1854
+#: config.php:1619 config.php:1852
 msgid "Administrator"
 msgstr ""
 
-#: config.php:1622 config.php:1850 config.php:1890 do_all_mail.php:224
-#: incs/functions.inc.php:2743 mail_all.php:218
+#: config.php:1622 config.php:1848 config.php:1888 do_all_mail.php:224
+#: incs/functions.inc.php:2746 mail_all.php:218
 msgid "Super"
 msgstr ""
 
-#: config.php:1625 config.php:1857 config.php:1895 do_all_mail.php:228
-#: incs/functions.inc.php:2747 mail_all.php:222
+#: config.php:1625 config.php:1855 config.php:1893 do_all_mail.php:228
+#: incs/functions.inc.php:2750 mail_all.php:222
 msgid "Member"
 msgstr ""
 
-#: config.php:1632 config.php:1859 config.php:1897 incs/functions.inc.php:2749
+#: config.php:1632 config.php:1857 config.php:1895 incs/functions.inc.php:2752
 #: stats_scr.php:493 stats_scr.php:594 stats_scr.php:1265 stats_scr.php:1579
 #, fuzzy
 msgid "Statistics"
 msgstr "Status"
 
-#: config.php:1635 config.php:1860 config.php:1898 incs/functions.inc.php:2750
+#: config.php:1635 config.php:1858 config.php:1896 incs/functions.inc.php:2753
 #: portal.php:426 portal.php:479 portal.php:564 portal.php:1042
 #: portal/ajax/insert_request.php:181 portal/request.php:768
 #: portal/request.php:769
 msgid "Service User"
 msgstr "Service User"
 
-#: config.php:1659 config.php:1937
+#: config.php:1659 config.php:1935
 #, fuzzy
 msgid "Last name"
 msgstr "Contact name"
 
-#: config.php:1661 config.php:1939
+#: config.php:1661 config.php:1937
 msgid "First"
 msgstr ""
 
-#: config.php:1663 config.php:1941
+#: config.php:1663 config.php:1939
 msgid "MI"
 msgstr ""
 
-#: config.php:1665 config.php:1943
+#: config.php:1665 config.php:1941
 msgid "DOB"
 msgstr ""
 
-#: config.php:1666 config.php:1845 config.php:1944 opena.php:98
+#: config.php:1666 config.php:1843 config.php:1942 opena.php:98
 msgid "Callsign"
 msgstr ""
 
-#: config.php:1671 config.php:1681 config.php:1949 config.php:1959
+#: config.php:1671 config.php:1681 config.php:1947 config.php:1957
 msgid "Alternate"
 msgstr ""
 
-#: config.php:1673 config.php:1951
+#: config.php:1673 config.php:1949
 #, fuzzy
 msgid "Street addr"
 msgstr "Street"
 
-#: config.php:1683 config.php:1961 do_color_checker.php:168
+#: config.php:1683 config.php:1959 do_color_checker.php:168
 #: do_color_checker.php:223 incs/capts.inc.php:93 top.php:1711 units.php:3932
 #: units.php:4253 units.php:4719 units_nm.php:1456 units_nm.php:1740
 msgid "Mobile"
@@ -3008,7 +3024,7 @@ msgstr "Mobile"
 msgid "Remove User"
 msgstr "Service User"
 
-#: config.php:1708 config.php:1982
+#: config.php:1708 config.php:1980
 #, fuzzy
 msgid "Not authorized."
 msgstr "Dispatched"
@@ -3017,9 +3033,9 @@ msgstr "Dispatched"
 msgid "DENIED! - User has active database records."
 msgstr ""
 
-#: config.php:1735 config.php:1788 incs/capts.inc.php:145
+#: config.php:1735 config.php:1786 incs/capts.inc.php:145
 #: incs/config.inc.php:388 incs/login.inc.php:605 reports.php:932
-#: reports.php:1051 rm/incs/mobile_login.inc.php:508
+#: reports.php:1054 rm/incs/mobile_login.inc.php:508
 msgid "User"
 msgstr "User"
 
@@ -3027,42 +3043,42 @@ msgstr "User"
 msgid "has been deleted from database."
 msgstr ""
 
-#: config.php:1788 facilities_nm.php:1029 facilities_nm.php:1149
+#: config.php:1786 facilities_nm.php:1029 facilities_nm.php:1149
 msgid "data has been updated."
 msgstr ""
 
-#: config.php:1838
+#: config.php:1836
 msgid "Passwords don't match. Please try again."
 msgstr ""
 
-#: config.php:1842
+#: config.php:1840
 #, fuzzy
 msgid "User ID:"
 msgstr "User"
 
-#: config.php:1844
+#: config.php:1842
 #, fuzzy
 msgid "Confirm Password"
 msgstr "Password"
 
-#: config.php:1858 do_all_mail.php:229 fac_routes.php:1229
+#: config.php:1856 do_all_mail.php:229 fac_routes.php:1229
 #: fac_routes_nm.php:1227 incs/capts.inc.php:142 incs/config.inc.php:391
-#: incs/full_scr.inc.php:1941 incs/functions.inc.php:1055
-#: incs/functions.inc.php:1112 incs/functions.inc.php:2748
+#: incs/full_scr.inc.php:1941 incs/functions.inc.php:1058
+#: incs/functions.inc.php:1115 incs/functions.inc.php:2751
 #: incs/functions_nm.inc.php:691 incs/functions_nm.inc.php:748
-#: incs/log_codes.inc.php:23 mail_all.php:223 main.php:943 reports.php:615
-#: reports.php:730 reports.php:857 reports.php:930 reports.php:1323
-#: reports.php:1737 reports.php:1892 reports.php:1967 routes_i.php:502
+#: incs/log_codes.inc.php:23 mail_all.php:223 main.php:939 reports.php:615
+#: reports.php:730 reports.php:857 reports.php:930 reports.php:1326
+#: reports.php:1740 reports.php:1895 reports.php:1970 routes_i.php:502
 #: routes_nm.php:1588 unit_ticket_log.php:143 units.php:174 units.php:3801
 #: units.php:4698
 msgid "Unit"
 msgstr "Unit"
 
-#: config.php:1862
+#: config.php:1860
 msgid "Info:"
 msgstr ""
 
-#: config.php:1875 facilities.php:2528 facilities.php:2541
+#: config.php:1873 facilities.php:2528 facilities.php:2541
 #: facilities_nm.php:1243 facilities_nm.php:1256
 #: portal/import_requests.php:323 quick_start.php:198 quick_start.php:641
 #: quick_start.php:1119 quick_start.php:1139 tables.php:1183 units.php:3924
@@ -3070,576 +3086,576 @@ msgstr ""
 msgid "Select one"
 msgstr ""
 
-#: config.php:1881
+#: config.php:1879
 #, fuzzy
 msgid "Add User"
 msgstr "User"
 
-#: config.php:1885 facilities.php:2654 facilities_nm.php:1342 units.php:4073
+#: config.php:1883 facilities.php:2654 facilities_nm.php:1342 units.php:4073
 #: warn_locations.php:1391 warn_locations_nm.php:721
 msgid "Required"
 msgstr ""
 
-#: config.php:1892 do_all_mail.php:225 incs/functions.inc.php:2744
+#: config.php:1890 do_all_mail.php:225 incs/functions.inc.php:2747
 #: mail_all.php:219
 msgid "Admin"
 msgstr ""
 
-#: config.php:1903 config.php:1916 edit.php:1245 edit.php:1255 edit.php:1265
+#: config.php:1901 config.php:1914 edit.php:1297 edit.php:1307 edit.php:1317
 #: tables/c_in_types.php:34 tables/c_un_status.php:45 tables/u_in_types.php:41
 #: tables/u_un_status.php:107 tables/v_in_types.php:39
 msgid "Group"
 msgstr "Group"
 
-#: config.php:2089
+#: config.php:2087
 msgid "GMaps API Key saved to database."
 msgstr ""
 
-#: config.php:2098
+#: config.php:2096
 msgid "Obtain GMaps API key at"
 msgstr ""
 
-#: config.php:2100
+#: config.php:2098
 msgid "Copy/paste key"
 msgstr ""
 
-#: config.php:2117 config.php:2375
+#: config.php:2115 config.php:2373
 msgid "Please correct and re-submit"
 msgstr ""
 
-#: config.php:2180
+#: config.php:2178
 msgid "Click to copy the dump"
 msgstr ""
 
-#: config.php:2197
+#: config.php:2195
 msgid "Select Closed Tickets for Permanent Deletion"
 msgstr ""
 
-#: config.php:2224
+#: config.php:2222
 msgid "Select All"
 msgstr ""
 
-#: config.php:2233
+#: config.php:2231
 #, fuzzy
 msgid "No Closed Tickets!"
 msgstr "Close incident"
 
-#: config.php:2247
+#: config.php:2245
 msgid "Please confirm deletions - cannot be undone!"
 msgstr ""
 
-#: config.php:2250
+#: config.php:2248
 #, fuzzy
 msgid "Confirmed"
 msgstr "Config"
 
-#: config.php:2351 config.php:2356 config.php:2366
+#: config.php:2349 config.php:2354 config.php:2364
 msgid "'Label' not used with this option"
 msgstr ""
 
-#: config.php:2352
+#: config.php:2350
 msgid "'Separator' not used with this option"
 msgstr ""
 
-#: config.php:2353
+#: config.php:2351
 msgid "'Next number' not used with this option"
 msgstr ""
 
-#: config.php:2357 config.php:2362 config.php:2367
+#: config.php:2355 config.php:2360 config.php:2365
 msgid "'Next number' must be numeric"
 msgstr ""
 
-#: config.php:2358 config.php:2363 config.php:2368
+#: config.php:2356 config.php:2361 config.php:2366
 msgid "'Next number' must be 1 or greater"
 msgstr ""
 
-#: config.php:2361
+#: config.php:2359
 msgid "'Label' required  with this option"
 msgstr ""
 
-#: config.php:2392
+#: config.php:2390
 msgid "Automatic Incident Numbers"
 msgstr ""
 
-#: config.php:2392
+#: config.php:2390
 msgid "mouseover styles for hints"
 msgstr ""
 
-#: config.php:2397
+#: config.php:2395
 msgid "Style"
 msgstr ""
 
-#: config.php:2399
+#: config.php:2397
 msgid "no incident numbers used - the default"
 msgstr ""
 
-#: config.php:2401
+#: config.php:2399
 #, fuzzy
 msgid "incident numbers only"
 msgstr "Incident name"
 
-#: config.php:2403
+#: config.php:2401
 msgid "your \\'Label\\' precedes the incident number"
 msgstr ""
 
-#: config.php:2404 config.php:2411
+#: config.php:2402 config.php:2409
 msgid "Label"
 msgstr ""
 
-#: config.php:2405
+#: config.php:2403
 msgid "the 2-digit year precedes the incident number"
 msgstr ""
 
-#: config.php:2406
+#: config.php:2404
 msgid "YR"
 msgstr ""
 
-#: config.php:2415
+#: config.php:2413
 msgid "Separator"
 msgstr ""
 
-#: config.php:2419
+#: config.php:2417
 msgid "Next number"
 msgstr ""
 
-#: config.php:2424
-#, fuzzy
-msgid "Append {get_text(\"Incident\")} nature"
-msgstr "Incident name"
+#: config.php:2422
+#, php-format
+msgid "Append %s nature"
+msgstr ""
 
-#: config.php:2474
+#: config.php:2472
 msgid "Incident Add/Edit hints - enter revisions"
 msgstr ""
 
-#: config.php:2513
+#: config.php:2511
 msgid "Hint updates applied!"
 msgstr ""
 
-#: config.php:2527
+#: config.php:2525
 msgid "CSS Day Settings saved"
 msgstr ""
 
-#: config.php:2537
+#: config.php:2535
 msgid "Edit CSS Colors - Day colors"
 msgstr ""
 
-#: config.php:2557 config.php:2626
+#: config.php:2555 config.php:2624
 msgid "Try Colors"
 msgstr ""
 
-#: config.php:2596
+#: config.php:2594
 msgid "CSS Night Settings saved"
 msgstr ""
 
-#: config.php:2606
+#: config.php:2604
 msgid "Edit CSS Colors - Night colors"
 msgstr ""
 
-#: config.php:2673 incs/capts.inc.php:26
+#: config.php:2671 incs/capts.inc.php:26
 msgid "About this version"
 msgstr ""
 
-#: config.php:2677 incs/capts.inc.php:64
+#: config.php:2675 incs/capts.inc.php:64
 #, fuzzy
 msgid "Email users"
 msgstr "Email"
 
-#: config.php:2678 incs/capts.inc.php:52
+#: config.php:2676 incs/capts.inc.php:52
 #, fuzzy
 msgid "Contacts"
 msgstr "Contact name"
 
-#: config.php:2684 incs/capts.inc.php:32
+#: config.php:2682 incs/capts.inc.php:32
 #, fuzzy
 msgid "Add user"
 msgstr "Add note"
 
-#: config.php:2686 incs/capts.inc.php:33
+#: config.php:2684 incs/capts.inc.php:33
 msgid "Add/Edit Notifies"
 msgstr ""
 
-#: config.php:2687 incs/capts.inc.php:55
+#: config.php:2685 incs/capts.inc.php:55
 msgid "Delete Closed Tickets"
 msgstr ""
 
-#: config.php:2688 incs/capts.inc.php:36
+#: config.php:2686 incs/capts.inc.php:36
 msgid "Alarm audio test"
 msgstr ""
 
-#: config.php:2692
+#: config.php:2690
 msgid "ICS FORMS"
 msgstr ""
 
-#: config.php:2699
+#: config.php:2697
 msgid "Evacuees"
 msgstr ""
 
-#: config.php:2705 incs/capts.inc.php:48
+#: config.php:2703 incs/capts.inc.php:48
 #, fuzzy
 msgid "Constituents"
 msgstr "Comments"
 
-#: config.php:2711 incs/capts.inc.php:84 patient.php:53 patient_w.php:67
+#: config.php:2709 incs/capts.inc.php:84 patient.php:56 patient_w.php:68
 msgid "Insurance"
 msgstr "Insurance"
 
-#: config.php:2717
+#: config.php:2715
 msgid "Personnel"
 msgstr ""
 
-#: config.php:2723
+#: config.php:2721
 msgid "PIN Control"
 msgstr ""
 
-#: config.php:2729
+#: config.php:2727
 msgid "Organisations"
 msgstr ""
 
-#: config.php:2736 edit.php:1630 facilities.php:3006 facilities.php:3231
+#: config.php:2734 edit.php:1682 facilities.php:3006 facilities.php:3231
 #: facilities_nm.php:1552 facilities_nm.php:1692
-#: incs/functions_major.inc.php:5123 top.php:1714 units.php:4590
+#: incs/functions_major.inc.php:5124 top.php:1714 units.php:4590
 #: units.php:5011 units_nm.php:1883 units_nm.php:2177
 msgid "Files"
 msgstr ""
 
-#: config.php:2739 fileman.php:264
+#: config.php:2737 fileman.php:264
 msgid "Upload File"
 msgstr ""
 
-#: config.php:2740
+#: config.php:2738
 msgid "File Manager"
 msgstr ""
 
-#: config.php:2744
+#: config.php:2742
 #, fuzzy
 msgid "Service User Portal"
 msgstr "Service User"
 
-#: config.php:2747
+#: config.php:2745
 #, fuzzy
 msgid "Service User Requests"
 msgstr "Service User"
 
-#: config.php:2754
+#: config.php:2752
 #, fuzzy
 msgid "Messaging"
 msgstr "messaging help"
 
-#: config.php:2756
+#: config.php:2754
 #, fuzzy
 msgid "Messaging Settings"
 msgstr "messaging help"
 
-#: config.php:2757
+#: config.php:2755
 msgid "Message Archiving"
 msgstr ""
 
-#: config.php:2758
+#: config.php:2756
 msgid "Email White List"
 msgstr ""
 
-#: config.php:2759
+#: config.php:2757
 msgid "Get all Messages"
 msgstr ""
 
-#: config.php:2760
+#: config.php:2758
 msgid "Edit Standard Messages"
 msgstr ""
 
-#: config.php:2761
+#: config.php:2759
 msgid "Message Text replacement"
 msgstr ""
 
-#: config.php:2765
+#: config.php:2763
 msgid "Edit Auto Status Text"
 msgstr ""
 
-#: config.php:2776
+#: config.php:2774
 #, fuzzy
 msgid "Auto Dispatch Status"
 msgstr "Dispatched"
 
-#: config.php:2778
+#: config.php:2776
 msgid "Auto Status Values"
 msgstr ""
 
-#: config.php:2783 config.php:2785
+#: config.php:2781 config.php:2783
 #, fuzzy
 msgid "Email Lists"
 msgstr "Email"
 
-#: config.php:2786
+#: config.php:2784
 #, fuzzy
 msgid "Email List Members"
 msgstr "Email"
 
-#: config.php:2794
+#: config.php:2792
 msgid "List and Cleanse"
 msgstr ""
 
-#: config.php:2794
+#: config.php:2792
 #, fuzzy
 msgid "Allocations"
 msgstr "Actions"
 
-#: config.php:2796
+#: config.php:2794
 msgid "Display Colors"
 msgstr ""
 
-#: config.php:2799
+#: config.php:2797
 msgid "Edit Day Colors"
 msgstr ""
 
-#: config.php:2800
+#: config.php:2798
 msgid "Edit Night Colors"
 msgstr ""
 
-#: config.php:2805
+#: config.php:2803
 msgid "Maps Configuration"
 msgstr ""
 
-#: config.php:2808
+#: config.php:2806
 msgid "Set Default Map"
 msgstr ""
 
-#: config.php:2809
+#: config.php:2807
 msgid "Set GMaps API key"
 msgstr ""
 
-#: config.php:2813
+#: config.php:2811
 msgid "Download Mobile Map Tiles (OSM)"
 msgstr ""
 
-#: config.php:2821
+#: config.php:2819
 msgid "Database Functions"
 msgstr ""
 
-#: config.php:2824 incs/capts.inc.php:60
+#: config.php:2822 incs/capts.inc.php:60
 msgid "Dump DB to screen"
 msgstr ""
 
-#: config.php:2826 incs/capts.inc.php:104
+#: config.php:2824 incs/capts.inc.php:104
 msgid "Optimize Database"
 msgstr ""
 
-#: config.php:2830 rm/index.php:2178
+#: config.php:2828 rm/index.php:2180
 msgid "Road Conditions"
 msgstr ""
 
-#: config.php:2833
+#: config.php:2831
 #, fuzzy
 msgid "Conditions Table"
 msgstr "Add Action"
 
-#: config.php:2840
+#: config.php:2838
 msgid "Outgoing email and Unit Tracking Tests"
 msgstr ""
 
-#: config.php:2843 units.php:3941 units_nm.php:1465
+#: config.php:2841 units.php:3941 units_nm.php:1465
 msgid "APRS"
 msgstr ""
 
-#: config.php:2844 units.php:3942 units_nm.php:1466
+#: config.php:2842 units.php:3942 units_nm.php:1466
 msgid "Instamapper"
 msgstr ""
 
-#: config.php:2847
+#: config.php:2845
 msgid "SMTP Mail"
 msgstr ""
 
-#: config.php:2848
+#: config.php:2846
 msgid "Native PHP Mail"
 msgstr ""
 
-#: config.php:2851
+#: config.php:2849
 msgid "Google Latitude"
 msgstr ""
 
-#: config.php:2852 units.php:3943 units_nm.php:1467
+#: config.php:2850 units.php:3943 units_nm.php:1467
 #, fuzzy
 msgid "LocateA"
 msgstr "Location"
 
-#: config.php:2853 gtrack.php:22 units.php:3944 units_nm.php:1468
+#: config.php:2851 gtrack.php:22 units.php:3944 units_nm.php:1468
 msgid "Gtrack"
 msgstr ""
 
-#: config.php:2854
+#: config.php:2852
 msgid "Open GTS"
 msgstr ""
 
-#: config.php:2855
+#: config.php:2853
 msgid "Internal Tracker"
 msgstr ""
 
-#: config.php:2861 config.php:2868 help.php:55 help.php:121 stats_scr.php:494
+#: config.php:2859 config.php:2866 help.php:55 help.php:121 stats_scr.php:494
 #: stats_scr.php:595 stats_scr.php:1043 stats_scr.php:1580
 #, fuzzy
 msgid "Configuration"
 msgstr "Situation"
 
-#: config.php:2864
+#: config.php:2862
 #, fuzzy
 msgid "Incident Numbers"
 msgstr "Incident name"
 
-#: config.php:2865 incs/capts.inc.php:81
+#: config.php:2863 incs/capts.inc.php:81
 #, fuzzy
 msgid "Incident types"
 msgstr "Incidents"
 
-#: config.php:2871
+#: config.php:2869
 msgid "types"
 msgstr ""
 
-#: config.php:2872
+#: config.php:2870
 #, fuzzy
 msgid "status"
 msgstr "Status"
 
-#: config.php:2873 top.php:1795
+#: config.php:2871 top.php:1795
 #, fuzzy
 msgid "Set"
 msgstr "St"
 
-#: config.php:2873
+#: config.php:2871
 msgid "Status to a common setting"
 msgstr ""
 
-#: config.php:2881
+#: config.php:2879
 #, fuzzy
 msgid "Facilities Configuration"
 msgstr "Facility contact"
 
-#: config.php:2884 incs/capts.inc.php:70
+#: config.php:2882 incs/capts.inc.php:70
 #, fuzzy
 msgid "Facility Status"
 msgstr "Facility State"
 
-#: config.php:2885 incs/capts.inc.php:71
+#: config.php:2883 incs/capts.inc.php:71
 #, fuzzy
 msgid "Facility Types"
 msgstr "Facilities"
 
-#: config.php:2893 config.php:2896 warn_locations.php:1766
+#: config.php:2891 config.php:2894 warn_locations.php:1766
 #: warn_locations_nm.php:899
 #, fuzzy
 msgid "Warn Locations"
 msgstr "Location"
 
-#: config.php:2900
+#: config.php:2898
 msgid "Captions, Signals, Hints and Places"
 msgstr ""
 
-#: config.php:2903
+#: config.php:2901
 #, fuzzy
 msgid "Captions"
 msgstr "Actions"
 
-#: config.php:2904 rm/chat.php:66
+#: config.php:2902 rm/chat.php:66
 msgid "Signals"
 msgstr ""
 
-#: config.php:2905
+#: config.php:2903
 msgid "Hints"
 msgstr ""
 
-#: config.php:2906
+#: config.php:2904
 msgid "Places"
 msgstr ""
 
-#: config.php:2909 config.php:2912 landb.php:672
+#: config.php:2907 config.php:2910 landb.php:672
 msgid "Map Markup"
 msgstr ""
 
-#: config.php:2913
+#: config.php:2911
 msgid "MM Categories"
 msgstr ""
 
-#: config.php:2921
+#: config.php:2919
 msgid "Cloud"
 msgstr ""
 
-#: config.php:2924 tables.php:2199
+#: config.php:2922 tables.php:2199
 msgid "Support"
 msgstr ""
 
-#: config.php:2925
+#: config.php:2923
 msgid "DB Admin"
 msgstr ""
 
-#: config.php:2934
+#: config.php:2932
 msgid "Courses"
 msgstr ""
 
-#: config.php:2940
+#: config.php:2938
 msgid "Update Courses"
 msgstr ""
 
-#: config.php:2941
+#: config.php:2939
 msgid "Update Courses taken"
 msgstr ""
 
-#: config.php:2942
+#: config.php:2940
 #, fuzzy
 msgid "Report"
 msgstr "Reports"
 
-#: config.php:2945 course_report.php:85
+#: config.php:2943 course_report.php:85
 msgid "All users"
 msgstr ""
 
-#: config.php:2959
+#: config.php:2957
 #, fuzzy
 msgid "Modules"
 msgstr "Module"
 
-#: config.php:2966
+#: config.php:2964
 msgid "Modules Configuration"
 msgstr ""
 
-#: config.php:2967
+#: config.php:2965
 msgid "Delete Tickets Module"
 msgstr ""
 
-#: config.php:2971
+#: config.php:2969
 #, fuzzy
 msgid "Add Tickets Module"
 msgstr "Tickets host"
 
-#: config.php:2975 do_color_checker.php:164 do_color_checker.php:219
-#: incs/capts.inc.php:89 incs/functions.inc.php:1053
-#: incs/functions.inc.php:1110 incs/functions_major.inc.php:3463
+#: config.php:2973 do_color_checker.php:164 do_color_checker.php:219
+#: incs/capts.inc.php:89 incs/functions.inc.php:1056
+#: incs/functions.inc.php:1113 incs/functions_major.inc.php:3464
 #: incs/functions_nm.inc.php:689 incs/functions_nm.inc.php:746
-#: reports.php:1318 reports.php:1967 reports.php:1973 top.php:1702
+#: reports.php:1321 reports.php:1970 reports.php:1976 top.php:1702
 #: unit_ticket_log.php:150 units_nm.php:2033
 msgid "Log"
 msgstr "Log"
 
-#: config.php:2976
+#: config.php:2974
 msgid "Settings"
 msgstr ""
 
-#: config.php:2979 incs/functions.inc.php:700 incs/functions.inc.php:3593
+#: config.php:2977 incs/functions.inc.php:703 incs/functions.inc.php:3592
 #: incs/functions_mail.php:146 incs/functions_nm.inc.php:620
 #: incs/functions_nm.inc.php:2353 m/sp_act.php:21
 msgid "Actions"
 msgstr "Actions"
 
-#: config.php:2980 incs/functions.inc.php:670 m/sp_act.php:21
+#: config.php:2978 incs/functions.inc.php:673 m/sp_act.php:21
 msgid "Patients"
 msgstr "Patients"
 
-#: config.php:2981 config.php:3001
+#: config.php:2979 config.php:2999
 msgid "Tables"
 msgstr ""
 
-#: config.php:3094 config.php:3114 rm/index.php:1222 units.php:1459
+#: config.php:3092 config.php:3112 rm/index.php:1224 units.php:1459
 #: units.php:1576
 msgid "error"
 msgstr ""
 
-#: config.php:3144
+#: config.php:3142
 msgid "not found"
 msgstr ""
 
@@ -3718,7 +3734,7 @@ msgid "Delete a Tickets Module"
 msgstr ""
 
 #: delete_module.php:212 incs/capts.inc.php:94 install_module.php:298
-#: patient.php:58 patient_w.php:73 top.php:1620
+#: patient.php:61 patient_w.php:74 top.php:1620
 msgid "Module"
 msgstr "Module"
 
@@ -3739,17 +3755,17 @@ msgstr ""
 msgid "Mail to Users"
 msgstr ""
 
-#: do_all_mail.php:163 do_unit_mail.php:568 ics213.php:411 mail_all.php:162
+#: do_all_mail.php:163 do_unit_mail.php:582 ics213.php:411 mail_all.php:162
 #: tables.php:2126
 msgid "Un-check all"
 msgstr ""
 
-#: do_all_mail.php:164 do_unit_mail.php:569 ics213.php:412 mail_all.php:163
+#: do_all_mail.php:164 do_unit_mail.php:583 ics213.php:412 mail_all.php:163
 #: tables.php:2125
 msgid "Check all"
 msgstr ""
 
-#: do_all_mail.php:238 do_unit_mail.php:690 mail_all.php:199
+#: do_all_mail.php:238 do_unit_mail.php:709 mail_all.php:199
 msgid "No addresses available!"
 msgstr ""
 
@@ -3767,7 +3783,7 @@ msgid "CSS Color Checker"
 msgstr ""
 
 #: do_color_checker.php:153 do_color_checker.php:207 incs/capts.inc.php:91
-#: m/sp_map.php:716 m/sp_map_spec.php:657 portal.php:1043 rm/index.php:2226
+#: m/sp_map.php:716 m/sp_map_spec.php:657 portal.php:1043 rm/index.php:2228
 #: stats_scr.php:495 stats_scr.php:596 stats_scr.php:1044 stats_scr.php:1266
 #: stats_scr.php:1581 top.php:1652
 msgid "Logout"
@@ -3798,7 +3814,7 @@ msgid "SOPs"
 msgstr ""
 
 #: do_color_checker.php:162 do_color_checker.php:217 incs/capts.inc.php:43
-#: rm/chat.php:45 rm/index.php:2313 top.php:1694
+#: rm/chat.php:45 rm/index.php:2315 top.php:1694
 msgid "Chat"
 msgstr "Chat"
 
@@ -3812,7 +3828,7 @@ msgid "Full scr"
 msgstr "Full scr"
 
 #: do_color_checker.php:166 do_color_checker.php:221 incs/capts.inc.php:86
-#: incs/functions.inc.php:3617 incs/functions_mail.php:170
+#: incs/functions.inc.php:3616 incs/functions_mail.php:170
 #: incs/functions_nm.inc.php:2377 top.php:1706
 msgid "Links"
 msgstr "Links"
@@ -3878,7 +3894,7 @@ msgstr ""
 
 #: do_color_checker.php:192 fac_routes.php:696 fac_routes_nm.php:695
 #: facilities.php:3195 facilities.php:3371 incs/full_scr.inc.php:199
-#: incs/functions_major.inc.php:398 portal.php:1113 quick_start.php:1026
+#: incs/functions_major.inc.php:399 portal.php:1113 quick_start.php:1026
 #: routes.php:1355 units.php:4457 units.php:4926 units.php:5173
 #: warn_locations.php:1693
 msgid "Traffic"
@@ -3954,7 +3970,7 @@ msgstr ""
 msgid "No facility addresses available"
 msgstr ""
 
-#: do_unit_mail.php:361 do_unit_mail.php:561
+#: do_unit_mail.php:361 do_unit_mail.php:575
 msgid "Mail to"
 msgstr ""
 
@@ -3962,11 +3978,11 @@ msgstr ""
 msgid "mail_help"
 msgstr "mail_help"
 
-#: do_unit_mail.php:390 do_unit_mail.php:643 mail_edit.php:175
+#: do_unit_mail.php:390 do_unit_mail.php:662 mail_edit.php:175
 msgid "Standard Message"
 msgstr ""
 
-#: do_unit_mail.php:419 do_unit_mail.php:670
+#: do_unit_mail.php:419 do_unit_mail.php:689
 #, fuzzy
 msgid "Use Email"
 msgstr "Email"
@@ -3976,182 +3992,183 @@ msgstr "Email"
 msgid "All incidents"
 msgstr "Close incident"
 
-#: do_unit_mail.php:620
+#: do_unit_mail.php:639
 msgid "messaging help"
 msgstr "messaging help"
 
-#: do_unit_mail.php:706
+#: do_unit_mail.php:725
 #, fuzzy
 msgid "Messages sent"
 msgstr "messaging help"
 
-#: edit.php:370 edit_nm.php:29 edit_nm.php:232
+#: edit.php:372 edit_nm.php:29 edit_nm.php:232
 msgid "Tickets - Edit Module"
 msgstr ""
 
-#: edit.php:584 edit.php:604 facilities.php:512 facilities.php:532
+#: edit.php:587 edit.php:607 facilities.php:512 facilities.php:532
 #: units.php:711 units.php:731 warn_locations.php:279 warn_locations.php:299
 #: warn_locations_nm.php:180 warn_locations_nm.php:196
 msgid "invalid LL format selector"
 msgstr ""
 
-#: edit.php:644
+#: edit.php:647
 msgid "Closed ticket requires run end date."
 msgstr ""
 
-#: edit.php:646 edit_nm.php:348
-msgid "Closed ticket requires {$disposition} data"
+#: edit.php:649 edit_nm.php:348
+#, php-format
+msgid "Closed ticket requires %s data"
 msgstr ""
 
-#: edit.php:1055 edit_nm.php:551
+#: edit.php:1058 edit_nm.php:551
 msgid "Confirm ticket deletion"
 msgstr ""
 
-#: edit.php:1114 edit.php:1116
+#: edit.php:1120 edit.php:1122
 msgid "Edit Ticket"
 msgstr ""
 
-#: edit.php:1114
+#: edit.php:1120
 #, fuzzy
 msgid "Groups"
 msgstr "Group"
 
-#: edit.php:1144 edit_nm.php:597
+#: edit.php:1187 edit_nm.php:597
 msgid "Edit Run Ticket"
 msgstr ""
 
-#: edit.php:1149
+#: edit.php:1201
 msgid "Anout Address, for instance round the back or building number"
 msgstr ""
 
-#: edit.php:1183 edit_nm.php:657
+#: edit.php:1235 edit_nm.php:657
 msgid "Add'l"
 msgstr ""
 
-#: edit.php:1188 incs/functions.inc.php:3522 incs/functions_major.inc.php:4374
-#: incs/functions_major.inc.php:5166 incs/functions_nm.inc.php:2284
+#: edit.php:1240 incs/functions.inc.php:3521 incs/functions_major.inc.php:4375
+#: incs/functions_major.inc.php:5167 incs/functions_nm.inc.php:2284
 #: portal/ajax/insert_request.php:167 portal/request.php:755
 #, fuzzy
 msgid "To Address"
 msgstr "Addr"
 
-#: edit.php:1232 edit_nm.php:605 incs/functions.inc.php:1797
+#: edit.php:1284 edit_nm.php:605 incs/functions.inc.php:1800
 #, fuzzy
 msgid "normal"
 msgstr "Normal"
 
-#: edit.php:1233 edit_nm.php:606 incs/functions.inc.php:1798
+#: edit.php:1285 edit_nm.php:606 incs/functions.inc.php:1801
 #, fuzzy
 msgid "medium"
 msgstr "Medium"
 
-#: edit.php:1234 edit_nm.php:607 incs/functions.inc.php:1799
+#: edit.php:1286 edit_nm.php:607 incs/functions.inc.php:1802
 msgid "high"
 msgstr ""
 
-#: edit.php:1352
+#: edit.php:1404
 msgid "Associated Portal User - this user can see this ticket as a request"
 msgstr ""
 
-#: edit.php:1431 edit_nm.php:683
+#: edit.php:1483 edit_nm.php:683
 #, fuzzy
 msgid "Not using facility"
 msgstr "Originating Facility"
 
-#: edit.php:1450 edit_nm.php:700
+#: edit.php:1502 edit_nm.php:700
 #, fuzzy
 msgid "Incident at Facility?"
 msgstr "Originating Facility"
 
-#: edit.php:1469 edit_nm.php:716
+#: edit.php:1521 edit_nm.php:716
 #, fuzzy
 msgid "No receiving facility"
 msgstr "Receiving Facility"
 
-#: edit.php:1483 edit_nm.php:728
+#: edit.php:1535 edit_nm.php:728
 #, fuzzy
 msgid "Receiving Facility?"
 msgstr "Receiving Facility"
 
-#: edit.php:1554 edit_nm.php:831
+#: edit.php:1606 edit_nm.php:831
 msgid ""
 "Position - Lat and Lng for Incident position. Click to show all position "
 "data."
 msgstr ""
 
-#: edit.php:1554 edit_nm.php:831 incs/capts.inc.php:112
-#: incs/functions.inc.php:3564 incs/functions_mail.php:117
-#: incs/functions_major.inc.php:4431 incs/functions_major.inc.php:5211
-#: incs/functions_major.inc.php:5303 incs/functions_major.inc.php:5925
-#: incs/functions_major_nm.inc.php:1784 incs/functions_major_nm.inc.php:1965
-#: incs/functions_major_nm.inc.php:2055 incs/functions_major_nm.inc.php:2149
-#: incs/functions_nm.inc.php:2324 message.php:155 reports.php:1282
+#: edit.php:1606 edit_nm.php:831 incs/capts.inc.php:112
+#: incs/functions.inc.php:3563 incs/functions_mail.php:117
+#: incs/functions_major.inc.php:4432 incs/functions_major.inc.php:5212
+#: incs/functions_major.inc.php:5304 incs/functions_major.inc.php:5926
+#: incs/functions_major_nm.inc.php:1785 incs/functions_major_nm.inc.php:1966
+#: incs/functions_major_nm.inc.php:2056 incs/functions_major_nm.inc.php:2150
+#: incs/functions_nm.inc.php:2324 message.php:155 reports.php:1285
 msgid "Position"
 msgstr "Position"
 
-#: edit.php:1562
+#: edit.php:1614
 msgid "US National Grid Co-ordinates."
 msgstr ""
 
-#: edit.php:1567
+#: edit.php:1619
 msgid "United Kingdom Ordnance Survey Grid Reference."
 msgstr ""
 
-#: edit.php:1572
+#: edit.php:1624
 msgid "Universal Transverse Mercator coordinate."
 msgstr ""
 
-#: edit.php:1580 edit_nm.php:364 edit_nm.php:833 fac_routes.php:146
-#: fac_routes_nm.php:143 incs/capts.inc.php:144 incs/functions.inc.php:3548
-#: incs/functions_mail.php:100 incs/functions_major.inc.php:4395
-#: incs/functions_major.inc.php:5183 incs/functions_major.inc.php:5275
-#: incs/functions_major.inc.php:5897 incs/functions_major_nm.inc.php:1748
-#: incs/functions_major_nm.inc.php:1934 incs/functions_major_nm.inc.php:2027
-#: incs/functions_major_nm.inc.php:2121 incs/functions_nm.inc.php:2307
+#: edit.php:1632 edit_nm.php:364 edit_nm.php:833 fac_routes.php:146
+#: fac_routes_nm.php:143 incs/capts.inc.php:144 incs/functions.inc.php:3547
+#: incs/functions_mail.php:100 incs/functions_major.inc.php:4396
+#: incs/functions_major.inc.php:5184 incs/functions_major.inc.php:5276
+#: incs/functions_major.inc.php:5898 incs/functions_major_nm.inc.php:1749
+#: incs/functions_major_nm.inc.php:1935 incs/functions_major_nm.inc.php:2028
+#: incs/functions_major_nm.inc.php:2122 incs/functions_nm.inc.php:2307
 #: portal.php:436 portal.php:481 portal.php:521 portal.php:566
-#: portal/requests.php:270 portal/requests.php:343 reports.php:1253
+#: portal/requests.php:270 portal/requests.php:343 reports.php:1256
 #: rm/ajax/ticket_detail.php:198 top.php:629 top.php:675
 msgid "Updated"
 msgstr "Updated"
 
-#: edit.php:1601
+#: edit.php:1653
 msgid "List of all actions and patients atached to this Incident"
 msgstr ""
 
-#: edit.php:1601 edit_nm.php:855
+#: edit.php:1653 edit_nm.php:855
 #, fuzzy
 msgid "Actions and Patients"
 msgstr "Add Patient"
 
-#: edit.php:1613 incs/config.setcenter.inc.php:222
-#: incs/functions_major.inc.php:4549
+#: edit.php:1665 incs/config.setcenter.inc.php:222
+#: incs/functions_major.inc.php:4550
 msgid "Zoom"
 msgstr ""
 
-#: edit.php:1633 facilities.php:3009 facilities.php:3234
+#: edit.php:1685 facilities.php:3009 facilities.php:3234
 #: facilities_nm.php:1555 facilities_nm.php:1695
-#: incs/functions_major.inc.php:5126 units.php:5014 units_nm.php:1886
+#: incs/functions_major.inc.php:5127 units.php:5014 units_nm.php:1886
 #: units_nm.php:2180
 msgid "FILE LIST"
 msgstr ""
 
-#: edit.php:1634 facilities.php:3010 facilities.php:3235
+#: edit.php:1686 facilities.php:3010 facilities.php:3235
 #: facilities_nm.php:1556 facilities_nm.php:1696
-#: incs/functions_major.inc.php:5127 units.php:4594 units.php:5015
+#: incs/functions_major.inc.php:5128 units.php:4594 units.php:5015
 #: units_nm.php:1887 units_nm.php:2181
 #, fuzzy
 msgid "Add file"
 msgstr "Add note"
 
-#: edit.php:2016 facilities.php:799 units.php:1416 warn_locations.php:468
+#: edit.php:2092 facilities.php:799 units.php:1416 warn_locations.php:468
 msgid "Geocode lookup failed"
 msgstr ""
 
-#: edit.php:2161
+#: edit.php:2237
 msgid "Map location is required for nearby incident lookup."
 msgstr ""
 
-#: edit.php:2199
+#: edit.php:2275
 #, fuzzy
 msgid "TICKET-Update"
 msgstr "Updated"
@@ -4313,17 +4330,21 @@ msgstr "Receiving Facility"
 msgid "Remove Entry"
 msgstr "Service User"
 
-#: email_lists.php:422
+#: email_lists.php:423
+msgid "On the left is the form to edit an entry in a Email List."
+msgstr ""
+
+#: email_lists.php:424
 msgid ""
-"\n"
-"                    On the left is the form to edit an entry in a Email List."
-"<BR /><BR />\n"
-"                    Using the select menus, select the email address you "
-"want to edit, either from the contacts list or from configured responders."
-"<BR />\n"
-"                    You can only chose <B>one</B> email address from the "
-"select menus, if you select <B>something from both</B> you will get an error "
-"when you submit the form and will need to revise and resubmit."
+"Using the select menus, select the email address you want to edit, either "
+"from the contacts list or from configured responders."
+msgstr ""
+
+#: email_lists.php:425 email_lists.php:502
+msgid ""
+"You can only chose <B>one</B> email address from the select menus, if you "
+"select <B>something from both</B> you will get an error when you submit the "
+"form and will need to revise and resubmit."
 msgstr ""
 
 #: email_lists.php:430 incs/full_scr.inc.php:223 quick_start.php:970
@@ -4332,23 +4353,22 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: email_lists.php:499
+#: email_lists.php:500
 msgid ""
-"\n"
-"                    On the left is the form to add a new email address to an "
-"existing Email List.<BR /><BR />\n"
-"                    Using the select menus, select first the Email List that "
-"this entry is to be added to and then select the email address you want to "
-"add, either from the contacts list or from configured responders.<BR />\n"
-"                    You can only chose <B>one</B> email address from the "
-"select menus, if you select <B>something from both</B> you will get an error "
-"when you submit the form and will need to revise and resubmit."
+"On the left is the form to add a new email address to an existing Email List."
+msgstr ""
+
+#: email_lists.php:501
+msgid ""
+"Using the select menus, select first the Email List that this entry is to be "
+"added to and then select the email address you want to add, either from the "
+"contacts list or from configured responders."
 msgstr ""
 
 #: email_lists.php:524 fac_routes.php:1334 fac_routes_nm.php:1330
 #: facilities.php:2068 incs/full_scr.inc.php:2496 incs/full_scr.inc.php:2837
-#: incs/functions_major.inc.php:3585 incs/functions_major.inc.php:3973
-#: incs/functions_major.inc.php:4968 incs/functions_major.inc.php:5722
+#: incs/functions_major.inc.php:3586 incs/functions_major.inc.php:3974
+#: incs/functions_major.inc.php:4969 incs/functions_major.inc.php:5723
 #: portal.php:428 portal.php:513 portal/requests.php:265
 #: portal/requests.php:338 rm/ajax/ticket_detail.php:169 routes_i.php:605
 #: tracks.php:624 tracks_hh.php:561 units.php:2833
@@ -4363,18 +4383,31 @@ msgstr "Contact name"
 msgid "Responder"
 msgstr "Responding"
 
-#: email_lists.php:551
+#: email_lists.php:552
 msgid ""
-"\n"
-"                    On the left is a list of all Mailing list entries "
-"showing the email address and the Mailing list it belongs to.<BR /><BR /> "
-"Click <B>Add New</B> and then fill out the resulting form and submit,\n"
-"                    to add a new entry to an existing Mailing list or "
-"<B>Back to Config</B> to return to the Tickets main configuration page.\n"
-"                    You can click on an entry in the list to <B>edit</B> it."
+"On the left is a list of all Mailing list entries showing the email address "
+"and the Mailing list it belongs to."
 msgstr ""
 
-#: email_lists.php:567
+#: email_lists.php:553
+msgid ""
+"Click <B>Add New</B> and then fill out the resulting form and submit, to add "
+"a new entry to an existing Mailing list or <B>Back to Config</B> to return "
+"to the Tickets main configuration page. You can click on an entry in the "
+"list to <B>edit</B> it."
+msgstr ""
+
+#: email_lists.php:557
+#, fuzzy
+msgid "Add New"
+msgstr "Add note"
+
+#: email_lists.php:558 msg_archive.php:263
+#, fuzzy
+msgid "Back to Config"
+msgstr "Config"
+
+#: email_lists.php:566
 msgid "Not Called correctly"
 msgstr ""
 
@@ -4463,15 +4496,15 @@ msgid "Sec phone"
 msgstr "Security phone"
 
 #: fac_routes.php:143 fac_routes_nm.php:140 facilities.php:2075
-#: incs/full_scr.inc.php:2849 incs/functions_major.inc.php:3987
-#: incs/functions_major.inc.php:4980 incs/functions_major.inc.php:5734
+#: incs/full_scr.inc.php:2849 incs/functions_major.inc.php:3988
+#: incs/functions_major.inc.php:4981 incs/functions_major.inc.php:5735
 #, fuzzy
 msgid "Prim pager"
 msgstr "Primary pager"
 
 #: fac_routes.php:144 fac_routes_nm.php:141 facilities.php:2076
-#: incs/full_scr.inc.php:2850 incs/functions_major.inc.php:3988
-#: incs/functions_major.inc.php:4981 incs/functions_major.inc.php:5735
+#: incs/full_scr.inc.php:2850 incs/functions_major.inc.php:3989
+#: incs/functions_major.inc.php:4982 incs/functions_major.inc.php:5736
 #, fuzzy
 msgid "Sec pager"
 msgstr "Secondary pager"
@@ -4598,14 +4631,14 @@ msgid "SLD"
 msgstr ""
 
 #: fac_routes.php:1334 fac_routes_nm.php:1330 facilities.php:2068
-#: incs/full_scr.inc.php:2496 incs/functions_major.inc.php:3585
+#: incs/full_scr.inc.php:2496 incs/functions_major.inc.php:3586
 #: routes_i.php:605 tracks_hh.php:561
 msgid "Via"
 msgstr ""
 
 #: fac_routes.php:1376 fac_routes_nm.php:1372 incs/full_scr.inc.php:2510
 #: incs/full_scr.inc.php:2532 incs/full_scr.inc.php:2552
-#: incs/full_scr.inc.php:2571 incs/functions_major.inc.php:3598
+#: incs/full_scr.inc.php:2571 incs/functions_major.inc.php:3599
 #: locatea.php:118 opena.php:89 routes_i.php:628 test_instam.php:142
 #: tracks.php:647 tracks_hh.php:584 units.php:2848 units.php:4776
 msgid "Course"
@@ -4613,7 +4646,7 @@ msgstr ""
 
 #: fac_routes.php:1376 fac_routes_nm.php:1372 incs/full_scr.inc.php:2510
 #: incs/full_scr.inc.php:2532 incs/full_scr.inc.php:2552
-#: incs/full_scr.inc.php:2571 incs/functions_major.inc.php:3598 opena.php:89
+#: incs/full_scr.inc.php:2571 incs/functions_major.inc.php:3599 opena.php:89
 #: routes_i.php:628 test_instam.php:143 tracks.php:647 tracks_hh.php:584
 #: units.php:4776
 msgid "Speed"
@@ -4625,7 +4658,7 @@ msgid "Alt"
 msgstr ""
 
 #: fac_routes.php:1377 fac_routes_nm.php:1373 incs/full_scr.inc.php:2511
-#: incs/functions_major.inc.php:3599 routes_i.php:629 tracks.php:648
+#: incs/functions_major.inc.php:3600 routes_i.php:629 tracks.php:648
 #: tracks_hh.php:585 units.php:2849 units.php:4777
 #, fuzzy
 msgid "Closest city"
@@ -4698,7 +4731,7 @@ msgstr ""
 msgid "Facility LOCATION must be set - click map location to set."
 msgstr ""
 
-#: facilities.php:1666 incs/functions_major.inc.php:684
+#: facilities.php:1666 incs/functions_major.inc.php:685
 msgid "Facility status update applied!"
 msgstr ""
 
@@ -4729,7 +4762,7 @@ msgstr ""
 #: facilities.php:1718 facilities.php:2443 facilities.php:2762
 #: facilities.php:3107 facilities_nm.php:712 facilities_nm.php:1177
 #: facilities_nm.php:1403 facilities_nm.php:1630
-#: incs/functions_major.inc.php:3887 incs/functions_major_nm.inc.php:1544
+#: incs/functions_major.inc.php:3888 incs/functions_major_nm.inc.php:1545
 #: quick_start.php:1110 tables/c_fac_types.php:27 tables/c_unit_types.php:27
 #: tables/u_conditions.php:51 tables/u_fac_types.php:28
 #: tables/u_unit_types.php:28 tables/v_conditions.php:21
@@ -4741,7 +4774,7 @@ msgstr ""
 #: facilities.php:1718 facilities.php:2441 facilities.php:2760
 #: facilities.php:3105 facilities_nm.php:712 facilities_nm.php:1175
 #: facilities_nm.php:1401 facilities_nm.php:1628 incs/capts.inc.php:75
-#: incs/functions_major.inc.php:3881 units.php:173 units.php:3829
+#: incs/functions_major.inc.php:3882 units.php:173 units.php:3829
 #: units.php:4193 units.php:4706 units_nm.php:1382 units_nm.php:1680
 msgid "Handle"
 msgstr "Handle"
@@ -4751,19 +4784,19 @@ msgstr "Handle"
 #: facilities.php:3120 facilities.php:3122 facilities_nm.php:712
 #: facilities_nm.php:852 facilities_nm.php:1284 facilities_nm.php:1289
 #: facilities_nm.php:1498 facilities_nm.php:1503 facilities_nm.php:1643
-#: facilities_nm.php:1645 incs/functions_major.inc.php:3887
-#: incs/functions_major.inc.php:3970 incs/functions_major_nm.inc.php:1544
+#: facilities_nm.php:1645 incs/functions_major.inc.php:3888
+#: incs/functions_major.inc.php:3971 incs/functions_major_nm.inc.php:1545
 msgid "Beds"
 msgstr "Beds"
 
 #: facilities.php:2015 facilities_nm.php:829 incs/full_scr.inc.php:2823
-#: incs/functions_major.inc.php:3931
+#: incs/functions_major.inc.php:3932
 #, fuzzy
 msgid "Route To Facility"
 msgstr "Facility"
 
-#: facilities.php:2064 incs/functions.inc.php:998
-#: incs/functions_major.inc.php:3591 tracks.php:626 tracks_hh.php:563
+#: facilities.php:2064 incs/functions.inc.php:1001
+#: incs/functions_major.inc.php:3592 tracks.php:626 tracks_hh.php:563
 #: warn_locations.php:1159
 msgid "View"
 msgstr ""
@@ -4771,48 +4804,48 @@ msgstr ""
 #: facilities.php:2069 facilities.php:2580 facilities.php:2891
 #: facilities.php:3129 facilities_nm.php:1297 facilities_nm.php:1512
 #: facilities_nm.php:1652 incs/capts.inc.php:125 incs/full_scr.inc.php:2843
-#: incs/functions_major.inc.php:3981 incs/functions_major.inc.php:4974
-#: incs/functions_major.inc.php:5728
+#: incs/functions_major.inc.php:3982 incs/functions_major.inc.php:4975
+#: incs/functions_major.inc.php:5729
 msgid "Security contact"
 msgstr "Security contact"
 
 #: facilities.php:2070 facilities.php:2581 facilities.php:2892
 #: facilities.php:3130 facilities_nm.php:1298 facilities_nm.php:1513
 #: facilities_nm.php:1653 incs/capts.inc.php:126 incs/full_scr.inc.php:2844
-#: incs/functions_major.inc.php:3982 incs/functions_major.inc.php:4975
-#: incs/functions_major.inc.php:5729
+#: incs/functions_major.inc.php:3983 incs/functions_major.inc.php:4976
+#: incs/functions_major.inc.php:5730
 msgid "Security email"
 msgstr "Security email"
 
 #: facilities.php:2071 facilities.php:2582 facilities.php:2893
 #: facilities.php:3131 facilities_nm.php:1299 facilities_nm.php:1514
 #: facilities_nm.php:1654 incs/capts.inc.php:127 incs/full_scr.inc.php:2845
-#: incs/functions_major.inc.php:3983 incs/functions_major.inc.php:4976
-#: incs/functions_major.inc.php:5730
+#: incs/functions_major.inc.php:3984 incs/functions_major.inc.php:4977
+#: incs/functions_major.inc.php:5731
 msgid "Security phone"
 msgstr "Security phone"
 
 #: facilities.php:2072 facilities.php:2584 facilities.php:2895
 #: facilities.php:3133 facilities_nm.php:1301 facilities_nm.php:1516
 #: facilities_nm.php:1656 incs/full_scr.inc.php:2846
-#: incs/functions_major.inc.php:3984 incs/functions_major.inc.php:4977
-#: incs/functions_major.inc.php:5731
+#: incs/functions_major.inc.php:3985 incs/functions_major.inc.php:4978
+#: incs/functions_major.inc.php:5732
 msgid "Access rules"
 msgstr "Access rules"
 
 #: facilities.php:2073 facilities.php:2585 facilities.php:2896
 #: facilities.php:3134 facilities_nm.php:1302 facilities_nm.php:1517
 #: facilities_nm.php:1657 incs/capts.inc.php:128 incs/full_scr.inc.php:2847
-#: incs/functions_major.inc.php:3985 incs/functions_major.inc.php:4978
-#: incs/functions_major.inc.php:5732
+#: incs/functions_major.inc.php:3986 incs/functions_major.inc.php:4979
+#: incs/functions_major.inc.php:5733
 msgid "Security reqs"
 msgstr "Security reqs"
 
 #: facilities.php:2074 facilities.php:2583 facilities.php:2894
 #: facilities.php:3132 facilities_nm.php:1300 facilities_nm.php:1515
 #: facilities_nm.php:1655 incs/capts.inc.php:103 incs/full_scr.inc.php:2848
-#: incs/functions_major.inc.php:3986 incs/functions_major.inc.php:4979
-#: incs/functions_major.inc.php:5733
+#: incs/functions_major.inc.php:3987 incs/functions_major.inc.php:4980
+#: incs/functions_major.inc.php:5734
 msgid "Opening hours"
 msgstr "Opening hours"
 
@@ -4915,18 +4948,18 @@ msgid "Facility beds"
 msgstr "Facilities"
 
 #: facilities.php:2570 facilities.php:2880 facilities_nm.php:1286
-#: facilities_nm.php:1500 incs/functions_major.inc.php:3970
+#: facilities_nm.php:1500 incs/functions_major.inc.php:3971
 msgid "Available"
 msgstr "Available"
 
 #: facilities.php:2571 facilities.php:2881 facilities_nm.php:1287
-#: facilities_nm.php:1501 incs/functions_major.inc.php:3970
+#: facilities_nm.php:1501 incs/functions_major.inc.php:3971
 msgid "Occupied"
 msgstr "Occupied"
 
 #: facilities.php:2573 facilities.php:2883 facilities.php:3122
 #: facilities_nm.php:1289 facilities_nm.php:1503 facilities_nm.php:1645
-#: incs/functions_major.inc.php:3971
+#: incs/functions_major.inc.php:3972
 msgid "Beds information"
 msgstr "Beds information"
 
@@ -5103,7 +5136,7 @@ msgstr ""
 msgid "Remove Facility"
 msgstr "Receiving Facility"
 
-#: facilities.php:3098 help.php:54 reports.php:1324
+#: facilities.php:3098 help.php:54 reports.php:1327
 msgid "Data"
 msgstr ""
 
@@ -5131,12 +5164,12 @@ msgstr ""
 msgid "Click line or icon for details"
 msgstr ""
 
-#: facilities.php:3405 main.php:1183 main.php:1188 units.php:5210
+#: facilities.php:3405 main.php:1179 main.php:1184 units.php:5210
 #, fuzzy
 msgid "Viewed Regions"
 msgstr "Regions"
 
-#: facilities.php:3406 facilities_nm.php:1798 main.php:1184 main.php:1189
+#: facilities.php:3406 facilities_nm.php:1798 main.php:1180 main.php:1185
 #: units.php:5211 units_nm.php:2306
 msgid "Dock"
 msgstr ""
@@ -5283,7 +5316,7 @@ msgstr ""
 msgid "Tickets File Manager"
 msgstr "Tickets host"
 
-#: fileman.php:207 incs/capts.inc.php:78 incs/functions_major_nm.inc.php:905
+#: fileman.php:207 incs/capts.inc.php:78 incs/functions_major_nm.inc.php:906
 #: portal/requests.php:262 portal/requests.php:335 reports.php:934
 #: tables/u_un_status.php:53 tables/v_in_types.php:33 units_nm.php:1845
 #: units_nm.php:2023 warn_locations.php:1072
@@ -5304,7 +5337,7 @@ msgstr "Facilities"
 msgid "Who By"
 msgstr ""
 
-#: fileman.php:215 incs/functions.inc.php:1055 incs/functions.inc.php:1112
+#: fileman.php:215 incs/functions.inc.php:1058 incs/functions.inc.php:1115
 #: incs/functions_nm.inc.php:691 incs/functions_nm.inc.php:748 log.php:142
 #: unit_log_view.php:129
 msgid "When"
@@ -5987,7 +6020,7 @@ msgid "Incident Popup"
 msgstr "Incident"
 
 #: incident_popup.php:207 incident_popup_nm.php:140 quick_start.php:1012
-#: reports.php:1732 rm/ajax/ticket_detail.php:161 tables/c_in_types.php:28
+#: reports.php:1735 rm/ajax/ticket_detail.php:161 tables/c_in_types.php:28
 #: tables/v_in_types.php:38
 #, fuzzy
 msgid "Severity"
@@ -6020,12 +6053,12 @@ msgstr "Units"
 msgid "Lookup failed"
 msgstr ""
 
-#: incs/capts.inc.php:25 incs/functions_major_nm.inc.php:905
+#: incs/capts.inc.php:25 incs/functions_major_nm.inc.php:906
 msgid "A"
 msgstr ""
 
-#: incs/capts.inc.php:29 incs/functions.inc.php:2030
-#: incs/functions_major.inc.php:3045 incs/functions_nm.inc.php:1097
+#: incs/capts.inc.php:29 incs/functions.inc.php:2033
+#: incs/functions_major.inc.php:3046 incs/functions_nm.inc.php:1097
 #: m/sp_add_note.php:20
 msgid "Add note"
 msgstr "Add note"
@@ -6050,26 +6083,26 @@ msgid "All-Tickets Notify"
 msgstr "Tickets host"
 
 #: incs/capts.inc.php:42 incs/full_scr.inc.php:203
-#: incs/functions_major.inc.php:876 incs/functions_major_nm.inc.php:598
+#: incs/functions_major.inc.php:877 incs/functions_major_nm.inc.php:599
 msgid "Change display"
 msgstr "Change display"
 
-#: incs/capts.inc.php:46 incs/functions.inc.php:2032
-#: incs/functions_major.inc.php:3042 incs/functions_nm.inc.php:1099
+#: incs/capts.inc.php:46 incs/functions.inc.php:2035
+#: incs/functions_major.inc.php:3043 incs/functions_nm.inc.php:1099
 msgid "Close incident"
 msgstr "Close incident"
 
 #: incs/capts.inc.php:53 incs/full_scr.inc.php:109 incs/full_scr.inc.php:206
-#: incs/functions_major.inc.php:250 incs/functions_major.inc.php:877
-#: incs/functions_major_nm.inc.php:599
+#: incs/functions_major.inc.php:251 incs/functions_major.inc.php:878
+#: incs/functions_major_nm.inc.php:600
 msgid "Current situation"
 msgstr "Current situation"
 
-#: incs/capts.inc.php:54 patient.php:51 patient_w.php:65
+#: incs/capts.inc.php:54 patient.php:54 patient_w.php:66
 msgid "Date of birth"
 msgstr "Date of birth"
 
-#: incs/capts.inc.php:57 incs/functions.inc.php:2035
+#: incs/capts.inc.php:57 incs/functions.inc.php:2038
 #: incs/functions_nm.inc.php:1102
 msgid "Dispatch Unit"
 msgstr "Dispatch Unit"
@@ -6088,7 +6121,7 @@ msgstr "Facility State"
 msgid "Facility clear time"
 msgstr "Facility State"
 
-#: incs/capts.inc.php:68 patient.php:54 patient_w.php:68
+#: incs/capts.inc.php:68 patient.php:57 patient_w.php:69
 msgid "Facility contact"
 msgstr "Facility contact"
 
@@ -6097,19 +6130,19 @@ msgstr "Facility contact"
 msgid "Facility en-route time"
 msgstr "Facility State"
 
-#: incs/capts.inc.php:73 patient.php:50 patient_w.php:64
+#: incs/capts.inc.php:73 patient.php:53 patient_w.php:65
 msgid "Full name"
 msgstr "Full name"
 
-#: incs/capts.inc.php:74 patient.php:52 patient_w.php:66
+#: incs/capts.inc.php:74 patient.php:55 patient_w.php:67
 #: tables/c_personnel.php:47 tables/u_personnel.php:48
 #: tables/v_personnel.php:44
 msgid "Gender"
 msgstr "Gender"
 
 #: incs/capts.inc.php:77 incs/full_scr.inc.php:178
-#: incs/functions_major.inc.php:416 incs/functions_major.inc.php:3168
-#: incs/functions_major_nm.inc.php:1182 quick_start.php:164
+#: incs/functions_major.inc.php:417 incs/functions_major.inc.php:3169
+#: incs/functions_major_nm.inc.php:1183 quick_start.php:164
 #: quick_start.php:1023 quick_start.php:1036 tables/c_in_types.php:32
 #: tables/u_in_types.php:38
 msgid "High"
@@ -6130,32 +6163,32 @@ msgid "Logged in"
 msgstr "Logged in"
 
 #: incs/capts.inc.php:92 incs/full_scr.inc.php:177
-#: incs/functions_major.inc.php:415 incs/functions_major.inc.php:3168
-#: incs/functions_major_nm.inc.php:1182 quick_start.php:164
+#: incs/functions_major.inc.php:416 incs/functions_major.inc.php:3169
+#: incs/functions_major_nm.inc.php:1183 quick_start.php:164
 #: quick_start.php:1022 quick_start.php:1035 tables/c_in_types.php:31
 #: tables/u_in_types.php:37
 msgid "Medium"
 msgstr "Medium"
 
 #: incs/capts.inc.php:100 incs/full_scr.inc.php:176
-#: incs/functions_major.inc.php:414 incs/functions_major.inc.php:3168
-#: incs/functions_major_nm.inc.php:1182 quick_start.php:164
+#: incs/functions_major.inc.php:415 incs/functions_major.inc.php:3169
+#: incs/functions_major_nm.inc.php:1183 quick_start.php:164
 #: quick_start.php:1021 quick_start.php:1034 tables/c_in_types.php:30
 #: tables/u_in_types.php:36
 msgid "Normal"
 msgstr "Normal"
 
-#: incs/capts.inc.php:101 incs/functions.inc.php:2025
+#: incs/capts.inc.php:101 incs/functions.inc.php:2028
 #: incs/functions_nm.inc.php:1092 mobile.php:123
 msgid "Notify"
 msgstr "Notify"
 
-#: incs/capts.inc.php:105 incs/functions_major_nm.inc.php:905
+#: incs/capts.inc.php:105 incs/functions_major_nm.inc.php:906
 msgid "P"
 msgstr ""
 
-#: incs/capts.inc.php:107 patient.php:519 patient.php:669 patient_w.php:506
-#: patient_w.php:640 portal/new_request.php:213 portal/new_request.php:311
+#: incs/capts.inc.php:107 patient.php:522 patient.php:672 patient_w.php:507
+#: patient_w.php:641 portal/new_request.php:213 portal/new_request.php:311
 #: portal/new_request.php:703
 msgid "Patient ID"
 msgstr "Patient ID"
@@ -6164,13 +6197,13 @@ msgstr "Patient ID"
 msgid "Permissions"
 msgstr ""
 
-#: incs/capts.inc.php:111 incs/functions.inc.php:2016
-#: incs/functions_major.inc.php:3044 incs/functions_nm.inc.php:1083
+#: incs/capts.inc.php:111 incs/functions.inc.php:2019
+#: incs/functions_major.inc.php:3045 incs/functions_nm.inc.php:1083
 msgid "Popup"
 msgstr "Popup"
 
-#: incs/capts.inc.php:129 incs/functions_major.inc.php:3168
-#: incs/functions_major_nm.inc.php:1182
+#: incs/capts.inc.php:129 incs/functions_major.inc.php:3169
+#: incs/functions_major_nm.inc.php:1183
 msgid "Severities"
 msgstr "Severities"
 
@@ -6178,9 +6211,9 @@ msgstr "Severities"
 msgid "SOP's"
 msgstr "SOP's"
 
-#: incs/capts.inc.php:132 incs/functions_major.inc.php:3414
-#: incs/functions_major.inc.php:3880 incs/functions_major_nm.inc.php:1309
-#: incs/functions_major_nm.inc.php:1536 tables/c_in_types.php:37
+#: incs/capts.inc.php:132 incs/functions_major.inc.php:3415
+#: incs/functions_major.inc.php:3881 incs/functions_major_nm.inc.php:1310
+#: incs/functions_major_nm.inc.php:1537 tables/c_in_types.php:37
 #: tables/c_un_status.php:47 tables/u_in_types.php:43
 #: tables/u_un_status.php:109 tables/v_in_types.php:40
 msgid "Sort"
@@ -6190,12 +6223,12 @@ msgstr ""
 msgid "This Call"
 msgstr ""
 
-#: incs/capts.inc.php:137 opena.php:89 reports.php:927 reports.php:1048
-#: reports.php:1321 t_tracker.php:143 test_instam.php:139 top.php:1629
+#: incs/capts.inc.php:137 opena.php:89 reports.php:927 reports.php:1051
+#: reports.php:1324 t_tracker.php:143 test_instam.php:139 top.php:1629
 msgid "Time"
 msgstr "Time"
 
-#: incs/capts.inc.php:139 incs/functions_major_nm.inc.php:905 patient.php:546
+#: incs/capts.inc.php:139 incs/functions_major_nm.inc.php:906 patient.php:549
 msgid "U"
 msgstr ""
 
@@ -6208,13 +6241,13 @@ msgstr ""
 msgid "Unit types"
 msgstr "Units"
 
-#: incs/capts.inc.php:147 incs/functions.inc.php:3544
-#: incs/functions_mail.php:95 incs/functions_major.inc.php:4393
-#: incs/functions_major.inc.php:5182 incs/functions_major.inc.php:5274
-#: incs/functions_major.inc.php:5896 incs/functions_major_nm.inc.php:1746
-#: incs/functions_major_nm.inc.php:1933 incs/functions_major_nm.inc.php:2026
-#: incs/functions_major_nm.inc.php:2120 incs/functions_nm.inc.php:2302
-#: message.php:126 reports.php:1252
+#: incs/capts.inc.php:147 incs/functions.inc.php:3543
+#: incs/functions_mail.php:95 incs/functions_major.inc.php:4394
+#: incs/functions_major.inc.php:5183 incs/functions_major.inc.php:5275
+#: incs/functions_major.inc.php:5897 incs/functions_major_nm.inc.php:1747
+#: incs/functions_major_nm.inc.php:1934 incs/functions_major_nm.inc.php:2027
+#: incs/functions_major_nm.inc.php:2121 incs/functions_nm.inc.php:2302
+#: message.php:126 reports.php:1255
 msgid "Written"
 msgstr "Written"
 
@@ -6987,10 +7020,9 @@ msgstr "State"
 msgid "Map"
 msgstr ""
 
-#: incs/config.setcenter.inc.php:203 incs/functions_major.inc.php:4560
-#: incs/functions_major.inc.php:5439 locatea.php:116 opena.php:89
-#: t_tracker.php:141 tables/c_places.php:145 tables/u_places.php:155
-#: test_instam.php:140
+#: incs/config.setcenter.inc.php:203 incs/functions_major.inc.php:4561
+#: incs/functions_major.inc.php:5440 locatea.php:116 opena.php:89
+#: t_tracker.php:141 test_instam.php:140
 msgid "Lat"
 msgstr "Lat"
 
@@ -7067,7 +7099,7 @@ msgstr ""
 msgid "Full screen"
 msgstr "Full scr"
 
-#: incs/full_scr.inc.php:200 incs/functions_major.inc.php:398 portal.php:1113
+#: incs/full_scr.inc.php:200 incs/functions_major.inc.php:399 portal.php:1113
 msgid "Weather"
 msgstr ""
 
@@ -7076,14 +7108,14 @@ msgstr ""
 msgid "Scheduled Runs"
 msgstr "Scheduled For"
 
-#: incs/full_scr.inc.php:1485 incs/functions_major.inc.php:2467 tracks.php:183
+#: incs/full_scr.inc.php:1485 incs/functions_major.inc.php:2468 tracks.php:183
 #: tracks_hh.php:159 units.php:823
 msgid ""
 "Track display requires popups to be enabled. Please adjust your browser "
 "options."
 msgstr ""
 
-#: incs/full_scr.inc.php:1503 incs/functions_major.inc.php:2492
+#: incs/full_scr.inc.php:1503 incs/functions_major.inc.php:2493
 msgid ""
 "Popup Incident display requires popups to be enabled. Please adjust your "
 "browser options."
@@ -7094,27 +7126,27 @@ msgstr ""
 msgid "Duration"
 msgstr "Situation"
 
-#: incs/full_scr.inc.php:1747 incs/functions_major.inc.php:3019
+#: incs/full_scr.inc.php:1747 incs/functions_major.inc.php:3020
 msgid "Booked Date"
 msgstr ""
 
-#: incs/full_scr.inc.php:1756 incs/functions_major.inc.php:3027
-#: incs/functions_major.inc.php:4402 incs/functions_major.inc.php:5187
-#: incs/functions_major.inc.php:5279 incs/functions_major.inc.php:5901
-#: incs/functions_major_nm.inc.php:1755 incs/functions_major_nm.inc.php:1939
-#: incs/functions_major_nm.inc.php:2031 incs/functions_major_nm.inc.php:2125
+#: incs/full_scr.inc.php:1756 incs/functions_major.inc.php:3028
+#: incs/functions_major.inc.php:4403 incs/functions_major.inc.php:5188
+#: incs/functions_major.inc.php:5280 incs/functions_major.inc.php:5902
+#: incs/functions_major_nm.inc.php:1756 incs/functions_major_nm.inc.php:1940
+#: incs/functions_major_nm.inc.php:2032 incs/functions_major_nm.inc.php:2126
 #: mobile.php:1033 portal.php:1001 portal/new_request.php:592
 #: portal/new_request.php:726 portal/request.php:642 portal/request.php:856
-#: portal/request.php:977 reports.php:1256 rm/ajax/ticket_detail.php:181
+#: portal/request.php:977 reports.php:1259 rm/ajax/ticket_detail.php:181
 msgid "Receiving Facility"
 msgstr "Receiving Facility"
 
-#: incs/full_scr.inc.php:1762 incs/functions_major.inc.php:3031
+#: incs/full_scr.inc.php:1762 incs/functions_major.inc.php:3032
 msgid "UTM grid"
 msgstr ""
 
 #: incs/full_scr.inc.php:1769 incs/full_scr.inc.php:1776
-#: incs/functions_major.inc.php:3057
+#: incs/functions_major.inc.php:3058
 #, fuzzy
 msgid "911 contact"
 msgstr "911 Contacted"
@@ -7137,7 +7169,7 @@ msgstr "Unit"
 msgid "No Current Unit Assignments"
 msgstr ""
 
-#: incs/full_scr.inc.php:2275 incs/functions_major.inc.php:3464
+#: incs/full_scr.inc.php:2275 incs/functions_major.inc.php:3465
 #: units_nm.php:1000
 #, fuzzy
 msgid "To Facility"
@@ -7166,7 +7198,7 @@ msgstr ""
 msgid "GL"
 msgstr ""
 
-#: incs/full_scr.inc.php:2499 incs/functions_major.inc.php:3589 units.php:2836
+#: incs/full_scr.inc.php:2499 incs/functions_major.inc.php:3590 units.php:2836
 #, fuzzy
 msgid "Dispatched to"
 msgstr "Dispatched"
@@ -7178,274 +7210,274 @@ msgstr "Email"
 
 #: incs/full_scr.inc.php:2510 incs/full_scr.inc.php:2532
 #: incs/full_scr.inc.php:2552 incs/full_scr.inc.php:2571
-#: incs/functions_major.inc.php:3598
+#: incs/functions_major.inc.php:3599
 msgid "Altitude"
 msgstr ""
 
 #: incs/full_scr.inc.php:2675 incs/full_scr.inc.php:3080
-#: incs/functions_major.inc.php:3687 incs/functions_major.inc.php:4159
-#: incs/functions_major.inc.php:4198
+#: incs/functions_major.inc.php:3688 incs/functions_major.inc.php:4160
+#: incs/functions_major.inc.php:4199
 msgid "None Defined!"
 msgstr ""
 
-#: incs/full_scr.inc.php:3069 incs/functions_major.inc.php:3672
-#: incs/functions_major.inc.php:3688 incs/functions_major.inc.php:4110
-#: incs/functions_major.inc.php:4211
+#: incs/full_scr.inc.php:3069 incs/functions_major.inc.php:3673
+#: incs/functions_major.inc.php:3689 incs/functions_major.inc.php:4111
+#: incs/functions_major.inc.php:4212
 msgid "ALL"
 msgstr ""
 
-#: incs/full_scr.inc.php:3070 incs/functions_major.inc.php:3673
-#: incs/functions_major.inc.php:3689 incs/functions_major.inc.php:4111
-#: incs/functions_major.inc.php:4212
+#: incs/full_scr.inc.php:3070 incs/functions_major.inc.php:3674
+#: incs/functions_major.inc.php:3690 incs/functions_major.inc.php:4112
+#: incs/functions_major.inc.php:4213
 msgid "NONE"
 msgstr ""
 
-#: incs/functions.inc.php:378 incs/functions_nm.inc.php:273
+#: incs/functions.inc.php:381 incs/functions_nm.inc.php:273
 msgid ""
 "Connection attempt to MySQL failed - correction required in order to "
 "continue."
 msgstr ""
 
-#: incs/functions.inc.php:382 incs/functions_nm.inc.php:277
+#: incs/functions.inc.php:385 incs/functions_nm.inc.php:277
 msgid ""
 "Connection attempt to database failed. Please run <a href=\"install.php"
 "\">install.php</a> with valid  database configuration information."
 msgstr ""
 
-#: incs/functions.inc.php:390 incs/functions_nm.inc.php:285
+#: incs/functions.inc.php:393 incs/functions_nm.inc.php:285
 msgid ""
 "One or more database tables is missing.  Please run <a href=\"install.php"
 "\">install.php</a> with valid database configuration information."
 msgstr ""
 
-#: incs/functions.inc.php:623 rm/index.php:975 rm/index.php:2198
+#: incs/functions.inc.php:626 rm/index.php:977 rm/index.php:2200
 msgid "Start Miles"
 msgstr ""
 
-#: incs/functions.inc.php:623 rm/index.php:979 rm/index.php:2199
+#: incs/functions.inc.php:626 rm/index.php:981 rm/index.php:2201
 msgid "On Scene Miles"
 msgstr ""
 
-#: incs/functions.inc.php:623 rm/index.php:977 rm/index.php:2200
+#: incs/functions.inc.php:626 rm/index.php:979 rm/index.php:2202
 msgid "End Miles"
 msgstr ""
 
-#: incs/functions.inc.php:624
+#: incs/functions.inc.php:627
 msgid "TOTAL MILES"
 msgstr ""
 
-#: incs/functions.inc.php:756 incs/functions.inc.php:937 messages.php:57
-#: messages.php:283 rm/index.php:2309
+#: incs/functions.inc.php:759 incs/functions.inc.php:940 messages.php:57
+#: messages.php:283 rm/index.php:2311
 msgid "Messages"
 msgstr ""
 
-#: incs/functions.inc.php:762 rm/ajax/messagelist.php:71
+#: incs/functions.inc.php:765 rm/ajax/messagelist.php:71
 #: rm/ajax/messagelist2.php:71
 msgid "No Messages"
 msgstr ""
 
-#: incs/functions.inc.php:880
+#: incs/functions.inc.php:883
 #, fuzzy
 msgid "\"Actions"
 msgstr "Actions"
 
-#: incs/functions.inc.php:900 incs/functions_nm.inc.php:607
+#: incs/functions.inc.php:903 incs/functions_nm.inc.php:607
 #: incs/functions_nm.inc.php:638
 msgid "edit"
 msgstr ""
 
-#: incs/functions.inc.php:1054 incs/functions.inc.php:1111
+#: incs/functions.inc.php:1057 incs/functions.inc.php:1114
 #: incs/functions_nm.inc.php:690 incs/functions_nm.inc.php:747
 msgid "CFS"
 msgstr ""
 
-#: incs/functions.inc.php:1055 incs/functions.inc.php:1112
+#: incs/functions.inc.php:1058 incs/functions.inc.php:1115
 #: incs/functions_nm.inc.php:691 incs/functions_nm.inc.php:748 log.php:142
-#: reports.php:928 reports.php:1049
+#: reports.php:928 reports.php:1052
 msgid "Code"
 msgstr ""
 
-#: incs/functions.inc.php:1737 incs/functions_nm.inc.php:907
+#: incs/functions.inc.php:1740 incs/functions_nm.inc.php:907
 #, fuzzy
 msgid "Status error"
 msgstr "Status"
 
-#: incs/functions.inc.php:1800
+#: incs/functions.inc.php:1803
 #, fuzzy
 msgid "Severity error"
 msgstr "Severities"
 
-#: incs/functions.inc.php:1987
+#: incs/functions.inc.php:1990
 msgid "An error occured in function"
 msgstr ""
 
-#: incs/functions.inc.php:1989 incs/functions_nm.inc.php:1056 tables.php:282
+#: incs/functions.inc.php:1992 incs/functions_nm.inc.php:1056 tables.php:282
 msgid "Additional info"
 msgstr ""
 
-#: incs/functions.inc.php:1990
+#: incs/functions.inc.php:1993
 msgid ""
 "Check your MySQL connection and if the problem persist, contact the <A HREF="
 "\"help.php?q=credits\">author</A>."
 msgstr ""
 
-#: incs/functions.inc.php:1991 incs/functions_nm.inc.php:1058
+#: incs/functions.inc.php:1994 incs/functions_nm.inc.php:1058
 #, fuzzy
 msgid "Execution stopped."
 msgstr "Exclusion Zone"
 
-#: incs/functions.inc.php:2023 incs/functions_nm.inc.php:1090 main.php:942
+#: incs/functions.inc.php:2026 incs/functions_nm.inc.php:1090 main.php:938
 msgid "Add Patient"
 msgstr "Add Patient"
 
-#: incs/functions.inc.php:2507
+#: incs/functions.inc.php:2510
 #, fuzzy
 msgid "Action Opened"
 msgstr "Action"
 
-#: incs/functions.inc.php:2508
+#: incs/functions.inc.php:2511
 #, fuzzy
 msgid "Action Closed"
 msgstr "Actions"
 
-#: incs/functions.inc.php:2509
+#: incs/functions.inc.php:2512
 msgid "Item Opened"
 msgstr ""
 
-#: incs/functions.inc.php:2510
+#: incs/functions.inc.php:2513
 msgid "Item Closed"
 msgstr ""
 
-#: incs/functions.inc.php:2751
+#: incs/functions.inc.php:2754
 msgid "level error"
 msgstr ""
 
-#: incs/functions.inc.php:3518 incs/functions_major.inc.php:4372
-#: incs/functions_major.inc.php:5165 incs/functions_nm.inc.php:2280
+#: incs/functions.inc.php:3517 incs/functions_major.inc.php:4373
+#: incs/functions_major.inc.php:5166 incs/functions_nm.inc.php:2280
 #, fuzzy
 msgid "About Address"
 msgstr "Addr"
 
-#: incs/functions.inc.php:3607 incs/functions_mail.php:160
+#: incs/functions.inc.php:3606 incs/functions_mail.php:160
 #: incs/functions_nm.inc.php:2367
 msgid "Tickets host"
 msgstr "Tickets host"
 
-#: incs/functions.inc.php:3658 incs/functions_mail.php:211
+#: incs/functions.inc.php:3657 incs/functions_mail.php:211
 #: incs/functions_nm.inc.php:2418
 msgid "Scheduled For"
 msgstr "Scheduled For"
 
-#: incs/functions.inc.php:3740
+#: incs/functions.inc.php:3739
 msgid "Not Set"
 msgstr ""
 
-#: incs/functions.inc.php:3760 incs/functions_mail.php:265
+#: incs/functions.inc.php:3759 incs/functions_mail.php:265
 msgid "Invalid smtp account information"
 msgstr ""
 
-#: incs/functions.inc.php:3767 incs/functions_mail.php:276
+#: incs/functions.inc.php:3766 incs/functions_mail.php:276
 msgid "Invalid email reply-to"
 msgstr ""
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 #, fuzzy
 msgid "Incident:"
 msgstr "Incident"
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 #, fuzzy
 msgid "Priority:"
 msgstr "Priority"
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 #, fuzzy
 msgid "Nature:"
 msgstr "Nature"
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 #, fuzzy
 msgid "Addr:"
 msgstr "Addr"
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 msgid "Descr:"
 msgstr ""
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 #, fuzzy
 msgid "Reported by:"
 msgstr "Reported by"
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 #, fuzzy
 msgid "Phone:"
 msgstr "Phone"
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 #, fuzzy
 msgid "Written:"
 msgstr "Written"
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 #, fuzzy
 msgid "Updated:"
 msgstr "Updated"
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 #, fuzzy
 msgid "Status:"
 msgstr "Status"
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 #, fuzzy
 msgid "Disp:"
 msgstr "Disp"
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 #, fuzzy
 msgid "Run Start:"
 msgstr "Run Start"
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 msgid "Map:"
 msgstr ""
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 #, fuzzy
 msgid "Patient:"
 msgstr "Patient"
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 #, fuzzy
 msgid "Actions:"
 msgstr "Actions"
 
-#: incs/functions.inc.php:3786 incs/functions_mail.php:296
+#: incs/functions.inc.php:3785 incs/functions_mail.php:296
 #, fuzzy
 msgid "Tickets host:"
 msgstr "Tickets host"
 
-#: incs/functions.inc.php:4566 incs/functions.inc.php:4568
+#: incs/functions.inc.php:4565 incs/functions.inc.php:4567
 msgid "None Selected"
 msgstr ""
 
-#: incs/functions.inc.php:4670 incs/functions_nm.inc.php:3126
+#: incs/functions.inc.php:4669 incs/functions_nm.inc.php:3126
 #, fuzzy
 msgid "Status legend"
 msgstr "Status"
 
-#: incs/functions.inc.php:5397 incs/functions.inc.php:5424
+#: incs/functions.inc.php:5396 incs/functions.inc.php:5423
 #: portal/request.php:996
 #, fuzzy
 msgid "Update"
 msgstr "Updated"
 
-#: incs/functions.inc.php:5398
+#: incs/functions.inc.php:5397
 msgid "Undock"
 msgstr ""
 
-#: incs/functions.inc.php:5521 incs/functions.inc.php:5544
+#: incs/functions.inc.php:5520 incs/functions.inc.php:5543
 msgid "Intrusion attempt prevented!"
 msgstr ""
 
@@ -7453,73 +7485,73 @@ msgstr ""
 msgid "Invalid smtp account address"
 msgstr ""
 
-#: incs/functions_major.inc.php:310 incs/functions_major_nm.inc.php:260
+#: incs/functions_major.inc.php:311 incs/functions_major_nm.inc.php:261
 #: units.php:5090
 msgid "Allocated Regions"
 msgstr ""
 
-#: incs/functions_major.inc.php:403
+#: incs/functions_major.inc.php:404
 msgid "Show / Hide"
 msgstr ""
 
-#: incs/functions_major.inc.php:437 incs/functions_major_nm.inc.php:313
+#: incs/functions_major.inc.php:438 incs/functions_major_nm.inc.php:314
 #: incs/login.inc.php:650
 #, fuzzy
 msgid "Contact us"
 msgstr "Contact name"
 
-#: incs/functions_major.inc.php:661
+#: incs/functions_major.inc.php:662
 msgid "Units status update applied!"
 msgstr ""
 
-#: incs/functions_major.inc.php:785
+#: incs/functions_major.inc.php:786
 msgid ""
 "Close Ticket operation requires popups to be enabled -- please adjust your "
 "browser options."
 msgstr ""
 
-#: incs/functions_major.inc.php:878
+#: incs/functions_major.inc.php:879
 msgid "closed today"
 msgstr ""
 
-#: incs/functions_major.inc.php:879
+#: incs/functions_major.inc.php:880
 msgid "closed yesterday+"
 msgstr ""
 
-#: incs/functions_major.inc.php:880
+#: incs/functions_major.inc.php:881
 msgid "closed this week"
 msgstr ""
 
-#: incs/functions_major.inc.php:881
+#: incs/functions_major.inc.php:882
 msgid "closed last week"
 msgstr ""
 
-#: incs/functions_major.inc.php:882
+#: incs/functions_major.inc.php:883
 msgid "closed last week+"
 msgstr ""
 
-#: incs/functions_major.inc.php:883
+#: incs/functions_major.inc.php:884
 msgid "closed this month"
 msgstr ""
 
-#: incs/functions_major.inc.php:884
+#: incs/functions_major.inc.php:885
 msgid "closed last month"
 msgstr ""
 
-#: incs/functions_major.inc.php:885
+#: incs/functions_major.inc.php:886
 msgid "closed this year"
 msgstr ""
 
-#: incs/functions_major.inc.php:886
+#: incs/functions_major.inc.php:887
 msgid "closed last year"
 msgstr ""
 
-#: incs/functions_major.inc.php:2559
+#: incs/functions_major.inc.php:2560
 #, fuzzy
 msgid "Scheduled Jobs"
 msgstr "Scheduled For"
 
-#: incs/functions_major.inc.php:2562
+#: incs/functions_major.inc.php:2563
 msgid ""
 "Click link to view a list of scheduled jobs that are not shown on the "
 "current situation screen. Scheduled jobs that are due in the next 2 days are "
@@ -7527,261 +7559,261 @@ msgid ""
 "date is highlighted and is the scheduled date."
 msgstr ""
 
-#: incs/functions_major.inc.php:2568
+#: incs/functions_major.inc.php:2569
 msgid ""
 "Click link view current situation screen including scheduled jobs that are "
 "due in the next 2 days. Scheduled jobs are shown with a * in front of the "
 "ID, the date is highlighted and is the scheduled date."
 msgstr ""
 
-#: incs/functions_major.inc.php:2568
+#: incs/functions_major.inc.php:2569
 #, fuzzy
 msgid "Click to view current situation"
 msgstr "Current situation"
 
-#: incs/functions_major.inc.php:2909
+#: incs/functions_major.inc.php:2910
 msgid "Click/Mouse-over for information"
 msgstr ""
 
-#: incs/functions_major.inc.php:3036 tracks.php:626 tracks_hh.php:563
+#: incs/functions_major.inc.php:3037 tracks.php:626 tracks_hh.php:563
 msgid "Details"
 msgstr ""
 
-#: incs/functions_major.inc.php:3049
+#: incs/functions_major.inc.php:3050
 #, fuzzy
 msgid "Contact Units"
 msgstr "Contact name"
 
-#: incs/functions_major.inc.php:3151
+#: incs/functions_major.inc.php:3152
 msgid "closed tickets this period!"
 msgstr ""
 
-#: incs/functions_major.inc.php:3151
+#: incs/functions_major.inc.php:3152
 msgid "current tickets!"
 msgstr ""
 
-#: incs/functions_major.inc.php:3406 incs/functions_major_nm.inc.php:1302
+#: incs/functions_major.inc.php:3407 incs/functions_major_nm.inc.php:1303
 msgid "No units!"
 msgstr ""
 
-#: incs/functions_major.inc.php:3420 patient.php:543 routes_i.php:502
+#: incs/functions_major.inc.php:3421 patient.php:546 routes_i.php:502
 #: tracks.php:409 units.php:2297
 msgid "M"
 msgstr ""
 
-#: incs/functions_major.inc.php:3462 track_u.php:319 tracks.php:517
+#: incs/functions_major.inc.php:3463 track_u.php:319 tracks.php:517
 #: tracks_hh.php:471 units_nm.php:2276
 msgid "Tracks"
 msgstr ""
 
-#: incs/functions_major.inc.php:3502
+#: incs/functions_major.inc.php:3503
 msgid "click to email unit"
 msgstr ""
 
-#: incs/functions_major.inc.php:3609
+#: incs/functions_major.inc.php:3610
 msgid "No Tip String"
 msgstr ""
 
-#: incs/functions_major.inc.php:3654 incs/functions_major_nm.inc.php:1454
+#: incs/functions_major.inc.php:3655 incs/functions_major_nm.inc.php:1455
 msgid "Units Legend"
 msgstr ""
 
-#: incs/functions_major.inc.php:3655
+#: incs/functions_major.inc.php:3656
 msgid "<B>M</B>obility stopped"
 msgstr ""
 
-#: incs/functions_major.inc.php:3655 routes_i.php:714 routes_nm.php:1653
+#: incs/functions_major.inc.php:3656 routes_i.php:714 routes_nm.php:1653
 #: tracks_hh.php:629 units.php:5137
 msgid "moving"
 msgstr ""
 
-#: incs/functions_major.inc.php:3655 routes_i.php:714 routes_nm.php:1653
+#: incs/functions_major.inc.php:3656 routes_i.php:714 routes_nm.php:1653
 #: tracks_hh.php:629 units.php:5137
 msgid "fast"
 msgstr ""
 
-#: incs/functions_major.inc.php:3655 routes_i.php:714 routes_nm.php:1653
+#: incs/functions_major.inc.php:3656 routes_i.php:714 routes_nm.php:1653
 #: tracks_hh.php:629 units.php:5137
 msgid "silent"
 msgstr ""
 
-#: incs/functions_major.inc.php:3874 incs/functions_major_nm.inc.php:1530
+#: incs/functions_major.inc.php:3875 incs/functions_major_nm.inc.php:1531
 #, fuzzy
 msgid "No Facilities!"
 msgstr "Facilities"
 
-#: incs/functions_major.inc.php:3899 incs/functions_major_nm.inc.php:1328
+#: incs/functions_major.inc.php:3900 incs/functions_major_nm.inc.php:1329
 #: units_nm.php:978
 msgid "Groups Assigned"
 msgstr ""
 
-#: incs/functions_major.inc.php:3947
+#: incs/functions_major.inc.php:3948
 msgid "click to email facility"
 msgstr ""
 
-#: incs/functions_major.inc.php:4064 incs/functions_major_nm.inc.php:1633
+#: incs/functions_major.inc.php:4065 incs/functions_major_nm.inc.php:1634
 #, fuzzy
 msgid "Facilities Legend"
 msgstr "Facility Street"
 
-#: incs/functions_major.inc.php:4190
+#: incs/functions_major.inc.php:4191
 #, fuzzy
 msgid "Boundaries and Fences"
 msgstr "Boundaries"
 
-#: incs/functions_major.inc.php:4197
+#: incs/functions_major.inc.php:4198
 #, fuzzy
 msgid "No Boundaries"
 msgstr "Boundaries"
 
-#: incs/functions_major.inc.php:4242
+#: incs/functions_major.inc.php:4243
 msgid "Sorry, browser compatibility problem. Contact your tech support group."
 msgstr ""
 
-#: incs/functions_major.inc.php:4396 incs/functions_major.inc.php:5184
-#: incs/functions_major.inc.php:5276 incs/functions_major.inc.php:5898
-#: incs/functions_major_nm.inc.php:1749 incs/functions_major_nm.inc.php:1935
-#: incs/functions_major_nm.inc.php:2028 incs/functions_major_nm.inc.php:2122
-#: reports.php:1254
+#: incs/functions_major.inc.php:4397 incs/functions_major.inc.php:5185
+#: incs/functions_major.inc.php:5277 incs/functions_major.inc.php:5899
+#: incs/functions_major_nm.inc.php:1750 incs/functions_major_nm.inc.php:1936
+#: incs/functions_major_nm.inc.php:2029 incs/functions_major_nm.inc.php:2123
+#: reports.php:1257
 #, fuzzy
 msgid "Scheduled date"
 msgstr "Scheduled Date"
 
-#: incs/functions_major.inc.php:4400 reports.php:1255
+#: incs/functions_major.inc.php:4401 reports.php:1258
 #, fuzzy
 msgid "at Facility"
 msgstr "Facility"
 
-#: incs/functions_major.inc.php:4557 incs/functions_major.inc.php:5436
+#: incs/functions_major.inc.php:4558 incs/functions_major.inc.php:5437
 msgid "Range"
 msgstr ""
 
-#: incs/functions_major.inc.php:4557 incs/functions_major.inc.php:5436
+#: incs/functions_major.inc.php:4558 incs/functions_major.inc.php:5437
 msgid "Brng"
 msgstr ""
 
-#: incs/functions_major.inc.php:4561 incs/functions_major.inc.php:5440
+#: incs/functions_major.inc.php:4562 incs/functions_major.inc.php:5441
 #: locatea.php:117 t_tracker.php:142 test_instam.php:141
 msgid "Lng"
 msgstr "Lng"
 
-#: incs/functions_major.inc.php:4561 incs/functions_major.inc.php:5440
+#: incs/functions_major.inc.php:4562 incs/functions_major.inc.php:5441
 msgid "NGS"
 msgstr ""
 
-#: incs/functions_major.inc.php:4562
+#: incs/functions_major.inc.php:4563
 msgid "Click map point for distance information"
 msgstr ""
 
-#: incs/functions_major.inc.php:4567 messages.php:273 units.php:4934
+#: incs/functions_major.inc.php:4568 messages.php:273 units.php:4934
 msgid "Mark All Read"
 msgstr ""
 
-#: incs/functions_major.inc.php:4568 messages.php:274 units.php:4935
+#: incs/functions_major.inc.php:4569 messages.php:274 units.php:4935
 msgid "Mark All Unread"
 msgstr ""
 
-#: incs/functions_major.inc.php:4569 units.php:4936
+#: incs/functions_major.inc.php:4570 units.php:4936
 msgid "Wastebasket"
 msgstr ""
 
-#: incs/functions_major.inc.php:4570 messages.php:240 units.php:4937
+#: incs/functions_major.inc.php:4571 messages.php:240 units.php:4937
 msgid "Inbox"
 msgstr ""
 
-#: incs/functions_major.inc.php:4574
+#: incs/functions_major.inc.php:4575
 msgid "Messages for Ticket"
 msgstr ""
 
-#: incs/functions_major.inc.php:4575 main.php:1107
+#: incs/functions_major.inc.php:4576 main.php:1103
 msgid "Showing Inbox"
 msgstr ""
 
-#: incs/functions_major.inc.php:4576 messages.php:284
+#: incs/functions_major.inc.php:4577 messages.php:284
 msgid "Click Column Heading to sort"
 msgstr ""
 
-#: incs/functions_major.inc.php:4581 messages.php:288
+#: incs/functions_major.inc.php:4582 messages.php:288
 msgid "FILTER"
 msgstr ""
 
-#: incs/functions_major.inc.php:4582 messages.php:289 units.php:4947
+#: incs/functions_major.inc.php:4583 messages.php:289 units.php:4947
 msgid "GO"
 msgstr ""
 
-#: incs/functions_major.inc.php:4591 messages.php:299 units.php:4957
+#: incs/functions_major.inc.php:4592 messages.php:299 units.php:4957
 #, fuzzy
 msgid "Typ"
 msgstr "Type"
 
-#: incs/functions_major.inc.php:4598 units.php:4964
+#: incs/functions_major.inc.php:4599 units.php:4964
 msgid "Del"
 msgstr ""
 
-#: incs/functions_major.inc.php:5418
+#: incs/functions_major.inc.php:5419
 msgid "No such ticket or user access to ticket is denied"
 msgstr ""
 
-#: incs/functions_major_nm.inc.php:600
+#: incs/functions_major_nm.inc.php:601
 #, fuzzy
 msgid "$incidents closed today"
 msgstr "Incidents"
 
-#: incs/functions_major_nm.inc.php:601
+#: incs/functions_major_nm.inc.php:602
 #, fuzzy
 msgid "$incidents closed yesterday+"
 msgstr "Incidents"
 
-#: incs/functions_major_nm.inc.php:602
+#: incs/functions_major_nm.inc.php:603
 #, fuzzy
 msgid "$incidents closed this week"
 msgstr "Incidents"
 
-#: incs/functions_major_nm.inc.php:603
+#: incs/functions_major_nm.inc.php:604
 #, fuzzy
 msgid "$incidents closed last week"
 msgstr "Incidents"
 
-#: incs/functions_major_nm.inc.php:604
+#: incs/functions_major_nm.inc.php:605
 #, fuzzy
 msgid "$incidents closed last week+"
 msgstr "Incidents"
 
-#: incs/functions_major_nm.inc.php:605
+#: incs/functions_major_nm.inc.php:606
 #, fuzzy
 msgid "$incidents closed this month"
 msgstr "Incidents"
 
-#: incs/functions_major_nm.inc.php:606
+#: incs/functions_major_nm.inc.php:607
 #, fuzzy
 msgid "$incidents closed last month"
 msgstr "Incidents"
 
-#: incs/functions_major_nm.inc.php:607
+#: incs/functions_major_nm.inc.php:608
 #, fuzzy
 msgid "$incidents closed this year"
 msgstr "Incidents"
 
-#: incs/functions_major_nm.inc.php:608
+#: incs/functions_major_nm.inc.php:609
 #, fuzzy
 msgid "$incidents closed last year"
 msgstr "Incidents"
 
-#: incs/functions_major_nm.inc.php:897
+#: incs/functions_major_nm.inc.php:898
 #, fuzzy
 msgid "View current situation"
 msgstr "Current situation"
 
-#: incs/functions_major_nm.inc.php:1367
+#: incs/functions_major_nm.inc.php:1368
 msgid "Click to email unit {$name}"
 msgstr ""
 
-#: incs/functions_major_nm.inc.php:1645
+#: incs/functions_major_nm.inc.php:1646
 msgid "Time Elapsed"
 msgstr ""
 
-#: incs/functions_major_nm.inc.php:1753 incs/functions_major_nm.inc.php:1938
-#: incs/functions_major_nm.inc.php:2030
+#: incs/functions_major_nm.inc.php:1754 incs/functions_major_nm.inc.php:1939
+#: incs/functions_major_nm.inc.php:2031
 #, fuzzy
 msgid "$incident at Facility"
 msgstr "Originating Facility"
@@ -7947,15 +7979,15 @@ msgstr ""
 msgid "Messaging Help Goes Here"
 msgstr "messaging help"
 
-#: index.php:1950
+#: index.php:1964
 msgid "Do you wish to use the Tickets Quick start routine?"
 msgstr ""
 
-#: index.php:1951
+#: index.php:1965
 msgid "Yes Please"
 msgstr ""
 
-#: index.php:2092
+#: index.php:2106
 msgid "Tickets requires a frames-capable browser."
 msgstr ""
 
@@ -8132,9 +8164,10 @@ msgid ""
 msgstr ""
 
 #: install.php:1331
+#, php-format
 msgid ""
-"ERROR! Directory '{$filename}' is not writable. 'Write' permissions must be "
-"corrected for installation."
+"ERROR! Directory '%s' is not writable. 'Write' permissions must be corrected "
+"for installation."
 msgstr ""
 
 #: install.php:1348
@@ -8277,11 +8310,6 @@ msgstr ""
 msgid "At least two map points are required"
 msgstr ""
 
-#: landb.php:843
-#, fuzzy
-msgid "Regions');?>"
-msgstr "Regions"
-
 #: landb.php:1369
 msgid "update complete"
 msgstr ""
@@ -8361,12 +8389,12 @@ msgstr ""
 msgid "Guests not allowed Log access."
 msgstr ""
 
-#: log.php:91 log.php:138 reports.php:1969
+#: log.php:91 log.php:138 reports.php:1972
 #, fuzzy
 msgid "Station Log"
 msgstr "Situation"
 
-#: log.php:92 log.php:141 reports.php:1646 unit_ticket_log.php:151
+#: log.php:92 log.php:141 reports.php:1649 unit_ticket_log.php:151
 #, fuzzy
 msgid "Log entry"
 msgstr "Log In"
@@ -8529,35 +8557,35 @@ msgstr ""
 msgid "Tickets - Main Module"
 msgstr ""
 
-#: main.php:307
+#: main.php:303
 msgid ""
 "A unit in your group is \\n outside a ring fence \\n however you aren't "
 "currently \\n viewing the group it is allocated to"
 msgstr ""
 
-#: main.php:354
+#: main.php:350
 msgid ""
 "A unit in your group is \\n inside an exclusion zone \\n however you aren't "
 "currently \\n viewing the group it is allocated to"
 msgstr ""
 
-#: main.php:717
+#: main.php:713
 msgid "WARNING: Recursion limit exceeded"
 msgstr ""
 
-#: main.php:1223
+#: main.php:1219
 msgid "Traffic Alert"
 msgstr ""
 
-#: main.php:1260
+#: main.php:1256
 msgid "Test1"
 msgstr ""
 
-#: main.php:1262
+#: main.php:1258
 msgid "Test2"
 msgstr ""
 
-#: main.php:1264
+#: main.php:1260
 msgid "Test3"
 msgstr ""
 
@@ -8773,11 +8801,6 @@ msgstr ""
 msgid "Back to Message Archiving"
 msgstr ""
 
-#: msg_archive.php:263
-#, fuzzy
-msgid "Back to Config"
-msgstr "Config"
-
 #: native.php:14
 #, fuzzy
 msgid "Tickets mail test"
@@ -8983,67 +9006,73 @@ msgstr ""
 msgid "is orphaned"
 msgstr ""
 
-#: patient.php:187 patient_w.php:173
-msgid "Name is required"
-msgstr ""
+#: patient.php:190
+#, fuzzy
+msgid "ID/Name is required"
+msgstr "Incident name"
 
-#: patient.php:188
+#: patient.php:191
 msgid "required"
 msgstr ""
 
-#: patient.php:189
+#: patient.php:192
 msgid "selection required"
 msgstr ""
 
-#: patient.php:198
+#: patient.php:201
 msgid "Please correct the following and re-submit."
 msgstr ""
 
-#: patient.php:206
+#: patient.php:209
 #, fuzzy
 msgid "record by"
 msgstr "Reported by"
 
-#: patient.php:335 patient_w.php:312
+#: patient.php:338 patient_w.php:313
 msgid "record has been added"
 msgstr ""
 
-#: patient.php:351
+#: patient.php:354
 msgid "TICKET - PATIENT"
 msgstr ""
 
-#: patient.php:454 patient_w.php:435
+#: patient.php:457 patient_w.php:436
 msgid "record deleted"
 msgstr ""
 
-#: patient.php:463
+#: patient.php:466
 msgid "Really delete"
 msgstr ""
 
-#: patient.php:463
+#: patient.php:466
 msgid "record"
 msgstr ""
 
-#: patient.php:505
+#: patient.php:508
 msgid "record updated"
 msgstr ""
 
-#: patient.php:516 patient.php:666 patient_w.php:502
+#: patient.php:519 patient.php:669 patient_w.php:503
 msgid "Record"
 msgstr ""
 
-#: patient.php:545
+#: patient.php:548
 msgid "T"
 msgstr ""
 
-#: patient_w.php:441
-msgid "Really delete {$patient} record"
+#: patient_w.php:174
+msgid "Name is required"
 msgstr ""
 
-#: patient_w.php:637
-#, fuzzy
-msgid "Add {$patient} Record"
-msgstr "Add Patient"
+#: patient_w.php:442
+#, php-format
+msgid "Really delete %s record"
+msgstr ""
+
+#: patient_w.php:638
+#, fuzzy, php-format
+msgid "Add %s Record"
+msgstr "User"
 
 #: portal.php:66 portal/new_request.php:72
 msgid "Tickets - Service User Portal"
@@ -11106,7 +11135,7 @@ msgstr ""
 msgid "No data this period."
 msgstr ""
 
-#: reports.php:712 reports.php:1031
+#: reports.php:712 reports.php:1034
 #, fuzzy
 msgid "Daily Report"
 msgstr "Reports"
@@ -11125,7 +11154,7 @@ msgstr "Contact name"
 msgid "Current Week-to-date"
 msgstr "Current situation"
 
-#: reports.php:716 reports.php:915 reports.php:1988
+#: reports.php:716 reports.php:915 reports.php:1991
 msgid "Last Week"
 msgstr ""
 
@@ -11158,108 +11187,108 @@ msgstr ""
 msgid "Station Report"
 msgstr "Situation"
 
-#: reports.php:975
+#: reports.php:978
 msgid "No data for this period"
 msgstr ""
 
-#: reports.php:1032
+#: reports.php:1035
 msgid "Report - Current Month-to-date"
 msgstr ""
 
-#: reports.php:1033
+#: reports.php:1036
 msgid "Report - Last Month"
 msgstr ""
 
-#: reports.php:1034
+#: reports.php:1037
 msgid "Report - Current Year-to-date"
 msgstr ""
 
-#: reports.php:1035
+#: reports.php:1038
 msgid "Report - Last Year"
 msgstr ""
 
-#: reports.php:1036
+#: reports.php:1039
 msgid "Report - Current Week-to-date"
 msgstr ""
 
-#: reports.php:1037
+#: reports.php:1040
 msgid "Report - Last Week"
 msgstr ""
 
-#: reports.php:1122
+#: reports.php:1125
 msgid "No data for this period!"
 msgstr ""
 
-#: reports.php:1261 reports.php:1731
+#: reports.php:1264 reports.php:1734
 msgid "Elapsed"
 msgstr ""
 
-#: reports.php:1322
+#: reports.php:1325
 msgid "Log code"
 msgstr ""
 
-#: reports.php:1460
+#: reports.php:1463
 msgid "No incident data for this period"
 msgstr ""
 
-#: reports.php:1472
+#: reports.php:1475
 msgid "Page {$page_num} of {$numrows}"
 msgstr ""
 
-#: reports.php:1725
+#: reports.php:1728
 msgid "Management Report"
 msgstr ""
 
-#: reports.php:1733
+#: reports.php:1736
 msgid "Call type"
 msgstr ""
 
-#: reports.php:1737
+#: reports.php:1740
 #, fuzzy
 msgid "responding"
 msgstr "Responding"
 
-#: reports.php:1809
+#: reports.php:1812
 #, fuzzy
 msgid "Not dispatched"
 msgstr "Dispatched"
 
-#: reports.php:1822
+#: reports.php:1825
 msgid "Mean incident close times by severity"
 msgstr ""
 
-#: reports.php:1880
+#: reports.php:1883
 #, fuzzy
 msgid "Other Reports"
 msgstr "Reports"
 
-#: reports.php:1968
+#: reports.php:1971
 #, fuzzy
 msgid "Dispatch Log"
 msgstr "Dispatched"
 
-#: reports.php:1970
+#: reports.php:1973
 msgid "Summary"
 msgstr ""
 
-#: reports.php:1971
+#: reports.php:1974
 msgid "After-action Report"
 msgstr ""
 
-#: reports.php:1972
+#: reports.php:1975
 #, fuzzy
 msgid " mgmt Report"
 msgstr "Reports"
 
-#: reports.php:1982
+#: reports.php:1985
 msgid "Mouseover for buttons"
 msgstr ""
 
-#: reports.php:1983
+#: reports.php:1986
 msgid "full width"
 msgstr ""
 
-#: reports.php:2017
+#: reports.php:2020
 msgid "This Week"
 msgstr ""
 
@@ -11301,7 +11330,7 @@ msgstr ""
 msgid "Select Status Value to set Responders to"
 msgstr ""
 
-#: rm/ajax/alert_detail.php:31 rm/index.php:2244
+#: rm/ajax/alert_detail.php:31 rm/index.php:2246
 #, fuzzy
 msgid "Close Detail"
 msgstr "Close incident"
@@ -11327,7 +11356,7 @@ msgid "DIST"
 msgstr ""
 
 #: rm/ajax/message_detail.php:30 rm/ajax/message_detail2.php:30
-#: rm/index.php:2277
+#: rm/index.php:2279
 msgid "MESSAGE DETAIL"
 msgstr ""
 
@@ -11345,7 +11374,7 @@ msgstr "Tickets host"
 msgid "Tkt Msgs"
 msgstr "Msgs"
 
-#: rm/ajax/ticket_detail.php:157 rm/index.php:935 road_conditions.php:1090
+#: rm/ajax/ticket_detail.php:157 rm/index.php:937 road_conditions.php:1090
 #: warnloc_popup.php:148 warnloc_popup_nm.php:105
 msgid "Title"
 msgstr ""
@@ -11387,200 +11416,200 @@ msgstr ""
 msgid "Tickets Normal Screen"
 msgstr "Tickets host"
 
-#: rm/incs/mobile_login.inc.php:520
+#: rm/incs/mobile_login.inc.php:519
 msgid "Tickets CAD Project home"
 msgstr ""
 
-#: rm/index.php:200
+#: rm/index.php:201
 #, fuzzy
 msgid "Tickets Mobile Screen"
 msgstr "Tickets host"
 
-#: rm/index.php:510
+#: rm/index.php:512
 #, fuzzy
 msgid "Your status update applied!"
 msgstr "Updated"
 
-#: rm/index.php:843 rm/index.php:865
+#: rm/index.php:845 rm/index.php:867
 #, fuzzy
 msgid "Loading Messages."
 msgstr "Current situation"
 
-#: rm/index.php:855
+#: rm/index.php:857
 #, fuzzy
 msgid "Close Messages"
 msgstr "Current situation"
 
-#: rm/index.php:893
+#: rm/index.php:895
 msgid "Loading Alerts."
 msgstr ""
 
-#: rm/index.php:908
+#: rm/index.php:910
 msgid "Loading Ticket List."
 msgstr ""
 
-#: rm/index.php:937
+#: rm/index.php:939
 #, fuzzy
 msgid "Incident Started"
 msgstr "Incidents"
 
-#: rm/index.php:967 rm/index.php:2194
+#: rm/index.php:969 rm/index.php:2196
 #, fuzzy
 msgid "On Scene"
 msgstr "On-scene"
 
-#: rm/index.php:969
+#: rm/index.php:971
 #, fuzzy
 msgid "Fac enroute"
 msgstr "Facility State"
 
-#: rm/index.php:971
+#: rm/index.php:973
 #, fuzzy
 msgid "Fac Arrived"
 msgstr "Facility Street"
 
-#: rm/index.php:1002
+#: rm/index.php:1004
 msgid "Loading Ticket Details."
 msgstr ""
 
-#: rm/index.php:1021 rm/index.php:1071
+#: rm/index.php:1023 rm/index.php:1073
 msgid "Loading Message Details."
 msgstr ""
 
-#: rm/index.php:1112
+#: rm/index.php:1114
 #, fuzzy
 msgid "Loading Alert Details."
 msgstr "Originating Facility"
 
-#: rm/index.php:1192
+#: rm/index.php:1194
 msgid "Hide Menu"
 msgstr ""
 
-#: rm/index.php:1208 rm/index.php:2240 rm/index.php:2250
+#: rm/index.php:1210 rm/index.php:2242 rm/index.php:2252
 msgid "Show Menu"
 msgstr ""
 
-#: rm/index.php:1257
+#: rm/index.php:1259
 msgid "Report Submitted - Thank You"
 msgstr ""
 
-#: rm/index.php:1259
+#: rm/index.php:1261
 msgid "There was an error submitting the data, please try again"
 msgstr ""
 
-#: rm/index.php:1696
+#: rm/index.php:1698
 msgid "Reply Sent"
 msgstr ""
 
-#: rm/index.php:1699
+#: rm/index.php:1701
 msgid "Reply FAILED"
 msgstr ""
 
-#: rm/index.php:2164
+#: rm/index.php:2166
 msgid "Zoom In"
 msgstr ""
 
-#: rm/index.php:2165
+#: rm/index.php:2167
 msgid "Zoom Out"
 msgstr ""
 
-#: rm/index.php:2166
+#: rm/index.php:2168
 msgid "Map Controls"
 msgstr ""
 
-#: rm/index.php:2168
+#: rm/index.php:2170
 msgid "Day Colorsl"
 msgstr ""
 
-#: rm/index.php:2169
+#: rm/index.php:2171
 msgid "Night Colors"
 msgstr ""
 
-#: rm/index.php:2170 rm/index.php:2171
+#: rm/index.php:2172 rm/index.php:2173
 msgid "Toggle Tracks"
 msgstr ""
 
-#: rm/index.php:2172
+#: rm/index.php:2174
 msgid "Center on me"
 msgstr ""
 
-#: rm/index.php:2175
+#: rm/index.php:2177
 msgid "My Lat Lng"
 msgstr ""
 
-#: rm/index.php:2176
+#: rm/index.php:2178
 #, fuzzy
 msgid "My Location"
 msgstr "Location"
 
-#: rm/index.php:2180
+#: rm/index.php:2182
 #, fuzzy
 msgid "Select Type"
 msgstr "State"
 
-#: rm/index.php:2192
+#: rm/index.php:2194
 #, fuzzy
 msgid "Dispatch Button"
 msgstr "Dispatched"
 
-#: rm/index.php:2195
+#: rm/index.php:2197
 #, fuzzy
 msgid "Fac Enroute"
 msgstr "Facility State"
 
-#: rm/index.php:2196
+#: rm/index.php:2198
 #, fuzzy
 msgid "Fac Arr"
 msgstr "Facility Street"
 
-#: rm/index.php:2201 tables/c_personnel.php:71 tables/u_personnel.php:72
+#: rm/index.php:2203 tables/c_personnel.php:71 tables/u_personnel.php:72
 #: tables/v_personnel.php:68
 msgid "Notes"
 msgstr ""
 
-#: rm/index.php:2205
+#: rm/index.php:2207
 msgid "Show Main Controls"
 msgstr ""
 
-#: rm/index.php:2217
+#: rm/index.php:2219
 msgid "Responder Mobile Screen"
 msgstr ""
 
-#: rm/index.php:2222
+#: rm/index.php:2224
 msgid "Login"
 msgstr ""
 
-#: rm/index.php:2260
+#: rm/index.php:2262
 msgid "To:"
 msgstr ""
 
-#: rm/index.php:2261
+#: rm/index.php:2263
 msgid "From:"
 msgstr ""
 
-#: rm/index.php:2262
+#: rm/index.php:2264
 msgid "Subject:"
 msgstr ""
 
-#: rm/index.php:2263
+#: rm/index.php:2265
 #, fuzzy
 msgid "Message:"
 msgstr "messaging help"
 
-#: rm/index.php:2263 rm/index.php:2285
+#: rm/index.php:2265 rm/index.php:2287
 msgid "Basic Message"
 msgstr ""
 
-#: rm/index.php:2267
+#: rm/index.php:2269
 msgid "DIRECTIONS"
 msgstr ""
 
-#: rm/index.php:2268
+#: rm/index.php:2270
 #, fuzzy
 msgid "Close Directions"
 msgstr "Actions"
 
-#: rm/index.php:2304
+#: rm/index.php:2306
 msgid "Alerts"
 msgstr ""
 
@@ -11890,8 +11919,13 @@ msgstr ""
 msgid "a <B>valid</B> email address"
 msgstr ""
 
+#: smtp_test.php:186
+msgid "Sent"
+msgstr ""
+
 #: smtp_test.php:193
-msgid "Mail to '{$errs}' failed"
+#, php-format
+msgid "Mail to '%s' failed"
 msgstr ""
 
 #: smtp_test.php:197
@@ -12201,7 +12235,8 @@ msgid "Properties"
 msgstr "Severities"
 
 #: tables.php:1560
-msgid "Table '{$tablename}' - Update/Delete Entry"
+#, php-format
+msgid "Table '%s' - Update/Delete Entry"
 msgstr ""
 
 #: tables.php:1703 tables.php:1851 tables/u_in_types.php:68
@@ -12305,8 +12340,9 @@ msgid "Default/Extra"
 msgstr ""
 
 #: tables.php:2007
-msgid "Add new {str_replace( \"_\", \" \", ucfirst($tablename))} entry"
-msgstr ""
+#, fuzzy, php-format
+msgid "Add new %s entry"
+msgstr "Add note"
 
 #: tables.php:2036
 #, fuzzy
@@ -12328,7 +12364,8 @@ msgid "In"
 msgstr ""
 
 #: tables.php:2170 tables.php:2173
-msgid "DB Error: {$mysql_db} inaccessible"
+#, php-format
+msgid "DB Error: %s inaccessible"
 msgstr ""
 
 #: tables.php:2195
@@ -12502,39 +12539,30 @@ msgstr "Assignments"
 msgid "Capabilities"
 msgstr "Capability"
 
-#: tables/c_places.php:97 tables/u_places.php:106
+#: tables/c_places.php:144
 #, fuzzy
-msgid "Place Name is required"
+msgid "Place name is required"
 msgstr "Incident name"
 
-#: tables/c_places.php:98 tables/u_places.php:107
+#: tables/c_places.php:145 tables/u_places.php:113
 #, fuzzy
 msgid "Latitude value is required"
 msgstr "Incident name"
 
-#: tables/c_places.php:103 tables/u_places.php:112
+#: tables/c_places.php:150 tables/u_places.php:118
 #, fuzzy
 msgid "Valid latitude is required"
 msgstr "Incident name"
 
-#: tables/c_places.php:104 tables/u_places.php:113
+#: tables/c_places.php:151 tables/u_places.php:119
 #, fuzzy
 msgid "Longitude value is required"
 msgstr "Incident name"
 
-#: tables/c_places.php:109 tables/u_places.php:118
+#: tables/c_places.php:156 tables/u_places.php:124
 #, fuzzy
 msgid "Valid longitude is required"
 msgstr "Incident name"
-
-#: tables/c_places.php:134
-msgid "Table 'places' - Add New Entry"
-msgstr ""
-
-#: tables/c_places.php:147 tables/u_places.php:157
-#, fuzzy
-msgid "Lon"
-msgstr "Log"
 
 #: tables/c_region.php:18
 msgid "Table 'Region' - Add New Entry"
@@ -12687,9 +12715,10 @@ msgstr ""
 msgid "Set severity"
 msgstr "Severities"
 
-#: tables/u_places.php:144
-msgid "Table 'places' - Update Entry"
-msgstr ""
+#: tables/u_places.php:112
+#, fuzzy
+msgid "Place Name is required"
+msgstr "Incident name"
 
 #: tables/u_region.php:18 tables/u_unit_types.php:22
 msgid "Table 'unit_types' - Update Entry"
@@ -13003,7 +13032,8 @@ msgid "Invalid Function"
 msgstr ""
 
 #: units.php:3299
-msgid "ERROR in {basename(__FILE__)} on line {__LINE__}"
+#, php-format
+msgid "ERROR in %s on line %s"
 msgstr ""
 
 #: units.php:3801
@@ -13290,7 +13320,8 @@ msgid ""
 msgstr ""
 
 #: units_nm.php:1485
-msgid "{get_text(\"Units\")} Status - Select from pulldown menu"
+#, php-format
+msgid "%s Status - Select from pulldown menu"
 msgstr ""
 
 #: units_nm.php:1547 units_nm.php:1841 warn_locations.php:1361
@@ -13433,6 +13464,22 @@ msgstr ""
 #: wp_lkup_cid.php:40 wp_lkup_cid.php:58
 msgid "Apt:"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Append {get_text(\"Incident\")} nature"
+#~ msgstr "Incident name"
+
+#, fuzzy
+#~ msgid "Regions');?>"
+#~ msgstr "Regions"
+
+#, fuzzy
+#~ msgid "Add {$patient} Record"
+#~ msgstr "Add Patient"
+
+#, fuzzy
+#~ msgid "Lon"
+#~ msgstr "Log"
 
 #, fuzzy
 #~ msgid "Incidents by Location"

@@ -261,13 +261,10 @@ if (!empty($_POST)) {
         </DIV>
         <DIV id='right_col' style='width: 40%; height: 500px; position: absolute; top: 60px; right: 2%; border: 3px outset #DEDEDE; background-color: #F0F0F0;'>
             <DIV class='heading' style='width: 100%;'><?php print gettext('HELP');?></DIV>
-            <DIV style='width: 100%; word-break: normal;'><?php print gettext('
-            This page is to set the Auto Status text values and their associated status values.<BR /><BR />
-            On the left side sre the status values currently configured on the Tickets CAD system. These can be changed through Config / Units Status. Next to these are a text box
-            where you can type in the text values you want to search for in incoming SMS messages. The Responder sending the message will put this text between the start and end tags
-            configured in Messaging settings (default *). Next to the text box is a select control where you can select from pre-configured signals that are configured in Config / Signals.<BR /><BR />
-            To congigure the auto status values, for each status value that you want to be automatically set by incoming SMS message, type the text value that you want to trigger this or
-            select from the pre-configured signals and then click Submit.');?><BR />
+            <DIV style='width: 100%; word-break: normal;'>
+                <?php print gettext('This page is to set the Auto Status text values and their associated status values.') . "<BR /><BR />"
+                    . gettext('On the left side sre the status values currently configured on the Tickets CAD system. These can be changed through Config / Units Status. Next to these are a text box where you can type in the text values you want to search for in incoming SMS messages. The Responder sending the message will put this text between the start and end tags configured in Messaging settings (default *). Next to the text box is a select control where you can select from pre-configured signals that are configured in Config / Signals.') . "<BR /><BR />"
+                    . gettext('To congigure the auto status values, for each status value that you want to be automatically set by incoming SMS message, type the text value that you want to trigger this on select from the pre-configured signals and then click Submit.');?><BR />
             </DIV>
         </DIV>
         <DIV style='width: 100%; text-align: center; position: absolute; bottom: 10%;'>

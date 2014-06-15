@@ -1482,7 +1482,7 @@ if (get_num_groups()) {
                 <INPUT ID = "track_key" SIZE="<?php print $key_field_size;?>" MAXLENGTH="<?php print $key_field_size;?>" TYPE="text" NAME="frm_callsign" VALUE="" />&nbsp;
             </TD>
             </TR>
-        <TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php print gettext('{get_text("Units")} Status - Select from pulldown menu');?>"><?php print gettext('Status');?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>
+        <TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="<?php sprintf( gettext('%s Status - Select from pulldown menu'), get_text("Units"));?>"><?php print gettext('Status');?></A>:&nbsp;<font color='red' size='-1'>*</font></TD>
             <TD ALIGN ='left'><SELECT NAME="frm_un_status_id" onChange = "document.res_add_Form.frm_log_it.value='1';">
                 <OPTION VALUE=0 SELECTED><?php print gettext('Select one');?></OPTION>
 <?php

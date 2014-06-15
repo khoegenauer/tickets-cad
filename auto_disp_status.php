@@ -245,12 +245,12 @@ if (!empty($_POST)) {
             </TABLE>
         </DIV>
         <DIV id='right_col' style='width: 40%; height: 500px; position: absolute; top: 60px; right: 2%; border: 3px outset #DEDEDE; background-color: #F0F0F0;'>
-            <DIV class='heading' style='width: 100%;'>HELP</DIV>
-            <DIV style='width: 100%; word-wrap: break-word;'><?php print gettext('
-            This page is to set the Auto Dispatch Status values and their associated status values.<BR /><BR />
-            On the left side are the Dispatch status values and on the right are select controls with the status values currently configured on the Tickets CAD system.
-            These can be changed through Config / Units Status.<BR /><BR />
-            To configure the auto status values, for each Dispatch status value that you want a specific unit status to be set, select the unit status next to that dispatch status and then click submit.');?><BR />
+            <DIV class='heading' style='width: 100%;'><?php print gettext('HELP');?></DIV>
+            <DIV style='width: 100%; word-wrap: break-word;'>
+            <?php print gettext('This page is to set the Auto Dispatch Status values and their associated status values.') . "<BR /><BR />"
+                    . gettext('On the left side are the Dispatch status values and on the right are select controls with the status values currently configured on the Tickets CAD system.') . '\n'
+                    . gettext('These can be changed through Config / Units Status.') . "<BR /><BR />"
+                    . gettext('To configure the auto status values, for each Dispatch status value that you want a specific unit status to be set, select the unit status next to that dispatch status and then click submit.');?><BR />
             </DIV>
         </DIV>
         <DIV style='width: 100%; text-align: center; position: absolute; bottom: 10%;'>

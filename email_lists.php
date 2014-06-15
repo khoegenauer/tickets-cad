@@ -419,10 +419,10 @@ if (!empty($_POST)) {
                 </DIV>
                 <DIV id='right_col' style='width: 40%; height: 500px; position: absolute; top: 60px; right: 2%; border: 3px outset #DEDEDE; background-color: #F0F0F0;'>
                     <DIV class='heading' style='width: 100%;'>HELP</DIV>
-                    <DIV style='width: 100%; word-wrap: break-word;'><?php print gettext('
-                    On the left is the form to edit an entry in a Email List.<BR /><BR />
-                    Using the select menus, select the email address you want to edit, either from the contacts list or from configured responders.<BR />
-                    You can only chose <B>one</B> email address from the select menus, if you select <B>something from both</B> you will get an error when you submit the form and will need to revise and resubmit.');?>
+                    <DIV style='width: 100%; word-wrap: break-word;'>
+                        <?php print gettext('On the left is the form to edit an entry in a Email List.') . "<BR /><BR />"
+                            . gettext('Using the select menus, select the email address you want to edit, either from the contacts list or from configured responders.') . "<BR />"
+                            . gettext('You can only chose <B>one</B> email address from the select menus, if you select <B>something from both</B> you will get an error when you submit the form and will need to revise and resubmit.');?>
                     </DIV>
                 </DIV>
                 <DIV style='width: 100%; text-align: center; position: absolute; bottom: 10%; left: 20%;'>
@@ -496,10 +496,10 @@ if (!empty($_POST)) {
                 </DIV>
                 <DIV id='right_col' style='width: 40%; height: 500px; position: absolute; top: 60px; right: 2%; border: 3px outset #DEDEDE; background-color: #F0F0F0;'>
                     <DIV class='heading' style='width: 100%;'>HELP</DIV>
-                    <DIV style='width: 100%; word-wrap: break-word;'><?php print gettext('
-                    On the left is the form to add a new email address to an existing Email List.<BR /><BR />
-                    Using the select menus, select first the Email List that this entry is to be added to and then select the email address you want to add, either from the contacts list or from configured responders.<BR />
-                    You can only chose <B>one</B> email address from the select menus, if you select <B>something from both</B> you will get an error when you submit the form and will need to revise and resubmit.');?>
+                    <DIV style='width: 100%; word-wrap: break-word;'>
+                        <?php print gettext('On the left is the form to add a new email address to an existing Email List.') . "<BR /><BR />"
+                                . gettext('Using the select menus, select first the Email List that this entry is to be added to and then select the email address you want to add, either from the contacts list or from configured responders.') . "<BR />"
+                                . gettext('You can only chose <B>one</B> email address from the select menus, if you select <B>something from both</B> you will get an error when you submit the form and will need to revise and resubmit.');?>
                     </DIV>
                 </DIV>
                 <DIV style='width: 100%; text-align: center; position: absolute; bottom: 10%; left: 20%;'>
@@ -548,15 +548,14 @@ if (!empty($_POST)) {
 
                 <DIV id='right_col' style='width: 40%; height: 500px; position: absolute; top: 60px; right: 2%; border: 3px outset #DEDEDE; background-color: #F0F0F0;'>
                     <DIV class='heading' style='width: 100%;'><?php print gettext('HELP');?></DIV>
-                    <DIV style='width: 100%; word-wrap: break-word;'><?php print gettext('
-                    On the left is a list of all Mailing list entries showing the email address and the Mailing list it belongs to.<BR /><BR /> Click <B>Add New</B> and then fill out the resulting form and submit,
-                    to add a new entry to an existing Mailing list or <B>Back to Config</B> to return to the Tickets main configuration page.
-                    You can click on an entry in the list to <B>edit</B> it.');?>
+                    <DIV style='width: 100%; word-wrap: break-word;'>
+                        <?php print gettext('On the left is a list of all Mailing list entries showing the email address and the Mailing list it belongs to.') . "<BR /><BR />"
+                            . gettext('Click <B>Add New</B> and then fill out the resulting form and submit, to add a new entry to an existing Mailing list or <B>Back to Config</B> to return to the Tickets main configuration page. You can click on an entry in the list to <B>edit</B> it.');?>
                     </DIV>
                 </DIV>
                 <DIV style='width: 100%; text-align: center; position: absolute; bottom: 10%; left: 20%;'>
-                    <SPAN id='add_but' class='plain' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='addnew();'>Add New</SPAN>
-                    <SPAN id='add_but' class='plain' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='goto_config();'>Back to Config</SPAN>
+                    <SPAN id='add_but' class='plain' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='addnew();'><?php print gettext('Add New');?></SPAN>
+                    <SPAN id='add_but' class='plain' onMouseover='do_hover(this);' onMouseout='do_plain(this);' onClick='goto_config();'><?php print gettext('Back to Config');?></SPAN>
                 <DIV>
             </DIV>
 

@@ -439,7 +439,7 @@ setTimeout("document.next_Form.submit()",1500);
             $query = "SELECT * FROM `$GLOBALS[mysql_prefix]patient` WHERE `id`='$_GET[id]' LIMIT 1";
             $result = mysql_query($query)or do_error($query,$query, mysql_error(), basename(__FILE__), __LINE__);
             $row = stripslashes_deep(mysql_fetch_assoc($result));
-            print "<FONT CLASS='header'>" . gettext('Really delete {$patient} record') . " ' " .shorten($row['description'], 24) . "' ?</FONT><BR /><BR />";
+            print "<FONT CLASS='header'>" . sprintf(gettext('Really delete %s record'), $patient) . " ' " .shorten($row['description'], 24) . "' ?</FONT><BR /><BR />";
             print "<FORM METHOD='post' ACTION='patient_w.php?action=delete&id=$_GET[id]&ticket_id=$_GET[ticket_id]&confirm=1'>
                 <INPUT TYPE='Submit' VALUE='" . gettext('Yes') . "'/>";
             print "<INPUT TYPE = 'button' VALUE = '" . gettext('Cancel') . "' onClick = 'window.close();' STYLE = 'margin-left:40px' /></FORM>";
@@ -635,7 +635,7 @@ document.list_form.submit();
 
     else {				// $get_action - NOTA - default
 ?>
-        <BR /><BR /><FONT CLASS="header" STYLE = 'margin-left:50px'><?php print gettext('Add {$patient} Record');?></FONT><BR /><BR />
+        <BR /><BR /><FONT CLASS="header" STYLE = 'margin-left:50px'><?php sprintf( gettext('Add %s Record'), $patient);?></FONT><BR /><BR />
         <FORM METHOD="post" NAME='patientAdd' onSubmit='return validate(document.patientAdd);'  ACTION="<?php echo basename(__FILE__);?>?ticket_id=<?php print $_GET['ticket_id'];?>&action=add">
         <TABLE BORDER="0" CELLSPACING=2 CELLPADDING=2 STYLE = 'margin-left:50px;'>
         <TR CLASS='even' ><TD><B><?php print get_text("Patient ID");?>:</B> <font color='red' size='-1'>*</font></TD><TD><INPUT TYPE="text" NAME="frm_name" value="" size="32"></TD></TR>

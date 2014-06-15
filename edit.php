@@ -646,7 +646,7 @@ $dis =  ($disallow)? "DISABLED ": "";				// 4/1/11 -
         if ((document.edit.frm_status.value == <?php print $GLOBALS['STATUS_CLOSED'];?>) && (document.edit.frm_year_problemend.disabled))
              {errmsg+= "\t<?php print gettext('Closed ticket requires run end date.');?>\n";}
         if ((document.edit.frm_status.value == <?php print $GLOBALS['STATUS_CLOSED'];?>) && (document.edit.frm_comments==""))
-            {errmsg+= "\t<?php print gettext('Closed ticket requires {$disposition} data');?>\n";}
+            {errmsg+= "\t<?php sprintf( gettext('Closed ticket requires %s data'), $disposition);?>\n";}
         if (theForm.frm_contact.value == "") {errmsg+= "\t<?php print gettext('Reported-by is required');?>\n";}
         if (theForm.frm_scope.value == "") {errmsg+= "\t<?php print gettext('Incident name is required');?>\n";}		// 10/21/08
 //		if (theForm.frm_description.value == "") {errmsg+= "\t<?php print gettext('Synopsis is required');?>\n";}

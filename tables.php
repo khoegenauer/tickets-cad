@@ -1557,7 +1557,7 @@ case "u":	// =======================================  Update 	==================
     <INPUT TYPE="hidden" NAME="srch_str"  	VALUE=""/> <!-- 9/12/10 -->
 
     <TABLE BORDER="0" ALIGN="center">
-    <TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php print gettext('Table \'{$tablename}\' - Update/Delete Entry');?></FONT></TD></TR>
+    <TR CLASS="even" VALIGN="top"><TD COLSPAN="2" ALIGN="CENTER"><FONT SIZE="+1"><?php sprintf( gettext('Table \'%s\' - Update/Delete Entry'), $tablename);?></FONT></TD></TR>
     <TR><TD>&nbsp;</TD></TR>
 <?php
     for ($i = 0; $i < mysql_num_fields($result); $i++) {
@@ -2004,7 +2004,7 @@ case "u":	// =======================================  Update 	==================
 <?php				// 3/19/11
         if ($can_edit) {
 ?>
-    <INPUT TYPE="button" VALUE="<?php print gettext('Add new {str_replace( "_", " ", ucfirst($tablename))} entry'); ?>" onclick= "this.form.func.value='c'; this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <INPUT TYPE="button" VALUE="<?php sprintf( gettext('Add new %s entry'), str_replace( "_", " ", ucfirst($tablename))); ?>" onclick= "this.form.func.value='c'; this.form.submit();" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php
         }
 ?>
@@ -2167,10 +2167,10 @@ function fnTables() {							/// displays tables comprising db $mysql_db
     $pref_lgth = strlen($mysql_prefix);
 
     $sql = "SHOW TABLES ";
-    $result = mysql_query($sql) or die (gettext('DB Error: {$mysql_db} inaccessible') . "\n");	// $mysql_db
+    $result = mysql_query($sql) or die (sprintf(gettext('DB Error: %s inaccessible'), $mysql_db) . "\n");	// $mysql_db
     while ($row = mysql_fetch_row($result)) {
         $sql ="SELECT * FROM `$row[0]` LIMIT 1";
-        $result2 = mysql_query($sql) or die (gettext('DB Error: {$mysql_db} inaccessible') . "\n");	// $mysql_db
+        $result2 = mysql_query($sql) or die (sprintf(gettext('DB Error: %s inaccessible'), $mysql_db) . "\n");	// $mysql_db
         $row2 = mysql_fetch_array($result2);
         $gotit = FALSE;
         for ($i = 0; $i < mysql_num_fields($result2); $i++) {			// look at each field - substr ( string, start, 999)

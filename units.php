@@ -3296,7 +3296,7 @@ function orig_map($mode, $lat, $lng, $icon) {						// Responder add, edit, view 
         break;
 
         default:
-        print gettext("ERROR in {basename(__FILE__)} on line {__LINE__}") . "<BR />";
+        print sprintf(gettext("ERROR in %s on line %s"),basename(__FILE__), __LINE__) . "<BR />";
     }
 ?>
 

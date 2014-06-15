@@ -1328,7 +1328,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
     else {
         $filename = './incs';							// 12/18/10
         if (!is_writable($filename)) {					// 8/8/10 -
-            die (gettext('ERROR! Directory \'{$filename}\' is not writable. \'Write\' permissions must be corrected for installation.'));
+            die (sprintf(gettext('ERROR! Directory \'%s\' is not writable. \'Write\' permissions must be corrected for installation.'), $filename);
             }
         $filename = './incs/mysql.inc.php';				// 2/21/09
 

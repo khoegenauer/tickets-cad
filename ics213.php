@@ -1,41 +1,13 @@
 <?php
-/**
- * @package ics213.php
- * @author John Doe <john.doe@example.com>
- * @since 2012-03-22
- * @version 2012-03-22
- */
-/*
-3/22/12 - initial release
-3/8/2014 - additional ICS forms, cancel button added
 
-*/
-if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09
+if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}
 error_reporting (E_ALL  ^ E_DEPRECATED);
 @session_start();
 require_once 'incs/functions.inc.php';		//7/28/10
 $evenodd = array ("even", "odd");	// CLASS names for alternating tbl row colors
 
-/**
- * html_mail
- * Insert description here
- *
- * @param $to
- * @param $subject
- * @param $html_message
- * @param $from_address
- * @param $from_display_name
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
-function html_mail($to, $subject, $html_message, $from_address, $from_display_name='') {
-
-//	$headers = 'From: ' . $from_display_name . ' <shoreas@gmail.com>' . "\n";
+function html_mail($to, $subject, $html_message, $from_address, $from_display_name='')
+{
     $from = get_variable('email_from');
     $from = is_email($from)? $from : "info@ticketscad.org";
     $headers = "From: {$from_display_name}<{$from}>\n";
@@ -48,24 +20,10 @@ function html_mail($to, $subject, $html_message, $from_address, $from_display_na
         }
 
     $temp = @mail($to, $subject, $html_message, $headers); // boolean
+}
 
-//	snap(__LINE__, $temp);
-    }			// end function html_mail ()
-
-/**
- * template_213
- * Insert description here
- *
- * @param $do_form
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
-function template_213($do_form = TRUE) {
+function template_213($do_form = TRUE)
+{
     global $item;
 	$out_str = "<!DOCTYPE html>
 <HTML>
@@ -248,34 +206,6 @@ function template_213($do_form = TRUE) {
     return $out_str;
     }							// end function template_213 ()
 
-// do_login(basename(__FILE__));
-/*
-    if (!(mysql_table_exists("$GLOBALS[mysql_prefix]ics213"))) {
-        $query = "CREATE TABLE `$GLOBALS[mysql_prefix]ics213` (
-              `id` int(7) NOT NULL AUTO_INCREMENT,
-              `f1` varchar(80) COLLATE utf8_unicode_ci NULL,
-              `f2` varchar(80) COLLATE utf8_unicode_ci NULL,
-              `f3` varchar(80) COLLATE utf8_unicode_ci NULL,
-              `f4` varchar(80) COLLATE utf8_unicode_ci NULL,
-              `f5` varchar(80) COLLATE utf8_unicode_ci NULL,
-              `f6` varchar(80) COLLATE utf8_unicode_ci NULL,
-              `f7` varchar(80) COLLATE utf8_unicode_ci NULL,
-              `f8` varchar(2000)COLLATE utf8_unicode_ci NULL,
-              `f9` varchar(80) COLLATE utf8_unicode_ci NULL,
-              `f10` varchar(80) COLLATE utf8_unicode_ci NULL,
-              `f11` varchar(2000) COLLATE utf8_unicode_ci NULL,
-              `f12` varchar(80) COLLATE utf8_unicode_ci NULL,
-              `f13` varchar(80) COLLATE utf8_unicode_ci NULL,
-              `f14` varchar(80) COLLATE utf8_unicode_ci NULL,
-
-              `_by` int(7) NOT NULL DEFAULT '0',
-              `_from` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-              `_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-              PRIMARY KEY (`id`)
-            ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-        $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
-        }
-*/
 
 $step = (array_key_exists ("step", $_POST))? $_POST['step']: 0 ;
 switch ($step) {
@@ -425,7 +355,7 @@ switch ($step) {
 
 ?>
         <TR CLASS='<?php print $evenodd[($i)%2]; ?>'><TD ALIGN='center' COLSPAN=3><BR /><BR />&nbsp;
-<!--		
+<!--
 			<INPUT TYPE='button' 	VALUE='ICS205' 		onClick = "do_205();" />
 			<INPUT TYPE='button' 	VALUE='ICS205-A' 	onClick = "do_205a();"  style = "margin-left:20px;" />
 			<INPUT TYPE='button' 	VALUE='ICS213' 		onClick = "do_213();"   style = "margin-left:20px;" />
@@ -435,7 +365,7 @@ switch ($step) {
 			<INPUT TYPE='button' 	VALUE='ICS213' 		onClick = "this.form.action = 'ics213.php'; this.form.submit();"   style = "margin-left:20px;" />
 			<INPUT TYPE='button' 	VALUE='ICS214' 		onClick = "this.form.action = 'ics214.php'; this.form.submit();"   style = "margin-left:20px;" />
 3/8/2014
--->			
+-->
 			<INPUT TYPE='button' 	VALUE='ICS205' 		onClick = "do_mail_str('ics205.php');" />
 			<INPUT TYPE='button' 	VALUE='ICS205-A' 	onClick = "do_mail_str('ics205a.php');"  style = "margin-left:20px;" />
 			<INPUT TYPE='button' 	VALUE='ICS213' 		onClick = "do_mail_str('ics213.php');"   style = "margin-left:20px;" />
@@ -573,10 +503,7 @@ switch ($step) {
         $item[12] = trim($_POST['f12']); 	// date
         $item[13] = trim($_POST['f13']); 	// time
         $item[14] = trim($_POST['f14']); 	// signature/position
-/*
-$message = preg_replace("#(?<!\r)\n#si", "\r\n", $message);
-addresses: $Result = preg_replace("/([\w\s]+)<([\S@._-]*)>/", "$2", $Input);
-*/
+
         $html_message = template_213(FALSE);
 
         $to_array = explode ("|", $_POST['frm_add_str']);

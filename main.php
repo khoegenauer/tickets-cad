@@ -6,7 +6,7 @@
  * @version
  */
 
-error_reporting(E_ALL);				// 9/13/08
+include'./incs/error_reporting.php';
 $units_side_bar_height = .6;		// max height of units sidebar as decimal fraction of screen height - default is 0.6 (60%)
 $do_blink = TRUE;					// or FALSE , only - 4/11/10
 $ld_ticker = "";
@@ -17,53 +17,6 @@ require_once './incs/functions.inc.php';
 $the_inc = ((array_key_exists('internet', ($_SESSION))) && ($_SESSION['internet']))? './incs/functions_major.inc.php' : './incs/functions_major_nm.inc.php';
 $the_level = (isset($_SESSION['level'])) ? $_SESSION['level'] : 0 ;
 require_once($the_inc);
-/*
-10/14/08 moved js includes here fm function_major
-1/11/09  handle callboard frame
-1/19/09 dollar function added
-1/21/09 added show butts - re button menu
-1/24/09 auto-refresh iff situation display and setting value
-1/28/09 poll time added to top frame
-3/16/09 added updates and auto-refresh if any mobile units
-3/18/09 'aprs_poll' to 'auto_poll'
-4/10/09 frames check for call board
-7/16/09	protocol handling added
-11/11/09 'top' and 'bottom' anchors added -
-12/26/09 handle 'log_in' $_GET variable
-1/3/10 wz tooltips added for usage in FMP
-1/8/10 added do_init logic - called ONLY from index.php
-1/23/10 refresh meta removed
-3/27/10 $zoom_tight added
-4/10/10 hide 'board' button if setting = 0
-4/11/10 do_blink added, poll_id dropped
-6/24/10 compression added
-7/18/10 redundant $() removed
-7/20/10 cb frame resize/refresh added
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-8/13/10 links incl relocated
-8/25/10 hide top buttons if ..., $_POST logout test
-8/29/10 dispatch status style added
-11/29/10 added to_listtype form when adding scheduled list type select dropdown
-3/15/11	Added reference to stylesheet.php for revisable day night colors
-3/19/11 added top term button value
-4/22/11 gunload correction
-5/16/11 Added code to support Ticker Module
-6/10/11	added groups and boundaries
-6/28/11 auto refresh added
-7/3/11 lazy logout button moved out of try/catch
-3/5/12 handle empty GMaps API key
-3/23/12 auto-refresh changes
-4/12/12 Revised regions control buttons
-6/1/12 Revised loading of main page modules so tha they only load on the main screen, not the Ticket Detail screen.
-6/14/12 Moved position of ck_frames() in onLoad string.
-10/23/12 Added code for Messaging
-3/26/2013 revised per RC Charlie
-5/26/2013 made auto_refresh conditional on setting value
-9/10/13 Changed logic to show full screen button, now shows if internet is available but maps are switched off by user choice.
-10/23/13 Revisions for user selectable maps
-10/31/13 Revisions for user selectable maps
-1/3/14 Added Live moving Responder markers, added Road Condition Alert Markers
-*/
 
 if (isset($_GET['logout'])) {
     do_logout();
@@ -195,12 +148,7 @@ if (is_guest()) {													// 8/25/10
     var NOT_STR = '<?php echo NOT_STR;?>';			// value if not logged-in, defined in functions.inc.php
     var check_initialized = false;
     var check_interval = null;
-/**
- *
- * @param {type} the_control
- * @param {type} the_val
- * @returns {undefined}
- */
+
     function change_status_sel(the_control, the_val) {
         var oldval = false;
         var newval = the_val;
@@ -220,35 +168,28 @@ if (is_guest()) {													// 8/25/10
                 }
             }
         }
-		
+
 	function set_marker_position(id, theLat, theLng) {	//	1/3/14
 		if (typeof rmarkers != 'undefined') {
 			if(theLat && theLng) {
 			var theCurrent = rmarkers[id].getPosition();
 				var currentLat = theCurrent.lat().toFixed(6);
-				var currentLng = theCurrent.lng().toFixed(6);	
+				var currentLng = theCurrent.lng().toFixed(6);
 				var newLat = parseFloat(theLat).toFixed(6);
-				var newLng = parseFloat(theLng).toFixed(6);			
+				var newLng = parseFloat(theLng).toFixed(6);
 				if((currentLat != newLat) || (currentLng != newLng)) {
 					rmarkers[id].setPosition( new google.maps.LatLng( theLat, theLng ) );
 					}
 				}
 			}
 		}
-        
-/**
- *
- * @returns {Boolean}
- */
+
     function logged_in() {								// returns boolean
         var temp = parent.frames["upper"].$("whom").innerHTML==NOT_STR;
 
         return !temp;
         }
-/**
- *
- * @returns {undefined}
- */
+
     function set_regions_control() {
         var reg_control = "<?php print get_variable('regions_control');?>";
         var regions_showing = "<?php print get_num_groups();?>";
@@ -262,18 +203,12 @@ if (is_guest()) {													// 8/25/10
                 }
             }
         }
-/**
- *
- * @returns {unresolved}
- */
+
     function fence_get() {								// set cycle
         if (check_interval!=null) {return;}			// ????
         check_interval = window.setInterval('check_fence_loop()', 60000);		// 4/7/10
         }			// end function mu get()
-/**
- *
- * @returns {unresolved}
- */
+
     function fence_init() {								// get initial values from server -  4/7/10
         if (check_initialized) { return; }
         check_initialized = true;
@@ -281,23 +216,12 @@ if (is_guest()) {													// 8/25/10
             exclude();
             fence_get();				// start loop
         }				// end function mu_init()
-/**
- *
- * @returns {undefined}
- */
+
     function check_fence_loop() {								// monitor for changes - 4/10/10, 6/10/11
             ring_fence();
             exclude();
         }			// end function do_loop()
-/**
- *
- * @param {type} id
- * @param {type} bgcol
- * @param {type} bgcol2
- * @param {type} maincol
- * @param {type} seccol
- * @returns {undefined}
- */
+
     function blink_text(id, bgcol, bgcol2, maincol, seccol) {	//	6/10/11
         if (!document.getElementById(id)) {
             alert("<?php print gettext('A unit in your group is \n outside a ring fence \n however you aren\'t currently \n viewing the group it is allocated to');?>");
@@ -321,11 +245,7 @@ if (is_guest()) {													// 8/25/10
             var back = bgcol;
             }
         }
-/**
- *
- * @param {type} id
- * @returns {undefined}
- */
+
     function unblink_text(id) {	//	6/10/11
         if (!document.getElementById(id)) {
         } else {
@@ -336,15 +256,7 @@ if (is_guest()) {													// 8/25/10
                 }
             }
         }
-/**
- *
- * @param {type} id
- * @param {type} bgcol
- * @param {type} bgcol2
- * @param {type} maincol
- * @param {type} seccol
- * @returns {undefined}
- */
+
     function blink_text2(id, bgcol, bgcol2, maincol, seccol) {	//	6/10/11
         if (!document.getElementById(id)) {
             alert("<?php print gettext('A unit in your group is \n inside an exclusion zone \n however you aren\'t currently \n viewing the group it is allocated to');?>");
@@ -368,11 +280,7 @@ if (is_guest()) {													// 8/25/10
             var back = bgcol;
             }
         }
-/**
- *
- * @param {type} id
- * @returns {undefined}
- */
+
     function unblink_text2(id) {	//	6/10/11
         if (!document.getElementById(id)) {
         } else {
@@ -397,14 +305,7 @@ if (is_guest()) {													// 8/25/10
         $term_str = ($temp )? $temp : "Mobile" ;
 
 ?>
-/*
-//	parent.frames["upper"].location.reload( true );
-    if (document.all && !(document.getElementById)) {		// accomodate IE
-        document.getElementById = function (id) {
-            return document.all[id];
-            }
-        }
-*/
+
 
         parent.frames["upper"].$("user_id").innerHTML  = "<?php print $_SESSION['user_id'];?>";
         parent.frames["upper"].$("whom").innerHTML  = "<?php print $_SESSION['user'];?>";			// user name
@@ -430,17 +331,11 @@ if (is_guest()) {													// 8/25/10
         }
     catch(e) {
         }
-/**
- *
- * @returns {undefined}
- */
+
     function get_new_colors() {													// 5/3/11
         window.location.href = '<?php print basename(__FILE__);?>';
         }
-/**
- *
- * @returns {undefined}
- */
+
     function ck_frames() {		//  onLoad = "ck_frames()"
         if (self.location.href==parent.location.href) {
             self.location.href = 'index.php';
@@ -450,10 +345,7 @@ if (is_guest()) {													// 8/25/10
             parent.upper.do_day_night("<?php print $_SESSION['day_night'];?>")
             }
         }		// end function ck_frames()
-/**
- *
- * @returns {undefined}
- */
+
     function ring_fence() {	//	run when new tracked data is received	6/10/11
         if (!google.maps.Polygon.prototype.Contains) {   						// 3/29/2013
                 google.maps.Polygon.prototype.Contains = function (latLng) {
@@ -573,10 +465,7 @@ if (is_guest()) {													// 8/25/10
             }
 ?>
         }	// end function ring_fence
-/**
- *
- * @returns {undefined}
- */
+
     function exclude() {	//	run when new tracked data is received	6/10/11
         if (!google.maps.Polygon.prototype.Contains) {   						// 3/29/2013
                 google.maps.Polygon.prototype.Contains = function (latLng) {
@@ -750,47 +639,29 @@ if (is_guest()) {													// 8/25/10
         return r;
         };
 //	var_dump = print_r;
-/**
- *
- * @returns {undefined}
- */
+
     function show_btns_closed() {						// 4/30/10
         $('btn_go').style.display = 'inline';
         $('btn_can').style.display = 'inline';
         }
-/**
- *
- * @returns {undefined}
- */
+
     function hide_btns_closed() {
         $('btn_go').style.display = 'none';
         $('btn_can').style.display = 'none';
         document.frm_interval_sel.frm_interval.selectedIndex=0;
         }
-/**
- *
- * @returns {undefined}
- */
+
     function show_btns_scheduled() {						// 4/30/10
         $('btn_scheduled').style.display = 'inline';
         $('btn_can').style.display = 'inline';
         }
-/**
- *
- * @returns {undefined}
- */
+
     function hide_btns_scheduled() {
         $('btn_scheduled').style.display = 'none';
         $('btn_can').style.display = 'none';
         document.frm_interval_sel.frm_sched.selectedIndex=0;
         }
-/**
- *
- * @param {type} url
- * @param {type} callback
- * @param {type} postData
- * @returns {unresolved}
- */
+
     function sendRequest(url,callback,postData) {
         var req = createXMLHTTPObject();
         if (!req) return;
@@ -809,20 +680,14 @@ if (is_guest()) {													// 8/25/10
         if (req.readyState == 4) return;
         req.send(postData);
         }
-/**
- *
- * @type Array
- */
+
     var XMLHttpFactories = [
         function () {return new XMLHttpRequest();	},
         function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
         function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
         function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
         ];
-/**
- *
- * @returns {Boolean}
- */
+
     function createXMLHTTPObject() {
         var xmlhttp = false;
         for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -837,11 +702,7 @@ if (is_guest()) {													// 8/25/10
 
         return xmlhttp;
         }
-/**
- *
- * @param {type} strURL
- * @returns {@exp;AJAX@pro;responseText|Boolean}
- */
+
     function syncAjax(strURL) {							// synchronous ajax function - 4/5/10
         if (window.XMLHttpRequest) {
             AJAX=new XMLHttpRequest();
@@ -861,11 +722,7 @@ if (is_guest()) {													// 8/25/10
             return false;
             }
         }		// end function sync Ajax()
-/**
- *
- * @param {type} the_ticket
- * @returns {unresolved}
- */
+
     function do_mail_all_win(the_ticket) {			// 6/16/09
         if (starting) {return;}
         starting=true;

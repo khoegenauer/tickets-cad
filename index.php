@@ -160,7 +160,7 @@ $old_version = get_variable('_version');
 
 if (!($version == $old_version))
 {		// current? - 6/6/2013  ==================================================
-  include './inc/version_update.inc'
+  include './incs/version_update.inc';
 }		// end (!($version ==...) ==================================================
 
 function update_disp_stat($which, $what, $old)
@@ -187,7 +187,7 @@ if (!mysql_table_exists("region"))
   $result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 }
 
-if (!table_exists("region_type")) {	//	6/10/11
+if (!mysql_table_exists("region_type")) {	//	6/10/11
         $query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]region_type` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `name` varchar(16) NOT NULL,
@@ -207,7 +207,7 @@ if (!table_exists("region_type")) {	//	6/10/11
         $result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	6/10/11
 }
 
-if (!table_exists("allocates")) {	//	6/10/11
+if (!mysql_table_exists("allocates")) {	//	6/10/11
         $query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]allocates` (
             `id` bigint(8) NOT NULL auto_increment,
             `group` int(4) NOT NULL default '1',

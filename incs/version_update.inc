@@ -1180,7 +1180,7 @@ else {									// exists, not-empty
         $result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	8/22/13
         }
 
-    if (!table_exists("personnel")) {		//	9/10/13
+    if (!mysql_table_exists("personnel")) {		//	9/10/13
         $query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]personnel` (
             `id` int(4) NOT NULL auto_increment COMMENT 'table id',
             `surname` varchar(48) default NULL,
@@ -1226,7 +1226,7 @@ else {									// exists, not-empty
         $result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	8/22/13
         }
 
-    if (!table_exists("files")) {		//	9/10/13
+    if (!mysql_table_exists("files")) {		//	9/10/13
         $query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]files` (
             `id` mediumint(5) NOT NULL AUTO_INCREMENT,
             `title` varchar(128) NOT NULL,
@@ -1245,7 +1245,7 @@ else {									// exists, not-empty
         $result = mysql_query($query) or do_error($query , 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		//	8/22/13
         }
 
-    if (!table_exists("files_x")) {		//	9/10/13
+    if (!mysql_table_exists("files_x")) {		//	9/10/13
         $query = "CREATE TABLE IF NOT EXISTS `$GLOBALS[mysql_prefix]files_x` (
             `id` mediumint(6) NOT NULL AUTO_INCREMENT,
             `file_id` mediumint(6) NOT NULL,

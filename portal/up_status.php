@@ -1,15 +1,7 @@
 <?php
-/**
- *
- *
- * @package up_status.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version string
- */
-/*
-11/28/12 Update requests table status field
-*/
+
+//11/28/12 Update requests table status field
+
 error_reporting(E_ALL);
 //	file as_up_un_status.php
 

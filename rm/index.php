@@ -1,14 +1,5 @@
 <?php
-/**
- * @package index.php
- * @author John Doe <john.doe@example.com>
- * @since 2013-09-10
- * @version 2013-09-10
- */
-/*
-9/10/13 New file - Index for mobile page
-4/24/14 Revised to load map with default position and then move on location found.
-*/
+
 require_once '../incs/functions.inc.php';
 require_once './incs/mobile_login.inc.php';
 require_once '../incs/browser.inc.php';			// 6/12/10
@@ -210,11 +201,11 @@ $logged_in_load = ($logged_in == 1) ? "get_conditions(); get_ticket_markers(" . 
     *, html { margin:0; padding:0 }
     div#map_canvas {z-index: 1; position: fixed; top: 0px; left: 0px;}
     div#map_outer { width:100%; height: auto; z-index: 1;}
-    div#screen_buttons { width: 100%; height: 50px; position: absolute; bottom: 0px; z-index: 999; text-align: center; }	
+    div#screen_buttons { width: 100%; height: 50px; position: absolute; bottom: 0px; z-index: 999; text-align: center; }
     div#app_outer { position: absolute; top: 0px; left: 0%; width: 80%; height: auto; z-index: 6; color: #000000;}
     div#app_title { position: relative; top: 2px; left: 0%; width: 80%; z-index: 6; color: #000000; background-color: #FEFEFE; font-size: 1em; font-weight: bold; display: inline-block; border: 4px outset #DEDEDE;}
     div#info { width:100%; overflow: hidden; text-align: center; top:0; left:0; }
-    div#outer { position: absolute; top: 0px; left: 0px; overflow: hidden; text-align: center;}	
+    div#outer { position: absolute; top: 0px; left: 0px; overflow: hidden; text-align: center;}
     div#menu_but { z-index: 99; display: inline-block; position: fixed; top: 100px; left: 0px; float: left; }
     div#menu_but2 { z-index: 99; display: inline-block; position: fixed; top: 100px; left: 0px; float: left; }
     div#toggle_tracks_but { z-index: 5; position: fixed; top: 50px; right: 165px; }
@@ -515,24 +506,24 @@ function update_status(the_unit, the_status) {							// write unit status data v
         return true;
         }				// end if/else (payload.substring(... )
     }		// end function to_server()
-	
+
 function get_recfac() {
 	var randomnumber=Math.floor(Math.random()*99999999);
-	var url ='./ajax/get_recfac.php?ticket_id=' + tick_id + '&version=' + randomnumber;	
-	sendRequest (url,get_recfac_cb, "");	
+	var url ='./ajax/get_recfac.php?ticket_id=' + tick_id + '&version=' + randomnumber;
+	sendRequest (url,get_recfac_cb, "");
 	}		// end function get_recfac()
-	
+
 function get_recfac_cb(req) {
 	var recfac_str=JSON.decode(req.responseText);
 	$('recfac_but').innerHTML = recfac_str[0];
-	}			// end function get_recfac_cb()	
-	
+	}			// end function get_recfac_cb()
+
 function update_recfac(tick_id, recfac) {
 	var randomnumber=Math.floor(Math.random()*99999999);
-	var url ='./ajax/update_recfac.php?ticket_id=' + tick_id + '&recfac=' + recfac + '&version=' + randomnumber;	
-	sendRequest (url,up_recfac_cb, "");	
+	var url ='./ajax/update_recfac.php?ticket_id=' + tick_id + '&recfac=' + recfac + '&version=' + randomnumber;
+	sendRequest (url,up_recfac_cb, "");
 	}		// end function update_recfac()
-	
+
 function up_recfac_cb(req) {
 	var up_str=JSON.decode(req.responseText);
 	if(up_str[0] == 100) {
@@ -540,11 +531,11 @@ function up_recfac_cb(req) {
 		} else {
 		alert("Update Couldn't be applied, please try again");
 		}
-	}			// end function up_recfac_cb()	
-	
+	}			// end function up_recfac_cb()
+
 function do_audible() {	// 6/12/10
 	try 		{document.getElementsByTagName('audio')[0].play();}
-	catch (e) 	{}		// ignore	
+	catch (e) 	{}		// ignore
 	}				// end function do_audible()
 
 /**
@@ -2166,7 +2157,7 @@ function pause_messages() {	//	10/29/13
         <div id="map_canvas"></div>
         <div id='plus_but' onClick = "zoomIn();"><IMG SRC = './images/zoomin.png' ALT='<?php print gettext('Zoom In');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>
         <div id='minus_but' onClick = "zoomOut();"><IMG SRC = './images/zoomout.png' ALT='<?php print gettext('Zoom Out');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>
-		<div id='map_but' class='plain' style="display: inline-block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"  onClick = "map_controls_onoff();"><IMG SRC = './images/map.png' ALT='<?php print gettext('Map Controls');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>		
+		<div id='map_but' class='plain' style="display: inline-block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);"  onClick = "map_controls_onoff();"><IMG SRC = './images/map.png' ALT='<?php print gettext('Map Controls');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>
         <div id='map_controls' style='display: none; border: 3px outset #707070; background-color: #CECECE; width: 70px; height: 230px;'>
             <div id='day_but' style='display: none;' onClick = "do_day();"><IMG SRC = './images/day.png' ALT='<?php print gettext('Day Colorsl');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>
             <div id='night_but' onClick = "do_night();"><IMG SRC = './images/night.png' ALT='<?php print gettext('Night Colors');?>' BORDER=0 STYLE = 'vertical-align: middle' /></div>
@@ -2202,7 +2193,7 @@ function pause_messages() {	//	10/29/13
             <span id="mileage_os_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'os_miles();'><?php print gettext('On Scene Miles');?></span>
             <span id="mileage_end_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'end_miles();'><?php print gettext('End Miles');?></span>
             <span id="notes_but" class='plain' style="display: block; z-index: 10;" onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = 'notes();'><?php print gettext('Notes');?></span>
-			<span id="recfac_but" class='plain' style="display: block; z-index: 10; width: auto;"></span>			
+			<span id="recfac_but" class='plain' style="display: block; z-index: 10; width: auto;"></span>
         </div>
         <div id='app_outer'>
             <div id='title_button' class='plain' style='position: absolute; left: 0px; top: 0px; display: inline-block; width: auto;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick='showhideTitle();'><IMG SRC="../<?php print get_variable('logo');?>" ALT='<?php print gettext('Show Main Controls');?>' style='vertical-align: middle;' BORDER=0 /></div>
@@ -2323,7 +2314,7 @@ function pause_messages() {	//	10/29/13
 	$the_mp3_file = get_variable('sound_mp3');
 
 	$temp = explode (" ", $browser);
-	switch (trim($temp[0])) {		
+	switch (trim($temp[0])) {
 	    case "firefox" :
 			print (empty($the_wav_file))? "\n": "\t\t<audio src=\"../sounds/{$the_wav_file}\" preload></audio>\n";
 			break;

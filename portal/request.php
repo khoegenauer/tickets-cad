@@ -1,13 +1,5 @@
 <?php
-/**
- *
- *
- * @package request.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version string
- */
-/*
+
 9/10/13 - request.php - file for view and edit of portal user request
 */
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}
@@ -25,9 +17,9 @@ if ($_SESSION['internet']) {				// 8/22/10
 	$key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 	} else {
 	$api_key = "";
-	$key_str = "";	
+	$key_str = "";
     }
-	
+
 $key_str = (strlen($api_key) == 39)?  "key={$api_key}&" : "";
 ?>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -281,8 +273,8 @@ function validate(theForm) {
 				var to_str3 = the_response[9];
 				var smsg_to_str3 = the_response[10];
 				var subject_str3 = the_response[11];
-				var text_str3 = the_response[12];	
-				var randomnumber = Math.floor(Math.random()*99999999);	
+				var text_str3 = the_response[12];
+				var randomnumber = Math.floor(Math.random()*99999999);
 				if((to_str1 == "") && (smsg_to_str1 == "") && (text_str1 == "")) {
 					} else {
 					var url ="../do_send_mail.php?to_str=" + to_str1 + "&smsg_to_str=" + smsg_to_str1 + "&subject_str=" + subject_str1 + "&text_str=" + text_str1 + "&version=" + randomnumber;
@@ -298,10 +290,10 @@ function validate(theForm) {
 					var url ="../do_send_mail.php?to_str=" + to_str3 + "&smsg_to_str=" + smsg_to_str3 + "&subject_str=" + subject_str3 + "&text_str=" + text_str3 + "&version=" + randomnumber;
 					sendRequest (url,mail_handleResult, "");
 					}
-				the_link = "<SPAN>The Request has been cancelled and the controllers have been informed. You will receive an email confirmation.</SPAN><BR /><BR /><BR /><BR />";		
+				the_link = "<SPAN>The Request has been cancelled and the controllers have been informed. You will receive an email confirmation.</SPAN><BR /><BR /><BR /><BR />";
 				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
 //				the_link += "<BR /><BR />" + countmail + " messages have been sent";
-         				window.opener.get_requests();	
+         				window.opener.get_requests();
                 }
             }
         }
@@ -340,8 +332,8 @@ function validate(theForm) {
 				var to_str3 = the_response[9];
 				var smsg_to_str3 = the_response[10];
 				var subject_str3 = the_response[11];
-				var text_str3 = the_response[12];	
-				var randomnumber = Math.floor(Math.random()*99999999);	
+				var text_str3 = the_response[12];
+				var randomnumber = Math.floor(Math.random()*99999999);
 				if((to_str1 == "") && (smsg_to_str1 == "") && (text_str1 == "")) {
 					} else {
 					var url ="../do_send_mail.php?to_str=" + to_str1 + "&smsg_to_str=" + smsg_to_str1 + "&subject_str=" + subject_str1 + "&text_str=" + text_str1 + "&version=" + randomnumber;
@@ -357,8 +349,8 @@ function validate(theForm) {
 					var url ="../do_send_mail.php?to_str=" + to_str3 + "&smsg_to_str=" + smsg_to_str3 + "&subject_str=" + subject_str3 + "&text_str=" + text_str3 + "&version=" + randomnumber;
 					sendRequest (url,mail_handleResult, "");
 					}
-				the_link = "<SPAN>A New Ticket has been inserted. click the link below to view</SPAN><BR /><BR /><BR /><BR />";		
-				the_link += "<SPAN id='the_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.opener.parent.frames[\"main\"].location=\"../edit.php?id=" + the_response[0] + "\"; window.close();'>Go to Ticket</SPAN>";			
+				the_link = "<SPAN>A New Ticket has been inserted. click the link below to view</SPAN><BR /><BR /><BR /><BR />";
+				the_link += "<SPAN id='the_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.opener.parent.frames[\"main\"].location=\"../edit.php?id=" + the_response[0] + "\"; window.close();'>Go to Ticket</SPAN>";
 				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
 //				the_link += "<BR /><BR />" + countmail + " messages have been sent";
                 window.opener.get_requests();
@@ -431,8 +423,8 @@ function validate(theForm) {
 				var to_str3 = the_response[9];
 				var smsg_to_str3 = the_response[10];
 				var subject_str3 = the_response[11];
-				var text_str3 = the_response[12];	
-				var randomnumber = Math.floor(Math.random()*99999999);	
+				var text_str3 = the_response[12];
+				var randomnumber = Math.floor(Math.random()*99999999);
 				if((to_str1 == "") && (smsg_to_str1 == "") && (text_str1 == "")) {
 					} else {
 					var url ="../do_send_mail.php?to_str=" + to_str1 + "&smsg_to_str=" + smsg_to_str1 + "&subject_str=" + subject_str1 + "&text_str=" + text_str1 + "&version=" + randomnumber;
@@ -448,8 +440,8 @@ function validate(theForm) {
 					var url ="../do_send_mail.php?to_str=" + to_str3 + "&smsg_to_str=" + smsg_to_str3 + "&subject_str=" + subject_str3 + "&text_str=" + text_str3 + "&version=" + randomnumber;
 					sendRequest (url,mail_handleResult, "");
 					}
-				the_link = "<SPAN>A New Ticket has been inserted. click the link below to view</SPAN><BR /><BR /><BR /><BR />";		
-				the_link += "<SPAN id='the_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.opener.parent.frames[\"main\"].location=\"../edit.php?id=" + the_response[0] + "\"; window.close();'>Go to Ticket</SPAN>";			
+				the_link = "<SPAN>A New Ticket has been inserted. click the link below to view</SPAN><BR /><BR /><BR /><BR />";
+				the_link += "<SPAN id='the_but' class='plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.opener.parent.frames[\"main\"].location=\"../edit.php?id=" + the_response[0] + "\"; window.close();'>Go to Ticket</SPAN>";
 				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
 //				the_link += "<BR /><BR />" + countmail + " messages have been sent";
                 window.opener.get_requests();
@@ -491,8 +483,8 @@ function validate(theForm) {
 				var to_str3 = the_response[9];
 				var smsg_to_str3 = the_response[10];
 				var subject_str3 = the_response[11];
-				var text_str3 = the_response[12];	
-				var randomnumber = Math.floor(Math.random()*99999999);	
+				var text_str3 = the_response[12];
+				var randomnumber = Math.floor(Math.random()*99999999);
 				if((to_str1 == "") && (smsg_to_str1 == "") && (text_str1 == "")) {
 					} else {
 					var url ="../do_send_mail.php?to_str=" + to_str1 + "&smsg_to_str=" + smsg_to_str1 + "&subject_str=" + subject_str1 + "&text_str=" + text_str1 + "&version=" + randomnumber;
@@ -508,7 +500,7 @@ function validate(theForm) {
 					var url ="../do_send_mail.php?to_str=" + to_str3 + "&smsg_to_str=" + smsg_to_str3 + "&subject_str=" + subject_str3 + "&text_str=" + text_str3 + "&version=" + randomnumber;
 					sendRequest (url,mail_handleResult, "");
 					}
-				the_link = "<SPAN>The request has been declined</SPAN><BR /><BR /><BR /><BR />";		
+				the_link = "<SPAN>The request has been declined</SPAN><BR /><BR /><BR /><BR />";
 				the_link += "<SPAN id='finish' class = 'plain' style='float: none;' onMouseOver='do_hover(this.id);' onMouseOut='do_plain(this.id);' onClick = 'window.close();'>Close</SPAN>";
 //				the_link += "<BR /><BR />" + countmail + " messages have been sent";
                 window.opener.get_requests();
@@ -522,7 +514,7 @@ function validate(theForm) {
 		var smsg_to_str = thesmsg;
 		var subject_str = subj;
 		var text_str = text;
-		var randomnumber = Math.floor(Math.random()*99999999);	
+		var randomnumber = Math.floor(Math.random()*99999999);
 		if((to_str == "") && (smsg_to_str == "") && (text_str == "")) {
 			} else {
 			var url ="../do_send_mail.php?to_str=" + to_str + "&smsg_to_str=" + smsg_to_str + "&subject_str=" + subject_str + "&text_str=" + text_str + "&version=" + randomnumber;
@@ -531,7 +523,7 @@ function validate(theForm) {
 		}
 
 	function mail_handleResult(req) {
-		var the_response=JSON.decode(req.responseText);	
+		var the_response=JSON.decode(req.responseText);
 		if(parseInt(the_response[0]) > 0) {
 			countmail++;
 			}
@@ -609,7 +601,7 @@ $requester = get_owner($_SESSION['user_id']);
 function get_contact_details($the_id) {
 	$the_ret = array();
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` `u` WHERE `id` = " . $the_id . " LIMIT 1";
-	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
+	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	if(mysql_num_rows($result) == 1) {
 		$row2 = stripslashes_deep(mysql_fetch_assoc($result));
 		$the_ret[] = (($row2['name_f'] != "") && ($row2['name_l'] != "")) ? $row2['name_f'] . " " . $row2['name_l'] : $row2['user'];
@@ -621,7 +613,7 @@ function get_contact_details($the_id) {
 function get_requester_details($the_id) {
 	$the_ret = array();
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` WHERE `id` = " . $the_id . " LIMIT 1";
-	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
+	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	if(mysql_num_rows($result) == 1) {
 		$row3 = stripslashes_deep(mysql_fetch_assoc($result));
 		if($row3['email'] == "") {
@@ -641,7 +633,7 @@ function get_requester_details($the_id) {
 
 function get_user_name($the_id) {
 	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` `u` WHERE `id` = " . $the_id . " LIMIT 1";
-	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
+	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	if(mysql_num_rows($result) == 1) {
 		$row4 = stripslashes_deep(mysql_fetch_assoc($result));
 		$the_ret = (($row4['name_f'] != "") && ($row4['name_l'] != "")) ? $the_ret[] = $row4['name_f'] . " " . $row4['name_l'] : $the_ret[] = $row4['user'];
@@ -649,7 +641,7 @@ function get_user_name($the_id) {
 	return $the_ret;
 	}
 function get_facilityname($value) {
-	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = " . $value . " LIMIT 1";		 
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = " . $value . " LIMIT 1";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 	if(mysql_num_rows($result) != 0) {
 		$row5 = stripslashes_deep(mysql_fetch_assoc($result));
@@ -658,9 +650,9 @@ function get_facilityname($value) {
 		return "";
 		}
 	}
-	
+
 function get_facilitydetails($value) {
-	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = " . $value . " LIMIT 1";		 
+	$query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = " . $value . " LIMIT 1";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 	if(mysql_num_rows($result) != 0) {
 		$row6 = stripslashes_deep(mysql_fetch_assoc($result));
@@ -671,7 +663,7 @@ function get_facilitydetails($value) {
 		} else {
 		$return['street'] = "";
 		$return['city'] = "";
-		$return['state'] = "";		
+		$return['state'] = "";
 		}
 	return $return;
 	}
@@ -682,7 +674,7 @@ if((!empty($_POST)) && (empty($_GET))) {
 	$appEmail = ($_POST['frm_app_email'] != "") ? $_POST['frm_app_email'] : NULL;
 	$the_email = (($appEmail != NULL) && (is_email($appEmail))) ? $appEmail : $theDetails[0];
     $meridiem_request_date = ((empty($_POST) || ((!empty($_POST)) && (empty ($_POST['frm_meridiem_request_date'])))) ) ? "" : $_POST['frm_meridiem_request_date'] ;
-  	$request_date = "$_POST[frm_year_request_date]-$_POST[frm_month_request_date]-$_POST[frm_day_request_date] 00:00:00$meridiem_request_date";	
+  	$request_date = "$_POST[frm_year_request_date]-$_POST[frm_month_request_date]-$_POST[frm_day_request_date] 00:00:00$meridiem_request_date";
     $query = "UPDATE `$GLOBALS[mysql_prefix]requests` SET
 		`email` = " . quote_smart(trim($appEmail)) . ",
         `street` = " . quote_smart(trim($_POST['frm_street'])) . ",
@@ -719,9 +711,9 @@ if((!empty($_POST)) && (empty($_GET))) {
 			$output2 .= ($_POST['frm_patient'] == $row['contact']) ? "": "`contact` = " . quote_smart(trim($_POST['frm_patient'])) . ",";
 			$output2 .= ($_POST['frm_phone'] == $row['phone']) ? "": "`phone` = " . quote_smart(trim($_POST['frm_phone'])) . ",";
 			$output2 .= ($_POST['frm_toaddress'] == $row['to_address']) ? "": "`to_address` = " . quote_smart(trim($_POST['frm_toaddress'])) . ",";
-			$output2 .= ($_POST['frm_orig_fac'] == $row['facility']) ? "": "`facility` = " . quote_smart(trim($_POST['frm_orig_fac'])) . ",";	
-			$output2 .= ($_POST['frm_rec_fac'] == $row['rec_facility']) ? "": "`rec_facility` = " . quote_smart(trim($_POST['frm_rec_fac'])) . ",";	
-			$output2 .= ($_POST['frm_description'] == $row['description']) ? "": "`description` = " . quote_smart(trim($_POST['frm_description'])) . ",";	
+			$output2 .= ($_POST['frm_orig_fac'] == $row['facility']) ? "": "`facility` = " . quote_smart(trim($_POST['frm_orig_fac'])) . ",";
+			$output2 .= ($_POST['frm_rec_fac'] == $row['rec_facility']) ? "": "`rec_facility` = " . quote_smart(trim($_POST['frm_rec_fac'])) . ",";
+			$output2 .= ($_POST['frm_description'] == $row['description']) ? "": "`description` = " . quote_smart(trim($_POST['frm_description'])) . ",";
 			$output3 = " WHERE `id` = " . $the_ticket;
 			if($output2 != "") {
 				$output2 = substr($output2, 0, -1);
@@ -732,12 +724,12 @@ if((!empty($_POST)) && (empty($_GET))) {
 		}
     do_log($GLOBALS['LOG_EDIT_REQUEST'], $_POST['id']);
 	$the_summary = "Request from " . get_user_name($_POST['requester']) . "has been edited\\r";
-	$the_summary = get_text('Scope') . ": " . $_POST['frm_scope'] . "\\r";	
+	$the_summary = get_text('Scope') . ": " . $_POST['frm_scope'] . "\\r";
 	$the_summary .= get_text('Patient') . " name: " . $_POST['frm_patient'] . "\\r";
-	$the_summary .= get_text('Street') . ": " . $_POST['frm_street'] . " ";	
-	$the_summary .= get_text('City') . ": " . $_POST['frm_city'] . " ";	
-	$the_summary .= get_text('Postcode') . ": " . $_POST['frm_postcode'] . " ";	
-	$the_summary .= get_text('State') . ": " . $_POST['frm_state'] . "\\r";	
+	$the_summary .= get_text('Street') . ": " . $_POST['frm_street'] . " ";
+	$the_summary .= get_text('City') . ": " . $_POST['frm_city'] . " ";
+	$the_summary .= get_text('Postcode') . ": " . $_POST['frm_postcode'] . " ";
+	$the_summary .= get_text('State') . ": " . $_POST['frm_state'] . "\\r";
 	$the_summary .= get_text('Contact Phone') . ": " . $_POST['frm_phone'] . "\\r";
 	$the_summary .= get_text('To Address') . ": " . $_POST['frm_toaddress'] . "\\r";
 	$the_summary .= get_text('Pickup Time') . ": " . $_POST['frm_pickup'] . "\\r";
@@ -748,52 +740,52 @@ if((!empty($_POST)) && (empty($_GET))) {
 	$the_summary .= ((is_array($rec_Fac)) && ($rec_Fac[0] != "")) ? "Receiving Facility " . $rec_Fac[0] . "\\rAddress: " . $rec_Fac[1] . "\\rPhone " . $rec_Fac[2] . "\\r" : "";
 	$searchArray = array("\r\n", "\n", "\r");
 	$theDescription = str_replace($searchArray, "\\r", $_POST['frm_description']);
-	$the_summary .= get_text('Description') . "\\r" . $theDescription . "\\r";	
-	$the_summary .= get_text('Request Date') . ": " . format_date_2(strtotime($request_date)) . "\\r";		
+	$the_summary .= get_text('Description') . "\\r" . $theDescription . "\\r";
+	$the_summary .= get_text('Request Date') . ": " . format_date_2(strtotime($request_date)) . "\\r";
 	$addrs = notify_newreq($_SESSION['user_id']);		// returns array of adddr's for notification, or FALSE
 	$to_str1 = "";
 	$smsg_to_str1 = "";
 	$subject_str1 = "";
-	$text_str1 = "";	
+	$text_str1 = "";
 	$to_str2 = "";
 	$smsg_to_str2 = "";
 	$subject_str2 = "";
-	$text_str2 = "";	
+	$text_str2 = "";
 	$to_str3 = "";
 	$smsg_to_str3 = "";
 	$subject_str3 = "";
-	$text_str3 = "";	
-	$theEmailCount = 0;	
+	$text_str3 = "";
+	$theEmailCount = 0;
 	if ($addrs) {				// any addresses?
 		$to_str1 = implode("|", $addrs);
 		$smsg_to_str1 = "";
 		$subject_str1 = get_text('Service User') . " Request has been edited\\r";
-		$text_str1 = "A request " . get_text('Service User') . " has been edited by " . $userName . " Dated " . $now . "Please log on to Tickets and check\\r"; 
+		$text_str1 = "A request " . get_text('Service User') . " has been edited by " . $userName . " Dated " . $now . "Please log on to Tickets and check\\r";
 		$text_str1 .= "Request Summary\\r" . $the_summary;
 		$text_str1 = addslashes($text_str1);
 		$theEmailCount++;
 //		do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
-		}				// end if/else ($addrs)	
+		}				// end if/else ($addrs)
 	if ($the_email != "") {				// any addresses?
 		$to_str2 = $the_email;
 		$smsg_to_str2 = "";
 		$subject_str2 = "Your request " . $_POST['frm_scope'] . " has been changed\\r";
-		$text_str2 = "Your Request " . $_POST['frm_scope'] . " has been changed\\r"; 
+		$text_str2 = "Your Request " . $_POST['frm_scope'] . " has been changed\\r";
 		$text_str2 .= "Request Summary\\r" . $the_summary;
 		$text_str2 = addslashes($text_str2);
 		$theEmailCount++;
-//		do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);	
-		}				// end if/else ($the_email)	
+//		do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
+		}				// end if/else ($the_email)
 	if ($userEmail != "") {				// any addresses?
 		$to_str3 = $userEmail;
 		$smsg_to_str3 = "";
 		$subject_str3 = "Your request " . $scope . " has been registered\\r";
-		$text_str3 = "Your Request " . $scope . " has been registered\\r"; 
+		$text_str3 = "Your Request " . $scope . " has been registered\\r";
 		$text_str3 .= "Request Summary\\r" . $the_summary;
 		$text_str3 = addslashes($text_str3);
 		$theEmailCount++;
-//		do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);	
-		}				// end if/else ($userEmail)	
+//		do_send ($to_str, $smsg_to_str, $subject_str, $text_str, 0, 0);
+		}				// end if/else ($userEmail)
 ?>
 	<BODY onLoad='do_userUpdatedMail("<?php print $to_str1;?>", "<?php print $smsg_to_str1;?>", "<?php print $subject_str1;?>", "<?php print $text_str1;?>"); do_userUpdatedMail("<?php print $to_str2;?>", "<?php print $smsg_to_str2;?>", "<?php print $subject_str2;?>", "<?php print $text_str2;?>"); do_userUpdatedMail("<?php print $to_str3;?>", "<?php print $smsg_to_str3;?>", "<?php print $subject_str3;?>", "<?php print $text_str3;?>");'>
         <CENTER>
@@ -810,48 +802,48 @@ if((!empty($_POST)) && (empty($_GET))) {
 	$id = (isset($_REQUEST['id'])) ? $_REQUEST['id'] : 0;
 	$only_view = ((isset($_GET['func'])) && ($_GET['func'] == "view")) ? TRUE : FALSE;
 	$can_edit = ((is_service_user()) && (!$only_view)) ? TRUE : FALSE;
-	$query = "SELECT *, 
+	$query = "SELECT *,
 			`r`.`id` AS `request_id`,
 			`r`.`pickup` AS `pickup`,
 			`r`.`arrival` AS `arrival`,
 			`r`.`ticket_id` AS `ticket_id`,
 			`r`.`email` AS `email`,
 			`r`.`orig_facility` AS `orig_facility`,
-			`r`.`rec_facility` AS `rec_facility`,			
+			`r`.`rec_facility` AS `rec_facility`,
 			`a`.`ticket_id` AS `a_ticket_id`,
 			`a`.`id` AS `assigns_id`,
 			`a`.`start_miles` AS `start_miles`,
 			`a`.`end_miles` AS `end_miles`,
 			`a`.`comments` AS `assigns_comments`,
 			`request_date` AS `request_date`,
-			`tentative_date` AS `tentative_date`,		
+			`tentative_date` AS `tentative_date`,
 			`accepted_date` AS `accepted_date`,
-			`declined_date` AS `declined_date`,		
+			`declined_date` AS `declined_date`,
 			`resourced_date` AS `resourced_date`,
-			`completed_date` AS `completed_date`,	
+			`completed_date` AS `completed_date`,
 			`closed` AS `closed`,
 			`_on` AS `_on`,
 			`a`.`dispatched` AS `dispatched`,
-			`a`.`clear` AS `clear`		
+			`a`.`clear` AS `clear`
 			FROM `$GLOBALS[mysql_prefix]requests` `r`
-			LEFT JOIN `$GLOBALS[mysql_prefix]assigns` `a` ON `a`.`ticket_id`=`r`.`ticket_id` 			
+			LEFT JOIN `$GLOBALS[mysql_prefix]assigns` `a` ON `a`.`ticket_id`=`r`.`ticket_id`
 			WHERE `r`.`id` = " . $id . " LIMIT 1";
-	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
+	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$row = stripslashes_deep(mysql_fetch_assoc($result));
-	$tentative_date = $row['tentative_date'];			
-	$accepted_date = $row['accepted_date'];	
-	$declined_date = $row['declined_date'];	
+	$tentative_date = $row['tentative_date'];
+	$accepted_date = $row['accepted_date'];
+	$declined_date = $row['declined_date'];
 	$resourced_date = (($row['dispatched'] != "") || ($row['dispatched'] != NULL)) ? $row['dispatched'] : $row['resourced_date'];
 	if(($row['dispatched'] != "") && ($row['dispatched'] != NULL) && ($row['resourced_date'] == NULL)) {
 		$query2 = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `resourced_date` = '" . mysql_format_date($row['dispatched']) . " WHERE `id` = " . $id;
-		$result2 = mysql_query($query2) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);	
+		$result2 = mysql_query($query2) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 		}
 	$completed_date = (($row['clear'] != "") || ($row['clear'] != NULL)) ? $row['clear'] : $row['completed_date'];
 	if(($row['clear'] != "") && ($row['clear'] != NULL) && ($row['completed_date'] == NULL)) {
 		$query3 = "UPDATE `$GLOBALS[mysql_prefix]requests` SET `completed_date` = '" . mysql_format_date($row['clear']) . " WHERE `id` = " . $id;
-		$result3 = mysql_query($query3) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);		
-		}		
-	$closed_date = $row['closed'];			
+		$result3 = mysql_query($query3) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+		}
+	$closed_date = $row['closed'];
 	$updated_by = get_owner($row['_by']);
     $orig_fac_details = get_facilitydetails($row['orig_facility']);
     $rec_fac_details = get_facilitydetails($row['rec_facility']);
@@ -864,14 +856,14 @@ if((!empty($_POST)) && (empty($_GET))) {
 	$status_sel .= "</SELECT>";
 
 	$rec_facility = ($row['rec_facility'] != 0) ? get_facilityname($row['rec_facility']) : "Not Set";
-	$orig_facility = ($row['orig_facility'] != 0) ? get_facilityname($row['orig_facility']) : "Not Set";	
+	$orig_facility = ($row['orig_facility'] != 0) ? get_facilityname($row['orig_facility']) : "Not Set";
 	$onload_str = "load(" .  get_variable('def_lat') . ", " . get_variable('def_lng') . "," . get_variable('def_zoom') . ");";
 	$now = time() - (intval(get_variable('delta_mins')*60));
 	$the_details = get_contact_details($row['requester']);	#
 	$contact_email_p = $the_details[1];
 ?>
 <SCRIPT>
-<?php	
+<?php
 	$query_fc = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` ORDER BY `name` ASC";
 	$result_fc = mysql_query($query_fc) or do_error($query_fc, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
 	$rec_fac_menu = "<SELECT NAME='frm_rec_fac' onChange='do_rec_fac_to_loc(this.options[selectedIndex].text.trim(), this.options[selectedIndex].value.trim())'>";
@@ -883,10 +875,10 @@ if((!empty($_POST)) && (empty($_GET))) {
 			$rf_city = ($row_fc['city'] != "") ? $row_fc['city'] : "Empty";
 			$rf_state = ($row_fc['state'] != "") ? $row_fc['state'] : "Empty";
 			print "\trec_fac_lat[" . $row_fc['id'] . "] = " . $row_fc['lat'] . " ;\n";
-			print "\trec_fac_lng[" . $row_fc['id'] . "] = " . $row_fc['lng'] . " ;\n";	
-			print "\trec_fac_street[" . $row_fc['id'] . "] = '" . $rf_street . "' ;\n";	
+			print "\trec_fac_lng[" . $row_fc['id'] . "] = " . $row_fc['lng'] . " ;\n";
+			print "\trec_fac_street[" . $row_fc['id'] . "] = '" . $rf_street . "' ;\n";
 			print "\trec_fac_city[" . $row_fc['id'] . "] = '" . $rf_city . "' ;\n";
-			print "\trec_fac_state[" . $row_fc['id'] . "] = '" . $rf_state . "' ;\n";	
+			print "\trec_fac_state[" . $row_fc['id'] . "] = '" . $rf_state . "' ;\n";
 			}
 	$rec_fac_menu .= "<SELECT>";
 
@@ -901,10 +893,10 @@ if((!empty($_POST)) && (empty($_GET))) {
 			$city = ($row_fc2['city'] != "") ? $row_fc2['city'] : "Empty";
 			$state = ($row_fc2['state'] != "") ? $row_fc2['state'] : "Empty";
 			print "\tfac_lat[" . $row_fc2['id'] . "] = " . $row_fc2['lat'] . " ;\n";
-			print "\tfac_lng[" . $row_fc2['id'] . "] = " . $row_fc2['lng'] . " ;\n";	
-			print "\tfac_street[" . $row_fc2['id'] . "] = '" . $street . "' ;\n";	
+			print "\tfac_lng[" . $row_fc2['id'] . "] = " . $row_fc2['lng'] . " ;\n";
+			print "\tfac_street[" . $row_fc2['id'] . "] = '" . $street . "' ;\n";
 			print "\tfac_city[" . $row_fc2['id'] . "] = '" . $city . "' ;\n";
-			print "\tfac_state[" . $row_fc2['id'] . "] = '" . $state . "' ;\n";		
+			print "\tfac_state[" . $row_fc2['id'] . "] = '" . $state . "' ;\n";
 			}
 	$orig_fac_menu .= "<SELECT>";
 ?>
@@ -937,19 +929,19 @@ if((!empty($_POST)) && (empty($_GET))) {
                     <TR class='odd'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Postcode');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['postcode'];?></TD>
                     </TR>
-                    <TR class='even'>	
+                    <TR class='even'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('State');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['state'];?></TD>
                     </TR>
-                    <TR class='odd'>	
+                    <TR class='odd'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Destination Address');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['to_address'];?></TD>
-                    </TR>	
+                    </TR>
                     <TR class='even'>
             						<TD class='td_label' style='text-align: left;'><?php print get_text('Pickup Time');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['pickup'];?></TD>
                     </TR>
                     <TR class='odd'>
                       <TD class='td_label' style='text-align: left;'><?php print get_text('Arrival Time');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['arrival'];?></TD>
-                    </TR>	
-                    <TR class='even'>	
+                    </TR>
+                    <TR class='even'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Phone');?></TD><TD class='td_data' style='text-align: left;'><?php print $row['phone'];?></TD>
                     </TR>
                     <TR class='odd'>
@@ -1060,20 +1052,20 @@ if((!empty($_POST)) && (empty($_GET))) {
                     </TR>
                     <TR class='odd'>
                       <TD class='td_label' style='text-align: left;'><?php print get_text('Postcode');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_postcode' TYPE='TEXT' SIZE='24' MAXLENGTH='64' VALUE="<?php print $row['postcode'];?>"></TD>
-                    </TR>						
-                    <TR class='even'>	
+                    </TR>
+                    <TR class='even'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('State');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_state' TYPE='TEXT' SIZE='4' MAXLENGTH='4' VALUE="<?php print $row['state'];?>"></TD>
                     </TR>
-                    <TR class='odd'>	
+                    <TR class='odd'>
                       <TD class='td_label' style='text-align: left;'><?php print get_text('Destination Address');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_toaddress' TYPE='TEXT' SIZE='24' MAXLENGTH='128' VALUE="<?php print $row['to_address'];?>"></TD>
-                    </TR>	
+                    </TR>
                     <TR class='even'>
           						<TD class='td_label' style='text-align: left;'><?php print get_text('Pickup Time');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_pickup' TYPE='TEXT' SIZE='24' MAXLENGTH='128' VALUE="<?php print $row['pickup'];?>"></TD>
                     </TR>
                     <TR class='odd'>
                       <TD class='td_label' style='text-align: left;'><?php print get_text('Arrival Time');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_arrival' TYPE='TEXT' SIZE='24' MAXLENGTH='128' VALUE="<?php print $row['arrival'];?>"></TD>
-                    </TR>	
-                    <TR class='even'>	
+                    </TR>
+                    <TR class='even'>
                         <TD class='td_label' style='text-align: left;'><?php print get_text('Phone');?></TD><TD class='td_data' style='text-align: left;'><INPUT NAME='frm_phone' TYPE='TEXT' SIZE='16' MAXLENGTH='16' VALUE="<?php print $row['phone'];?>"></TD>
                     </TR>
                     <TR class='odd'>
@@ -1101,7 +1093,7 @@ if((!empty($_POST)) && (empty($_GET))) {
 				<INPUT NAME='frm_username' TYPE='hidden' SIZE='128' VALUE="<?php print get_user_name($row['requester']);?>" />
             </DIV><BR /><BR />
             <SPAN id='sub_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "validate(document.edit_frm);"><?php print gettext('Update');?></SPAN>
-      			<SPAN id='close_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.opener.get_requests(); window.close();">Cancel</SPAN><BR /><BR />	
+      			<SPAN id='close_but' CLASS ='plain' style='float: none;' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick = "window.opener.get_requests(); window.close();">Cancel</SPAN><BR /><BR />
             </FORM>
         </DIV>
     </DIV>

@@ -1,35 +1,5 @@
 <?php
-/**
- *
- * @package action.php
- * @author John Doe <john.doe@example.com>
- * @since 2008-08-16
- * @version 2013-07-03
- */
-/*
-8/16/08	lots of changes; lock icon for date entry control, date validation, 'fetch_assoc' vs 'fetch_array', 'delete' process, 'LIMIT 1' added
-8/24/08 removed LIMIT from INSERT sql
-10/7/08	set  WRAP="virtual"
-10/19/08 set end tags
-10/22/08 added priorities as notify selection criteria
-1/21/09 added show butts - re button menu
-1/27/09 options list style revision - per variable unit types
-2/12/09 changed order per AF request
-3/18/10 log corrections made
-3/20/10 units order and textarea width changes, replaced multi-select with checkboxes
-7/20/10 color added to types, status added
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-8/8/10  corrected div height calculation, scroll => auto
-8/15/10 dupe prvention added
-8/27/10 missing fmp call
-12/17/10 signals handling added
-1/27/11 gmaps call removed
-3/15/11 changed stylesheet.php to stylesheet.php
-4/22/11 addslashes() added for embedded apostrophes
-6/10/11 Added regional capability - restrictions to shown responders by groups allocated
-6/11/12 Moved javascript functions do_unlock, do_lock and do_asof from main JS section to line 742, spurious do notify() removed
-7/3/2013 - socket2me conditioned on internet and broadcast settings
-*/
+
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09
 error_reporting (E_ALL  ^ E_DEPRECATED);
 

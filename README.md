@@ -12,7 +12,6 @@ tickets-cad
 
 ![Lingohub Shield](https://lingohub.com/khoegenauer/tickets-cad/shield_454fb697-c7fc-43d6-ad4d-aeef5151159b.png "Lingohub Shield")
 
-  Development repository for Tickets, the open source computer-aided dispatch program. 
+  Development repository for Tickets, the open source computer-aided dispatch program.
 Production releases available on [TicketsCAD](http://www.ticketscad.org/), or [Sourceforge](http://sourceforge.net/projects/openises/files/)
   Community support is available through our [Google Group](https://groups.google.com/forum/#!forum/open-source-cad), or [TicketsCAD Forums](http://www.ticketscad.org/tcforums)
-  

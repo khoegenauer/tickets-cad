@@ -1,14 +1,5 @@
 <?php
-/**
- * @package persist3.php
- * @author John Doe <john.doe@example.com>
- * @since 2011-03-15
- * @version 2011-03-15
- */
-/*
-3/15/11 new release
-*/
-error_reporting(E_ALL);
+include'./incs/error_reporting.php';
 
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10

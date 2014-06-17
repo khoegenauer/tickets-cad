@@ -1,22 +1,6 @@
 <?php
-/**
- *
- * @package add_note.php
- * @author John Doe <john.doe@example.com>
- * @since 2009-08-10
- * @version 2013-01-07
- */
-/*
-8/10/09	initial release
-1/27/10 corrections applied to update field
-3/16/10 ceck for empty note
-7/12/10 <br. -> '\n'
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-12/1/10 added get_text(disposition)
-3/15/11 changed stylesheet.php to stylesheet.php
-1/7/2013 added user ident to inserted string, strip_tags as XSS prevention
-*/
-error_reporting(E_ALL);
+
+include'./incs/error_reporting.php';
 
 @session_start();
 require_once './incs/functions.inc.php';		//7/28/10
@@ -115,7 +99,7 @@ Signal &raquo;
         $field_name = array('description', 'comments');
 		$frm_ticket_id=(int)$_POST['frm_ticket_id'];	//	4/4/14
 		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id` = {$frm_ticket_id} LIMIT 1";	//	4/4/14
-		
+
 //		$query = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE `id` = {$_POST['frm_ticket_id']} LIMIT 1";
         $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
         $row = stripslashes_deep(mysql_fetch_assoc($result));

@@ -1,15 +1,7 @@
 <?php
-/**
- * @package stylesheet.php
- * @author John Doe <john.doe@example.com>
- * @since 2011-03-15
- * @version 2012-10-23
- */
+
 header('Content-type: text/css');
-/*
-3/15/11 new file - dynamic css file
-10/23/12 Added styles for messaging
-*/
+
 require_once 'incs/functions.inc.php';
 session_start();
 $day_night = ((array_key_exists('day_night', ($_SESSION))) && ($_SESSION['day_night']))? $_SESSION['day_night'] : 'Day';

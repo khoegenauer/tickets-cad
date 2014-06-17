@@ -1,11 +1,5 @@
 <?php
-/**
- * @package reset_regions.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version
- */
-error_reporting(E_ALL);
+include'./incs/error_reporting.php';
 
 @session_start();
 require_once './incs/functions.inc.php';

@@ -1,37 +1,6 @@
 <?php
-/**
- * @package patient.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version string
- */
-/*
 
-ALTER TABLE `pre_patient` CHANGE `insurance_id` `insurance_id` INT( 3 ) NULL DEFAULT NULL 
-
-8/16/08	lots of changes; date_dropdown used, lock icon for date entry control, date validation, 'mysql_fetch_assoc' vs 'fetch_array', 'delete' process, 'LIMIT 1' added
-10/1/08	added error reporting
-10/7/08	set  WRAP="virtual"
-10/19/08 added 'required' flag
-10/22/08 added 'priorities' as notify selection criteria
-1/21/09 added show butts - re button menu
-2/12/09 corrections for am/pm handling, added dollar function
-3/18/10 log corrections made
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-8/15/10	added dupe prevention, per JG email
-8/27/10 fmp call added
-11/30/10 get_text('patient') added
-12/15/10 Patient ID added as patient identifier
-3/15/11 changed stylesheet.php to stylesheet.php
-4/22/11 addslashes() added for embedded apostrophes
-6/10/11 added intrusion detection, accommodate window operation
-7/27/11 fixed, per kb email
-8/4/11 added call to google maps script
-7/3/2013 - socket2me conditioned on internet and broadcast settings
-7/12/13 - revised to catch 0 value in gender and insurance.
-*/
-if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09
-error_reporting (E_ALL  ^ E_DEPRECATED);
+include'./incs/error_reporting.php';
 
 @session_start();
 require_once 'incs/functions.inc.php';

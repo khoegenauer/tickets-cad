@@ -1,16 +1,6 @@
 <?php
-/**
- * @package persist.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version 2010-07-28
- */
-/*
-2/14/09 initial release of session persistence processor - sets flag n (POST['f_n']) to given value (POST['v_n'])
-1/23/10 revise to use PHP sessions
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-*/
-error_reporting(E_ALL);
+
+include'./incs/error_reporting.php';
 
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10

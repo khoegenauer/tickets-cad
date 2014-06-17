@@ -1,16 +1,7 @@
 <?php
-/**
- * @package incident_popup_nm.php
- * @author John Doe <john.doe@example.com>
- * @since 2010-07-28
- * @version 2011-03-15
- */
-/*
-7/28/10 Initial Release - no maps version of incident popup.
-3/15/11 changed stylesheet.php to stylesheet.php
-*/
 
-error_reporting(E_ALL);
+
+include'./incs/error_reporting.php';
 
 @session_start();
 @session_start();

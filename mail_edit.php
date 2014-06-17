@@ -1,21 +1,6 @@
 <?php
-/**
- * @package mail_edit.php
- * @author John Doe <john.doe@example.com>
- * @since 2009-02-18
- * @version 2012-10-23
- */
-/*
-2/18/09 initial release
-2/28/09 added email addr validation
-7/19/10 title handling corrected
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-8/30/10 finished addr correction
-3/15/11 changed stylesheet.php to stylesheet.php
-10/23/12 Added code for messaging (SMS Gateway)
-*/
-error_reporting(E_ALL);
 
+include'./incs/error_reporting.php';
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10
 require_once './incs/messaging.inc.php';
@@ -48,19 +33,11 @@ $title = (isset($row)) ? substr(stripslashes($row['scope']), 0, 60): $_POST['frm
 String.prototype.trim = function () {
     return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
     };
-/**
- *
- * @param {type} lines
- * @returns {undefined}
- */
+
 function reSizeScr(lines) {
     window.resizeTo(640,((lines * 18)+260));		// derived via trial/error (more of the latter, mostly)
     }
-/**
- *
- * @param {type} str
- * @returns {Boolean}
- */
+
 function addrcheck(str) {
     var at="@";
     var dot=".";
@@ -79,11 +56,7 @@ function addrcheck(str) {
     }
 var temp;
 var lines;
-/**
- *
- * @param {type} theForm
- * @returns {Boolean}
- */
+
 function do_val(theForm) {										// 2/28/09, 10/23/12
     if ((theForm.frm_use_smsg) && (theForm.frm_use_smsg == 0)) {
         if (theForm.frm_addrs.value == "") {
@@ -125,11 +98,7 @@ function do_val(theForm) {										// 2/28/09, 10/23/12
         }
     theForm.submit();
     }
-/**
- *
- * @param {type} message
- * @returns {undefined}
- */
+
     function set_message(message) {	//	10/23/12
         var randomnumber=Math.floor(Math.random()*99999999);
         var tick_id = <?php print $tick_id;?>;

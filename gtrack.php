@@ -1,16 +1,6 @@
 <?php
-/**
- * @package gtrack.php
- * @author John Doe <john.doe@example.com>
- * @since 2009-07-29
- * @version 2011-03-15
- */
-/*
-7/29/09 Created test script for Gtrack vehicle tracking system.
-3/15/11 changed stylesheet.php to stylesheet.php
-*/
 
-error_reporting(E_ALL);
+include'./incs/error_reporting.php';
 
 @session_start();
 @session_start();

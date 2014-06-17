@@ -1,31 +1,5 @@
 <?php
-/**
- *
- * @package action_w.php
- * @author John Doe <john.doe@example.com>
- * @since 2008-08-16
- * @version 2011-03-15
- */
-/*
-8/16/08	lots of changes; lock icon for date entry control, date validation, 'fetch_assoc' vs 'fetch_array', 'delete' process, 'LIMIT 1' added
-8/24/08 removed LIMIT from INSERT sql
-10/7/08	set  WRAP="virtual"
-10/19/08 set end tags
-10/22/08 added priorities as notify selection criteria
-1/21/09 added show butts - re button menu
-1/27/09 options list style revision - per variable unit types
-2/12/09 changed order per AF request
-3/18/10 log corrections made
-3/20/10 units order and textarea width changes, replaced multi-select with checkboxes
-7/20/10 color added to types, status added
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-8/8/10  corrected div height calculation, scroll => auto
-8/15/10 dupe prvention added
-8/27/10 missing fmp call
-3/15/11 changed default.css to stylesheet.php
-1/22/11 Added refresh of window opener when Finished adding action.
-4/9/2014 addslashes included for string apostrophe handling
-*/
+
 error_reporting(E_ALL);
 
 session_start();
@@ -136,7 +110,7 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
  */
     function chknum(str) {
         var nums = str.trim().replace(/\D/g, "" );							// strip all non-digits
-        
+
         return (nums == str.trim());
         }
 /**
@@ -237,16 +211,16 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
                  `updated` = '{$frm_asof}' AND
                  `responder` = '{$responder}' ";
 */													// 4/9/2014
-	     		$query 	= "INSERT INTO `$GLOBALS[mysql_prefix]action` 
+	     		$query 	= "INSERT INTO `$GLOBALS[mysql_prefix]action`
 	     			(`description`,`ticket_id`,`date`,`user`,`action_type`, `updated`, `responder`) VALUES (
-	     				addslashes({$_POST['frm_description']}), 
-	     				'{$_GET['ticket_id']}', 
-	     				'{$now}', 
-	     				{$_SESSION['user_id']}, 
-	     				addslashes({$GLOBALS['ACTION_COMMENT']}), 
-	     				'{$frm_asof}', 
+	     				addslashes({$_POST['frm_description']}),
+	     				'{$_GET['ticket_id']}',
+	     				'{$now}',
+	     				{$_SESSION['user_id']},
+	     				addslashes({$GLOBALS['ACTION_COMMENT']}),
+	     				'{$frm_asof}',
 	     				addslashes({$responder})
-	     				)";		
+	     				)";
 
 
             $result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename(__FILE__), __LINE__);
@@ -254,12 +228,12 @@ $get_action = (empty($_GET['action']))? "form" : $_GET['action'];		// 10/21/08
 
                  $query 	= "INSERT INTO `$GLOBALS[mysql_prefix]action`
 	     			(`description`,`ticket_id`,`date`,`user`,`action_type`, `updated`, `responder`) VALUES (
-	     				'{$_POST['frm_description']}', 
-	     				'{$_GET['ticket_id']}', 
-	     				'{$now}', 
-	     				{$_SESSION['user_id']}, 
-	     				{$GLOBALS['ACTION_COMMENT']}, 
-	     				'{$frm_asof}', 
+	     				'{$_POST['frm_description']}',
+	     				'{$_GET['ticket_id']}',
+	     				'{$now}',
+	     				{$_SESSION['user_id']},
+	     				{$GLOBALS['ACTION_COMMENT']},
+	     				'{$frm_asof}',
 	     				'{$responder}')";		// 8/24/08
                 $result	= mysql_query($query) or do_error($query,'mysql_query() failed',mysql_error(), basename(__FILE__), __LINE__);
 

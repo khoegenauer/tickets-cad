@@ -1,12 +1,5 @@
 <?php
-/**
- * @package routes.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version string
- */
-if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09
-error_reporting (E_ALL  ^ E_DEPRECATED);
+include'./incs/error_reporting.php';
 
 $GLOBALS['NM_LAT_VAL'] 		= 0.999999;												// 2/3/2013
 

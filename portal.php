@@ -1,15 +1,5 @@
 <?php
-/**
- * @package portal.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version 2013-09-10
- */
-/*
-9/10/13 - Major re-write to previous versions
-*/
-if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09
-error_reporting (E_ALL  ^ E_DEPRECATED);
+include'./incs/error_reporting.php';
 @session_start();
 $logged_in = $logged_out = false;
 if (empty($_SESSION)) {
@@ -22,19 +12,7 @@ require_once './incs/functions.inc.php';
 do_login(basename(__FILE__));
 $requester = get_owner($_SESSION['user_id']);
 
-/**
- * get_user_name
- * Insert description here
- *
- * @param $the_id
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
+
 function get_user_name($the_id) {
     $query = "SELECT * FROM `$GLOBALS[mysql_prefix]user` `u` WHERE `id` = " . $the_id . " LIMIT 1";
     $result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
@@ -147,20 +125,17 @@ function set_size() {
     $('banner').style.height = "2em";
     $('list_header').style.width = bannerwidth + "px";
     $('list_header').style.height = "2em";
-    $('all_requests').style.width = bannerwidth * .95 + "px";		
+    $('all_requests').style.width = bannerwidth * .95 + "px";
     }
 /**
- * 
+ *
  * @returns {undefined}
  */
 function out_frames() {		//  onLoad = "out_frames()"
     if (top.location != location) top.location.href = document.location.href;
     }		// end function out_frames()
 
-/**
- *
- * @returns {Array}
- */
+
 function $() {									// 1/21/09
     var elements = new Array();
     for (var i = 0; i < arguments.length; i++) {
@@ -172,54 +147,30 @@ function $() {									// 1/21/09
 
     return elements;
     }
-/**
- *
- * @param {type} where
- * @param {type} the_id
- * @returns {undefined}
- */
+
 function go_there(where, the_id) {		//
     document.go.action = where;
     document.go.submit();
     }				// end function go there ()
-/**
- *
- * @param {type} obj
- * @param {type} the_class
- * @returns {Boolean}
- */
+
 function CngClass(obj, the_class) {
     $(obj).className=the_class;
 
     return true;
     }
-/**
- *
- * @param {type} the_id
- * @returns {Boolean}
- */
+
 function do_hover(the_id) {
     CngClass(the_id, 'hover');
 
     return true;
     }
-/**
- *
- * @param {type} the_id
- * @returns {Boolean}
- */
+
 function do_plain(the_id) {
     CngClass(the_id, 'plain');
 
     return true;
     }
-/**
- *
- * @param {type} url
- * @param {type} callback
- * @param {type} postData
- * @returns {unresolved}
- */
+
 function sendRequest(url,callback,postData) {
     var req = createXMLHTTPObject();
     if (!req) return;
@@ -237,20 +188,14 @@ function sendRequest(url,callback,postData) {
     if (req.readyState == 4) return;
     req.send(postData);
     }
-/**
- *
- * @type Array
- */
+
 var XMLHttpFactories = [
     function () {return new XMLHttpRequest();	},
     function () {return new ActiveXObject("Msxml2.XMLHTTP");	},
     function () {return new ActiveXObject("Msxml3.XMLHTTP");	},
     function () {return new ActiveXObject("Microsoft.XMLHTTP");	}
     ];
-/**
- *
- * @returns {Boolean}
- */
+
 function createXMLHTTPObject() {
     var xmlhttp = false;
     for (var i=0;i<XMLHttpFactories.length;i++) {
@@ -265,11 +210,7 @@ function createXMLHTTPObject() {
 
     return xmlhttp;
     }
-/**
- *
- * @param {type} strURL
- * @returns {@exp;AJAX@pro;responseText|Boolean}
- */
+
 function syncAjax(strURL) {
     if (window.XMLHttpRequest) {
         AJAX=new XMLHttpRequest();
@@ -289,36 +230,23 @@ function syncAjax(strURL) {
         return false;
         }
     }
-/**
- *
- * @returns {undefined}
- */
+
 function requests_get() {
     msgs_interval = window.setInterval('do_requests_loop()', 60000);
     }
-/**
- *
- * @returns {undefined}
- */
+
 function do_requests_loop() {
     randomnumber=Math.floor(Math.random()*99999999);
     var url ="./portal/ajax/list_requests.php?id=<?php print $_SESSION['user_id'];?>&showall=" + showall + "&version=" + randomnumber;
     sendRequest (url, requests_cb2, "");
     }
-/**
- *
- * @returns {undefined}
- */
+
 function logged_in() {								// returns boolean
     var temp = <?php print $logged_in;?>;
 
     return temp;
     }
-/**
- *
- * @param {type} val
- * @returns {Boolean}
- */
+
 function isNull(val) {								// checks var stuff = null;
 
     return val === null;
@@ -326,11 +254,7 @@ function isNull(val) {								// checks var stuff = null;
 
 var newwindow = null;
 var starting;
-/**
- *
- * @param {type} id
- * @returns {unresolved}
- */
+
 function do_window(id) {				// 1/19/09
     if ((newwindow) && (!(newwindow.closed))) {newwindow.focus(); return;}		// 7/28/10
     if (logged_in()) {
@@ -349,11 +273,7 @@ function do_window(id) {				// 1/19/09
 
 var viewwindow = null;
 var starting;
-/**
- *
- * @param {type} id
- * @returns {unresolved}
- */
+
 function do_viewwindow(id) {				// 1/19/09
     if ((viewwindow) && (!(viewwindow.closed))) {viewwindow.focus(); return;}		// 7/28/10
     if (logged_in()) {
@@ -372,10 +292,7 @@ function do_viewwindow(id) {				// 1/19/09
 
 var newreq = null;
 var starting;
-/**
- *
- * @returns {unresolved}
- */
+
 function do_newreq() {				// 1/19/09
     if ((newreq) && (!(newreq.closed))) {newreq.focus(); return;}		// 7/28/10
     if (logged_in()) {
@@ -394,10 +311,10 @@ function do_newreq() {				// 1/19/09
 var dopasswd = null;
 var starting;
 function do_passwdchange() {				// 1/19/09
-	if ((dopasswd) && (!(dopasswd.closed))) {dopasswd.focus(); return;}		// 7/28/10	
+	if ((dopasswd) && (!(dopasswd.closed))) {dopasswd.focus(); return;}		// 7/28/10
 	if (logged_in()) {
 		if(starting) {return;}						// 6/6/08
-		starting=true;	
+		starting=true;
 		dopasswd=window.open("./portal/profile.php", "change_password",  "titlebar, location=0, resizable=1, scrollbars=yes, height=700, width=600, status=0, toolbar=0, menubar=0, location=0, left=100, top=300, screenX=100, screenY=300");
 		if (isNull(dopasswd)) {
 			alert ("Portal operation requires popups to be enabled. Please adjust your browser options.");
@@ -407,11 +324,7 @@ function do_passwdchange() {				// 1/19/09
 		starting = false;
 		}
 	}		// end function do_passwdchange()
-/**
- *
- * @param {type} req
- * @returns {undefined}
- */
+
 function requests_cb2(req) {
     var the_requests=JSON.decode(req.responseText);
     if (the_requests[0][0] == "No Current Requests") {
@@ -487,11 +400,7 @@ function requests_cb2(req) {
         the_string += "</TABLE>";
         $('all_requests').innerHTML = the_string;
     }
-/**
- *
- * @param {type} showall
- * @returns {undefined}
- */
+
 function get_requests() {
     var width = "";
     randomnumber=Math.floor(Math.random()*99999999);
@@ -601,11 +510,7 @@ function do_filelist() {
         }
     }
 
-/**
- *
- * @param {type} req
- * @returns {undefined}
- */
+
 function markers_cb2(req) {
     var the_markers=JSON.decode(req.responseText);
     if (the_markers[0] != -1) {
@@ -619,7 +524,7 @@ function markers_cb2(req) {
 			info_t += "<TR class='even'><TD class='td_label'><B><?php print get_text('Job Title');?></B></TD><TD class='td_data'>" + the_scope + "</TD></TR>";
 			info_t += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Job Description');?></B></TD><TD class='td_data'>" + the_description + "</TD></TR>";
 			for(var elements in the_markers[key].responders) {
-				var tr_handle = the_markers[key].responders[elements].handle;	
+				var tr_handle = the_markers[key].responders[elements].handle;
 				info_t += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Responder');?></B></TD><TD class='td_data'>" + tr_handle + "</TD></TR>";
 				}
 			info_t += "</TABLE><BR /><BR /></DIV>";
@@ -635,7 +540,7 @@ function markers_cb2(req) {
                 info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('Responder Handle');?></B></TD><TD class='td_data'>" + r_handle + "</TD></TR>";
 				info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('Assigned to Job');?></B></TD><TD class='td_data'>" + the_scope + "</TD></TR>";
 				info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('Job Description');?></B></TD><TD class='td_data'>" + the_description + "</TD></TR></TABLE><BR /><BR /></DIV>";
-				createMarker(point, 1, r_handle, info_r);			
+				createMarker(point, 1, r_handle, info_r);
                 }
             }
         }
@@ -661,7 +566,7 @@ function get_the_markers() {
 				info_t += "<TR class='even'><TD class='td_label'><B><?php print get_text('Job Title');?></B></TD><TD class='td_data'>" + the_scope + "</TD></TR>";
 				info_t += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Job Description');?></B></TD><TD class='td_data'>" + the_description + "</TD></TR>";
 				for(var elements in the_markers[key].responders) {
-					var tr_handle = the_markers[key].responders[elements].handle;	
+					var tr_handle = the_markers[key].responders[elements].handle;
 					info_t += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Responder');?></B></TD><TD class='td_data'>" + tr_handle + "</TD></TR>";
 					}
 				info_t += "</TABLE><BR /><BR /></DIV>";
@@ -678,7 +583,7 @@ function get_the_markers() {
 					info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('Assigned to Job');?></B></TD><TD class='td_data'>" + the_scope + "</TD></TR>";
 					info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('Job Description');?></B></TD><TD class='td_data'>" + the_description + "</TD></TR></TABLE><BR /><BR /></DIV>";
                     point = new google.maps.LatLng(r_lat, r_lng);
-					createMarker(point, 1, r_handle, info_r);			
+					createMarker(point, 1, r_handle, info_r);
                     }
                 }
             }

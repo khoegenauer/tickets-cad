@@ -1,11 +1,5 @@
 <?php
-/**
- * @package routes_nm.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version
- */
-error_reporting(E_ALL);
+include'./incs/error_reporting.php';
 @session_start();
 require_once './incs/functions.inc.php';
 require_once($_SESSION['fmp']);
@@ -21,13 +15,7 @@ $unit_ht_max = 	0.3;		// unit sidebar height maximum as a portion of screen heig
 
 $units_side_bar_height = 0.9;		// height of units sidebar as decimal fraction - default is 0.9 (90%)
 
-/*
-7/16/10 Initial Release for no internet operation - created from routes.php
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-11/18/10 Added filter by capabilities and fixed individual unit dispatch.
-3/15/11 changed default.css to stylesheet.php
-5/28/11 sql inject prevention added
-*/
+
 
 do_login(basename(__FILE__));		//
 if ((isset($_REQUEST['ticket_id'])) && (!(strval(intval($_REQUEST['ticket_id']))===$_REQUEST['ticket_id']))) {	shut_down();}	// 5/28/11
@@ -46,18 +34,7 @@ if (!(isset ($_SESSION['allow_dirs']))) {
     $_SESSION['allow_dirs'] = 'true';			// note js-style LC
     }
 
-/**
- * get_ticket_id
- * Insert description here
- *
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
+
 function get_ticket_id() {				// 5/4/11
     if (array_key_exists('ticket_id', ($_REQUEST))) {
         $_SESSION['active_ticket'] = $_REQUEST['ticket_id'];

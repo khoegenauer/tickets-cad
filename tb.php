@@ -1,24 +1,6 @@
 <?php
-/**
- * @package tb.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version string
- */
-error_reporting(E_ALL);
-/**
- * dump
- * Insert description here
- *
- * @param $variable
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
+include'./incs/error_reporting.php';
+
 function dump($variable) {
     echo "\n<PRE>";				// pretty it a bit
     var_dump($variable) ;

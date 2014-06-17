@@ -12,7 +12,7 @@ require_once './incs/functions.inc.php';
 @session_start();
 
 do_login(basename(__FILE__));
-error_reporting(E_ALL);
+include'./incs/error_reporting.php';
 set_time_limit(0);
 
 $local = getcwd() . "/_osm/tiles/";

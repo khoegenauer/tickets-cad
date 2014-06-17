@@ -1,25 +1,5 @@
 <?php
-/**
- *
- *
- * @package exportcsv.inc.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version string
- */
-/**
- * get_facilityname
- * Insert description here
- *
- * @param $value
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
+
 function get_facilityname($value) {
     $query = "SELECT * FROM `$GLOBALS[mysql_prefix]facilities` WHERE `id` = " . $value . " LIMIT 1";
     $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(),basename( __FILE__), __LINE__);
@@ -101,8 +81,8 @@ function exportMysqlToCsv($user,$filename = 'requests.csv') {
 			} else {
 			$output[$z][] = $row['to_address'];
 			}
-    		$output[$z][] = ($row['pickup'] != 0) ? $row['pickup']: "";	
-        $output[$z][] = ($row['arrival'] != 0) ? $row['arrival']: "";	
+    		$output[$z][] = ($row['pickup'] != 0) ? $row['pickup']: "";
+        $output[$z][] = ($row['arrival'] != 0) ? $row['arrival']: "";
         $output[$z][] = ($row['rec_facility'] != 0) ? get_facilityname($row['rec_facility']): "Not Set";
         $output[$z][] = $row['title'];
         $output[$z][] = $row['description'];

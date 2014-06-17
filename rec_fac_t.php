@@ -1,14 +1,5 @@
 <?php
-/**
- * @package rec_fac_t.php
- * @author John Doe <john.doe@example.com>
- * @since 2011-10-18
- * @version 2011-10-18
- */
-/*
-10/18/11	New release - updating receiving Facility from Mobile screen.
-*/
-error_reporting(E_ALL);
+include'./incs/error_reporting.php';
 
 @session_start();
 require_once 'incs/functions.inc.php';

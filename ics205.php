@@ -3,8 +3,7 @@
 2/26/2014 - initial release
 3/8/2014 - revised for inline style vs css
 */
-if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09 
-error_reporting (E_ALL  ^ E_DEPRECATED);
+include'./incs/error_reporting.php';
 @session_start();
 require_once('incs/functions.inc.php');		//7/28/10
 
@@ -14,11 +13,11 @@ function template_205 ($item) {
 		$body_style	= ' MARGIN:0; FONT-WEIGHT: normal; FONT-SIZE: 12px; COLOR: #000000; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none ';
 		$table_style	= 'width:auto; border:2px solid black;  border-collapse: collapse;';
 		$table_upper_style= 'width:auto; border-collapse: collapse; border:none; ';
-		
+
 		$tr_fat_style = 'background-color: white; height: 40px; vertical-align:text-top; border:1px solid black; ';
 		$tr_thin_style = 'background-color: white; height: 21px; vertical-align:middle;  border:none; ';
 		$tr_plain_style = 'background-color: white; height: 21px; border:none; ';
-		
+
 		$td_heading_style= 'FONT-WEIGHT: 900; FONT-SIZE: 11px;  border:1px solid black; ';
 		$td_heading_3_style = 'FONT-WEIGHT: 400; FONT-SIZE: 12px;  border:1px solid black; text-align: left; ';
 		$td_heading_4_style  = 'FONT-WEIGHT: 900; FONT-SIZE: 11px;  text-align: right;  border:1px solid black; ';
@@ -60,7 +59,7 @@ function template_205 ($item) {
 			</table>
 		</td>
 		</tr>
-		
+
 		<tr style = '{$tr_thin_style}'>
 		<td style = '{$td_heading_style}' colspan=6>&nbsp;3. BASIC RADIO CHANNEL USE</td>
 		</tr>
@@ -144,7 +143,7 @@ function template_205 ($item) {
 		<td style = '{$td_plain_style}'> {$item[58]}</td>
 		<td style = '{$td_plain_style}'> {$item[59]}</td>
 		</tr>
-		
+
 		<tr style = '{$tr_thin_style}'>
 		<td style = '{$td_heading_style}' colspan=4>&nbsp;4. Prepared by: (Communications Unit)</td>
 		<td style = '{$td_heading_style}' colspan=2>&nbsp;Date / Time</td>
@@ -157,12 +156,12 @@ function template_205 ($item) {
 		<td style= '{$td_heading_3_style}' colspan=5>&nbsp;INCIDENT RADIO COMMUNICATIONS PLAN</td>
 		<td style= '{$td_heading_3_style}' colspan=1>ICS 205-CG (Rev 07/04)&nbsp;</td>
 		</tr>
-		
-		</table>\n";	// end of returned string		
-		}		// end function template 205
-		
 
-?>	
+		</table>\n";	// end of returned string
+		}		// end function template 205
+
+
+?>
 <!DOCTYPE html>
 <HTML>
 <HEAD>
@@ -177,7 +176,7 @@ function template_205 ($item) {
 <META HTTP-EQUIV="Content-Script-Type"	CONTENT="text/javascript">
 <script type = "javascript" src = "./js/jquery.min.js"></script>
 
-<SCRIPT> 
+<SCRIPT>
 	String.prototype.trim = function () {
 		return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
 		};
@@ -227,32 +226,32 @@ switch ($step) {
 //			$data = $name;		// test
 			return "<textarea id='f{$name}'  name='f{$name}' cols={$cols} rows={$rows} tabindex={$tabindex}>{$data}</textarea>";
 			}
-		 
+
 		function in_text( $name, $size, $tabindex, $data = "") {		//  <input type=text ...
 //			$data = $name;		// test
-			return "<input type=text id='f{$name}'  name='f{$name}' size={$size} maxlength={$size} value='{$data}' tabindex={$tabindex} />";	
+			return "<input type=text id='f{$name}'  name='f{$name}' size={$size} maxlength={$size} value='{$data}' tabindex={$tabindex} />";
 			}
 
 		$item = array();
 		$item[0] =  "";
 		$item[1] =  in_text  (1, 20, 1); 				// $name, $size, $tabindex
-		$item[2] =  in_text  (2, 10, 2, $the_date);  
-		$item[3] =  in_text  (3, 5, 3, $the_time);  
-		$item[4] =  in_text  (4, 10, 4, $the_date);  
-		$item[5] =  in_text  (5, 5, 5, $the_time);  		
+		$item[2] =  in_text  (2, 10, 2, $the_date);
+		$item[3] =  in_text  (3, 5, 3, $the_time);
+		$item[4] =  in_text  (4, 10, 4, $the_date);
+		$item[5] =  in_text  (5, 5, 5, $the_time);
 
-		for ( $i = 0; $i<(6*9); $i+=6 ) {	
+		for ( $i = 0; $i<(6*9); $i+=6 ) {
 				$item[$i+6] =  in_area  ($i+6, 12, 1, $i+6);  		// $name, $cols, $rows, $tabindex, $data = ""
-				$item[$i+7] =  in_area  ($i+7, 10, 1, $i+7);  		
-				$item[$i+8] =  in_area  ($i+8, 12, 1, $i+8);  		
-				$item[$i+9] =  in_area  ($i+9, 12, 1, $i+9);  		
-				$item[$i+10] =  in_area  ($i+10, 12, 1, $i+10);  	
-				$item[$i+11] =  in_area  ($i+11, 22, 1, $i+11);  	
-				}	
-	
+				$item[$i+7] =  in_area  ($i+7, 10, 1, $i+7);
+				$item[$i+8] =  in_area  ($i+8, 12, 1, $i+8);
+				$item[$i+9] =  in_area  ($i+9, 12, 1, $i+9);
+				$item[$i+10] =  in_area  ($i+10, 12, 1, $i+10);
+				$item[$i+11] =  in_area  ($i+11, 22, 1, $i+11);
+				}
+
 		$item[60] =  in_text  (60, 48, 60, $the_by);  		// $name, $size, $tabindex
-		$item[61] =  in_text  (61, 10, 61, $the_date);  	
-		$item[62] =  in_text  (62, 5, 62, $the_time);  	
+		$item[61] =  in_text  (61, 10, 61, $the_date);
+		$item[62] =  in_text  (62, 5, 62, $the_time);
 
 ?>
 <BODY onload = "document.form_205.f1.focus();">		<!-- <?php echo __LINE__ ; ?> -->
@@ -284,27 +283,27 @@ switch ($step) {
 		else {
 			alert("Incident Name is required");
 			our_form.f1.focus();
-			return false;		
+			return false;
 			}
 		}		// end function validate()
-</script>	
+</script>
 
 <?php
 
 	break;
-	
-	case 2 :			// do mail 
+
+	case 2 :			// do mail
 
 		function html_mail ($to, $subject, $html_message, $from_address, $from_display_name='') {
-		//	$headers = 'From: ' . $from_display_name . ' <shoreas@gmail.com>' . "\n"; 
+		//	$headers = 'From: ' . $from_display_name . ' <shoreas@gmail.com>' . "\n";
 			$from = get_variable('email_from');
 			$from = is_email($from)? $from : "info@ticketscad.org";
-			$headers = "From: {$from_display_name}<{$from}>\n"; 
+			$headers = "From: {$from_display_name}<{$from}>\n";
 			$headers .= 'MIME-Version: 1.0' . "\r\n";
 			$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 			$temp = get_variable('email_reply_to');
 			if (is_email($temp)){
-			    $headers .= "Reply-To: {$temp}\r\n"; 
+			    $headers .= "Reply-To: {$temp}\r\n";
 			    }
 
 			$temp = @mail($to, $subject, $html_message, $headers); // boolean
@@ -312,8 +311,8 @@ switch ($step) {
 
 		$stuff = array_values ($_POST);
 
-		$html_message = template_205 ($stuff) ;		
-		
+		$html_message = template_205 ($stuff) ;
+
 		$to_array = explode ("|", $_POST['frm_add_str']);
 		$to = $sep = "";
 		for ($i=0; $i < count($to_array); $i++) {
@@ -352,18 +351,18 @@ function fade( elem, time ) {
 <center>
 <div id = 'complete' style = 'margin-top:40px;'><H2 >ICS 205 Message sent - <?php echo $stuff[1] ; ?></h2></div>
 
-<?php	
+<?php
 //		echo template_205 ($stuff) ;
 		break;
 
 	case 3 :				// what-for tbd
 
 	break;
-	
+
 default:
-    echo  "err-err-err-err-err at: " . __LINE__;	
-	}		// end switch	
-?>	
+    echo  "err-err-err-err-err at: " . __LINE__;
+	}		// end switch
+?>
 <form name = "can_form" method = 'post' action = 'ics213.php'>
 </form>
 </BODY>

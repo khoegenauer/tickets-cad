@@ -1,19 +1,17 @@
 <?php
 
-error_reporting(E_ALL);
+include'./incs/error_reporting.php';
 $facs_side_bar_height = .5;		// max height of facilities sidebar as decimal fraction of screen height - default is 0.6 (60%)
 $zoom_tight = FALSE;				// replace with a decimal number to over-ride the standard default zoom setting
 $iw_width= "300px";					// map infowindow with
-/*
-1/3/14 New File - for Road Condition Alerts
-*/
 
-@session_start();	
+
+@session_start();
 
 require_once('./incs/functions.inc.php');		//7/28/10
 do_login(basename(__FILE__));
 $key_field_size = 30;
-$st_size = (get_variable("locale") ==0)?  2: 4;		
+$st_size = (get_variable("locale") ==0)?  2: 4;
 
 extract($_GET);
 extract($_POST);
@@ -22,7 +20,7 @@ if((($istest)) && (!empty($_POST))) {dump ($_POST);}
 
 
 function loc_format_date($date){
-	if (get_variable('locale')==1)	{return date("j/n/y H:i",$date);}					// 08/27/10 - Revised to show UK format for locale = 1	
+	if (get_variable('locale')==1)	{return date("j/n/y H:i",$date);}					// 08/27/10 - Revised to show UK format for locale = 1
 	else 							{return date(get_variable("date_format"),$date);}	// return date(get_variable("date_format"),strtotime($date));
 	}				// end function fac format date
 function isempty($arg) {
@@ -65,16 +63,16 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 	<SCRIPT SRC="./js/usng.js" 			TYPE="text/javascript"></SCRIPT>
 	<SCRIPT SRC="./js/lat_lng.js" 		TYPE="text/javascript"></SCRIPT>
 	<SCRIPT SRC="./js/geotools2.js" 	TYPE="text/javascript"></SCRIPT>
-	<SCRIPT SRC="./js/osgb.js" 			TYPE="text/javascript"></SCRIPT>		
+	<SCRIPT SRC="./js/osgb.js" 			TYPE="text/javascript"></SCRIPT>
 	<SCRIPT SRC='./js/misc_function.js' TYPE='text/javascript'></SCRIPT>
-	<SCRIPT SRC='./js/graticule_V3.js' 	TYPE='text/javascript'></SCRIPT> 	
+	<SCRIPT SRC='./js/graticule_V3.js' 	TYPE='text/javascript'></SCRIPT>
 <!--
 	<SCRIPT SRC="./js/v3_epoly.js" 		TYPE="text/javascript"></SCRIPT>
--->	
+-->
 	<SCRIPT src="./js/elabel_v3.js" TYPE="text/javascript"></SCRIPT>
 	<SCRIPT SRC="./js/domready.js"		TYPE="text/javascript" ></script>
 	<SCRIPT SRC="./js/gmaps_v3_init.js"	TYPE="text/javascript" ></script>
-	<SCRIPT src = "./js/elabel_v3.js"></SCRIPT>	
+	<SCRIPT src = "./js/elabel_v3.js"></SCRIPT>
 	<SCRIPT>
 	var map;		// note global
 	var theAlertTypeIcon;
@@ -148,7 +146,7 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 		do_ngs(theForm);
 		domap();			// show it
 		}				// end function
-		
+
 	function do_unlock_pos(theForm) {
 		theForm.frm_ngs.disabled=false;
 		$("lock_p").style.visibility = "hidden";
@@ -221,7 +219,7 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 			}
 		}
 
-	var grid_bool = false;		
+	var grid_bool = false;
 	function toglGrid() {						// toggle
 		grid_bool = !grid_bool;
 		if (grid_bool)	{ grid = new Graticule(map); }
@@ -278,7 +276,7 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 		if (theForm.frm_name.value.trim()=="")											{errmsg+="Location NAME is required.\n";}
 		if (theForm.frm_descr.value.trim()=="")											{errmsg+="Location DESCRIPTION is required.\n";}
 		if ((theForm.frm_lat.value=="") || (theForm.frm_lng.value==""))					{errmsg+="Location LOCATION must be set - click map location to set.\n";}	// 11/11/09 position mandatory
-		
+
 		if (errmsg!="") {
 			alert ("Please correct the following and re-submit:\n\n" + errmsg);
 			return false;
@@ -302,40 +300,40 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 	function pt_to_map (my_form, theicon, lat, lng) {
 		if(myMarker) {myMarker.setMap(null);}			// destroy predecessor
 
-		my_form.frm_lat.value=lat;	
-		my_form.frm_lng.value=lng;	
+		my_form.frm_lat.value=lat;
+		my_form.frm_lng.value=lng;
 		my_form.show_lat.value=do_lat_fmt(lat);
 		my_form.show_lng.value=do_lng_fmt(lng);
-			
+
 		var loc = <?php print get_variable('locale');?>;
 		if(loc == 0) { my_form.frm_ngs.value=LLtoUSNG(lat, lng, 5); }
 		if(loc == 1) { my_form.frm_ngs.value=LLtoOSGB(lat, lng, 5); }
 		if(loc == 2) { my_form.frm_ngs.value=LLtoUTM(lat, lng, 5); }
-	
+
 		map.setCenter(new google.maps.LatLng(lat, lng), <?php print get_variable('def_zoom');?>);
 		var image = theicon;
-		var dp_latlng = new google.maps.LatLng(lat, lng);		
+		var dp_latlng = new google.maps.LatLng(lat, lng);
 
 		myMarker = new google.maps.Marker({
 			position: dp_latlng,
-			icon: image, 
+			icon: image,
 			draggable: true,
 			map: map
 			});
 		myMarker.setMap(map);		// add marker with icon
 		}				// end function pt_to_map ()
-		
+
 	function show_theType(id) {
 		var url = "./ajax/get_alerticon.php?id=" + id;
 		sendRequest (url, icon_cb, "");
 		function icon_cb(req) {
 			var theIcon=JSON.decode(req.responseText)
 			var theTypeIcon = "<IMG SRC=\"./rm/roadinfo_icons/" + theIcon + "\">";
-			$('icon_flag').innerHTML = theTypeIcon;	
+			$('icon_flag').innerHTML = theTypeIcon;
 			theAlertTypeIcon = "./rm/roadinfo_icons/" + theIcon;
-			}		
+			}
 		}
-		
+
 	function loc_lkup(my_form) {
 		if(my_form.frm_type.value==0) {
 			alert("Set Type first");
@@ -348,8 +346,8 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 		var geocoder = new google.maps.Geocoder();
 		var myAddress = my_form.frm_street.value.trim();
 
-		geocoder.geocode( { 'address': myAddress}, function(results, status) {		
-			if (status == google.maps.GeocoderStatus.OK)	{ pt_to_map (my_form, theAlertTypeIcon, results[0].geometry.location.lat(), results[0].geometry.location.lng());}					
+		geocoder.geocode( { 'address': myAddress}, function(results, status) {
+			if (status == google.maps.GeocoderStatus.OK)	{ pt_to_map (my_form, theAlertTypeIcon, results[0].geometry.location.lat(), results[0].geometry.location.lng());}
 			else 											{ alert("Geocode lookup failed: " + status);}
 			});				// end geocoder.geocode()
 
@@ -357,10 +355,10 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 
 	function getAddress(latlng, currform) {
 		var rev_coding_on = '<?php print get_variable('reverse_geo');?>';
-		if (rev_coding_on == 0) return;		
+		if (rev_coding_on == 0) return;
 		if(markersArray.length > 1) {
-			clearOverlays(); 
-			marker = new google.maps.Marker({position: latlng, map: map, draggable: true});			
+			clearOverlays();
+			marker = new google.maps.Marker({position: latlng, map: map, draggable: true});
 			}
 		map.setCenter(latlng);
 		map.setZoom(18);
@@ -380,22 +378,22 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 					if (contains(component.types, 'administrative_area_level_1')) {
 						theState = component.short_name;
 						bits.push(component.long_name);
-						}	
+						}
 					if (contains(component.types, 'administrative_area_level_2')) {
 						bits.push(component.long_name);
-						}	
+						}
 					if (contains(component.types, 'administrative_area_level_3')) {
 						bits.push(component.long_name);
 						}
 					if (contains(component.types, 'colloquial_area')) {
 						bits.push(component.long_name);
-						}	
+						}
 					if (contains(component.types, 'premise')) {
 						bits.push(component.long_name);
-						}		
+						}
 					if (contains(component.types, 'sub_premise')) {
 						bits.push(component.long_name);
-						}										
+						}
 					if (contains(component.types, 'street_address')) {
 						theStreet = component.long_name;
 						bits.push(component.long_name);
@@ -403,33 +401,33 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 					if (contains(component.types, 'postal_code')) {
 						thePostCode = component.long_name
 						bits.push(component.long_name);
-						}						
+						}
 					if (contains(component.types, 'intersection')) {
 						bits.push(component.long_name);
-						}	
+						}
 					if (contains(component.types, 'route')) {
 						bits.push(component.long_name);
-						}						
+						}
 					if (contains(component.types, 'locality')) {
 						theCity = component.long_name;
 						bits.push(component.long_name);
-						}			
+						}
 					if (contains(component.types, 'sublocality')) {
 						bits.push(component.long_name);
-						}		
+						}
 					if (contains(component.types, 'neighborhood')) {
 						bits.push(component.long_name);
-						}	
+						}
 					if (contains(component.types, 'neighborhood')) {
 						bits.push(component.long_name);
-						}						
+						}
 					}
 					switch(currform) {
 					case "a":
 						document.loc_add_form.frm_street.value = resp[0].formatted_address;
 						document.loc_add_form.frm_city.value = theCity;
 						document.loc_add_form.frm_state.value = theState;
-						document.loc_add_form.frm_street.focus();	
+						document.loc_add_form.frm_street.focus();
 						break;
 
 					case "e":
@@ -440,21 +438,21 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 						break;
 					default:
 						alert ("596: error");
-					}		// end switch()		
+					}		// end switch()
 				}
 			});
-		}		
+		}
 
-	function capWords(str){ 
-		var words = str.split(" "); 
-		for (var i=0 ; i < words.length ; i++){ 
-			var testwd = words[i]; 
-			var firLet = testwd.substr(0,1); 
-			var rest = testwd.substr(1, testwd.length -1) 
-			words[i] = firLet.toUpperCase() + rest 
-	  	 	} 
-		return( words.join(" ")); 
-		} 
+	function capWords(str){
+		var words = str.split(" ");
+		for (var i=0 ; i < words.length ; i++){
+			var testwd = words[i];
+			var firLet = testwd.substr(0,1);
+			var rest = testwd.substr(1, testwd.length -1)
+			words[i] = firLet.toUpperCase() + rest
+	  	 	}
+		return( words.join(" "));
+		}
 
 	function hideIcons() {
 		map.clearOverlays();
@@ -484,7 +482,7 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 			}
 		if(loc == 2) {
 			document.forms[0].frm_ngs.value = LLtoOSGB(document.forms[0].frm_lat.value, document.forms[0].frm_lng.value);
-			}			
+			}
 		document.forms[0].frm_ngs.disabled=true;
 		}
 
@@ -516,14 +514,14 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 	function to_top() {
 		location.href = '#top';
 		}
-		
+
 	function to_bottom() {
 		location.href = '#bottom';
 		}
-		
+
 	function add_hash(in_str) { // prepend # if absent
 		return (in_str.substr(0,1)=="#")? in_str : "#" + in_str;
-		}		
+		}
 
 	function do_hover (the_id) {
 		CngClass(the_id, 'hover');
@@ -538,8 +536,8 @@ if((array_key_exists('HTTPS', $_SERVER)) && ($_SERVER['HTTPS'] == 'on')) {
 	function CngClass(obj, the_class){
 		$(obj).className=the_class;
 		return true;
-		}		
-		
+		}
+
 	function sendRequest(url,callback,postData) {
 		var req = createXMLHTTPObject();
 		if (!req) return;
@@ -592,8 +590,8 @@ function list_locations($addon = '', $start) {
 			`c`.`title` AS `type_title`,
 			`c`.`icon`AS `icon_url`,
 			`r`.`_on` AS `updated`
-			FROM `$GLOBALS[mysql_prefix]roadinfo` `r` 
-			LEFT JOIN `$GLOBALS[mysql_prefix]conditions` `c` ON `r`.`conditions`=`c`.`id` 
+			FROM `$GLOBALS[mysql_prefix]roadinfo` `r`
+			LEFT JOIN `$GLOBALS[mysql_prefix]conditions` `c` ON `r`.`conditions`=`c`.`id`
 			ORDER BY `cond_id`";
 	$result = mysql_query($query) or do_error('', 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	unset($result);
@@ -612,16 +610,16 @@ function list_locations($addon = '', $start) {
 	function call_back (in_obj){				// callback function - from gmaps_v3_init()
 		do_lat(in_obj.lat);			// set form values
 		do_lng(in_obj.lng);
-		do_ngs();	
+		do_ngs();
 		}
 //				826
 
-		map =  gmaps_v3_init(call_back, 'map_canvas', 
-			<?php echo get_variable('def_lat');?>, 
-			<?php echo get_variable('def_lng');?>, 
-			<?php echo (get_variable('def_zoom')*2);?>, 
-			icon_file, 
-			<?php echo get_variable('maptype');?>, 
+		map =  gmaps_v3_init(call_back, 'map_canvas',
+			<?php echo get_variable('def_lat');?>,
+			<?php echo get_variable('def_lng');?>,
+			<?php echo (get_variable('def_zoom')*2);?>,
+			icon_file,
+			<?php echo get_variable('maptype');?>,
 			true);									// read-only
 
 	var color=0;
@@ -634,18 +632,18 @@ function list_locations($addon = '', $start) {
 		if (div_area == "locs_list_sh") {
 			var controlarea = "locs_list";
 			}
-		var divarea = div_area 
-		var hide_cont = hide_cont 
-		var show_cont = show_cont 
+		var divarea = div_area
+		var hide_cont = hide_cont
+		var show_cont = show_cont
 		if($(divarea)) {
 			$(divarea).style.display = 'none';
 			$(hide_cont).style.display = 'none';
 			$(show_cont).style.display = '';
-			} 
+			}
 		var params = "f_n=" +controlarea+ "&v_n=h&sess_id=<?php print get_sess_key(__LINE__); ?>";
 		var url = "persist2.php";
-		sendRequest (url, gb_handleResult, params);			
-		} 
+		sendRequest (url, gb_handleResult, params);
+		}
 
 	function showDiv(div_area, hide_cont, show_cont) {
 		if (div_area == "buttons_sh") {
@@ -655,8 +653,8 @@ function list_locations($addon = '', $start) {
 			var controlarea = "locs_list";
 			}
 		var divarea = div_area
-		var hide_cont = hide_cont 
-		var show_cont = show_cont 
+		var hide_cont = hide_cont
+		var show_cont = show_cont
 		if($(divarea)) {
 			$(divarea).style.display = '';
 			$(hide_cont).style.display = '';
@@ -664,9 +662,9 @@ function list_locations($addon = '', $start) {
 			}
 		var params = "f_n=" +controlarea+ "&v_n=s&sess_id=<?php print get_sess_key(__LINE__); ?>";
 		var url = "persist2.php";
-		sendRequest (url, gb_handleResult, params);					
-		} 	
-		
+		sendRequest (url, gb_handleResult, params);
+		}
+
 	function gb_handleResult(req) {							// 12/03/10	The persist callback function
 		}
 
@@ -679,7 +677,7 @@ function list_locations($addon = '', $start) {
 			}
 		}
 	return retval;
-	}		
+	}
 
 	function createMarker(point, tabs, id, icon, loc_id) {
 		got_points = true;													// at least one
@@ -688,11 +686,11 @@ function list_locations($addon = '', $start) {
 		marker.id = loc_id;				// for hide/unhide - unused
 		google.maps.event.addListener(marker, "click", function() {		// here for both side bar and icon click
 			try {open_iw.close()} catch(err) {;}
-			map.setZoom(8);			
+			map.setZoom(8);
 			map.setCenter(point);
-			var infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});	 
+			var infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});
 			open_iw = infowindow;
-			infowindow.open(map, marker);		
+			infowindow.open(map, marker);
 			});			// end google.maps.event.add Listener()
 
 		gmarkers[id] = marker;									// marker to array for side_bar click function
@@ -704,15 +702,15 @@ function list_locations($addon = '', $start) {
 	function createdummyMarker(point, tabs, id, loc_id) {
 		got_points = true;
 		var image_file = "./our_icons/question1.png";
-		var dummymarker = new google.maps.Marker({position: point, map: map, icon: image_file});		
+		var dummymarker = new google.maps.Marker({position: point, map: map, icon: image_file});
 		dummymarker.id = loc_id;				// for hide/unhide - unused
 		google.maps.event.addListener(dummymarker, "click", function() {		// here for both side bar and icon click
 			if (dummymarker) {
 				try {open_iw.close()} catch(err) {;}
 				map.setZoom(8);
 				map.setCenter(point);
-				infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});	 
-				open_iw = infowindow;				
+				infowindow = new google.maps.InfoWindow({ content: tabs, maxWidth: 300});
+				open_iw = infowindow;
 				infowindow.open(map, dummymarker);
 				}		// end if (marker)
 			});			// end google.maps.Event.add Listener()
@@ -720,20 +718,20 @@ function list_locations($addon = '', $start) {
 		infoTabs[id] = tabs;									// tabs to array
 		if (!(map_is_fixed)) {
 			bounds.extend(point);
-			map.fitBounds(bounds);			
+			map.fitBounds(bounds);
 			}
 		return dummymarker;
 		}				// end function create dummy Marker()
-		
+
 	function do_sidebar (sidebar, id, the_class, loc_id) {
 		var loc_id = loc_id;
 		side_bar_html += "<TR CLASS='" + colors[(id)%2] +"'>";
 		side_bar_html += "<TD CLASS='" + the_class + "' onClick = myclick(" + id + "); >" + loc_id + sidebar +"</TD></TR>\n";		// 3/15/11
 		}
 
-	function do_sidebar_nm (sidebar, line_no, id, loc_id) {	
-		var loc_id = loc_id;	
-		var letter = to_str(line_no);	
+	function do_sidebar_nm (sidebar, line_no, id, loc_id) {
+		var loc_id = loc_id;
+		var letter = to_str(line_no);
 		side_bar_html += "<TR CLASS='" + colors[(line_no)%2] +"'>";
 		side_bar_html += "<TD onClick = myclick_nm(" + id + "); >" + loc_id + sidebar +"</TD></TR>\n";		// 1/23/09, 10/29/09 removed period, 11/11/09, 3/15/11
 		}
@@ -766,7 +764,7 @@ function list_locations($addon = '', $start) {
 			}
 		if(loc == 2) {
 			document.forms[0].frm_ngs.value = LLtoOSGB(document.forms[0].frm_lat.value, document.forms[0].frm_lng.value);
-			}			
+			}
 		document.forms[0].frm_ngs.disabled=true;
 		}
 
@@ -819,14 +817,14 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 	    zoomControl: true,
 	    scaleControl: true,
 	    mapTypeId: google.maps.MapTypeId.<?php echo get_maptype_str(); ?>
-		}	
+		}
 
 	var map = new google.maps.Map($('map_canvas'), mapOptions);				// 1145
 
 	map.setCenter(new google.maps.LatLng(<?php echo get_variable('def_lat'); ?>, <?php echo get_variable('def_lng'); ?>), <?php echo get_variable('def_zoom'); ?>);
 
 	var bounds = new google.maps.LatLngBounds();		// Initialize bounds for the map
-	
+
 	var listIcon = new google.maps.MarkerImage("./markers/yellow.png");		<?php echo "// " . __LINE__ . "\n";?>
 	listIcon.shadow = "./markers/sm_shadow.png";
 	listIcon.iconSize = new google.maps.Size(30, 30);
@@ -847,8 +845,8 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			`c`.`title` AS `type_title`,
 			`c`.`icon`AS `icon_url`,
 			`r`.`_on` AS `updated`
-			FROM `$GLOBALS[mysql_prefix]roadinfo` `r` 
-			LEFT JOIN `$GLOBALS[mysql_prefix]conditions` `c` ON `r`.`conditions`=`c`.`id` 
+			FROM `$GLOBALS[mysql_prefix]roadinfo` `r`
+			LEFT JOIN `$GLOBALS[mysql_prefix]conditions` `c` ON `r`.`conditions`=`c`.`id`
 			ORDER BY `cond_id` ASC";
 	$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 	$num_locations = mysql_affected_rows();
@@ -865,7 +863,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			}
 		else {
 			$toedit = "&nbsp;&nbsp;&nbsp;&nbsp;<A HREF='road_conditions.php?func=location&edit=true&id=" . $row['cond_id'] . "'><U>Edit</U></A>" ;
-			}		
+			}
 
 		if (!($got_point) && ((my_is_float($row['lat'])))) {
 			if(((float) $row['lat']==$GLOBALS['NM_LAT_VAL']) && ((float)$row['lng']==$GLOBALS['NM_LAT_VAL'])) {
@@ -879,8 +877,8 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		$update_error = strtotime('now - 6 hours');							// set the time for silent setting
 // name
 
-		$display_name = $name = shorten(htmlentities($row['title'], ENT_QUOTES), 20);	
-		$display_street = $street = shorten(htmlentities($row['street'], ENT_QUOTES), 40);			
+		$display_name = $name = shorten(htmlentities($row['title'], ENT_QUOTES), 20);
+		$display_street = $street = shorten(htmlentities($row['street'], ENT_QUOTES), 40);
 
 		$sidebar_line = "&nbsp;&nbsp;<TD WIDTH='30%' TITLE = '{$row['r_title']}' {$the_on_click}><U><SPAN STYLE='background-color: #FFFFFF;  opacity: .7; color:#000000;'>" . addslashes($name) ."</SPAN></U></TD>";	//	6/10/11
 		$sidebar_line .= "<TD WIDTH='40%' TITLE = '" . addslashes($street) . "' {$the_on_click}><U><SPAN STYLE='background-color: #FFFFFF;  opacity: .7; color:#000000;'><NOBR>" . addslashes($street) ."</NOBR></SPAN></U></TD>";
@@ -894,7 +892,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 // tab 1
 
 		if (my_is_float($row['lat'])) {										// position data of any type?
-		
+
 			$line_ctr = 0;
 			$tab_1 = "<TABLE CLASS='infowin' width='{$iw_width}'>";
 			$tab_1 .= "<TR CLASS='even'><TD COLSPAN=2 ALIGN='center'><B>" . addslashes(shorten($display_name, 48)) . "</B></TD></TR>";
@@ -914,7 +912,7 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			}		// end if/else
 
 		$name = $row['r_title'];	// 10/8/09		 4/28/11
-		if(((float)$row['lat']==$GLOBALS['NM_LAT_VAL']) && ((float)$row['lng']==$GLOBALS['NM_LAT_VAL'])) {		
+		if(((float)$row['lat']==$GLOBALS['NM_LAT_VAL']) && ((float)$row['lng']==$GLOBALS['NM_LAT_VAL'])) {
 ?>
 		var loc_id = "<?php print $index;?>";	//	10/8/09
 		var the_class = ((map_is_fixed) && (!(bounds.contains(point))))? "emph" : "td_label";
@@ -933,16 +931,16 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 		marker.setMap(map);		// 1578
 
 <?php
-			}	// End if/else 
+			}	// End if/else
 		} else {		// end ANY position data available
 
-			$name = $row['title'];		
+			$name = $row['title'];
 			$temp = explode("/", $name );
 			$index = substr($temp[count($temp) -1], -6, strlen($temp[count($temp) -1]));
 
 ?>
 			var loc_id = "<?php print $index;?>";
-<?php		
+<?php
 			print "\tdo_sidebar_nm (\" {$sidebar_line} \" , i, {$row['id']}, loc_id);\n";	// sidebar only - no map
 			}
 	$i++;				// zero-based
@@ -955,9 +953,9 @@ print (((my_is_int($dzf)) && ($dzf==2)) || ((my_is_int($dzf)) && ($dzf==3)))? "t
 			}
 		else {
 			map.fitBounds(bounds);					// Now fit the map to the bounds  - ({Z:{b:33.7489954, d:49.3844788492429}, ca:{b:-97.23322530034568, d:-76.612189}})
-			var listener = google.maps.event.addListenerOnce (map, "idle", function() { 
-				if (map.getZoom() > 16) map.setZoom(15); 
-				});			
+			var listener = google.maps.event.addListenerOnce (map, "idle", function() {
+				if (map.getZoom() > 16) map.setZoom(15);
+				});
 			}
 		}
 
@@ -1008,15 +1006,15 @@ var buttons_html = "";
 			$station = TRUE;			//
 			$the_lat = empty($_POST['frm_lat'])? "NULL" : quote_smart(trim($_POST['frm_lat'])) ;
 			$the_lng = empty($_POST['frm_lng'])? "NULL" : quote_smart(trim($_POST['frm_lng'])) ;
-			
+
 			$loc_id = $_POST['frm_id'];
 			$by = $_SESSION['user_id'];					// 6/4/2013
-			$from = $_SERVER['REMOTE_ADDR'];			
+			$from = $_SERVER['REMOTE_ADDR'];
 			$query = "UPDATE `$GLOBALS[mysql_prefix]roadinfo` SET
 				`title`= " . 		quote_smart(trim($_POST['frm_name'])) . ",
-				`description`= " . 	quote_smart(trim($_POST['frm_state'])) . ",		
+				`description`= " . 	quote_smart(trim($_POST['frm_state'])) . ",
 				`address`= " . 		quote_smart(trim($_POST['frm_street'])) . ",
-				`conditions`= " . 	$_POST['frm_type'] . ",		
+				`conditions`= " . 	$_POST['frm_type'] . ",
 				`lat`= " . 			$the_lat . ",
 				`lng`= " . 			$the_lng . ",
 				`_by`= " . 			quote_smart(trim($by)) . ",
@@ -1035,18 +1033,18 @@ var buttons_html = "";
 		$by = $_SESSION['user_id'];		//	4/14/11
 		$frm_lat = (empty($_POST['frm_lat']))? 'NULL': quote_smart(trim($_POST['frm_lat']));
 		$frm_lng = (empty($_POST['frm_lng']))? 'NULL': quote_smart(trim($_POST['frm_lng']));
-		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));	
+		$now = mysql_format_date(time() - (get_variable('delta_mins')*60));
 		$by = $_SESSION['user_id'];					// 6/4/2013
-		$from = $_SERVER['REMOTE_ADDR'];			
+		$from = $_SERVER['REMOTE_ADDR'];
 		$query = "INSERT INTO `$GLOBALS[mysql_prefix]roadinfo` (
-			`title`, 
-			`description`, 
-			`address`, 
+			`title`,
+			`description`,
+			`address`,
 			`conditions`,
-			`lat`, 
-			`lng`, 
-			`_by`, 
-			`_on`, 
+			`lat`,
+			`lng`,
+			`_by`,
+			`_on`,
 			`_from` )
 			VALUES (" .
 			quote_smart(trim($_POST['frm_name'])) . "," .
@@ -1054,7 +1052,7 @@ var buttons_html = "";
 			quote_smart(trim($_POST['frm_street'])) . "," .
 			$_POST['frm_type'] . "," .
 			$frm_lat . "," .
-			$frm_lng . "," .				
+			$frm_lng . "," .
 			quote_smart(trim($by)) . "," .
 			quote_smart(trim($now)) . "," .
 			quote_smart(trim($from)) . ");";
@@ -1085,7 +1083,7 @@ var buttons_html = "";
 		<TABLE BORDER=0 ID='outer' WIDTH='80%'><TR><TD WIDTH='50%'>
 		<TABLE BORDER="0" ID='addform' WIDTH='98%'>
 		<TR><TD ALIGN='center' COLSPAN='2'><FONT CLASS='header'><FONT SIZE=-1><FONT COLOR='green'><?php print get_text("Add Road Conditions Alert"); ?></FONT></FONT><BR /><BR />
-		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>		
+		<FONT SIZE=-1>(mouseover caption for help information)</FONT></FONT><BR /><BR /></TD></TR>
 		<FORM NAME= "loc_add_form" METHOD="POST" ACTION="<?php print basename(__FILE__);?>?func=location&goadd=true">
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Give the alert a Title"><?php print get_text("Title"); ?></A>:&nbsp;<FONT COLOR='red' SIZE='-1'>*</FONT>&nbsp;</TD>
 			<TD COLSPAN=3 ><INPUT MAXLENGTH="48" SIZE="48" TYPE="text" NAME="frm_name" VALUE="" /></TD>
@@ -1104,7 +1102,7 @@ var buttons_html = "";
 				</SELECT><SPAN id='icon_flag'></SPAN>
 			</TD>
 		</TR>
-		<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>			
+		<TR class='spacer'><TD class='spacer' COLSPAN=99>&nbsp;</TD></TR>
 		<TR CLASS='even'><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Street Address - type in street address in fields or click location on map "><?php print get_text("Address"); ?></A>:&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onClick="Javascript:loc_lkup(document.loc_add_form);"><img src="./markers/glasses.png" alt="Lookup location." /></button></TD>
 		<TD><INPUT SIZE="61" TYPE="text" NAME="frm_street" VALUE="" MAXLENGTH="61"></TD></TR> <!-- 7/5/10 -->
 		<TR CLASS = "even"><TD CLASS="td_label"><A CLASS="td_label" HREF="#" TITLE="Description - additional details about the alert">Description</A>:&nbsp;<font color='red' size='-1'>*</font></TD>	<TD COLSPAN=3 ><TEXTAREA NAME="frm_descr" COLS=60 ROWS=2></TEXTAREA></TD></TR>
@@ -1117,7 +1115,7 @@ var buttons_html = "";
 			<INPUT TYPE="text" NAME="show_lng" SIZE=11 VALUE="" disabled />&nbsp;&nbsp;
 <?php
 	$locale = get_variable('locale');
-	switch($locale) { 
+	switch($locale) {
 		case "0":
 ?>
 		<SPAN ID = 'usng_link' onClick = "do_usng_conv(loc_add_form)" style='font-weight: bold;'>USNG:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled /></TD></TR>
@@ -1129,7 +1127,7 @@ var buttons_html = "";
 		<SPAN ID = 'osgb_link' style='font-weight: bold;'>OSGB:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_ngs" VALUE="" disabled /></TD></TR>
 <?php
 		break;
-	
+
 		default:
 ?>
 		<SPAN ID = 'utm_link' style='font-weight: bold;'>UTM:</SPAN><INPUT TYPE="text" SIZE=19 NAME="frm_utm" VALUE="" disabled /></TD></TR>
@@ -1159,7 +1157,7 @@ var buttons_html = "";
 		$icon_file = "./markers/crosshair.png";
 ?>
 <script>
-//										some globals		
+//										some globals
 		var map = null;				// the map object - note GLOBAL
 		var myMarker;					// the marker object
 		var lat_var;						// see init.js
@@ -1171,23 +1169,23 @@ var buttons_html = "";
 		function call_back (in_obj){				// callback function - from gmaps_v3_init()
 			do_lat(in_obj.lat);			// set form values
 			do_lng(in_obj.lng);
-			do_ngs();	
+			do_ngs();
 			}
 	//				2192 - Add
 
-		map = gmaps_v3_init(call_back, 'map_canvas', 
-			<?php echo get_variable('def_lat');?>, 
-			<?php echo get_variable('def_lng');?>, 
-			<?php echo get_variable('def_zoom');?>, 
-			icon_file, 
-			<?php echo get_variable('maptype');?>, 
-			false);		
+		map = gmaps_v3_init(call_back, 'map_canvas',
+			<?php echo get_variable('def_lat');?>,
+			<?php echo get_variable('def_lng');?>,
+			<?php echo get_variable('def_zoom');?>,
+			icon_file,
+			<?php echo get_variable('maptype');?>,
+			false);
 
 </script>
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
 		<!-- <?php echo __LINE__;?> -->
-		<A NAME="bottom" /> 
-		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>		
+		<A NAME="bottom" />
+		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>
 		</BODY>
 		</HTML>
 <?php
@@ -1212,8 +1210,8 @@ var buttons_html = "";
 				`r`.`lng` AS `lng`,
 				`r`.`address` AS `address`,
 				`r`.`_on` AS `updated`
-				FROM `$GLOBALS[mysql_prefix]roadinfo` `r` 
-				LEFT JOIN `$GLOBALS[mysql_prefix]conditions` `c` ON `r`.`conditions`=`c`.`id` 
+				FROM `$GLOBALS[mysql_prefix]roadinfo` `r`
+				LEFT JOIN `$GLOBALS[mysql_prefix]conditions` `c` ON `r`.`conditions`=`c`.`id`
 				WHERE `r`.`id`=$id";
 		$result	= mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 		$row	= mysql_fetch_assoc($result);
@@ -1261,7 +1259,7 @@ var buttons_html = "";
 		$map_capt = "<BR /><BR /><CENTER><B><FONT CLASS = 'normal_text'>Click Map to revise location</FONT></B>";
 		$lock_butt ="<IMG ID='lock_p' BORDER=0 SRC='./markers/unlock2.png' STYLE='vertical-align: middle' onClick = 'do_unlock_pos(document.res_edit_Form);'>";
 		$usng_link = "<SPAN ID = 'usng_link' onClick = 'do_usng_conv(res_edit_Form)'>{$usng}:</SPAN>";
-		$osgb_link = "<SPAN ID = 'osgb_link'>{$osgb}:</SPAN>";		
+		$osgb_link = "<SPAN ID = 'osgb_link'>{$osgb}:</SPAN>";
 ?>
 		<TR CLASS = "odd">
 			<TD CLASS="td_label">
@@ -1279,21 +1277,21 @@ var buttons_html = "";
 	$utm_val = toUTM("{$row['lat']}, {$row['lng']}");
 
 	$locale = get_variable('locale');
-	switch($locale) { 
+	switch($locale) {
 		case "0":
 		?>&nbsp;USNG:<INPUT TYPE="text" NAME="frm_ngs" VALUE='<?php print $usng_val;?>' SIZE=19 disabled /></TD></TR>	<!-- 9/13/08, 2/10/11 -->
 <?php 	break;
 
 		case "1":
-?> 
+?>
 		&nbsp;OSGB:<INPUT TYPE="text" NAME="frm_ngs" VALUE='<?php print $osgb_val;?>' SIZE=19 disabled /></TD></TR>	<!-- 9/13/08, 2/10/11 -->
-<?php 
+<?php
 		break;
 
 		default:
-?> 
+?>
 		&nbsp;UTM:<INPUT TYPE="text" NAME="frm_ngs" VALUE='<?php print $utm_val;?>' SIZE=19 disabled /></TD></TR>	<!-- 9/13/08, 2/10/11 -->
-<?php 		
+<?php
 		}
 ?>
 		<TR><TD>&nbsp;</TD></TR>
@@ -1328,23 +1326,23 @@ var buttons_html = "";
 		function call_back (in_obj){				// callback function - from gmaps_v3_init()
 			do_lat(parseFloat(in_obj.lat));			// set form values
 			do_lng(parseFloat(in_obj.lng));
-			do_ngs();	
+			do_ngs();
 			}
 
-		map = gmaps_v3_init(call_back, 'map_canvas', 
-			<?php echo $row['lat'];?>, 
-			<?php echo $row['lng'];?>, 
-			<?php echo (get_variable('def_zoom'));?>, 
-			icon_file, 
-			<?php echo get_variable('maptype');?>, 
-			false);		
+		map = gmaps_v3_init(call_back, 'map_canvas',
+			<?php echo $row['lat'];?>,
+			<?php echo $row['lng'];?>,
+			<?php echo (get_variable('def_zoom'));?>,
+			icon_file,
+			<?php echo get_variable('maptype');?>,
+			false);
 
 </script>
 
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print basename( __FILE__);?>"></FORM>
 		<!-- 2431 -->
-		<A NAME="bottom" /> 
-		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>		
+		<A NAME="bottom" />
+		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>
 		</BODY>
 		</HTML>
 <?php
@@ -1356,14 +1354,14 @@ var buttons_html = "";
 
 		if ($_getview == 'true') {
 
-			
+
 			$id = $_GET['id'];
 			$query	= "SELECT * FROM `$GLOBALS[mysql_prefix]roadinfo` WHERE `id`= " . $id . " LIMIT 1";	// 1/19/2013
 			$result	= mysql_query($query) or do_error($query, 'mysql_query() failed', mysql_error(), __FILE__, __LINE__);
 			$row	= stripslashes_deep(mysql_fetch_assoc($result));
 			$lat = $row['lat'];
 			$lng = $row['lng'];
-			$coords =  $row['lat'] . "," . $row['lng'];		// for UTM			
+			$coords =  $row['lat'] . "," . $row['lng'];		// for UTM
 ?>
 			<SCRIPT >
 			var starting = false;
@@ -1404,7 +1402,7 @@ var buttons_html = "";
 			<TR CLASS = 'odd'><TD CLASS="td_label">As of:</TD>	<TD><?php print loc_format_date(strtotime($row['_on'])); ?></TD></TR>
 <?php
 			if (my_is_float($lat)) {
-?>		
+?>
 				<TR CLASS = "even"><TD CLASS="td_label"  onClick = 'javascript: do_coords(<?php print "$lat,$lng";?>)'><U>Lat/Lng</U>:</TD><TD>
 					<?php print get_lat($lat);?> <?php print get_lng($lng);?>&nbsp;
 
@@ -1415,10 +1413,10 @@ var buttons_html = "";
 					$utm_val = toUTM("{$row['lat']}, {$row['lng']}");
 
 					$locale = get_variable('locale');
-					switch($locale) { 
+					switch($locale) {
 						case "0":?>
 						&nbsp;USNG: <?php print $usng_val;?></TD></TR>	<!-- 9/13/08 -->
-<?php 					
+<?php
 						break;
 						case "1":
 ?>
@@ -1463,26 +1461,26 @@ var buttons_html = "";
 			<FORM NAME="to_edit_Form" METHOD="post" ACTION = "<?php print basename(__FILE__);?>?func=location&edit=true&id=<?php print $id; ?>"></FORM>
 							<!-- END Location VIEW -->
 <?php
-				if(!(my_is_float($lat))) {	
+				if(!(my_is_float($lat))) {
 					} else {
 					if(((float)$lat==$GLOBALS['NM_LAT_VAL']) && ((float)$lng==$GLOBALS['NM_LAT_VAL'])) {	// checks for facilities input in no maps mode 7/28/10
-						}											
+						}
 					}
 			$icon_file =  ((float)$lat==(float)$GLOBALS['NM_LAT_VAL'])? "./our_icons/question1.png" : "./markers/yellow.png";
 ?>
 <script>
-			map = gmaps_v3_init(null, 'map_canvas', 
-				<?php echo $lat;?>, 
-				<?php echo $lng;?>, 
-				<?php echo (get_variable('def_zoom')*2);?>, 
-				'<?php echo $icon_file;?>',  
-				<?php echo get_variable('maptype');?>, 
-				true);		
+			map = gmaps_v3_init(null, 'map_canvas',
+				<?php echo $lat;?>,
+				<?php echo $lng;?>,
+				<?php echo (get_variable('def_zoom')*2);?>,
+				'<?php echo $icon_file;?>',
+				<?php echo get_variable('maptype');?>,
+				true);
 </script>
 
 				<!-- 1408 -->
-				<A NAME="bottom" /> 
-				<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>			
+				<A NAME="bottom" />
+				<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>
 				</BODY>
 				</HTML>
 <?php
@@ -1494,7 +1492,7 @@ var buttons_html = "";
 		</HEAD>
 		<BODY onLoad = "ck_frames();" ><!-- <?php echo __LINE__ ;?> -->
 		<SCRIPT TYPE="text/javascript" src="./js/wz_tooltip.js"></SCRIPT>
-		<SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT>		
+		<SCRIPT TYPE="text/javascript" src="./js/elabel_v3.js"></SCRIPT>
 		<A NAME='top'>		<!-- 11/11/09 -->
 <?php
 		print "<SPAN STYLE = 'margin-left:100px;'>{$caption}</SPAN>";
@@ -1503,13 +1501,13 @@ var buttons_html = "";
 <?php
 		require_once('./incs/links.inc.php');
 		$required = 250 + (mysql_affected_rows()*40);
-		$facs_side_bar_height = .9;		// max height of units sidebar as decimal fraction of screen height - default is 0.6 (60%)		
-		$the_height = (integer)  min (round($facs_side_bar_height * $_SESSION['scr_height']), $required );		// set the max	
-		$user_level = is_super() ? 9999 : $_SESSION['user_id']; 
-			
+		$facs_side_bar_height = .9;		// max height of units sidebar as decimal fraction of screen height - default is 0.6 (60%)
+		$the_height = (integer)  min (round($facs_side_bar_height * $_SESSION['scr_height']), $required );		// set the max
+		$user_level = is_super() ? 9999 : $_SESSION['user_id'];
+
 		$heading = "Warn Locations - " . get_variable('map_caption');
 ?>
-		<DIV style='z-index: 1;'>		
+		<DIV style='z-index: 1;'>
 			<TABLE ID='outer' WIDTH='100%'>
 				<TR CLASS='spacer'>
 					<TD CLASS='spacer' COLSPAN='99' ALIGN='center'>&nbsp;
@@ -1530,10 +1528,10 @@ var buttons_html = "";
 								<TD ALIGN='center'><B>Warn Locations (<DIV id="num_locations" style="display: inline;"></DIV>)</B>
 								</TD>
 							</TR>
-							<TR class='odd'>	
+							<TR class='odd'>
 								<TD ALIGN='center'>Click line or icon for details
 								</TD>
-							</TR>			
+							</TR>
 							<TR>
 								<TD>
 									<DIV ID='side_bar' style="height: auto;  overflow-y: scroll; overflow-x: hidden;"></DIV>
@@ -1554,7 +1552,7 @@ var buttons_html = "";
 							</TR>
 						</TABLE>
 					</TD>
-					<TD WIDTH = '50%'>	
+					<TD WIDTH = '50%'>
 						<TABLE ID = 'MAP' BORDER=0>
 							<TR class='even'>
 								<TD ALIGN='center'>
@@ -1587,8 +1585,8 @@ var buttons_html = "";
 
 		<FORM NAME='can_Form' METHOD="post" ACTION = "<?php print  basename(__FILE__);?>?func=location"></FORM>
 		<!-- 1452 -->
-		<A NAME="bottom" /> 
-		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>			
+		<A NAME="bottom" />
+		<DIV ID='to_top' style="position:fixed; bottom:50px; left:50px; height: 12px; width: 10px;" onclick = "location.href = '#top';"><IMG SRC="markers/up.png"  BORDER=0></div>
 		</BODY>				<!-- END LOCATION LIST and ADD -->
 <?php
 		$buttons = "<TR><TD COLSPAN=99 ALIGN='center'>";

@@ -12,7 +12,7 @@ function dump($variable) {
 
 //Original script by Tom Chaplin, http://www.carterlake.org/weatherphp.php
 //Modified by Kevin Bednar to add write-to-file and write-to-db functionality
-//to allow for use 
+//to allow for use
 // Force Defaults for Zone and County
 if ( ! isset($_REQUEST['warnzone']) )
         $_REQUEST['warnzone']="NJZ001";
@@ -60,7 +60,7 @@ $targetwarn ="";
 //Display this one first no matter what!
 
 	while ($i < count($warnheaders)):
-		if (preg_match("/Tornado Warning/i", $warnheaders[$i])) {  
+		if (preg_match("/Tornado Warning/i", $warnheaders[$i])) {
 			$targetwarn = $warnheaders[$i];
 			$targettext = $warntext[$i];
 			$targettext = explode("$$",$targettext);
@@ -75,7 +75,7 @@ $targetwarn ="";
 	if ($flag == 0) {
 		$i = 0;
 		while ($i < count($warnheaders)):
-			if (preg_match("/Warning/i", $warnheaders[$i])) {  
+			if (preg_match("/Warning/i", $warnheaders[$i])) {
 			$targetwarn = $warnheaders[$i];
 			$targettext = $warntext[$i];
 			$targettext = explode("$$",$targettext);
@@ -91,7 +91,7 @@ $targetwarn ="";
 	if ($flag == 0) {
 		$i = 0;
 		while ($i < count($warnheaders)):
-			if (preg_match("/Watch/i", $warnheaders[$i])) {  
+			if (preg_match("/Watch/i", $warnheaders[$i])) {
 			$targetwarn = $warnheaders[$i];
 			$targettext = $warntext[$i];
 			$targettext = explode("$$",$targettext);
@@ -107,7 +107,7 @@ $targetwarn ="";
 	if ($flag == 0) {
 		$i = 0;
 		while ($i < count($warnheaders)):
-			if (preg_match("/Advisory/i", $warnheaders[$i])) {  
+			if (preg_match("/Advisory/i", $warnheaders[$i])) {
 			$targetwarn = $warnheaders[$i];
 			$targettext = $warntext[$i];
 			$targettext = explode("$$",$targettext);
@@ -123,7 +123,7 @@ $targetwarn ="";
 	if ($flag == 0) {
 		$i = 0;
 		while ($i < count($warnheaders)):
-			if (preg_match("/Statement/i", $warnheaders[$i])) {  
+			if (preg_match("/Statement/i", $warnheaders[$i])) {
 			$targetwarn = $warnheaders[$i];
 			$targettext = $warntext[$i];
 			$targettext = explode("$$",$targettext);
@@ -159,7 +159,7 @@ $targetwarn ="";
 	    		$warnlist = $warnlist . '<br><a href="http://www.crh.noaa.gov/showsigwx.php?warnzone=' . $warnzone. '&warncounty=' . $warncounty . '&local_place1=' . $warnlocal . '&product1=' . $warnheaderplus . '" target="_new">' . $warnheaders[$i] . '</a>';
 		}
 	}
-    
+
 }
 
 echo "<b>";

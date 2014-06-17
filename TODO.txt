@@ -1,6 +1,6 @@
  Tickets TODO
 -------------------
-Note: some of these are discussion starters, no guarantee for implementation. Email developer re any thoughts on the following.                
+Note: some of these are discussion starters, no guarantee for implementation. Email developer re any thoughts on the following.
 
 1. Provide for user-defined unit types, including icon color - COMPLETE
 2. Provide for live icon creation. - COMPLETE

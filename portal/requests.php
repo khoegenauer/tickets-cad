@@ -1,15 +1,7 @@
 <?php
-/**
- *
- *
- * @package requests.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version string
- */
-/*
-9/10/13 - requests.php - lists pending / open requests for Tickets user
-*/
+
+//9/10/13 - requests.php - lists pending / open requests for Tickets user
+
 if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}
 error_reporting (E_ALL  ^ E_DEPRECATED);
 @session_start();
@@ -268,8 +260,8 @@ function get_requests() {
 		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 12px; border-right: 1px solid #FFFFFF;'><?php print get_text('Status');?></TD>";
 		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 12px; border-right: 1px solid #FFFFFF;'><?php print get_text('Requested');?></TD>";
 		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 12px; border-right: 1px solid #FFFFFF;'><?php print get_text('Updated');?></TD>";
-		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 12px; border-right: 1px solid #FFFFFF;'><?php print get_text('By');?></TD>";			
-		the_string += "</TR>";		
+		the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 12px; border-right: 1px solid #FFFFFF;'><?php print get_text('By');?></TD>";
+		the_string += "</TR>";
         theClass = "background-color: #CECECE";
         for (var key in the_requests) {
             if (the_requests[key][0] == "<?php print gettext('No Current Requests');?>") {
@@ -289,7 +281,7 @@ function get_requests() {
 				the_string += "<TD style='" + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap; border-right: 1px solid #707070;' onClick=\"window.open('request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][4] + "</TD>";
 				the_string += "<TD style='" + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap; border-right: 1px solid #707070;' onClick=\"window.open('request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][13] + "</TD>";
 				the_string += "<TD style='width: 25%; " + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap: sWrap; border-right: 1px solid #707070;' onClick=\"window.open('request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][14] + "</TD>";
-				the_string += "<TD style='" + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap; border-right: 1px solid #707070;' " + the_onclick + ">" + the_requests[key][16] + "</TD>";	
+				the_string += "<TD style='" + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap; border-right: 1px solid #707070;' " + the_onclick + ">" + the_requests[key][16] + "</TD>";
 				the_string += "<TD style='" + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap; border-right: 1px solid #707070;' onClick=\"window.open('request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][18] + "</TD>";
 				the_string += "<TD style='" + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap; border-right: 1px solid #707070;' onClick=\"window.open('request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][25] + "</TD>";
 				the_string += "<TD style='" + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap; border-right: 1px solid #707070;' onClick=\"window.open('request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][26] + "</TD>";
@@ -341,7 +333,7 @@ function requests_cb2(req) {
 	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 12px; border-right: 1px solid #FFFFFF;'><?php print get_text('Status');?></TD>";
 	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 12px; border-right: 1px solid #FFFFFF;'><?php print get_text('Requested');?></TD>";
 	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 12px; border-right: 1px solid #FFFFFF;'><?php print get_text('Updated');?></TD>";
-	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 12px; border-right: 1px solid #FFFFFF;'><?php print get_text('By');?></TD>";			
+	the_string += "<TD class='heading' style='" + width + "font-weight: bold; font-size: 12px; border-right: 1px solid #FFFFFF;'><?php print get_text('By');?></TD>";
     the_string += "</TR>";
     theClass = "background-color: #CECECE";
     for (var key in the_requests) {
@@ -362,7 +354,7 @@ function requests_cb2(req) {
 			the_string += "<TD style='" + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap; border-right: 1px solid #707070;' onClick=\"window.open('request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][4] + "</TD>";
 			the_string += "<TD style='" + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap; border-right: 1px solid #707070;' onClick=\"window.open('request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][13] + "</TD>";
 			the_string += "<TD style='width: 25%; " + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap: sWrap; border-right: 1px solid #707070;' onClick=\"window.open('request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][14] + "</TD>";
-			the_string += "<TD style='" + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap; border-right: 1px solid #707070;' " + the_onclick + ">" + the_requests[key][16] + "</TD>";	
+			the_string += "<TD style='" + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap; border-right: 1px solid #707070;' " + the_onclick + ">" + the_requests[key][16] + "</TD>";
 			the_string += "<TD style='" + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap; border-right: 1px solid #707070;' onClick=\"window.open('request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][18] + "</TD>";
 			the_string += "<TD style='" + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap; border-right: 1px solid #707070;' onClick=\"window.open('request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][25] + "</TD>";
 			the_string += "<TD style='" + the_requests[key][17] + " white-space: normal; word-wrap: break-word; -ms-word-wrap : sWrap; border-right: 1px solid #707070;' onClick=\"window.open('request.php?id=" + the_request_id + "','view_message','width=600,height=600,titlebar=1, location=0, resizable=1, scrollbars=yes, status=0,toolbar=0,menubar=0,location=0, right=100,top=300,screenX=500,screenY=300')\">" + the_requests[key][26] + "</TD>";
@@ -373,14 +365,14 @@ function requests_cb2(req) {
         $('all_requests').innerHTML = the_string;
     }
 /**
- * 
+ *
  * @returns {undefined}
  */
 function summary_get() {
 	summary_interval = window.setInterval('do_summary_loop()', 10000);
-	}	
+	}
 /**
- * 
+ *
  * @returns {undefined}
  */
 function do_requests_loop() {
@@ -389,7 +381,7 @@ function do_requests_loop() {
 	sendRequest (url, summary_cb2, "");
 	}
 /**
- * 
+ *
  * @returns {undefined}
  */
 function get_summary() {
@@ -401,7 +393,7 @@ function get_summary() {
 		var theColor = "style='background-color: #CECECE; color: #000000;'";
 		if(the_summary[0] > 5) { theColor = "style='background-color: red; color: yellow; font-weight: bold;'"; }
 		var numOpen = "<TD class='summ_td_label'>Requests Open (not accepted): </TD><TD class='summ_td_data' " + theColor + ">" + the_summary[0] + "</TD>";
-		if(the_summary[1] > 5) { theColor = "style='background-color: red; color: yellow; font-weight: bold;'"; }			
+		if(the_summary[1] > 5) { theColor = "style='background-color: red; color: yellow; font-weight: bold;'"; }
 		var numAcc = "<TD class='summ_td_label'>Requests Accepted (not resourced): </TD><TD class='summ_td_data'>" + the_summary[1] + "</TD>";
 		var numComp = "<TD class='summ_td_label'>Requests Completed: </TD><TD class='summ_td_data'>" + the_summary[3] + "</TD>";
 		if(the_summary[7] > 5) { theColor = "style='background-color: red; color: yellow; font-weight: bold;'"; }
@@ -413,20 +405,20 @@ function get_summary() {
 		summaryText += "<TR>" + totTent + totCan + totDec + "</TR>";
 		summaryText += "</TABLE>";
 		$('theSummary').innerHTML = summaryText;
-		summary_get();			
+		summary_get();
 		}
 	}
 /**
- * 
+ *
  * @param {type} req
  * @returns {undefined}
- */	
+ */
 function summary_cb2(req) {
 	var the_summary=JSON.decode(req.responseText);
 	var theColor = "style='background-color: #CECECE; color: #000000;'";
 	if(the_summary[0] > 5) { theColor = "style='background-color: red; color: yellow; font-weight: bold;'"; }
 	var numOpen = "<TD class='summ_td_label'>Requests Open (not accepted): </TD><TD class='summ_td_data' " + theColor + ">" + the_summary[0] + "</TD>";
-	if(the_summary[1] > 5) { theColor = "style='background-color: red; color: yellow; font-weight: bold;'"; }			
+	if(the_summary[1] > 5) { theColor = "style='background-color: red; color: yellow; font-weight: bold;'"; }
 	var numAcc = "<TD class='summ_td_label'>Requests Accepted (not resourced): </TD><TD class='summ_td_data'>" + the_summary[1] + "</TD>";
 	var numComp = "<TD class='summ_td_label'>Requests Completed: </TD><TD class='summ_td_data'>" + the_summary[3] + "</TD>";
 	if(the_summary[7] > 5) { theColor = "style='background-color: red; color: yellow; font-weight: bold;'"; }
@@ -440,7 +432,7 @@ function summary_cb2(req) {
 	$('theSummary').innerHTML = summaryText;
 	}
 /**
- * 
+ *
  * @returns {undefined}
  */
 function hide_closed() {
@@ -450,7 +442,7 @@ function hide_closed() {
 	get_requests();
 	}
 /**
- * 
+ *
  * @returns {undefined}
  */
 function show_closed() {
@@ -468,7 +460,7 @@ function do_logout() {
     document.gout_form.submit();			// send logout
     }
 /**
- * 
+ *
  * @returns {undefined}
  */
 function stop_timers() {
@@ -481,7 +473,7 @@ function stop_timers() {
 <BODY onLoad="ck_frames(); location.href = '#top'; get_requests(); get_summary();" onUnload = "stop_timers();";>
 	<DIV id='the_banner' class='heading' style='position: fixed; left: 2%; top: 2%; width:92%; border: 2px outset #CECECE; padding: 10px; text-align: center; font-size: 28px; height: 50px;'>Requests
 	<SPAN id='showBut' class='plain' onMouseOver='do_hover();' onMouseOut='do_plain();' onClick='show_closed();'>Show All</SPAN>
-	<SPAN id='hideBut' class='plain' style='display: none;' onMouseOver='do_hover();' onMouseOut='do_plain();' onClick='hide_closed();'>Hide Closed</SPAN>	
+	<SPAN id='hideBut' class='plain' style='display: none;' onMouseOver='do_hover();' onMouseOut='do_plain();' onClick='hide_closed();'>Hide Closed</SPAN>
 	<SPAN ID='export_but' CLASS='plain' onMouseOver="do_hover(this.id);" onMouseOut="do_plain(this.id);" onClick="window.location.href='csv_export.php'"><?php print get_text('Export Requests to CSV');?></SPAN>
 	<SPAN id='theSummary' style='height: 20px; width: 60%; float: right;'></SPAN>
 	</DIV>

@@ -1,11 +1,5 @@
 <?php
-/*
-2/9/09 initial version
-2/11/09 error messages revised
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-*/
-error_reporting(E_ALL);									// 10/1/08
-
+include'./incs/error_reporting.php';
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10
 $api_key = get_variable('gmaps_api_key');
@@ -33,8 +27,8 @@ $api_key = get_variable('gmaps_api_key');
 			}
 		return elements;
 		}
-	
-	
+
+
 	var myPano;
 	var lat = <?php print $_GET['thelat'];?>;
 	var lng =  <?php print $_GET['thelng'];?>;
@@ -44,7 +38,7 @@ $api_key = get_variable('gmaps_api_key');
 		myPano = new GStreetviewPanorama(document.getElementById("pano"), panoramaOptions);
 		GEvent.addListener(myPano, "error", handleNoFlash);
 		}
-	
+
 	function handleNoFlash(errorCode) {				// 2/11/09
 		if (errorCode == "600") {
 			alert("No StreetView this location")
@@ -55,7 +49,7 @@ $api_key = get_variable('gmaps_api_key');
 			self.close();
 			}
 		}			// end function handleNoFlash()
-		
+
 	</script>
 	</head>
 	<body onLoad = "do_the_view()" onUnload="GUnload()">

@@ -1,25 +1,5 @@
 <?php
-/**
- * @package track_u.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version string
- */
-/*
-original, converted from tracks.php
-10/4/08	added auto-refresh
-10/4/08	corrected to include all point into bounding box
-10/4/08	added direction icons
-3/18/09 'aprs_poll' to 'auto_poll'
-4/8/09 correction to icon names, 'small text' added
-7/29/09	Changed titlebar to show Name and Handle
-8/2/09 Added code to get maptype variable and switch to change default maptype based on variable setting
-7/16/10 detailmap.setCenter correction
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-8/13/10 map.setUIToDefault();
-8/19/10 alternative source of lookup argument
-3/15/11 changed stylesheet.php to stylesheet.php
-*/
+
 
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10
@@ -63,7 +43,7 @@ function list_tracks($addon = '', $start) {
 	var which;
 	var i = 0;			// sidebar/icon index, track point index
 	var points = false;								// none
-	
+
 	function $() {									// 1/21/09
 		var elements = new Array();
 		for (var i = 0; i < arguments.length; i++) {
@@ -86,7 +66,7 @@ function list_tracks($addon = '', $start) {
 				google.maps.event.addListener(marker, "click", function() {		// 1811 - here for both side bar and icon click
 					try  {open_iw.close()} catch (e) {;}
 					map.setCenter(point, 8);
-					var infowindow = new google.maps.InfoWindow({ content: html, maxWidth: 400});	 
+					var infowindow = new google.maps.InfoWindow({ content: html, maxWidth: 400});
 					infowindow.open(map, marker);
 					open_iw = infowindow;
 					which = id;
@@ -97,7 +77,7 @@ function list_tracks($addon = '', $start) {
 				google.maps.event.addListener(marker, "click", function() {		// 1811 - here for both side bar and icon click
 					try  {open_iw.close()} catch (e) {;}
 					map.setCenter(point, 8);
-					var infowindow = new google.maps.InfoWindow({ content: html, maxWidth: 400});	 
+					var infowindow = new google.maps.InfoWindow({ content: html, maxWidth: 400});
 					infowindow.open(map, marker);
 					open_iw = infowindow;
 					which = id;
@@ -112,7 +92,7 @@ function list_tracks($addon = '', $start) {
 				google.maps.event.addListener(marker, "click", function() {		// 1811 - here for both side bar and icon click
 					try  {open_iw.close()} catch (e) {;}
 					map.setCenter(point, 8);
-					var infowindow = new google.maps.InfoWindow({ content: html, maxWidth: 400});	 
+					var infowindow = new google.maps.InfoWindow({ content: html, maxWidth: 400});
 					infowindow.open(map, marker);
 					open_iw = infowindow;
 					which = id;
@@ -146,16 +126,16 @@ function list_tracks($addon = '', $start) {
     var side_bar_html = "<TABLE border=0 CLASS='sidebar' ID='tbl_responders'>";
     side_bar_html +="<TR><TD ALIGN='center' COLSPAN=99><?php print gettext('Mouseover for details');?></TD></TR>";
 
-	var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);	
+	var myLatlng = new google.maps.LatLng(<?php print get_variable('def_lat');?>, <?php print get_variable('def_lng');?>);
 	var mapOptions = {
 		zoom: <?php print get_variable('def_zoom');?>,
 		center: myLatlng,
 		panControl: true,
 	    zoomControl: true,
 	    scaleControl: true
-		}	
+		}
 
-	map = new google.maps.Map($('map_canvas'), mapOptions);				// 
+	map = new google.maps.Map($('map_canvas'), mapOptions);				//
 <?php
 $maptype = get_variable('maptype');	// 08/02/09
 
@@ -188,7 +168,7 @@ $maptype = get_variable('maptype');	// 08/02/09
 	listIcon.iconAnchor = new google.maps.Point(8, 28);
 	listIcon.infoWindowAnchor = new google.maps.Point(9, 2);
 	listIcon.infoShadowAnchor = new google.maps.Point(18, 25);
-	
+
 	var newIcon = new google.maps.MarkerImage("./markers/white.png");
 	newIcon.shadow = "./markers/sm_shadow.png";
 	newIcon.iconSize = new google.maps.Size(20, 34);
@@ -206,7 +186,7 @@ $maptype = get_variable('maptype');	// 08/02/09
 		} else {
 			map.setCenter(center, currzoom);
 		}
-		gmarkers[which].setMap(map);		
+		gmarkers[which].setMap(map);
         });
 <?php
 
@@ -214,7 +194,7 @@ $maptype = get_variable('maptype');	// 08/02/09
     $toedit = "";
 
 	$eols = array ("\r\n", "\n", "\r");		// all flavors of eol
-	
+
     $query = "SELECT DISTINCT `source`, `latitude`, `longitude` ,`course` ,`speed` ,`altitude` ,`closest_city` ,
         `status` , `packet_date`,
         UNIX_TIMESTAMP(updated) AS `updated`
@@ -236,7 +216,7 @@ $maptype = get_variable('maptype');	// 08/02/09
                 $day = substr ($row_tr['packet_date'] ,  0,  10);
                 $sidebar_line .="<TR CLASS='" . $evenodd[$i%2] . "'><TD COLSPAN=99><U>" . $day . "</U></TD></TR>\n";
 				} else {
-				$sidebar_line = "<TABLE border=0>\n";			
+				$sidebar_line = "<TABLE border=0>\n";
 				$sidebar_line .="<TR CLASS='" . $evenodd[$i%2] . "' onClick='myclick(" . $i . ");'>";		// 4/8/09
             $sidebar_line .= "<TD CLASS = 'text_small' TITLE='" . $row_tr['packet_date'] . "'>&nbsp;" .  	substr ($row_tr['packet_date'] , 11, 5) ." </TD>\n";
             $sidebar_line .= "<TD CLASS = 'text_small' TITLE='" . $row_tr['latitude']. ", ". $row_tr['longitude'] . "'>&nbsp;" . shorten($row_tr['latitude'], 8) ."</TD>\n";
@@ -244,7 +224,7 @@ $maptype = get_variable('maptype');	// 08/02/09
             $sidebar_line .= "<TD CLASS = 'text_small' TITLE='" . $row_tr['closest_city'] . "'>&nbsp;" .  	shorten($row_tr['closest_city'], 16) ."</TD>\n";
             $sidebar_line .="</TR>\n";
 				$sidebar_line .="</TABLE>\n";
-				
+
 ?>
             j++;
 				do_sidebar ("<?php print str_replace($eols, "", $sidebar_line); ?>", j);		// as single string

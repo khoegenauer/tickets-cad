@@ -56,7 +56,7 @@ if (!(empty($_POST))) {
  * @since
  */
         function test_instam($key) {		// returns array, or FALSE
-			$start_at = time();			
+			$start_at = time();
 
             // snap(basename(__FILE__) . __LINE__, $key_val);
 
@@ -87,13 +87,13 @@ if (!(empty($_POST))) {
 				echo "<br /><center><h3>Instamapper server says:</h3></center><br />";
 				echo "<br /><center><h3><i>{$data}</i></h3></center><br />";
 				return false;
-				}			
+				}
 			else {
 				$data = get_remote($the_url, FALSE);		// no JSON decode - 4/23/11
 				$arr = @json_decode( $data );
 //				dump(gettype($arr));
-				
-				$temp = @get_object_vars($arr[0]);	
+
+				$temp = @get_object_vars($arr[0]);
 
 				echo "<center>\n<table style = 'margin-top: 6px;'>";
 				echo "<tr><td colspan=2 align='center'><h3>Results</h3></td></tr>";
@@ -102,7 +102,7 @@ if (!(empty($_POST))) {
 					}
 				echo "<tr><td colspan=2 align='center'><h3>Time: {$elapsed} seconds</h3></td></tr>";
 				echo "</table>";
-				
+
             $ary_data = explode ("\n", $data);
 
             return $ary_data;

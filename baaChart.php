@@ -23,13 +23,13 @@ USAGE SAMPLE
     $mygraph->addDataSeries('L',LINE_MARK_NONE,"30,45,50,55,52,60","Europe");
     $mygraph->setBgColor(255,255,255,0);
     $mygraph->drawGraph();
-                                   
+
 */
     /********************************************************
     *                      defines                          *
     ********************************************************/
     define ('VERSION', 'baaChart 1.4');
-    
+
     define ('PIE_NONE',0);
     define ('PIE_LEGEND_PCENT',1);
     define ('PIE_LEGEND_VALUE',2);
@@ -116,14 +116,14 @@ class baaChart  {
     *                   public methods                      *
     ********************************************************/
 /**
- * 
+ *
  * @param type $awidth
  * @param type $aheight
  * @param type $pic
  * @param type $clip
  * @param type $picx
  * @param type $picy
- */    
+ */
     function baaChart ($awidth, $aheight=0, $pic='', $clip=0, $picx=0, $picy=0) {
         $this->width = $awidth;
         $this->height = $aheight==0 ? floor($awidth / 1.616) : $aheight;

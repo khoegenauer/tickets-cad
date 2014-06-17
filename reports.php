@@ -1,63 +1,6 @@
 <?php
-/**
- * @package reports.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version string
- */
-/*
-6/6/08 revised to accommodate deleted incident and unit records, these identified by a # at its index value
-8/7/08 added ACTION & PATIENT delete types
-8/9/08 calculate graphics width
-8/15/08	mysql_fetch_array to mysql_fetch_assoc - performance
-8/15/08	handle dropped tickets
-10/1/08	added error reporting
-11/21/08 removed istest.inc.php include
-1/21/09 corrected log info handling
-1/21/09 added show butts - re button menu
-1/31/09 dispatch function added
-2/2/09 accommodate trashed unit status values
-2/6/09 added dispatch statistics
-2/8/09 added selected unit/incident
-2/24/09 added dollar function
-3/23/09 fixes per freitas email
-4/11/09 responder sort by name
-8/3/09 Added switch function to change date format dependant on locale setting. Fixed initial display to default to unit report
-8/10/09 deleted locale = '2'
-10/31/09 corrected  dispatch log no-data display
-3/18/10 added incident log report
-3/23/10 added optgroups to select lists
-3/24/10 trim() added
-3/25/10 log codes inc file added
-4/4/10 heading alignments
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-9/27/10 added 'after-action' report
-10/4/10 added incident management report
-11/29/10 locale == 2 handling added
-12/3/10 get_text added for captions
-12/30/10 sql correction applied
-1/14/10 'error' code handling added to Station report
-1/16/11 get_text 'Units' added
-3/15/11 added reference to stylesheet.php for revisable day night colors.
-3/23/11 fix for date variable not defined when reports submitted with $_POST set
-4/1/11 Fixed array of incident status types to include scheduled.
-4/12/11 Revised sql to reduce un-needed fields
-4/14/11 added shorten() width factors as a function of user monitor width
-4/24/11  problemstart data added to dispatch report
-4/5/11 get_new_colors() added
-6/4/11  added facility actions LOG_CALL_U2FENR, etc. to the test
-6/8/11 do_dispreport complete re-write, using problemstart as base for elapsed times
-7/22/11 - correction per MC email.
-7/24/11 corrections to qualifier per MC email.
-11/4/11 - AS corrections to Unit log per AJ email; handle final unprinted log entry
-5/29/12 - AS corrections to avoid using mysql unixtimestamp and SQL to reduce data load returned
-10/24/12 - rewrite dispatch report to use assigns, vs. log data
-12/1/2012 - re-do re unix SQL time replacement
-1/7/2013 - date correction, use setting disp_stat for column headings
-2/4/2013 - Change to after action report to add associated messages to ticket detail.
-5/31/2013 - strtotime() applied for date arithnetic/conversion
-*/
-error_reporting(E_ALL);									// 10/1/08
+
+include'./incs/error_reporting.php';
 $asof = "3/24/10";
 
 @session_start();
@@ -69,8 +12,6 @@ $img_width  = round(.8*$_SESSION['scr_width']/3);		//8/9/08
 if ((($istest)) && (!empty($_GET))) {dump ($_GET);}
 if ((($istest)) && (!empty($_POST))) {dump ($_POST);}
 
-//$ionload =  ((isset($_POST) && isset($_POST['frm_group']) && $_POST['frm_group']=='i'))? " inc_onload();": "";
-
 extract($_GET);
 extract($_POST);
 
@@ -79,15 +20,15 @@ if(($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']) && (intval(get_variable('restr
 	exit();
 	}
 
-$locale = get_variable('locale');	// 08/03/09
+$locale = get_variable('locale');
 
-$nature = get_text("Nature");			// 12/03/10
+$nature = get_text("Nature");
 $disposition = get_text("Disposition");
 $patient = get_text("Patient");
 $incident = get_text("Incident");
 $incidents = get_text("Incidents");
 
-$full_w = (@$_POST['frm_full_w']==1)? 100: 1;		// normal (shortened) or not
+$full_w = (@$_POST['frm_full_w']==1)? 100: 1;
 
 $width_factors = array( (float) .01, (float) .013, (float) .016, (float) .032);			// 4/14/11
 $w_tiny = (int) floor($_SESSION['scr_width'] * $width_factors[0] * $full_w);
@@ -95,12 +36,6 @@ $w_small = (int) floor($_SESSION['scr_width'] * $width_factors[1] * $full_w);
 $w_medium = (int) floor($_SESSION['scr_width'] * $width_factors[2] * $full_w);
 $w_large = (int) floor($_SESSION['scr_width'] * $width_factors[3] * $full_w);
 
-/*
-$w_tiny = (int) floor($_SESSION['scr_width'] * $width_factors[0] * 10 );
-$w_small = (int) floor($_SESSION['scr_width'] * $width_factors[1] * 10);
-$w_medium = (int) floor($_SESSION['scr_width'] * $width_factors[2] * 10);
-$w_large = (int) floor($_SESSION['scr_width'] * $width_factors[3] * 10);
-*/
 
 $evenodd = array ("even", "odd");	// CLASS names for alternating tbl row colors
 // ================ report-specific variables ===============================================
@@ -225,93 +160,49 @@ p.page { page-break-after: always; }
         return elements;
         }
 
-    /* function $() Sample Usage:
-    var obj1 = document.getElementById('element1');
-    var obj2 = document.getElementById('element2');
-    function alertElements() {
-      var i;
-      var elements = $('a','b','c',obj1,obj2,'d','e');
-      for ( i=0;i
-    */
-/**
- *
- * @returns {unresolved}
- */
+
     String.prototype.trim = function () {					// 3/24/10
 
         return this.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1");
         };
-/**
- *
- * @returns {undefined}
- */
+
     function get_new_colors() {								// 4/5/11
         window.location.href = '<?php print basename(__FILE__);?>';
         }
-/**
- *
- * @param {type} the_form
- * @returns {undefined}
- */
+
     function do_full_w(the_form) {							// 4/24/11
         var the_val = (the_form.full.checked)? 1:0;
         document.sel_form.frm_full_w.value=document.udr_form.frm_full_w.value=document.ugr_form.frm_full_w.value=document.log_form.frm_full_w.value=the_val;
         }
-/**
- *
- * @param {type} id
- * @returns {unresolved}
- */
+
     function viewT(id) {			// view ticket
 
         return;
-//		document.T_nav_form.id.value=id;
-//		document.T_nav_form.action='main.php';
-//		document.T_nav_form.submit();
+
         }
-/**
- *
- * @param {type} id
- * @returns {unresolved}
- */
+
     function viewU(id) {			// view unit
 
         return;
-//		document.U_nav_form.id.value=id;
-//		document.U_nav_form.submit();
+
         }
-/**
- *
- * @param {type} date_in
- * @returns {undefined}
- */
+
     function toUDRnav(date_in) {					// daily report
         document.udr_form.frm_date.value=date_in;	// set date params
         document.udr_form.frm_group.value=which;
-//		document.udr_form.frm_resp_sel.value=document.sel_form.frm_ticket_id.options[document.sel_form.frm_ticket_id.selectedIndex].value;	// 2/8/09
-//		document.udr_form.frm_tick_sel.value=document.sel_form.frm_unit_id.options[document.sel_form.frm_unit_id.selectedIndex].value;
-        document.udr_form.frm_resp_sel.value=document.sel_form.frm_unit_id.options[document.sel_form.frm_unit_id.selectedIndex].value;	// 2/8/09
+        document.udr_form.frm_resp_sel.value=document.sel_form.frm_unit_id.options[document.sel_form.frm_unit_id.selectedIndex].value;
         document.udr_form.frm_tick_sel.value=document.sel_form.frm_ticket_id.options[document.sel_form.frm_ticket_id.selectedIndex].value;
         document.udr_form.submit();
         }
-/**
- *
- * @param {type} instr
- * @returns {undefined}
- */
+
     function do_ugr(instr) {						// select for generic
         document.ugr_form.frm_func.value=instr;
         document.ugr_form.frm_group.value=which;
-//		document.ugr_form.frm_resp_sel.value=document.sel_form.frm_ticket_id.options[document.sel_form.frm_ticket_id.selectedIndex].value;	// 2/8/09
-//		document.ugr_form.frm_tick_sel.value=document.sel_form.frm_unit_id.options[document.sel_form.frm_unit_id.selectedIndex].value;
         document.ugr_form.frm_resp_sel.value=document.sel_form.frm_unit_id.options[document.sel_form.frm_unit_id.selectedIndex].value;	// 2/8/09
         document.ugr_form.frm_tick_sel.value=document.sel_form.frm_ticket_id.options[document.sel_form.frm_ticket_id.selectedIndex].value;
         document.ugr_form.submit();
-        }		// end do_ugr()
-/**
- *
- * @returns {undefined}
- */
+        }
+
     function ck_frames() {		// ck_frames()
         if (self.location.href==parent.location.href) {
             self.location.href = 'index.php';
@@ -319,12 +210,8 @@ p.page { page-break-after: always; }
         else {
             parent.upper.show_butts();										// 1/21/09
             }
-        }		// end function ck_frames()
-/**
- *
- * @param {type} id
- * @returns {undefined}
- */
+        }
+
     function open_tick_window(id) {				// 4/14/11
         var url = "single.php?ticket_id="+ id;
         var tickWindow = window.open(url, 'mailWindow', 'resizable=1, scrollbars, height=600, width=720, left=100,top=100,screenX=100,screenY=100');
@@ -445,38 +332,12 @@ p.page { page-break-after: always; }
             }		// end switch ()
         }				// end function date range()
 
-/**
- * date_part
- * Insert description here
- *
- * @param $in_date
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
     function date_part($in_date) {						// return date part of date/time string
         $temp = explode (" ", $in_date);
 
         return $temp[0];
         }		// end function date_part()
 
-/**
- * time_part
- * Insert description here
- *
- * @param $in_date
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
     function time_part($in_date) {						// "2007-12-02 21:07:30"
         $temp = explode (" ", $in_date);
 
@@ -485,20 +346,6 @@ p.page { page-break-after: always; }
 
 // =================================================== DISPATCH LOG =========================================	1/31/09
 
-/**
- * do_dispreport
- * Insert description here
- *
- * @param $date_in
- * @param $func_in
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
     function do_dispreport($date_in, $func_in) {				// $frm_date, $mode as params - 6/8/11
         global $nature, $disposition, $patient, $incident, $incidents;	// 12/3/10
         global $evenodd, $types;
@@ -1056,8 +903,7 @@ p.page { page-break-after: always; }
             print "</TR>\n";
             $inc_types = array();
 
-            while ($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)) {			// 8/15/08 main loop - top
-//				dump ($row);
+            while ($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)) {
                 if ($row['code']<20) {
                     if (array_key_exists($row['in_types_id'], $inc_types)) {
                         $inc_types[$row['in_types_id']]++;
@@ -1066,7 +912,7 @@ p.page { page-break-after: always; }
                         $inc_types[$row['in_types_id']] = 1;
                         }
                     print "<TR CLASS='" . $evenodd[$i%2] . "'>";
-                    if (!(date("z", strtotime($row['when'])) == $curr_date)) {								// date change?
+                    if (!(date("z", strtotime($row['when'])) == $curr_date)) {
                         print "<TD>" . date ('D, M j', strtotime($row['when'])) ."</TD>";
                         $curr_date = date("z", strtotime($row['when']));
                         }
@@ -1079,7 +925,6 @@ p.page { page-break-after: always; }
                         print "<TD TITLE = '" .
                         $row['ticket_id'] . "' CLASS='" .
                         $severity_class . "' onClick = 'viewT(" .
-//						$row['tick_severity'] . "' onClick = 'viewT(" .
                         $row['ticket_id'] . ");'>" .
                         $the_ticket . "</TD>";
                         }
@@ -1088,15 +933,14 @@ p.page { page-break-after: always; }
                     print "</TR>\n";
                     $i++;
                     }
-                }		// end while($row = ...)
-//			dump ($inc_types);
+                }
+
 
         $query2 = "SELECT * FROM `$GLOBALS[mysql_prefix]ticket` WHERE id IN (" . $query . ")";
-//		dump ($query2);
         $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), __FILE__, __LINE__);
             while ($row = stripslashes_deep(mysql_fetch_assoc($result), MYSQL_ASSOC)) {			//
 //				dump ($row['id']);
-                }																// end while($row ...
+                }
 //		graphics date range in db format and calculated img width - when` < '2013-06-01 23:59:59&p3=391'  AND `code` = '10'
 $s_urlstr =  "sever_graph.php?p1=" . 		urlencode($from_to[0]) . "&p2=" . urlencode($from_to[1]) . "&p3={$img_width}";	//8/9/08
 $t_urlstr =  "inc_types_graph.php?p1=" . 	urlencode($from_to[0]) . "&p2=" . urlencode($from_to[1]) . "&p3={$img_width}";

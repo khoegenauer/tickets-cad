@@ -1,16 +1,10 @@
 <?php
-/**
- * @package main.php
- * @author John Doe <john.doe@example.com>
- * @since
- * @version
- */
 
 include'./incs/error_reporting.php';
 $units_side_bar_height = .6;		// max height of units sidebar as decimal fraction of screen height - default is 0.6 (60%)
-$do_blink = TRUE;					// or FALSE , only - 4/11/10
+$do_blink = TRUE;
 $ld_ticker = "";
-session_start();						//
+session_start();
 
 require_once './incs/functions.inc.php';
 

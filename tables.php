@@ -1,51 +1,5 @@
 <?php
-/**
- * @package tables.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version
- */
-// Made available under the terms of GNU General Public License (GPL) http://www.gnu.org/copyleft/gpl.html
-/*
-Released Jul 23, 2006
-Enumerated types added Jul 20
-Dynarch JS Calendar functions added
-improvements to datatype 'time' handling
-9/5/08 corrections to max length
-9/18/08 changes to $_POST handling, frame jump prevention and login check
-12/20/08 named fields as hiddens
-12/26/08 set tables directory as repository for custom processors
-12/29/08 icon revised to img filename - superceded 1/4/09
-1/5/09 aprs added to unit_types schema
-1/29/09 corrected if(...)
-7/7/09	revised textarea limit criterion, added Script-date meta
-8/20/09	handle prefixes correctly
-10/6/09 Added Facilities icons handling
-10/10/09 quotes corrected
-10/13/09 referential integrity checks added
-10/20/09 disallow edit/delete unit status = 'available'
-11/2/09 correction to 10/20/09 entry
-11/8/09 ereg_replace() deprecated and replaced
-2/8/10 PHP parseInt added, plus c_un_status.php, u_un_status.php
-2/25/10 'disallow' made inactive
-6/21/10 NULL vs empty for real types when empty, fnQuote_Smart to case 'pu', length and maxlength corrections
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-9/5/10 fix to session_start();
-9/12/10 's' => 'l'
-9/15/10 added to test for dd list type, td onClick call added
-9/16/10 get_comments() added
-9/19/10 do_onload() added
-10/26/10 _by => _userid - to pick up table 'user', correction to option list build
-10/31/10 revised sql in get_comments(), handle un-set search_str, added check/un-check all
-11/9/10 function is_in_use() added
-11/20/10 corrected 'push' sgl-quote handling
-12/15/10 accommodate comments problem
-3/15/11 changed default.css to stylesheet.php
-3/18/11 revised to correct error if $_POST['srch_str'] does not exist
-6/10/11 Added Regions
-12/12/11 - special case table user added
-1/6/2013 - security measures added
-*/
+
 $gmap=TRUE;
 
 session_start();
@@ -57,8 +11,7 @@ require_once './incs/functions.inc.php';
 $query = "SET @@global.sql_mode= '';";		// 6/25/10
 $result = mysql_query($query) ;
 
-if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09
-error_reporting (E_ALL  ^ E_DEPRECATED);
+include'./incs/error_reporting.php';
 $istest=FALSE;
 if ($istest) {
     dump($_POST);

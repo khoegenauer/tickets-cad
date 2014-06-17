@@ -1,4 +1,71 @@
 <?php
+
+
+function do_caption($temp, $repl="") { 				// adds a 'captions' table entry - 12/4/10
+    if ($repl == "") { $repl = $temp; }
+    $caption = quote_smart($temp);
+    $repl = quote_smart($repl);
+    $query = "SELECT * FROM `$GLOBALS[mysql_prefix]captions` WHERE `capt` = $caption LIMIT 1;";	// 11/30/10
+    $result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+    if (mysql_affected_rows()==0) {
+        $query = "INSERT INTO `$GLOBALS[mysql_prefix]captions` ( `capt`, `repl`) VALUES ( $caption, $repl);";
+        $result = mysql_query($query) or do_error("", 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+        }
+
+    return;
+    }
+
+function do_setting($which, $what) {				// 7/7/09
+    $query = "SELECT * FROM `$GLOBALS[mysql_prefix]settings` WHERE `name`= '$which' LIMIT 1";		// 5/25/09
+    $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+    if (mysql_affected_rows()==0) {
+        $query = "INSERT INTO `$GLOBALS[mysql_prefix]settings` ( `id` , `name` , `value` ) VALUES (NULL , '$which', '$what');";
+        $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+        }
+    unset ($result);
+
+    return TRUE;
+    }				// end function do_setting ()
+
+function do_msg_setting($which, $what) {				// 5/25/13
+    $query = "SELECT * FROM `$GLOBALS[mysql_prefix]msg_settings` WHERE `name`= '$which' LIMIT 1";		// 5/25/09
+    $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+    if (mysql_affected_rows()==0) {
+        $query = "INSERT INTO `$GLOBALS[mysql_prefix]msg_settings` ( `id` , `name` , `value` ) VALUES (NULL , '$which', '$what');";
+        $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+        }
+    unset ($result);
+
+    return TRUE;
+    }				// end function do_msg_setting ()
+
+
+function update_setting($which, $what) {		//	3/15/11
+    $query = "SELECT * FROM `$GLOBALS[mysql_prefix]settings` WHERE `name`= '$which' LIMIT 1";
+    $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+    if (mysql_affected_rows()!=0) {
+        $query = "UPDATE `$GLOBALS[mysql_prefix]settings` SET `value`= '$what' WHERE `name` = '$which'";
+        $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+        }
+    unset ($result);
+
+    return TRUE;
+    }				// end function update_setting ()
+
+function update_msg_settings($which, $what) {		//	3/15/11
+    $query = "SELECT * FROM `$GLOBALS[mysql_prefix]msg_settings` WHERE `name`= '$which' LIMIT 1";
+    $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+    if (mysql_affected_rows()!=0) {
+        $query = "UPDATE `$GLOBALS[mysql_prefix]msg_settings` SET `value`= '$what' WHERE `name` = '$which'";
+        $result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
+        }
+    unset ($result);
+
+    return TRUE;
+    }				// end function update_msg_settings ()
+
+
+
 do_setting ('smtp_acct','');			// 7/7/09
 do_setting ('email_from','');			// 7/7/09
 do_setting ('gtrack_url','');			// 7/7/09

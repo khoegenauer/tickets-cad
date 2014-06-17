@@ -211,19 +211,13 @@ if (file_exists("./incs/modules.inc.php")) {
         }
 
     var arr_lgth_good = 13;								// size of a valid returned array - 2/25/12, 10/23/12
-/**
- *
- * @param {type} req
- * @returns {unresolved}
- */
+
     function get_latest_id_cb(req) {					// get_latest_id callback() - 8/16/10
         try {
             var the_id_arr=JSON.decode(req.responseText);	// 1/7/11
             }
         catch (e) {
-//			alert(req.responseText);
-//			alert("<?php echo 'error: ' . basename(__FILE__) . '@' .  __LINE__;?>");
-//			do_logout();				// 2/10/12
+
             return;
             }
 
@@ -324,11 +318,7 @@ if (file_exists("./incs/modules.inc.php")) {
 			}
 		new_msgs_get();
 		}			// end function get_latest_messages_cb()
-/**
- *
- * @param {type} x
- * @returns {String}
- */
+
     function toHex(x) {
         hex="0123456789ABCDEF";almostAscii=' !"#$%&'+"'"+'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ['+'\\'+']^_`abcdefghijklmnopqrstuvwxyz{|}';r="";
         for (i=0;i<x.length;i++) {
@@ -338,34 +328,22 @@ if (file_exists("./incs/modules.inc.php")) {
 
         return r;
         };
-/**
- *
- * @returns {unresolved}
- */
+
     function mu_get() {								// set cycle
         if (mu_interval!=null) {return;}			// ????
         mu_interval = window.setInterval('do_loop()', <?php print $poll_cycle_time;?>);		// 4/7/10
         }			// end function mu get()
-/**
- *
- * @returns {unresolved}
- */
+
     function new_msgs_get() {								// set cycle, 10/23/12
         if (nm_interval!=null) {return;}			// ????
 		nm_interval = window.setInterval('do_latest_msgs_loop()', 30000);
         }			// end function mu get()
-/**
- *
- * @returns {unresolved}
- */
+
     function messages_get() {								// set cycle, 10/23/12
         if (msgs_interval!=null) {return;}			// ????
 		msgs_interval = window.setInterval('do_msgs_loop()', 30000);
         }			// end function mu get()
-/**
- *
- * @returns {unresolved}
- */
+
     function mu_init() {								// get initial values from server -  4/7/10
         var randomnumber=Math.floor(Math.random()*99999999);
         if (is_initialized) { return; }
@@ -374,7 +352,7 @@ if (file_exists("./incs/modules.inc.php")) {
         sendRequest ('get_latest_id.php?version=' + randomnumber,init_cb, "");
             function init_cb(req) {
 
-//				the_id_str = syncAjax("get_latest_id.php");			// note synch call
+
                 var the_id_arr=JSON.decode(req.responseText);				// 1/7/11
 
                 if (the_id_arr.length != 13) {						// 2/25/12, 10/23/12
@@ -416,10 +394,7 @@ if (file_exists("./incs/modules.inc.php")) {
                 do_filelist();	//	9/10/13
                 }				// end function init_cb()
         }				// end function mu_init()
-/**
- *
- * @returns {unresolved}
- */
+
     function nm_init() {								// get initial values from server -  10/23/12
         var randomnumber=Math.floor(Math.random()*99999999);
         if (nmis_initialized) { return; }
@@ -440,11 +415,7 @@ if (file_exists("./incs/modules.inc.php")) {
                 }			// end function msg_cb()
         }				// end function nm_init()
 
-// for messages
-/**
- *
- * @returns {undefined}
- */
+
     function get_msgs() {	//	10/23/12
         var randomnumber=Math.floor(Math.random()*99999999);
           // call the server to execute the server side operation
@@ -455,10 +426,7 @@ if (file_exists("./incs/modules.inc.php")) {
             xmlHttp.send(null);
             }
         }
-/**
- *
- * @returns {undefined}
- */
+
     function handleRequestStateChange() {	//	10/23/12
         var the_resp;
         var the_val;
@@ -640,19 +608,10 @@ if (file_exists("./incs/modules.inc.php")) {
         var randomnumber=Math.floor(Math.random()*99999999);
         sendRequest ('set_cook_exp.php?version=' + randomnumber,set_cook_exp_handleResult, "");
         }
-/**
- *
- * @returns {undefined}
- */
+
     function set_cook_exp_handleResult() {
         }
-/**
- *
- * @param {type} url
- * @param {type} callback
- * @param {type} postData
- * @returns {unresolved}
- */
+
     function sendRequest(url,callback,postData) {
         var req = createXMLHTTPObject();
         if (!req) return;
@@ -699,11 +658,7 @@ if (file_exists("./incs/modules.inc.php")) {
 
         return xmlhttp;
         }
-/**
- *
- * @param {type} strURL
- * @returns {Boolean|@exp;AJAX@pro;responseText}
- */
+
     function syncAjax(strURL) {							// synchronous ajax function - 4/5/10
         if (window.XMLHttpRequest) {
             AJAX=new XMLHttpRequest();

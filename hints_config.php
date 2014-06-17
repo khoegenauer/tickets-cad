@@ -1,15 +1,6 @@
 <?php
-/**
- * @package hints_config.php
- * @author John Doe <john.doe@example.com>
- * @since
- * @version 2011-03-15
- */
-/*
-3/15/11 added css color tables configuration capability
-*/
-    if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/7/09
-    error_reporting (E_ALL  ^ E_DEPRECATED);
+
+include'./incs/error_reporting.php';
     session_start();
     require_once './incs/functions.inc.php';
     do_login(basename(__FILE__));	// session_start()

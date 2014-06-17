@@ -850,20 +850,14 @@ if (is_guest()) {													// 8/25/10
 <STYLE TYPE="text/css">
 .box { background-color: #DEE3E7; border: 2px outset #606060; color: #000000; padding: 0px; position: absolute; z-index:1000; width: 180px; }
 .bar { background-color: #FFFFFF; border-bottom: 2px solid #000000; cursor: move; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
-/* 3/26/2013
-.bar_header { height: 20px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
-*/
+
 .bar_header { height: 30px; background-color: #CECECE; font-weight: bold; padding: 2px 1em 2px 1em;  z-index:1000; text-align: center;}
 .content { padding: 1em; }
 </STYLE>
 <SCRIPT>
     var watch_val;
-/**
- *
- * @returns {undefined}
- */
-    function start_watch() {							// get initial values from top - 3/23/12
-//		alert(681 + parent.frames["upper"].$("div_assign_id").innerHTML);
+
+    function start_watch() {
         parent.frames['upper'].mu_init();				// start the polling
         $("div_ticket_id").innerHTML = parent.frames["upper"].$("div_ticket_id").innerHTML;		// copy for monitoring
         $("div_assign_id").innerHTML = parent.frames["upper"].$("div_assign_id").innerHTML;
@@ -878,23 +872,17 @@ if (is_guest()) {													// 8/25/10
 <?php
         }
 ?>
-        }				// end function start watch()
-/**
- *
- * @returns {undefined}
- */
+        }
+
     function end_watch() {
         if (watch_val) {						// possible null
             window.clearInterval(watch_val);
             window.location.reload();
             }
-        }				// end function end_watch()
-/**
- *
- * @returns {undefined}
- */
-    function do_watch() {								// monitor for changes
-//		alert(697);
+        }
+
+    function do_watch() {
+
         if (							// any change?
             (($("div_ticket_id").innerHTML != "") && ($("div_ticket_id").innerHTML != parent.frames["upper"].$("div_ticket_id").innerHTML)) ||
             (($("div_assign_id").innerHTML != "") && ($("div_assign_id").innerHTML != parent.frames["upper"].$("div_assign_id").innerHTML)) ||
@@ -905,12 +893,9 @@ if (is_guest()) {													// 8/25/10
                 end_watch();
                 window.location.reload();
             }
-        }			// end function do_watch()
+        }
 
-/**
- *
- * @returns {undefined}
- */
+
     function do_blink() {																// 3/23/12 - 4/5/12
         $("hdr_td_str").innerHTML = ($("hdr_td_str").innerHTML == "&nbsp;")? the_info  : "&nbsp;" ;
         blink_count--;								// limit blink duration
@@ -921,59 +906,36 @@ if (is_guest()) {													// 8/25/10
     var blink_count;												// duration of blink
     var orig_head_str;												// header string value at start of blink
     var the_info = "<?php echo $info_str; ?>";
-/**
- *
- * @returns {undefined}
- */
+
     function start_blink() {
         orig_head_str = $("hdr_td_str").innerHTML;
-        blink_var = setInterval('do_blink()',500);					// on/off cycle is once per second
-        blink_count = 30;											// = 30 seconds
+        blink_var = setInterval('do_blink()',500);
+        blink_count = 30;
         }
-/**
- *
- * @returns {undefined}
- */
+
     function end_blink() {
         if (blink_var) {
-            $("hdr_td_str").innerHTML = orig_head_str; 					// restore original value
+            $("hdr_td_str").innerHTML = orig_head_str;
             clearInterval(blink_var);
             }
-        }		// end function
-/**
- *
- * @returns {undefined}
- */
+        }
+
     function get_wastebin() {	//	10/23/12
         $(waste_but).style.display = "none";
         $(inbox_but).style.display = "inline";
         get_wastelist('','',sortby, 'DESC','');
         $('the_box').innerHTML = "Showing Wastebasket";
         }
-/**
- *
- * @returns {undefined}
- */
-    function get_inbox() {	//	10/23/12
+
+    function get_inbox() {
         $(waste_but).style.display = "inline";
         $(inbox_but).style.display = "none";
         $('the_box').innerHTML = "<?php print gettext('Showing Inbox');?>";
-/*		get_main_messagelist(ticket_id,'',sortby, 'DESC','', 'ticket');  3/26/2013  */
         get_all_messagelist(ticket_id,'',sortby, 'DESC','', 'ticket');
         }
-/**
- *
- * @param {type} ticket_id
- * @param {type} responder_id
- * @param {type} sortby
- * @param {type} sort
- * @param {type} filter
- * @param {type} thescreen
- * @returns {undefined}
- */
-    function get_mainmessages(ticket_id, responder_id, sortby, sort, filter, thescreen) {	//	10/23/12
+
+    function get_mainmessages(ticket_id, responder_id, sortby, sort, filter, thescreen) {
         ticket_id = ticket_id;
-/*		get_main_messagelist(ticket_id,'',sortby, sort, filter, 'ticket');	3/26/2013  */
         get_all_messagelist(ticket_id,'',sortby, sort, filter, 'ticket');
         }
 <?php

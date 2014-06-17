@@ -1,19 +1,6 @@
 <?php
-/**
- * @package landb.php
- * @author John Doe <john.doe@example.com>
- * @since 2011-05-25
- * @version 2013-05-22
- */
-/*
-5/25/11 initial release
-7/2/11 corrections to include filled data as hiddens
-7/3/11 added 2 fields to schema
-7/30/11 table renamed
-5/22/13 Totally revised for google maps API V3
-*/
-if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09
-error_reporting (E_ALL  ^ E_DEPRECATED);
+
+include'./incs/error_reporting.php';
 require_once 'incs/functions.inc.php';
 //	dump ($_POST);
     $tablename = "{$GLOBALS['mysql_prefix']}mmarkup";		// 7/30/11

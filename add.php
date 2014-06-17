@@ -1,14 +1,5 @@
 <?php
-/**
- *
- * @package add.php
- * @author John Doe <john.doe@example.com>
- * @since 2007-10-28
- * @version 2013-11-29
- */
-
-if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09
-error_reporting (E_ALL  ^ E_DEPRECATED);
+include'./incs/error_reporting.php';
 @session_start();
 if (empty($_SESSION)) {
     header("Location: index.php");
@@ -22,110 +13,6 @@ $in_win = array_key_exists ("mode", $_GET);		// in
 if ($istest) {print "_GET"; dump($_GET);}
 if ($istest) {print "_POST"; dump($_POST);}
 
-/*
-10/28/07 added onLoad = "document.add.frm_lat.disabled..
-11/38/07 added frame jump prevention
-11/98/07 added map under image
-5/29/08  added do_kml() call
-8/11/08	 added problem-start lock/unlock
-8/23/08	 added usng handling
-8/23/08  corrected problem-end hskpng
-9/9/08	 added lat/lng-to-CG format functions
-10/4/08	 added function do_inc_name()
-10/7/08	 set WRAP="virtual"
-10/8/08 synopsis made non-mandatory
-10/15/08 changed 'Comments' to 'Disposition'
-10/16/08 changed ticket_id to frm_ticket_id
-10/17/08 removed 10/16/08 change
-10/19/08 added insert_id to description
-12/6/08 allow user input of NGS values; common icon marker function
-1/11/09 TBD as default, auto_route setting option
-1/17/09 replaced ajax functions - for consistency
-1/18/09 added script-specific CONSTANTS
-1/19/09 added geocode function
-1/21/09 show/hide butts
-1/22/09 - serial no. to ticket description
-1/25/09 serial no. pre-set
-1/27/09 area code vaiable added
-2/4/09  added function get_res_row()
-2/10/09 added function sv_win()
-2/11/09 added dollar function, streetview functions
-3/3/09 cleaned trash as page bottom
-3/10/09 intrusive space in ticket_id
-4/30/09 $ replaces document.getElementById, USNG text underline
-7/7/09	added protocol handling
-7/16/09	zero to in_types_id
-8/2/09 Added code to get maptype variable and switch to change default maptype based on variable setting
-8/3/09 Added code to get locale variable and change USNG/UTM/UTM dependant on variable in tabs and sidebar.
-8/13/09	'date' = now added to UPDATE
-9/22/09 Added set Incident at a Facility functionality
-9/29/09	'frequent fliers' added
-10/1/09 added special ticket type - for pre-booked tickets
-10/2/09	added locale check for WP lookup
-10/6/09 Added Mouseover help text to all field labels.
-10/6/09 Added Receiving Facility, added links button
-10/12/09 Incident at facility menu is hidden by default - click radio button to show.
-10/13/09 Added reverse geocoding - map click now returns address and location to form.
-11/01/09 Added use of reverse_geo setting to switch off reverse geocoding if not required - default is off.
-11/06/09 Changed "Special" incident type to "Scheduled".
-11/06/09 Moved both Facility dropdown menus to the same area
-12/16/09 added call-history operation
-1/3/10 added '_by' field for multi-user call-taker id
-3/13/10 present constituents 'miscellaneous'
-3/18/10 corrections to facilities options list
-3/24/10 made facilities input conditioned on existence, logging revised
-4/21/10 provided for changed NOC/name values - per AF  email
-4/27/10 try geo-code on failed phone lookup
-5/6/10 accommodate embedded quotes
-6/20/10 handle negative delta's, NULL forced, 'NULL' un-quoted
-6/25/10 guest/member notification changed
-6/26/10 911 field handling added
-7/5/10 Revised reverse geocoding function - per AH
-7/11/10 'NULL'  to 0
-7/22/10 miscjs, google reverse geocode parse added
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-8/7/10 protocol reset house-keeping
-8/13/10 map.setUIToDefault(), get_text settings
-9/30/10 use '_by' as the match identifier, booking button name disambiguated
-10/21/10 onload focus(), tabindex added
-11/5/10 revised to prepare for callerid handling
-11/13/10 incident numbering added
-11/23/10 'state' size made locale-dependent
-11/29/10 locale 2 handling added
-12/1/10 get_text changes
-12/18/10 set signals added
-1/1/11 Titles array added, scheduled incidents revised
-1/19/10 revised to accommodate both maps and no-maps option
-1/21/11 corrections to booked-date handling
-1/24/11 corrections to locale/grid handling
-1/29/11	changed coordinates test to string-length
-2/1/11 added table 'hints' as hints source
-2/11/11 condition signals on non-empty table
-2/12/11 facility names shortened
-2/19/11 draggable button bar replaces tr
-2/27/11 corrected 'append incident nature to incident name'
-3/2/11 added  base64_decode to serialize/unserialize
-3/15/11 changed default.css to stylesheet.php to cater for day / night capability
-3/17/11 Revised form to not use default city if places exist in the places table
-4/23/11 revisions for USNG handling
-5/22/11 corrected reverse geo-location lookup
-6/9/11 action and patient buttons, cancel function added, caller id
-6/10/11 added changes required to support regional capability (Ticket region assignment).
-6/23/11 revised target for action and patient buttons
-11/22/2012 'nearby' capability added
-12/1/2012 show 'nearby' only if internet/maps
-5/22/2013 added broadcast call
-6/2/2013 - reverse geocode added
-7/3/2013 - socket2me conditioned on internet and broadcast settings, enforce reverse-geo values size limits
-9/10/13 - Added "address about" and "To address" fields. Also Location warnings capability
-10/11/2013 - corrected auto incident numbering - relocated else {} closure
-3/29/2014 - added buildings operations
-4/7/2014 - revised per nm operation
-4/27/2014 - correction re bldg per YG email
-5/7/2014 - prepend bldg name to location string
-5/9/2014 - revised query for consistency with edit.php
-5/10/2014 - revised bldg sql to preclude field-name collision
-*/
 
 if (empty($_GET)) {
     if (mysql_table_exists("$GLOBALS[mysql_prefix]caller_id")) {				// 6/9/11
@@ -137,7 +24,6 @@ if (empty($_GET)) {
             $query = "UPDATE `$GLOBALS[mysql_prefix]caller_id` SET `status` = 1 WHERE `id` = " . quote_smart($row['id']);
     //		$result = mysql_query($query) or do_error($query, 'mysql query failed', mysql_error(), basename(__FILE__), __LINE__);
             $lookup_vals = explode (";", $row['lookup_vals']);
-    //		dump($lookup_vals);
             $cid_calls = $lookup_vals[0];
             $cid_name = $lookup_vals[1];
             $cid_phone = $lookup_vals[2];
@@ -1063,7 +949,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
         do_lat(in_obj.lat);			// set form values
         do_lng(in_obj.lng);
         do_ngs();
-		$("do_sv").style.display = "block";				// show streetview link	
+		$("do_sv").style.display = "block";				// show streetview link
 <?php								// 6/2/2013
     if (intval(get_variable('reverse_geo'))==1) {
 ?>
@@ -1450,7 +1336,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 
         geocoder.geocode( { 'address': myAddress}, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-//				myMarker.setMap(null);									// clear existing/default icon 
+//				myMarker.setMap(null);									// clear existing/default icon
 
                 pt_to_map (my_form, results[0].geometry.location.lat(), results[0].geometry.location.lng());
                 var tick_lat = results[0].geometry.location.lat();	//	8/14/13
@@ -1580,13 +1466,13 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
 						document.add.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,32).trim() ;		// city
                         var temp = addr_pieces[(addr_pieces.length-2)].substring(0,5).trim().split(" ");				// zipcode
                         if (temp.length == 2) {
-							document.add.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,32).trim() ;	// city						
-							document.add.frm_state.value=temp[0].substring(0,4).trim() ;								// US state							
+							document.add.frm_city.value=addr_pieces[(addr_pieces.length-3)].substring(0,32).trim() ;	// city
+							document.add.frm_state.value=temp[0].substring(0,4).trim() ;								// US state
                             }
                         else {
 							var the_city = addr_pieces[(addr_pieces.length-3)] + ", " + addr_pieces[(addr_pieces.length-2)] ;
-							document.add.frm_city.value=the_city.substring(0,32).trim() ;								// city						
-							document.add.frm_state.value=addr_pieces[(addr_pieces.length-1)].substring(0,4).trim()		// country							
+							document.add.frm_city.value=the_city.substring(0,32).trim() ;								// city
+							document.add.frm_state.value=addr_pieces[(addr_pieces.length-1)].substring(0,4).trim()		// country
                             }
                     }				// end switch
                 }
@@ -1855,7 +1741,7 @@ $get_add = ((empty($_GET) || ((!empty($_GET)) && (empty ($_GET['add'])))) ) ? ""
         $('proto_cell').innerHTML = "";					// 8/7/10
 		$('bldg_info').innerHTML = "";					// 4/27/2014
 		theForm.reset();
-		clearmap();		
+		clearmap();
 
         }		// end function reset()
 /**
@@ -2341,11 +2227,11 @@ function do_nearby(the_form) {		// 11/22/2012
     }		// end do_nearby()
 
 function do_bldg(in_val) {									// called with zero-based array index - 3/29/2014
-	if (myMarker) {myMarker.setMap(null);}	// clear existing/default icon 
+	if (myMarker) {myMarker.setMap(null);}	// clear existing/default icon
 
 	var obj_bldg = bldg_arr[in_val];						// nth object
-//	document.add.frm_street.value = obj_bldg.bldg_street;	- limit to 96 chars - ex; str.substring(1, 4) gets 1-3; 
-	document.add.frm_street.value = (obj_bldg.bldg_name+ "/" +obj_bldg.bldg_street+ "/" + document.add.frm_street.value).substring(0, 96);	// limit to 96 chars 
+//	document.add.frm_street.value = obj_bldg.bldg_street;	- limit to 96 chars - ex; str.substring(1, 4) gets 1-3;
+	document.add.frm_street.value = (obj_bldg.bldg_name+ "/" +obj_bldg.bldg_street+ "/" + document.add.frm_street.value).substring(0, 96);	// limit to 96 chars
 	document.add.frm_city.value = obj_bldg.bldg_city;
 	document.add.frm_state.value = obj_bldg.bldg_state;
 	if (document.add.frm_lat) {
@@ -2354,17 +2240,17 @@ function do_bldg(in_val) {									// called with zero-based array index - 3/29/
 		}
 	if (obj_bldg.bldg_info.length > 0 ) {
 		var close_str = "<span onclick = \"$('bldg_info').style.display = 'none';\"><b><center><u>X</u></center></b></span>";
-		$('bldg_info').innerHTML = obj_bldg.bldg_info + close_str;		// 
-		$('bldg_info').style.display = "inline";	
+		$('bldg_info').innerHTML = obj_bldg.bldg_info + close_str;		//
+		$('bldg_info').style.display = "inline";
 		}
 	loc_lkup(document.add) ;			// to map
-	$("do_sv").style.display = "block";				// show streetview link  			
+	$("do_sv").style.display = "block";				// show streetview link
 
 	}		// end function do_bldg()
 
 <?php								// 3/29/2014
 //		5/10/2014
-$query_bldg = "SELECT 
+$query_bldg = "SELECT
 		`name`			AS `bldg_name`,
 		`apply_to`		AS `bldg_apply_to`,
 		`street`		AS `bldg_street`,
@@ -2373,7 +2259,7 @@ $query_bldg = "SELECT
 		`information`	AS `bldg_information`,
 		`lat`			AS `bldg_lat`,
 		`lon`			AS `bldg_lon`
-		FROM `$GLOBALS[mysql_prefix]places` WHERE `apply_to` = 'bldg' ORDER BY `bldg_name` ASC";		
+		FROM `$GLOBALS[mysql_prefix]places` WHERE `apply_to` = 'bldg' ORDER BY `bldg_name` ASC";
 
 $result_bldg = mysql_query($query_bldg) or do_error($query_bldg, 'mysql query failed', mysql_error(), basename( __FILE__), __LINE__);
 if (mysql_num_rows($result_bldg) > 0) {
@@ -2383,8 +2269,8 @@ if (mysql_num_rows($result_bldg) > 0) {
 	echo "\n\t var bldg_arr = new Array();\n";
 	while ($row_bldg = stripslashes_deep(mysql_fetch_assoc($result_bldg))) {
 //			4/27/2014
-		$sel_str .= "\t<option value = {$i} >{$row_bldg['name']}</option>\n";		
-		echo "\t var bldg={ bldg_name:\"{$row_bldg['name']}\", bldg_street:\"{$row_bldg['street']}\", bldg_city:\"{$row_bldg['city']}\", 
+		$sel_str .= "\t<option value = {$i} >{$row_bldg['name']}</option>\n";
+		echo "\t var bldg={ bldg_name:\"{$row_bldg['name']}\", bldg_street:\"{$row_bldg['street']}\", bldg_city:\"{$row_bldg['city']}\",
 			bldg_state:\"{$row_bldg['state']}\", bldg_lat:\"{$row_bldg['lat']}\", bldg_lon:\"{$row_bldg['lon']}\", bldg_info:\"{$row_bldg['information']}\"};\n";
 		echo "\t bldg_arr.push(bldg);\n";		// object onto array
 		$i++;
@@ -2415,7 +2301,7 @@ if (mysql_num_rows($result_bldg) > 0) {
 	</TR>
 <?php
 	}		// end if()
-?>	
+?>
 <!-- / -->
 
 <TR CLASS='even'>
@@ -2802,7 +2688,7 @@ if ($has_portal == 1) {
     print "<B><SPAN ID = 'grid_link' onClick = 'do_grid_to_ll();'>{$grid_types[$locale]}:</SPAN></B>&nbsp;<INPUT SIZE='19' TYPE='text' NAME='frm_ngs' VALUE='' DISABLED ></TD></TR>";
     }		// end if ($gmaps)
 	else {
-?>	
+?>
 	<INPUT TYPE="hidden" NAME="show_lat" VALUE="" />
 	<INPUT TYPE="hidden" NAME="show_lng" VALUE=""/ >
 <?php

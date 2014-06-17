@@ -1,12 +1,4 @@
 <?php
-/*
-9/18/08 filename changes to XXX.txt
-1/21/09 added show butts - re button menu
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-12/1/10 get_text Patient, disposition added
-5/4/11 get_new_colors() added
-*/
-
 session_start();
 require_once './incs/functions.inc.php';
 $patient = get_text("Patient");						// 12/1/10

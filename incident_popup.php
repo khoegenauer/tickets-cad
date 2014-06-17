@@ -1,23 +1,5 @@
 <?php
-/**
- * @package incident_popup.php
- * @author John Doe <john.doe@example.com>
- * @since 2009-07-08
- * @version 2011-03-15
- */
-/*
-7/08/09 Created Incident Popup from track_u.php
-7/29/09 Revised code for statistics display and background color determined by severity
-3/12/10 added incident age to stats, revised display
-3/25/10 added 'dispatched' and 'cleared' to display
-6/25/10 added year check to NULL for cleared assigns
-7/4/10 added ticket details to head section
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-8/26/10 fmp added - AH
-3/15/11 changed stylesheet.php to stylesheet.php
-*/
-
-error_reporting(E_ALL);
+include'./incs/error_reporting.php';
 
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10

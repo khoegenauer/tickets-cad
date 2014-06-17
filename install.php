@@ -1,78 +1,10 @@
 <?php
-/**
- * @package install.php
- * @author John Doe <john.doe@example.com>
- * @since
- * @version
- */
-/*
-10/8/07 added domain detection for GMaps API key association
-1/8/08 added settings email_reply_to' and call_board;
-3/20/08 added settings map height and width;
-6/7/08  added kml files setting
-6/9/08  revised default 'admin' account level to 'super'
-6/12/08 revised version number only
-6/27/08 revised version number only
-6/28/08 revised version number only
-7/16/08 revised default military time
-9/13/08 added error_reporting, lat/lng setting entry
-9/13/08 added table `unit_types`
-9/13/08 added white pages key
-9/13/08 GSearch API key
-9/15/08 added tables 'login'
-9/16/08 corr's to undefined's
-9/17/08 dropped field 'hash', rearranged field 'user' in table 'user'
-9/17/08 added table 'photos'
-9/18/08 added table `cities`
-9/22/08 version # only
-10/08/08 version # only
-10/11/08 major schema update
-10/17/08 added '__sleep' setting
-10/19/08 added pager nos. to responder
-10/22/08 expanded table notify schema
-11/6/08 table user default corrections, sql_mode
-1/17/09 changed `in-quarters` to `on_scene`, insert `auto_route` settings
-1/17/09 version no. to '2.9 B beta'
-1/18/08 added 'in service' unit status
-1/25/09 team tables renamed
-1/27/09 added default area code setting, unit_types schema, responder schema updates
-2/3/09 version no.
-2/8/09 table tracks_hh added
-2/11/09 session table expanded
-2/14/09 session flags to varchar
-2/21/09 check file write-able
-2/24/09 added 'terrain' setting
-3/17/09 chgd aprs_poll to auto_poll
-3/22/09 removed redundant def_area_code
-4/10/09 responder schema update
-1/23/10 - removed table session
-8/5/10 version number base - to permit index.php to update schema, internet setting added
-8/8/10    accomodate absent mysql.inc.php - as install trigger
-10/29/10  'PASSWORD' => 'MD5' to accommodate old MySQL versions
-12/18/10   write permissions test corrected
-1/10/11 Added default setting for Group or dispatch
-5/11/12 Added code for quick start.
-1/9/2013 API key is no longer mandatory
-4/2/2013 removed API key value.
-*/
 
-error_reporting(E_ALL);				// 2/3/09
+
+include'./incs/error_reporting.php';
 
 $version = "2.20 A base beta";				// see usage below 8/5/10
 
-/**
- * dump
- * Insert description here
- *
- * @param $variable
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
 function dump($variable) {
     echo "\n<PRE>";					// pretty it a bit
     var_dump($variable) ;
@@ -121,20 +53,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 //	foreach ($_GET as $VarName=>$VarValue) {echo "GET:$VarName => $VarValue, <BR />";};
 //	echo "<BR/>";
 
-/**
- * table_exists
- * Insert description here
- *
- * @param $name
- * @param $drop_tables
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
+
     function table_exists($name,$drop_tables) {			//check if mysql table exists, if it's a re-install
         $query 		= "SELECT COUNT(*) FROM $name";
            $result 	= mysql_query($query);
@@ -152,19 +71,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
             }
         }
 
-/**
- * prefix
- * Insert description here
- *
- * @param $tbl
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
+
     function prefix($tbl) {		/* returns concatenated string */
         global $db_prefix;
 
@@ -177,21 +84,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
         $query = "INSERT INTO `$tablename` (name,value) VALUES('$name','$value')";
         $result = mysql_query($query) or die("DO_INSERT_SETTINGS($name,$value) " . gettext('failed, execution halted') . "");
         }
-    //create tables
-/**
- * create_tables
- * Insert description here
- *
- * @param $db_prefix
- * @param $drop_tables
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
+
     function create_tables($db_prefix,$drop_tables=1) {
         //check if tables exists and if drop_tables is 1
 
@@ -253,23 +146,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         $tables = "";
 
-// -- phpMyAdmin SQL Dump
-// -- version 2.9.2
-// -- http://www.phpmyadmin.net
-// --
-// -- Host: localhost
-// -- Generation Time: Oct 11, 2008 at 12:35 PM
-// -- Server version: 5.0.27
-// -- PHP Version: 5.2.1
-// --
-// -- Database: `tickets_2_8_c`
-// --
 
-// -- --------------------------------------------------------
-
-// --
-// -- Table structure for table `action`
-// --
         $table_name = prefix("action");
         $query = "CREATE TABLE `$table_name` (
          `id` bigint(8) NOT NULL auto_increment,
@@ -286,11 +163,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables = $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `assigns`
-// --
 
         $table_name = prefix("assigns");
         $query = "CREATE TABLE `$table_name` (
@@ -311,11 +184,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `certs`
-// --
 
         $table_name = prefix("certs");
         $query = "CREATE TABLE `$table_name` (
@@ -330,11 +199,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `certs_x_user`
-// --
 
         $table_name = prefix("certs_x_user");
         $query = "CREATE TABLE `$table_name` (
@@ -351,11 +216,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `chat_messages`
-// --
 
         $table_name = prefix("chat_messages");
         $query = "CREATE TABLE `$table_name` (
@@ -371,11 +232,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `chat_rooms`
-// --
 
         $table_name = prefix("chat_rooms");
         $query = "CREATE TABLE `$table_name` (
@@ -387,11 +244,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `cities`
-// --
 
         $table_name = prefix("cities");
         $query = "CREATE TABLE `$table_name` (
@@ -407,11 +260,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `clones`
-// --
 
         $table_name = prefix("clones");
         $query = "CREATE TABLE `$table_name` (
@@ -425,11 +274,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `contacts`
-// --
 
         $table_name = prefix("contacts");
         $query = "CREATE TABLE `$table_name` (
@@ -447,11 +292,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `courses`
-// --
 
         $table_name = prefix("courses");
         $query = "CREATE TABLE `$table_name` (
@@ -469,11 +310,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `courses_x_user`
-// --
 
         $table_name = prefix("courses_x_user");
         $query = "CREATE TABLE `$table_name` (
@@ -490,11 +327,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `documents`
-// --
 
         $table_name = prefix("documents");
         $query = "CREATE TABLE `$table_name` (
@@ -521,11 +354,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `documents_log`
-// --
 
         $table_name = prefix("documents_log");
         $query = "CREATE TABLE `$table_name` (
@@ -542,11 +371,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `in_types`
-// --
 
         $table_name = prefix("in_types");
         $query = "CREATE TABLE `$table_name` (
@@ -562,20 +387,13 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
 
-//		--
-//		--  data for table `in_types`
-//		--
 
             $query = "INSERT INTO `$table_name` (`id`, `type`, `description`, `group`, `sort`) VALUES
                 (NULL, 'examp1', 'Example one', 'grp 1', '1'),
                 (NULL, 'examp2', 'Example two', 'grp 2', '2');";
             mysql_query($query) or die("INSERT INTO TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
 
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `log`
-// --
 
         $table_name = prefix("log");
         $query = "CREATE TABLE `$table_name` (
@@ -593,11 +411,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `logins`
-// --
 
         $table_name = prefix("logins");
         $query = "CREATE TABLE `$table_name` (
@@ -610,11 +424,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `notify`				// 10/22/08
-// --
 
         $table_name = prefix("notify");
         $query = "CREATE TABLE `$table_name` (
@@ -638,11 +448,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `patient`
-// --
 
         $table_name = prefix("patient");
         $query = "CREATE TABLE `$table_name` (
@@ -666,11 +472,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `photos`
-// --
 
         $table_name = prefix("photos");
         $query = "CREATE TABLE `$table_name` (
@@ -687,11 +489,7 @@ $api_key = "AIzaSyBN2v_821i9ivnaWoNXb0MIV3Dz8RQ3xqc";			// 1/9/2013
 
         mysql_query($query) or die("CREATE TABLE " . gettext('failed, execution halted at line') . " ". __LINE__);
         $tables .= $table_name . ", ";
-// -- --------------------------------------------------------
 
-// --
-// -- Table structure for table `responder` 1/27/09, 4/10/09
-// --
 
         $table_name = prefix("responder");
         $query = "CREATE TABLE `$table_name` (

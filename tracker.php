@@ -1,16 +1,5 @@
 <?php
-/**
- * @package tracker.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version string
- */
-/* Release Notes - tracking script for windows and windows mobile devices using uTrack application
-5/10/11	Initial Release. Takes incoming data from tracked unit and puts into database
-*/
-
-if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09
-error_reporting (E_ALL  ^ E_DEPRECATED);
+include'./incs/error_reporting.php';
 require_once 'incs/functions.inc.php';		//7/28/10
 
 $speed_type = 1;	//	Speed Measure - 1 = mph, 2 = kph, 3 = knots

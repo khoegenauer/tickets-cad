@@ -1,15 +1,5 @@
 <?php
-/**
- * @package reset_responder_status.php
- * @author John Doe <john.doe@example.com>
- * @since
- * @version 2012-10-15
- */
-/* Change log - auto_status.php
-10/15/12	New File - accessed from Config to set auto status values for incoming SMS messages
-*/
-
-error_reporting(E_ALL);
+include'./incs/error_reporting.php';
 
 @session_start();
 require_once './incs/functions.inc.php';

@@ -1,23 +1,5 @@
 <?php
-/**
- * @package search.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version 2013-01-06
- */
-/*
-8/28/08 mysql_fetch_array to  mysql_fetch_assoc
-9/19/08 add injection protection to query parameters
-1/21/09 added show butts - re button menu
-2/24/09 added dollar function
-7/20/10 gmaps call removed, quote_smart added for injection prevention
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-9/30/10 major re-do based on using $id_stack as list of qualifying ticket id's
-3/15/11 changed stylesheet.php to stylesheet.php
-4/5/11 get_new_colors() added
-1/6/2013 XSS check corrected
-*/
-error_reporting(E_ALL);
+include'./incs/error_reporting.php';
 
 session_start();
 //require_once($_SESSION['fip']);				// 7/28/10
@@ -28,7 +10,7 @@ if ($istest) {
     dump ($_POST);
     dump ($_GET);
     }
-	
+
 if(($_SESSION['level'] == $GLOBALS['LEVEL_UNIT']) && (intval(get_variable('restrict_units')) == 1)) {
 	print "Not Authorized";
 	exit();

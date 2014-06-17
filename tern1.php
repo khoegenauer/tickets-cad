@@ -1,16 +1,5 @@
 <?php
-/**
- * the_func
- * Insert description here
- *
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
+
 function the_func() {
     return FALSE;
     }

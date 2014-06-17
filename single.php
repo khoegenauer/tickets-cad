@@ -1,21 +1,5 @@
 <?php
-/**
- * @package single.php
- * @author John Doe <john.doe@example.com>
- * @since 2010-04-13
- * @version 2012-11-30
- */
-/*
-4/13/10 initial release
-4/30/10 added test for data existence
-6/1/10 added functions_major.inc.php
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-8/10/10 address data disambiguated
-3/15/11 changed stylesheet.php to stylesheet.php
-11/30/2012 unix time conversion dropped
-*/
-error_reporting(E_ALL);
-        // 7/28/10
+include'./incs/error_reporting.php';
 @session_start();
 require_once($_SESSION['fip']);		// 7/28/10
 require_once($_SESSION['fmp']);		// 7/28/10, 8/10/10

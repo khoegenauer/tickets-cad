@@ -1,56 +1,7 @@
 <?php
-/**
- * @package top.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version
- */
-/*
-1/3/10 complete re-write to support button light-up for multi-user operation
-1/11/10 added do_set_sess_exp()
-4/1/10 JSON replaces eval
-4/5/10 do_time, cb width calc, cb script rename, syncAjax() {
-4/7/10 $cycle added, 'mu_init' to 'get_latest.php', unit position change now tracked
-4/10/10 replaced JSON return with tab-sep'd string
-4/11/10 removed poll value references
-4/15/10 fullscreen=no
-5/12/10 show/hide Board button
-6/12/10 browser id, audible alarms added for new ticket, chat invite
-7/3/10 changed Card to SOP's
-7/21/10 hide cb frame on logout
-7/27/10 Unit login handling added
-7/28/10 window focus added, logout moved to top row
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-8/8/10 implment version no. as hyphen-separated string
-8/16/10 convert synch ajax to asynch
-8/20/10 'term' => 'mobile'
-8/21/10 light up active module/button
-8/24/10 emd card handling cleanup
-8/25/10 server variables handling cleaned up
-8/27/10 chat error detection
-10/28/10 additions to support modules
-1/7/11  JSON re-introduced with length validation and parseInt()
-3/15/11 added reference to stylesheet.php for revisable day night colors.
-5/4/11 day/night color changes added
-5/10/11 log window width increased
-6/28/11 try/catch added to accommodate main's new auto-refresh
-2/10/12	added logout() call to error detection 3 places
-2/25/12 action and patient data to button light-up
-2/27/12 div's added for latest ticket, assigns, action and patient
-10/23/12 Added code for messaging
-5/13/2013 added ics-213 button conditional on setting value
-5/24/2013 - websockets code added
-5/29/2013 - revised message handling/notification, do_logout() calls commented out in try/catch error handling
-5/30/2013 - set 5-second poll cycle.
-6/3/2013 - made HAS button appearance conditional on setting
-7/2/2013 include setting internet in HAS include
-7/16/13 Revisions to strings for top bars which fail on intial load after install and stop buttons from showing.
-10/25/13 Revised get_filelist and associated timer.
-1/3/14 Added Road Condition Alert markers and live moving unit markers
-1/30/14 Revised new message handling and added unread messages flag
-*/
 
-error_reporting(E_ALL);
+
+include'./incs/error_reporting.php';
 require_once './incs/functions.inc.php';		// 7/28/10
 require_once './incs/browser.inc.php';			// 6/12/10
 @session_start();
@@ -244,7 +195,7 @@ if (file_exists("./incs/modules.inc.php")) {
  */
     function do_latest_msgs_loop() {	//	10/23/12
         var randomnumber=Math.floor(Math.random()*99999999);
-		sendRequest ('./ajax/list_message_totals.php?version=' + randomnumber,get_latest_messages_cb, "");	
+		sendRequest ('./ajax/list_message_totals.php?version=' + randomnumber,get_latest_messages_cb, "");
         }
 /**
  *
@@ -371,8 +322,8 @@ if (file_exists("./incs/modules.inc.php")) {
 			$("msg").innerHTML = "Msgs";
 			msg_signal_o_off();
 			}
-		new_msgs_get();					
-		}			// end function get_latest_messages_cb()	
+		new_msgs_get();
+		}			// end function get_latest_messages_cb()
 /**
  *
  * @param {type} x
@@ -401,7 +352,7 @@ if (file_exists("./incs/modules.inc.php")) {
  */
     function new_msgs_get() {								// set cycle, 10/23/12
         if (nm_interval!=null) {return;}			// ????
-		nm_interval = window.setInterval('do_latest_msgs_loop()', 30000); 
+		nm_interval = window.setInterval('do_latest_msgs_loop()', 30000);
         }			// end function mu get()
 /**
  *
@@ -473,7 +424,7 @@ if (file_exists("./incs/modules.inc.php")) {
         var randomnumber=Math.floor(Math.random()*99999999);
         if (nmis_initialized) { return; }
         nmis_initialized = true;
-		sendRequest ('./ajax/list_message_totals.php?version=' + randomnumber,msg_cb, "");		
+		sendRequest ('./ajax/list_message_totals.php?version=' + randomnumber,msg_cb, "");
             function msg_cb(req) {
                 var the_msg_arr=JSON.decode(req.responseText);
 				var the_number = parseInt(the_msg_arr[0][0]);
@@ -534,9 +485,9 @@ if (file_exists("./incs/modules.inc.php")) {
         messages_get();
         }
 
-// for responder positions		
+// for responder positions
 	function do_positions() {	//	12/27/13
-		var randomnumber=Math.floor(Math.random()*99999999);		
+		var randomnumber=Math.floor(Math.random()*99999999);
 	  	// call the server to execute the server side operation
 		if (window.XMLHttpRequest) {
 			respxmlHttp = new XMLHttpRequest();
@@ -545,7 +496,7 @@ if (file_exists("./incs/modules.inc.php")) {
 			respxmlHttp.send(null);
 			}
 		}
-		
+
 	function readPositions() {	//	12/27/13
 		if (respxmlHttp.readyState == 4) {
 			if (respxmlHttp.status == 200) {
@@ -554,22 +505,22 @@ if (file_exists("./incs/modules.inc.php")) {
 					var the_resp_id = resp_positions[key][0];
 					var the_resp_lat = parseFloat(resp_positions[key][4]);
 					var the_resp_lng = parseFloat(resp_positions[key][5]);
-					if(typeof parent.frames["main"].set_marker_position == 'function') { 
-						parent.frames["main"].set_marker_position(the_resp_id, the_resp_lat, the_resp_lng);	
+					if(typeof parent.frames["main"].set_marker_position == 'function') {
+						parent.frames["main"].set_marker_position(the_resp_id, the_resp_lat, the_resp_lng);
 						}
-					}	
+					}
 				}
 			}
-		positions_get();		
+		positions_get();
 		}
-		
+
 	function positions_get() {			// set cycle, 12/27/13
 		if (pos_interval!=null) {return;}			// ????
 		pos_interval = window.setInterval('do_positions_loop()', 30000);
-		}			// end function mu get()	
-		
+		}			// end function mu get()
+
 	function do_positions_loop() {	//	12/27/13
-		var randomnumber=Math.floor(Math.random()*99999999);		
+		var randomnumber=Math.floor(Math.random()*99999999);
 	  	// call the server to execute the server side operation
 		if (window.XMLHttpRequest) {
 			respxmlHttp = new XMLHttpRequest();
@@ -578,7 +529,7 @@ if (file_exists("./incs/modules.inc.php")) {
 			respxmlHttp.send(null);
 			}
 		}
-		
+
 	function readPositions2() {	//	12/27/13
 		if (respxmlHttp.readyState == 4) {
 			if (respxmlHttp.status == 200) {
@@ -587,17 +538,17 @@ if (file_exists("./incs/modules.inc.php")) {
 					var the_resp_id = resp_positions[key][0];
 					var the_resp_lat = parseFloat(resp_positions[key][4]);
 					var the_resp_lng = parseFloat(resp_positions[key][5]);
-					if(typeof parent.frames["main"].set_marker_position == 'function') { 
-						parent.frames["main"].set_marker_position(the_resp_id, the_resp_lat, the_resp_lng);	
+					if(typeof parent.frames["main"].set_marker_position == 'function') {
+						parent.frames["main"].set_marker_position(the_resp_id, the_resp_lat, the_resp_lng);
 						}
-					}	
+					}
 				}
 			}
 		}
 
-// for road conditions		
+// for road conditions
 	function do_conditions() {	//	1/3/14
-		var randomnumber=Math.floor(Math.random()*99999999);		
+		var randomnumber=Math.floor(Math.random()*99999999);
 	  	// call the server to execute the server side operation
 		if (window.XMLHttpRequest) {
 			condxmlHttp = new XMLHttpRequest();
@@ -606,7 +557,7 @@ if (file_exists("./incs/modules.inc.php")) {
 			condxmlHttp.send(null);
 			}
 		}
-		
+
 	function readConditions() {	//	1/3/14
 		if (condxmlHttp.readyState == 4) {
 			if (condxmlHttp.status == 200) {
@@ -627,23 +578,23 @@ if (file_exists("./incs/modules.inc.php")) {
 					info += "<TR class='even'><TD class='td_label'><B><?php print get_text('Type');?></B></TD><TD class='td_data'>" + the_condTypeTitle + "</TD></TR>";
 					info += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Address');?></B></TD><TD class='td_data'>" + the_condAddress + "</TD></TR>";
 					info += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Updated');?></B></TD><TD class='td_data'>" + the_condDate + "</TD></TR></TABLE>";
-					if(typeof parent.frames["main"].createConditionMarker == 'function') { 
+					if(typeof parent.frames["main"].createConditionMarker == 'function') {
 						parent.frames["main"].createConditionMarker(the_condLat, the_condLng, the_condID, info, "roadinfo", the_iconurl)
 						}
-					}	
+					}
 				}
 			}
 			}
-		conditions_get();		
+		conditions_get();
 		}
-		
+
 	function conditions_get() {			// set cycle, 1/3/14
 		if (pos_interval!=null) {return;}			// ????
 		pos_interval = window.setInterval('do_conditions_loop()', 30000);
-		}			// end function mu get()	
-		
+		}			// end function mu get()
+
 	function do_conditions_loop() {	//	1/3/14
-		var randomnumber=Math.floor(Math.random()*99999999);		
+		var randomnumber=Math.floor(Math.random()*99999999);
 	  	// call the server to execute the server side operation
 		if (window.XMLHttpRequest) {
 			condxmlHttp = new XMLHttpRequest();
@@ -652,7 +603,7 @@ if (file_exists("./incs/modules.inc.php")) {
 			condxmlHttp.send(null);
 			}
 		}
-		
+
 	function readConditions2() {	//	1/3/14
 		if (condxmlHttp.readyState == 4) {
 			if (condxmlHttp.status == 200) {
@@ -673,10 +624,10 @@ if (file_exists("./incs/modules.inc.php")) {
 					info += "<TR class='even'><TD class='td_label'><B><?php print get_text('Alert Type');?></B></TD><TD class='td_data'>" + the_condTypeTitle + "</TD></TR>";
 					info += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Address');?></B></TD><TD class='td_data'>" + the_condAddress + "</TD></TR>";
 					info += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Updated');?></B></TD><TD class='td_data'>" + the_condDate + "</TD></TR></TABLE>";
-					if(typeof parent.frames["main"].createConditionMarker == 'function') { 
+					if(typeof parent.frames["main"].createConditionMarker == 'function') {
 						parent.frames["main"].createConditionMarker(the_condLat, the_condLng, the_condID, info, "roadinfo", the_iconurl)
 						}
-					}	
+					}
 				}
 			}
 		}
@@ -837,16 +788,16 @@ if (file_exists("./incs/modules.inc.php")) {
 			} else {
 			if(lit["msg"]) {
 				CngClass("msg", "signal_b");
-				lit_o["msg"] = false;					
+				lit_o["msg"] = false;
 				} else {
 				CngClass("msg", "plain");
-				lit_o["msg"] = false;	
+				lit_o["msg"] = false;
 				}
 			}
 		lit_r["msg"] = false;
 		lit_o["msg"] = true;
 		}
-		
+
 	function msg_signal_o() {										// light the msg button, 10/23/12, 1/30/14
 		if (lit_o["msg"]) {return; }									// already lit - possibly red
 		if (lit_r["msg"]) {return; }
@@ -861,11 +812,11 @@ if (file_exists("./incs/modules.inc.php")) {
 			} else {
 			if(lit["msg"]) {
 				CngClass("msg", "signal_b");
-				lit_o["msg"] = false;					
+				lit_o["msg"] = false;
 				} else {
 				CngClass("msg", "plain");
-				lit_o["msg"] = false;	
-				}			
+				lit_o["msg"] = false;
+				}
 			}
 		lit_o["msg"] = false;
 		}

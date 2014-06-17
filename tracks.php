@@ -1,32 +1,5 @@
 <?php
-/**
- * @package tracks.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version string
- */
-/*
-5/23/08 added do_kml() - generate KML JS -
-5/25/08 revised removed deleting non-located units
-5/26/08 revised to avoid adding fixed unit location to bounds computation
-5/26/08 revised to refer to units.php vice config.php
-6/15/08 revised to show mobile units only
-6/16/08 UTC time format conversion corrected
-6/17/08 added tracks array information
-6/25/08 added APRS window handling
-8/27/08 mysql_fetch_assoc replaces fetch_array
-10/4/08	added auto-refresh
-1/21/09 added show butts - re button menu
-1/24/09 revised per generated icons
-2/24/09 corrected png names
-3/18/09 'aprs_poll' to 'auto_poll'
-1/23/10 refresh meat removed
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-8/13/10 map.setUIToDefault();
-3/15/11 changed stylesheet.php to stylesheet.php
-6/21/2013 corrected the APRS-only sql
 
-*/
 
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10
@@ -38,19 +11,6 @@ $api_key = get_variable('gmaps_api_key');
 
 extract($_GET);
 
-/**
- * is_a_float
- * Insert description here
- *
- * @param $n
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
 function is_a_float($n) {									// 3/25/09
 
     return ( $n == strval(floatval($n)) )? true : false;
@@ -68,18 +28,7 @@ unset($result);
 $icons = $GLOBALS['icons'];				// 1/1/09
 $sm_icons = $GLOBALS['sm_icons'];
 
-/**
- * get_icon_legend
- * Insert description here
- *
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
+
 function get_icon_legend() {			// returns legend string - 1/1/09
     global $u_types, $sm_icons;
     $query = "SELECT DISTINCT `type` FROM `$GLOBALS[mysql_prefix]responder` ORDER BY `name`";
@@ -93,20 +42,7 @@ function get_icon_legend() {			// returns legend string - 1/1/09
     return $print;
     }			// end function get_icon_legend ()
 
-/**
- * list_responders
- * Insert description here
- *
- * @param $addon
- * @param $start
- *
- * @return
- *
- * @access
- * @static
- * @see
- * @since
- */
+
 function list_responders($addon = '', $start) {
 
 global $u_types;

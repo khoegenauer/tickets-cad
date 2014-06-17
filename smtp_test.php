@@ -1,16 +1,5 @@
 <?php
-/**
- * @package smtp_test.php
- * @author John Doe <john.doe@example.com>
- * @since
- * @version 2011-03-15
- */
-/*
-7/5/10 accomodate security parameter, per KJ email
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-3/15/11 changed stylesheet.php to stylesheet.php
-*/
-error_reporting(E_ALL);
+include'./incs/error_reporting.php';
 
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10

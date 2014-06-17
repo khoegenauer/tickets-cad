@@ -1,23 +1,5 @@
 <?php
-/**
- * @package routes_i.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version 2011-03-15
- */
-/*
-routes to incident from selected unit
-08/7/31 cloned from routes.php
-1/21/09 added show butts - re button menu
-3/11/09 scroll wheel operation added
-1/7/10 added 'call taker' alias
-7/16/10 detailmap.setCenter correction
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-11/23/10 - mi vs km per locale
-3/15/11 changed stylesheet.php to stylesheet.php
-
-*/
-error_reporting(E_ALL);
+include'./incs/error_reporting.php';
 
 @session_start();
 require_once($_SESSION['fip']);		//7/28/10

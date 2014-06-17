@@ -1,16 +1,5 @@
 <?php
-/**
- * @package t_tracker.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version string
- */
-/*
-7/25/09	initial release
-7/28/10 Added inclusion of startup.inc.php for checking of network status and setting of file name variables to support no-maps versions of scripts.
-3/15/11 changed stylesheet.php to stylesheet.php
-*/
-error_reporting(E_ALL);
+include'./incs/error_reporting.php';
 
 @session_start();
 require_once 'incs/functions.inc.php';		//7/28/10

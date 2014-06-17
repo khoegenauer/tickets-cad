@@ -1,13 +1,5 @@
 <?php
-/**
- * @package settings.inc.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version string
- */
-/* This file accomodates your installation.  This is the *ONLY* irving file that should need revision. */
 
-/* database stuff from here - MUST  be changed */
 
 require_once './incs/mysql.inc.php';			// database settings - edit per yr installation
 

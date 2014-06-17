@@ -1,15 +1,5 @@
 <?php
-/**
- * @package portal.php
- * @author John Doe <john.doe@example.com>
- * @since version
- * @version 2013-09-10
- */
-/*
-9/10/13 - Major re-write to previous versions
-*/
-if ( !defined( 'E_DEPRECATED' ) ) { define( 'E_DEPRECATED',8192 );}		// 11/8/09
-error_reporting (E_ALL  ^ E_DEPRECATED);
+include'./incs/error_reporting.php';
 @session_start();
 $logged_in = $logged_out = false;
 if (empty($_SESSION)) {
@@ -147,10 +137,10 @@ function set_size() {
     $('banner').style.height = "2em";
     $('list_header').style.width = bannerwidth + "px";
     $('list_header').style.height = "2em";
-    $('all_requests').style.width = bannerwidth * .95 + "px";		
+    $('all_requests').style.width = bannerwidth * .95 + "px";
     }
 /**
- * 
+ *
  * @returns {undefined}
  */
 function out_frames() {		//  onLoad = "out_frames()"
@@ -394,10 +384,10 @@ function do_newreq() {				// 1/19/09
 var dopasswd = null;
 var starting;
 function do_passwdchange() {				// 1/19/09
-	if ((dopasswd) && (!(dopasswd.closed))) {dopasswd.focus(); return;}		// 7/28/10	
+	if ((dopasswd) && (!(dopasswd.closed))) {dopasswd.focus(); return;}		// 7/28/10
 	if (logged_in()) {
 		if(starting) {return;}						// 6/6/08
-		starting=true;	
+		starting=true;
 		dopasswd=window.open("./portal/profile.php", "change_password",  "titlebar, location=0, resizable=1, scrollbars=yes, height=700, width=600, status=0, toolbar=0, menubar=0, location=0, left=100, top=300, screenX=100, screenY=300");
 		if (isNull(dopasswd)) {
 			alert ("Portal operation requires popups to be enabled. Please adjust your browser options.");
@@ -619,7 +609,7 @@ function markers_cb2(req) {
 			info_t += "<TR class='even'><TD class='td_label'><B><?php print get_text('Job Title');?></B></TD><TD class='td_data'>" + the_scope + "</TD></TR>";
 			info_t += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Job Description');?></B></TD><TD class='td_data'>" + the_description + "</TD></TR>";
 			for(var elements in the_markers[key].responders) {
-				var tr_handle = the_markers[key].responders[elements].handle;	
+				var tr_handle = the_markers[key].responders[elements].handle;
 				info_t += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Responder');?></B></TD><TD class='td_data'>" + tr_handle + "</TD></TR>";
 				}
 			info_t += "</TABLE><BR /><BR /></DIV>";
@@ -635,7 +625,7 @@ function markers_cb2(req) {
                 info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('Responder Handle');?></B></TD><TD class='td_data'>" + r_handle + "</TD></TR>";
 				info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('Assigned to Job');?></B></TD><TD class='td_data'>" + the_scope + "</TD></TR>";
 				info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('Job Description');?></B></TD><TD class='td_data'>" + the_description + "</TD></TR></TABLE><BR /><BR /></DIV>";
-				createMarker(point, 1, r_handle, info_r);			
+				createMarker(point, 1, r_handle, info_r);
                 }
             }
         }
@@ -661,7 +651,7 @@ function get_the_markers() {
 				info_t += "<TR class='even'><TD class='td_label'><B><?php print get_text('Job Title');?></B></TD><TD class='td_data'>" + the_scope + "</TD></TR>";
 				info_t += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Job Description');?></B></TD><TD class='td_data'>" + the_description + "</TD></TR>";
 				for(var elements in the_markers[key].responders) {
-					var tr_handle = the_markers[key].responders[elements].handle;	
+					var tr_handle = the_markers[key].responders[elements].handle;
 					info_t += "<TR class='odd'><TD class='td_label'><B><?php print get_text('Responder');?></B></TD><TD class='td_data'>" + tr_handle + "</TD></TR>";
 					}
 				info_t += "</TABLE><BR /><BR /></DIV>";
@@ -678,7 +668,7 @@ function get_the_markers() {
 					info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('Assigned to Job');?></B></TD><TD class='td_data'>" + the_scope + "</TD></TR>";
 					info_r += "<TR class='even'><TD class='td_label'><B><?php print get_text('Job Description');?></B></TD><TD class='td_data'>" + the_description + "</TD></TR></TABLE><BR /><BR /></DIV>";
                     point = new google.maps.LatLng(r_lat, r_lng);
-					createMarker(point, 1, r_handle, info_r);			
+					createMarker(point, 1, r_handle, info_r);
                     }
                 }
             }
